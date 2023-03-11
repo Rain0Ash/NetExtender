@@ -96,7 +96,24 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Double ConvertInformation(Double value, InformationSize from, InformationSize to)
+        public static Single ConvertInformation(this Single value, InformationSize from, InformationSize to)
+        {
+            if (from == to)
+            {
+                return value;
+            }
+
+            return value * ((Single) from / (Single) to);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Double ConvertInformation(this InformationSize from, Single value, InformationSize to)
+        {
+            return ConvertInformation(value, from, to);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Double ConvertInformation(this Double value, InformationSize from, InformationSize to)
         {
             if (from == to)
             {
@@ -113,7 +130,7 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Decimal ConvertInformation(Decimal value, InformationSize from, InformationSize to)
+        public static Decimal ConvertInformation(this Decimal value, InformationSize from, InformationSize to)
         {
             if (from == to)
             {
@@ -130,7 +147,7 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static UInt64 ConvertInformation(Int32 value, InformationSize from, InformationSize to)
+        public static UInt64 ConvertInformation(this Int32 value, InformationSize from, InformationSize to)
         {
             return value > 0 ? ConvertInformation(from, (UInt64) value, to) : 0;
         }
@@ -142,7 +159,7 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static UInt64 ConvertInformation(UInt32 value, InformationSize from, InformationSize to)
+        public static UInt64 ConvertInformation(this UInt32 value, InformationSize from, InformationSize to)
         {
             return ConvertInformation((UInt64) value, from, to);
         }
@@ -154,7 +171,7 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static UInt64 ConvertInformation(Int64 value, InformationSize from, InformationSize to)
+        public static UInt64 ConvertInformation(this Int64 value, InformationSize from, InformationSize to)
         {
             return value > 0 ? ConvertInformation(from, (UInt64) value, to) : 0;
         }
@@ -166,7 +183,7 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static UInt64 ConvertInformation(UInt64 value, InformationSize from, InformationSize to)
+        public static UInt64 ConvertInformation(this UInt64 value, InformationSize from, InformationSize to)
         {
             if (from == to)
             {

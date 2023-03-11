@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
@@ -173,7 +174,6 @@ namespace NetExtender.Utilities.Numerics
         /// Max iterations count in Taylor series
         /// </summary>
         private const Int32 DecimalMaxIteration = 100;
-
         public static BigInteger DecimalMaximumBigInteger { get; } = new BigInteger(Decimal.MaxValue);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -3678,27 +3678,698 @@ namespace NetExtender.Utilities.Numerics
             return BitConverter.GetBytes(Decimal.GetBits(value)[3])[2];
         }
 
-        public static BigInteger Factorial(UInt32 value)
+        private static class Factorials
         {
-            if (value <= 1)
+            private static ImmutableArray<BigInteger> Values { get; }
+            private const Int32 Offset = 27;
+            public const Int32 Maximum = 1 << 10;
+            private const Int32 Count = Maximum - Offset;
+
+            static Factorials()
             {
-                return 1;
+                Values = Evaluate().ToImmutableArray();
             }
 
-            BigInteger sum = value;
-            BigInteger result = value;
-            for (UInt32 i = value - 2; i > 1; i -= 2)
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static Boolean Factorial(UInt32 value, out BigInteger result)
             {
-                sum += i;
-                result *= sum;
+                result = value switch
+                {
+                    <= Offset => BigFactorial(value),
+                    <= Maximum => Values[(Int32) value - Offset - 1],
+                    _ => BigInteger.Zero
+                };
+
+                return result > 0;
             }
 
-            if (value % 2 != 0)
+            [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+            private static BigInteger[] Evaluate()
             {
-                result *= value / 2 + 1;
+                BigInteger[] values = new BigInteger[Count];
+
+                BigInteger current = new BigInteger(DecimalFactorial(Offset));
+                for (Int32 i = Offset + 1; i <= Maximum; i++)
+                {
+                    current *= i;
+                    values[i - Offset - 1] = current;
+                }
+
+                return values;
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int64 Factorial(this SByte value)
+        {
+            if (value < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(value), value, null);
             }
 
-            return result;
+            return Factorial((UInt32) value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int64 Factorial(this Byte value)
+        {
+            return Factorial((UInt32) value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int64 Factorial(this Int16 value)
+        {
+            if (value < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(value), value, null);
+            }
+
+            return Factorial((UInt32) value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int64 Factorial(this UInt16 value)
+        {
+            return Factorial((UInt32) value);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int64 Factorial(this Int32 value)
+        {
+            if (value < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(value), value, null);
+            }
+
+            return Factorial((UInt32) value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int64 Factorial(this UInt32 value)
+        {
+            return value switch
+            {
+                0 => 1L,
+                1 => 1L,
+                2 => 2L,
+                3 => 6L,
+                4 => 24L,
+                5 => 120L,
+                6 => 720L,
+                7 => 5040L,
+                8 => 40320L,
+                9 => 362880L,
+                10 => 3628800L,
+                11 => 39916800L,
+                12 => 479001600L,
+                13 => 6227020800L,
+                14 => 87178291200L,
+                15 => 1307674368000L,
+                16 => 20922789888000L,
+                17 => 355687428096000L,
+                18 => 6402373705728000L,
+                19 => 121645100408832000L,
+                20 => 2432902008176640000L,
+                _ => throw new OverflowException()
+            };
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int64 Factorial(this Int64 value)
+        {
+            if (value < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(value), value, null);
+            }
+
+            return Factorial((UInt64) value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int64 Factorial(this UInt64 value)
+        {
+            return value switch
+            {
+                0 => 1L,
+                1 => 1L,
+                2 => 2L,
+                3 => 6L,
+                4 => 24L,
+                5 => 120L,
+                6 => 720L,
+                7 => 5040L,
+                8 => 40320L,
+                9 => 362880L,
+                10 => 3628800L,
+                11 => 39916800L,
+                12 => 479001600L,
+                13 => 6227020800L,
+                14 => 87178291200L,
+                15 => 1307674368000L,
+                16 => 20922789888000L,
+                17 => 355687428096000L,
+                18 => 6402373705728000L,
+                19 => 121645100408832000L,
+                20 => 2432902008176640000L,
+                _ => throw new OverflowException()
+            };
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Decimal DecimalFactorial(this SByte value)
+        {
+            if (value < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(value), value, null);
+            }
+
+            return DecimalFactorial((UInt32) value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Decimal DecimalFactorial(this Byte value)
+        {
+            return DecimalFactorial((UInt32) value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Decimal DecimalFactorial(this Int16 value)
+        {
+            if (value < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(value), value, null);
+            }
+
+            return DecimalFactorial((UInt32) value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Decimal DecimalFactorial(this UInt16 value)
+        {
+            return DecimalFactorial((UInt32) value);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Decimal DecimalFactorial(this Int32 value)
+        {
+            if (value < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(value), value, null);
+            }
+
+            return DecimalFactorial((UInt32) value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Decimal DecimalFactorial(this UInt32 value)
+        {
+            return value switch
+            {
+                0 => 1M,
+                1 => 1M,
+                2 => 2M,
+                3 => 6M,
+                4 => 24M,
+                5 => 120M,
+                6 => 720M,
+                7 => 5040M,
+                8 => 40320M,
+                9 => 362880M,
+                10 => 3628800M,
+                11 => 39916800M,
+                12 => 479001600M,
+                13 => 6227020800M,
+                14 => 87178291200M,
+                15 => 1307674368000M,
+                16 => 20922789888000M,
+                17 => 355687428096000M,
+                18 => 6402373705728000M,
+                19 => 121645100408832000M,
+                20 => 2432902008176640000M,
+                21 => 51090942171709440000M,
+                22 => 1124000727777607680000M,
+                23 => 25852016738884976640000M,
+                24 => 620448401733239439360000M,
+                25 => 15511210043330985984000000M,
+                26 => 403291461126605635584000000M,
+                27 => 10888869450418352160768000000M,
+                _ => throw new OverflowException()
+            };
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Decimal DecimalFactorial(this Int64 value)
+        {
+            if (value < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(value), value, null);
+            }
+
+            return DecimalFactorial((UInt64) value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Decimal DecimalFactorial(this UInt64 value)
+        {
+            return value switch
+            {
+                0 => 1M,
+                1 => 1M,
+                2 => 2M,
+                3 => 6M,
+                4 => 24M,
+                5 => 120M,
+                6 => 720M,
+                7 => 5040M,
+                8 => 40320M,
+                9 => 362880M,
+                10 => 3628800M,
+                11 => 39916800M,
+                12 => 479001600M,
+                13 => 6227020800M,
+                14 => 87178291200M,
+                15 => 1307674368000M,
+                16 => 20922789888000M,
+                17 => 355687428096000M,
+                18 => 6402373705728000M,
+                19 => 121645100408832000M,
+                20 => 2432902008176640000M,
+                21 => 51090942171709440000M,
+                22 => 1124000727777607680000M,
+                23 => 25852016738884976640000M,
+                24 => 620448401733239439360000M,
+                25 => 15511210043330985984000000M,
+                26 => 403291461126605635584000000M,
+                27 => 10888869450418352160768000000M,
+                _ => throw new OverflowException()
+            };
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Factorial(this SByte value, out Int64 result)
+        {
+            result = value switch
+            {
+                >= 0 and <= 20 => Factorial(value),
+                _ => default
+            };
+
+            return result > 0;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Factorial(this SByte value, out UInt64 result)
+        {
+            result = value switch
+            {
+                >= 0 and <= 20 => (UInt64) Factorial(value),
+                _ => default
+            };
+
+            return result > 0;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Factorial(this SByte value, out Decimal result)
+        {
+            result = value switch
+            {
+                >= 0 and <= 27 => DecimalFactorial(value),
+                _ => default
+            };
+
+            return result > 0;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Factorial(this Byte value, out Int64 result)
+        {
+            result = value switch
+            {
+                >= 0 and <= 20 => Factorial(value),
+                _ => default
+            };
+
+            return result > 0;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Factorial(this Byte value, out UInt64 result)
+        {
+            result = value switch
+            {
+                >= 0 and <= 20 => (UInt64) Factorial(value),
+                _ => default
+            };
+
+            return result > 0;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Factorial(this Byte value, out Decimal result)
+        {
+            result = value switch
+            {
+                >= 0 and <= 27 => DecimalFactorial(value),
+                _ => default
+            };
+
+            return result > 0;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Factorial(this Int16 value, out Int64 result)
+        {
+            result = value switch
+            {
+                >= 0 and <= 20 => Factorial(value),
+                _ => default
+            };
+
+            return result > 0;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Factorial(this Int16 value, out UInt64 result)
+        {
+            result = value switch
+            {
+                >= 0 and <= 20 => (UInt64) Factorial(value),
+                _ => default
+            };
+
+            return result > 0;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Factorial(this Int16 value, out Decimal result)
+        {
+            result = value switch
+            {
+                >= 0 and <= 27 => DecimalFactorial(value),
+                _ => default
+            };
+
+            return result > 0;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Factorial(this UInt16 value, out Int64 result)
+        {
+            result = value switch
+            {
+                >= 0 and <= 20 => Factorial(value),
+                _ => default
+            };
+
+            return result > 0;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Factorial(this UInt16 value, out UInt64 result)
+        {
+            result = value switch
+            {
+                >= 0 and <= 20 => (UInt64) Factorial(value),
+                _ => default
+            };
+
+            return result > 0;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Factorial(this UInt16 value, out Decimal result)
+        {
+            result = value switch
+            {
+                >= 0 and <= 27 => DecimalFactorial(value),
+                _ => default
+            };
+
+            return result > 0;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Factorial(this Int32 value, out Int64 result)
+        {
+            result = value switch
+            {
+                >= 0 and <= 20 => Factorial(value),
+                _ => default
+            };
+
+            return result > 0;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Factorial(this Int32 value, out UInt64 result)
+        {
+            result = value switch
+            {
+                >= 0 and <= 20 => (UInt64) Factorial(value),
+                _ => default
+            };
+
+            return result > 0;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Factorial(this Int32 value, out Decimal result)
+        {
+            result = value switch
+            {
+                >= 0 and <= 27 => DecimalFactorial(value),
+                _ => default
+            };
+
+            return result > 0;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Factorial(this UInt32 value, out Int64 result)
+        {
+            result = value switch
+            {
+                >= 0 and <= 20 => Factorial(value),
+                _ => default
+            };
+
+            return result > 0;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Factorial(this UInt32 value, out UInt64 result)
+        {
+            result = value switch
+            {
+                >= 0 and <= 20 => (UInt64) Factorial(value),
+                _ => default
+            };
+
+            return result > 0;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Factorial(this UInt32 value, out Decimal result)
+        {
+            result = value switch
+            {
+                >= 0 and <= 27 => DecimalFactorial(value),
+                _ => default
+            };
+
+            return result > 0;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Factorial(this Int64 value, out Int64 result)
+        {
+            result = value switch
+            {
+                >= 0 and <= 20 => Factorial(value),
+                _ => default
+            };
+
+            return result > 0;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Factorial(this Int64 value, out UInt64 result)
+        {
+            result = value switch
+            {
+                >= 0 and <= 20 => (UInt64) Factorial(value),
+                _ => default
+            };
+
+            return result > 0;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Factorial(this Int64 value, out Decimal result)
+        {
+            result = value switch
+            {
+                >= 0 and <= 27 => DecimalFactorial(value),
+                _ => default
+            };
+
+            return result > 0;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Factorial(this UInt64 value, out Int64 result)
+        {
+            result = value switch
+            {
+                >= 0 and <= 20 => Factorial(value),
+                _ => default
+            };
+
+            return result > 0;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Factorial(this UInt64 value, out UInt64 result)
+        {
+            result = value switch
+            {
+                >= 0 and <= 20 => (UInt64) Factorial(value),
+                _ => default
+            };
+
+            return result > 0;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Factorial(this UInt64 value, out Decimal result)
+        {
+            result = value switch
+            {
+                >= 0 and <= 27 => DecimalFactorial(value),
+                _ => default
+            };
+
+            return result > 0;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static BigInteger BigFactorial(this SByte value)
+        {
+            if (value < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(value), value, null);
+            }
+
+            return BigFactorial((UInt32) value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static BigInteger BigFactorial(this Byte value)
+        {
+            return BigFactorial((UInt32) value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static BigInteger BigFactorial(this Int16 value)
+        {
+            if (value < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(value), value, null);
+            }
+
+            return BigFactorial((UInt32) value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static BigInteger BigFactorial(this UInt16 value)
+        {
+            return BigFactorial((UInt32) value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static BigInteger BigFactorial(this Int32 value)
+        {
+            if (value < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(value), value, null);
+            }
+
+            return BigFactorial((UInt32) value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static BigInteger BigFactorial(this UInt32 value)
+        {
+            return value switch
+            {
+                <= 20 => Factorial(value),
+                <= 27 => new BigInteger(DecimalFactorial(value)),
+                <= Factorials.Maximum when Factorials.Factorial(value, out BigInteger result) => result,
+                _ => Evaluate(value)
+            };
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            static BigInteger Evaluate(UInt32 value)
+            {
+                BigInteger sum = value;
+                BigInteger result = value;
+                for (UInt32 i = value - 2; i > 1; i -= 2)
+                {
+                    sum += i;
+                    result *= sum;
+                }
+
+                if (value % 2 != 0)
+                {
+                    result *= value / 2 + 1;
+                }
+
+                return result;
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static BigInteger BigFactorial(this Int64 value)
+        {
+            if (value < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(value), value, null);
+            }
+
+            if (value > UInt32.MaxValue)
+            {
+                throw new ArgumentOutOfRangeException(nameof(value), value, null);
+            }
+
+            return BigFactorial((UInt32) value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static BigInteger BigFactorial(this UInt64 value)
+        {
+            if (value > UInt32.MaxValue)
+            {
+                throw new ArgumentOutOfRangeException(nameof(value), value, null);
+            }
+
+            return BigFactorial((UInt32) value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static BigInteger BigFactorial(this BigInteger value)
+        {
+            if (value < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(value), value, null);
+            }
+
+            if (value > UInt32.MaxValue)
+            {
+                throw new ArgumentOutOfRangeException(nameof(value), value, null);
+            }
+
+            return BigFactorial((UInt32) value);
         }
 
         public static Decimal DiscreteDifference(this Single value, Single between, Byte digits)

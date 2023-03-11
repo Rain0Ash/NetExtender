@@ -316,41 +316,6 @@ namespace NetExtender.Utilities.Numerics
         ForEach(types.Append(biginteger), MaxImplementation);
     }
 
-    void FactorialImplementation(String type)
-    {
-        WriteLine($"\t\tpublic static {biginteger} Factorial(this {type} value)");
-        WriteLine("\t\t{");
-
-        if (!IsUnsignedType(type))
-        {
-            WriteLine("\t\t\tif (value < 0)");
-            WriteLine("\t\t\t{");
-            WriteLine("\t\t\t\tthrow new ArgumentOutOfRangeException(nameof(value), value, null);");
-            WriteLine("\t\t\t}");
-
-            WriteLine(String.Empty);
-        }
-
-        if (!IsSmallType(type) && type != nameof(Int32) && type != nameof(UInt32))
-        {
-            WriteLine("\t\t\tif (value > UInt32.MaxValue)");
-            WriteLine("\t\t\t{");
-            WriteLine("\t\t\t\tthrow new ArgumentOutOfRangeException(nameof(value), value, null);");
-            WriteLine("\t\t\t}");
-
-            WriteLine(String.Empty);
-        }
-
-        WriteLine("\t\t\treturn Factorial((UInt32)value);");
-
-        WriteLine("\t\t}");
-    }
-
-    void Factorial()
-    {
-        ForEach(types.Where(NotChar).Where(IsIntType).Where(type => type != nameof(UInt32)).Append(biginteger), FactorialImplementation);
-    }
-
     void RangeImplementation(String type)
     {
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
@@ -1719,8 +1684,6 @@ namespace NetExtender.Utilities.Numerics
     Min();
     WriteLine(String.Empty);
     Max();
-    WriteLine(String.Empty);
-    Factorial();
     WriteLine(String.Empty);
     Range();
     WriteLine(String.Empty);
