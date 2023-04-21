@@ -201,10 +201,17 @@ namespace NetExtender.Types.Anonymous
 
             ILGenerator generator = method.GetILGenerator();
 
-            generator.DeclareLocal(builder);
+            Label @false = generator.DefineLabel();
+            Label exit = generator.DefineLabel();
 
             generator.Emit(OpCodes.Ldarg_1);
             generator.Emit(OpCodes.Isinst, builder);
+            generator.Emit(OpCodes.Brfalse_S, @false);
+
+            generator.DeclareLocal(builder);
+
+            generator.Emit(OpCodes.Ldarg_1);
+            generator.Emit(OpCodes.Castclass, builder);
             generator.Emit(OpCodes.Stloc_0);
             generator.Emit(OpCodes.Ldloc_0);
 
@@ -214,6 +221,13 @@ namespace NetExtender.Types.Anonymous
                 generator.Emit(OpCodes.Ceq);
                 generator.Emit(OpCodes.Ldc_I4_0);
                 generator.Emit(OpCodes.Ceq);
+                generator.Emit(OpCodes.Br_S, exit);
+
+                generator.MarkLabel(@false);
+                generator.Emit(OpCodes.Ldc_I4_0);
+                generator.Emit(OpCodes.Ret);
+
+                generator.MarkLabel(exit);
                 generator.Emit(OpCodes.Ret);
 
                 return method;
@@ -236,9 +250,17 @@ namespace NetExtender.Types.Anonymous
                 generator.Emit(OpCodes.Callvirt, equalsmethod);
             }
 
+            generator.Emit(OpCodes.Br_S, exit);
+            generator.MarkLabel(@false);
+            generator.Emit(OpCodes.Ldc_I4_0);
             generator.Emit(OpCodes.Ret);
+
             generator.MarkLabel(label);
             generator.Emit(OpCodes.Ldc_I4_0);
+            generator.Emit(OpCodes.Ret);
+
+            generator.MarkLabel(exit);
+            generator.Emit(OpCodes.Ret);
 
             return method;
         }*/

@@ -3,6 +3,7 @@
 
 using System;
 using System.Runtime.Serialization;
+using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Exceptions
 {
@@ -21,7 +22,7 @@ namespace NetExtender.Types.Exceptions
                 return;
             }
             
-            throw Enum.IsDefined(value) ? new EnumNotSupportedException<T>(value) : new EnumUndefinedException<T>(value);
+            throw EnumUtilities.IsDefined(value) ? new EnumNotSupportedException<T>(value) : new EnumUndefinedException<T>(value);
         }
 
         public EnumUndefinedOrNotSupportedException(T value, String? message)
@@ -37,7 +38,7 @@ namespace NetExtender.Types.Exceptions
                 return;
             }
             
-            throw Enum.IsDefined(value) ? new EnumNotSupportedException<T>(value, message) : new EnumUndefinedException<T>(value, null, message);
+            throw EnumUtilities.IsDefined(value) ? new EnumNotSupportedException<T>(value, message) : new EnumUndefinedException<T>(value, null, message);
         }
 
         public EnumUndefinedOrNotSupportedException(T value, String? paramName, String? message)
@@ -53,7 +54,7 @@ namespace NetExtender.Types.Exceptions
                 return;
             }
             
-            throw Enum.IsDefined(value) ? new EnumNotSupportedException<T>(value, message) : new EnumUndefinedException<T>(value, paramName, message);
+            throw EnumUtilities.IsDefined(value) ? new EnumNotSupportedException<T>(value, message) : new EnumUndefinedException<T>(value, paramName, message);
         }
 
         public EnumUndefinedOrNotSupportedException(T value, String? paramName, String? message, Exception? innerException)
@@ -69,7 +70,7 @@ namespace NetExtender.Types.Exceptions
                 return;
             }
             
-            if (Enum.IsDefined(value))
+            if (EnumUtilities.IsDefined(value))
             {
                 throw new EnumNotSupportedException<T>(value, message, innerException);
             }

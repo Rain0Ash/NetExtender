@@ -16,6 +16,14 @@ namespace NetExtender.Types.Exceptions
             return exception?.Value ?? default;
         }
         
+        public Type Type
+        {
+            get
+            {
+                return typeof(T);
+            }
+        }
+        
         public T Value { get; }
 
         public override Enum Enum

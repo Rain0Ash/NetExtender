@@ -2,6 +2,8 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using NetExtender.Types.Exceptions;
@@ -300,6 +302,129 @@ namespace NetExtender.Utilities.Numerics
         public static Boolean IsNaN(this Complex value)
         {
             return Complex.IsNaN(value);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Enumerator2 GetEnumerator(this (Complex, Complex) value)
+        {
+            return new Enumerator2(value);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Enumerator3 GetEnumerator(this (Complex, Complex, Complex) value)
+        {
+            return new Enumerator3(value);
+        }
+
+        public struct Enumerator2 : IEnumerator<Complex>
+        {
+            private (Complex, Complex) Value { get; }
+            private Int32 Index { get; set; } = -1;
+
+            public Enumerator2((Complex, Complex) value)
+            {
+                Value = value;
+            }
+
+            public readonly Complex Current
+            {
+                get
+                {
+                    return Index switch
+                    {
+                        0 => Value.Item1,
+                        1 => Value.Item2,
+                        _ => throw new InvalidOperationException()
+                    };
+                }
+            }
+
+            readonly Object IEnumerator.Current
+            {
+                get
+                {
+                    return Current;
+                }
+            }
+
+            public Boolean MoveNext()
+            {
+                while (Index < 1)
+                {
+                    ++Index;
+                    if (!Complex.IsNaN(Current))
+                    {
+                        return true;
+                    }
+                }
+                
+                return false;
+            }
+
+            public void Reset()
+            {
+                Index = -1;
+            }
+
+            public void Dispose()
+            {
+            }
+        }
+    }
+    
+    public struct Enumerator3 : IEnumerator<Complex>
+    {
+        private (Complex, Complex, Complex) Value { get; }
+        private Int32 Index { get; set; } = -1;
+
+        public Enumerator3((Complex, Complex, Complex) value)
+        {
+            Value = value;
+        }
+
+        public readonly Complex Current
+        {
+            get
+            {
+                return Index switch
+                {
+                    0 => Value.Item1,
+                    1 => Value.Item2,
+                    2 => Value.Item3,
+                    _ => throw new InvalidOperationException()
+                };
+            }
+        }
+
+        readonly Object IEnumerator.Current
+        {
+            get
+            {
+                return Current;
+            }
+        }
+
+        public Boolean MoveNext()
+        {
+            while (Index < 2)
+            {
+                ++Index;
+                if (!Complex.IsNaN(Current))
+                {
+                    return true;
+                }
+            }
+                
+            return false;
+        }
+
+        public void Reset()
+        {
+            Index = -1;
+        }
+
+        public void Dispose()
+        {
         }
     }
 }

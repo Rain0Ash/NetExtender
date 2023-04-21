@@ -99,39 +99,22 @@ namespace NetExtender.Utilities.Types
                 {
                     Saturation = 0;
                     Hue = Undefined;
+                    return;
                 }
-                else
+
+                Saturation = Luminosity <= HLSMax / 2 ? (difference * HLSMax + sum / 2) / sum : (difference * HLSMax + (2 * RGBMax - sum) / 2) / (2 * RGBMax - sum);
+
+                Int32 Rdelta = ((max - r) * (HLSMax / 6) + difference / 2) / difference;
+                Int32 Gdelta = ((max - g) * (HLSMax / 6) + difference / 2) / difference;
+                Int32 Bdelta = ((max - b) * (HLSMax / 6) + difference / 2) / difference;
+
+                Hue = r == max ? Bdelta - Gdelta : g == max ? HLSMax / 3 + Rdelta - Bdelta : 2 * HLSMax / 3 + Gdelta - Rdelta;
+                Hue += Hue switch
                 {
-                    Saturation = Luminosity <= HLSMax / 2 ? (difference * HLSMax + sum / 2) / sum : (difference * HLSMax + (2 * RGBMax - sum) / 2) / (2 * RGBMax - sum);
-
-                    Int32 Rdelta = ((max - r) * (HLSMax / 6) + difference / 2) / difference;
-                    Int32 Gdelta = ((max - g) * (HLSMax / 6) + difference / 2) / difference;
-                    Int32 Bdelta = ((max - b) * (HLSMax / 6) + difference / 2) / difference;
-
-                    //TODO: переписать
-                    if (r == max)
-                    {
-                        Hue = Bdelta - Gdelta;
-                    }
-                    else if (g == max)
-                    {
-                        Hue = HLSMax / 3 + Rdelta - Bdelta;
-                    }
-                    else
-                    {
-                        Hue = 2 * HLSMax / 3 + Gdelta - Rdelta;
-                    }
-
-                    if (Hue < 0)
-                    {
-                        Hue += HLSMax;
-                    }
-
-                    if (Hue > HLSMax)
-                    {
-                        Hue -= HLSMax;
-                    }
-                }
+                    < 0 => HLSMax,
+                    > HLSMax => -HLSMax,
+                    _ => 0
+                };
             }
 
             public Color Darker(Single percent)

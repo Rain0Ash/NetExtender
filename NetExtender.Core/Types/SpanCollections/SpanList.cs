@@ -11,7 +11,7 @@ namespace NetExtender.Types.SpanCollections
         public const Int32 Size = 1;
     }
 
-    //TODO: LastIndexOf, Insert, other list methods
+    //TODO: other list methods
     public ref struct SpanList<T>
     {
         public static implicit operator Span<T>(SpanList<T> value)
@@ -344,6 +344,88 @@ namespace NetExtender.Types.SpanCollections
             Count = count;
             Version++;
         }
+        
+        public void Insert(Int32 index, T item)
+        {
+            if (index < 0 || index > Count)
+            {
+                throw new ArgumentOutOfRangeException(nameof(index));
+            }
+
+            if (Count >= Capacity)
+            {
+                throw new InvalidOperationException("Destination span is too small. Reinitialize with bigger span");
+            }
+
+            if (index < Count)
+            {
+                Internal.Slice(index, Count - index).CopyTo(Internal.Slice(index + 1));
+            }
+
+            Internal[index] = item;
+            Count++;
+            Version++;
+        }
+        
+        public void InsertRange(Int32 index, ReadOnlySpan<T> source)
+        {
+            if (index < 0 || index > Count)
+            {
+                throw new ArgumentOutOfRangeException(nameof(index));
+            }
+
+            if (source.Length > Capacity - Count)
+            {
+                throw new InvalidOperationException("Destination span is too small. Reinitialize with bigger span");
+            }
+
+            if (index < Count)
+            {
+                Internal.Slice(index, Count - index).CopyTo(Internal.Slice(index + source.Length));
+            }
+
+            source.CopyTo(Internal.Slice(index));
+            Count += source.Length;
+            Version++;
+        }
+        
+        public void InsertRange(Int32 index, IEnumerable<T> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (index < 0 || index > Count)
+            {
+                throw new ArgumentOutOfRangeException(nameof(index));
+            }
+
+            Int32 count = Count;
+            foreach (T item in source)
+            {
+                if (count >= Capacity)
+                {
+                    Internal.Slice(Count, count - Count).Clear();
+                    throw new InvalidOperationException("Destination span is too small. Reinitialize with bigger span");
+                }
+
+                if (index < count)
+                {
+                    Internal.Slice(index, count - index).CopyTo(Internal.Slice(index + 1));
+                    Internal[index] = item;
+                    index++;
+                    count++;
+                    continue;
+                }
+
+                Internal[count] = item;
+                count++;
+            }
+
+            Count = count;
+            Version++;
+        }
 
         public void Remove(T item)
         {
@@ -369,6 +451,21 @@ namespace NetExtender.Types.SpanCollections
         public readonly void Reverse()
         {
             Internal.Slice(0, Count).Reverse();
+        }
+
+        public readonly void Reverse(Int32 index, Int32 count)
+        {
+            if (index < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(index), index, null);
+            }
+            
+            if (count < 0 || index + count > Count)
+            {
+                throw new ArgumentOutOfRangeException(nameof(count), count, null);
+            }
+            
+            Internal.Slice(index, count).Reverse();
         }
 
         public readonly void Sort()

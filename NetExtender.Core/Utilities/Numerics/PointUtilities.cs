@@ -9,7 +9,6 @@ using NetExtender.Types.Numerics;
 
 namespace NetExtender.Utilities.Numerics
 {
-    //TODO: offset by mutation
     public static class PointUtilities
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -23,6 +22,190 @@ namespace NetExtender.Utilities.Numerics
         {
             return MathUtilities.Distance(first.X, first.Y, second.X, second.Y);
         }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void Offset(this PointOffset offset, ref Point value, Int32 count)
+        {
+            Offset(ref value, offset, count);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static void Offset(this ref Point value, PointOffset offset, Int32 count)
+        {
+            switch (offset)
+            {
+                case PointOffset.None:
+                    return;
+                case PointOffset.Up:
+                    value.Y -= count;
+                    return;
+                case PointOffset.Down:
+                    value.Y += count;
+                    return;
+                case PointOffset.Left:
+                    value.X -= count;
+                    return;
+                case PointOffset.Right:
+                    value.X += count;
+                    return;
+                case PointOffset.UpLeft:
+                    value.X -= count;
+                    value.Y -= count;
+                    return;
+                case PointOffset.DownLeft:
+                    value.X -= count;
+                    value.Y += count;
+                    return;
+                case PointOffset.UpRight:
+                    value.X += count;
+                    value.Y -= count;
+                    return;
+                case PointOffset.DownRight:
+                    value.X += count;
+                    value.Y += count;
+                    return;
+                default:
+                    throw new EnumUndefinedOrNotSupportedException<PointOffset>(offset, nameof(offset), null);
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void Offset(this PointOffset offset, ref Point value, Size size)
+        {
+            Offset(ref value, offset, size);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static void Offset(this ref Point value, PointOffset offset, Size size)
+        {
+            switch (offset)
+            {
+                case PointOffset.None:
+                    return;
+                case PointOffset.Up:
+                    value.Y -= size.Height;
+                    return;
+                case PointOffset.Down:
+                    value.Y += size.Height;
+                    return;
+                case PointOffset.Left:
+                    value.X -= size.Width;
+                    return;
+                case PointOffset.Right:
+                    value.X += size.Width;
+                    return;
+                case PointOffset.UpLeft:
+                    value.X -= size.Width;
+                    value.Y -= size.Height;
+                    return;
+                case PointOffset.DownLeft:
+                    value.X -= size.Width;
+                    value.Y += size.Height;
+                    return;
+                case PointOffset.UpRight:
+                    value.X += size.Width;
+                    value.Y -= size.Height;
+                    return;
+                case PointOffset.DownRight:
+                    value.X += size.Width;
+                    value.Y += size.Height;
+                    return;
+                default:
+                    throw new EnumUndefinedOrNotSupportedException<PointOffset>(offset, nameof(offset), null);
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void Offset(this PointOffset offset, ref PointF value, Single count)
+        {
+            Offset(ref value, offset, count);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static void Offset(this ref PointF value, PointOffset offset, Single count)
+        {
+            switch (offset)
+            {
+                case PointOffset.None:
+                    return;
+                case PointOffset.Up:
+                    value.Y -= count;
+                    return;
+                case PointOffset.Down:
+                    value.Y += count;
+                    return;
+                case PointOffset.Left:
+                    value.X -= count;
+                    return;
+                case PointOffset.Right:
+                    value.X += count;
+                    return;
+                case PointOffset.UpLeft:
+                    value.X -= count;
+                    value.Y -= count;
+                    return;
+                case PointOffset.DownLeft:
+                    value.X -= count;
+                    value.Y += count;
+                    return;
+                case PointOffset.UpRight:
+                    value.X += count;
+                    value.Y -= count;
+                    return;
+                case PointOffset.DownRight:
+                    value.X += count;
+                    value.Y += count;
+                    return;
+                default:
+                    throw new EnumUndefinedOrNotSupportedException<PointOffset>(offset, nameof(offset), null);
+            }
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void Offset(this PointOffset offset, ref PointF value, SizeF size)
+        {
+            Offset(ref value, offset, size);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static void Offset(this ref PointF value, PointOffset offset, SizeF size)
+        {
+            switch (offset)
+            {
+                case PointOffset.None:
+                    return;
+                case PointOffset.Up:
+                    value.Y -= size.Height;
+                    return;
+                case PointOffset.Down:
+                    value.Y += size.Height;
+                    return;
+                case PointOffset.Left:
+                    value.X -= size.Width;
+                    return;
+                case PointOffset.Right:
+                    value.X += size.Width;
+                    return;
+                case PointOffset.UpLeft:
+                    value.X -= size.Width;
+                    value.Y -= size.Height;
+                    return;
+                case PointOffset.DownLeft:
+                    value.X -= size.Width;
+                    value.Y += size.Height;
+                    return;
+                case PointOffset.UpRight:
+                    value.X += size.Width;
+                    value.Y -= size.Height;
+                    return;
+                case PointOffset.DownRight:
+                    value.X += size.Width;
+                    value.Y += size.Height;
+                    return;
+                default:
+                    throw new EnumUndefinedOrNotSupportedException<PointOffset>(offset, nameof(offset), null);
+            }
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Point WithOffset(this PointOffset offset, Point value, Int32 count)
@@ -30,6 +213,7 @@ namespace NetExtender.Utilities.Numerics
             return WithOffset(value, offset, count);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static Point WithOffset(this Point value, PointOffset offset, Int32 count)
         {
             return offset switch
@@ -53,6 +237,7 @@ namespace NetExtender.Utilities.Numerics
             return WithOffset(value, offset, size);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static Point WithOffset(this Point value, PointOffset offset, Size size)
         {
             return offset switch
@@ -76,6 +261,7 @@ namespace NetExtender.Utilities.Numerics
             return WithOffset(value, offset, count);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static PointF WithOffset(this PointF value, PointOffset offset, Single count)
         {
             return offset switch
@@ -99,6 +285,7 @@ namespace NetExtender.Utilities.Numerics
             return WithOffset(value, offset, size);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static PointF WithOffset(this PointF value, PointOffset offset, SizeF size)
         {
             return offset switch
@@ -116,6 +303,7 @@ namespace NetExtender.Utilities.Numerics
             };
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static PointOffset Invert(this PointOffset offset)
         {
             return offset switch

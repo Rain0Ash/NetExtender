@@ -26,9 +26,6 @@ namespace NetExtender.Initializer
 
     public static partial class NetExtenderFrameworkInitializer
     {
-        //TODO: Autocreate binary hashes
-        // ReSharper disable once CollectionNeverUpdated.Local
-
         private static Assembly? Load(String assembly, Boolean isThrow)
         {
             return Load(assembly, null, default, isThrow);

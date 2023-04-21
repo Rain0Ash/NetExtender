@@ -12,7 +12,6 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using NetExtender.Types.Exceptions;
 using NetExtender.Types.Native.Windows;
-using NetExtender.Utilities.IO;
 
 namespace NetExtender.Utilities.Windows
 {

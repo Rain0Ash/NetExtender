@@ -10,7 +10,7 @@ namespace NetExtender.Types.Exceptions
     [Serializable]
     public class IncorrentEnumTypeException<T> : IncorrentEnumTypeException
     {
-        public override Type Type
+        public sealed override Type Type
         {
             get
             {

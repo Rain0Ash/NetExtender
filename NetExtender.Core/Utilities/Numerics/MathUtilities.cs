@@ -61,6 +61,7 @@ namespace NetExtender.Utilities.Numerics
             public const Single One = 1F;
 
             public const Single PI = MathF.PI;
+            public const Single PIx2 = PI * 2;
             public const Single E = MathF.E;
             public const Single Radian = PI / AngleUtilities.SingleDegree.Straight;
 
@@ -85,6 +86,7 @@ namespace NetExtender.Utilities.Numerics
             public const Double One = 1D;
 
             public const Double PI = Math.PI;
+            public const Double PIx2 = PI * 2;
             public const Double E = Math.E;
             public const Double Radian = PI / AngleUtilities.DoubleDegree.Straight;
 
@@ -557,20 +559,15 @@ namespace NetExtender.Utilities.Numerics
             Int32 iteration = 1;
             Decimal result = Decimal.One;
             Decimal factorial = Decimal.One;
-            Decimal cached;
+            Decimal cache;
             do
             {
-                cached = result;
+                cache = result;
                 factorial *= value / iteration++;
                 result += factorial;
-            } while (cached != result);
+            } while (cache != result);
 
-            if (count == 0)
-            {
-                return result;
-            }
-
-            return result * Pow(DecimalConstants.E, count);
+            return count != 0 ? result * Pow(DecimalConstants.E, count) : result;
         }
 
         private static Boolean IsInteger(Decimal value)
@@ -3106,13 +3103,44 @@ namespace NetExtender.Utilities.Numerics
         {
             return value * DecimalConstants.Radian;
         }
-
+        
         /// <summary>
         /// Truncates to  [-2*PI;2*PI]
         /// </summary>
         /// <param name="value"></param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Decimal TruncateToPeriodicInterval(Decimal value)
+        public static Single TruncateToPeriodicInterval(this Single value)
+        {
+            TruncateToPeriodicInterval(ref value);
+            return value;
+        }
+        
+        /// <summary>
+        /// Truncates to  [-2*PI;2*PI]
+        /// </summary>
+        /// <param name="value"></param>
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static void TruncateToPeriodicInterval(ref Single value)
+        {
+            while (value >= SingleConstants.PIx2)
+            {
+                Int32 divide = Math.Abs((Int32)(value / SingleConstants.PIx2));
+                value -= divide * SingleConstants.PIx2;
+            }
+
+            while (value <= -SingleConstants.PIx2)
+            {
+                Int32 divide = Math.Abs((Int32)(value / SingleConstants.PIx2));
+                value += divide * SingleConstants.PIx2;
+            }
+        }
+        
+        /// <summary>
+        /// Truncates to  [-2*PI;2*PI]
+        /// </summary>
+        /// <param name="value"></param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Double TruncateToPeriodicInterval(this Double value)
         {
             TruncateToPeriodicInterval(ref value);
             return value;
@@ -3122,6 +3150,38 @@ namespace NetExtender.Utilities.Numerics
         /// Truncates to  [-2*PI;2*PI]
         /// </summary>
         /// <param name="value"></param>
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static void TruncateToPeriodicInterval(ref Double value)
+        {
+            while (value >= DoubleConstants.PIx2)
+            {
+                Int32 divide = Math.Abs((Int32)(value / DoubleConstants.PIx2));
+                value -= divide * DoubleConstants.PIx2;
+            }
+
+            while (value <= -DoubleConstants.PIx2)
+            {
+                Int32 divide = Math.Abs((Int32)(value / DoubleConstants.PIx2));
+                value += divide * DoubleConstants.PIx2;
+            }
+        }
+
+        /// <summary>
+        /// Truncates to  [-2*PI;2*PI]
+        /// </summary>
+        /// <param name="value"></param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Decimal TruncateToPeriodicInterval(this Decimal value)
+        {
+            TruncateToPeriodicInterval(ref value);
+            return value;
+        }
+
+        /// <summary>
+        /// Truncates to  [-2*PI;2*PI]
+        /// </summary>
+        /// <param name="value"></param>
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static void TruncateToPeriodicInterval(ref Decimal value)
         {
             while (value >= DecimalConstants.PIx2)
@@ -3136,51 +3196,72 @@ namespace NetExtender.Utilities.Numerics
                 value += divide * DecimalConstants.PIx2;
             }
         }
-
-        private static Boolean IsSignOfSinPositive(Decimal value)
+        
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Boolean IsSignOfSinPositive(this Single value)
         {
-            TruncateToPeriodicInterval(ref value);
-
-            if (value is >= -DecimalConstants.PIx2 and <= -DecimalConstants.PI)
+            return TruncateToPeriodicInterval(value) switch
             {
-                return true;
-            }
-
-            if (value is >= -DecimalConstants.PI and <= Decimal.Zero)
-            {
-                return false;
-            }
-
-            if (value is >= Decimal.Zero and <= DecimalConstants.PI)
-            {
-                return true;
-            }
-
-            if (value is >= DecimalConstants.PI and <= DecimalConstants.PIx2)
-            {
-                return false;
-            }
-
-            throw new ArgumentException(nameof(value));
+                >= -MathF.PI * 2 and <= -MathF.PI => true,
+                >= -MathF.PI and <= 0 => false,
+                >= 0 and <= MathF.PI => true,
+                >= MathF.PI and <= MathF.PI * 2 => false,
+                _ => throw new ArgumentOutOfRangeException(nameof(value), value, null)
+            };
         }
 
-        private static Decimal CalculateSinFromCos(Decimal value, Decimal cos)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Single SinFromCos(this Single value, Single cos)
+        {
+            Single module = MathF.Sqrt(1 - cos * cos);
+            return IsSignOfSinPositive(value) ? module : -module;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Boolean IsSignOfSinPositive(this Double value)
+        {
+            return TruncateToPeriodicInterval(value) switch
+            {
+                >= -Math.PI * 2 and <= -Math.PI => true,
+                >= -Math.PI and <= 0 => false,
+                >= 0 and <= Math.PI => true,
+                >= Math.PI and <= Math.PI * 2 => false,
+                _ => throw new ArgumentOutOfRangeException(nameof(value), value, null)
+            };
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Double SinFromCos(this Double value, Double cos)
+        {
+            Double module = Math.Sqrt(1 - cos * cos);
+            return IsSignOfSinPositive(value) ? module : -module;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Boolean IsSignOfSinPositive(this Decimal value)
+        {
+            return TruncateToPeriodicInterval(value) switch
+            {
+                >= -DecimalConstants.PIx2 and <= -DecimalConstants.PI => true,
+                >= -DecimalConstants.PI and <= Decimal.Zero => false,
+                >= Decimal.Zero and <= DecimalConstants.PI => true,
+                >= DecimalConstants.PI and <= DecimalConstants.PIx2 => false,
+                _ => throw new ArgumentOutOfRangeException(nameof(value), value, null)
+            };
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Decimal SinFromCos(this Decimal value, Decimal cos)
         {
             Decimal module = Sqrt(Decimal.One - cos * cos);
-
-            if (IsSignOfSinPositive(value))
-            {
-                return module;
-            }
-
-            return -module;
+            return IsSignOfSinPositive(value) ? module : -module;
         }
 
         /// <inheritdoc cref="Math.Sin"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Decimal Sin(this Decimal value)
         {
-            return CalculateSinFromCos(value, Cos(value));
+            return SinFromCos(value, Cos(value));
         }
 
         /// <inheritdoc cref="Math.Sinh"/>
@@ -3223,7 +3304,7 @@ namespace NetExtender.Utilities.Numerics
 
             Decimal x = Decimal.Zero;
             Decimal result = value;
-            Decimal cached;
+            Decimal cache;
             Int32 i = 1;
 
             x += result;
@@ -3231,11 +3312,11 @@ namespace NetExtender.Utilities.Numerics
 
             do
             {
-                cached = result;
+                cache = result;
                 result *= px * (Decimal.One - DecimalConstants.Half / i);
                 x += result / ((i << 1) + 1);
                 i++;
-            } while (cached != result);
+            } while (cache != result);
 
             return x;
         }
@@ -3266,11 +3347,11 @@ namespace NetExtender.Utilities.Numerics
 
             Decimal px = -value * DecimalConstants.Half;
             Decimal x = Decimal.One + px;
-            Decimal cached = x - Decimal.One;
+            Decimal cache = x - Decimal.One;
 
-            for (Int32 i = 1; cached != x && i < DecimalMaxIteration; i++)
+            for (Int32 i = 1; cache != x && i < DecimalMaxIteration; i++)
             {
-                cached = x;
+                cache = x;
                 Decimal factor = i * ((i << 1) + 3) + 1;
                 factor = -DecimalConstants.Half / factor;
                 px *= value * factor;
@@ -3325,7 +3406,7 @@ namespace NetExtender.Utilities.Numerics
                 throw new ArgumentException(nameof(value));
             }
 
-            return CalculateSinFromCos(value, cos) / cos;
+            return SinFromCos(value, cos) / cos;
         }
 
         /// <inheritdoc cref="Math.Tanh"/>
@@ -3384,7 +3465,7 @@ namespace NetExtender.Utilities.Numerics
         public static Decimal Cot(this Decimal value)
         {
             Decimal cos = Cos(value);
-            Decimal sin = CalculateSinFromCos(value, cos);
+            Decimal sin = SinFromCos(value, cos);
 
             if (sin == Decimal.Zero)
             {
@@ -4508,6 +4589,189 @@ namespace NetExtender.Utilities.Numerics
         public static BigInteger DiscreteDifference(this BigInteger value, BigInteger between)
         {
             return Difference(value, between) + BigInteger.One;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static (Complex First, Complex Second) Roots(Double a, Double b, Double c)
+        {
+            return Roots(a, b, c, out _);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static (Complex First, Complex Second) Roots(Double a, Double b, Double c, out Int32 real)
+        {
+            if (Math.Abs(a) < Double.Epsilon)
+            {
+                if (Math.Abs(b) < Double.Epsilon)
+                {
+                    real = (Math.Abs(c) < Double.Epsilon) ? 1 : 0;
+                    return (new Complex(0, 0), Complex.NaN);
+                }
+
+                real = 1;
+                return (new Complex(-c / b, 0), Complex.NaN);
+            }
+
+            Double discriminant = b * b - 4 * a * c;
+
+            if (discriminant >= 0)
+            {
+                Double sqrt = Math.Sqrt(discriminant);
+                Double denominator = 2 * a;
+
+                Complex root1 = (-b + sqrt) / denominator;
+                Complex root2 = (-b - sqrt) / denominator;
+
+                real = Math.Abs(discriminant) < Double.Epsilon ? 1 : 2;
+                return root1 == root2 ? (root1, root2) : (root1, Complex.NaN);
+            }
+            else
+            {
+                Double ireal = -b / (2 * a);
+                Double imaginary = Math.Sqrt(-discriminant) / (2 * a);
+
+                Complex root1 = new Complex(ireal, imaginary);
+                Complex root2 = new Complex(ireal, -imaginary);
+
+                real = 0;
+                return root1 == root2 ? (root1, root2) : (root1, Complex.NaN);
+            }
+        }
+        
+        public enum IntegrationMethod
+        {
+            Default,
+            Rectangular,
+            Trapezoidal,
+            Simpson
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Double Integrate(Double lower, Double upper, Func<Double, Double> function)
+        {
+            return Integrate(lower, upper, function, IntegrationMethod.Default);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Double Integrate(Double lower, Double upper, Func<Double, Double> function, IntegrationMethod method)
+        {
+            return method switch
+            {
+                IntegrationMethod.Rectangular => IntegrateRectangular(lower, upper, function),
+                IntegrationMethod.Trapezoidal => IntegrateTrapezoidal(lower, upper, function),
+                IntegrationMethod.Simpson => IntegrateSimpson(lower, upper, function),
+                IntegrationMethod.Default => IntegrateSimpson(lower, upper, function),
+                _ => throw new EnumUndefinedOrNotSupportedException<IntegrationMethod>(method, nameof(method), null)
+            };
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Double Integrate(Double lower, Double upper, Func<Double, Double> function, Int32 intervals)
+        {
+            return Integrate(lower, upper, function, intervals, IntegrationMethod.Default);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Double Integrate(Double lower, Double upper, Func<Double, Double> function, Int32 intervals, IntegrationMethod method)
+        {
+            return method switch
+            {
+                IntegrationMethod.Rectangular => IntegrateRectangular(lower, upper, function, intervals),
+                IntegrationMethod.Trapezoidal => IntegrateTrapezoidal(lower, upper, function, intervals),
+                IntegrationMethod.Simpson => IntegrateSimpson(lower, upper, function, intervals),
+                IntegrationMethod.Default => IntegrateSimpson(lower, upper, function, intervals),
+                _ => throw new EnumUndefinedOrNotSupportedException<IntegrationMethod>(method, nameof(method), null)
+            };
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Double IntegrateRectangular(Double lower, Double upper, Func<Double, Double> function)
+        {
+            return IntegrateRectangular(upper, lower, function, 1000);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Double IntegrateRectangular(Double lower, Double upper, Func<Double, Double> function, Int32 intervals)
+        {
+            if (function is null)
+            {
+                throw new ArgumentNullException(nameof(function));
+            }
+
+            Double interval = (upper - lower) / intervals;
+            Double sum = 0;
+            
+            for (Int32 i = 0; i < intervals; i++)
+            {
+                Double x = lower + (i + 0.5) * interval;
+                Double y = function(x);
+                sum += y * interval;
+            }
+            
+            return sum;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Double IntegrateTrapezoidal(Double lower, Double upper, Func<Double, Double> function)
+        {
+            return IntegrateTrapezoidal(lower, upper, function, 1000);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Double IntegrateTrapezoidal(Double lower, Double upper, Func<Double, Double> function, Int32 intervals)
+        {
+            if (function is null)
+            {
+                throw new ArgumentNullException(nameof(function));
+            }
+
+            Double interval = (upper - lower) / intervals;
+            Double sum = 0.5 * (function(lower) + function(upper));
+            
+            for (Int32 i = 1; i < intervals; i++)
+            {
+                Double x = lower + i * interval;
+                sum += function(x);
+            }
+            
+            return sum * interval;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Double IntegrateSimpson(Double lower, Double upper, Func<Double, Double> function)
+        {
+            return IntegrateSimpson(lower, upper, function, 1000);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Double IntegrateSimpson(Double lower, Double upper, Func<Double, Double> function, Int32 intervals)
+        {
+            if (function is null)
+            {
+                throw new ArgumentNullException(nameof(function));
+            }
+
+            if (intervals % 2 == 1)
+            {
+                intervals++;
+            }
+
+            Double interval = (upper - lower) / intervals;
+            Double subinterval = interval / 2;
+            
+            Double sum = 0;
+            for (Int32 i = 0; i < intervals; i += 2)
+            {
+                Double x1 = lower + i * interval;
+                Double x2 = x1 + subinterval;
+                Double x3 = x2 + subinterval;
+                Double y1 = function(x1);
+                Double y2 = function(x2);
+                Double y3 = function(x3);
+                sum += (y1 + 4 * y2 + y3) * subinterval / 3;
+            }
+
+            return sum;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

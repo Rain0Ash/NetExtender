@@ -9,7 +9,7 @@ namespace NetExtender.Types.Exceptions
     [Serializable]
     public class NotFlagsEnumTypeException<T> : NotFlagsEnumTypeException where T : unmanaged, Enum
     {
-        public override Type Type
+        public sealed override Type Type
         {
             get
             {

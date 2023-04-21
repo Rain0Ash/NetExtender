@@ -19,7 +19,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(counter));
             }
 
-            return counter!.OrderByValues()!;
+            return counter.OrderByValues();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -30,7 +30,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(counter));
             }
 
-            return counter!.OrderByValuesDescending()!;
+            return counter.OrderByValuesDescending();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -41,7 +41,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(counter));
             }
 
-            return counter!.OrderByValues()!;
+            return counter.OrderByValues();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -52,7 +52,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(counter));
             }
 
-            return counter!.OrderByValuesDescending()!;
+            return counter.OrderByValuesDescending();
         }
     }
 }

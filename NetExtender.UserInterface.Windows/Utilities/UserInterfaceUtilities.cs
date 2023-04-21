@@ -26,10 +26,10 @@ namespace NetExtender.Utilities.UserInterface
         public const Int32 Distance = 5;
 
         [DllImport("user32.dll", SetLastError = true)]
-        private static extern UInt32 GetWindowThreadProcessId(IntPtr hwnd, out UInt32 lpdwProcessId);
+        private static extern UInt32 GetWindowThreadProcessId(IntPtr handle, out UInt32 lpdwProcessId);
 
         [DllImport("user32.dll")]
-        private static extern UInt32 GetWindowThreadProcessId(IntPtr hwnd, IntPtr processId);
+        private static extern UInt32 GetWindowThreadProcessId(IntPtr handle, IntPtr processId);
 
         [DllImport("kernel32.dll")]
         private static extern UInt32 GetCurrentThreadId();
@@ -41,18 +41,18 @@ namespace NetExtender.Utilities.UserInterface
         private static extern Boolean AttachThreadInput(UInt32 idAttach, UInt32 idAttachTo, Boolean fAttach);
 
         [DllImport("user32.dll", SetLastError = true)]
-        private static extern Boolean BringWindowToTop(IntPtr hwnd);
+        private static extern Boolean BringWindowToTop(IntPtr handle);
 
         [DllImport("user32.dll")]
-        private static extern Boolean ShowWindow(IntPtr hwnd, UInt32 nCmdShow);
+        private static extern Boolean ShowWindow(IntPtr handle, UInt32 nCmdShow);
 
         [DllImport("user32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern Boolean GetClientRect(IntPtr hwnd, out WinRectangle rectangle);
+        private static extern Boolean GetClientRect(IntPtr handle, out WinRectangle rectangle);
         
         [DllImport("user32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern Boolean GetWindowRect(IntPtr hwnd, out WinRectangle rectangle);
+        private static extern Boolean GetWindowRect(IntPtr handle, out WinRectangle rectangle);
 
         public static Rectangle GetClientRectangle(IntPtr handle)
         {
@@ -94,9 +94,8 @@ namespace NetExtender.Utilities.UserInterface
             return GetWindowRectangle(window.Handle);
         }
 
-        //TODO: добавить установку, проверку и удаление пунктов меню
         [DllImport("user32.dll", SetLastError = true)]
-        private static extern IntPtr GetSystemMenu(IntPtr hwnd, Boolean bRevert = false);
+        private static extern IntPtr GetSystemMenu(IntPtr handle, Boolean bRevert = false);
 
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         private static extern Boolean GetMenuItemInfo(IntPtr hMenu, UInt32 uItem, Boolean fByPosition, [In, Out] MenuItemInfo lpmii);
@@ -124,7 +123,7 @@ namespace NetExtender.Utilities.UserInterface
         private static extern Boolean DeleteMenu(IntPtr hMenu, Int32 nPosition, Boolean uFlags);
 
         [DllImport("user32.dll", CharSet = CharSet.Unicode)]
-        private static extern Int32 GetWindowText(IntPtr hwnd, StringBuilder text, Int32 count);
+        private static extern Int32 GetWindowText(IntPtr handle, StringBuilder text, Int32 count);
 
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         private static extern Boolean EnumThreadWindows(Int32 threadId, EnumThreadProc pfnEnum, IntPtr lParam);
@@ -136,12 +135,12 @@ namespace NetExtender.Utilities.UserInterface
         private static extern IntPtr FindWindowEx(IntPtr parentHwnd, IntPtr childAfterHwnd, IntPtr className, String windowText);
 
         [DllImport("user32.dll")]
-        private static extern Int32 ShowWindow(IntPtr hwnd, Int32 nCmdShow);
+        private static extern Int32 ShowWindow(IntPtr handle, Int32 nCmdShow);
 
         [DllImport("user32.dll")]
-        private static extern UInt32 GetWindowThreadProcessId(IntPtr hwnd, out Int32 lpdwProcessId);
+        private static extern UInt32 GetWindowThreadProcessId(IntPtr handle, out Int32 lpdwProcessId);
 
-        private delegate Boolean EnumThreadProc(IntPtr hwnd, IntPtr lParam);
+        private delegate Boolean EnumThreadProc(IntPtr handle, IntPtr lParam);
 
         [Flags]
         internal enum WindowsMenuItemMask
@@ -218,15 +217,15 @@ namespace NetExtender.Utilities.UserInterface
             }
         }
 
-        private static Boolean GetSystemMenuItem(IntPtr hwnd, UInt32 index, out MenuItemInfo info)
+        private static Boolean GetSystemMenuItem(IntPtr handle, UInt32 index, out MenuItemInfo info)
         {
-            if (hwnd == IntPtr.Zero)
+            if (handle == IntPtr.Zero)
             {
                 info = default;
                 return false;
             }
 
-            IntPtr menu = GetSystemMenu(hwnd);
+            IntPtr menu = GetSystemMenu(handle);
 
             if (menu == IntPtr.Zero)
             {
@@ -244,14 +243,14 @@ namespace NetExtender.Utilities.UserInterface
             return GetMenuItemInfoByPosition(menu, index, info);
         }
 
-        private static IEnumerable<MenuItemInfo> GetSystemMenuItemsInternal(IntPtr hwnd)
+        private static IEnumerable<MenuItemInfo> GetSystemMenuItemsInternal(IntPtr handle)
         {
-            if (hwnd == IntPtr.Zero)
+            if (handle == IntPtr.Zero)
             {
                 yield break;
             }
 
-            IntPtr menu = GetSystemMenu(hwnd);
+            IntPtr menu = GetSystemMenu(handle);
 
             if (menu == IntPtr.Zero)
             {
@@ -278,100 +277,132 @@ namespace NetExtender.Utilities.UserInterface
             }
         }
 
-        public static Boolean ContainsMenuSeparator(IntPtr hwnd, String title)
+        public static Boolean ContainsMenuSeparator(IntPtr handle, String title)
         {
             if (title is null)
             {
                 throw new ArgumentNullException(nameof(title));
             }
 
-            return GetSystemMenuItemsInternal(hwnd).Any(item => item.TypeData == title);
+            return GetSystemMenuItemsInternal(handle).Any(item => item.TypeData == title);
         }
 
-        public static Boolean AppendMenuSeparator(IntPtr hwnd)
+        public static Boolean AppendMenuSeparator(IntPtr handle)
         {
-            if (hwnd == IntPtr.Zero)
+            if (handle == IntPtr.Zero)
             {
                 return false;
             }
 
-            IntPtr menu = GetSystemMenu(hwnd);
+            IntPtr menu = GetSystemMenu(handle);
             return menu != IntPtr.Zero && AppendMenu(menu, (Int32) WindowsMenuItemType.Separator, 0, String.Empty);
         }
 
-        public static Boolean InsertMenuSeparator(IntPtr hwnd, Byte position)
+        public static Boolean InsertMenuSeparator(IntPtr handle, Byte position)
         {
-            if (hwnd == IntPtr.Zero)
+            if (handle == IntPtr.Zero)
             {
                 return false;
             }
 
-            IntPtr menu = GetSystemMenu(hwnd);
+            IntPtr menu = GetSystemMenu(handle);
             return menu != IntPtr.Zero && InsertMenu(menu, position, (UInt32) WindowsMenuItemType.Separator, 0, String.Empty);
         }
+        
+        private static Boolean ContainsMenu(IntPtr handle, String item)
+        {
+            if (handle == IntPtr.Zero)
+            {
+                return false;
+            }
 
-        public static Boolean AppendMenu(IntPtr hwnd, Int32 id, String item)
+            IntPtr menu = GetSystemMenu(handle);
+            for (UInt32 i = 0; i < GetMenuItemCount(menu); i++)
+            {
+                MenuItemInfo info = new MenuItemInfo
+                {
+                    Size = MenuItemInfo.SizeOf,
+                    Mask = WindowsMenuItemMask.Type,
+                    TypeData = new String(' ', 256),
+                    Length = 256
+                };
+                
+                if (!GetMenuItemInfoByPosition(menu, i, info))
+                {
+                    continue;
+                }
+
+                if (info.TypeData.Contains(item))
+                {
+                    return true;
+                }
+            }
+            
+            return false;
+        }
+
+        public static Boolean AppendMenu(IntPtr handle, Int32 id, String item)
         {
             if (item is null)
             {
                 throw new ArgumentNullException(nameof(item));
             }
 
-            if (hwnd == IntPtr.Zero)
+            if (handle == IntPtr.Zero)
             {
                 return false;
             }
 
-            IntPtr menu = GetSystemMenu(hwnd);
+            IntPtr menu = GetSystemMenu(handle);
             return menu != IntPtr.Zero && AppendMenu(menu, (UInt32) WindowsMenuItemType.String, id, item);
         }
 
-        public static Boolean InsertMenu(IntPtr hwnd, Byte position, Int32 id, String item)
+        public static Boolean InsertMenu(IntPtr handle, Byte position, Int32 id, String item)
         {
             if (item is null)
             {
                 throw new ArgumentNullException(nameof(item));
             }
 
-            if (hwnd == IntPtr.Zero)
+            if (handle == IntPtr.Zero)
             {
                 return false;
             }
 
-            IntPtr menu = GetSystemMenu(hwnd);
+            IntPtr menu = GetSystemMenu(handle);
             return menu != IntPtr.Zero && InsertMenu(menu, position, (UInt32) WindowsMenuItemType.String, id, item);
         }
 
-        public static Boolean RemoveMenuAt(IntPtr hwnd, Byte position)
+        public static Boolean RemoveMenuAt(IntPtr handle, Byte position)
         {
-            if (hwnd == IntPtr.Zero)
+            if (handle == IntPtr.Zero)
             {
                 return false;
             }
 
-            IntPtr menu = GetSystemMenu(hwnd);
+            IntPtr menu = GetSystemMenu(handle);
             return menu != IntPtr.Zero && DeleteMenu(menu, position, true);
         }
 
-        public static Boolean RemoveMenuBy(IntPtr hwnd, Int32 command)
+        public static Boolean RemoveMenuBy(IntPtr handle, Int32 command)
         {
-            if (hwnd == IntPtr.Zero)
+            if (handle == IntPtr.Zero)
             {
                 return false;
             }
 
-            IntPtr menu = GetSystemMenu(hwnd);
+            IntPtr menu = GetSystemMenu(handle);
             return menu != IntPtr.Zero && DeleteMenu(menu, command, false);
         }
 
-        public static Boolean ResetSystemMenu(IntPtr hwnd)
+        public static Boolean ResetSystemMenu(IntPtr handle)
         {
-            if (hwnd == IntPtr.Zero)
+            if (handle == IntPtr.Zero)
             {
                 return false;
             }
 
-            return GetSystemMenu(hwnd, true) == IntPtr.Zero;
+            return GetSystemMenu(handle, true) == IntPtr.Zero;
         }
 
         public static Boolean ShowWindow(IntPtr handle, WindowStateType state)
@@ -389,24 +420,24 @@ namespace NetExtender.Utilities.UserInterface
             return ShowWindow(window.Handle, state);
         }
 
-        private static Boolean Bring(IntPtr hwnd)
+        private static Boolean Bring(IntPtr handle)
         {
-            BringWindowToTop(hwnd);
-            ShowWindow(hwnd, 5);
+            BringWindowToTop(handle);
+            ShowWindow(handle, 5);
             return true;
         }
 
-        private static Boolean AttachAndBring(UInt32 thread, UInt32 application, IntPtr hwnd)
+        private static Boolean AttachAndBring(UInt32 thread, UInt32 application, IntPtr handle)
         {
             AttachThreadInput(thread, application, true);
-            Bring(hwnd);
+            Bring(handle);
             AttachThreadInput(thread, application, false);
             return true;
         }
 
-        public static Boolean BringToForegroundWindow(IntPtr hwnd)
+        public static Boolean BringToForegroundWindow(IntPtr handle)
         {
-            if (hwnd == IntPtr.Zero)
+            if (handle == IntPtr.Zero)
             {
                 return false;
             }
@@ -414,7 +445,7 @@ namespace NetExtender.Utilities.UserInterface
             UInt32 thread = GetWindowThreadProcessId(GetForegroundWindow(), IntPtr.Zero);
             UInt32 application = GetCurrentThreadId();
 
-            return thread == application ? Bring(hwnd) : AttachAndBring(thread, application, hwnd);
+            return thread == application ? Bring(handle) : AttachAndBring(thread, application, handle);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
