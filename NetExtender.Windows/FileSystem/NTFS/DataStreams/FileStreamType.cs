@@ -52,6 +52,6 @@ namespace NetExtender.IO.FileSystem.NTFS.DataStreams
         /// Transactional data.
         /// (Undocumented - BACKUP_TXFS_DATA)
         /// </summary>
-        TransactionData = 10,
+        TransactionData = 10
     }
 }

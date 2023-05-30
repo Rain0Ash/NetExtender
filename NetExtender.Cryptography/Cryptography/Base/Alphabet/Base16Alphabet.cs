@@ -1,11 +1,6 @@
 ﻿// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
-// <copyright file="Base16Alphabet.cs" company="Sedat Kapanoglu">
-// Copyright (c) 2014-2019 Sedat Kapanoglu
-// Licensed under Apache-2.0 License (see LICENSE.txt file for details)
-// </copyright>
-
 using System;
 
 namespace NetExtender.Cryptography.Base.Alphabet
@@ -16,28 +11,14 @@ namespace NetExtender.Cryptography.Base.Alphabet
     public class Base16Alphabet : EncodingAlphabet
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="Base16Alphabet"/> class.
+        /// Gets lower case Base16 alphabet.
         /// </summary>
-        /// <param name="alphabet">Encoding alphabet.</param>
-        /// <param name="caseSensitive">If the decoding should be performed case sensitive.</param>
-        public Base16Alphabet(String alphabet, Boolean caseSensitive = false)
-            : base(16, alphabet)
-        {
-            if (!caseSensitive)
-            {
-                MapCounterparts();
-            }
-        }
+        public static Base16Alphabet LowerCase { get; } =  new Base16Alphabet("0123456789abcdef");
 
         /// <summary>
         /// Gets upper case Base16 alphabet.
         /// </summary>
         public static Base16Alphabet UpperCase { get; } = new Base16Alphabet("0123456789ABCDEF");
-
-        /// <summary>
-        /// Gets lower case Base16 alphabet.
-        /// </summary>
-        public static Base16Alphabet LowerCase { get; } =  new Base16Alphabet("0123456789abcdef");
 
         /// <summary>
         /// Gets ModHex Base16 alphabet, used by Yubico apps.
@@ -48,28 +29,52 @@ namespace NetExtender.Cryptography.Base.Alphabet
         /// Gets a value indicating whether the decoding should be performed in a case sensitive fashion.
         /// The default is false.
         /// </summary>
-        public Boolean CaseSensitive { get; } = false;
+        public Boolean Insensitive { get; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Base16Alphabet"/> class.
+        /// </summary>
+        /// <param name="alphabet">Encoding alphabet.</param>
+        public Base16Alphabet(String alphabet)
+            : this(alphabet, true)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Base16Alphabet"/> class.
+        /// </summary>
+        /// <param name="alphabet">Encoding alphabet.</param>
+        /// <param name="insensitive">If the decoding should be performed case sensitive.</param>
+        public Base16Alphabet(String alphabet, Boolean insensitive)
+            : base(16, alphabet)
+        {
+            Insensitive = insensitive;
+            
+            if (Insensitive)
+            {
+                MapCounterparts();
+            }
+        }
 
         private void MapCounterparts()
         {
-            Int32 alphaLen = Value.Length;
-            for (Int32 i = 0; i < alphaLen; i++)
+            for (Int32 i = 0; i < Value.Length; i++)
             {
-                Char c = Value[i];
+                Char character = Value[i];
 
-                if (!Char.IsLetter(c))
+                if (!Char.IsLetter(character))
                 {
                     continue;
                 }
 
-                if (Char.IsUpper(c))
+                if (Char.IsUpper(character))
                 {
-                    Map(Char.ToLowerInvariant(c), i);
+                    Map(Char.ToLowerInvariant(character), i);
                 }
 
-                if (Char.IsLower(c))
+                if (Char.IsLower(character))
                 {
-                    Map(Char.ToUpperInvariant(c), i);
+                    Map(Char.ToUpperInvariant(character), i);
                 }
             }
         }

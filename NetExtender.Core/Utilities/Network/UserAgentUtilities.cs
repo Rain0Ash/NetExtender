@@ -103,7 +103,7 @@ namespace NetExtender.Utilities.Network
                     { UserAgentArchitecture.LinuxUbuntuAMD64, 0.5 * linux * 0.4 },
 
                     { UserAgentArchitecture.FreeBSDX64, 1 * freebsd * 0.5 },
-                    { UserAgentArchitecture.FreeBSDAMD64, 1 * freebsd * 0.5 },
+                    { UserAgentArchitecture.FreeBSDAMD64, 1 * freebsd * 0.5 }
                 };
             }
         }

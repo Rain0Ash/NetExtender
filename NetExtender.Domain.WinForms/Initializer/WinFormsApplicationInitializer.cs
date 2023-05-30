@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using NetExtender.Domains.Builder.Interfaces;
 using NetExtender.Domains.Initializer;
 using NetExtender.Domains.WinForms.Applications;
+using NetExtender.Domains.WinForms.Builder;
 using NetExtender.Domains.WinForms.View;
 using NetExtender.Initializer;
 
@@ -81,5 +82,8 @@ namespace NetExtender.Domains.WinForms.Initializer
     
     public abstract class WinFormsApplicationInitializer<T, TBuilder> : ApplicationInitializer<WinFormsApplication, WinFormsView<T, TBuilder>> where T : Form where TBuilder : IApplicationBuilder<T>, new()
     {
+        public abstract class Builder : WinFormsBuilder<T>
+        {
+        }
     }
 }

@@ -31,6 +31,6 @@ namespace NetExtender.UserInterface.Windows.Taskbar
         /// <summary>S_FALSE</summary>
         False = 1,
         /// <summary>Win32 Error code: ERROR_CANCELLED</summary>
-        Win32ErrorCanceled = 1223, // 0x000004C7
+        Win32ErrorCanceled = 1223 // 0x000004C7
     }
 }

@@ -143,7 +143,7 @@ namespace NetExtender.Configuration.Ini
                     file.Add(grouping.Key, section);
                 }
 
-                return await file.WriteAsync();
+                return await file.WriteAsync().ConfigureAwait(false);
             }
             catch (Exception)
             {

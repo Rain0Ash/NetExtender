@@ -1,11 +1,6 @@
 ﻿// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
-// <copyright file="EncodingAlphabet.cs" company="Sedat Kapanoglu">
-// Copyright (c) 2014-2019 Sedat Kapanoglu
-// Licensed under Apache-2.0 License (see LICENSE.txt file for details)
-// </copyright>
-
 using System;
 using NetExtender.Cryptography.Base.Interfaces;
 
@@ -17,7 +12,7 @@ namespace NetExtender.Cryptography.Base.Alphabet
     /// alphabets for different encodings. It's suitable if you want to
     /// implement your own encoding based on the existing base classes.
     /// </summary>
-    public abstract class EncodingAlphabet : IEncodingAlphabet
+    public abstract class EncodingAlphabet : IEncodingAlphabet, IEquatable<EncodingAlphabet>
     {
         /// <summary>
         /// Specifies the highest possible char value in an encoding alphabet
@@ -26,12 +21,29 @@ namespace NetExtender.Cryptography.Base.Alphabet
         private const Int32 MaxLength = 127;
 
         /// <summary>
+        /// Gets the length of the alphabet.
+        /// </summary>
+        public Int32 Length { get; }
+
+        private Byte[] Internal { get; } = new Byte[MaxLength];
+
+        /// <summary>
         /// Holds a mapping from character to an actual byte value
         /// The values are held as "value + 1" so a zero would denote "not set"
         /// and would cause an exception.
         /// </summary>
-        /// <remarks>byte[] has no discernible perf impact and saves memory.</remarks>
-        private readonly Byte[] _reverseLookupTable = new Byte[MaxLength];
+        internal ReadOnlySpan<Byte> ReverseLookupTable
+        {
+            get
+            {
+                return Internal;
+            }
+        }
+
+        /// <summary>
+        /// Gets the characters of the alphabet.
+        /// </summary>
+        public String Value { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EncodingAlphabet"/> class.
@@ -47,8 +59,7 @@ namespace NetExtender.Cryptography.Base.Alphabet
 
             if (alphabet.Length != length)
             {
-                throw new ArgumentException($"Required alphabet length is {length} but provided alphabet is "
-                    + $"{alphabet.Length} characters long");
+                throw new ArgumentOutOfRangeException(nameof(alphabet), alphabet.Length, $"Required alphabet length is {length}.");
             }
 
             Length = length;
@@ -61,37 +72,41 @@ namespace NetExtender.Cryptography.Base.Alphabet
         }
 
         /// <summary>
-        /// Gets the length of the alphabet.
+        /// Map a character to a value.
         /// </summary>
-        public Int32 Length { get; }
-
-        /// <summary>
-        /// Gets the characters of the alphabet.
-        /// </summary>
-        public String Value { get; }
-
-        internal ReadOnlySpan<Byte> ReverseLookupTable
+        /// <param name="character">Characters.</param>
+        /// <param name="value">Corresponding value.</param>
+        protected void Map(Char character, Int32 value)
         {
-            get
-            {
-                return _reverseLookupTable;
-            }
+            Internal[character] = (Byte) (value + 1);
         }
 
-        /// <summary>
-        /// Generates a standard invalid character exception for alphabets.
-        /// </summary>
-        /// <remarks>
-        /// The reason this is not a throwing method itself is
-        /// that the compiler has no way of knowing whether the execution
-        /// will end after the method call and can incorrectly assume
-        /// reachable code.
-        /// </remarks>
-        /// <param name="c">Characters.</param>
-        /// <returns>Exception to be thrown.</returns>
-        public static Exception InvalidCharacter(Char c)
+        /// <inheritdoc/>
+        public override Int32 GetHashCode()
         {
-            return new ArgumentException($"Invalid character: {c}");
+            return Value.GetHashCode(StringComparison.Ordinal);
+        }
+
+        /// <inheritdoc/>
+        public override Boolean Equals(Object? obj)
+        {
+            return obj switch
+            {
+                null => false,
+                EncodingAlphabet alphabet => Equals(alphabet),
+                IEncodingAlphabet alphabet => Equals(alphabet),
+                _ => false
+            };
+        }
+
+        public Boolean Equals(EncodingAlphabet? other)
+        {
+            return other is not null && String.Equals(Value, other.Value, StringComparison.Ordinal);
+        }
+
+        public Boolean Equals(IEncodingAlphabet? other)
+        {
+            return other is not null && String.Equals(Value, other.Value, StringComparison.Ordinal);
         }
 
         /// <summary>
@@ -101,22 +116,6 @@ namespace NetExtender.Cryptography.Base.Alphabet
         public override String ToString()
         {
             return Value;
-        }
-
-        /// <inheritdoc/>
-        public override Int32 GetHashCode()
-        {
-            return Value.GetHashCode(StringComparison.Ordinal);
-        }
-
-        /// <summary>
-        /// Map a character to a value.
-        /// </summary>
-        /// <param name="c">Characters.</param>
-        /// <param name="value">Corresponding value.</param>
-        protected void Map(Char c, Int32 value)
-        {
-            _reverseLookupTable[c] = (Byte)(value + 1);
         }
     }
 }

@@ -1467,11 +1467,10 @@ namespace NetExtender.Utilities.Types
             };
 
             const Double Gamma = 0.80;
-            const Double IntensityMax = Maximum;
 
-            r = red < Double.Epsilon ? (Byte) 0 : (Byte) Math.Round(IntensityMax * Math.Pow(red * factor, Gamma));
-            g = green < Double.Epsilon ? (Byte) 0 : (Byte) Math.Round(IntensityMax * Math.Pow(green * factor, Gamma));
-            b = blue < Double.Epsilon ? (Byte) 0 : (Byte) Math.Round(IntensityMax * Math.Pow(blue * factor, Gamma));
+            r = red < Double.Epsilon ? (Byte) 0 : (Byte) Math.Round(Maximum * Math.Pow(red * factor, Gamma));
+            g = green < Double.Epsilon ? (Byte) 0 : (Byte) Math.Round(Maximum * Math.Pow(green * factor, Gamma));
+            b = blue < Double.Epsilon ? (Byte) 0 : (Byte) Math.Round(Maximum * Math.Pow(blue * factor, Gamma));
             return true;
         }
 

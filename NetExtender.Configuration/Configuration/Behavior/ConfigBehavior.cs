@@ -134,7 +134,7 @@ namespace NetExtender.Configuration.Behavior
 
         public virtual async Task<Boolean> ContainsAsync(String? key, IEnumerable<String>? sections, CancellationToken token)
         {
-            return await GetAsync(key, sections, token) is not null;
+            return await GetAsync(key, sections, token).ConfigureAwait(false) is not null;
         }
 
         public abstract String? Get(String? key, IEnumerable<String>? sections);
@@ -169,14 +169,14 @@ namespace NetExtender.Configuration.Behavior
         {
             sections = sections.Materialize();
 
-            String? result = await GetAsync(key, sections, token);
+            String? result = await GetAsync(key, sections, token).ConfigureAwait(false);
 
             if (result is not null)
             {
                 return result;
             }
 
-            return value is not null && await SetAsync(key, value, sections, token) ? value : null;
+            return value is not null && await SetAsync(key, value, sections, token).ConfigureAwait(false) ? value : null;
         }
 
         public abstract ConfigurationEntry[]? GetExists(IEnumerable<String>? sections);
@@ -300,11 +300,11 @@ namespace NetExtender.Configuration.Behavior
                 return null;
             }
 
-            ConfigurationValueEntry[]? entries = await GetExistsValuesAsync(null, token);
+            ConfigurationValueEntry[]? entries = await GetExistsValuesAsync(null, token).ConfigureAwait(false);
 
             IConfigBehavior transaction = new MemoryConfigBehavior(ConfigOptions.IgnoreEvent);
 
-            await transaction.MergeAsync(entries, token);
+            await transaction.MergeAsync(entries, token).ConfigureAwait(false);
             return new ConfigBehaviorTransaction(this, transaction);
         }
 
@@ -341,7 +341,7 @@ namespace NetExtender.Configuration.Behavior
 
         public async ValueTask DisposeAsync()
         {
-            await DisposeAsync(true);
+            await DisposeAsync(true).ConfigureAwait(false);
             GC.SuppressFinalize(this);
         }
 

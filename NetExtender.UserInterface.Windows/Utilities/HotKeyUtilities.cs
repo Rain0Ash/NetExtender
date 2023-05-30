@@ -27,7 +27,7 @@ namespace NetExtender.Utilities.UserInterface
         Shift = 4,
 
         /// <summary>The Windows logo key.</summary>
-        Windows = 8,
+        Windows = 8
     }
 
     public static class HotKeyUtilities

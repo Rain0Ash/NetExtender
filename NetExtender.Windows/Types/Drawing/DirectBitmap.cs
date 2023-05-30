@@ -33,7 +33,7 @@ namespace NetExtender.Windows.Types
         /// <summary>
         /// Specifies that the format is 32 bits per pixel; 8 bits each are used for the alpha, red, green, and blue components.
         /// </summary>
-        Format32bppArgb = 2498570,
+        Format32bppArgb = 2498570
     }
 
     public sealed unsafe class DirectBitmap : IDisposable

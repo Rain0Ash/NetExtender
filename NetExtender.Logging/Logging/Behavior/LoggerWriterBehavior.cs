@@ -57,7 +57,7 @@ namespace NetExtender.Logging.Behavior
 
             if (Writer is not null)
             {
-                await Writer.DisposeAsync();
+                await Writer.DisposeAsync().ConfigureAwait(false);
                 Writer = null;
             }
         }

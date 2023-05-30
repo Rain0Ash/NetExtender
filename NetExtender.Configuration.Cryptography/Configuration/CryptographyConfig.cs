@@ -174,7 +174,7 @@ namespace NetExtender.Configuration.Cryptography
 
         public async Task<String?> GetRawValueAsync(String? key, String? alternate, IEnumerable<String>? sections, CancellationToken token)
         {
-            return await GetRawValueAsync(key, sections, token) ?? alternate;
+            return await GetRawValueAsync(key, sections, token).ConfigureAwait(false) ?? alternate;
         }
 
         public Task<String?> GetValueAsync(String? key, IStringCryptor? cryptor, params String[]? sections)
@@ -194,7 +194,8 @@ namespace NetExtender.Configuration.Cryptography
 
         public virtual async Task<String?> GetValueAsync(String? key, IStringCryptor? cryptor, IEnumerable<String>? sections, CancellationToken token)
         {
-            return await Behavior.GetAsync(key, cryptor, sections, token);
+            // ReSharper disable once AsyncConverter.AsyncAwaitMayBeElidedHighlighting
+            return await Behavior.GetAsync(key, cryptor, sections, token).ConfigureAwait(false);
         }
 
         public Task<String?> GetValueAsync(String? key, String? alternate, IStringCryptor? cryptor, params String[]? sections)
@@ -214,7 +215,7 @@ namespace NetExtender.Configuration.Cryptography
 
         public async Task<String?> GetValueAsync(String? key, String? alternate, IStringCryptor? cryptor, IEnumerable<String>? sections, CancellationToken token)
         {
-            return await GetValueAsync(key, cryptor, sections, token) ?? alternate;
+            return await GetValueAsync(key, cryptor, sections, token).ConfigureAwait(false) ?? alternate;
         }
 
         public Boolean SetRawValue(String? key, String? value, params String[]? sections)

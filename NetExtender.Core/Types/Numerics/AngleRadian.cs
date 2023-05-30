@@ -256,7 +256,7 @@ namespace NetExtender.Types.Numerics
                 AngleDegree angle => Equals(angle.ToAngleRadian()),
                 AngleGradian angle => Equals(angle.ToAngleRadian()),
                 AngleRevolution angle => Equals(angle.ToAngleRadian()),
-                _ => false,
+                _ => false
             };
         }
 

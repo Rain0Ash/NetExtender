@@ -192,14 +192,14 @@ namespace NetExtender.Types.Streams
 
         public override async ValueTask<Int32> ReadAsync(Memory<Byte> buffer, CancellationToken token = default)
         {
-            Int32 count = await Internal.ReadAsync(buffer, token);
+            Int32 count = await Internal.ReadAsync(buffer, token).ConfigureAwait(false);
             OnReadProgress(count);
             return count;
         }
 
         public override async Task<Int32> ReadAsync(Byte[] buffer, Int32 offset, Int32 count, CancellationToken token)
         {
-            count = await Internal.ReadAsync(buffer, offset, count, token);
+            count = await Internal.ReadAsync(buffer, offset, count, token).ConfigureAwait(false);
             OnReadProgress(count);
             return count;
         }
@@ -235,13 +235,13 @@ namespace NetExtender.Types.Streams
 
         public override async ValueTask WriteAsync(ReadOnlyMemory<Byte> buffer, CancellationToken token = default)
         {
-            await Internal.WriteAsync(buffer, token);
+            await Internal.WriteAsync(buffer, token).ConfigureAwait(false);
             OnWriteProgress(buffer.Length);
         }
 
         public override async Task WriteAsync(Byte[] buffer, Int32 offset, Int32 count, CancellationToken token)
         {
-            await Internal.WriteAsync(buffer, offset, count, token);
+            await Internal.WriteAsync(buffer, offset, count, token).ConfigureAwait(false);
             OnWriteProgress(buffer.AsSpan(offset, count).Length);
         }
 

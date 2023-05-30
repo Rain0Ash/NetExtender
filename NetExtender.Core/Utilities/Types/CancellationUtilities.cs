@@ -216,6 +216,7 @@ namespace NetExtender.Utilities.Types
                 CancellationToken = token;
             }
 
+            // ReSharper disable once AsyncConverter.AsyncMethodNamingHighlighting
             public Task GetResult()
             {
                 if (IsCompleted)

@@ -278,8 +278,8 @@ namespace NetExtender.Utilities.Serialization
         /// <param name="element">Element with attribute</param>
         /// <param name="name">Attribute name.</param>
         /// <param name="parser">Value parser</param>
-        /// <param name="default">Default value.</param>
-        /// <returns>Parsed value or <paramref name="default"/> if attribute not exists.</returns>
+        /// <param name="alternate">Default value.</param>
+        /// <returns>Parsed value or <paramref name="alternate"/> if attribute not exists.</returns>
         /// <exception cref="ArgumentNullException">
         /// <paramref name="element"/> or <paramref name="name"/> or <paramref name="parser"/> is null.
         /// </exception>
@@ -309,8 +309,8 @@ namespace NetExtender.Utilities.Serialization
         /// </summary>
         /// <param name="element">Element with attribute</param>
         /// <param name="name">Attribute name.</param>
-        /// <param name="default">Default value.</param>
-        /// <returns>Parsed value or <paramref name="default"/> if attribute does not exist.</returns>
+        /// <param name="alternate">Default value.</param>
+        /// <returns>Parsed value or <paramref name="alternate"/> if attribute does not exist.</returns>
         /// <exception cref="ArgumentNullException">
         /// <paramref name="element"/> or <paramref name="name"/> is null.
         /// </exception>
@@ -335,9 +335,9 @@ namespace NetExtender.Utilities.Serialization
         /// <typeparam name="T">Type of value</typeparam>
         /// <param name="parent">Parent element.</param>
         /// <param name="selector">Function to select element value</param>
-        /// <param name="default">Default value.</param>
+        /// <param name="alternate">Default value.</param>
         /// <param name="names">Array of possible element names.</param>
-        /// <returns>Selected element value or <paramref name="default"/> if element does not exist.</returns>
+        /// <returns>Selected element value or <paramref name="alternate"/> if element does not exist.</returns>
         /// <exception cref="ArgumentNullException">
         /// <paramref name="parent"/> or <paramref name="selector"/> or <paramref name="names"/> is null.
         /// </exception>
@@ -369,8 +369,8 @@ namespace NetExtender.Utilities.Serialization
         /// <param name="parent">Parent element.</param>
         /// <param name="name">Element name.</param>
         /// <param name="selector">Function to select element value</param>
-        /// <param name="default">Default value.</param>
-        /// <returns>Selected element value or <paramref name="default"/> if element does not exist</returns>
+        /// <param name="alternate">Default value.</param>
+        /// <returns>Selected element value or <paramref name="alternate"/> if element does not exist</returns>
         /// <exception cref="ArgumentNullException">
         /// <paramref name="parent"/> or <paramref name="selector"/> is null.
         /// </exception>
@@ -391,8 +391,8 @@ namespace NetExtender.Utilities.Serialization
         /// <param name="parent">Parent element.</param>
         /// <param name="name">Element name.</param>
         /// <param name="selector">Function to parse element value</param>
-        /// <param name="default">Default value.</param>
-        /// <returns>Selected element value or <paramref name="default"/> if element does not exist</returns>
+        /// <param name="alternate">Default value.</param>
+        /// <returns>Selected element value or <paramref name="alternate"/> if element does not exist</returns>
         /// <exception cref="ArgumentNullException">
         /// <paramref name="parent"/> or <paramref name="name"/> or <paramref name="selector"/> is null.
         /// </exception>
@@ -411,8 +411,8 @@ namespace NetExtender.Utilities.Serialization
         /// </summary>
         /// <param name="parent">Parent element.</param>
         /// <param name="name">Element name.</param>
-        /// <param name="default">Default value.</param>
-        /// <returns>Selected element value or <paramref name="default"/> if element does not exist</returns>
+        /// <param name="alternate">Default value.</param>
+        /// <returns>Selected element value or <paramref name="alternate"/> if element does not exist</returns>
         /// <exception cref="ArgumentNullException">
         /// <paramref name="parent"/> or <paramref name="name"/> is null.
         /// </exception>

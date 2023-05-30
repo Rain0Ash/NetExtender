@@ -1079,8 +1079,7 @@ namespace NetExtender.Utilities.Types
 
             using StreamReader reader = stream.ToStreamReader(encoding, true);
 
-            String? line;
-            while((line = reader.ReadLine()) is not null)
+            while(reader.ReadLine() is { } line)
             {
                 yield return line;
             }
@@ -1221,7 +1220,7 @@ namespace NetExtender.Utilities.Types
             }
 
             await using StreamWriter writer = stream.ToStreamWriter(encoding, true);
-            await writer.WriteAsync(buffer, token);
+            await writer.WriteAsync(buffer, token).ConfigureAwait(false);
         }
 
         public static Task WriteAsync(this Stream stream, String? value)
@@ -1237,7 +1236,7 @@ namespace NetExtender.Utilities.Types
             }
 
             await using StreamWriter writer = stream.ToStreamWriter(encoding, true);
-            await writer.WriteAsync(value);
+            await writer.WriteAsync(value).ConfigureAwait(false);
         }
 
         public static Task WriteAsync(this Stream stream, StringBuilder? value)
@@ -1263,7 +1262,7 @@ namespace NetExtender.Utilities.Types
             }
 
             await using StreamWriter writer = stream.ToStreamWriter(encoding, true);
-            await writer.WriteAsync(value, token);
+            await writer.WriteAsync(value, token).ConfigureAwait(false);
         }
 
         public static Task WriteLineAsync(this Stream stream)
@@ -1279,7 +1278,7 @@ namespace NetExtender.Utilities.Types
             }
 
             await using StreamWriter writer = stream.ToStreamWriter(encoding, true);
-            await writer.WriteLineAsync();
+            await writer.WriteLineAsync().ConfigureAwait(false);
         }
 
         public static Task WriteLineAsync(this Stream stream, ReadOnlyMemory<Char> buffer)
@@ -1305,7 +1304,7 @@ namespace NetExtender.Utilities.Types
             }
 
             await using StreamWriter writer = stream.ToStreamWriter(encoding, true);
-            await writer.WriteLineAsync(buffer, token);
+            await writer.WriteLineAsync(buffer, token).ConfigureAwait(false);
         }
 
         public static Task WriteLineAsync(this Stream stream, String? value)
@@ -1321,7 +1320,7 @@ namespace NetExtender.Utilities.Types
             }
 
             await using StreamWriter writer = stream.ToStreamWriter(encoding, true);
-            await writer.WriteLineAsync(value);
+            await writer.WriteLineAsync(value).ConfigureAwait(false);
         }
 
         public static Task WriteLineAsync(this Stream stream, StringBuilder? value)
@@ -1347,7 +1346,7 @@ namespace NetExtender.Utilities.Types
             }
 
             await using StreamWriter writer = stream.ToStreamWriter(encoding, true);
-            await writer.WriteLineAsync(value, token);
+            await writer.WriteLineAsync(value, token).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -1380,7 +1379,7 @@ namespace NetExtender.Utilities.Types
 
             using BinaryReader reader = stream.ToBinaryReader(null, true);
             Int32 count = checked((Int32) (stream.Length - stream.Position));
-            return await reader.ReadBytesAsync(count, token);
+            return await reader.ReadBytesAsync(count, token).ConfigureAwait(false);
         }
 
         public static Stream AsSeekableStream(this Stream stream)

@@ -70,7 +70,7 @@ namespace NetExtender.Utilities.Types
                     => (from < to) switch
                     {
                         true => new RangeEnumerator(from, to, 1),
-                        false => new RangeEnumerator(from, to, -1),
+                        false => new RangeEnumerator(from, to, -1)
                     },
                 _ => throw new InvalidOperationException("Invalid range")
             };

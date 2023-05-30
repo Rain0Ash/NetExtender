@@ -288,7 +288,7 @@ namespace NetExtender.Localization.Properties
 
             if (!IsCaching)
             {
-                await ReadAsync(token);
+                await ReadAsync(token).ConfigureAwait(false);
             }
 
             return Internal.Value;
@@ -306,7 +306,7 @@ namespace NetExtender.Localization.Properties
                 return Alternate;
             }
 
-            ILocalizationString? value = await GetValueAsync(token);
+            ILocalizationString? value = await GetValueAsync(token).ConfigureAwait(false);
             return predicate?.Invoke(value) != false ? value : Alternate;
         }
 
@@ -354,7 +354,7 @@ namespace NetExtender.Localization.Properties
 
             if (!IsCaching)
             {
-                await SaveAsync(token);
+                await SaveAsync(token).ConfigureAwait(false);
             }
 
             OnChanged(Internal.Value);
@@ -417,7 +417,7 @@ namespace NetExtender.Localization.Properties
                 return false;
             }
 
-            ILocalizationString? value = await GetValueInternalAsync(token) ?? Alternate;
+            ILocalizationString? value = await GetValueInternalAsync(token).ConfigureAwait(false) ?? Alternate;
 
             Internal.Reset(value);
             OnChanged(value);
@@ -682,7 +682,7 @@ namespace NetExtender.Localization.Properties
 
             if (!IsCaching)
             {
-                await ReadAsync(token);
+                await ReadAsync(token).ConfigureAwait(false);
             }
 
             return Internal.Value;
@@ -732,7 +732,7 @@ namespace NetExtender.Localization.Properties
 
             if (!IsCaching)
             {
-                await SaveAsync(token);
+                await SaveAsync(token).ConfigureAwait(false);
             }
 
             OnChanged(Internal.Value);
@@ -800,7 +800,7 @@ namespace NetExtender.Localization.Properties
                 return false;
             }
 
-            String? value = await GetValueInternalAsync(token) ?? Alternate;
+            String? value = await GetValueInternalAsync(token).ConfigureAwait(false) ?? Alternate;
 
             if (Internal.IsValueCreated && value == Internal.Value)
             {

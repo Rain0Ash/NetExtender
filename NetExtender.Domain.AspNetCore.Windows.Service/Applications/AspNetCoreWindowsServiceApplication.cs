@@ -62,7 +62,7 @@ namespace NetExtender.Domains.AspNetCore.Service.Applications
             Host = host;
             RegisterShutdownToken(token);
             IWindowsService service = Host.AsService();
-            return await RunAsync(service, token);
+            return await RunAsync(service, token).ConfigureAwait(false);
         }
 
         public override void Shutdown(Int32 code)

@@ -427,7 +427,7 @@ namespace NetExtender.Configuration.Cryptography.Behavior
                 throw new CryptographicException();
             }
 
-            String? value = await GetRawAsync(key, sections, token);
+            String? value = await GetRawAsync(key, sections, token).ConfigureAwait(false);
 
             if (value is not null && (configuration?.IsCryptValue ?? IsCryptValue))
             {
@@ -569,7 +569,7 @@ namespace NetExtender.Configuration.Cryptography.Behavior
                 throw new CryptographicException();
             }
 
-            String? raw = await GetOrSetRawAsync(key, value, sections, token);
+            String? raw = await GetOrSetRawAsync(key, value, sections, token).ConfigureAwait(false);
 
             if (raw is not null && (configuration?.IsCryptValue ?? IsCryptValue) && TryDecryptValue(raw, configuration, out value))
             {
@@ -709,7 +709,7 @@ namespace NetExtender.Configuration.Cryptography.Behavior
                 }
             }
 
-            ConfigurationEntry[]? entries = await GetExistsRawAsync(sections, token);
+            ConfigurationEntry[]? entries = await GetExistsRawAsync(sections, token).ConfigureAwait(false);
 
             if (entries is null)
             {
@@ -760,7 +760,7 @@ namespace NetExtender.Configuration.Cryptography.Behavior
                 }
             }
 
-            ConfigurationValueEntry[]? entries = await GetExistsValuesRawAsync(sections, token);
+            ConfigurationValueEntry[]? entries = await GetExistsValuesRawAsync(sections, token).ConfigureAwait(false);
 
             if (entries is null)
             {
@@ -954,7 +954,7 @@ namespace NetExtender.Configuration.Cryptography.Behavior
 
         public async Task<ConfigurationValueEntry[]?> DifferenceAsync(IStringCryptor? cryptor, IEnumerable<ConfigurationValueEntry>? entries, CancellationToken token)
         {
-            return Decrypt(cryptor, await Behavior.DifferenceAsync(Encrypt(cryptor, entries), token))?.ToArray();
+            return Decrypt(cryptor, await Behavior.DifferenceAsync(Encrypt(cryptor, entries), token).ConfigureAwait(false))?.ToArray();
         }
 
         public Task<ConfigurationValueEntry[]?> DifferenceRawAsync(IEnumerable<ConfigurationValueEntry>? entries, CancellationToken token)
@@ -969,7 +969,7 @@ namespace NetExtender.Configuration.Cryptography.Behavior
 
         async Task<IConfigBehaviorTransaction?> IConfigBehavior.TransactionAsync(CancellationToken token)
         {
-            return await TransactionAsync(token);
+            return await TransactionAsync(token).ConfigureAwait(false);
         }
 
         public ICryptographyConfigBehaviorTransaction? Transaction()
@@ -1004,11 +1004,11 @@ namespace NetExtender.Configuration.Cryptography.Behavior
                 return null;
             }
 
-            ConfigurationValueEntry[]? entries = await GetExistsValuesAsync(null, token);
+            ConfigurationValueEntry[]? entries = await GetExistsValuesAsync(null, token).ConfigureAwait(false);
 
             ICryptographyConfigBehavior transaction = new MemoryConfigBehavior(ConfigOptions.IgnoreEvent).Cryptography(cryptor ?? Cryptor);
 
-            await transaction.MergeAsync(entries, token);
+            await transaction.MergeAsync(entries, token).ConfigureAwait(false);
             return new CryptographyConfigBehaviorTransaction(this, transaction);
         }
 
@@ -1035,7 +1035,7 @@ namespace NetExtender.Configuration.Cryptography.Behavior
 
         public async ValueTask DisposeAsync()
         {
-            await Behavior.DisposeAsync();
+            await Behavior.DisposeAsync().ConfigureAwait(false);
             GC.SuppressFinalize(this);
         }
     }

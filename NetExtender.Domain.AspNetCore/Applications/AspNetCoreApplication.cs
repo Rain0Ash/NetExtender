@@ -41,7 +41,7 @@ namespace NetExtender.Domains.AspNetCore.Applications
 
             Context = host;
             RegisterShutdownToken(token);
-            await Context.RunAsync(token);
+            await Context.RunAsync(token).ConfigureAwait(false);
             return this;
         }
 

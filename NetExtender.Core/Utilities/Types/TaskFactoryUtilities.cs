@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 namespace NetExtender.Utilities.Types
 {
     [SuppressMessage("ReSharper", "ParameterOnlyUsedForPreconditionCheck.Global")]
+    [SuppressMessage("ReSharper", "AsyncConverter.AsyncMethodNamingHighlighting")]
     public static class TaskFactoryUtilities
     {
         public static TaskFactory<T> ToGeneric<T>(this TaskFactory factory)

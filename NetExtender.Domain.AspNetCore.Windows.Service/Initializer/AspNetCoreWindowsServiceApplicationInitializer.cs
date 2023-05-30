@@ -3,6 +3,7 @@
 
 using Microsoft.Extensions.Hosting;
 using NetExtender.Domains.AspNetCore.Service.Applications;
+using NetExtender.Domains.AspNetCore.Service.Builder;
 using NetExtender.Domains.AspNetCore.Service.View;
 using NetExtender.Domains.Builder.Interfaces;
 using NetExtender.Domains.Initializer;
@@ -13,7 +14,10 @@ namespace NetExtender.Domains.AspNetCore.Service.Initializer
     {
     }
     
-    public abstract class AspNetCoreWindowsServiceApplicationInitializer<T, TBuilder> : ApplicationInitializer<AspNetCoreWindowsServiceApplication, AspNetCoreWindowsServiceView<T, TBuilder>> where T : class, IHost where TBuilder : IApplicationBuilder<T>, new()
+    public abstract class AspNetCoreWindowsServiceApplicationInitializer<T, TBuilder> : ApplicationInitializer<AspNetCoreWindowsServiceApplication, AspNetCoreWindowsServiceView<T, TBuilder>> where T : class, IHost, new() where TBuilder : IApplicationBuilder<T>, new()
     {
+        public abstract class Builder : AspNetCoreWindowsServiceBuilder<T>
+        {
+        }
     }
 }

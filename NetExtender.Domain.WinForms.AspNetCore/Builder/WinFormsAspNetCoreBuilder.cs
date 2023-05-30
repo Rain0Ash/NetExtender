@@ -13,7 +13,7 @@ using NetExtender.Domains.WinForms.AspNetCore.Context;
 
 namespace NetExtender.Domains.WinForms.AspNetCore.Builder
 {
-    public class WinFormsAspNetCoreBuilder<TForm, THost> : WinFormsAspNetCoreBuilder<TForm>, IApplicationBuilder<WinFormsAspNetCoreContext<TForm, THost>> where TForm : Form, new() where THost : class, IHost, new()
+    public class WinFormsAspNetCoreBuilder<TForm, THost> : WinFormsAspNetCoreBuilder<TForm>, IApplicationBuilder<WinFormsAspNetCoreContext<TForm, THost>> where TForm : Form where THost : class, IHost
     {
         protected override THost Host(String[] arguments)
         {
@@ -22,7 +22,7 @@ namespace NetExtender.Domains.WinForms.AspNetCore.Builder
                 throw new ArgumentNullException(nameof(arguments));
             }
 
-            return new THost();
+            return New<THost>();
         }
         
         public override WinFormsAspNetCoreContext<TForm, THost> Build()
@@ -46,7 +46,7 @@ namespace NetExtender.Domains.WinForms.AspNetCore.Builder
         }
     }
 
-    public abstract class WinFormsAspNetCoreBuilder<TForm> : WinFormsAspNetCoreBuilder, IApplicationBuilder<WinFormsAspNetCoreContext<TForm>> where TForm : Form, new()
+    public abstract class WinFormsAspNetCoreBuilder<TForm> : WinFormsAspNetCoreBuilder, IApplicationBuilder<WinFormsAspNetCoreContext<TForm>> where TForm : Form
     {
         protected override TForm Form(String[] arguments)
         {
@@ -55,7 +55,7 @@ namespace NetExtender.Domains.WinForms.AspNetCore.Builder
                 throw new ArgumentNullException(nameof(arguments));
             }
 
-            return new TForm();
+            return New<TForm>();
         }
 
         public override WinFormsAspNetCoreContext<TForm> Build()

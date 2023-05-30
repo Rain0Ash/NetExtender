@@ -259,7 +259,7 @@ namespace NetExtender.Domains
                     throw new ArgumentNullException(nameof(view));
                 }
 
-                await view.StartAsync();
+                await view.StartAsync().ConfigureAwait(false);
                 return this;
             }
 
@@ -275,7 +275,7 @@ namespace NetExtender.Domains
                     throw new ArgumentNullException(nameof(view));
                 }
 
-                await view.StartAsync(token);
+                await view.StartAsync(token).ConfigureAwait(false);
                 return this;
             }
 
@@ -291,7 +291,7 @@ namespace NetExtender.Domains
                     throw new ArgumentNullException(nameof(view));
                 }
 
-                await view.StartAsync(args);
+                await view.StartAsync(args).ConfigureAwait(false);
                 return this;
             }
 
@@ -307,7 +307,7 @@ namespace NetExtender.Domains
                     throw new ArgumentNullException(nameof(view));
                 }
 
-                await view.StartAsync(args);
+                await view.StartAsync(args).ConfigureAwait(false);
                 return this;
             }
 
@@ -323,7 +323,7 @@ namespace NetExtender.Domains
                     throw new ArgumentNullException(nameof(view));
                 }
 
-                await view.StartAsync(args, token);
+                await view.StartAsync(args, token).ConfigureAwait(false);
                 return this;
             }
 
@@ -339,7 +339,7 @@ namespace NetExtender.Domains
                     throw new ArgumentNullException(nameof(view));
                 }
 
-                await view.StartAsync(args, token);
+                await view.StartAsync(args, token).ConfigureAwait(false);
                 return this;
             }
 
@@ -351,13 +351,13 @@ namespace NetExtender.Domains
 
             public async Task<IDomain> RunAsync()
             {
-                await Application.RunAsync();
+                await Application.RunAsync().ConfigureAwait(false);
                 return this;
             }
 
             public async Task<IDomain> RunAsync(CancellationToken token)
             {
-                await Application.RunAsync(token);
+                await Application.RunAsync(token).ConfigureAwait(false);
                 return this;
             }
 

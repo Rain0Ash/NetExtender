@@ -590,7 +590,6 @@ namespace System.Collections.Concurrent
         private static Int32 GetBucket(Int32 hashcode, Int32 bucketCount)
         {
             Int32 bucketNo = (hashcode & 0x7fffffff) % bucketCount;
-            Debug.Assert(bucketNo >= 0 && bucketNo < bucketCount);
             return bucketNo;
         }
 
@@ -598,9 +597,6 @@ namespace System.Collections.Concurrent
         {
             bucketNo = (hashcode & 0x7fffffff) % bucketCount;
             lockNo = bucketNo % lockCount;
-
-            Debug.Assert(bucketNo >= 0 && bucketNo < bucketCount);
-            Debug.Assert(lockNo >= 0 && lockNo < lockCount);
         }
 
         private Boolean IsBucketsEmpty()

@@ -27,6 +27,6 @@ namespace NetExtender.Types.Collections
         Stack = 256 | Collection,
         GenericStack = Stack | Generic,
         Queue = 512 | Collection,
-        GenericQueue = Queue | Generic,
+        GenericQueue = Queue | Generic
     }
 }

@@ -86,7 +86,7 @@ namespace NetExtender.Configuration.Behavior
             try
             {
                 key = Join(key, sections);
-                return key is not null ? await TryGetValueAsync(key, token) : null;
+                return key is not null ? await TryGetValueAsync(key, token).ConfigureAwait(false) : null;
             }
             catch (Exception)
             {
@@ -150,12 +150,12 @@ namespace NetExtender.Configuration.Behavior
                 if (IsIgnoreEvent && !IsLazyWrite)
                 {
                     key = Join(key, sections);
-                    return key is not null && await TrySetValueAsync(key, value, token);
+                    return key is not null && await TrySetValueAsync(key, value, token).ConfigureAwait(false);
                 }
 
                 sections = sections.AsIImmutableList();
 
-                if (IsLazyWrite && await GetAsync(key, sections, token) == value)
+                if (IsLazyWrite && await GetAsync(key, sections, token).ConfigureAwait(false) == value)
                 {
                     return true;
                 }
@@ -167,7 +167,7 @@ namespace NetExtender.Configuration.Behavior
                     return false;
                 }
 
-                await TrySetValueAsync(key, value, token);
+                await TrySetValueAsync(key, value, token).ConfigureAwait(false);
 
                 if (!IsIgnoreEvent)
                 {
@@ -222,7 +222,7 @@ namespace NetExtender.Configuration.Behavior
             {
                 if (sections is null)
                 {
-                    return (await TryGetExistsAsync(token))?.Select(EntriesConvert).ToArray();
+                    return (await TryGetExistsAsync(token).ConfigureAwait(false))?.Select(EntriesConvert).ToArray();
                 }
 
                 sections = sections.Materialize(out Int32 count);
@@ -232,7 +232,7 @@ namespace NetExtender.Configuration.Behavior
                     return Deconstruct(entry, out _, out IEnumerable<String>? sequence) && (sequence?.SequencePartialEqual(sections) ?? count <= 0);
                 }
 
-                return (await TryGetExistsAsync(token))?.Where(IsEqualSections).Select(EntriesConvert).ToArray();
+                return (await TryGetExistsAsync(token).ConfigureAwait(false))?.Where(IsEqualSections).Select(EntriesConvert).ToArray();
             }
             catch (Exception)
             {
@@ -270,7 +270,7 @@ namespace NetExtender.Configuration.Behavior
             {
                 if (sections is null)
                 {
-                    return (await TryGetExistsValuesAsync(token))?.Select(ValueEntriesConvert).ToArray();
+                    return (await TryGetExistsValuesAsync(token).ConfigureAwait(false))?.Select(ValueEntriesConvert).ToArray();
                 }
 
                 sections = sections.Materialize(out Int32 count);
@@ -280,7 +280,7 @@ namespace NetExtender.Configuration.Behavior
                     return Deconstruct(entry.Key, out _, out IEnumerable<String>? sequence) && (sequence?.SequencePartialEqual(sections) ?? count <= 0);
                 }
 
-                return (await TryGetExistsValuesAsync(token))?.Where(IsEqualSections).Select(ValueEntriesConvert).ToArray();
+                return (await TryGetExistsValuesAsync(token).ConfigureAwait(false))?.Where(IsEqualSections).Select(ValueEntriesConvert).ToArray();
             }
             catch (Exception)
             {
@@ -306,7 +306,7 @@ namespace NetExtender.Configuration.Behavior
                 return false;
             }
 
-            ConfigurationEntry[]? exists = await GetExistsAsync(sections, token);
+            ConfigurationEntry[]? exists = await GetExistsAsync(sections, token).ConfigureAwait(false);
 
             if (exists is null)
             {
@@ -317,7 +317,7 @@ namespace NetExtender.Configuration.Behavior
             // ReSharper disable once LoopCanBeConvertedToQuery
             foreach (ConfigurationEntry exist in exists)
             {
-                result |= await SetAsync(exist.Key, null, exist.Sections, token);
+                result |= await SetAsync(exist.Key, null, exist.Sections, token).ConfigureAwait(false);
             }
 
             return result;
@@ -429,7 +429,7 @@ namespace NetExtender.Configuration.Behavior
                 return false;
             }
 
-            ConfigurationValueEntry[]? values = await GetExistsValuesAsync(null, token);
+            ConfigurationValueEntry[]? values = await GetExistsValuesAsync(null, token).ConfigureAwait(false);
 
             if (values is null || values.Length <= 0)
             {
@@ -453,7 +453,7 @@ namespace NetExtender.Configuration.Behavior
                         continue;
                     }
 
-                    if (!await TrySetValueAsync(Join(entry.Key, entry.Sections), entry.Value, token))
+                    if (!await TrySetValueAsync(Join(entry.Key, entry.Sections), entry.Value, token).ConfigureAwait(false))
                     {
                         continue;
                     }
@@ -469,7 +469,7 @@ namespace NetExtender.Configuration.Behavior
 
                 if (entry.Value is null)
                 {
-                    if (!await TrySetValueAsync(Join(entry.Key, entry.Sections), null, token))
+                    if (!await TrySetValueAsync(Join(entry.Key, entry.Sections), null, token).ConfigureAwait(false))
                     {
                         continue;
                     }
@@ -478,7 +478,7 @@ namespace NetExtender.Configuration.Behavior
                     continue;
                 }
 
-                if (!await TrySetValueAsync(Join(entry.Key, entry.Sections), entry.Value, token))
+                if (!await TrySetValueAsync(Join(entry.Key, entry.Sections), entry.Value, token).ConfigureAwait(false))
                 {
                     continue;
                 }
@@ -610,11 +610,11 @@ namespace NetExtender.Configuration.Behavior
                 return false;
             }
 
-            ConfigurationValueEntry[]? values = await GetExistsValuesAsync(null, token);
+            ConfigurationValueEntry[]? values = await GetExistsValuesAsync(null, token).ConfigureAwait(false);
 
             if (values is null || values.Length <= 0)
             {
-                return await MergeAsync(entries, token);
+                return await MergeAsync(entries, token).ConfigureAwait(false);
             }
 
             IndexDictionary<ConfigurationEntry, ConfigurationValueEntry> dictionary = values.ToIndexDictionary(item => (ConfigurationEntry) item, item => item);
@@ -634,7 +634,7 @@ namespace NetExtender.Configuration.Behavior
                         continue;
                     }
 
-                    if (!await TrySetValueAsync(Join(entry.Key, entry.Sections), entry.Value, token))
+                    if (!await TrySetValueAsync(Join(entry.Key, entry.Sections), entry.Value, token).ConfigureAwait(false))
                     {
                         continue;
                     }
@@ -650,7 +650,7 @@ namespace NetExtender.Configuration.Behavior
 
                 if (entry.Value is null)
                 {
-                    if (!await TrySetValueAsync(Join(entry.Key, entry.Sections), null, token))
+                    if (!await TrySetValueAsync(Join(entry.Key, entry.Sections), null, token).ConfigureAwait(false))
                     {
                         continue;
                     }
@@ -659,7 +659,7 @@ namespace NetExtender.Configuration.Behavior
                     continue;
                 }
 
-                if (!await TrySetValueAsync(Join(entry.Key, entry.Sections), entry.Value, token))
+                if (!await TrySetValueAsync(Join(entry.Key, entry.Sections), entry.Value, token).ConfigureAwait(false))
                 {
                     continue;
                 }
@@ -674,7 +674,7 @@ namespace NetExtender.Configuration.Behavior
                     continue;
                 }
 
-                if (!await TrySetValueAsync(Join(key, sections), null, token))
+                if (!await TrySetValueAsync(Join(key, sections), null, token).ConfigureAwait(false))
                 {
                     continue;
                 }

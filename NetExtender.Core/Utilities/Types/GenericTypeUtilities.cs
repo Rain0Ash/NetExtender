@@ -56,7 +56,7 @@ namespace NetExtender.Utilities.Types
                 6 => typeof(Tuple<,,,,,>).MakeGenericType(arguments),
                 7 => typeof(Tuple<,,,,,,>).MakeGenericType(arguments),
                 8 when TupleType.ContainsKey(arguments[7].TryGetGenericTypeDefinition()) => typeof(Tuple<,,,,,,,>).MakeGenericType(arguments),
-                _ => typeof(Tuple<,,,,,,,>).MakeGenericType(arguments[0], arguments[1], arguments[2], arguments[3], arguments[4], arguments[5], arguments[6], CreateTupleType(arguments.Skip(7).ToArray())),
+                _ => typeof(Tuple<,,,,,,,>).MakeGenericType(arguments[0], arguments[1], arguments[2], arguments[3], arguments[4], arguments[5], arguments[6], CreateTupleType(arguments.Skip(7).ToArray()))
             };
         }
 
@@ -82,7 +82,7 @@ namespace NetExtender.Utilities.Types
                 6 => typeof(ValueTuple<,,,,,>).MakeGenericType(arguments),
                 7 => typeof(ValueTuple<,,,,,,>).MakeGenericType(arguments),
                 8 when ValueTupleType.ContainsKey(arguments[7].TryGetGenericTypeDefinition()) => typeof(ValueTuple<,,,,,,,>).MakeGenericType(arguments),
-                _ => typeof(ValueTuple<,,,,,,,>).MakeGenericType(arguments[0], arguments[1], arguments[2], arguments[3], arguments[4], arguments[5], arguments[6], CreateValueTupleType(arguments.Skip(7).ToArray())),
+                _ => typeof(ValueTuple<,,,,,,,>).MakeGenericType(arguments[0], arguments[1], arguments[2], arguments[3], arguments[4], arguments[5], arguments[6], CreateValueTupleType(arguments.Skip(7).ToArray()))
             };
         }
 

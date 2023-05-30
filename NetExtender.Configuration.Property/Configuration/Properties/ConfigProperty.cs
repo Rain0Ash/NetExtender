@@ -255,7 +255,7 @@ namespace NetExtender.Configuration.Properties
                 return Alternate;
             }
 
-            T value = await Property.GetValueAsync(Alternate, Converter, token);
+            T value = await Property.GetValueAsync(Alternate, Converter, token).ConfigureAwait(false);
             return predicate?.Invoke(value) != false ? value : Alternate;
         }
 
@@ -271,7 +271,7 @@ namespace NetExtender.Configuration.Properties
 
         public virtual async Task<Boolean> SetValueAsync(T value, CancellationToken token)
         {
-            return !IsReadOnly && await Property.SetValueAsync(value, token);
+            return !IsReadOnly && await Property.SetValueAsync(value, token).ConfigureAwait(false);
         }
 
         public virtual Boolean RemoveValue()
@@ -286,7 +286,7 @@ namespace NetExtender.Configuration.Properties
 
         public virtual async Task<Boolean> RemoveValueAsync(CancellationToken token)
         {
-            return !IsAlwaysDefault && !IsReadOnly && await Property.RemoveValueAsync(token);
+            return !IsAlwaysDefault && !IsReadOnly && await Property.RemoveValueAsync(token).ConfigureAwait(false);
         }
 
         public virtual Boolean KeyExist()
@@ -330,7 +330,7 @@ namespace NetExtender.Configuration.Properties
                 return false;
             }
 
-            T value = await Property.GetValueAsync(Alternate, Converter, token);
+            T value = await Property.GetValueAsync(Alternate, Converter, token).ConfigureAwait(false);
 
             Internal.Reset(value);
             OnChanged(value);
@@ -540,7 +540,7 @@ namespace NetExtender.Configuration.Properties
 
             if (!IsCaching)
             {
-                await ReadAsync(token);
+                await ReadAsync(token).ConfigureAwait(false);
             }
 
             return Internal.Value;
@@ -590,7 +590,7 @@ namespace NetExtender.Configuration.Properties
 
             if (!IsCaching)
             {
-                await SaveAsync(token);
+                await SaveAsync(token).ConfigureAwait(false);
             }
 
             OnChanged(Internal.Value);
@@ -658,7 +658,7 @@ namespace NetExtender.Configuration.Properties
                 return false;
             }
 
-            String? value = await GetValueInternalAsync(token) ?? Alternate;
+            String? value = await GetValueInternalAsync(token).ConfigureAwait(false) ?? Alternate;
 
             if (Internal.IsValueCreated && value == Internal.Value)
             {

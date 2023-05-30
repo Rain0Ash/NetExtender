@@ -11,7 +11,7 @@ namespace NetExtender.Domains.WindowsPresentation.Builder
     {
     }
 
-    public class WindowsPresentationBuilder<T> : ApplicationBuilder<T> where T : Window, new()
+    public class WindowsPresentationBuilder<T> : ApplicationBuilder<T> where T : Window
     {
         public override T Build(String[] arguments)
         {
@@ -20,7 +20,7 @@ namespace NetExtender.Domains.WindowsPresentation.Builder
                 throw new ArgumentNullException(nameof(arguments));
             }
 
-            return new T();
+            return New();
         }
     }
 }

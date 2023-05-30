@@ -2464,7 +2464,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(value));
             }
 
-            return value.Length > 0 ? value[0].ToString(info).ToUpper(info) + value.Substring(1) : value;
+            return value.Length > 0 ? String.Concat(value[0].ToString(info).ToUpper(info), value.AsSpan(1)) : value;
         }
 
         public static String ToCapitalizeFirstCharLower(this String value)

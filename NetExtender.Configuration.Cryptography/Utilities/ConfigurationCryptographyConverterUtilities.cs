@@ -271,10 +271,10 @@ namespace NetExtender.Configuration.Cryptography.Convert.Utilities
 
             if (config is IReadOnlyCryptographyConverterConfig configuration)
             {
-                return await configuration.GetValueAsync(key, alternate, converter, sections, token);
+                return await configuration.GetValueAsync(key, alternate, converter, sections, token).ConfigureAwait(false);
             }
 
-            String? value = await config.GetValueAsync(key, sections, token);
+            String? value = await config.GetValueAsync(key, sections, token).ConfigureAwait(false);
 
             if (value is null)
             {
@@ -349,10 +349,10 @@ namespace NetExtender.Configuration.Cryptography.Convert.Utilities
 
             if (config is IReadOnlyCryptographyConverterConfig configuration)
             {
-                return await configuration.GetValueAsync(key, alternate, cryptor, converter, sections, token);
+                return await configuration.GetValueAsync(key, alternate, cryptor, converter, sections, token).ConfigureAwait(false);
             }
 
-            String? value = await config.GetValueAsync(key, cryptor, sections, token);
+            String? value = await config.GetValueAsync(key, cryptor, sections, token).ConfigureAwait(false);
 
             if (value is null)
             {
@@ -447,10 +447,10 @@ namespace NetExtender.Configuration.Cryptography.Convert.Utilities
 
             if (config is IReadOnlyCryptographyConverterConfig configuration)
             {
-                return await configuration.GetRawValueAsync(key, alternate, converter, sections, token);
+                return await configuration.GetRawValueAsync(key, alternate, converter, sections, token).ConfigureAwait(false);
             }
 
-            String? value = await config.GetRawValueAsync(key, sections, token);
+            String? value = await config.GetRawValueAsync(key, sections, token).ConfigureAwait(false);
 
             if (value is null)
             {
@@ -719,10 +719,10 @@ namespace NetExtender.Configuration.Cryptography.Convert.Utilities
 
             if (config is ICryptographyConverterConfig configuration)
             {
-                return await configuration.GetValueAsync(key, alternate, converter, sections, token);
+                return await configuration.GetValueAsync(key, alternate, converter, sections, token).ConfigureAwait(false);
             }
 
-            String? value = await config.GetValueAsync(key, sections, token);
+            String? value = await config.GetValueAsync(key, sections, token).ConfigureAwait(false);
 
             if (value is null)
             {
@@ -797,10 +797,10 @@ namespace NetExtender.Configuration.Cryptography.Convert.Utilities
 
             if (config is ICryptographyConverterConfig configuration)
             {
-                return await configuration.GetValueAsync(key, alternate, cryptor, converter, sections, token);
+                return await configuration.GetValueAsync(key, alternate, cryptor, converter, sections, token).ConfigureAwait(false);
             }
 
-            String? value = await config.GetValueAsync(key, cryptor, sections, token);
+            String? value = await config.GetValueAsync(key, cryptor, sections, token).ConfigureAwait(false);
 
             if (value is null)
             {
@@ -895,10 +895,10 @@ namespace NetExtender.Configuration.Cryptography.Convert.Utilities
 
             if (config is ICryptographyConverterConfig configuration)
             {
-                return await configuration.GetRawValueAsync(key, alternate, converter, sections, token);
+                return await configuration.GetRawValueAsync(key, alternate, converter, sections, token).ConfigureAwait(false);
             }
 
-            String? value = await config.GetRawValueAsync(key, sections, token);
+            String? value = await config.GetRawValueAsync(key, sections, token).ConfigureAwait(false);
 
             if (value is null)
             {
@@ -1011,16 +1011,16 @@ namespace NetExtender.Configuration.Cryptography.Convert.Utilities
 
             if (config is ICryptographyConverterConfig configuration)
             {
-                return await configuration.SetValueAsync(key, value, sections, token);
+                return await configuration.SetValueAsync(key, value, sections, token).ConfigureAwait(false);
             }
 
             if (value is null)
             {
-                return await config.SetValueAsync(key, null, sections, token);
+                return await config.SetValueAsync(key, null, sections, token).ConfigureAwait(false);
             }
 
             String? convert = value.GetString();
-            return convert is not null && await config.SetValueAsync(key, convert, sections, token);
+            return convert is not null && await config.SetValueAsync(key, convert, sections, token).ConfigureAwait(false);
         }
 
         public static Task<Boolean> SetValueAsync<T>(this ICryptographyConfig config, String? key, T value, IStringCryptor? cryptor, params String[]? sections)
@@ -1047,16 +1047,16 @@ namespace NetExtender.Configuration.Cryptography.Convert.Utilities
 
             if (config is ICryptographyConverterConfig configuration)
             {
-                return await configuration.SetValueAsync(key, value, cryptor, sections, token);
+                return await configuration.SetValueAsync(key, value, cryptor, sections, token).ConfigureAwait(false);
             }
 
             if (value is null)
             {
-                return await config.SetValueAsync(key, null, cryptor, sections, token);
+                return await config.SetValueAsync(key, null, cryptor, sections, token).ConfigureAwait(false);
             }
 
             String? convert = value.GetString();
-            return convert is not null && await config.SetValueAsync(key, convert, cryptor, sections, token);
+            return convert is not null && await config.SetValueAsync(key, convert, cryptor, sections, token).ConfigureAwait(false);
         }
 
         public static Task<Boolean> SetRawValueAsync<T>(this ICryptographyConfig config, String? key, T value, params String[]? sections)
@@ -1083,16 +1083,16 @@ namespace NetExtender.Configuration.Cryptography.Convert.Utilities
 
             if (config is ICryptographyConverterConfig configuration)
             {
-                return await configuration.SetRawValueAsync(key, value, sections, token);
+                return await configuration.SetRawValueAsync(key, value, sections, token).ConfigureAwait(false);
             }
 
             if (value is null)
             {
-                return await config.SetRawValueAsync(key, null, sections, token);
+                return await config.SetRawValueAsync(key, null, sections, token).ConfigureAwait(false);
             }
 
             String? convert = value.GetString();
-            return convert is not null && await config.SetRawValueAsync(key, convert, sections, token);
+            return convert is not null && await config.SetRawValueAsync(key, convert, sections, token).ConfigureAwait(false);
         }
 
         public static T? GetOrSetValue<T>(this ICryptographyConfig config, String? key, T value, params String[]? sections)
@@ -1256,11 +1256,11 @@ namespace NetExtender.Configuration.Cryptography.Convert.Utilities
 
             if (config is ICryptographyConverterConfig configuration)
             {
-                return await configuration.GetOrSetValueAsync(key, value, converter, sections, token);
+                return await configuration.GetOrSetValueAsync(key, value, converter, sections, token).ConfigureAwait(false);
             }
 
             String? convert = value?.GetString();
-            String? get = await config.GetOrSetValueAsync(key, convert, sections, token);
+            String? get = await config.GetOrSetValueAsync(key, convert, sections, token).ConfigureAwait(false);
 
             if (get is null)
             {
@@ -1315,11 +1315,11 @@ namespace NetExtender.Configuration.Cryptography.Convert.Utilities
 
             if (config is ICryptographyConverterConfig configuration)
             {
-                return await configuration.GetOrSetValueAsync(key, value, cryptor, converter, sections, token);
+                return await configuration.GetOrSetValueAsync(key, value, cryptor, converter, sections, token).ConfigureAwait(false);
             }
 
             String? convert = value?.GetString();
-            String? get = await config.GetOrSetValueAsync(key, convert, cryptor, sections, token);
+            String? get = await config.GetOrSetValueAsync(key, convert, cryptor, sections, token).ConfigureAwait(false);
 
             if (get is null)
             {
@@ -1374,11 +1374,11 @@ namespace NetExtender.Configuration.Cryptography.Convert.Utilities
 
             if (config is ICryptographyConverterConfig configuration)
             {
-                return await configuration.GetOrSetRawValueAsync(key, value, converter, sections, token);
+                return await configuration.GetOrSetRawValueAsync(key, value, converter, sections, token).ConfigureAwait(false);
             }
 
             String? convert = value?.GetString();
-            String? get = await config.GetOrSetRawValueAsync(key, convert, sections, token);
+            String? get = await config.GetOrSetRawValueAsync(key, convert, sections, token).ConfigureAwait(false);
 
             if (get is null)
             {

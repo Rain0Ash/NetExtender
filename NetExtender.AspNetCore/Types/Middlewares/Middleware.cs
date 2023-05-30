@@ -34,6 +34,7 @@ namespace NetExtender.AspNetCore.Types.Middlewares
 
         public virtual async Task InvokeAsync(HttpContext context)
         {
+            // ReSharper disable once AsyncConverter.AsyncAwaitMayBeElidedHighlighting
             await Next.Invoke(context).ConfigureAwait(false);
         }
     }

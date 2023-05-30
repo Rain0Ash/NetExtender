@@ -196,7 +196,7 @@ namespace NetExtender.Localization
 
         public async Task<ILocalizationString?> GetValueAsync(String? key, ILocalizationString? alternate, IEnumerable<String>? sections, CancellationToken token)
         {
-            return await GetValueAsync(key, sections, token) ?? alternate;
+            return await GetValueAsync(key, sections, token).ConfigureAwait(false) ?? alternate;
         }
 
         public new Task<ILocalizationString?> GetValueAsync(String? key, String? alternate, params String[]? sections)
@@ -216,7 +216,7 @@ namespace NetExtender.Localization
 
         public new async Task<ILocalizationString?> GetValueAsync(String? key, String? alternate, IEnumerable<String>? sections, CancellationToken token)
         {
-            return await GetValueAsync(key, sections, token) ?? LocalizationString.Create(Behavior.Default, alternate);
+            return await GetValueAsync(key, sections, token).ConfigureAwait(false) ?? LocalizationString.Create(Behavior.Default, alternate);
         }
 
         public String? GetValue(String? key, LocalizationIdentifier identifier, params String[]? sections)
@@ -276,7 +276,7 @@ namespace NetExtender.Localization
 
         public async Task<String?> GetValueAsync(String? key, LocalizationIdentifier identifier, String? alternate, IEnumerable<String>? sections, CancellationToken token)
         {
-            return await GetValueAsync(key, identifier, sections, token) ?? alternate;
+            return await GetValueAsync(key, identifier, sections, token).ConfigureAwait(false) ?? alternate;
         }
 
         public Boolean SetValue(String? key, ILocalizationString? value, params String[]? sections)
@@ -832,7 +832,7 @@ namespace NetExtender.Localization
 
         public new virtual async Task<ILocalizationTransaction?> TransactionAsync(CancellationToken token)
         {
-            ILocalizationBehaviorTransaction? transaction = await Behavior.TransactionAsync(token);
+            ILocalizationBehaviorTransaction? transaction = await Behavior.TransactionAsync(token).ConfigureAwait(false);
             return transaction is not null ? new LocalizationTransaction(this, transaction) : null;
         }
 
@@ -863,7 +863,7 @@ namespace NetExtender.Localization
 
             foreach ((String? key, ImmutableArray<String> sections) in this)
             {
-                await config.SetValueAsync(key, this[key, sections], sections, token);
+                await config.SetValueAsync(key, this[key, sections], sections, token).ConfigureAwait(false);
             }
         }
 

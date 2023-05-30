@@ -40,7 +40,7 @@ namespace NetExtender.AspNetCore.Types.Middlewares
                     context.Response.StatusCode = (Int32) code;
                 }
 
-                await context.Response.WriteAsJsonAsync(exception.Info);
+                await context.Response.WriteAsJsonAsync(exception.Info).ConfigureAwait(false);
             }
         }
     }

@@ -11,7 +11,7 @@ namespace NetExtender.Domains.Service.Builder
     {
     }
     
-    public class WindowsServiceBuilder<T> : ApplicationBuilder<T> where T : class, IWindowsService, new()
+    public class WindowsServiceBuilder<T> : ApplicationBuilder<T> where T : class, IWindowsService
     {
         public override T Build(String[] arguments)
         {
@@ -20,7 +20,7 @@ namespace NetExtender.Domains.Service.Builder
                 throw new ArgumentNullException(nameof(arguments));
             }
 
-            return new T();
+            return New();
         }
     }
 }

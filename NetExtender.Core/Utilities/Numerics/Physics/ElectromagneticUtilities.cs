@@ -28,7 +28,7 @@ namespace NetExtender.Utilities.Numerics.Physics
         VeryLowFrequency,
         UltraLowFrequency,
         SuperLowFrequency,
-        ExtremelyLowFrequency,
+        ExtremelyLowFrequency
     }
 
     public enum ElectromagneticType

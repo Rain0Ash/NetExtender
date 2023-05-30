@@ -20,7 +20,7 @@ namespace NetExtender.Domains.View
         {
             if (context is null)
             {
-                return await RunAsync(token);
+                return await RunAsync(token).ConfigureAwait(false);
             }
 
             Context ??= context;
@@ -30,7 +30,7 @@ namespace NetExtender.Domains.View
             }
 
             TApplication application = Domain.Current.Application.As<TApplication>();
-            await application.RunAsync(Context, token);
+            await application.RunAsync(Context, token).ConfigureAwait(false);
             return this;
         }
     }

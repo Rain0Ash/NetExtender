@@ -51,6 +51,7 @@ namespace NetExtender.Domains.Utilities
             return source.Initialize(AutoInitializeInternal(source));
         }
 
+        // ReSharper disable once AsyncConverter.AsyncMethodNamingHighlighting
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static async Task<IDomain> AutoInitialize(this Task<IDomain> source)
         {
@@ -73,7 +74,8 @@ namespace NetExtender.Domains.Utilities
             IApplication application = AutoInitializeInternal(source);
             return application is IApplicationInitializer initializer ? source.Initialize(initializer).View(initializer, args) : source.Initialize(application).AutoView(args);
         }
-
+        
+        // ReSharper disable once AsyncConverter.AsyncMethodNamingHighlighting
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static async Task<IDomain> AutoInitializeWithView(this Task<IDomain> source, IEnumerable<String>? args)
         {
@@ -96,7 +98,8 @@ namespace NetExtender.Domains.Utilities
             IApplication application = AutoInitializeInternal(source);
             return application is IApplicationInitializer initializer ? source.Initialize(initializer).View(initializer, args) : source.Initialize(application).AutoView(args);
         }
-
+        
+        // ReSharper disable once AsyncConverter.AsyncMethodNamingHighlighting
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static async Task<IDomain> AutoInitializeWithView(this Task<IDomain> source, params String[]? args)
         {
@@ -108,6 +111,7 @@ namespace NetExtender.Domains.Utilities
             return AutoInitializeWithView(await source.ConfigureAwait(false), args);
         }
 
+        // ReSharper disable once AsyncConverter.AsyncMethodNamingHighlighting
         public static async Task<IDomain> Initialize<T>(this Task<IDomain> source) where T : IApplication, new()
         {
             if (source is null)
@@ -119,6 +123,7 @@ namespace NetExtender.Domains.Utilities
             return domain.Initialize<T>();
         }
 
+        // ReSharper disable once AsyncConverter.AsyncMethodNamingHighlighting
         public static async Task<IDomain> Initialize(this Task<IDomain> source, IApplication application)
         {
             if (source is null)
@@ -209,7 +214,7 @@ namespace NetExtender.Domains.Utilities
             }
 
             IDomain domain = await source.ConfigureAwait(false);
-            return await domain.ViewAsync(AutoViewInternal(await source.ConfigureAwait(false)), token);
+            return await domain.ViewAsync(AutoViewInternal(await source.ConfigureAwait(false)), token).ConfigureAwait(false);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -226,7 +231,7 @@ namespace NetExtender.Domains.Utilities
             }
 
             IDomain domain = await source.ConfigureAwait(false);
-            return await domain.ViewAsync(AutoViewInternal(await source.ConfigureAwait(false)), args, token);
+            return await domain.ViewAsync(AutoViewInternal(await source.ConfigureAwait(false)), args, token).ConfigureAwait(false);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -243,7 +248,7 @@ namespace NetExtender.Domains.Utilities
             }
 
             IDomain domain = await source.ConfigureAwait(false);
-            return await domain.ViewAsync(AutoViewInternal(await source.ConfigureAwait(false)), args, token);
+            return await domain.ViewAsync(AutoViewInternal(await source.ConfigureAwait(false)), args, token).ConfigureAwait(false);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

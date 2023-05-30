@@ -156,10 +156,10 @@ namespace NetExtender.Configuration.Utilities
 
             if (config is IReadOnlyConverterConfig configuration)
             {
-                return await configuration.GetValueAsync(key, alternate, converter, sections, token);
+                return await configuration.GetValueAsync(key, alternate, converter, sections, token).ConfigureAwait(false);
             }
 
-            String? value = await config.GetValueAsync(key, sections, token);
+            String? value = await config.GetValueAsync(key, sections, token).ConfigureAwait(false);
 
             if (value is null)
             {
@@ -312,10 +312,10 @@ namespace NetExtender.Configuration.Utilities
 
             if (config is IConverterConfig configuration)
             {
-                return await configuration.GetValueAsync(key, alternate, converter, sections, token);
+                return await configuration.GetValueAsync(key, alternate, converter, sections, token).ConfigureAwait(false);
             }
 
-            String? value = await config.GetValueAsync(key, sections, token);
+            String? value = await config.GetValueAsync(key, sections, token).ConfigureAwait(false);
 
             if (value is null)
             {
@@ -376,16 +376,16 @@ namespace NetExtender.Configuration.Utilities
 
             if (config is IConverterConfig configuration)
             {
-                return await configuration.SetValueAsync(key, value, sections, token);
+                return await configuration.SetValueAsync(key, value, sections, token).ConfigureAwait(false);
             }
 
             if (value is null)
             {
-                return await config.SetValueAsync(key, null, sections, token);
+                return await config.SetValueAsync(key, null, sections, token).ConfigureAwait(false);
             }
 
             String? convert = value.GetString();
-            return convert is not null && await config.SetValueAsync(key, convert, sections, token);
+            return convert is not null && await config.SetValueAsync(key, convert, sections, token).ConfigureAwait(false);
         }
 
         public static T? GetOrSetValue<T>(this IConfig config, String? key, T value, params String[]? sections)
@@ -471,11 +471,11 @@ namespace NetExtender.Configuration.Utilities
 
             if (config is IConverterConfig configuration)
             {
-                return await configuration.GetOrSetValueAsync(key, value, converter, sections, token);
+                return await configuration.GetOrSetValueAsync(key, value, converter, sections, token).ConfigureAwait(false);
             }
 
             String? convert = value?.GetString();
-            String? get = await config.GetOrSetValueAsync(key, convert, sections, token);
+            String? get = await config.GetOrSetValueAsync(key, convert, sections, token).ConfigureAwait(false);
 
             if (get is null)
             {

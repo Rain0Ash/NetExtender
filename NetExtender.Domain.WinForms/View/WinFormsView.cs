@@ -91,7 +91,7 @@ namespace NetExtender.Domains.WinForms.View
         {
             if (form is null)
             {
-                return await RunAsync(token);
+                return await RunAsync(token).ConfigureAwait(false);
             }
 
             Context ??= form;
@@ -103,7 +103,7 @@ namespace NetExtender.Domains.WinForms.View
             Context.Closed += OnFormClosed;
 
             WinFormsApplication application = Domain.Current.Application.As<WinFormsApplication>();
-            await application.RunAsync(Context, token);
+            await application.RunAsync(Context, token).ConfigureAwait(false);
             return this;
         }
 

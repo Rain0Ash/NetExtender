@@ -217,7 +217,7 @@ namespace NetExtender.Logging
 
         public async ValueTask DisposeAsync()
         {
-            await DisposeAsync(true);
+            await DisposeAsync(true).ConfigureAwait(false);
             GC.SuppressFinalize(this);
         }
 
@@ -233,7 +233,7 @@ namespace NetExtender.Logging
         {
             if (disposing)
             {
-                await Behavior.DisposeAsync();
+                await Behavior.DisposeAsync().ConfigureAwait(false);
             }
         }
 

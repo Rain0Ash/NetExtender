@@ -97,7 +97,7 @@ namespace NetExtender.Configuration.Database.Configuration.Database
             
             try
             {
-                T? entity = await Storage.FirstOrDefaultAsync(entity => entity.Key == key, token);
+                T? entity = await Storage.FirstOrDefaultAsync(entity => entity.Key == key, token).ConfigureAwait(false);
                 return entity?.Value;
             }
             catch (DbException)
@@ -164,7 +164,7 @@ namespace NetExtender.Configuration.Database.Configuration.Database
             
             try
             {
-                T? entity = await Storage.FirstOrDefaultAsync(entity => entity.Key == key, token);
+                T? entity = await Storage.FirstOrDefaultAsync(entity => entity.Key == key, token).ConfigureAwait(false);
 
                 if (value is null)
                 {
@@ -184,10 +184,10 @@ namespace NetExtender.Configuration.Database.Configuration.Database
                 else
                 {
                     entity = New(key, value);
-                    await Storage.AddAsync(entity, token);
+                    await Storage.AddAsync(entity, token).ConfigureAwait(false);
                 }
 
-                await Context.SaveChangesAsync(token);
+                await Context.SaveChangesAsync(token).ConfigureAwait(false);
                 return true;
             }
             catch (DbException)
@@ -220,7 +220,7 @@ namespace NetExtender.Configuration.Database.Configuration.Database
         {
             try
             {
-                return await Storage.Select(entity => entity.Key).ToArrayAsync(token);
+                return await Storage.Select(entity => entity.Key).ToArrayAsync(token).ConfigureAwait(false);
             }
             catch (DbException)
             {
@@ -252,7 +252,7 @@ namespace NetExtender.Configuration.Database.Configuration.Database
         {
             try
             {
-                T[] entities = await Storage.ToArrayAsync(token);
+                T[] entities = await Storage.ToArrayAsync(token).ConfigureAwait(false);
                 return entities.Select(Convert).ToArray();
             }
             catch (DbException)

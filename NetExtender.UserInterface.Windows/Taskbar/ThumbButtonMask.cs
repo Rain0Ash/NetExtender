@@ -8,6 +8,6 @@ namespace NetExtender.UserInterface.Windows.Taskbar
         Bitmap = 1,
         Icon = 2,
         Tooltip = 4,
-        THB_FLAGS = 8,
+        THB_FLAGS = 8
     }
 }

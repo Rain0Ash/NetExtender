@@ -27,7 +27,7 @@ namespace NetExtender.Domains
             [ApplicationStatus.ClosedBeta] = "CB",
             [ApplicationStatus.Beta] = "B",
             [ApplicationStatus.OpenBeta] = "OB",
-            [ApplicationStatus.Release] = "R",
+            [ApplicationStatus.Release] = "R"
         }.ToImmutableDictionary();
 
         private static readonly IDictionary<ApplicationBranch, String> BranchDictionary = new Dictionary<ApplicationBranch, String>

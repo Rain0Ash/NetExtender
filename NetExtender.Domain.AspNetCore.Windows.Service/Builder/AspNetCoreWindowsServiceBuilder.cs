@@ -10,7 +10,7 @@ namespace NetExtender.Domains.AspNetCore.Service.Builder
     {
     }
     
-    public class AspNetCoreWindowsServiceBuilder<T> : AspNetCoreBuilder<T> where T : class, IHost, new()
+    public class AspNetCoreWindowsServiceBuilder<T> : AspNetCoreBuilder<T> where T : class, IHost
     {
     }
 }

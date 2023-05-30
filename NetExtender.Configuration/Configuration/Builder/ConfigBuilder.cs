@@ -120,7 +120,7 @@ namespace NetExtender.Configuration.Builder
 
                 foreach ((String? key, String? value, ImmutableArray<String> sections) in entries)
                 {
-                    await config.SetValueAsync(key, value, sections, token);
+                    await config.SetValueAsync(key, value, sections, token).ConfigureAwait(false);
                 }
             }
 

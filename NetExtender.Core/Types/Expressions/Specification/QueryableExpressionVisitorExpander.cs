@@ -37,7 +37,7 @@ namespace NetExtender.Types.Expressions.Specification
                 .ToLookup(method => method.Name, method => new
                 {
                     Method = method,
-                    Signature = GetMethodSignature(method),
+                    Signature = GetMethodSignature(method)
                 });
 
             foreach (var queryable in methods.WhereNotNull())

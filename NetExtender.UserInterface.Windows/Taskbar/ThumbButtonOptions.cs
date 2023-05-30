@@ -13,6 +13,6 @@ namespace NetExtender.UserInterface.Windows.Taskbar
         DismissOnClick = 2,
         NoBackground = 4,
         Hidden = 8,
-        NonInteractive = 16, // 0x00000010
+        NonInteractive = 16 // 0x00000010
     }
 }

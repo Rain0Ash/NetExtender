@@ -196,7 +196,7 @@ namespace NetExtender.Configuration.Utilities
                 throw new ArgumentNullException(nameof(property));
             }
 
-            String? value = await property.GetValueAsync(token);
+            String? value = await property.GetValueAsync(token).ConfigureAwait(false);
 
             if (value is null)
             {
@@ -277,7 +277,7 @@ namespace NetExtender.Configuration.Utilities
                 throw new ArgumentNullException(nameof(property));
             }
 
-            String? value = await property.GetValueAsync(token);
+            String? value = await property.GetValueAsync(token).ConfigureAwait(false);
 
             if (value is null)
             {
@@ -318,11 +318,11 @@ namespace NetExtender.Configuration.Utilities
 
             if (value is null)
             {
-                return await property.SetValueAsync(null, token);
+                return await property.SetValueAsync(null, token).ConfigureAwait(false);
             }
 
             String? convert = value.GetString();
-            return convert is not null && await property.SetValueAsync(convert, token);
+            return convert is not null && await property.SetValueAsync(convert, token).ConfigureAwait(false);
         }
 
         public static IReadOnlyConfigProperty GetConfigurationProperty(this IReadOnlyConfig config, String? key, params String[]? sections)

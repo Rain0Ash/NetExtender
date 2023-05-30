@@ -62,7 +62,9 @@ namespace NetExtender.AspNetCore.Types.Middlewares
         public override async Task InvokeAsync(HttpContext context)
         {
             context.Response.Headers.Remove(ServerHttpHeaderName);
-            await Next.Invoke(context);
+            
+            // ReSharper disable once AsyncConverter.AsyncAwaitMayBeElidedHighlighting
+            await Next.Invoke(context).ConfigureAwait(false);
         }
     }
 }

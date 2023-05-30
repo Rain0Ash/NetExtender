@@ -248,7 +248,7 @@ namespace NetExtender.Configuration.Properties
                 return Alternate;
             }
 
-            T value = await Property.GetValueAsync(Alternate, Converter, token);
+            T value = await Property.GetValueAsync(Alternate, Converter, token).ConfigureAwait(false);
             return predicate?.Invoke(value) != false ? value : Alternate;
         }
 
@@ -293,7 +293,7 @@ namespace NetExtender.Configuration.Properties
                 return false;
             }
 
-            T value = await Property.GetValueAsync(Alternate, Converter, token);
+            T value = await Property.GetValueAsync(Alternate, Converter, token).ConfigureAwait(false);
 
             Internal.Reset(value);
             OnChanged(value);
@@ -456,7 +456,7 @@ namespace NetExtender.Configuration.Properties
 
             if (!IsCaching)
             {
-                await ReadAsync(token);
+                await ReadAsync(token).ConfigureAwait(false);
             }
 
             return Internal.Value;
@@ -508,7 +508,7 @@ namespace NetExtender.Configuration.Properties
                 return false;
             }
 
-            String? value = await GetValueInternalAsync(token) ?? Alternate;
+            String? value = await GetValueInternalAsync(token).ConfigureAwait(false) ?? Alternate;
 
             if (Internal.IsValueCreated && value == Internal.Value)
             {

@@ -34,7 +34,7 @@ namespace NetExtender.Domains.AspNetCore.Builder
         }
     }
     
-    public class AspNetCoreBuilder<T> : ApplicationBuilder<T> where T : class, IHost, new()
+    public class AspNetCoreBuilder<T> : ApplicationBuilder<T> where T : class, IHost
     {
         public override T Build(String[] arguments)
         {
@@ -43,7 +43,7 @@ namespace NetExtender.Domains.AspNetCore.Builder
                 throw new ArgumentNullException(nameof(arguments));
             }
 
-            return new T();
+            return New();
         }
     }
 }

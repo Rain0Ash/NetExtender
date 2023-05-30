@@ -37,7 +37,7 @@ namespace NetExtender.Utilities.NAudio
 
             try
             {
-                await signal.WaitAsync(token);
+                await signal.WaitAsync(token).ConfigureAwait(false);
             }
             catch (OperationCanceledException)
             {
@@ -189,7 +189,9 @@ namespace NetExtender.Utilities.NAudio
             }
 
             player.Play();
-            await player.WaitAsync(token);
+            
+            // ReSharper disable once AsyncConverter.AsyncAwaitMayBeElidedHighlighting
+            await player.WaitAsync(token).ConfigureAwait(false);
         }
 
         public static Task PlayAsync(this IWavePlayer player, IWaveProvider provider)
@@ -210,7 +212,9 @@ namespace NetExtender.Utilities.NAudio
             }
 
             Play(player, provider);
-            await player.WaitAsync(token);
+            
+            // ReSharper disable once AsyncConverter.AsyncAwaitMayBeElidedHighlighting
+            await player.WaitAsync(token).ConfigureAwait(false);
         }
 
         public static Task PlayAsync(this IWavePlayer player, ISampleProvider provider)
@@ -231,7 +235,9 @@ namespace NetExtender.Utilities.NAudio
             }
 
             Play(player, provider);
-            await player.WaitAsync(token);
+            
+            // ReSharper disable once AsyncConverter.AsyncAwaitMayBeElidedHighlighting
+            await player.WaitAsync(token).ConfigureAwait(false);
         }
 
         public static Task PlayAsync(this IWavePlayer player, ISampleProvider provider, Boolean bit16)
@@ -252,7 +258,9 @@ namespace NetExtender.Utilities.NAudio
             }
 
             Play(player, provider, bit16);
-            await player.WaitAsync(token);
+            
+            // ReSharper disable once AsyncConverter.AsyncAwaitMayBeElidedHighlighting
+            await player.WaitAsync(token).ConfigureAwait(false);
         }
 
         public static Task PlayAsync(this IWavePlayer player, ISampleProvider provider, IAudioSound sound)

@@ -14,10 +14,8 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
-using NetExtender.Types.Drawing.Colors;
 using NetExtender.Types.Geometry;
 using NetExtender.Utilities.Cryptography;
-using NetExtender.Utilities.IO;
 using NetExtender.Windows.Types;
 
 namespace NetExtender.Utilities.Types

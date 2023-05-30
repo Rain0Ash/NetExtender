@@ -86,7 +86,7 @@ namespace NetExtender.Domains.Initializer
             try
             {
                 Initialize();
-                await Domain.AutoStartAsync(token);
+                await Domain.AutoStartAsync(token).ConfigureAwait(false);
                 return 0;
             }
             catch (Exception exception)
@@ -123,7 +123,8 @@ namespace NetExtender.Domains.Initializer
 
         protected async Task<Int32> StartAsync(String[]? args, CancellationToken token)
         {
-            return await ThreadUtilities.STA(InternalAsync, args, token);
+            // ReSharper disable once AsyncConverter.AsyncAwaitMayBeElidedHighlighting
+            return await ThreadUtilities.STA(InternalAsync, args, token).ConfigureAwait(false);
         }
 
         protected override void Shutdown(Object? sender, Int32 code, Boolean exit)

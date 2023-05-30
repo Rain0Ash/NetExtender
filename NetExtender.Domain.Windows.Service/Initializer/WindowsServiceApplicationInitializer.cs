@@ -4,6 +4,7 @@
 using NetExtender.Domains.Builder.Interfaces;
 using NetExtender.Domains.Initializer;
 using NetExtender.Domains.Service.Applications;
+using NetExtender.Domains.Service.Builder;
 using NetExtender.Domains.Service.Views;
 using NetExtender.Windows.Services.Types.Services.Interfaces;
 
@@ -15,5 +16,8 @@ namespace NetExtender.Domains.Service.Initializer
     
     public abstract class WindowsServiceApplicationInitializer<T, TBuilder> : ApplicationInitializer<WindowsServiceApplication, WindowsServiceView<T, TBuilder>> where T : class, IWindowsService where TBuilder : IApplicationBuilder<T>, new()
     {
+        public abstract class Builder : WindowsServiceBuilder<T>
+        {
+        }
     }
 }

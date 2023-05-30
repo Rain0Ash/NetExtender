@@ -1,11 +1,6 @@
 ﻿// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
-// <copyright file="Base16.cs" company="Sedat Kapanoglu">
-// Copyright (c) 2014-2019 Sedat Kapanoglu
-// Licensed under Apache-2.0 License (see LICENSE.txt file for details)
-// </copyright>
-
 using System;
 using System.IO;
 using System.Threading.Tasks;
@@ -20,23 +15,14 @@ namespace NetExtender.Cryptography.Base
     public sealed class Base16 : BaseCryptographyStream
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="Base16"/> class.
+        /// Gets lower case Base16 encoder. Decoding is case-insensitive.
         /// </summary>
-        /// <param name="alphabet">Alphabet to use.</param>
-        public Base16(Base16Alphabet alphabet)
-        {
-            Alphabet = alphabet;
-        }
+        public static Base16 LowerCase { get; } = new Base16(Base16Alphabet.LowerCase);
 
         /// <summary>
         /// Gets upper case Base16 encoder. Decoding is case-insensitive.
         /// </summary>
         public static Base16 UpperCase { get; } = new Base16(Base16Alphabet.UpperCase);
-
-        /// <summary>
-        /// Gets lower case Base16 encoder. Decoding is case-insensitive.
-        /// </summary>
-        public static Base16 LowerCase { get; } = new Base16(Base16Alphabet.LowerCase);
 
         /// <summary>
         /// Gets lower case Base16 encoder. Decoding is case-insensitive.
@@ -48,54 +34,46 @@ namespace NetExtender.Cryptography.Base
         /// </summary>
         public Base16Alphabet Alphabet { get; }
 
-        /// <inheritdoc/>
-        public override Int32 GetHashCode()
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Base16"/> class.
+        /// </summary>
+        /// <param name="alphabet">Alphabet to use.</param>
+        public Base16(Base16Alphabet alphabet)
         {
-            return Alphabet.GetHashCode();
+            Alphabet = alphabet ?? throw new ArgumentNullException(nameof(alphabet));
         }
 
         /// <inheritdoc/>
-        public override String ToString()
-        {
-            return $"{nameof(Base16)}_{Alphabet}";
-        }
-
-        /// <inheritdoc/>
-        public override Int32 GetSafeByteCountForDecoding(ReadOnlySpan<Char> text)
-        {
-            Int32 textLen = text.Length;
-            if ((textLen & 1) != 0)
-            {
-                return 0;
-            }
-
-            return textLen / 2;
-        }
-
-        /// <inheritdoc/>
-        public override Int32 GetSafeCharCountForEncoding(ReadOnlySpan<Byte> buffer)
+        public override Int32 SafeCharCountForEncoding(ReadOnlySpan<Byte> buffer)
         {
             return buffer.Length * 2;
         }
 
-        /// <summary>
-        /// Encode to Base16 representation using uppercase lettering.
-        /// </summary>
-        /// <param name="bytes">Bytes to encode.</param>
-        /// <returns>Base16 string.</returns>
-        public static String EncodeUpper(ReadOnlySpan<Byte> bytes)
+        /// <inheritdoc/>
+        public override Int32 SafeByteCountForDecoding(ReadOnlySpan<Char> buffer)
         {
-            return UpperCase.Encode(bytes);
+            return (buffer.Length & 1) == 0 ? buffer.Length / 2 : 0;
         }
 
         /// <summary>
-        /// Encode to Base16 representation using lowercase lettering.
+        /// Encode to Base16 representation.
         /// </summary>
-        /// <param name="bytes">Bytes to encode.</param>
+        /// <param name="value">Bytes to encode.</param>
         /// <returns>Base16 string.</returns>
-        public static String EncodeLower(ReadOnlySpan<Byte> bytes)
+        public override unsafe String Encode(ReadOnlySpan<Byte> value)
         {
-            return LowerCase.Encode(bytes);
+            if (value.Length <= 0)
+            {
+                return String.Empty;
+            }
+
+            String output = new String('\0', SafeCharCountForEncoding(value));
+            fixed (Char* outputPtr = output)
+            {
+                InternalEncode(value, value.Length, Alphabet.Value, outputPtr);
+            }
+
+            return output;
         }
 
         /// <summary>
@@ -103,9 +81,19 @@ namespace NetExtender.Cryptography.Base
         /// </summary>
         /// <param name="input">Stream that provides bytes to be encoded.</param>
         /// <param name="output">Stream that the encoded text is written to.</param>
-        public static void EncodeUpper(Stream input, TextWriter output)
+        public override void Encode(Stream input, TextWriter output)
         {
-            UpperCase.Encode(input, output);
+            if (input is null)
+            {
+                throw new ArgumentNullException(nameof(input));
+            }
+
+            if (output is null)
+            {
+                throw new ArgumentNullException(nameof(output));
+            }
+
+            Encode(input, output, (buffer, _) => Encode(buffer.Span));
         }
 
         /// <summary>
@@ -114,30 +102,122 @@ namespace NetExtender.Cryptography.Base
         /// <param name="input">Stream that provides bytes to be encoded.</param>
         /// <param name="output">Stream that the encoded text is written to.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public static Task EncodeUpperAsync(Stream input, TextWriter output)
+        public override Task EncodeAsync(Stream input, TextWriter output)
         {
-            return UpperCase.EncodeAsync(input, output);
+            if (input is null)
+            {
+                throw new ArgumentNullException(nameof(input));
+            }
+
+            if (output is null)
+            {
+                throw new ArgumentNullException(nameof(output));
+            }
+
+            return EncodeAsync(input, output, (buffer, _) => Encode(buffer.Span));
+        }
+
+        /// <inheritdoc/>
+        public override unsafe Boolean TryEncode(ReadOnlySpan<Byte> value, Span<Char> output, out Int32 written)
+        {
+            unchecked
+            {
+                String alphabet = Alphabet.Value;
+
+                Int32 length = value.Length * 2;
+                if (length <= 0 || output.Length < length)
+                {
+                    written = 0;
+                    return true;
+                }
+
+                fixed (Char* poutput = output)
+                {
+                    InternalEncode(value, value.Length, alphabet, poutput);
+                }
+
+                written = length;
+                return true;
+            }
+        }
+
+        private static unsafe void InternalEncode(ReadOnlySpan<Byte> value, Int32 length, String alphabet, Char* poutput)
+        {
+            unchecked
+            {
+                fixed (Byte* pointer = value)
+                {
+                    Byte* pinput = pointer;
+                    Int32 octets = length / sizeof(UInt64);
+                    for (Int32 i = 0; i < octets; i++, pinput += sizeof(UInt64))
+                    {
+                        // read bigger chunks
+                        UInt64 input = *(UInt64*) pinput;
+                        for (Int32 j = 0; j < sizeof(UInt64) / 2; j++, input >>= 16)
+                        {
+                            UInt16 pair = (UInt16) input;
+
+                            // use cpu pipeline to parallelize writes
+                            poutput[0] = alphabet[(pair >> 4) & 0x0F];
+                            poutput[1] = alphabet[pair & 0x0F];
+                            poutput[2] = alphabet[pair >> 12];
+                            poutput[3] = alphabet[(pair >> 8) & 0x0F];
+                            poutput += 4;
+                        }
+                    }
+
+                    for (Int32 remaining = length % sizeof(UInt64); remaining > 0; remaining--)
+                    {
+                        Byte b = *pinput++;
+                        poutput[0] = alphabet[b >> 4];
+                        poutput[1] = alphabet[b & 0x0F];
+                        poutput += 2;
+                    }
+                }
+            }
         }
 
         /// <summary>
-        /// Encodes stream of bytes into a Base16 text.
+        /// Decode Base16 text into bytes.
         /// </summary>
-        /// <param name="input">Stream that provides bytes to be encoded.</param>
-        /// <param name="output">Stream that the encoded text is written to.</param>
-        public static void EncodeLower(Stream input, TextWriter output)
+        /// <param name="value">Base16 text.</param>
+        /// <returns>Decoded bytes.</returns>
+        public override Span<Byte> Decode(ReadOnlySpan<Char> value)
         {
-            LowerCase.Encode(input, output);
+            if (value.Length <= 0)
+            {
+                return Array.Empty<Byte>();
+            }
+
+            Byte[] output = new Byte[SafeByteCountForDecoding(value)];
+            if (!TryDecode(value, output, out _))
+            {
+                throw new InvalidOperationException($"Can't decode {nameof(Base16)}");
+            }
+
+            return output;
         }
 
         /// <summary>
-        /// Encodes stream of bytes into a Base16 text.
+        /// Decode Base16 text through streams for generic use. Stream based variant tries to consume
+        /// as little memory as possible, and relies of .NET's own underlying buffering mechanisms,
+        /// contrary to their buffer-based versions.
         /// </summary>
-        /// <param name="input">Stream that provides bytes to be encoded.</param>
-        /// <param name="output">Stream that the encoded text is written to.</param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public static Task EncodeLowerAsync(Stream input, TextWriter output)
+        /// <param name="input">Stream that the encoded bytes would be read from.</param>
+        /// <param name="output">Stream where decoded bytes will be written to.</param>
+        public override void Decode(TextReader input, Stream output)
         {
-            return LowerCase.EncodeAsync(input, output);
+            if (input is null)
+            {
+                throw new ArgumentNullException(nameof(input));
+            }
+
+            if (output is null)
+            {
+                throw new ArgumentNullException(nameof(output));
+            }
+
+            Decode(input, output, buffer => Decode(buffer.Span).ToArray());
         }
 
         /// <summary>
@@ -150,210 +230,86 @@ namespace NetExtender.Cryptography.Base
         /// <returns>Task that represents the async operation.</returns>
         public override Task DecodeAsync(TextReader input, Stream output)
         {
-            return StreamHelper.DecodeAsync(input, output, buffer => Decode(buffer.Span).ToArray());
-        }
-
-        /// <summary>
-        /// Decode Base16 text through streams for generic use. Stream based variant tries to consume
-        /// as little memory as possible, and relies of .NET's own underlying buffering mechanisms,
-        /// contrary to their buffer-based versions.
-        /// </summary>
-        /// <param name="input">Stream that the encoded bytes would be read from.</param>
-        /// <param name="output">Stream where decoded bytes will be written to.</param>
-        public override void Decode(TextReader input, Stream output)
-        {
-            StreamHelper.Decode(input, output, buffer => Decode(buffer.Span).ToArray());
-        }
-
-        /// <summary>
-        /// Encodes stream of bytes into a Base16 text.
-        /// </summary>
-        /// <param name="input">Stream that provides bytes to be encoded.</param>
-        /// <param name="output">Stream that the encoded text is written to.</param>
-        public override void Encode(Stream input, TextWriter output)
-        {
-            StreamHelper.Encode(input, output, (buffer, _) => Encode(buffer.Span));
-        }
-
-        /// <summary>
-        /// Encodes stream of bytes into a Base16 text.
-        /// </summary>
-        /// <param name="input">Stream that provides bytes to be encoded.</param>
-        /// <param name="output">Stream that the encoded text is written to.</param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public override Task EncodeAsync(Stream input, TextWriter output)
-        {
-            return StreamHelper.EncodeAsync(input, output, (buffer, _) => Encode(buffer.Span));
-        }
-
-        /// <summary>
-        /// Decode Base16 text into bytes.
-        /// </summary>
-        /// <param name="text">Base16 text.</param>
-        /// <returns>Decoded bytes.</returns>
-        public override Span<Byte> Decode(ReadOnlySpan<Char> text)
-        {
-            Int32 textLen = text.Length;
-            if (textLen == 0)
+            if (input is null)
             {
-                return Array.Empty<Byte>();
+                throw new ArgumentNullException(nameof(input));
             }
 
-            Byte[] output = new Byte[GetSafeByteCountForDecoding(text)];
-            if (!TryDecode(text, output, out _))
+            if (output is null)
             {
-                throw new ArgumentException(@"Invalid text", nameof(text));
+                throw new ArgumentNullException(nameof(output));
             }
 
-            return output;
+            return DecodeAsync(input, output, buffer => Decode(buffer.Span).ToArray());
         }
 
         /// <inheritdoc/>
-        public override unsafe Boolean TryDecode(ReadOnlySpan<Char> text, Span<Byte> output, out Int32 numBytesWritten)
+        public override unsafe Boolean TryDecode(ReadOnlySpan<Char> text, Span<Byte> output, out Int32 written)
         {
             unchecked
             {
-                Int32 textLen = text.Length;
-                if (textLen == 0)
+                if (text.Length <= 0 || (text.Length & 1) != 0)
                 {
-                    numBytesWritten = 0;
+                    written = 0;
                     return true;
                 }
 
-                if ((textLen & 1) != 0)
+                Int32 length = text.Length / 2;
+                if (output.Length < length)
                 {
-                    numBytesWritten = 0;
-                    return false;
-                }
-
-                Int32 outputLen = textLen / 2;
-                if (output.Length < outputLen)
-                {
-                    numBytesWritten = 0;
+                    written = 0;
                     return false;
                 }
 
                 ReadOnlySpan<Byte> table = Alphabet.ReverseLookupTable;
 
-                fixed (Byte* outputPtr = output)
-                fixed (Char* textPtr = text)
+                fixed (Byte* pointer = output)
+                fixed (Char* ptext = text)
                 {
-                    Byte* pOutput = outputPtr;
-                    Char* pInput = textPtr;
-                    Char* pEnd = pInput + textLen;
-                    while (pInput != pEnd)
+                    Char* pinput = ptext;
+                    Byte* poutput = pointer;
+                    Char* pend = pinput + text.Length;
+                    
+                    while (pinput != pend)
                     {
-                        Int32 b1 = table[pInput[0]] - 1;
-                        if (b1 < 0)
+                        Int32 first = table[pinput[0]] - 1;
+                        if (first < 0)
                         {
-                            throw new ArgumentException($"Invalid hex character: {pInput[0]}");
+                            throw new ArgumentException($"Invalid hex character: {pinput[0]}");
                         }
 
-                        Int32 b2 = table[pInput[1]] - 1;
-                        if (b2 < 0)
+                        Int32 second = table[pinput[1]] - 1;
+                        if (second < 0)
                         {
-                            throw new ArgumentException($"Invalid hex character: {pInput[1]}");
+                            throw new ArgumentException($"Invalid hex character: {pinput[1]}");
                         }
 
-                        *pOutput++ = (Byte)(b1 << 4 | b2);
-                        pInput += 2;
+                        *poutput++ = (Byte) (first << 4 | second);
+                        pinput += 2;
                     }
                 }
 
-                numBytesWritten = outputLen;
+                written = length;
                 return true;
             }
-        }
-
-        /// <summary>
-        /// Encode to Base16 representation.
-        /// </summary>
-        /// <param name="bytes">Bytes to encode.</param>
-        /// <returns>Base16 string.</returns>
-        public override unsafe String Encode(ReadOnlySpan<Byte> bytes)
-        {
-            Int32 bytesLen = bytes.Length;
-            if (bytesLen == 0)
-            {
-                return String.Empty;
-            }
-
-            String output = new String('\0', GetSafeCharCountForEncoding(bytes));
-            fixed (Char* outputPtr = output)
-            {
-                InternalEncode(bytes, bytesLen, Alphabet.Value, outputPtr);
-            }
-
-            return output;
         }
 
         /// <inheritdoc/>
-        public override unsafe Boolean TryEncode(ReadOnlySpan<Byte> bytes, Span<Char> output, out Int32 numCharsWritten)
+        public override Int32 GetHashCode()
         {
-            unchecked
-            {
-                Int32 bytesLen = bytes.Length;
-                String alphabet = Alphabet.Value;
-
-                Int32 outputLen = bytesLen * 2;
-                if (output.Length < outputLen)
-                {
-                    numCharsWritten = 0;
-                    return false;
-                }
-
-                if (outputLen == 0)
-                {
-                    numCharsWritten = 0;
-                    return true;
-                }
-
-                fixed (Char* outputPtr = output)
-                {
-                    InternalEncode(bytes, bytesLen, alphabet, outputPtr);
-                }
-
-                numCharsWritten = outputLen;
-                return true;
-            }
+            return Alphabet.GetHashCode();
         }
 
-        private static unsafe void InternalEncode(ReadOnlySpan<Byte> bytes, Int32 bytesLen, String alphabet, Char* outputPtr)
+        /// <inheritdoc/>
+        public override Boolean Equals(Object? obj)
         {
-            unchecked
-            {
-                fixed (Byte* bytesPtr = bytes)
-                {
-                    Char* pOutput = outputPtr;
-                    Byte* pInput = bytesPtr;
+            return obj is Base16 other && Alphabet.Equals(other.Alphabet);
+        }
 
-                    Int32 octets = bytesLen / sizeof(UInt64);
-                    for (Int32 i = 0; i < octets; i++, pInput += sizeof(UInt64))
-                    {
-                        // read bigger chunks
-                        UInt64 input = *(UInt64*)pInput;
-                        for (Int32 j = 0; j < sizeof(UInt64) / 2; j++, input >>= 16)
-                        {
-                            UInt16 pair = (UInt16)input;
-
-                            // use cpu pipeline to parallelize writes
-                            pOutput[0] = alphabet[(pair >> 4) & 0x0F];
-                            pOutput[1] = alphabet[pair & 0x0F];
-                            pOutput[2] = alphabet[pair >> 12];
-                            pOutput[3] = alphabet[(pair >> 8) & 0x0F];
-                            pOutput += 4;
-                        }
-                    }
-
-                    for (Int32 remaining = bytesLen % sizeof(UInt64); remaining > 0; remaining--)
-                    {
-                        Byte b = *pInput++;
-                        pOutput[0] = alphabet[b >> 4];
-                        pOutput[1] = alphabet[b & 0x0F];
-                        pOutput += 2;
-                    }
-                }
-            }
+        /// <inheritdoc/>
+        public override String ToString()
+        {
+            return $"{nameof(Base16)}_{Alphabet}";
         }
     }
 }

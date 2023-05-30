@@ -161,11 +161,13 @@ namespace NetExtender.Initializer
             Environment.Exit(exception?.HResult ?? 1);
         }
 
+        // ReSharper disable once AsyncConverter.AsyncMethodNamingHighlighting
         protected static Task<Int32> Exit()
         {
             return Zero;
         }
 
+        // ReSharper disable once AsyncConverter.AsyncMethodNamingHighlighting
         protected static Task<Int32> Exit(Int32 code)
         {
             return code switch
@@ -176,11 +178,13 @@ namespace NetExtender.Initializer
             };
         }
 
+        // ReSharper disable once AsyncConverter.AsyncMethodNamingHighlighting
         protected static Task<Int32> Exit(TimeSpan delay)
         {
             return Exit(delay, 0);
         }
 
+        // ReSharper disable once AsyncConverter.AsyncMethodNamingHighlighting
         protected static Task<Int32> Exit(TimeSpan delay, Int32 code)
         {
             return Task.Delay(delay).ContinueWith(_ => code);

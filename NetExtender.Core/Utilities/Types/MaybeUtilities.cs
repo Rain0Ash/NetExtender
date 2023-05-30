@@ -56,9 +56,10 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(fallback));
             }
 
-            return maybe.HasValue ? maybe : fallback();
+            return maybe.HasValue ? maybe : fallback.Invoke();
         }
 
+        // ReSharper disable once AsyncConverter.AsyncMethodNamingHighlighting
         public static async Task<Maybe<T>> Or<T>(this Maybe<T> maybe, Func<Task<T>> fallback)
         {
             if (fallback is null)
@@ -66,7 +67,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(fallback));
             }
 
-            return maybe.HasValue ? maybe : await fallback().ConfigureAwait(false);
+            return maybe.HasValue ? maybe : await fallback.Invoke().ConfigureAwait(false);
         }
 
         public static Maybe<T> Or<T>(this Maybe<T> maybe, Maybe<T> fallback)
@@ -74,6 +75,7 @@ namespace NetExtender.Utilities.Types
             return maybe.HasValue ? maybe : fallback;
         }
 
+        // ReSharper disable once AsyncConverter.AsyncMethodNamingHighlighting
         public static async Task<Maybe<T>> Or<T>(this Maybe<T> maybe, Task<Maybe<T>> fallback)
         {
             if (fallback is null)
@@ -91,9 +93,10 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(fallback));
             }
 
-            return maybe.HasValue ? maybe : fallback();
+            return maybe.HasValue ? maybe : fallback.Invoke();
         }
 
+        // ReSharper disable once AsyncConverter.AsyncMethodNamingHighlighting
         public static async Task<Maybe<T>> Or<T>(this Maybe<T> maybe, Func<Task<Maybe<T>>> fallback)
         {
             if (fallback is null)
@@ -101,7 +104,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(fallback));
             }
 
-            return maybe.HasValue ? maybe : await fallback();
+            return maybe.HasValue ? maybe : await fallback.Invoke().ConfigureAwait(false);
         }
     }
 }

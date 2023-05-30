@@ -127,7 +127,7 @@ namespace NetExtender.Configuration.Synchronizers
             // ReSharper disable once LoopCanBeConvertedToQuery
             foreach (IReadableBehavior info in collection.OfType<IReadableBehavior>())
             {
-                successful |= await info.ReadAsync();
+                successful |= await info.ReadAsync().ConfigureAwait(false);
             }
             
             return successful;
@@ -151,7 +151,7 @@ namespace NetExtender.Configuration.Synchronizers
                     return successful;
                 }
                 
-                successful |= await info.ReadAsync(token);
+                successful |= await info.ReadAsync(token).ConfigureAwait(false);
             }
             
             return successful;
@@ -179,7 +179,7 @@ namespace NetExtender.Configuration.Synchronizers
             // ReSharper disable once LoopCanBeConvertedToQuery
             foreach (ISaveableBehavior info in collection.OfType<ISaveableBehavior>())
             {
-                successful |= await info.SaveAsync();
+                successful |= await info.SaveAsync().ConfigureAwait(false);
             }
             
             return successful;
@@ -203,7 +203,7 @@ namespace NetExtender.Configuration.Synchronizers
                     return successful;
                 }
                 
-                successful |= await info.SaveAsync(token);
+                successful |= await info.SaveAsync(token).ConfigureAwait(false);
             }
             
             return successful;
@@ -231,7 +231,7 @@ namespace NetExtender.Configuration.Synchronizers
             // ReSharper disable once LoopCanBeConvertedToQuery
             foreach (IResetableBehavior info in collection.OfType<IResetableBehavior>())
             {
-                successful |= await info.ResetAsync();
+                successful |= await info.ResetAsync().ConfigureAwait(false);
             }
             
             return successful;
@@ -255,7 +255,7 @@ namespace NetExtender.Configuration.Synchronizers
                     return successful;
                 }
                 
-                successful |= await info.ResetAsync(token);
+                successful |= await info.ResetAsync(token).ConfigureAwait(false);
             }
             
             return successful;

@@ -339,7 +339,7 @@ namespace NetExtender.Utilities.Windows.IO
             AlternateDataStreamInfo info = OpenAlternateDataStream(path, name);
 
             using StreamReader reader = info.OpenText();
-            return await reader.ReadToEndAsync();
+            return await reader.ReadToEndAsync().ConfigureAwait(false);
         }
 
         /// <summary>

@@ -300,7 +300,7 @@ namespace NetExtender.Utilities.Windows.IO
 
                 await using (FileStream write = info.OpenWrite())
                 {
-                    await write.WriteAsync(value);
+                    await write.WriteAsync(value).ConfigureAwait(false);
                 }
 
                 using Process? process = Process.Start("notepad.exe", info.FullName);
@@ -311,9 +311,9 @@ namespace NetExtender.Utilities.Windows.IO
                     return null;
                 }
 
-                await process.WaitForExitAsync(token);
+                await process.WaitForExitAsync(token).ConfigureAwait(false);
                 await using FileStream stream = info.OpenRead();
-                return await stream.ReadAsStringAsync();
+                return await stream.ReadAsStringAsync().ConfigureAwait(false);
             }
             catch (Exception)
             {

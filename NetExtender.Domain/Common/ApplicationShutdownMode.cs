@@ -7,6 +7,6 @@ namespace NetExtender.Domains
     {
         OnLastWindowClose,
         OnMainWindowClose,
-        OnExplicitShutdown,
+        OnExplicitShutdown
     }
 }

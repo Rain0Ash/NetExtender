@@ -164,14 +164,14 @@ namespace NetExtender.Domains.WindowsPresentation.AspNetCore.View
         {
             if (host is null)
             {
-                return await RunAsync(window, token);
+                return await RunAsync(window, token).ConfigureAwait(false);
             }
             
             WindowsPresentationAspNetCoreApplication application = Domain.Current.Application.As<WindowsPresentationAspNetCoreApplication>();
             
             if (window is null)
             {
-                await application.RunAsync(host, token);
+                await application.RunAsync(host, token).ConfigureAwait(false);
                 return this;
             }
 
@@ -189,7 +189,7 @@ namespace NetExtender.Domains.WindowsPresentation.AspNetCore.View
                 throw new ArgumentException($"{nameof(host)} not reference equals with {nameof(Host)}");
             }
 
-            await application.RunAsync(Window, Host, token);
+            await application.RunAsync(Window, Host, token).ConfigureAwait(false);
             return this;
         }
         

@@ -417,7 +417,7 @@ namespace NetExtender.Configuration.Cryptography.Properties
                 throw new CryptographicException();
             }
 
-            String? value = await Config.GetValueAsync(key, sections, token);
+            String? value = await Config.GetValueAsync(key, sections, token).ConfigureAwait(false);
 
             if (value is not null && IsCryptValue)
             {

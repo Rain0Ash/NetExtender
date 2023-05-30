@@ -63,21 +63,25 @@ namespace NetExtender.Utilities.Types
         {
         }
 
+        // ReSharper disable once AsyncConverter.AsyncMethodNamingHighlighting
         public static Task InBackground(this Action action)
         {
             return InBackground(action, false);
         }
 
+        // ReSharper disable once AsyncConverter.AsyncMethodNamingHighlighting
         public static Task InBackground(this Action action, Boolean fairness)
         {
             return InBackground(action, fairness, CancellationToken.None);
         }
 
+        // ReSharper disable once AsyncConverter.AsyncMethodNamingHighlighting
         public static Task InBackground(this Action action, CancellationToken token)
         {
             return InBackground(action, false, token);
         }
 
+        // ReSharper disable once AsyncConverter.AsyncMethodNamingHighlighting
         public static Task InBackground(this Action action, Boolean fairness, CancellationToken token)
         {
             if (action is null)

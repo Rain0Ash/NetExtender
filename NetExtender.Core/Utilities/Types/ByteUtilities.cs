@@ -22,7 +22,7 @@ namespace NetExtender.Utilities.Types
         PetaBit = GigaBit * MegaBit,
         PetaByte = ByteUtilities.BitInByte * PetaBit,
         ZettaBit = GigaBit * GigaBit,
-        ZettaByte = ByteUtilities.BitInByte * ZettaBit,
+        ZettaByte = ByteUtilities.BitInByte * ZettaBit
     }
 
     public static class ByteUtilities

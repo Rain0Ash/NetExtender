@@ -161,7 +161,7 @@ namespace NetExtender.Utilities.Numerics
         WriteLine("\t\t{");
         WriteLine("\t\t\tunchecked");
         WriteLine("\t\t\t{");
-        WriteLine($"\t\t\t\treturn shift switch");
+        WriteLine("\t\t\t\treturn shift switch");
         WriteLine("\t\t\t\t{");
         WriteLine("\t\t\t\t\t0 => value,");
         WriteLine($"\t\t\t\t\t< 0 => {nameof(BitwiseShift)}RightTrue(value, -shift),");
@@ -192,7 +192,7 @@ namespace NetExtender.Utilities.Numerics
         WriteLine("\t\t{");
         WriteLine("\t\t\tunchecked");
         WriteLine("\t\t\t{");
-        WriteLine($"\t\t\t\treturn shift switch");
+        WriteLine("\t\t\t\treturn shift switch");
         WriteLine("\t\t\t\t{");
         WriteLine("\t\t\t\t\t0 => value,");
         WriteLine($"\t\t\t\t\t< 0 => {nameof(BitwiseShift)}LeftTrue(value, -shift),");

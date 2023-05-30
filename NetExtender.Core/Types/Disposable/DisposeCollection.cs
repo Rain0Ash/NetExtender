@@ -186,7 +186,7 @@ namespace NetExtender.Types.Disposable
 
         public async ValueTask DisposeAsync()
         {
-            await this.DisposeAllAsync();
+            await this.DisposeAllAsync().ConfigureAwait(false);
             Internal.Clear();
             GC.SuppressFinalize(this);
         }

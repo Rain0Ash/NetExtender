@@ -102,7 +102,7 @@ namespace NetExtender.Utilities.Types
 
             foreach (String? value in values)
             {
-                await writer.WriteLineAsync(value);
+                await writer.WriteLineAsync(value).ConfigureAwait(false);
             }
         }
 
@@ -120,7 +120,7 @@ namespace NetExtender.Utilities.Types
 
             await foreach (String? value in values)
             {
-                await writer.WriteLineAsync(value);
+                await writer.WriteLineAsync(value).ConfigureAwait(false);
             }
         }
 
@@ -166,7 +166,8 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(values));
             }
 
-            await writer.WriteLineAsync(String.Join(" ", values));
+            // ReSharper disable once AsyncConverter.AsyncAwaitMayBeElidedHighlighting
+            await writer.WriteLineAsync(String.Join(" ", values)).ConfigureAwait(false);
         }
     }
 }

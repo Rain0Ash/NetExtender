@@ -375,7 +375,7 @@ namespace NetExtender.Utilities.Numerics
                 AngleQuadrant.Second => straight - reduced,
                 AngleQuadrant.Third => reduced - straight,
                 AngleQuadrant.Fourth => full - reduced,
-                _ => throw new InvalidOperationException(),
+                _ => throw new InvalidOperationException()
             };
         }
 

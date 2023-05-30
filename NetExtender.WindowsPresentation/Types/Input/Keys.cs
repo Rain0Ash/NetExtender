@@ -200,7 +200,7 @@ namespace NetExtender.WindowsPresentation.Types.Input
             {
                 null => false,
                 Keys keys => Equals(keys),
-                _ => Internal.Equals(obj),
+                _ => Internal.Equals(obj)
             };
         }
 

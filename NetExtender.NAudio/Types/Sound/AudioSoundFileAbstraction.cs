@@ -110,7 +110,7 @@ namespace NetExtender.NAudio.Types.Sound
         public override async Task<Byte[]> ReadAsync(CancellationToken token)
         {
             await using FileStream stream = File.OpenRead();
-            return await stream.ReadAsByteArrayAsync(token);
+            return await stream.ReadAsByteArrayAsync(token).ConfigureAwait(false);
         }
     }
 }

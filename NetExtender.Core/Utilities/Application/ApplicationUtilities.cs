@@ -3,6 +3,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reflection;
 using System.Threading;
@@ -13,6 +14,7 @@ using NetExtender.Utilities.Threading;
 
 namespace NetExtender.Utilities.Application
 {
+    [SuppressMessage("ReSharper", "AsyncConverter.AsyncMethodNamingHighlighting")]
     public static class ApplicationUtilities
     {
         static ApplicationUtilities()
@@ -311,7 +313,7 @@ namespace NetExtender.Utilities.Application
             {
                 WindowStyle = ProcessWindowStyle.Hidden,
                 CreateNoWindow = true
-            }.StartProcessAsync(wait, token);
+            }.StartProcessAsync(wait, token).ConfigureAwait(false);
 
             if (restart is null)
             {

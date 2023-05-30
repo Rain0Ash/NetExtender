@@ -255,7 +255,7 @@ namespace NetExtender.Domains.Service.Applications
 
             if (WindowsServiceUtilities.IsServiceExist(Domain.ApplicationIdentifier))
             {
-                if (!await WindowsServiceUtilities.StartServiceAsync(Domain.ApplicationIdentifier, token))
+                if (!await WindowsServiceUtilities.StartServiceAsync(Domain.ApplicationIdentifier, token).ConfigureAwait(false))
                 {
                     throw new InitializeException("Can't start service. Maybe need elevate execute for starting service.");
                 }

@@ -1,11 +1,6 @@
 ﻿// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
-// <copyright file="IBaseStreamEncoder.cs" company="Sedat Kapanoglu">
-// Copyright (c) 2014-2019 Sedat Kapanoglu
-// Licensed under Apache-2.0 License (see LICENSE.txt file for details)
-// </copyright>
-
 using System.IO;
 using System.Threading.Tasks;
 

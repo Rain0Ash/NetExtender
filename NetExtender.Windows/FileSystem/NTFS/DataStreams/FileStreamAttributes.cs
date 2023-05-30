@@ -30,6 +30,6 @@ namespace NetExtender.IO.FileSystem.NTFS.DataStreams
         /// <summary>
         /// Set if the stream is sparse.
         /// </summary>
-        Sparse = 8,
+        Sparse = 8
     }
 }

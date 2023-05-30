@@ -36,7 +36,7 @@ namespace NetExtender.Types.TaskSchedulers
 
             void Start()
             {
-                foreach (var task in Tasks.GetConsumingEnumerable())
+                foreach (Task task in Tasks.GetConsumingEnumerable())
                 {
                     TryExecuteTask(task);
                 }

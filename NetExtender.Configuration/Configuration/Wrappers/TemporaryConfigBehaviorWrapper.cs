@@ -256,7 +256,7 @@ namespace NetExtender.Configuration.Wrappers
 
         public async ValueTask DisposeAsync()
         {
-            await Internal.ResetAsync(CancellationToken.None);
+            await Internal.ResetAsync(CancellationToken.None).ConfigureAwait(false);
         }
 
         public IEnumerator<ConfigurationValueEntry> GetEnumerator()

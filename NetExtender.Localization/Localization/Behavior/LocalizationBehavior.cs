@@ -291,7 +291,7 @@ namespace NetExtender.Localization.Behavior
 
         public virtual async Task<Boolean> ContainsAsync(String? key, IEnumerable<String>? sections, CancellationToken token)
         {
-            ConfigurationValueEntry[]? entries = await Behavior.GetExistsValuesAsync(Converter.Convert(key, sections, LocalizationOptions), token);
+            ConfigurationValueEntry[]? entries = await Behavior.GetExistsValuesAsync(Converter.Convert(key, sections, LocalizationOptions), token).ConfigureAwait(false);
             return entries is not null && entries.Length > 0;
         }
 
@@ -313,7 +313,7 @@ namespace NetExtender.Localization.Behavior
 
         public virtual async Task<ILocalizationString?> GetAsync(String? key, IEnumerable<String>? sections, CancellationToken token)
         {
-            ConfigurationValueEntry[]? entries = await Behavior.GetExistsValuesAsync(Converter.Convert(key, sections, LocalizationOptions), token);
+            ConfigurationValueEntry[]? entries = await Behavior.GetExistsValuesAsync(Converter.Convert(key, sections, LocalizationOptions), token).ConfigureAwait(false);
             return entries is not null && entries.Length > 0 ? new LocalizationString(this, Converter.Extract(entries)) : null;
         }
 
@@ -324,7 +324,7 @@ namespace NetExtender.Localization.Behavior
 
         async Task<String?> IConfigBehavior.GetAsync(String? key, IEnumerable<String>? sections, CancellationToken token)
         {
-            return (await GetAsync(key, sections, token))?.ToString();
+            return (await GetAsync(key, sections, token).ConfigureAwait(false))?.ToString();
         }
 
         public virtual String? Get(String? key, LocalizationIdentifier identifier, IEnumerable<String>? sections)
@@ -369,7 +369,7 @@ namespace NetExtender.Localization.Behavior
 
             if (value is null)
             {
-                return await Behavior.SetAsync(key, null, sections, token);
+                return await Behavior.SetAsync(key, null, sections, token).ConfigureAwait(false);
             }
 
             sections = sections?.ToImmutableArray();
@@ -377,7 +377,7 @@ namespace NetExtender.Localization.Behavior
             Boolean successful = false;
             foreach ((LocalizationIdentifier identifier, String? entry) in value)
             {
-                successful |= await SetAsync(key, identifier, entry, sections, token);
+                successful |= await SetAsync(key, identifier, entry, sections, token).ConfigureAwait(false);
             }
 
             return successful;
@@ -424,7 +424,7 @@ namespace NetExtender.Localization.Behavior
         public virtual async Task<ILocalizationString?> GetOrSetAsync(String? key, ILocalizationString? value, IEnumerable<String>? sections, CancellationToken token)
         {
             sections = sections?.ToImmutableArray();
-            ILocalizationString? entry = await GetAsync(key, sections, token);
+            ILocalizationString? entry = await GetAsync(key, sections, token).ConfigureAwait(false);
 
             if (entry is not null)
             {
@@ -436,7 +436,7 @@ namespace NetExtender.Localization.Behavior
                 return null;
             }
 
-            return await SetAsync(key, value, sections, token) ? await GetAsync(key, sections, token) : null;
+            return await SetAsync(key, value, sections, token).ConfigureAwait(false) ? await GetAsync(key, sections, token).ConfigureAwait(false) : null;
         }
 
         String? IConfigBehavior.GetOrSet(String? key, String? value, IEnumerable<String>? sections)
@@ -482,7 +482,7 @@ namespace NetExtender.Localization.Behavior
 
         public virtual async Task<LocalizationMultiEntry[]?> GetExistsAsync(IEnumerable<String>? sections, CancellationToken token)
         {
-            ConfigurationEntry[]? entries = await Behavior.GetExistsAsync(sections, token);
+            ConfigurationEntry[]? entries = await Behavior.GetExistsAsync(sections, token).ConfigureAwait(false);
             return entries is not null ? GetExistsInternal(entries).ToArray() : null;
         }
 
@@ -509,7 +509,7 @@ namespace NetExtender.Localization.Behavior
 
         public virtual async Task<LocalizationEntry[]?> GetExistsAsync(LocalizationIdentifier identifier, IEnumerable<String>? sections, CancellationToken token)
         {
-            ConfigurationEntry[]? entries = await Behavior.GetExistsAsync(sections, token);
+            ConfigurationEntry[]? entries = await Behavior.GetExistsAsync(sections, token).ConfigureAwait(false);
             return entries is not null ? GetExistsInternal(identifier, entries).ToArray() : null;
         }
 
@@ -526,7 +526,7 @@ namespace NetExtender.Localization.Behavior
 
         public virtual async Task<LocalizationValueEntry[]?> GetExistsValuesAsync(IEnumerable<String>? sections, CancellationToken token)
         {
-            ConfigurationValueEntry[]? entries = await Behavior.GetExistsValuesAsync(sections, token);
+            ConfigurationValueEntry[]? entries = await Behavior.GetExistsValuesAsync(sections, token).ConfigureAwait(false);
             return entries is not null ? GetExistsValuesInternal(entries).ToArray() : null;
         }
 
@@ -555,7 +555,7 @@ namespace NetExtender.Localization.Behavior
 
         public virtual async Task<LocalizationMultiValueEntry[]?> GetExistsMultiValuesAsync(IEnumerable<String>? sections, CancellationToken token)
         {
-            ConfigurationValueEntry[]? entries = await Behavior.GetExistsValuesAsync(sections, token);
+            ConfigurationValueEntry[]? entries = await Behavior.GetExistsValuesAsync(sections, token).ConfigureAwait(false);
             return entries is not null ? GetExistsMultiValuesInternal(entries).ToArray() : null;
         }
 
@@ -582,7 +582,7 @@ namespace NetExtender.Localization.Behavior
 
         public virtual async Task<LocalizationValueEntry[]?> GetExistsValuesAsync(LocalizationIdentifier identifier, IEnumerable<String>? sections, CancellationToken token)
         {
-            ConfigurationValueEntry[]? entries = await Behavior.GetExistsValuesAsync(sections, token);
+            ConfigurationValueEntry[]? entries = await Behavior.GetExistsValuesAsync(sections, token).ConfigureAwait(false);
             return entries is not null ? GetExistsValuesInternal(identifier, entries).ToArray() : null;
         }
 
@@ -703,7 +703,7 @@ namespace NetExtender.Localization.Behavior
 
         public virtual async Task<LocalizationValueEntry[]?> DifferenceAsync(IEnumerable<LocalizationValueEntry>? entries, CancellationToken token)
         {
-            return Converter.Extract(await Behavior.DifferenceAsync(Converter.Pack(entries), token))?.ToArray();
+            return Converter.Extract(await Behavior.DifferenceAsync(Converter.Pack(entries), token).ConfigureAwait(false))?.ToArray();
         }
 
         public virtual LocalizationValueEntry[]? Difference(IEnumerable<LocalizationMultiValueEntry>? entries)
@@ -713,7 +713,7 @@ namespace NetExtender.Localization.Behavior
 
         public virtual async Task<LocalizationValueEntry[]?> DifferenceAsync(IEnumerable<LocalizationMultiValueEntry>? entries, CancellationToken token)
         {
-            return Converter.Extract(await Behavior.DifferenceAsync(Converter.Pack(entries), token))?.ToArray();
+            return Converter.Extract(await Behavior.DifferenceAsync(Converter.Pack(entries), token).ConfigureAwait(false))?.ToArray();
         }
 
         IConfigBehaviorTransaction? IConfigBehavior.Transaction()
@@ -748,11 +748,11 @@ namespace NetExtender.Localization.Behavior
                 return null;
             }
 
-            LocalizationMultiValueEntry[]? entries = await GetExistsMultiValuesAsync(null, token);
+            LocalizationMultiValueEntry[]? entries = await GetExistsMultiValuesAsync(null, token).ConfigureAwait(false);
 
             ILocalizationBehavior transaction = new MemoryConfigBehavior(ConfigOptions.IgnoreEvent).Localization();
 
-            await transaction.MergeAsync(entries, token);
+            await transaction.MergeAsync(entries, token).ConfigureAwait(false);
             return new LocalizationBehaviorTransaction(this, transaction);
         }
 
@@ -789,7 +789,7 @@ namespace NetExtender.Localization.Behavior
 
         public async ValueTask DisposeAsync()
         {
-            await Behavior.DisposeAsync();
+            await Behavior.DisposeAsync().ConfigureAwait(false);
             GC.SuppressFinalize(this);
         }
     }

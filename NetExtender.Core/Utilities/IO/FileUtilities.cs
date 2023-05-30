@@ -395,8 +395,7 @@ namespace NetExtender.Utilities.IO
         {
             StreamReader file = GetFileReader(path);
 
-            String? line;
-            while((line = file.ReadLine()) is not null)
+            while(file.ReadLine() is { } line)
             {
                 yield return line;
             }
@@ -406,8 +405,7 @@ namespace NetExtender.Utilities.IO
         {
             using StreamReader file = GetFileReader(path, encoding);
 
-            String? line;
-            while((line = file.ReadLine()) is not null)
+            while(file.ReadLine() is { } line)
             {
                 yield return line;
             }

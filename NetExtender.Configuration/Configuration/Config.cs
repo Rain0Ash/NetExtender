@@ -480,7 +480,7 @@ namespace NetExtender.Configuration
 
         public virtual async Task<IConfigTransaction?> TransactionAsync(CancellationToken token)
         {
-            IConfigBehaviorTransaction? transaction = await Behavior.TransactionAsync(token);
+            IConfigBehaviorTransaction? transaction = await Behavior.TransactionAsync(token).ConfigureAwait(false);
             return transaction is not null ? new ConfigTransaction(this, transaction) : null;
         }
 
@@ -511,7 +511,7 @@ namespace NetExtender.Configuration
 
             foreach ((String? key, ImmutableArray<String> sections) in this)
             {
-                await config.SetValueAsync(key, this[key, sections], sections, token);
+                await config.SetValueAsync(key, this[key, sections], sections, token).ConfigureAwait(false);
             }
         }
 
@@ -572,7 +572,7 @@ namespace NetExtender.Configuration
 
         public async ValueTask DisposeAsync()
         {
-            await DisposeAsync(true);
+            await DisposeAsync(true).ConfigureAwait(false);
             GC.SuppressFinalize(this);
         }
 
@@ -588,7 +588,7 @@ namespace NetExtender.Configuration
         {
             if (disposing)
             {
-                await Behavior.DisposeAsync();
+                await Behavior.DisposeAsync().ConfigureAwait(false);
             }
         }
 

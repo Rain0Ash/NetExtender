@@ -61,7 +61,7 @@ namespace NetExtender.Utilities.Configuration
 
             if (reload)
             {
-                await temporary.ReloadAsync(CancellationToken.None);
+                await temporary.ReloadAsync(CancellationToken.None).ConfigureAwait(false);
             }
 
             return temporary;

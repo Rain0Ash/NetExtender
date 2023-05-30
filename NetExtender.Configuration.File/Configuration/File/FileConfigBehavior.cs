@@ -92,7 +92,7 @@ namespace NetExtender.Configuration.File
 
             try
             {
-                await System.IO.File.WriteAllTextAsync(Path, config, token);
+                await System.IO.File.WriteAllTextAsync(Path, config, token).ConfigureAwait(false);
                 return true;
             }
             catch (Exception)
@@ -142,7 +142,7 @@ namespace NetExtender.Configuration.File
 
         public override async Task<Boolean> SetAsync(String? key, String? value, IEnumerable<String>? sections, CancellationToken token)
         {
-            return await base.SetAsync(key, value, sections, token) && await WriteConfigAsync(token);
+            return await base.SetAsync(key, value, sections, token).ConfigureAwait(false) && await WriteConfigAsync(token).ConfigureAwait(false);
         }
 
         public override Boolean Clear(IEnumerable<String>? sections)
@@ -157,7 +157,7 @@ namespace NetExtender.Configuration.File
 
         public override async Task<Boolean> MergeAsync(IEnumerable<ConfigurationValueEntry>? entries, CancellationToken token)
         {
-            return await base.MergeAsync(entries, token) && await WriteConfigAsync(token);
+            return await base.MergeAsync(entries, token).ConfigureAwait(false) && await WriteConfigAsync(token).ConfigureAwait(false);
         }
 
         public override Boolean Replace(IEnumerable<ConfigurationValueEntry>? entries)
@@ -167,7 +167,7 @@ namespace NetExtender.Configuration.File
 
         public override async Task<Boolean> ReplaceAsync(IEnumerable<ConfigurationValueEntry>? entries, CancellationToken token)
         {
-            return await base.ReplaceAsync(entries, token) && await WriteConfigAsync(token);
+            return await base.ReplaceAsync(entries, token).ConfigureAwait(false) && await WriteConfigAsync(token).ConfigureAwait(false);
         }
 
         public override Boolean Reload()

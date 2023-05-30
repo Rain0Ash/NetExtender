@@ -79,7 +79,7 @@ namespace NetExtender.Domains.WindowsPresentation.AspNetCore.Applications
 
             Server ??= Create(host);
             Server.Start();
-            await base.RunAsync(window, token);
+            await base.RunAsync(window, token).ConfigureAwait(false);
             return this;
         }
 

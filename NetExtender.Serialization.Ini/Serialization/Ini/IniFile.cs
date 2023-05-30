@@ -340,7 +340,7 @@ namespace NetExtender.Serialization.Ini
             }
 
             using StringReader reader = new StringReader(value);
-            await ReadAsync(reader);
+            await ReadAsync(reader).ConfigureAwait(false);
         }
 
         public Task ReadAsync(Stream stream)
@@ -362,7 +362,7 @@ namespace NetExtender.Serialization.Ini
             }
 
             IniSection? section = null;
-            while (await reader.ReadLineAsync() is { } line)
+            while (await reader.ReadLineAsync().ConfigureAwait(false) is { } line)
             {
                 ReadLine(line, ref section);
             }
@@ -479,7 +479,7 @@ namespace NetExtender.Serialization.Ini
         public async Task<String> WriteAsync()
         {
             await using StringWriter writer = new StringWriter();
-            await WriteAsync(writer);
+            await WriteAsync(writer).ConfigureAwait(false);
             return writer.ToString();
         }
 
@@ -506,14 +506,14 @@ namespace NetExtender.Serialization.Ini
             {
                 if (index++ > 0)
                 {
-                    await writer.WriteLineAsync(String.Empty);
+                    await writer.WriteLineAsync(String.Empty).ConfigureAwait(false);
                 }
                 
-                await writer.WriteLineAsync($"[{ini.Trim()}]");
+                await writer.WriteLineAsync($"[{ini.Trim()}]").ConfigureAwait(false);
 
                 foreach ((String key, IniValue value) in section)
                 {
-                    await writer.WriteLineAsync($"{key}={value}");
+                    await writer.WriteLineAsync($"{key}={value}").ConfigureAwait(false);
                 }
             }
         }

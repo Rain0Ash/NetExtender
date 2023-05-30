@@ -151,7 +151,7 @@ namespace NetExtender.NAudio.Types.Sound
             try
             {
                 Stream.ResetPosition();
-                Byte[] data = await Stream.ReadAsByteArrayAsync(token);
+                Byte[] data = await Stream.ReadAsByteArrayAsync(token).ConfigureAwait(false);
                 return data;
             }
             finally

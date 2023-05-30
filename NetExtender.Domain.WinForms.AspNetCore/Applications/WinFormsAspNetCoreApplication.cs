@@ -57,7 +57,7 @@ namespace NetExtender.Domains.WinForms.AspNetCore.Applications
 
             Server ??= Create(host);
             Server.Start();
-            await base.RunAsync(form, token);
+            await base.RunAsync(form, token).ConfigureAwait(false);
             return this;
         }
 

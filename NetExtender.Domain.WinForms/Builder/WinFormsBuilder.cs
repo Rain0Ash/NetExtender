@@ -11,7 +11,7 @@ namespace NetExtender.Domains.WinForms.Builder
     {
     }
 
-    public class WinFormsBuilder<T> : ApplicationBuilder<T> where T : Form, new()
+    public class WinFormsBuilder<T> : ApplicationBuilder<T> where T : Form
     {
         public override T Build(String[] arguments)
         {
@@ -20,7 +20,7 @@ namespace NetExtender.Domains.WinForms.Builder
                 throw new ArgumentNullException(nameof(arguments));
             }
 
-            return new T();
+            return New();
         }
     }
 }

@@ -13,7 +13,7 @@ using NetExtender.Domains.WindowsPresentation.AspNetCore.Context;
 
 namespace NetExtender.Domains.WindowsPresentation.AspNetCore.Builder
 {
-    public class WindowsPresentationAspNetCoreBuilder<TWindow, THost> : WindowsPresentationAspNetCoreBuilder<TWindow>, IApplicationBuilder<WindowsPresentationAspNetCoreContext<TWindow, THost>> where TWindow : Window, new() where THost : class, IHost, new()
+    public class WindowsPresentationAspNetCoreBuilder<TWindow, THost> : WindowsPresentationAspNetCoreBuilder<TWindow>, IApplicationBuilder<WindowsPresentationAspNetCoreContext<TWindow, THost>> where TWindow : Window where THost : class, IHost
     {
         protected override THost Host(String[] arguments)
         {
@@ -22,7 +22,7 @@ namespace NetExtender.Domains.WindowsPresentation.AspNetCore.Builder
                 throw new ArgumentNullException(nameof(arguments));
             }
 
-            return new THost();
+            return New<THost>();
         }
 
         public override WindowsPresentationAspNetCoreContext<TWindow, THost> Build()
@@ -46,7 +46,7 @@ namespace NetExtender.Domains.WindowsPresentation.AspNetCore.Builder
         }
     }
     
-    public abstract class WindowsPresentationAspNetCoreBuilder<TWindow> : WindowsPresentationAspNetCoreBuilder, IApplicationBuilder<WindowsPresentationAspNetCoreContext<TWindow>> where TWindow : Window, new()
+    public abstract class WindowsPresentationAspNetCoreBuilder<TWindow> : WindowsPresentationAspNetCoreBuilder, IApplicationBuilder<WindowsPresentationAspNetCoreContext<TWindow>> where TWindow : Window
     {
         protected override TWindow Window(String[] arguments)
         {
@@ -55,7 +55,7 @@ namespace NetExtender.Domains.WindowsPresentation.AspNetCore.Builder
                 throw new ArgumentNullException(nameof(arguments));
             }
 
-            return new TWindow();
+            return New<TWindow>();
         }
 
         public override WindowsPresentationAspNetCoreContext<TWindow> Build()

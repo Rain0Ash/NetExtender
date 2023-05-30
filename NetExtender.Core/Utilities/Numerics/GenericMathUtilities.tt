@@ -1048,7 +1048,7 @@ namespace NetExtender.Utilities.Numerics
             WriteLine("\t\t{");
             if (IsUnsignedType(type))
             {
-                WriteLine($"\t\t\treturn BitOperations.Log2(value);");
+                WriteLine("\t\t\treturn BitOperations.Log2(value);");
             }
             else
             {

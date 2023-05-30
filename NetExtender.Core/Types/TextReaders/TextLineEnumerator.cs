@@ -51,7 +51,7 @@ namespace NetExtender.Types.TextReaders
 
         public async ValueTask<Boolean> MoveNextAsync()
         {
-            return (Line = await Reader.ReadLineAsync()) is not null;
+            return (Line = await Reader.ReadLineAsync().ConfigureAwait(false)) is not null;
         }
 
         void IEnumerator.Reset()

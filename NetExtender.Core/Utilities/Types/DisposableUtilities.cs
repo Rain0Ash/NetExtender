@@ -69,7 +69,7 @@ namespace NetExtender.Utilities.Types
 
                 try
                 {
-                    await item.DisposeAsync();
+                    await item.DisposeAsync().ConfigureAwait(false);
                 }
                 catch (Exception exception)
                 {

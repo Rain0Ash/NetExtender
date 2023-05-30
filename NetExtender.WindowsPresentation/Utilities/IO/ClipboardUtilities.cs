@@ -277,7 +277,7 @@ namespace NetExtender.Utilities.Windows.IO
                 return Clear();
             }
 
-            await using MemoryStream stream = await raw.ToStreamAsync();
+            await using MemoryStream stream = await raw.ToStreamAsync().ConfigureAwait(false);
             return SetRaw(stream);
         }
 
@@ -294,7 +294,7 @@ namespace NetExtender.Utilities.Windows.IO
             }
 
             await using MemoryStream ms = new MemoryStream();
-            await stream.CopyToAsync(ms);
+            await stream.CopyToAsync(ms).ConfigureAwait(false);
 
             return SetRaw(ms);
         }
@@ -504,12 +504,12 @@ namespace NetExtender.Utilities.Windows.IO
 
         public static async Task<Boolean> FlushSetRawAsync(Byte[] raw)
         {
-            return await SetRawAsync(raw) && Flush();
+            return await SetRawAsync(raw).ConfigureAwait(false) && Flush();
         }
 
         public static async Task<Boolean> FlushSetRawAsync(Stream stream)
         {
-            return await SetRawAsync(stream) && Flush();
+            return await SetRawAsync(stream).ConfigureAwait(false) && Flush();
         }
 
         public static Boolean FlushSetImage(BitmapSource image)

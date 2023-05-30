@@ -67,7 +67,7 @@ namespace NetExtender.AspNetCore.Types.Middlewares
                 return;
             }
 
-            await Next(context);
+            await Next(context).ConfigureAwait(false);
         }
     }
 }

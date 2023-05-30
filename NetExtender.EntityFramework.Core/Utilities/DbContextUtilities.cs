@@ -169,7 +169,7 @@ namespace NetExtender.Utilities.EntityFrameworkCore
             }
         }
 
-        public static async Task<T> ExecuteInTransaction<T>(this DbContext context, Func<Task<T>> method)
+        public static async Task<T> ExecuteInTransactionAsync<T>(this DbContext context, Func<Task<T>> method)
         {
             if (context is null)
             {
@@ -182,14 +182,14 @@ namespace NetExtender.Utilities.EntityFrameworkCore
             }
 
             IDbContextTransaction? current = context.Database.CurrentTransaction;
-            IDbContextTransaction transaction = current ?? await context.Database.BeginTransactionAsync();
+            IDbContextTransaction transaction = current ?? await context.Database.BeginTransactionAsync().ConfigureAwait(false);
 
             try
             {
-                T result = await method.Invoke();
+                T result = await method.Invoke().ConfigureAwait(false);
                 if (transaction != current)
                 {
-                    await transaction.CommitAsync();
+                    await transaction.CommitAsync().ConfigureAwait(false);
                 }
 
                 return result;
@@ -201,14 +201,14 @@ namespace NetExtender.Utilities.EntityFrameworkCore
                     throw;
                 }
 
-                await transaction.RollbackAsync();
+                await transaction.RollbackAsync().ConfigureAwait(false);
                 throw;
             }
             finally
             {
                 if (transaction != current)
                 {
-                    await transaction.DisposeAsync();
+                    await transaction.DisposeAsync().ConfigureAwait(false);
                 }
             }
         }
@@ -419,7 +419,7 @@ namespace NetExtender.Utilities.EntityFrameworkCore
                 try
                 {
                     token.ThrowIfCancellationRequested();
-                    await context.SaveChangesAsync(token);
+                    await context.SaveChangesAsync(token).ConfigureAwait(false);
                     return;
                 }
                 catch (DbUpdateConcurrencyException exception)
@@ -431,7 +431,7 @@ namespace NetExtender.Utilities.EntityFrameworkCore
 
                     token.ThrowIfCancellationRequested();
                     EntityEntry entity = exception.Entries.Single();
-                    PropertyValues? values = await entity.GetDatabaseValuesAsync(token);
+                    PropertyValues? values = await entity.GetDatabaseValuesAsync(token).ConfigureAwait(false);
                     entity.OriginalValues.SetValues(values!);
                     UpdateRowVersion(entity);
                 }
@@ -688,13 +688,13 @@ namespace NetExtender.Utilities.EntityFrameworkCore
                 throw new ArgumentNullException(nameof(changes));
             }
 
-            return context.ExecuteInTransaction(async () =>
+            return context.ExecuteInTransactionAsync(async () =>
             {
                 TransactionLogContext transaction = new TransactionLogContext(context);
-                Int32 count = await changes.Invoke(accept, token);
+                Int32 count = await changes.Invoke(accept, token).ConfigureAwait(false);
 
                 transaction.AddTransactionLogEntities();
-                await changes.Invoke(accept, token);
+                await changes.Invoke(accept, token).ConfigureAwait(false);
                 return count;
             });
         }

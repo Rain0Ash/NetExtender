@@ -74,7 +74,7 @@ namespace NetExtender.Domains.WindowsPresentation.View
 
             if (window is null)
             {
-                await application.RunAsync(token);
+                await application.RunAsync(token).ConfigureAwait(false);
                 return this;
             }
 
@@ -85,7 +85,7 @@ namespace NetExtender.Domains.WindowsPresentation.View
             }
 
             Context.Closed += OnFormClosed;
-            await application.RunAsync(Context, token);
+            await application.RunAsync(Context, token).ConfigureAwait(false);
             return this;
         }
 

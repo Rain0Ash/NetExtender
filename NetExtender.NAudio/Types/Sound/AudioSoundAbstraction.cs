@@ -54,7 +54,8 @@ namespace NetExtender.NAudio.Types.Sound
 
         public virtual async Task<Byte[]> ReadAsync(CancellationToken token)
         {
-            return await Task.Run(Read, token);
+            // ReSharper disable once AsyncConverter.AsyncAwaitMayBeElidedHighlighting
+            return await Task.Run(Read, token).ConfigureAwait(false);
         }
     }
 }

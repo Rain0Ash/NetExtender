@@ -9,6 +9,6 @@ namespace NetExtender.UserInterface.Windows.Taskbar
         UseAppThumbnailAlways = 1,
         UseAppThumbnailWhenActive = 2,
         UseAppPeekAlways = 4,
-        UseAppPeekWhenActive = 8,
+        UseAppPeekWhenActive = 8
     }
 }
