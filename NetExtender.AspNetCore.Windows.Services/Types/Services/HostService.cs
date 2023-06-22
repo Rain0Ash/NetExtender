@@ -18,7 +18,7 @@ namespace NetExtender.AspNetCore.Windows.Services.Types.Services
         /// </summary>
         /// <param name="host">The configured web host containing the web application to host in the Windows service.</param>
         public HostService(IHost host)
-            : base(host?.Services ?? throw new ArgumentNullException(nameof(host)))
+            : base(host is not null ? host.Services : throw new ArgumentNullException(nameof(host)))
         {
             Host = host ?? throw new ArgumentNullException(nameof(host));
         }

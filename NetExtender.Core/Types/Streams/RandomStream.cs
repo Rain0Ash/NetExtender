@@ -113,7 +113,7 @@ namespace NetExtender.Types.Streams
                 return ValueTask.FromCanceled<Int32>(token);
             }
 
-            Read(buffer.Span);
+            _ = Read(buffer.Span);
             return ValueTask.FromResult(buffer.Length);
         }
 
@@ -124,7 +124,7 @@ namespace NetExtender.Types.Streams
                 return Task.FromCanceled<Int32>(token);
             }
 
-            Read(buffer, offset, count);
+            _ = Read(buffer, offset, count);
             return Task.FromResult(count);
         }
 

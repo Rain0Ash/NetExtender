@@ -93,7 +93,7 @@ namespace NetExtender.EntityFrameworkCore
 
         public override Int32 GetHashCode()
         {
-            return base.GetHashCode();
+            return HashCode.Combine(Timeout, IsolationLevel);
         }
 
         public override Boolean Equals(Object? obj)

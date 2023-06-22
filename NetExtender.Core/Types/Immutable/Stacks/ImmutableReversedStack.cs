@@ -30,7 +30,12 @@ namespace NetExtender.Types.Immutable.Stacks
 
         public ImmutableReversedStack(IEnumerable<T> stack)
         {
-            Stack = stack?.AsImmutableList() ?? throw new ArgumentNullException(nameof(stack));
+            if (stack is null)
+            {
+                throw new ArgumentNullException(nameof(stack));
+            }
+
+            Stack = stack.AsImmutableList();
         }
 
         public T Peek()

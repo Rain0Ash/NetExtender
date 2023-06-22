@@ -40,8 +40,7 @@ namespace NetExtender.ImageSharp.Utilities
                 throw new ArgumentNullException(nameof(stream));
             }
 
-            using Image<Rgba32>? image = Image.Load<Rgba32>(stream);
-
+            using Image<Rgba32> image = Image.Load<Rgba32>(stream);
             return evaluator.Hash(image);
         }
 

@@ -2957,6 +2957,7 @@ namespace NetExtender.Utilities.Types
             return source;
         }
 
+        [SuppressMessage("ReSharper", "AsyncConverter.AsyncWait")]
         public static Task PropagateException(this Task source)
         {
             if (source is null)
@@ -2972,6 +2973,7 @@ namespace NetExtender.Utilities.Types
             return source;
         }
 
+        [SuppressMessage("ReSharper", "AsyncConverter.AsyncWait")]
         public static Task<T> PropagateException<T>(this Task<T> source)
         {
             if (source is null)
@@ -3006,6 +3008,7 @@ namespace NetExtender.Utilities.Types
                 Internal = task ?? throw new ArgumentNullException(nameof(task));
             }
 
+            [SuppressMessage("ReSharper", "AsyncConverter.AsyncWait")]
             public IDisposable Subscribe(IObserver<T> observer)
             {
                 if (observer is null)

@@ -53,13 +53,19 @@ namespace NetExtender.AspNetCore.Types.Identities
         {
             get
             {
+                // ReSharper disable once ConditionalAccessQualifierIsNonNullableAccordingToAPIContract
                 return HttpContext.User?.Identity?.IsAuthenticated ?? false;
             }
         }
 
         public DefaultIdentityUser(IHttpContextAccessor accessor, UserManager<TUser> manager)
         {
-            HttpContext = accessor?.HttpContext ?? throw new ArgumentNullException(nameof(accessor));
+            if (accessor is null)
+            {
+                throw new ArgumentNullException(nameof(accessor));
+            }
+
+            HttpContext = accessor.HttpContext ?? throw new ArgumentNullException(nameof(accessor.HttpContext));
             Manager = manager ?? throw new ArgumentNullException(nameof(manager));
             AddIdentity(new ClaimsIdentity(HttpContext.User.Identity));
             AddIdentities(HttpContext.User.Identities);

@@ -102,12 +102,12 @@ namespace NetExtender.Types.Dictionaries
         }
 
         public SortedMultiDictionary(IEnumerable<KeyValuePair<TKey, ImmutableHashSet<TValue>>> collection)
-            : base(collection?.ToDictionary() ?? throw new ArgumentNullException(nameof(collection)))
+            : base(collection is not null ? collection.ToDictionary() : throw new ArgumentNullException(nameof(collection)))
         {
         }
 
         public SortedMultiDictionary(IEnumerable<KeyValuePair<TKey, ImmutableHashSet<TValue>>> collection, IComparer<TKey>? comparer)
-            : base(collection?.ToDictionary() ?? throw new ArgumentNullException(nameof(collection)), comparer)
+            : base(collection is not null ? collection.ToDictionary() : throw new ArgumentNullException(nameof(collection)), comparer)
         {
         }
 
@@ -165,7 +165,7 @@ namespace NetExtender.Types.Dictionaries
                 throw new ArgumentNullException(nameof(key));
             }
 
-            if (TryGetValue(key, out ImmutableHashSet<TValue>? result) && result?.Count > 0)
+            if (TryGetValue(key, out ImmutableHashSet<TValue>? result) && result.Count > 0)
             {
                 value = result.First();
                 return true;

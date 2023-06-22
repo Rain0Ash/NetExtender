@@ -503,7 +503,7 @@ namespace System
 
         public Boolean ToChar(out Char result)
         {
-            if (Value is >= 0 and <= Char.MaxValue)
+            if (Value <= Char.MaxValue)
             {
                 result = (Char) Value;
                 return true;

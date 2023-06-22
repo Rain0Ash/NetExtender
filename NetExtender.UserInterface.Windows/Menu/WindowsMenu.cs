@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using NetExtender.UserInterface.Interfaces;
 using NetExtender.Utilities.Numerics;
 
@@ -32,6 +33,7 @@ namespace NetExtender.UserInterface.Windows.Menu
             Items = new List<WindowsMenuItem>();
         }
 
+        [SuppressMessage("ReSharper", "ConditionalAccessQualifierIsNonNullableAccordingToAPIContract")]
         public WindowsMenu(IWindow window)
             : this(window?.Handle ?? throw new ArgumentNullException(nameof(window)))
         {

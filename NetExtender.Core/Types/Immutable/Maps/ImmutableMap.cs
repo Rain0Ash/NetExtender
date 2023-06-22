@@ -198,7 +198,7 @@ namespace NetExtender.Types.Immutable.Maps
 
         public ImmutableMap<TKey, TValue> Remove(TKey key)
         {
-            return Base.ContainsKey(key) ? new ImmutableMap<TKey, TValue>(Base.Remove(key), Reversed.Remove(Base[key])) : this;
+            return Base.TryGetValue(key, out TValue? value) ? new ImmutableMap<TKey, TValue>(Base.Remove(key), Reversed.Remove(value)) : this;
         }
 
         IImmutableMap<TKey, TValue> IImmutableMap<TKey, TValue>.Remove(TKey key)
@@ -229,7 +229,7 @@ namespace NetExtender.Types.Immutable.Maps
 
         public ImmutableMap<TKey, TValue> RemoveByValue(TValue key)
         {
-            return Reversed.ContainsKey(key) ? new ImmutableMap<TKey, TValue>(Base.Remove(Reversed[key]), Reversed.Remove(key)) : this;
+            return Reversed.TryGetValue(key, out TKey? value) ? new ImmutableMap<TKey, TValue>(Base.Remove(value), Reversed.Remove(key)) : this;
         }
 
         IImmutableMap<TKey, TValue> IImmutableMap<TKey, TValue>.RemoveByValue(TValue key)

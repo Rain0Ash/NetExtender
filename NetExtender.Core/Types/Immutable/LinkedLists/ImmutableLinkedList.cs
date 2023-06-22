@@ -464,6 +464,7 @@ namespace NetExtender.Types.Immutable.LinkedLists
         /// Returns a new list with all elements matching <paramref name="predicate"/> removed.
         /// This method is O(n). All retained elements prior to the last removed element are copied.
         /// </summary>
+        // ReSharper disable once CognitiveComplexity
         public ImmutableLinkedList<T> RemoveAll(Func<T, Boolean> predicate)
         {
             if (predicate is null)
@@ -648,6 +649,7 @@ namespace NetExtender.Types.Immutable.LinkedLists
             return true;
         }
 
+        // ReSharper disable once CognitiveComplexity
         private static void Merge(ref Segment segment1, ref Segment segment2, IComparer<T> comparer, out Segment result)
         {
             EnsureFullCopy(ref segment1);

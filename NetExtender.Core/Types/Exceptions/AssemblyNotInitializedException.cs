@@ -19,7 +19,7 @@ namespace NetExtender.Types.Exceptions
         }
 
         public ModuleNotInitializedException(Module module, String? message)
-            : base(module?.Assembly ?? throw new ArgumentNullException(nameof(module)), message ?? $"Module {module.Assembly.GetName().Name} is not initialized")
+            : base(module is not null ? module.Assembly : throw new ArgumentNullException(nameof(module)), message ?? $"Module {module.Assembly.GetName().Name} is not initialized")
         {
             Module = module ?? throw new ArgumentNullException(nameof(module));
         }

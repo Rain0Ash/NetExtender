@@ -2,6 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
@@ -50,6 +51,7 @@ namespace NetExtender.Domains.AspNetCore.Server
             Server = Context.RunAsync(Source.Token);
         }
 
+        [SuppressMessage("ReSharper", "AsyncConverter.AsyncWait")]
         public virtual void Stop()
         {
             if (!IsStarted || Server is null || Source is null)

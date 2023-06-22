@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
@@ -107,6 +108,7 @@ namespace NetExtender.Utilities.Network
             };
         }
 
+        [SuppressMessage("ReSharper", "PatternIsRedundant")]
         public static PortType GetPortType(UInt16 port)
         {
             return port switch
@@ -114,7 +116,7 @@ namespace NetExtender.Utilities.Network
                 InvalidPort => PortType.Invalid,
                 <= SystemPortMaximum => PortType.System,
                 <= RegisterPortMaximum => PortType.Register,
-                <= DynamicPortMaximum => PortType.Dynamic
+                <= DynamicPortMaximum => PortType.Dynamic,
             };
         }
 

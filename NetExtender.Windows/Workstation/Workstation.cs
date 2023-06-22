@@ -21,8 +21,15 @@ namespace NetExtender.Workstation
 
         private static String? GetCurrentUserSID()
         {
-            using WindowsIdentity user = WindowsIdentity.GetCurrent();
-            return user?.User?.Value;
+            try
+            {
+                using WindowsIdentity user = WindowsIdentity.GetCurrent();
+                return user.User?.Value;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
         public static Boolean? IsAdministrator
@@ -75,7 +82,7 @@ namespace NetExtender.Workstation
             Continuous = 0x80000000
         }
 
-        [DllImportAttribute("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         private static extern ScreenSaverExecutionState SetThreadExecutionState(ScreenSaverExecutionState state);
 
         public static Boolean ScreenSaverEnabled

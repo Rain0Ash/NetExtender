@@ -33,9 +33,14 @@ namespace NetExtender.Utilities.Network
 
         public static async Task<HttpStatusCode> GetProxyStatusAsync(this WebProxy proxy, TimeSpan timeout, CancellationToken token)
         {
-            if (proxy?.Address is null)
+            if (proxy is null)
             {
                 throw new ArgumentNullException(nameof(proxy));
+            }
+
+            if (proxy.Address is null)
+            {
+                throw new ArgumentNullException(nameof(proxy.Address));
             }
 
             const String address = "https://google.com";

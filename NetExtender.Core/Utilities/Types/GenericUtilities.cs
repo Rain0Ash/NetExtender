@@ -514,9 +514,9 @@ namespace NetExtender.Utilities.Types
                 return original;
             }
 
-            if (visited.ContainsKey(original))
+            if (visited.TryGetValue(original, out Object? @internal))
             {
-                return visited[original];
+                return @internal;
             }
 
             if (typeof(Delegate).IsAssignableFrom(type))

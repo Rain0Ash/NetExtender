@@ -336,7 +336,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
 
             services.AddApiVersioning(options =>
             {
-                options.DefaultApiVersion = ApiVersion.TryParse(version, out ApiVersion? api) && api is not null ? api : ApiVersion.Default;
+                options.DefaultApiVersion = ApiVersion.TryParse(version, out ApiVersion? api) ? api : ApiVersion.Default;
                 options.AssumeDefaultVersionWhenUnspecified = true;
                 options.ReportApiVersions = true;
                 options.ApiVersionReader = Activator.CreateInstance<T>();

@@ -9,7 +9,7 @@ namespace NetExtender.UserInterface.WinForms.Forms
 {
     public abstract class HelpToolTipForm : FixedForm
     {
-        private HelpToolTip ToolTip { get; }
+        private HelpToolTip? ToolTip { get; set; }
 
         protected HelpToolTipForm()
         {
@@ -18,6 +18,11 @@ namespace NetExtender.UserInterface.WinForms.Forms
 
         public void SetMessage(Control control, String message)
         {
+            if (ToolTip is null)
+            {
+                throw new ObjectDisposedException(nameof(ToolTip));
+            }
+            
             if (!Controls.Contains(control))
             {
                 return;
@@ -28,11 +33,21 @@ namespace NetExtender.UserInterface.WinForms.Forms
 
         public void RemoveMessage(Control control)
         {
+            if (ToolTip is null)
+            {
+                throw new ObjectDisposedException(nameof(ToolTip));
+            }
+            
             ToolTip.SetToolTip(control, null);
         }
 
         public void RemoveAllMessages()
         {
+            if (ToolTip is null)
+            {
+                throw new ObjectDisposedException(nameof(ToolTip));
+            }
+            
             ToolTip.RemoveAll();
         }
 
@@ -41,6 +56,7 @@ namespace NetExtender.UserInterface.WinForms.Forms
             if (disposing)
             {
                 ToolTip?.Dispose();
+                ToolTip = null;
             }
 
             base.Dispose(disposing);

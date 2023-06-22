@@ -517,10 +517,7 @@ namespace NetExtender.Utilities.Types
 
             foreach ((TKey key, TValue value) in source)
             {
-                if (!dictionary.ContainsKey(value))
-                {
-                    dictionary.Add(value, key);
-                }
+                dictionary.TryAdd(value, key);
             }
 
             return dictionary;

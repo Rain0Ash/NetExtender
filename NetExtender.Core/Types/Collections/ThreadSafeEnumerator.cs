@@ -23,12 +23,17 @@ namespace NetExtender.Types.Collections
 
         public ThreadSafeEnumerator(IEnumerable source)
         {
-            Enumerator = source?.GetEnumerator() ?? throw new ArgumentNullException(nameof(source));
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            Enumerator = source.GetEnumerator();
             Monitor.Enter(Enumerator);
         }
 
         public ThreadSafeEnumerator(IEnumerable source, Object synchronization)
-            : this(source?.GetEnumerator() ?? throw new ArgumentNullException(nameof(source)), synchronization)
+            : this(source is not null ? source.GetEnumerator() : throw new ArgumentNullException(nameof(source)), synchronization)
         {
         }
 
@@ -94,12 +99,17 @@ namespace NetExtender.Types.Collections
 
         public ThreadSafeEnumerator(IEnumerable<T> source)
         {
-            Enumerator = source?.GetEnumerator() ?? throw new ArgumentNullException(nameof(source));
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            Enumerator = source.GetEnumerator();
             Monitor.Enter(Enumerator);
         }
 
         public ThreadSafeEnumerator(IEnumerable<T> source, Object synchronization)
-            : this(source?.GetEnumerator() ?? throw new ArgumentNullException(nameof(source)), synchronization)
+            : this(source is not null ? source.GetEnumerator() : throw new ArgumentNullException(nameof(source)), synchronization)
         {
         }
 
@@ -133,7 +143,7 @@ namespace NetExtender.Types.Collections
 
             if (disposing)
             {
-                Enumerator?.Dispose();
+                Enumerator.Dispose();
             }
         }
 

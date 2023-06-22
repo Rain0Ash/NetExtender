@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO.MemoryMappedFiles;
 using System.Threading;
 using System.Threading.Tasks;
@@ -254,6 +255,7 @@ namespace NetExtender.Types.Interprocess
             accessor.WriteArray(sizeof(Int32), data, 0, data.Length);
         }
 
+        [SuppressMessage("ReSharper", "AsyncConverter.AsyncWait")]
         public void Dispose()
         {
             if (MappedFile is null)

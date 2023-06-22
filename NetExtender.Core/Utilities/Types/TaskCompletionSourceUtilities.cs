@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 
 namespace NetExtender.Utilities.Types
@@ -174,6 +175,7 @@ namespace NetExtender.Utilities.Types
             }
         }
 
+        [SuppressMessage("ReSharper", "AsyncConverter.AsyncWait")]
         public static TaskCompletionSource<T> SetFromTask<T>(this TaskCompletionSource<T> source, Task<T> task)
         {
             if (source is null)
@@ -249,6 +251,7 @@ namespace NetExtender.Utilities.Types
             };
         }
 
+        [SuppressMessage("ReSharper", "AsyncConverter.AsyncWait")]
         public static Boolean TrySetFromTask<T>(this TaskCompletionSource<T> source, Task<T> task)
         {
             if (source is null)

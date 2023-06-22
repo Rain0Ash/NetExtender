@@ -2,6 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -28,6 +29,7 @@ namespace NetExtender.Utilities.Types
                 Task.Factory.StartNew(() => callback(state), CancellationToken.None, TaskCreationOptions.None, Scheduler);
             }
 
+            [SuppressMessage("ReSharper", "AsyncConverter.AsyncWait")]
             public override void Send(SendOrPostCallback callback, Object? state)
             {
                 Task task = new Task(() => callback(state));
