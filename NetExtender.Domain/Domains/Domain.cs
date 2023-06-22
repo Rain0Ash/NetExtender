@@ -99,17 +99,17 @@ namespace NetExtender.Domains
 
         public static IDomain Create(String name)
         {
-            return Create(new ApplicationData(name, ApplicationVersion.Default));
+            return Create(new ApplicationInfo(name, ApplicationVersion.Default));
         }
 
         public static IDomain Create(String name, String identifier)
         {
-            return Create(new ApplicationData(name, identifier, ApplicationVersion.Default));
+            return Create(new ApplicationInfo(name, identifier, ApplicationVersion.Default));
         }
 
-        public static IDomain Create(IApplicationData data)
+        public static IDomain Create(IApplicationInfo info)
         {
-            return Create(new InternalDomain(data));
+            return Create(new InternalDomain(info));
         }
 
         public static IDomain AutoStart()
@@ -144,12 +144,12 @@ namespace NetExtender.Domains
 
         public static IDomain AutoStart(String name, IEnumerable<String>? args)
         {
-            return AutoStart(new ApplicationData(name, ApplicationVersion.Default), args);
+            return AutoStart(new ApplicationInfo(name, ApplicationVersion.Default), args);
         }
 
         public static IDomain AutoStart(String name, params String[]? args)
         {
-            return AutoStart(new ApplicationData(name, ApplicationVersion.Default), args);
+            return AutoStart(new ApplicationInfo(name, ApplicationVersion.Default), args);
         }
 
         public static IDomain AutoStart(String name, String identifier)
@@ -159,37 +159,37 @@ namespace NetExtender.Domains
 
         public static IDomain AutoStart(String name, String identifier, IEnumerable<String>? args)
         {
-            return AutoStart(new ApplicationData(name, identifier, ApplicationVersion.Default), args);
+            return AutoStart(new ApplicationInfo(name, identifier, ApplicationVersion.Default), args);
         }
 
         public static IDomain AutoStart(String name, String identifier, params String[]? args)
         {
-            return AutoStart(new ApplicationData(name, identifier, ApplicationVersion.Default), args);
+            return AutoStart(new ApplicationInfo(name, identifier, ApplicationVersion.Default), args);
         }
 
-        public static IDomain AutoStart(IApplicationData data)
+        public static IDomain AutoStart(IApplicationInfo info)
         {
-            return AutoStart(data, (IEnumerable<String>?) null);
+            return AutoStart(info, (IEnumerable<String>?) null);
         }
 
-        public static IDomain AutoStart(IApplicationData data, IEnumerable<String>? args)
+        public static IDomain AutoStart(IApplicationInfo info, IEnumerable<String>? args)
         {
-            if (data is null)
+            if (info is null)
             {
-                throw new ArgumentNullException(nameof(data));
+                throw new ArgumentNullException(nameof(info));
             }
 
-            return Create(data).AutoInitializeWithView(args);
+            return Create(info).AutoInitializeWithView(args);
         }
 
-        public static IDomain AutoStart(IApplicationData data, params String[]? args)
+        public static IDomain AutoStart(IApplicationInfo info, params String[]? args)
         {
-            if (data is null)
+            if (info is null)
             {
-                throw new ArgumentNullException(nameof(data));
+                throw new ArgumentNullException(nameof(info));
             }
 
-            return Create(data).AutoInitializeWithView(args);
+            return Create(info).AutoInitializeWithView(args);
         }
 
         public static IDomain Create(String name, IApplication application)
@@ -202,9 +202,9 @@ namespace NetExtender.Domains
             return Create(name, identifier).Initialize(application);
         }
 
-        public static IDomain Create(IApplicationData data, IApplication application)
+        public static IDomain Create(IApplicationInfo info, IApplication application)
         {
-            return Create(data).Initialize(application);
+            return Create(info).Initialize(application);
         }
 
         public static IDomain Create(String name, IApplication application, IApplicationView view)
@@ -217,9 +217,9 @@ namespace NetExtender.Domains
             return Create(name, identifier, application).View(view);
         }
 
-        public static IDomain Create(IApplicationData data, IApplication application, IApplicationView view)
+        public static IDomain Create(IApplicationInfo info, IApplication application, IApplicationView view)
         {
-            return Create(data, application).View(view);
+            return Create(info, application).View(view);
         }
 
         public static Task<IDomain?> CreateAsync()
@@ -252,14 +252,14 @@ namespace NetExtender.Domains
             return Task.FromResult(Create(name, identifier));
         }
 
-        public static Task<IDomain> CreateAsync(IApplicationData data)
+        public static Task<IDomain> CreateAsync(IApplicationInfo info)
         {
-            return Task.FromResult(Create(data));
+            return Task.FromResult(Create(info));
         }
 
-        public static Task<IDomain> CreateAsync(IApplicationData data, CancellationToken token)
+        public static Task<IDomain> CreateAsync(IApplicationInfo info, CancellationToken token)
         {
-            return Task.FromResult(Create(data));
+            return Task.FromResult(Create(info));
         }
 
         public static Task<IDomain> AutoStartAsync()
@@ -352,34 +352,34 @@ namespace NetExtender.Domains
             return Task.FromResult(AutoStart(name, identifier, args));
         }
 
-        public static Task<IDomain> AutoStartAsync(IApplicationData data)
+        public static Task<IDomain> AutoStartAsync(IApplicationInfo info)
         {
-            return Task.FromResult(AutoStart(data));
+            return Task.FromResult(AutoStart(info));
         }
 
-        public static Task<IDomain> AutoStartAsync(IApplicationData data, IEnumerable<String>? args)
+        public static Task<IDomain> AutoStartAsync(IApplicationInfo info, IEnumerable<String>? args)
         {
-            return Task.FromResult(AutoStart(data, args));
+            return Task.FromResult(AutoStart(info, args));
         }
 
-        public static Task<IDomain> AutoStartAsync(IApplicationData data, params String[]? args)
+        public static Task<IDomain> AutoStartAsync(IApplicationInfo info, params String[]? args)
         {
-            return Task.FromResult(AutoStart(data, args));
+            return Task.FromResult(AutoStart(info, args));
         }
 
-        public static Task<IDomain> AutoStartAsync(IApplicationData data, CancellationToken token)
+        public static Task<IDomain> AutoStartAsync(IApplicationInfo info, CancellationToken token)
         {
-            return Task.FromResult(AutoStart(data));
+            return Task.FromResult(AutoStart(info));
         }
 
-        public static Task<IDomain> AutoStartAsync(IApplicationData data, IEnumerable<String>? args, CancellationToken token)
+        public static Task<IDomain> AutoStartAsync(IApplicationInfo info, IEnumerable<String>? args, CancellationToken token)
         {
-            return Task.FromResult(AutoStart(data, args));
+            return Task.FromResult(AutoStart(info, args));
         }
 
-        public static Task<IDomain> AutoStartAsync(IApplicationData data, CancellationToken token, params String[]? args)
+        public static Task<IDomain> AutoStartAsync(IApplicationInfo info, CancellationToken token, params String[]? args)
         {
-            return Task.FromResult(AutoStart(data, args));
+            return Task.FromResult(AutoStart(info, args));
         }
 
         public static Task<IDomain> CreateAsync(String name, IApplication application)
@@ -402,14 +402,14 @@ namespace NetExtender.Domains
             return Task.FromResult(Create(name, identifier).Initialize(application));
         }
 
-        public static Task<IDomain> CreateAsync(IApplicationData data, IApplication application)
+        public static Task<IDomain> CreateAsync(IApplicationInfo info, IApplication application)
         {
-            return Task.FromResult(Create(data).Initialize(application));
+            return Task.FromResult(Create(info).Initialize(application));
         }
 
-        public static Task<IDomain> CreateAsync(IApplicationData data, IApplication application, CancellationToken token)
+        public static Task<IDomain> CreateAsync(IApplicationInfo info, IApplication application, CancellationToken token)
         {
-            return Task.FromResult(Create(data).Initialize(application));
+            return Task.FromResult(Create(info).Initialize(application));
         }
 
         public static Task<IDomain> CreateAsync(String name, IApplication application, IApplicationView view)
@@ -432,14 +432,14 @@ namespace NetExtender.Domains
             return Create(name, identifier, application).ViewAsync(view, token);
         }
 
-        public static Task<IDomain> CreateAsync(IApplicationData data, IApplication application, IApplicationView view)
+        public static Task<IDomain> CreateAsync(IApplicationInfo info, IApplication application, IApplicationView view)
         {
-            return Create(data, application).ViewAsync(view);
+            return Create(info, application).ViewAsync(view);
         }
 
-        public static Task<IDomain> CreateAsync(IApplicationData data, IApplication application, IApplicationView view, CancellationToken token)
+        public static Task<IDomain> CreateAsync(IApplicationInfo info, IApplication application, IApplicationView view, CancellationToken token)
         {
-            return Create(data, application).ViewAsync(view, token);
+            return Create(info, application).ViewAsync(view, token);
         }
 
         public static DateTime StartedAt
@@ -546,7 +546,7 @@ namespace NetExtender.Domains
             }
         }
 
-        public static ApplicationInfo Information
+        public static ApplicationInformation Information
         {
             get
             {

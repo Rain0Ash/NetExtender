@@ -6,15 +6,20 @@ using System;
 namespace NetExtender.Domains
 {
     [Serializable]
-    public readonly struct ApplicationInfo
+    public readonly struct ApplicationInformation
     {
-        public static ApplicationInfo Default { get; } = new ApplicationInfo();
+        public static ApplicationInformation Default { get; } = new ApplicationInformation();
 
         public String Developer { get; }
         public String Repository { get; }
         public String? URL { get; }
 
-        public ApplicationInfo(String developer, String repository, String? url = null)
+        public ApplicationInformation(String developer, String repository)
+            : this(developer, repository, null)
+        {
+        }
+
+        public ApplicationInformation(String developer, String repository, String? url)
         {
             Developer = developer;
             Repository = repository;

@@ -8,6 +8,7 @@ using System.Drawing;
 using System.Runtime.CompilerServices;
 using NetExtender.Types.Exceptions;
 using NetExtender.Types.Geometry;
+
 // ReSharper disable InvertIf
 // ReSharper disable ConvertToAutoProperty
 

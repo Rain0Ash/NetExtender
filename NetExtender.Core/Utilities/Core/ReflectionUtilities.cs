@@ -15,9 +15,9 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
-using NetExtender.Types.Reflection;
 using NetExtender.Types.Attributes;
 using NetExtender.Types.Exceptions;
+using NetExtender.Types.Reflection;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Utilities.Core
@@ -3357,7 +3357,7 @@ namespace NetExtender.Utilities.Core
                     Int32 lastindex = type.IndexOfAny(new[] { ']', ',' }, index + 2);
                     String value = type.Substring(index, lastindex - index);
                     tokens[token] = value;
-                    type = type.Replace(value, String.Empty);
+                    type = type.Remove(value);
                     index = type.IndexOf(token, StringComparison.InvariantCulture);
                 }
             }

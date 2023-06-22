@@ -255,6 +255,8 @@ namespace NetExtender.Utilities.Types
             }
         }
 
+        private static Regex FormatVariablesRegex { get; } = new Regex(@"\{|\}", RegexOptions.Compiled);
+        
         public static IEnumerable<String> GetFormatVariables(String value)
         {
             if (value is null)
@@ -264,7 +266,7 @@ namespace NetExtender.Utilities.Types
 
             return Regex.Matches(value, FormatVariableRegexPattern, RegexOptions.Compiled)
                 .Select(match => match.Value)
-                .Select(format => Regex.Replace(format.ToLower(), @"\{|\}", String.Empty));
+                .Select(format => FormatVariablesRegex.Remove(format.ToLower()));
         }
 
         private static IImmutableMap<Char, Char> Brackets { get; } = new Dictionary<Char, Char>(4)
@@ -329,6 +331,54 @@ namespace NetExtender.Utilities.Types
             }
 
             return order.Count <= 0;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String Remove(this String value, String remove)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            if (remove is null)
+            {
+                throw new ArgumentNullException(nameof(remove));
+            }
+
+            return value.Replace(remove, String.Empty);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String Remove(this String value, String remove, StringComparison comparison)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            if (remove is null)
+            {
+                throw new ArgumentNullException(nameof(remove));
+            }
+
+            return value.Replace(remove, String.Empty, comparison);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String Remove(this String value, String remove, Boolean ignoreCase, CultureInfo? culture)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            if (remove is null)
+            {
+                throw new ArgumentNullException(nameof(remove));
+            }
+
+            return value.Replace(remove, String.Empty, ignoreCase, culture);
         }
 
         public static String ReplaceFrom<T>(this String source, IEnumerable<KeyValuePair<String, T?>> dictionary)
@@ -2652,7 +2702,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(value));
             }
 
-            return AnsiRegex.Replace(value, String.Empty);
+            return AnsiRegex.Remove(value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -2951,26 +3001,6 @@ namespace NetExtender.Utilities.Types
         public static Int32 OccurrencesOf(this String value, Char character, Boolean insensitive)
         {
             return insensitive ? OccurrencesInsensitiveOf(value, character) : OccurrencesOf(value, character);
-        }
-
-        /// <summary>
-        /// Returns a new string in which all occurences of the specified value are removed.
-        /// </summary>
-        /// <param name="value">The text.</param>
-        /// <param name="occurence">The string to seek and remove.</param>
-        public static String RemoveAllOf(this String value, String occurence)
-        {
-            if (value is null)
-            {
-                throw new ArgumentNullException(nameof(value));
-            }
-
-            if (occurence is null)
-            {
-                throw new ArgumentNullException(nameof(occurence));
-            }
-
-            return value.Replace(occurence, String.Empty);
         }
 
         /// <summary>

@@ -5,49 +5,39 @@ using System;
 
 namespace NetExtender.Domains.Interfaces
 {
-    // ReSharper disable once RedundantExtendsListEntry
-    public interface IApplicationData : IComparable<IApplicationData>, IEquatable<IApplicationData>, IDisposable
+    public interface IApplicationInfo : IComparable<IApplicationInfo>, IEquatable<IApplicationInfo>, IDisposable
     {
-        public static Boolean operator >(IApplicationData first, IApplicationData second)
+        public static Boolean operator >(IApplicationInfo first, IApplicationInfo second)
         {
             return first.CompareTo(second) > 0;
         }
 
-        public static Boolean operator <(IApplicationData first, IApplicationData second)
+        public static Boolean operator <(IApplicationInfo first, IApplicationInfo second)
         {
             return first.CompareTo(second) < 0;
         }
 
-        public static Boolean operator >=(IApplicationData first, IApplicationData second)
+        public static Boolean operator >=(IApplicationInfo first, IApplicationInfo second)
         {
             return first.CompareTo(second) >= 0;
         }
 
-        public static Boolean operator <=(IApplicationData first, IApplicationData second)
+        public static Boolean operator <=(IApplicationInfo first, IApplicationInfo second)
         {
             return first.CompareTo(second) <= 0;
         }
 
         public ApplicationInfoMessage Message { get; }
-
         public Guid Guid { get; }
-
         public String ApplicationName { get; }
-
         public String ApplicationIdentifier { get; }
-
         public DateTime StartedAt { get; }
-
         public ApplicationVersion Version { get; }
-        public ApplicationInfo Information { get; }
-
+        public ApplicationInformation Information { get; }
         public ApplicationStatus Status { get; }
-
+        public String StatusInfo { get; }
         public ApplicationBranch Branch { get; }
-
-        public String StatusData { get; }
-
-        public String BranchData { get; }
+        public String BranchInfo { get; }
         public Boolean HasAnotherInstance { get; }
     }
 }

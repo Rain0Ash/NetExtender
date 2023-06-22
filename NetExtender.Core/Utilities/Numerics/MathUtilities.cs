@@ -352,12 +352,51 @@ namespace NetExtender.Utilities.Numerics
             return (Single) value;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        public static Boolean Equals(this Single value, Single other, Single epsilon)
+        {
+            if (Single.IsNaN(value) || Single.IsNaN(other))
+            {
+                return false;
+            }
+
+            if (Single.IsPositiveInfinity(value) && Single.IsPositiveInfinity(other) || Single.IsNegativeInfinity(value) && Single.IsNegativeInfinity(other))
+            {
+                return true;
+            }
+
+            return Math.Abs(value - other) < epsilon;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        public static Boolean Equals(this Double value, Double other, Double epsilon)
+        {
+            if (Double.IsNaN(value) || Double.IsNaN(other))
+            {
+                return false;
+            }
+
+            if (Double.IsPositiveInfinity(value) && Double.IsPositiveInfinity(other) || Double.IsNegativeInfinity(value) && Double.IsNegativeInfinity(other))
+            {
+                return true;
+            }
+
+            return Math.Abs(value - other) < epsilon;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        public static Boolean Equals(this Decimal value, Decimal other, Decimal epsilon)
+        {
+            return Math.Abs(value - other) < epsilon;
+        }
+
         /// <summary>
         /// Returns the greatest common denominator between value1 and value2
         /// </summary>
         /// <param name="first">Value 1</param>
         /// <param name="second">Value 2</param>
         /// <returns>The greatest common denominator if one exists</returns>
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static Int32 Gcd(this Int32 first, Int32 second)
         {
             if (first == Int32.MinValue || second == Int32.MinValue)
@@ -372,11 +411,10 @@ namespace NetExtender.Utilities.Numerics
                 if (first > second)
                 {
                     first %= second;
+                    continue;
                 }
-                else
-                {
-                    second %= first;
-                }
+
+                second %= first;
             }
 
             return first == 0 ? second : first;
@@ -388,6 +426,7 @@ namespace NetExtender.Utilities.Numerics
         /// <param name="first">Value 1</param>
         /// <param name="second">Value 2</param>
         /// <returns>The greatest common denominator if one exists</returns>
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static UInt32 Gcd(this UInt32 first, UInt32 second)
         {
             while (first != 0 && second != 0)
@@ -395,11 +434,10 @@ namespace NetExtender.Utilities.Numerics
                 if (first > second)
                 {
                     first %= second;
+                    continue;
                 }
-                else
-                {
-                    second %= first;
-                }
+
+                second %= first;
             }
 
             return first == 0 ? second : first;
@@ -411,6 +449,7 @@ namespace NetExtender.Utilities.Numerics
         /// <param name="first">Value 1</param>
         /// <param name="second">Value 2</param>
         /// <returns>The greatest common denominator if one exists</returns>
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static Int64 Gcd(this Int64 first, Int64 second)
         {
             if (first == Int64.MinValue || second == Int64.MinValue)
@@ -425,11 +464,10 @@ namespace NetExtender.Utilities.Numerics
                 if (first > second)
                 {
                     first %= second;
+                    continue;
                 }
-                else
-                {
-                    second %= first;
-                }
+
+                second %= first;
             }
 
             return first == 0 ? second : first;
@@ -441,6 +479,7 @@ namespace NetExtender.Utilities.Numerics
         /// <param name="first">Value 1</param>
         /// <param name="second">Value 2</param>
         /// <returns>The greatest common denominator if one exists</returns>
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static UInt64 Gcd(this UInt64 first, UInt64 second)
         {
             while (first != 0 && second != 0)
@@ -448,11 +487,10 @@ namespace NetExtender.Utilities.Numerics
                 if (first > second)
                 {
                     first %= second;
+                    continue;
                 }
-                else
-                {
-                    second %= first;
-                }
+
+                second %= first;
             }
 
             return first == 0 ? second : first;
@@ -4087,7 +4125,7 @@ namespace NetExtender.Utilities.Numerics
         {
             result = value switch
             {
-                >= 0 and <= 20 => Factorial(value),
+                <= 20 => Factorial(value),
                 _ => default
             };
 
@@ -4099,7 +4137,7 @@ namespace NetExtender.Utilities.Numerics
         {
             result = value switch
             {
-                >= 0 and <= 20 => (UInt64) Factorial(value),
+                <= 20 => (UInt64) Factorial(value),
                 _ => default
             };
 
@@ -4111,7 +4149,7 @@ namespace NetExtender.Utilities.Numerics
         {
             result = value switch
             {
-                >= 0 and <= 27 => DecimalFactorial(value),
+                <= 27 => DecimalFactorial(value),
                 _ => default
             };
 
@@ -4159,7 +4197,7 @@ namespace NetExtender.Utilities.Numerics
         {
             result = value switch
             {
-                >= 0 and <= 20 => Factorial(value),
+                <= 20 => Factorial(value),
                 _ => default
             };
 
@@ -4171,7 +4209,7 @@ namespace NetExtender.Utilities.Numerics
         {
             result = value switch
             {
-                >= 0 and <= 20 => (UInt64) Factorial(value),
+                <= 20 => (UInt64) Factorial(value),
                 _ => default
             };
 
@@ -4183,7 +4221,7 @@ namespace NetExtender.Utilities.Numerics
         {
             result = value switch
             {
-                >= 0 and <= 27 => DecimalFactorial(value),
+                <= 27 => DecimalFactorial(value),
                 _ => default
             };
 
@@ -4231,7 +4269,7 @@ namespace NetExtender.Utilities.Numerics
         {
             result = value switch
             {
-                >= 0 and <= 20 => Factorial(value),
+                <= 20 => Factorial(value),
                 _ => default
             };
 
@@ -4243,7 +4281,7 @@ namespace NetExtender.Utilities.Numerics
         {
             result = value switch
             {
-                >= 0 and <= 20 => (UInt64) Factorial(value),
+                <= 20 => (UInt64) Factorial(value),
                 _ => default
             };
 
@@ -4255,7 +4293,7 @@ namespace NetExtender.Utilities.Numerics
         {
             result = value switch
             {
-                >= 0 and <= 27 => DecimalFactorial(value),
+                <= 27 => DecimalFactorial(value),
                 _ => default
             };
 
@@ -4303,7 +4341,7 @@ namespace NetExtender.Utilities.Numerics
         {
             result = value switch
             {
-                >= 0 and <= 20 => Factorial(value),
+                <= 20 => Factorial(value),
                 _ => default
             };
 
@@ -4315,7 +4353,7 @@ namespace NetExtender.Utilities.Numerics
         {
             result = value switch
             {
-                >= 0 and <= 20 => (UInt64) Factorial(value),
+                <= 20 => (UInt64) Factorial(value),
                 _ => default
             };
 
@@ -4327,7 +4365,7 @@ namespace NetExtender.Utilities.Numerics
         {
             result = value switch
             {
-                >= 0 and <= 27 => DecimalFactorial(value),
+                <= 27 => DecimalFactorial(value),
                 _ => default
             };
 

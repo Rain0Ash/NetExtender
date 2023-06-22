@@ -14,31 +14,18 @@ namespace NetExtender.Domains.Interfaces
     public interface IDomain : IApplication, IDisposable
     {
         public IApplication Application { get; }
-
         public Boolean IsReady { get; }
-
         public Guid Guid { get; }
-
         public ApplicationVersion Version { get; }
-
-        public ApplicationInfo Information { get; }
-
+        public ApplicationInformation Information { get; }
         public DateTime StartedAt { get; }
-
-        public IApplicationData Data { get; }
-
+        public IApplicationInfo Info { get; }
         public ApplicationStatus Status { get; }
-
-        public String StatusData { get; }
-
+        public String StatusInfo { get; }
         public ApplicationBranch Branch { get; }
-
-        public String BranchData { get; }
-
+        public String BranchInfo { get; }
         public String ApplicationName { get; }
-
         public String ApplicationIdentifier { get; }
-
         public CultureInfo Culture { get; set; }
         public Boolean AlreadyStarted { get; }
 

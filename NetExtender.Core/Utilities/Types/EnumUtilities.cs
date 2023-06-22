@@ -641,6 +641,18 @@ namespace NetExtender.Utilities.Types
         {
             return CacheNames<T>.Contains(name);
         }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean ContainsName<T>(String name, Boolean without) where T : unmanaged, Enum
+        {
+            return without ? ContainsNameWithoutDefault<T>(name) : ContainsName<T>(name);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean ContainsNameWithoutDefault<T>(String name) where T : unmanaged, Enum
+        {
+            return CacheNamesWithoutDefault<T>.Contains(name);
+        }
 
         /// <summary>
         ///     Retrieves an array of the names of the constants in a specified enumeration.
@@ -651,6 +663,28 @@ namespace NetExtender.Utilities.Types
         public static ReadOnlyCollection<String> GetNames<T>() where T : unmanaged, Enum
         {
             return CacheNames<T>.Names;
+        }
+
+        /// <summary>
+        ///     Retrieves an array of the names of the constants in a specified enumeration.
+        /// </summary>
+        /// <typeparam name="T">Enum type</typeparam>
+        /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ReadOnlyCollection<String> GetNames<T>(Boolean without) where T : unmanaged, Enum
+        {
+            return without ? GetNamesWithoutDefault<T>() : GetNames<T>();
+        }
+
+        /// <summary>
+        ///     Retrieves an array of the names of the constants in a specified enumeration.
+        /// </summary>
+        /// <typeparam name="T">Enum type</typeparam>
+        /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ReadOnlyCollection<String> GetNamesWithoutDefault<T>() where T : unmanaged, Enum
+        {
+            return CacheNamesWithoutDefault<T>.Names;
         }
 
         /// <summary>
@@ -673,6 +707,28 @@ namespace NetExtender.Utilities.Types
         public static ReadOnlyCollection<EnumMember<T>> GetMembers<T>() where T : unmanaged, Enum
         {
             return CacheMembers<T>.Members;
+        }
+
+        /// <summary>
+        ///     Retrieves an array of the member information of the constants in a specified enumeration.
+        /// </summary>
+        /// <typeparam name="T">Enum type</typeparam>
+        /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ReadOnlyCollection<EnumMember<T>> GetMembers<T>(Boolean without) where T : unmanaged, Enum
+        {
+            return without ? GetMembersWithoutDefault<T>() : GetMembers<T>();
+        }
+
+        /// <summary>
+        ///     Retrieves an array of the member information of the constants in a specified enumeration.
+        /// </summary>
+        /// <typeparam name="T">Enum type</typeparam>
+        /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ReadOnlyCollection<EnumMember<T>> GetMembersWithoutDefault<T>() where T : unmanaged, Enum
+        {
+            return CacheMembersWithoutDefault<T>.Members;
         }
 
         /// <summary>
@@ -1270,6 +1326,23 @@ namespace NetExtender.Utilities.Types
             }
         }
 
+        private static class CacheNamesWithoutDefault<T> where T : unmanaged, Enum
+        {
+            public static ReadOnlyCollection<String> Names { get; }
+            public static ImmutableHashSet<String> Set { get; }
+
+            static CacheNamesWithoutDefault()
+            {
+                Names = CacheNames<T>.Names.Where(GenericUtilities.IsNotDefault).ToReadOnlyArray();
+                Set = Names.ToImmutableHashSet();
+            }
+
+            public static Boolean Contains(String name)
+            {
+                return Set.Contains(name);
+            }
+        }
+
         private static class CacheDescription<T> where T : unmanaged, Enum
         {
             public static ImmutableDictionary<T, String> Values { get; }
@@ -1326,6 +1399,16 @@ namespace NetExtender.Utilities.Types
             static CacheMembers()
             {
                 Members = CacheNames<T>.Names.Select(value => new EnumMember<T>(value)).ToReadOnlyArray();
+            }
+        }
+
+        private static class CacheMembersWithoutDefault<T> where T : unmanaged, Enum
+        {
+            public static ReadOnlyCollection<EnumMember<T>> Members { get; }
+
+            static CacheMembersWithoutDefault()
+            {
+                Members = CacheMembers<T>.Members.Where(GenericUtilities.IsNotDefault).ToReadOnlyArray();
             }
         }
 

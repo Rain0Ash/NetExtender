@@ -115,7 +115,7 @@ namespace NetExtender.Utilities.IO
             }
 
             String regex = new String(Path.GetInvalidFileNameChars()) + new String(Path.GetInvalidPathChars());
-            return Regex.Replace(path, $"[{Regex.Escape(regex)}]", String.Empty);
+            return RegexUtilities.Remove(path, $"[{Regex.Escape(regex)}]");
         }
 
         public static Boolean IsFullPath(String path)

@@ -48,7 +48,7 @@ namespace NetExtender.Domains
                 }
             }
 
-            public IApplicationData Data { get; }
+            public IApplicationInfo Info { get; }
 
             public Boolean? Elevate { get; init; }
 
@@ -86,7 +86,7 @@ namespace NetExtender.Domains
             {
                 get
                 {
-                    return Data.Guid;
+                    return Info.Guid;
                 }
             }
 
@@ -94,15 +94,15 @@ namespace NetExtender.Domains
             {
                 get
                 {
-                    return Data.Version;
+                    return Info.Version;
                 }
             }
 
-            public ApplicationInfo Information
+            public ApplicationInformation Information
             {
                 get
                 {
-                    return Data.Information;
+                    return Info.Information;
                 }
             }
 
@@ -110,7 +110,7 @@ namespace NetExtender.Domains
             {
                 get
                 {
-                    return Data.StartedAt;
+                    return Info.StartedAt;
                 }
             }
 
@@ -118,15 +118,15 @@ namespace NetExtender.Domains
             {
                 get
                 {
-                    return Data.Status;
+                    return Info.Status;
                 }
             }
 
-            public String StatusData
+            public String StatusInfo
             {
                 get
                 {
-                    return Data.StatusData;
+                    return Info.StatusInfo;
                 }
             }
 
@@ -134,15 +134,15 @@ namespace NetExtender.Domains
             {
                 get
                 {
-                    return Data.Branch;
+                    return Info.Branch;
                 }
             }
 
-            public String BranchData
+            public String BranchInfo
             {
                 get
                 {
-                    return Data.BranchData;
+                    return Info.BranchInfo;
                 }
             }
 
@@ -150,7 +150,7 @@ namespace NetExtender.Domains
             {
                 get
                 {
-                    return Data.ApplicationName;
+                    return Info.ApplicationName;
                 }
             }
 
@@ -158,7 +158,7 @@ namespace NetExtender.Domains
             {
                 get
                 {
-                    return Data.ApplicationIdentifier;
+                    return Info.ApplicationIdentifier;
                 }
             }
 
@@ -178,13 +178,13 @@ namespace NetExtender.Domains
             {
                 get
                 {
-                    return Data.HasAnotherInstance;
+                    return Info.HasAnotherInstance;
                 }
             }
 
-            public InternalDomain(IApplicationData data)
+            public InternalDomain(IApplicationInfo info)
             {
-                Data = data ?? throw new ArgumentNullException(nameof(data));
+                Info = info ?? throw new ArgumentNullException(nameof(info));
                 Culture = CultureInfo.InvariantCulture;
             }
 

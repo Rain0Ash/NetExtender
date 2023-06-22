@@ -33,6 +33,57 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String Remove(String input, String pattern)
+        {
+            return Regex.Replace(input, pattern, String.Empty);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String Remove(String input, String pattern, RegexOptions options)
+        {
+            return Regex.Replace(input, pattern, String.Empty, options);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String Remove(String input, String pattern, RegexOptions options, TimeSpan matchTimeout)
+        {
+            return Regex.Replace(input, pattern, String.Empty, options, matchTimeout);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String Remove(this Regex regex, String input)
+        {
+            if (regex is null)
+            {
+                throw new ArgumentNullException(nameof(regex));
+            }
+
+            return regex.Replace(input, String.Empty);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String Remove(this Regex regex, String input, Int32 count)
+        {
+            if (regex is null)
+            {
+                throw new ArgumentNullException(nameof(regex));
+            }
+
+            return regex.Replace(input, String.Empty, count);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String Remove(this Regex regex, String input, Int32 count, Int32 startat)
+        {
+            if (regex is null)
+            {
+                throw new ArgumentNullException(nameof(regex));
+            }
+
+            return regex.Replace(input, String.Empty, count, startat);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String JoinMatches(String value, String pattern, RegexOptions options = RegexOptions.None)
         {
             return JoinMatches(value, pattern, String.Empty, options);
@@ -692,6 +743,78 @@ namespace NetExtender.Utilities.Types
             }
 
             return Task.Run(() => regex.Replace(input, replacement, count, startat), token);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Task<String> RemoveAsync(String input, String pattern)
+        {
+            return RemoveAsync(input, pattern, CancellationToken.None);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Task<String> RemoveAsync(String input, String pattern, CancellationToken token)
+        {
+            return ReplaceAsync(input, pattern, String.Empty, token);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Task<String> RemoveAsync(String input, String pattern, RegexOptions options)
+        {
+            return RemoveAsync(input, pattern, options, CancellationToken.None);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Task<String> RemoveAsync(String input, String pattern, RegexOptions options, CancellationToken token)
+        {
+            return ReplaceAsync(input, pattern, String.Empty, options, token);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Task<String> RemoveAsync(String input, String pattern, RegexOptions options, TimeSpan matchTimeout)
+        {
+            return RemoveAsync(input, pattern, options, matchTimeout, CancellationToken.None);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Task<String> RemoveAsync(String input, String pattern, RegexOptions options, TimeSpan matchTimeout, CancellationToken token)
+        {
+            return ReplaceAsync(input, pattern, String.Empty, options, matchTimeout, token);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Task<String> RemoveAsync(this Regex regex, String input)
+        {
+            return RemoveAsync(regex, input, CancellationToken.None);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Task<String> RemoveAsync(this Regex regex, String input, CancellationToken token)
+        {
+            return ReplaceAsync(regex, input, String.Empty, token);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Task<String> RemoveAsync(this Regex regex, String input, Int32 count)
+        {
+            return RemoveAsync(regex, input, count, CancellationToken.None);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Task<String> RemoveAsync(this Regex regex, String input, Int32 count, CancellationToken token)
+        {
+            return ReplaceAsync(regex, input, String.Empty, count, token);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Task<String> RemoveAsync(this Regex regex, String input, Int32 count, Int32 startat)
+        {
+            return RemoveAsync(regex, input, count, startat, CancellationToken.None);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Task<String> RemoveAsync(this Regex regex, String input, Int32 count, Int32 startat, CancellationToken token)
+        {
+            return ReplaceAsync(regex, input, String.Empty, count, startat, token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

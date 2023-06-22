@@ -5,8 +5,8 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using NetExtender.Configuration.Common;
-using NetExtender.Types.Behavior.Interfaces;
 using NetExtender.Interfaces;
+using NetExtender.Types.Behavior.Interfaces;
 
 namespace NetExtender.Configuration.Properties.Interfaces
 {

@@ -2,46 +2,19 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 using NetExtender.Domains.Interfaces;
+using NetExtender.Domains.Utilities;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Domains
 {
     [Serializable]
-    public class ApplicationData : IApplicationData
+    public class ApplicationInfo : IApplicationInfo
     {
-        private static readonly IDictionary<ApplicationStatus, String> StatusDictionary = new Dictionary<ApplicationStatus, String>
-        {
-            [ApplicationStatus.None] = String.Empty,
-            [ApplicationStatus.NotFunctional] = "NF",
-            [ApplicationStatus.PreAlpha] = "PA",
-            [ApplicationStatus.ClosedAlpha] = "CA",
-            [ApplicationStatus.Alpha] = "A",
-            [ApplicationStatus.OpenAlpha] = "OA",
-            [ApplicationStatus.PreBeta] = "PB",
-            [ApplicationStatus.ClosedBeta] = "CB",
-            [ApplicationStatus.Beta] = "B",
-            [ApplicationStatus.OpenBeta] = "OB",
-            [ApplicationStatus.Release] = "R"
-        }.ToImmutableDictionary();
-
-        private static readonly IDictionary<ApplicationBranch, String> BranchDictionary = new Dictionary<ApplicationBranch, String>
-        {
-            [ApplicationBranch.Master] = String.Empty,
-            [ApplicationBranch.Stable] = "S",
-            [ApplicationBranch.Unstable] = "U",
-            [ApplicationBranch.Development] = "DEV",
-            [ApplicationBranch.Prototype] = "P",
-            [ApplicationBranch.Nightly] = "N",
-            [ApplicationBranch.NewArchitecture] = "NA"
-        }.ToImmutableDictionary();
-
-        public static Boolean operator ==(ApplicationData? first, ApplicationData? second)
+        public static Boolean operator ==(ApplicationInfo? first, ApplicationInfo? second)
         {
             if (ReferenceEquals(first, second))
             {
@@ -56,27 +29,27 @@ namespace NetExtender.Domains
             return first.CompareTo(second) == 0;
         }
 
-        public static Boolean operator !=(ApplicationData first, ApplicationData second)
+        public static Boolean operator !=(ApplicationInfo first, ApplicationInfo second)
         {
             return !(first == second);
         }
 
-        public static Boolean operator >(ApplicationData first, ApplicationData second)
+        public static Boolean operator >(ApplicationInfo first, ApplicationInfo second)
         {
             return first.CompareTo(second) > 0;
         }
 
-        public static Boolean operator <(ApplicationData first, ApplicationData second)
+        public static Boolean operator <(ApplicationInfo first, ApplicationInfo second)
         {
             return first.CompareTo(second) < 0;
         }
 
-        public static Boolean operator >=(ApplicationData first, ApplicationData second)
+        public static Boolean operator >=(ApplicationInfo first, ApplicationInfo second)
         {
             return first.CompareTo(second) >= 0;
         }
 
-        public static Boolean operator <=(ApplicationData first, ApplicationData second)
+        public static Boolean operator <=(ApplicationInfo first, ApplicationInfo second)
         {
             return first.CompareTo(second) <= 0;
         }
@@ -91,33 +64,28 @@ namespace NetExtender.Domains
         }
 
         public Guid Guid { get; }
-
         public String ApplicationName { get; }
-
         public String ApplicationIdentifier { get; }
-
         public DateTime StartedAt { get; }
-
         public ApplicationVersion Version { get; }
-        public ApplicationInfo Information { get; }
-
+        public ApplicationInformation Information { get; }
         public ApplicationStatus Status { get; }
 
-        public ApplicationBranch Branch { get; }
-
-        public String StatusData
+        public virtual String StatusInfo
         {
             get
             {
-                return StatusDictionary[Status];
+                return Status.Info();
             }
         }
 
-        public String BranchData
+        public ApplicationBranch Branch { get; }
+
+        public virtual String BranchInfo
         {
             get
             {
-                return BranchDictionary[Branch];
+                return Branch.Info();
             }
         }
 
@@ -129,49 +97,51 @@ namespace NetExtender.Domains
             }
         }
 
+        private static Regex IdentifierRegex { get; } = new Regex(@"[^a-zA-Z0-9]", RegexOptions.Compiled);
+
         [return: NotNullIfNotNull("name")]
         protected static String? ToIdentifier(String? name)
         {
-            return name is not null ? Regex.Replace(name, @"[^a-zA-Z0-9]", String.Empty) : null;
+            return name is not null ? IdentifierRegex.Remove(name) : null;
         }
 
-        public ApplicationData(ApplicationVersion version, ApplicationStatus status = ApplicationStatus.Release, ApplicationBranch branch = ApplicationBranch.Master)
-            : this(version, ApplicationInfo.Default, status, branch)
+        public ApplicationInfo(ApplicationVersion version, ApplicationStatus status = ApplicationStatus.Release, ApplicationBranch branch = ApplicationBranch.Master)
+            : this(version, ApplicationInformation.Default, status, branch)
         {
         }
 
 
-        public ApplicationData(ApplicationVersion version, ApplicationInfo information, ApplicationStatus status = ApplicationStatus.Release, ApplicationBranch branch = ApplicationBranch.Master)
+        public ApplicationInfo(ApplicationVersion version, ApplicationInformation information, ApplicationStatus status = ApplicationStatus.Release, ApplicationBranch branch = ApplicationBranch.Master)
             : this(Process.GetCurrentProcess().ProcessName, version, information, status, branch)
         {
         }
 
-        public ApplicationData(String name, ApplicationVersion version, ApplicationStatus status = ApplicationStatus.Release, ApplicationBranch branch = ApplicationBranch.Master)
-            : this(name, version, ApplicationInfo.Default, status, branch)
+        public ApplicationInfo(String name, ApplicationVersion version, ApplicationStatus status = ApplicationStatus.Release, ApplicationBranch branch = ApplicationBranch.Master)
+            : this(name, version, ApplicationInformation.Default, status, branch)
         {
         }
 
-        public ApplicationData(String name, ApplicationVersion version, ApplicationInfo information, ApplicationStatus status = ApplicationStatus.Release, ApplicationBranch branch = ApplicationBranch.Master)
+        public ApplicationInfo(String name, ApplicationVersion version, ApplicationInformation information, ApplicationStatus status = ApplicationStatus.Release, ApplicationBranch branch = ApplicationBranch.Master)
             : this(name, name, version, information, status, branch)
         {
         }
 
-        public ApplicationData(String name, ApplicationStatus status = ApplicationStatus.Release, ApplicationBranch branch = ApplicationBranch.Master)
+        public ApplicationInfo(String name, ApplicationStatus status = ApplicationStatus.Release, ApplicationBranch branch = ApplicationBranch.Master)
             : this(name, name, status, branch)
         {
         }
 
-        public ApplicationData(String name, String identifier, ApplicationStatus status = ApplicationStatus.Release, ApplicationBranch branch = ApplicationBranch.Master)
+        public ApplicationInfo(String name, String identifier, ApplicationStatus status = ApplicationStatus.Release, ApplicationBranch branch = ApplicationBranch.Master)
             : this(name, identifier, ApplicationVersion.Default, status, branch)
         {
         }
 
-        public ApplicationData(String name, String identifier, ApplicationVersion version, ApplicationStatus status = ApplicationStatus.Release, ApplicationBranch branch = ApplicationBranch.Master)
-            : this(name, identifier, version, ApplicationInfo.Default, status, branch)
+        public ApplicationInfo(String name, String identifier, ApplicationVersion version, ApplicationStatus status = ApplicationStatus.Release, ApplicationBranch branch = ApplicationBranch.Master)
+            : this(name, identifier, version, ApplicationInformation.Default, status, branch)
         {
         }
 
-        public ApplicationData(String name, String identifier, ApplicationVersion version, ApplicationInfo information, ApplicationStatus status = ApplicationStatus.Release, ApplicationBranch branch = ApplicationBranch.Master)
+        public ApplicationInfo(String name, String identifier, ApplicationVersion version, ApplicationInformation information, ApplicationStatus status = ApplicationStatus.Release, ApplicationBranch branch = ApplicationBranch.Master)
         {
             if (name is null)
             {
@@ -201,12 +171,12 @@ namespace NetExtender.Domains
             MutexUtilities.RegisterMutex(ApplicationName);
         }
 
-        public Int32 CompareTo(IApplicationData? other)
+        public Int32 CompareTo(IApplicationInfo? other)
         {
             return CompareTo(other, false);
         }
 
-        public Int32 CompareTo(IApplicationData? other, Boolean version)
+        public Int32 CompareTo(IApplicationInfo? other, Boolean version)
         {
             if (other is null)
             {
@@ -235,17 +205,17 @@ namespace NetExtender.Domains
 
         public override String ToString()
         {
-            return $"{Version}:{StatusData}{BranchData}";
+            return $"{Version}:{StatusInfo}{BranchInfo}";
         }
 
-        public Boolean Equals(IApplicationData? other)
+        public Boolean Equals(IApplicationInfo? other)
         {
             return other is not null && Version.Equals(other.Version) && Status == other.Status && Branch == other.Branch;
         }
 
         public override Boolean Equals(Object? obj)
         {
-            return obj is ApplicationData other && Equals(other);
+            return obj is ApplicationInfo other && Equals(other);
         }
 
         public override Int32 GetHashCode()
@@ -281,7 +251,7 @@ namespace NetExtender.Domains
             Dispose(disposing);
         }
 
-        ~ApplicationData()
+        ~ApplicationInfo()
         {
             Dispose(false);
         }

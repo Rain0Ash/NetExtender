@@ -13,15 +13,15 @@ namespace NetExtender.Types.Monads
         {
             return value.HasValue;
         }
-        
-        public static implicit operator Maybe<T>(T value)
-        {
-            return new Maybe<T>(value);
-        }
 
         public static explicit operator T(Maybe<T> value)
         {
             return value.Value;
+        }
+
+        public static implicit operator Maybe<T>(T value)
+        {
+            return new Maybe<T>(value);
         }
 
         public static Boolean operator ==(Maybe<T> first, Maybe<T> second)

@@ -21,7 +21,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="DynamicData" Version="7.12.1" />
+        <PackageReference Include="DynamicData" Version="7.14.2" />
     </ItemGroup>
 
     <ItemGroup>

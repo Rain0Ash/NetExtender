@@ -9,21 +9,15 @@ namespace NetExtender.Domains
     public record ApplicationInfoMessage
     {
         public Guid Guid { get; }
-
         public String ApplicationName { get; }
-
         public String ApplicationIdentifier { get; }
-
         public DateTime StartedAt { get; }
-
         public ApplicationVersion Version { get; }
-        public ApplicationInfo Information { get; }
-
+        public ApplicationInformation Information { get; }
         public ApplicationStatus Status { get; }
-
         public ApplicationBranch Branch { get; }
 
-        public ApplicationInfoMessage(Guid guid, String name, String identifier, DateTime startedAt, ApplicationVersion version, ApplicationInfo information, ApplicationStatus status, ApplicationBranch branch)
+        public ApplicationInfoMessage(Guid guid, String name, String identifier, DateTime startedAt, ApplicationVersion version, ApplicationInformation information, ApplicationStatus status, ApplicationBranch branch)
         {
             Guid = guid;
             ApplicationName = name;

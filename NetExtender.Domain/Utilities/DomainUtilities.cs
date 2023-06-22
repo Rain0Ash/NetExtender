@@ -18,6 +18,40 @@ namespace NetExtender.Domains.Utilities
 {
     public static class DomainUtilities
     {
+        public static String Info(this ApplicationStatus value)
+        {
+            return value switch
+            {
+                ApplicationStatus.None => String.Empty,
+                ApplicationStatus.NotFunctional => "NF",
+                ApplicationStatus.PreAlpha => "PA",
+                ApplicationStatus.ClosedAlpha => "CA",
+                ApplicationStatus.Alpha => "A",
+                ApplicationStatus.OpenAlpha => "OA",
+                ApplicationStatus.PreBeta => "PB",
+                ApplicationStatus.ClosedBeta => "CB",
+                ApplicationStatus.Beta => "B",
+                ApplicationStatus.OpenBeta => "OB",
+                ApplicationStatus.Release => "R",
+                _ => throw new EnumUndefinedOrNotSupportedException<ApplicationStatus>(value)
+            };
+        }
+
+        public static String Info(this ApplicationBranch value)
+        {
+            return value switch
+            {
+                ApplicationBranch.Master => String.Empty,
+                ApplicationBranch.Stable => "S",
+                ApplicationBranch.Unstable => "U",
+                ApplicationBranch.Development => "DEV",
+                ApplicationBranch.Prototype => "P",
+                ApplicationBranch.Nightly => "N",
+                ApplicationBranch.NewArchitecture => "NA",
+                _ => throw new EnumUndefinedOrNotSupportedException<ApplicationBranch>(value)
+            };
+        }
+        
         private static Type? AutoApplication(this Assembly assembly, IDomain source, String @namespace)
         {
             if (assembly is null)

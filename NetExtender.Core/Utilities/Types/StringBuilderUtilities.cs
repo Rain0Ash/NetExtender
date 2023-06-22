@@ -801,6 +801,54 @@ namespace NetExtender.Utilities.Types
         {
             return Pop(builder, start, length, out result);
         }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static StringBuilder Remove(this StringBuilder builder, String remove)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            if (remove is null)
+            {
+                throw new ArgumentNullException(nameof(remove));
+            }
+
+            return builder.Replace(remove, String.Empty);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static StringBuilder Remove(this StringBuilder builder, String remove, StringComparison comparison)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            if (remove is null)
+            {
+                throw new ArgumentNullException(nameof(remove));
+            }
+
+            return builder.Replace(remove, String.Empty, comparison);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static StringBuilder Remove(this StringBuilder builder, String remove, Boolean ignoreCase, CultureInfo? culture)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            if (remove is null)
+            {
+                throw new ArgumentNullException(nameof(remove));
+            }
+
+            return builder.Replace(remove, String.Empty, ignoreCase, culture);
+        }
 
         public static StringBuilder RemoveChar(this StringBuilder builder, Int32 index)
         {

@@ -2,8 +2,8 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
-using NetExtender.Types.Behavior.Interfaces;
 using NetExtender.Logging.Common;
+using NetExtender.Types.Behavior.Interfaces;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Logging.Behavior.Interfaces

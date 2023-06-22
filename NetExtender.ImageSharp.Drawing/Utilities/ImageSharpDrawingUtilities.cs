@@ -23,7 +23,7 @@ namespace NetExtender.ImageSharp.Utilities
 
             using MemoryStream stream = new MemoryStream();
 
-            IImageEncoder encoder = image.GetConfiguration().ImageFormatsManager.FindEncoder(PngFormat.Instance);
+            IImageEncoder encoder = image.GetConfiguration().ImageFormatsManager.GetEncoder(PngFormat.Instance);
             image.Save(stream, encoder);
 
             stream.Seek(0, SeekOrigin.Begin);
