@@ -25,7 +25,7 @@
     <ItemGroup>
         <PackageReference Include="DynamicData" Version="7.14.2" />
         <PackageReference Include="DynamicData.ReactiveUI" Version="6.11.0.2613" />
-        <PackageReference Include="ReactiveUI" Version="19.2.1" />
+        <PackageReference Include="ReactiveUI" Version="19.4.1" />
     </ItemGroup>
 
     <ItemGroup>
