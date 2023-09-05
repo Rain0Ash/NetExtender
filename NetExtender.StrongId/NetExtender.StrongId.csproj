@@ -86,12 +86,12 @@
         <EmbeddedResource Include="StrongId\Template\Generic\TextJsonConverter.cs" />
         <Compile Remove="StrongId\Template\Generic\Nullable\TextJsonConverter.cs" />
         <EmbeddedResource Include="StrongId\Template\Generic\Nullable\TextJsonConverter.cs" />
-        <Compile Remove="StrongId\Template\Generic\SwaggerSchemaFilter.cs" />
-        <EmbeddedResource Include="StrongId\Template\Generic\SwaggerSchemaFilter.cs" />
         <Compile Remove="StrongId\Template\Generic\NewtonsoftJsonConverter.cs" />
         <EmbeddedResource Include="StrongId\Template\Generic\NewtonsoftJsonConverter.cs" />
         <Compile Remove="StrongId\Template\Generic\EntityFrameworkValueConverter.cs" />
         <EmbeddedResource Include="StrongId\Template\Generic\EntityFrameworkValueConverter.cs" />
+        <Compile Remove="StrongId\Template\Generic\SwaggerSchemaFilter.cs" />
+        <EmbeddedResource Include="StrongId\Template\Generic\SwaggerSchemaFilter.cs" />
 
         <Compile Remove="StrongId\Template\Generic\Parseable.cs" />
         <EmbeddedResource Include="StrongId\Template\Generic\Parseable.cs" />
@@ -232,6 +232,47 @@
         <EmbeddedResource Include="StrongId\Template\Decimal\Nullable\Decimal.TypeConverter.cs" />
         <Compile Remove="StrongId\Template\Decimal\Nullable\Decimal.DapperTypeHandler.cs" />
         <EmbeddedResource Include="StrongId\Template\Decimal\Nullable\Decimal.DapperTypeHandler.cs" />
+
+        <Compile Remove="StrongId\Template\BigInteger\BigInteger.TypeConverter.cs" />
+        <EmbeddedResource Include="StrongId\Template\BigInteger\BigInteger.TypeConverter.cs" />
+        <Compile Remove="StrongId\Template\BigInteger\BigInteger.TextJsonConverter.cs" />
+        <EmbeddedResource Include="StrongId\Template\BigInteger\BigInteger.TextJsonConverter.cs" />
+        <Compile Remove="StrongId\Template\BigInteger\BigInteger.DapperTypeHandler.cs" />
+        <EmbeddedResource Include="StrongId\Template\BigInteger\BigInteger.DapperTypeHandler.cs" />
+
+        <Compile Remove="StrongId\Template\BigInteger\Nullable\BigInteger.TypeConverter.cs" />
+        <EmbeddedResource Include="StrongId\Template\BigInteger\Nullable\BigInteger.TypeConverter.cs" />
+        <Compile Remove="StrongId\Template\BigInteger\Nullable\BigInteger.DapperTypeHandler.cs" />
+        <EmbeddedResource Include="StrongId\Template\BigInteger\Nullable\BigInteger.DapperTypeHandler.cs" />
+
+        <Compile Remove="StrongId\Template\Guid\Guid.Constructors.cs" />
+        <EmbeddedResource Include="StrongId\Template\Guid\Guid.Constructors.cs" />
+        <Compile Remove="StrongId\Template\Guid\Guid.TypeConverter.cs" />
+        <EmbeddedResource Include="StrongId\Template\Guid\Guid.TypeConverter.cs" />
+        <Compile Remove="StrongId\Template\Guid\Guid.DapperTypeHandler.cs" />
+        <EmbeddedResource Include="StrongId\Template\Guid\Guid.DapperTypeHandler.cs" />
+        <Compile Remove="StrongId\Template\Guid\Guid.SwaggerSchemaFilter.cs" />
+        <EmbeddedResource Include="StrongId\Template\Guid\Guid.SwaggerSchemaFilter.cs" />
+
+        <Compile Remove="StrongId\Template\Guid\Nullable\Guid.TypeConverter.cs" />
+        <EmbeddedResource Include="StrongId\Template\Guid\Nullable\Guid.TypeConverter.cs" />
+        <Compile Remove="StrongId\Template\Guid\Nullable\Guid.DapperTypeHandler.cs" />
+        <EmbeddedResource Include="StrongId\Template\Guid\Nullable\Guid.DapperTypeHandler.cs" />
+
+        <Compile Remove="StrongId\Template\NewId\NewId.Constructors.cs" />
+        <EmbeddedResource Include="StrongId\Template\NewId\NewId.Constructors.cs" />
+        <Compile Remove="StrongId\Template\NewId\NewId.TypeConverter.cs" />
+        <EmbeddedResource Include="StrongId\Template\NewId\NewId.TypeConverter.cs" />
+        <Compile Remove="StrongId\Template\NewId\NewId.TextJsonConverter.cs" />
+        <EmbeddedResource Include="StrongId\Template\NewId\NewId.TextJsonConverter.cs" />
+        <Compile Remove="StrongId\Template\NewId\NewId.NewtonsoftJsonConverter.cs" />
+        <EmbeddedResource Include="StrongId\Template\NewId\NewId.NewtonsoftJsonConverter.cs" />
+        <Compile Remove="StrongId\Template\NewId\NewId.EntityFrameworkValueConverter.cs" />
+        <EmbeddedResource Include="StrongId\Template\NewId\NewId.EntityFrameworkValueConverter.cs" />
+        <Compile Remove="StrongId\Template\NewId\NewId.DapperTypeHandler.cs" />
+        <EmbeddedResource Include="StrongId\Template\NewId\NewId.DapperTypeHandler.cs" />
+        <Compile Remove="StrongId\Template\NewId\NewId.SwaggerSchemaFilter.cs" />
+        <EmbeddedResource Include="StrongId\Template\NewId\NewId.SwaggerSchemaFilter.cs" />
     </ItemGroup>
 
 </Project>

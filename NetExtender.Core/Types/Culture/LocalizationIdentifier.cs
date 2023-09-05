@@ -283,6 +283,14 @@ namespace NetExtender.Types.Culture
             }
         }
 
+        public String? UnicodeFlag
+        {
+            get
+            {
+                return Region?.GetUnicodeFlag();
+            }
+        }
+
         public String? RegionName
         {
             get

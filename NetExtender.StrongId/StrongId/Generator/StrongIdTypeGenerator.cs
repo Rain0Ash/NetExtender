@@ -127,7 +127,7 @@ namespace NetExtender.StrongId.Generator
             builder.Replace(UnderlyingType, resource.Type);
             builder.Replace(TypeName, resource.Name.Remove("?"));
             builder.Replace(Type, resource.Type.Remove("?"));
-            builder.Replace(Nullable, resource.Nullable ? "true" : "false");
+            builder.Replace(Nullable, resource.Underlying.IsNullable() ? "true" : "false");
         }
 
         private protected virtual StrongIdConverterType AppendAttributes(StringBuilder builder, StrongIdConverterType type, Byte count)

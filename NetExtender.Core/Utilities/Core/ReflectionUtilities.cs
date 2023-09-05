@@ -15,6 +15,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
+using System.Threading.Tasks;
 using NetExtender.Types.Attributes;
 using NetExtender.Types.Exceptions;
 using NetExtender.Types.Reflection;
@@ -467,6 +468,7 @@ namespace NetExtender.Utilities.Core
             return declaring.IsVisible && !declaring.IsSealed && !method.IsStatic && (method.IsPublic || method.IsFamily || method.IsFamilyOrAssembly);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsOverridable(this MethodInfo method)
         {
             if (method is null)
@@ -474,7 +476,63 @@ namespace NetExtender.Utilities.Core
                 throw new ArgumentNullException(nameof(method));
             }
 
-            return method.IsInheritable() && method.IsVirtual && !method.IsFinal;
+            return method.IsAbstract || method.IsInheritable() && method.IsVirtual && !method.IsFinal;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsAsync(this MethodInfo method)
+        {
+            if (method is null)
+            {
+                throw new ArgumentNullException(nameof(method));
+            }
+
+            Type type = method.ReturnType;
+            return type == typeof(ValueTask) || type.Closes(typeof(ValueTask<>)) || type == typeof(Task) || type.Closes(typeof(Task<>));
+        }
+
+        private static Boolean Closes(this Type? type, Type? open)
+        {
+            if (type is null || open is null)
+            {
+                return false;
+            }
+
+            TypeInfo info = type.GetTypeInfo();
+
+            if (info.IsGenericType && type.GetGenericTypeDefinition() == open)
+            {
+                return true;
+            }
+
+            if (type.GetInterfaces().Any(@interface => @interface.Closes(open)))
+            {
+                return true;
+            }
+
+            if (info.BaseType is not Type @base)
+            {
+                return false;
+            }
+
+            if (@base.GetTypeInfo().IsGenericType && @base.GetGenericTypeDefinition() == open)
+            {
+                return true;
+            }
+
+            return info.BaseType?.Closes(open) ?? false;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsAnonymousType(this Object? value)
+        {
+            return value is not null && IsAnonymousType(value.GetType());
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsAnonymousType(this Type? type)
+        {
+            return type is not null && type.Namespace is null;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

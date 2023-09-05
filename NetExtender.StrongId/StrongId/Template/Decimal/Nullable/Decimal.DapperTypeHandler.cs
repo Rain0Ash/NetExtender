@@ -24,8 +24,8 @@
                     System.UInt32 result => new STRONGID(result),
                     System.Int64 result => new STRONGID(result),
                     System.UInt64 result => new STRONGID(result),
-                    System.Single result => new STRONGID(result),
-                    System.Double result => new STRONGID(result),
+                    System.Single result => new STRONGID((TYPE) result),
+                    System.Double result => new STRONGID((TYPE) result),
                     System.Decimal result => new STRONGID(result),
                     System.String result when TYPE.TryParse(result, System.Globalization.NumberStyles.Any, null, out TYPE convert) => new STRONGID(convert),
                     _ => throw new System.InvalidCastException($"Unable to cast object of type {value.GetType().Name} to STRONGID")

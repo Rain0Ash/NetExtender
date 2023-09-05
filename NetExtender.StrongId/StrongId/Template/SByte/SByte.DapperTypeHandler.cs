@@ -17,13 +17,14 @@
                 {
                     null => new STRONGID(),
                     System.SByte result => new STRONGID(result),
-                    System.Byte result when result <= TYPE.MaxValue result => new STRONGID((TYPE) result),
-                    System.Int16 result when result >= TYPE.MinValue && result <= TYPE.MaxValue result => new STRONGID((TYPE) result),
+                    System.Byte result when result <= TYPE.MaxValue => new STRONGID((TYPE) result),
+                    System.Int16 result when result >= TYPE.MinValue && result <= TYPE.MaxValue => new STRONGID((TYPE) result),
                     System.UInt16 result when result <= TYPE.MaxValue => new STRONGID((TYPE) result),
                     System.Int32 result when result >= TYPE.MinValue && result <= TYPE.MaxValue => new STRONGID((TYPE) result),
                     System.UInt32 result when result <= TYPE.MaxValue => new STRONGID((TYPE) result),
                     System.Int64 result when result >= TYPE.MinValue && result <= TYPE.MaxValue => new STRONGID((TYPE) result),
                     System.UInt64 result when result <= (System.Int32) TYPE.MaxValue => new STRONGID((TYPE) result),
+                    System.Numerics.BigInteger result when result >= TYPE.MinValue && result <= TYPE.MaxValue => new STRONGID((TYPE) result),
                     System.String result when TYPE.TryParse(result, System.Globalization.NumberStyles.Any, null, out TYPE convert) => new STRONGID(convert),
                     _ => throw new System.InvalidCastException($"Unable to cast object of type {value.GetType().Name} to STRONGID")
                 };

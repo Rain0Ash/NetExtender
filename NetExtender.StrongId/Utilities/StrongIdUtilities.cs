@@ -246,6 +246,156 @@ namespace NetExtender.StrongId
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsString(this StrongIdUnderlyingType type)
+        {
+            return type switch
+            {
+                StrongIdUnderlyingType.SByte => false,
+                StrongIdUnderlyingType.SByteNullable => false,
+                StrongIdUnderlyingType.Byte => false,
+                StrongIdUnderlyingType.ByteNullable => false,
+                StrongIdUnderlyingType.Int16 => false,
+                StrongIdUnderlyingType.Int16Nullable => false,
+                StrongIdUnderlyingType.UInt16 => false,
+                StrongIdUnderlyingType.UInt16Nullable => false,
+                StrongIdUnderlyingType.Int32 => false,
+                StrongIdUnderlyingType.Int32Nullable => false,
+                StrongIdUnderlyingType.UInt32 => false,
+                StrongIdUnderlyingType.UInt32Nullable => false,
+                StrongIdUnderlyingType.Int64 => false,
+                StrongIdUnderlyingType.Int64Nullable => false,
+                StrongIdUnderlyingType.UInt64 => false,
+                StrongIdUnderlyingType.UInt64Nullable => false,
+                StrongIdUnderlyingType.Single => false,
+                StrongIdUnderlyingType.SingleNullable => false,
+                StrongIdUnderlyingType.Double => false,
+                StrongIdUnderlyingType.DoubleNullable => false,
+                StrongIdUnderlyingType.Decimal => false,
+                StrongIdUnderlyingType.DecimalNullable => false,
+                StrongIdUnderlyingType.BigInteger => false,
+                StrongIdUnderlyingType.BigIntegerNullable => false,
+                StrongIdUnderlyingType.String => true,
+                StrongIdUnderlyingType.StringCurrentCulture => true,
+                StrongIdUnderlyingType.StringCurrentCultureIgnoreCase => true,
+                StrongIdUnderlyingType.StringInvariantCulture => true,
+                StrongIdUnderlyingType.StringInvariantCultureIgnoreCase => true,
+                StrongIdUnderlyingType.StringOrdinal => true,
+                StrongIdUnderlyingType.StringOrdinalIgnoreCase => true,
+                StrongIdUnderlyingType.StringNullable => true,
+                StrongIdUnderlyingType.StringNullableCurrentCulture => true,
+                StrongIdUnderlyingType.StringNullableCurrentCultureIgnoreCase => true,
+                StrongIdUnderlyingType.StringNullableInvariantCulture => true,
+                StrongIdUnderlyingType.StringNullableInvariantCultureIgnoreCase => true,
+                StrongIdUnderlyingType.StringNullableOrdinal => true,
+                StrongIdUnderlyingType.StringNullableOrdinalIgnoreCase => true,
+                StrongIdUnderlyingType.Guid => false,
+                StrongIdUnderlyingType.GuidNullable => false,
+                StrongIdUnderlyingType.NewId => false,
+                _ => throw new InvalidOperationException($"Invalid enum type: {type}")
+            };
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsCultureString(this StrongIdUnderlyingType type)
+        {
+            return type switch
+            {
+                StrongIdUnderlyingType.SByte => false,
+                StrongIdUnderlyingType.SByteNullable => false,
+                StrongIdUnderlyingType.Byte => false,
+                StrongIdUnderlyingType.ByteNullable => false,
+                StrongIdUnderlyingType.Int16 => false,
+                StrongIdUnderlyingType.Int16Nullable => false,
+                StrongIdUnderlyingType.UInt16 => false,
+                StrongIdUnderlyingType.UInt16Nullable => false,
+                StrongIdUnderlyingType.Int32 => false,
+                StrongIdUnderlyingType.Int32Nullable => false,
+                StrongIdUnderlyingType.UInt32 => false,
+                StrongIdUnderlyingType.UInt32Nullable => false,
+                StrongIdUnderlyingType.Int64 => false,
+                StrongIdUnderlyingType.Int64Nullable => false,
+                StrongIdUnderlyingType.UInt64 => false,
+                StrongIdUnderlyingType.UInt64Nullable => false,
+                StrongIdUnderlyingType.Single => false,
+                StrongIdUnderlyingType.SingleNullable => false,
+                StrongIdUnderlyingType.Double => false,
+                StrongIdUnderlyingType.DoubleNullable => false,
+                StrongIdUnderlyingType.Decimal => false,
+                StrongIdUnderlyingType.DecimalNullable => false,
+                StrongIdUnderlyingType.BigInteger => false,
+                StrongIdUnderlyingType.BigIntegerNullable => false,
+                StrongIdUnderlyingType.String => false,
+                StrongIdUnderlyingType.StringCurrentCulture => true,
+                StrongIdUnderlyingType.StringCurrentCultureIgnoreCase => true,
+                StrongIdUnderlyingType.StringInvariantCulture => true,
+                StrongIdUnderlyingType.StringInvariantCultureIgnoreCase => true,
+                StrongIdUnderlyingType.StringOrdinal => true,
+                StrongIdUnderlyingType.StringOrdinalIgnoreCase => true,
+                StrongIdUnderlyingType.StringNullable => false,
+                StrongIdUnderlyingType.StringNullableCurrentCulture => true,
+                StrongIdUnderlyingType.StringNullableCurrentCultureIgnoreCase => true,
+                StrongIdUnderlyingType.StringNullableInvariantCulture => true,
+                StrongIdUnderlyingType.StringNullableInvariantCultureIgnoreCase => true,
+                StrongIdUnderlyingType.StringNullableOrdinal => true,
+                StrongIdUnderlyingType.StringNullableOrdinalIgnoreCase => true,
+                StrongIdUnderlyingType.Guid => false,
+                StrongIdUnderlyingType.GuidNullable => false,
+                StrongIdUnderlyingType.NewId => false,
+                _ => throw new InvalidOperationException($"Invalid enum type: {type}")
+            };
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsIgnoreCase(this StrongIdUnderlyingType type)
+        {
+            return type switch
+            {
+                StrongIdUnderlyingType.SByte => false,
+                StrongIdUnderlyingType.SByteNullable => false,
+                StrongIdUnderlyingType.Byte => false,
+                StrongIdUnderlyingType.ByteNullable => false,
+                StrongIdUnderlyingType.Int16 => false,
+                StrongIdUnderlyingType.Int16Nullable => false,
+                StrongIdUnderlyingType.UInt16 => false,
+                StrongIdUnderlyingType.UInt16Nullable => false,
+                StrongIdUnderlyingType.Int32 => false,
+                StrongIdUnderlyingType.Int32Nullable => false,
+                StrongIdUnderlyingType.UInt32 => false,
+                StrongIdUnderlyingType.UInt32Nullable => false,
+                StrongIdUnderlyingType.Int64 => false,
+                StrongIdUnderlyingType.Int64Nullable => false,
+                StrongIdUnderlyingType.UInt64 => false,
+                StrongIdUnderlyingType.UInt64Nullable => false,
+                StrongIdUnderlyingType.Single => false,
+                StrongIdUnderlyingType.SingleNullable => false,
+                StrongIdUnderlyingType.Double => false,
+                StrongIdUnderlyingType.DoubleNullable => false,
+                StrongIdUnderlyingType.Decimal => false,
+                StrongIdUnderlyingType.DecimalNullable => false,
+                StrongIdUnderlyingType.BigInteger => false,
+                StrongIdUnderlyingType.BigIntegerNullable => false,
+                StrongIdUnderlyingType.String => false,
+                StrongIdUnderlyingType.StringCurrentCulture => false,
+                StrongIdUnderlyingType.StringCurrentCultureIgnoreCase => true,
+                StrongIdUnderlyingType.StringInvariantCulture => false,
+                StrongIdUnderlyingType.StringInvariantCultureIgnoreCase => true,
+                StrongIdUnderlyingType.StringOrdinal => false,
+                StrongIdUnderlyingType.StringOrdinalIgnoreCase => true,
+                StrongIdUnderlyingType.StringNullable => false,
+                StrongIdUnderlyingType.StringNullableCurrentCulture => false,
+                StrongIdUnderlyingType.StringNullableCurrentCultureIgnoreCase => true,
+                StrongIdUnderlyingType.StringNullableInvariantCulture => false,
+                StrongIdUnderlyingType.StringNullableInvariantCultureIgnoreCase => true,
+                StrongIdUnderlyingType.StringNullableOrdinal => false,
+                StrongIdUnderlyingType.StringNullableOrdinalIgnoreCase => true,
+                StrongIdUnderlyingType.Guid => false,
+                StrongIdUnderlyingType.GuidNullable => false,
+                StrongIdUnderlyingType.NewId => false,
+                _ => throw new InvalidOperationException($"Invalid enum type: {type}")
+            };
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static (String FullName, String Name) UnderlyingType(this StrongIdUnderlyingType type)
         {
             return type switch

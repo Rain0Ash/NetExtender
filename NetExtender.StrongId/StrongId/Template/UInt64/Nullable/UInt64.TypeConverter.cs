@@ -6,6 +6,7 @@
                 return type == typeof(System.UInt64?) ||
                        type == typeof(System.Double?) ||
                        type == typeof(System.Decimal?) ||
+                       type == typeof(System.Numerics.BigInteger?) ||
                        type == typeof(System.String) ||
                        base.CanConvertTo(context, type);
             }
@@ -28,6 +29,11 @@
                 }
 
                 if (type == typeof(System.Decimal?))
+                {
+                    return strong.Value;
+                }
+
+                if (type == typeof(System.Numerics.BigInteger?))
                 {
                     return strong.Value;
                 }
@@ -58,6 +64,8 @@
                        type == typeof(System.Int64?) ||
                        type == typeof(System.UInt64) ||
                        type == typeof(System.UInt64?) ||
+                       type == typeof(System.Numerics.BigInteger) ||
+                       type == typeof(System.Numerics.BigInteger?) ||
                        type == typeof(System.String) ||
                        base.CanConvertFrom(context, type);
             }
@@ -75,6 +83,7 @@
                     System.UInt32 result => new STRONGID(result),
                     System.Int64 result when result >= TYPE.MinValue => new STRONGID((TYPE) result),
                     System.UInt64 result => new STRONGID(result),
+                    System.Numerics.BigInteger result when result >= TYPE.MinValue && result <= TYPE.MaxValue => new STRONGID((TYPE) result),
                     System.String result when TYPE.TryParse(result, System.Globalization.NumberStyles.Any, culture, out TYPE convert) => new STRONGID(convert),
                     _ => base.ConvertFrom(context, culture, value),
                 };

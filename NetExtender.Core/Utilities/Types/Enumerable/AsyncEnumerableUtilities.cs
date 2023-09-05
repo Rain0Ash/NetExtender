@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -57,6 +58,144 @@ namespace NetExtender.Utilities.Types
 
             return source is IAsyncEnumerable<T> async ? async.GetAsyncEnumerator() : source.AsAsyncEnumerable().GetAsyncEnumerator();
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Task ForEachAsync<TSource>(this IEnumerable<TSource> source, Func<TSource, Task> action)
+        {
+            return ForEachAsync(source, action, CancellationToken.None);
+        }
+
+        public static async Task ForEachAsync<TSource>(this IEnumerable<TSource> source, Func<TSource, Task> action, CancellationToken token)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            foreach (TSource item in source)
+            {
+                token.ThrowIfCancellationRequested();
+                await action(item).ConfigureAwait(false);
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Task ForEachAsync<TSource>(this IEnumerable<TSource> source, Func<TSource, CancellationToken, Task> action)
+        {
+            return ForEachAsync(source, action, CancellationToken.None);
+        }
+
+        public static async Task ForEachAsync<TSource>(this IEnumerable<TSource> source, Func<TSource, CancellationToken, Task> action, CancellationToken token)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+            
+            foreach (TSource item in source)
+            {
+                token.ThrowIfCancellationRequested();
+                await action(item, token).ConfigureAwait(false);
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Task ForEachAsync<TSource>(this IEnumerable<TSource> source, Func<TSource, Int32, Task> action)
+        {
+            return ForEachAsync(source, action, CancellationToken.None);
+        }
+
+        public static async Task ForEachAsync<TSource>(this IEnumerable<TSource> source, Func<TSource, Int32, Task> action, CancellationToken token)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+            
+            Int32 index = 0;
+            foreach (TSource item in source)
+            {
+                token.ThrowIfCancellationRequested();
+                await action(item, index++).ConfigureAwait(false);
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Task ForEachAsync<TSource>(this IEnumerable<TSource> source, Func<TSource, Int32, CancellationToken, Task> action)
+        {
+            return ForEachAsync(source, action, CancellationToken.None);
+        }
+
+        public static async Task ForEachAsync<TSource>(this IEnumerable<TSource> source, Func<TSource, Int32, CancellationToken, Task> action, CancellationToken token)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+            
+            Int32 index = 0;
+            foreach (TSource item in source)
+            {
+                token.ThrowIfCancellationRequested();
+                await action(item, index++, token).ConfigureAwait(false);
+            }
+        }
+        
+#if NET6_0_OR_GREATER
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Task ParallelForEachAsync<TSource>(this IEnumerable<TSource> source, Func<TSource, Task> action)
+        {
+            return ParallelForEachAsync(source, action, CancellationToken.None);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Task ParallelForEachAsync<TSource>(this IEnumerable<TSource> source, Func<TSource, Task> action, CancellationToken token)
+        {
+            return ParallelForEachAsync(source, Environment.ProcessorCount, action, token);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Task ParallelForEachAsync<TSource>(this IEnumerable<TSource> source, Int32 parallelism, Func<TSource, Task> action)
+        {
+            return ParallelForEachAsync(source, parallelism, action, CancellationToken.None);
+        }
+
+        public static Task ParallelForEachAsync<TSource>(this IEnumerable<TSource> source, Int32 parallelism, Func<TSource, Task> action, CancellationToken token)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            ParallelOptions options = new ParallelOptions { MaxDegreeOfParallelism = parallelism, CancellationToken = token };
+            return Parallel.ForEachAsync(source, options, (item, _) => new ValueTask(action(item)));
+        }
+#endif
 
         public static List<T> Materialize<T>(this IAsyncEnumerable<T> source)
         {

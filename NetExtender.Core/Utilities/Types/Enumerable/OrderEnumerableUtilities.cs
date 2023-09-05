@@ -349,5 +349,96 @@ namespace NetExtender.Utilities.Types
 
             return source.OrderByDescending(selector, comparison.ToComparer());
         }
+
+        public static IEnumerable<T> TopologicalSort<T>(this IEnumerable<T> source, Func<T, IEnumerable<T>> dependencies)
+        {
+            return TopologicalSort(source, dependencies, false);
+        }
+
+        public static IEnumerable<T> TopologicalSort<T>(this IEnumerable<T> source, Func<T, IEnumerable<T>> dependencies, Boolean cyclic)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (dependencies is null)
+            {
+                throw new ArgumentNullException(nameof(dependencies));
+            }
+
+            return source.TopologicalSort(dependency => dependencies(dependency).ToList().GetEnumerator(), cyclic);
+        }
+
+        public static IEnumerable<T> TopologicalSort<T>(this IEnumerable<T> source, Func<T, IEnumerator<T>> dependencies)
+        {
+            return TopologicalSort(source, dependencies, false);
+        }
+
+        // ReSharper disable once CognitiveComplexity
+        public static IEnumerable<T> TopologicalSort<T>(this IEnumerable<T> source, Func<T, IEnumerator<T>> dependencies, Boolean cyclic)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (dependencies is null)
+            {
+                throw new ArgumentNullException(nameof(dependencies));
+            }
+
+            List<T> sorted = new List<T>();
+            HashSet<T> visited = new HashSet<T>();
+
+            HashSet<T> visiting = new HashSet<T>();
+            Stack<(T, IEnumerator<T>)> stack = new Stack<(T, IEnumerator<T>)>();
+
+            foreach (T item in source)
+            {
+                Visit(item, visited, visiting, sorted, stack, dependencies, cyclic);
+            }
+
+            return sorted;
+            
+            static void Visit(T root, ISet<T> visited, ISet<T> visiting, ICollection<T> sorted, Stack<(T, IEnumerator<T>)> stack, Func<T, IEnumerator<T>> dependencies, Boolean cyclic)
+            {
+                if (!visited.Add(root))
+                {
+                    return;
+                }
+
+                stack.Push((root, dependencies(root)));
+                visiting.Add(root);
+
+                while (stack.Count > 0)
+                {
+                    (T parent, IEnumerator<T> enumerator) = stack.Peek();
+                    if (!enumerator.MoveNext())
+                    {
+                        visiting.Remove(parent);
+                        sorted.Add(parent);
+                        stack.Pop();
+                        continue;
+                    }
+
+                    T child = enumerator.Current;
+                    if (!visited.Add(child))
+                    {
+                        if (!cyclic && visiting.Contains(child))
+                        {
+                            throw new Exception("Cyclic dependency found");
+                        }
+
+                        continue;
+                    }
+
+                    visiting.Add(child);
+                    stack.Push((child, dependencies(child)));
+                }
+
+                visiting.Remove(root);
+            }
+        }
     }
 }

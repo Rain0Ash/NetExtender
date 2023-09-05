@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Text;
 using NetExtender.Types.Culture;
 using NetExtender.Types.Exceptions;
 
@@ -381,6 +382,67 @@ namespace NetExtender.Utilities.Types
         {
             return TryGetCultureInfo(culture, out CultureInfo info) ? info : type.GetCultureInfo();
         }
+        
+#if NET6_0_OR_GREATER
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String? GetUnicodeFlag(UInt16 identifier)
+        {
+            return GetUnicodeFlag((LocalizationIdentifier) identifier);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String? GetUnicodeFlag(Int32 identifier)
+        {
+            return GetUnicodeFlag((LocalizationIdentifier) identifier);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String? GetUnicodeFlag(this CultureIdentifier identifier)
+        {
+            return GetUnicodeFlag((LocalizationIdentifier) identifier);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String? GetUnicodeFlag(this LocalizationIdentifier identifier)
+        {
+            return identifier.Region is RegionInfo region ? GetUnicodeFlag(region) : null;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String? GetUnicodeFlag(this CultureInfo culture)
+        {
+            if (culture is null)
+            {
+                throw new ArgumentNullException(nameof(culture));
+            }
+
+            return culture.ToRegionInfo() is RegionInfo region ? GetUnicodeFlag(region) : null;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String GetUnicodeFlag(this RegionInfo region)
+        {
+            if (region is null)
+            {
+                throw new ArgumentNullException(nameof(region));
+            }
+
+            const Int32 indicator = 0x1F1E6;
+            const Int32 uppercase = indicator - 'A';
+            const Int32 lowercase = indicator - 'a';
+
+            String iso = region.TwoLetterISORegionName;
+            Rune rune1 = iso[0] is >= 'a' and <= 'z' ? new Rune(iso[0] + lowercase) : new Rune(iso[0] + uppercase);
+            Rune rune2 = iso[1] is >= 'a' and <= 'z' ? new Rune(iso[1] + lowercase) : new Rune(iso[1] + uppercase);
+
+            const Int32 surrogate = 4;
+            return String.Create(surrogate, (rune1, rune2), (span, _) =>
+            {
+                rune1.EncodeToUtf16(span);
+                rune2.EncodeToUtf16(span[2..]);
+            });
+        }
+#endif
 
         private static Dictionary<LocalizationIdentifier, LocalizationIdentifier> IdentifiersNormalization { get; } = new Dictionary<LocalizationIdentifier, LocalizationIdentifier>
         {

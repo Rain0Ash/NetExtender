@@ -95,11 +95,35 @@ namespace NetExtender.StrongId.Generator
                     interfaces = arguments[3].As<StrongIdInterfaceType>();
                     goto case 3;
                 case 3:
-                    converter = arguments[2].As<StrongIdConverterType>();
-                    goto case 2;
+                    try
+                    {
+                        converter = arguments[2].As<StrongIdConverterType>();
+                        goto case 2;
+                    }
+                    catch (InvalidCastException)
+                    {
+                        interfaces = arguments[2].As<StrongIdInterfaceType>();
+                        goto case 2;
+                    }
                 case 2:
-                    conversion = arguments[1].As<StrongIdConversionType>();
-                    goto case 1;
+                    try
+                    {
+                        conversion = arguments[1].As<StrongIdConversionType>();
+                        goto case 1;
+                    }
+                    catch (InvalidCastException)
+                    {
+                        try
+                        {
+                            converter = arguments[2].As<StrongIdConverterType>();
+                            goto case 1;
+                        }
+                        catch (InvalidCastException)
+                        {
+                            interfaces = arguments[2].As<StrongIdInterfaceType>();
+                            goto case 1;
+                        }
+                    }
                 case 1:
                     try
                     {

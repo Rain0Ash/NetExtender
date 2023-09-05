@@ -11,7 +11,7 @@ namespace NetExtender.StrongId.Attributes
         /// <summary>
         /// The default <see cref="System.Type"/> to use to store the strongly-typed ID values.
         /// </summary>
-        public StrongIdUnderlyingType? Type { get; }
+        public StrongIdUnderlyingType Type { get; }
 
         /// <summary>
         /// The type of conversion operator for the strongly-typed ID
