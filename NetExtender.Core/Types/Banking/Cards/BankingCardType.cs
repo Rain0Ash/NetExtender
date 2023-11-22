@@ -3,7 +3,7 @@
 
 using System;
 
-namespace NetExtender.Initializer.Types.Banking.Cards
+namespace NetExtender.Types.Banking.Cards
 {
     public enum BankingCardType : Byte
     {

@@ -11,6 +11,8 @@ using System.Threading.Tasks;
 using NetExtender.Configuration;
 using NetExtender.Configuration.Common;
 using NetExtender.Configuration.Properties.Interfaces;
+using NetExtender.Types.Converters;
+using NetExtender.Types.Converters.Interfaces;
 using NetExtender.Localization.Common;
 using NetExtender.Localization.Common.Interfaces;
 using NetExtender.Localization.Events;
@@ -98,11 +100,11 @@ namespace NetExtender.Localization.Properties
             }
         }
 
-        public virtual TryConverter<String?, ILocalizationString?> Converter
+        public virtual ITwoWayConverter<String?, ILocalizationString?> Converter
         {
             get
             {
-                return ConvertUtilities.TryConvert;
+                return TwoWayConverter<String?, ILocalizationString?>.Default;
             }
         }
 

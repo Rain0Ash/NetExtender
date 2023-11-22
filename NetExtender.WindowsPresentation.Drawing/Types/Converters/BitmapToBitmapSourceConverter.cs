@@ -2,6 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Globalization;
 using System.Windows.Data;
@@ -13,7 +14,8 @@ namespace NetExtender.WindowsPresentationForms.Types.Converters
 {
     public class BitmapToBitmapSourceConverter : IValueConverter
     {
-        public Object Convert(Object value, Type targetType, Object parameter, CultureInfo culture)
+        [return: NotNullIfNotNull("value")]
+        public Object? Convert(Object? value, Type targetType, Object? parameter, CultureInfo culture)
         {
             if (value is Bitmap bitmap && typeof(ImageSource).IsAssignableFrom(targetType))
             {
@@ -23,7 +25,8 @@ namespace NetExtender.WindowsPresentationForms.Types.Converters
             return value;
         }
 
-        public Object ConvertBack(Object value, Type targetType, Object parameter, CultureInfo culture)
+        [return: NotNullIfNotNull("value")]
+        public Object? ConvertBack(Object? value, Type targetType, Object? parameter, CultureInfo culture)
         {
             if (value is BitmapSource source && typeof(Bitmap) == targetType)
             {

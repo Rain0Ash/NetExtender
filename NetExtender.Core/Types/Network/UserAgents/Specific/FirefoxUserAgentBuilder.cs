@@ -30,8 +30,11 @@ namespace NetExtender.Types.Network.UserAgents.Specific
             String arch = GetArchitecture(architecture);
             String culture = GetCultureName(info);
             String firefox = RandomGeckoVersion();
-            return
-                $"Mozilla/5.0 ({(!String.IsNullOrEmpty(arch) ? $"{arch}; " : String.Empty)}{(!String.IsNullOrEmpty(culture) ? $"{culture}; " : String.Empty)}rv:{firefox}) Gecko/{(UseGeckoCode ? "20100101" : $"{firefox}")} Firefox/{firefox}";
+            String gecko = UseGeckoCode ? "20100101" : $"{firefox}";
+
+            arch = !String.IsNullOrEmpty(arch) ? $"{arch}; " : String.Empty;
+            culture = !String.IsNullOrEmpty(culture) ? $"{culture}; " : String.Empty;
+            return $"Mozilla/5.0 ({arch}{culture}rv:{firefox}) Gecko/{gecko} Firefox/{firefox}";
         }
     }
 }

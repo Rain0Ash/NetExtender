@@ -63,7 +63,7 @@ namespace NetExtender.Types.Enums
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public IReadOnlyList<TAttribute> GetAttributes<TAttribute>() where TAttribute : Attribute
         {
-            return EnumUtilities.CacheAttributes<T, TAttribute>.Cache[Value];
+            return EnumUtilities.CacheAttributes<T, TAttribute>.Get(Value);
         }
 
         /// <summary>

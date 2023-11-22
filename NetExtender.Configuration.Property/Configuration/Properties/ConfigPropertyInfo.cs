@@ -46,6 +46,14 @@ namespace NetExtender.Configuration.Properties
 
         public abstract Boolean HasValue { get; }
 
+        public Boolean IsInitialize
+        {
+            get
+            {
+                return Options.HasFlag(ConfigPropertyOptions.Initialize);
+            }
+        }
+
         public Boolean IsCaching
         {
             get

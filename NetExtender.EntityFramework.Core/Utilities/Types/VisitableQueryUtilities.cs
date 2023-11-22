@@ -29,7 +29,7 @@ namespace NetExtender.Utilities.EntityFrameworkCore.Types
 
         public static IQueryable<T> ToExpandable<T>(this IQueryable<T> queryable)
         {
-            if (queryable == null)
+            if (queryable is null)
             {
                 throw new ArgumentNullException(nameof(queryable));
             }
@@ -39,7 +39,7 @@ namespace NetExtender.Utilities.EntityFrameworkCore.Types
 
         public static IQueryable<T> AsExpandable<T>(this IQueryable<T> queryable)
         {
-            if (queryable == null)
+            if (queryable is null)
             {
                 throw new ArgumentNullException(nameof(queryable));
             }

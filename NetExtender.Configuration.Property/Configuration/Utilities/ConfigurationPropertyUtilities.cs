@@ -10,6 +10,8 @@ using NetExtender.Configuration.Interfaces;
 using NetExtender.Configuration.Properties;
 using NetExtender.Configuration.Properties.Interfaces;
 using NetExtender.Configuration.Synchronizers.Interfaces;
+using NetExtender.Types.Converters;
+using NetExtender.Types.Converters.Interfaces;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Configuration.Utilities
@@ -43,10 +45,15 @@ namespace NetExtender.Configuration.Utilities
 
         public static IReadOnlyConfigProperty<T?> Converter<T>(this IReadOnlyConfigProperty property, Func<T, Boolean>? validate)
         {
-            return Converter<T>(property, validate, null);
+            return Converter(property, validate, (TryConverter<String?, T>?) null);
         }
 
         public static IReadOnlyConfigProperty<T?> Converter<T>(this IReadOnlyConfigProperty property, TryConverter<String?, T>? converter)
+        {
+            return Converter(property, null, converter);
+        }
+
+        public static IReadOnlyConfigProperty<T?> Converter<T>(this IReadOnlyConfigProperty property, IOneWayConverter<String?, T>? converter)
         {
             return Converter(property, null, converter);
         }
@@ -56,14 +63,19 @@ namespace NetExtender.Configuration.Utilities
             return Converter(property, default, validate!, converter!);
         }
 
+        public static IReadOnlyConfigProperty<T?> Converter<T>(this IReadOnlyConfigProperty property, Func<T, Boolean>? validate, IOneWayConverter<String?, T>? converter)
+        {
+            return Converter(property, default, validate!, converter!);
+        }
+
         public static IReadOnlyConfigProperty<T> Converter<T>(this IReadOnlyConfigProperty property, T alternate)
         {
-            return Converter(property, alternate, null, null);
+            return Converter(property, alternate, null, (TryConverter<String?, T>?) null);
         }
 
         public static IReadOnlyConfigProperty<T> Converter<T>(this IReadOnlyConfigProperty property, T alternate, Func<T, Boolean>? validate)
         {
-            return Converter(property, alternate, validate, null);
+            return Converter(property, alternate, validate, (TryConverter<String?, T>?) null);
         }
 
         public static IReadOnlyConfigProperty<T> Converter<T>(this IReadOnlyConfigProperty property, T alternate, TryConverter<String?, T>? converter)
@@ -71,7 +83,22 @@ namespace NetExtender.Configuration.Utilities
             return Converter(property, alternate, null, converter);
         }
 
+        public static IReadOnlyConfigProperty<T> Converter<T>(this IReadOnlyConfigProperty property, T alternate, IOneWayConverter<String?, T>? converter)
+        {
+            return Converter(property, alternate, null, converter);
+        }
+
         public static IReadOnlyConfigProperty<T> Converter<T>(this IReadOnlyConfigProperty property, T alternate, Func<T, Boolean>? validate, TryConverter<String?, T>? converter)
+        {
+            if (property is null)
+            {
+                throw new ArgumentNullException(nameof(property));
+            }
+
+            return new ReadOnlyConfigProperty<T>(property, alternate, validate, converter);
+        }
+
+        public static IReadOnlyConfigProperty<T> Converter<T>(this IReadOnlyConfigProperty property, T alternate, Func<T, Boolean>? validate, IOneWayConverter<String?, T>? converter)
         {
             if (property is null)
             {
@@ -88,10 +115,15 @@ namespace NetExtender.Configuration.Utilities
 
         public static IConfigProperty<T?> Converter<T>(this IConfigProperty property, Func<T, Boolean>? validate)
         {
-            return Converter<T>(property, validate, null);
+            return Converter(property, validate, (TryConverter<String?, T>?) null);
         }
 
         public static IConfigProperty<T?> Converter<T>(this IConfigProperty property, TryConverter<String?, T>? converter)
+        {
+            return Converter(property, null, converter);
+        }
+
+        public static IConfigProperty<T?> Converter<T>(this IConfigProperty property, IOneWayConverter<String?, T>? converter)
         {
             return Converter(property, null, converter);
         }
@@ -101,14 +133,19 @@ namespace NetExtender.Configuration.Utilities
             return Converter(property, default, validate!, converter!);
         }
 
+        public static IConfigProperty<T?> Converter<T>(this IConfigProperty property, Func<T, Boolean>? validate, IOneWayConverter<String?, T>? converter)
+        {
+            return Converter(property, default, validate!, converter!);
+        }
+
         public static IConfigProperty<T> Converter<T>(this IConfigProperty property, T alternate)
         {
-            return Converter(property, alternate, null, null);
+            return Converter(property, alternate, null, (TryConverter<String?, T>?) null);
         }
 
         public static IConfigProperty<T> Converter<T>(this IConfigProperty property, T alternate, Func<T, Boolean>? validate)
         {
-            return Converter(property, alternate, validate, null);
+            return Converter(property, alternate, validate, (TryConverter<String?, T>?) null);
         }
 
         public static IConfigProperty<T> Converter<T>(this IConfigProperty property, T alternate, TryConverter<String?, T>? converter)
@@ -116,7 +153,22 @@ namespace NetExtender.Configuration.Utilities
             return Converter(property, alternate, null, converter);
         }
 
+        public static IConfigProperty<T> Converter<T>(this IConfigProperty property, T alternate, IOneWayConverter<String?, T>? converter)
+        {
+            return Converter(property, alternate, null, converter);
+        }
+
         public static IConfigProperty<T> Converter<T>(this IConfigProperty property, T alternate, Func<T, Boolean>? validate, TryConverter<String?, T>? converter)
+        {
+            if (property is null)
+            {
+                throw new ArgumentNullException(nameof(property));
+            }
+
+            return new ConfigProperty<T>(property, alternate, validate, converter);
+        }
+
+        public static IConfigProperty<T> Converter<T>(this IConfigProperty property, T alternate, Func<T, Boolean>? validate, IOneWayConverter<String?, T>? converter)
         {
             if (property is null)
             {
@@ -136,9 +188,19 @@ namespace NetExtender.Configuration.Utilities
             return GetValue(property, converter?.Invoke(property.Alternate, out T? result) == true ? result : default, converter!);
         }
 
+        public static T? GetValue<T>(this IReadOnlyConfigProperty property, IOneWayConverter<String?, T>? converter)
+        {
+            if (property is null)
+            {
+                throw new ArgumentNullException(nameof(property));
+            }
+
+            return GetValue(property, converter?.TryConvert(property.Alternate, out T? result) == true ? result : default, converter!);
+        }
+
         public static T GetValue<T>(this IReadOnlyConfigProperty property, T alternate)
         {
-            return GetValue(property, alternate, null);
+            return GetValue(property, alternate, (TryConverter<String, T>?) null);
         }
 
         public static T GetValue<T>(this IReadOnlyConfigProperty property, T alternate, TryConverter<String, T>? converter)
@@ -159,6 +221,24 @@ namespace NetExtender.Configuration.Utilities
             return converter(value, out T? result) ? result : alternate;
         }
 
+        public static T GetValue<T>(this IReadOnlyConfigProperty property, T alternate, IOneWayConverter<String, T>? converter)
+        {
+            if (property is null)
+            {
+                throw new ArgumentNullException(nameof(property));
+            }
+
+            String? value = property.GetValue();
+
+            if (value is null)
+            {
+                return alternate;
+            }
+
+            converter ??= OneWayConverter<String, T>.Default;
+            return converter.TryConvert(value, out T? result) ? result : alternate;
+        }
+
         public static Task<T?> GetValueAsync<T>(this IReadOnlyConfigProperty property, TryConverter<String?, T>? converter)
         {
             return GetValueAsync(property, converter, CancellationToken.None);
@@ -174,6 +254,21 @@ namespace NetExtender.Configuration.Utilities
             return GetValueAsync(property, converter?.Invoke(property.Alternate, out T? result) == true ? result : default, converter!, token);
         }
 
+        public static Task<T?> GetValueAsync<T>(this IReadOnlyConfigProperty property, IOneWayConverter<String?, T>? converter)
+        {
+            return GetValueAsync(property, converter, CancellationToken.None);
+        }
+
+        public static Task<T?> GetValueAsync<T>(this IReadOnlyConfigProperty property, IOneWayConverter<String?, T>? converter, CancellationToken token)
+        {
+            if (property is null)
+            {
+                throw new ArgumentNullException(nameof(property));
+            }
+
+            return GetValueAsync(property, converter?.TryConvert(property.Alternate, out T? result) == true ? result : default, converter!, token);
+        }
+
         public static Task<T> GetValueAsync<T>(this IReadOnlyConfigProperty property, T alternate)
         {
             return GetValueAsync(property, alternate, CancellationToken.None);
@@ -181,7 +276,7 @@ namespace NetExtender.Configuration.Utilities
 
         public static Task<T> GetValueAsync<T>(this IReadOnlyConfigProperty property, T alternate, CancellationToken token)
         {
-            return GetValueAsync(property, alternate, null, token);
+            return GetValueAsync(property, alternate, (TryConverter<String, T>?) null, token);
         }
 
         public static Task<T> GetValueAsync<T>(this IReadOnlyConfigProperty property, T alternate, TryConverter<String, T>? converter)
@@ -207,6 +302,29 @@ namespace NetExtender.Configuration.Utilities
             return converter(value, out T? result) ? result : alternate;
         }
 
+        public static Task<T> GetValueAsync<T>(this IReadOnlyConfigProperty property, T alternate, IOneWayConverter<String, T>? converter)
+        {
+            return GetValueAsync(property, alternate, converter, CancellationToken.None);
+        }
+
+        public static async Task<T> GetValueAsync<T>(this IReadOnlyConfigProperty property, T alternate, IOneWayConverter<String, T>? converter, CancellationToken token)
+        {
+            if (property is null)
+            {
+                throw new ArgumentNullException(nameof(property));
+            }
+
+            String? value = await property.GetValueAsync(token).ConfigureAwait(false);
+
+            if (value is null)
+            {
+                return alternate;
+            }
+
+            converter ??= OneWayConverter<String, T>.Default;
+            return converter.TryConvert(value, out T? result) ? result : alternate;
+        }
+
         public static T? GetValue<T>(this IConfigProperty property, TryConverter<String?, T>? converter)
         {
             if (property is null)
@@ -216,10 +334,20 @@ namespace NetExtender.Configuration.Utilities
 
             return GetValue(property, converter?.Invoke(property.Alternate, out T? result) == true ? result : default, converter!);
         }
+        
+        public static T? GetValue<T>(this IConfigProperty property, IOneWayConverter<String?, T>? converter)
+        {
+            if (property is null)
+            {
+                throw new ArgumentNullException(nameof(property));
+            }
+
+            return GetValue(property, converter?.TryConvert(property.Alternate, out T? result) == true ? result : default, converter!);
+        }
 
         public static T GetValue<T>(this IConfigProperty property, T alternate)
         {
-            return GetValue(property, alternate, null);
+            return GetValue(property, alternate, (TryConverter<String, T>?) null);
         }
 
         public static T GetValue<T>(this IConfigProperty property, T alternate, TryConverter<String, T>? converter)
@@ -240,6 +368,24 @@ namespace NetExtender.Configuration.Utilities
             return converter(value, out T? result) ? result : alternate;
         }
 
+        public static T GetValue<T>(this IConfigProperty property, T alternate, IOneWayConverter<String, T>? converter)
+        {
+            if (property is null)
+            {
+                throw new ArgumentNullException(nameof(property));
+            }
+
+            String? value = property.GetValue();
+
+            if (value is null)
+            {
+                return alternate;
+            }
+
+            converter ??= OneWayConverter<String, T>.Default;
+            return converter.TryConvert(value, out T? result) ? result : alternate;
+        }
+
         public static Task<T?> GetValueAsync<T>(this IConfigProperty property, TryConverter<String?, T>? converter)
         {
             return GetValueAsync(property, converter, CancellationToken.None);
@@ -255,6 +401,21 @@ namespace NetExtender.Configuration.Utilities
             return GetValueAsync(property, converter?.Invoke(property.Alternate, out T? result) == true ? result : default, converter!, token);
         }
 
+        public static Task<T?> GetValueAsync<T>(this IConfigProperty property, IOneWayConverter<String?, T>? converter)
+        {
+            return GetValueAsync(property, converter, CancellationToken.None);
+        }
+
+        public static Task<T?> GetValueAsync<T>(this IConfigProperty property, IOneWayConverter<String?, T>? converter, CancellationToken token)
+        {
+            if (property is null)
+            {
+                throw new ArgumentNullException(nameof(property));
+            }
+
+            return GetValueAsync(property, converter?.TryConvert(property.Alternate, out T? result) == true ? result : default, converter!, token);
+        }
+
         public static Task<T> GetValueAsync<T>(this IConfigProperty property, T alternate)
         {
             return GetValueAsync(property, alternate, CancellationToken.None);
@@ -262,7 +423,7 @@ namespace NetExtender.Configuration.Utilities
 
         public static Task<T> GetValueAsync<T>(this IConfigProperty property, T alternate, CancellationToken token)
         {
-            return GetValueAsync(property, alternate, null, token);
+            return GetValueAsync(property, alternate, (TryConverter<String, T>?) null, token);
         }
 
         public static Task<T> GetValueAsync<T>(this IConfigProperty property, T alternate, TryConverter<String, T>? converter)
@@ -288,6 +449,30 @@ namespace NetExtender.Configuration.Utilities
             return converter(value, out T? result) ? result : alternate;
         }
 
+        public static Task<T> GetValueAsync<T>(this IConfigProperty property, T alternate, IOneWayConverter<String, T>? converter)
+        {
+            return GetValueAsync(property, alternate, converter, CancellationToken.None);
+        }
+
+        public static async Task<T> GetValueAsync<T>(this IConfigProperty property, T alternate, IOneWayConverter<String, T>? converter, CancellationToken token)
+        {
+            if (property is null)
+            {
+                throw new ArgumentNullException(nameof(property));
+            }
+
+            String? value = await property.GetValueAsync(token).ConfigureAwait(false);
+
+            if (value is null)
+            {
+                return alternate;
+            }
+
+            converter ??= OneWayConverter<String, T>.Default;
+            return converter.TryConvert(value, out T? result) ? result : alternate;
+        }
+
+        //TODO: добавить вариант с конвертированием.
         public static Boolean SetValue<T>(this IConfigProperty property, T value)
         {
             if (property is null)
@@ -303,7 +488,70 @@ namespace NetExtender.Configuration.Utilities
             String? convert = value.GetString();
             return convert is not null && property.SetValue(convert);
         }
+        
+        public static Boolean SetValue<T>(this IConfigProperty property, T value, TryConverter<T, String?>? converter)
+        {
+            if (property is null)
+            {
+                throw new ArgumentNullException(nameof(property));
+            }
 
+            if (value is null)
+            {
+                return property.SetValue(null);
+            }
+
+            if (converter is not null && converter.Invoke(value, out String? convert))
+            {
+                return convert is not null && property.SetValue(convert);
+            }
+
+            convert = value.GetString();
+            return convert is not null && property.SetValue(convert);
+        }
+        
+        public static Boolean SetValue<T>(this IConfigProperty property, T value, IOneWayConverter<T, String?>? converter)
+        {
+            if (property is null)
+            {
+                throw new ArgumentNullException(nameof(property));
+            }
+
+            if (value is null)
+            {
+                return property.SetValue(null);
+            }
+
+            if (converter is not null && converter.TryConvert(value, out String? convert))
+            {
+                return convert is not null && property.SetValue(convert);
+            }
+
+            convert = value.GetString();
+            return convert is not null && property.SetValue(convert);
+        }
+        
+        public static Boolean SetValue<T>(this IConfigProperty property, T value, ITwoWayConverter<String?, T>? converter)
+        {
+            if (property is null)
+            {
+                throw new ArgumentNullException(nameof(property));
+            }
+
+            if (value is null)
+            {
+                return property.SetValue(null);
+            }
+
+            if (converter is not null && converter.TryConvertBack(value, out String? convert))
+            {
+                return convert is not null && property.SetValue(convert);
+            }
+
+            convert = value.GetString();
+            return convert is not null && property.SetValue(convert);
+        }
+        
         public static Task<Boolean> SetValueAsync<T>(this IConfigProperty property, T value)
         {
             return SetValueAsync(property, value, CancellationToken.None);
@@ -322,6 +570,84 @@ namespace NetExtender.Configuration.Utilities
             }
 
             String? convert = value.GetString();
+            return convert is not null && await property.SetValueAsync(convert, token).ConfigureAwait(false);
+        }
+
+        public static Task<Boolean> SetValueAsync<T>(this IConfigProperty property, T value, TryConverter<T, String?>? converter)
+        {
+            return SetValueAsync(property, value, converter, CancellationToken.None);
+        }
+
+        public static async Task<Boolean> SetValueAsync<T>(this IConfigProperty property, T value, TryConverter<T, String?>? converter, CancellationToken token)
+        {
+            if (property is null)
+            {
+                throw new ArgumentNullException(nameof(property));
+            }
+
+            if (value is null)
+            {
+                return await property.SetValueAsync(null, token).ConfigureAwait(false);
+            }
+            
+            if (converter is not null && converter.Invoke(value, out String? convert))
+            {
+                return convert is not null && await property.SetValueAsync(convert, token).ConfigureAwait(false);
+            }
+
+            convert = value.GetString();
+            return convert is not null && await property.SetValueAsync(convert, token).ConfigureAwait(false);
+        }
+
+        public static Task<Boolean> SetValueAsync<T>(this IConfigProperty property, T value, IOneWayConverter<T, String?>? converter)
+        {
+            return SetValueAsync(property, value, converter, CancellationToken.None);
+        }
+
+        public static async Task<Boolean> SetValueAsync<T>(this IConfigProperty property, T value, IOneWayConverter<T, String?>? converter, CancellationToken token)
+        {
+            if (property is null)
+            {
+                throw new ArgumentNullException(nameof(property));
+            }
+
+            if (value is null)
+            {
+                return await property.SetValueAsync(null, token).ConfigureAwait(false);
+            }
+            
+            if (converter is not null && converter.TryConvert(value, out String? convert))
+            {
+                return convert is not null && await property.SetValueAsync(convert, token).ConfigureAwait(false);
+            }
+
+            convert = value.GetString();
+            return convert is not null && await property.SetValueAsync(convert, token).ConfigureAwait(false);
+        }
+
+        public static Task<Boolean> SetValueAsync<T>(this IConfigProperty property, T value, ITwoWayConverter<String?, T>? converter)
+        {
+            return SetValueAsync(property, value, converter, CancellationToken.None);
+        }
+
+        public static async Task<Boolean> SetValueAsync<T>(this IConfigProperty property, T value, ITwoWayConverter<String?, T>? converter, CancellationToken token)
+        {
+            if (property is null)
+            {
+                throw new ArgumentNullException(nameof(property));
+            }
+
+            if (value is null)
+            {
+                return await property.SetValueAsync(null, token).ConfigureAwait(false);
+            }
+            
+            if (converter is not null && converter.TryConvertBack(value, out String? convert))
+            {
+                return convert is not null && await property.SetValueAsync(convert, token).ConfigureAwait(false);
+            }
+
+            convert = value.GetString();
             return convert is not null && await property.SetValueAsync(convert, token).ConfigureAwait(false);
         }
 
@@ -492,7 +818,7 @@ namespace NetExtender.Configuration.Utilities
 
         public static IReadOnlyConfigProperty<T> GetConfigurationProperty<T>(this IReadOnlyConfig config, String? key, T alternate, Func<T, Boolean>? validate, ConfigPropertyOptions options, IEnumerable<String>? sections)
         {
-            return GetConfigurationProperty(config, key, alternate, validate, null, options, sections);
+            return GetConfigurationProperty(config, key, alternate, validate, (TryConverter<String?, T>?) null, options, sections);
         }
 
         public static IReadOnlyConfigProperty<T> GetConfigurationProperty<T>(this IReadOnlyConfig config, String? key, T alternate, Func<T, Boolean>? validate, TryConverter<String?, T>? converter, ConfigPropertyOptions options, params String[]? sections)
@@ -501,6 +827,16 @@ namespace NetExtender.Configuration.Utilities
         }
 
         public static IReadOnlyConfigProperty<T> GetConfigurationProperty<T>(this IReadOnlyConfig config, String? key, T alternate, Func<T, Boolean>? validate, TryConverter<String?, T>? converter, ConfigPropertyOptions options, IEnumerable<String>? sections)
+        {
+            return new ReadOnlyConfigProperty<T>(config, key, alternate, validate, converter, options, sections);
+        }
+
+        public static IReadOnlyConfigProperty<T> GetConfigurationProperty<T>(this IReadOnlyConfig config, String? key, T alternate, Func<T, Boolean>? validate, IOneWayConverter<String?, T>? converter, ConfigPropertyOptions options, params String[]? sections)
+        {
+            return GetConfigurationProperty(config, key, alternate, validate, converter, options, (IEnumerable<String>?) sections);
+        }
+
+        public static IReadOnlyConfigProperty<T> GetConfigurationProperty<T>(this IReadOnlyConfig config, String? key, T alternate, Func<T, Boolean>? validate, IOneWayConverter<String?, T>? converter, ConfigPropertyOptions options, IEnumerable<String>? sections)
         {
             return new ReadOnlyConfigProperty<T>(config, key, alternate, validate, converter, options, sections);
         }
@@ -552,7 +888,7 @@ namespace NetExtender.Configuration.Utilities
 
         public static IConfigProperty<T> GetConfigurationProperty<T>(this IConfig config, String? key, T alternate, Func<T, Boolean>? validate, ConfigPropertyOptions options, IEnumerable<String>? sections)
         {
-            return GetConfigurationProperty(config, key, alternate, validate, null, options, sections);
+            return GetConfigurationProperty(config, key, alternate, validate, (TryConverter<String?, T>?) null, options, sections);
         }
 
         public static IConfigProperty<T> GetConfigurationProperty<T>(this IConfig config, String? key, T alternate, Func<T, Boolean>? validate, TryConverter<String?, T>? converter, ConfigPropertyOptions options, params String[]? sections)
@@ -561,6 +897,16 @@ namespace NetExtender.Configuration.Utilities
         }
 
         public static IConfigProperty<T> GetConfigurationProperty<T>(this IConfig config, String? key, T alternate, Func<T, Boolean>? validate, TryConverter<String?, T>? converter, ConfigPropertyOptions options, IEnumerable<String>? sections)
+        {
+            return new ConfigProperty<T>(config, key, alternate, validate, converter, options, sections);
+        }
+
+        public static IConfigProperty<T> GetConfigurationProperty<T>(this IConfig config, String? key, T alternate, Func<T, Boolean>? validate, IOneWayConverter<String?, T>? converter, ConfigPropertyOptions options, params String[]? sections)
+        {
+            return GetConfigurationProperty(config, key, alternate, validate, converter, options, (IEnumerable<String>?) sections);
+        }
+
+        public static IConfigProperty<T> GetConfigurationProperty<T>(this IConfig config, String? key, T alternate, Func<T, Boolean>? validate, IOneWayConverter<String?, T>? converter, ConfigPropertyOptions options, IEnumerable<String>? sections)
         {
             return new ConfigProperty<T>(config, key, alternate, validate, converter, options, sections);
         }
@@ -612,7 +958,7 @@ namespace NetExtender.Configuration.Utilities
 
         public static IReadOnlyConfigProperty<T> GetReadOnlyConfigurationProperty<T>(this IConfig config, String? key, T alternate, Func<T, Boolean>? validate, ConfigPropertyOptions options, IEnumerable<String>? sections)
         {
-            return GetReadOnlyConfigurationProperty(config, key, alternate, validate, null, options, sections);
+            return GetReadOnlyConfigurationProperty(config, key, alternate, validate, (TryConverter<String?, T>?) null, options, sections);
         }
 
         public static IReadOnlyConfigProperty<T> GetReadOnlyConfigurationProperty<T>(this IConfig config, String? key, T alternate, Func<T, Boolean>? validate, TryConverter<String?, T>? converter, ConfigPropertyOptions options, params String[]? sections)
@@ -621,6 +967,16 @@ namespace NetExtender.Configuration.Utilities
         }
 
         public static IReadOnlyConfigProperty<T> GetReadOnlyConfigurationProperty<T>(this IConfig config, String? key, T alternate, Func<T, Boolean>? validate, TryConverter<String?, T>? converter, ConfigPropertyOptions options, IEnumerable<String>? sections)
+        {
+            return new ReadOnlyConfigPropertyWrapper<T>(config, key, alternate, validate, converter, options, sections);
+        }
+
+        public static IReadOnlyConfigProperty<T> GetReadOnlyConfigurationProperty<T>(this IConfig config, String? key, T alternate, Func<T, Boolean>? validate, IOneWayConverter<String?, T>? converter, ConfigPropertyOptions options, params String[]? sections)
+        {
+            return GetReadOnlyConfigurationProperty(config, key, alternate, validate, converter, options, (IEnumerable<String>?) sections);
+        }
+
+        public static IReadOnlyConfigProperty<T> GetReadOnlyConfigurationProperty<T>(this IConfig config, String? key, T alternate, Func<T, Boolean>? validate, IOneWayConverter<String?, T>? converter, ConfigPropertyOptions options, IEnumerable<String>? sections)
         {
             return new ReadOnlyConfigPropertyWrapper<T>(config, key, alternate, validate, converter, options, sections);
         }

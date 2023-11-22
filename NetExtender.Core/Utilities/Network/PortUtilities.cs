@@ -116,7 +116,7 @@ namespace NetExtender.Utilities.Network
                 InvalidPort => PortType.Invalid,
                 <= SystemPortMaximum => PortType.System,
                 <= RegisterPortMaximum => PortType.Register,
-                <= DynamicPortMaximum => PortType.Dynamic,
+                <= DynamicPortMaximum => PortType.Dynamic
             };
         }
 

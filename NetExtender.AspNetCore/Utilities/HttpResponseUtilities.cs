@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace NetExtender.Utilities.AspNetCore.Types
 {
-    public static class HttpResponceUtilities
+    public static class HttpResponseUtilities
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T SetStatusCode<T>(this T response, HttpStatusCode code) where T : HttpResponse

@@ -5,6 +5,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using NetExtender.Domains.Applications.Interfaces;
 using NetExtender.Domains.AspNetCore.Server;
@@ -13,46 +14,33 @@ using NetExtender.Domains.WindowsPresentation.Applications;
 
 namespace NetExtender.Domains.WindowsPresentation.AspNetCore.Applications
 {
-    public class WindowsPresentationAspNetCoreApplication<TApplication> : WindowsPresentationAspNetCoreApplication where TApplication : Application, new()
+    public abstract class WindowsPresentationAspNetCoreApplicationAbstraction<THost> : WindowsPresentationApplication where THost : class
     {
-        public WindowsPresentationAspNetCoreApplication()
-            : base(new TApplication())
-        {
-        }
+        protected IAspNetCoreApplicationServer<THost>? Server { get; set; }
 
-        public WindowsPresentationAspNetCoreApplication(TApplication application)
-            : base(application)
-        {
-        }
-    }
-
-    public class WindowsPresentationAspNetCoreApplication : WindowsPresentationApplication
-    {
-        protected IAspNetCoreApplicationServer? Server { get; set; }
-        
-        public WindowsPresentationAspNetCoreApplication()
+        protected WindowsPresentationAspNetCoreApplicationAbstraction()
             : this(new Application())
         {
         }
-        
-        public WindowsPresentationAspNetCoreApplication(Application application)
+
+        protected WindowsPresentationAspNetCoreApplicationAbstraction(Application application)
             : base(application)
         {
         }
 
-        protected IAspNetCoreApplicationServer Create(IHost host)
+        protected IAspNetCoreApplicationServer<THost> Create(THost host)
         {
-            return Create<IHost>(host);
+            return Create<THost>(host);
         }
 
-        protected virtual IAspNetCoreApplicationServer Create<THost>(THost host) where THost : class, IHost
+        protected virtual IAspNetCoreApplicationServer<T> Create<T>(T host) where T : class, THost
         {
             if (host is null)
             {
                 throw new ArgumentNullException(nameof(host));
             }
 
-            return new AspNetCoreApplicationServer<THost>(host);
+            return AspNetCoreApplicationServerAbstraction<T>.Create(host);
         }
         
         public override Task<IApplication> RunAsync(CancellationToken token)
@@ -65,12 +53,12 @@ namespace NetExtender.Domains.WindowsPresentation.AspNetCore.Applications
             return RunAsync(window, null, token);
         }
 
-        public virtual Task<IApplication> RunAsync(IHost? host, CancellationToken token)
+        public virtual Task<IApplication> RunAsync(THost? host, CancellationToken token)
         {
             return RunAsync(null, host, token);
         }
 
-        public virtual async Task<IApplication> RunAsync(Window? window, IHost? host, CancellationToken token)
+        public virtual async Task<IApplication> RunAsync(Window? window, THost? host, CancellationToken token)
         {
             if (host is null)
             {
@@ -93,6 +81,56 @@ namespace NetExtender.Domains.WindowsPresentation.AspNetCore.Applications
             {
                 base.Shutdown(code);
             }
+        }
+    }
+    
+    public class WindowsPresentationAspNetCoreApplication<TApplication> : WindowsPresentationAspNetCoreApplication where TApplication : Application, new()
+    {
+        public WindowsPresentationAspNetCoreApplication()
+            : base(new TApplication())
+        {
+        }
+
+        public WindowsPresentationAspNetCoreApplication(TApplication application)
+            : base(application)
+        {
+        }
+    }
+
+    public class WindowsPresentationAspNetCoreApplication : WindowsPresentationAspNetCoreApplicationAbstraction<IHost>
+    {
+        public WindowsPresentationAspNetCoreApplication()
+        {
+        }
+        
+        public WindowsPresentationAspNetCoreApplication(Application application)
+            : base(application)
+        {
+        }
+    }
+    
+    public class WindowsPresentationAspNetCoreWebApplication<TApplication> : WindowsPresentationAspNetCoreWebApplication where TApplication : Application, new()
+    {
+        public WindowsPresentationAspNetCoreWebApplication()
+            : base(new TApplication())
+        {
+        }
+
+        public WindowsPresentationAspNetCoreWebApplication(TApplication application)
+            : base(application)
+        {
+        }
+    }
+
+    public class WindowsPresentationAspNetCoreWebApplication : WindowsPresentationAspNetCoreApplicationAbstraction<IWebHost>
+    {
+        public WindowsPresentationAspNetCoreWebApplication()
+        {
+        }
+        
+        public WindowsPresentationAspNetCoreWebApplication(Application application)
+            : base(application)
+        {
         }
     }
 }

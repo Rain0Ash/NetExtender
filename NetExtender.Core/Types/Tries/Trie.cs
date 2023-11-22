@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
-namespace NetExtender.Initializer.Types.Tries
+namespace NetExtender.Types.Tries
 {
     /// <summary>
     /// Implementation of trie data structure.
@@ -77,6 +77,11 @@ namespace NetExtender.Initializer.Types.Tries
             return Set.Contains(key);
         }
 
+        public Boolean ContainsKey(ReadOnlySpan<TKey> key)
+        {
+            return Set.Contains(key);
+        }
+
         Boolean ICollection<KeyValuePair<IEnumerable<TKey>, TValue>>.Contains(KeyValuePair<IEnumerable<TKey>, TValue> item)
         {
             if (!Set.TryGetItem(item.Key, out IEnumerable<TKey>? result) || result is not Entry entry)
@@ -101,6 +106,11 @@ namespace NetExtender.Initializer.Types.Tries
 
             return Set.Get(prefix).Cast<Entry>().Select(entry => new TrieEntry<TKey, TValue>(entry, entry.Value));
         }
+        
+        public IEnumerable<TrieEntry<TKey, TValue>> Get(ReadOnlySpan<TKey> prefix)
+        {
+            return Set.Get(prefix).Cast<Entry>().Select(entry => new TrieEntry<TKey, TValue>(entry, entry.Value));
+        }
 
         public Boolean TryGetValue(IEnumerable<TKey> key, [MaybeNullWhen(false)] out TValue value)
         {
@@ -109,6 +119,18 @@ namespace NetExtender.Initializer.Types.Tries
                 throw new ArgumentNullException(nameof(key));
             }
 
+            if (!Set.TryGetItem(key, out IEnumerable<TKey>? result) || result is not Entry entry)
+            {
+                value = default;
+                return false;
+            }
+
+            value = entry.Value;
+            return true;
+        }
+
+        public Boolean TryGetValue(ReadOnlySpan<TKey> key, [MaybeNullWhen(false)] out TValue value)
+        {
             if (!Set.TryGetItem(key, out IEnumerable<TKey>? result) || result is not Entry entry)
             {
                 value = default;
@@ -130,6 +152,12 @@ namespace NetExtender.Initializer.Types.Tries
             Set.Add(entry);
         }
 
+        public void Add(ReadOnlySpan<TKey> key, TValue value)
+        {
+            Entry entry = new Entry(key.ToArray()) { Value = value };
+            Set.Add(entry);
+        }
+
         void ICollection<KeyValuePair<IEnumerable<TKey>, TValue>>.Add(KeyValuePair<IEnumerable<TKey>, TValue> item)
         {
             Add(item.Key, item.Value);
@@ -142,6 +170,11 @@ namespace NetExtender.Initializer.Types.Tries
                 throw new ArgumentNullException(nameof(key));
             }
 
+            return Set.Remove(key);
+        }
+
+        public Boolean Remove(ReadOnlySpan<TKey> key)
+        {
             return Set.Remove(key);
         }
 
@@ -200,6 +233,28 @@ namespace NetExtender.Initializer.Types.Tries
                     throw new ArgumentNullException(nameof(key));
                 }
 
+                if (!Set.TryGetItem(key, out IEnumerable<TKey>? result))
+                {
+                    Add(key, value);
+                    return;
+                }
+
+                if (result is Entry entry)
+                {
+                    entry.Value = value;
+                }
+            }
+        }
+
+        [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
+        public TValue this[ReadOnlySpan<TKey> key]
+        {
+            get
+            {
+                return TryGetValue(key, out TValue? result) ? result : throw new KeyNotFoundException("The given key was not present in the trie.");
+            }
+            set
+            {
                 if (!Set.TryGetItem(key, out IEnumerable<TKey>? result))
                 {
                     Add(key, value);

@@ -4491,6 +4491,30 @@ namespace NetExtender.Utilities.Numerics
             return BigFactorial((UInt32) value);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        public static Single Fibonacci(this Single value)
+        {
+            const Single plus = (1 + SingleConstants.Sqrt5) / 2;
+            const Single minus = (1 - SingleConstants.Sqrt5) / 2;
+            return SingleConstants.InvertedSqrt5 * (Pow(plus, value) - Pow(minus, value));
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        public static Double Fibonacci(this Double value)
+        {
+            const Double plus = (1 + DoubleConstants.Sqrt5) / 2;
+            const Double minus = (1 - DoubleConstants.Sqrt5) / 2;
+            return DoubleConstants.InvertedSqrt5 * (Pow(plus, value) - Pow(minus, value));
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        public static Decimal Fibonacci(this Decimal value)
+        {
+            const Decimal plus = (1 + DecimalConstants.Sqrt5) / 2;
+            const Decimal minus = (1 - DecimalConstants.Sqrt5) / 2;
+            return DecimalConstants.InvertedSqrt5 * (Pow(plus, value) - Pow(minus, value));
+        }
+
         public static Decimal DiscreteDifference(this Single value, Single between, Byte digits)
         {
             Single abs = Abs(value - between);

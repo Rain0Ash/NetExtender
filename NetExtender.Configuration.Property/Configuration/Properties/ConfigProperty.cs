@@ -12,6 +12,8 @@ using NetExtender.Configuration.Common;
 using NetExtender.Configuration.Interfaces;
 using NetExtender.Configuration.Properties.Interfaces;
 using NetExtender.Configuration.Utilities;
+using NetExtender.Types.Converters;
+using NetExtender.Types.Converters.Interfaces;
 using NetExtender.Types.Monads;
 using NetExtender.Utilities.Types;
 
@@ -60,6 +62,14 @@ namespace NetExtender.Configuration.Properties
             get
             {
                 return Property.HasValue;
+            }
+        }
+
+        public Boolean IsInitialize
+        {
+            get
+            {
+                return Property.IsInitialize;
             }
         }
 
@@ -146,7 +156,7 @@ namespace NetExtender.Configuration.Properties
             }
         }
 
-        public TryConverter<String?, T> Converter { get; }
+        public ITwoWayConverter<String?, T> Converter { get; }
 
         private event PropertyChangedEventHandler? PropertyChanged;
         event PropertyChangedEventHandler? INotifyPropertyChanged.PropertyChanged
@@ -166,6 +176,11 @@ namespace NetExtender.Configuration.Properties
         {
         }
 
+        protected internal ConfigProperty(IConfig config, String? key, T alternate, Func<T, Boolean>? validate, IOneWayConverter<String?, T>? converter, ConfigPropertyOptions options, IEnumerable<String>? sections)
+            : this(new ConfigProperty(config, key, null, options, sections), alternate, validate, converter)
+        {
+        }
+
         protected internal ConfigProperty(IConfigProperty property, T alternate, Func<T, Boolean>? validate, TryConverter<String?, T>? converter)
         {
             Property = property ?? throw new ArgumentNullException(nameof(property));
@@ -174,7 +189,28 @@ namespace NetExtender.Configuration.Properties
             Internal = new DynamicLazy<T>(Initialize);
             Alternate = alternate;
             Validate = validate;
-            Converter = converter ?? ConvertUtilities.TryConvert;
+            Converter = converter is not null ? TwoWayConverter<String?, T>.Combine(converter, TwoWayConverter<T>.String()) : TwoWayConverter<T>.String().Reverse();
+            
+            if (IsInitialize)
+            {
+                Internal.TryInitialize();
+            }
+        }
+
+        protected internal ConfigProperty(IConfigProperty property, T alternate, Func<T, Boolean>? validate, IOneWayConverter<String?, T>? converter)
+        {
+            Property = property ?? throw new ArgumentNullException(nameof(property));
+            Property.Changed += OnChanged;
+            Property.PropertyChanged += OnChanged;
+            Internal = new DynamicLazy<T>(Initialize);
+            Alternate = alternate;
+            Validate = validate;
+            Converter = converter?.AsTwoWay(TwoWayConverter<T>.String()) ?? TwoWayConverter<T>.String().Reverse();
+
+            if (IsInitialize)
+            {
+                Internal.TryInitialize();
+            }
         }
 
         protected void OnChanged(ConfigurationChangedEventArgs<T> args)
@@ -200,7 +236,7 @@ namespace NetExtender.Configuration.Properties
             }
 
             (String? key, String? value, ImmutableArray<String> sections) = args.Value;
-            if (Converter(value, out T? result) && Validate?.Invoke(result) != false)
+            if (Converter.TryConvert(value, out T? result) && Validate?.Invoke(result) != false)
             {
                 ConfigurationValueEntry<T> entry = new ConfigurationValueEntry<T>(key, result, sections);
                 Changed?.Invoke(this, new ConfigurationChangedEventArgs<T>(entry, args.Handled));
@@ -214,7 +250,17 @@ namespace NetExtender.Configuration.Properties
 
         protected virtual T Initialize()
         {
-            return !IsAlwaysDefault ? Property.GetValue(Alternate, Converter) : Alternate;
+            if (IsAlwaysDefault)
+            {
+                return Alternate;
+            }
+
+            if (IsInitialize && Property.GetValue() is null)
+            {
+                return Value = Alternate;
+            }
+            
+            return Property.GetValue(Alternate, Converter);
         }
 
         public virtual T GetValue()
@@ -261,7 +307,7 @@ namespace NetExtender.Configuration.Properties
 
         public virtual Boolean SetValue(T value)
         {
-            return !IsReadOnly && Property.SetValue(value);
+            return !IsReadOnly && Property.SetValue(value, Converter);
         }
 
         public Task<Boolean> SetValueAsync(T value)
@@ -271,7 +317,7 @@ namespace NetExtender.Configuration.Properties
 
         public virtual async Task<Boolean> SetValueAsync(T value, CancellationToken token)
         {
-            return !IsReadOnly && await Property.SetValueAsync(value, token).ConfigureAwait(false);
+            return !IsReadOnly && await Property.SetValueAsync(value, Converter, token).ConfigureAwait(false);
         }
 
         public virtual Boolean RemoveValue()
@@ -446,6 +492,11 @@ namespace NetExtender.Configuration.Properties
         {
             Config = config ?? throw new ArgumentNullException(nameof(config));
             Config.Changed += OnChanged;
+            
+            if (IsInitialize)
+            {
+                Internal.TryInitialize();
+            }
         }
 
         protected virtual void OnChanged(ConfigurationChangedEventArgs args)
@@ -478,7 +529,17 @@ namespace NetExtender.Configuration.Properties
 
         protected override String? Initialize()
         {
-            return !IsAlwaysDefault ? GetValueInternal() : Alternate;
+            if (IsAlwaysDefault)
+            {
+                return Alternate;
+            }
+
+            if (IsInitialize && Config.GetValue(Key, Sections) is null)
+            {
+                return Value = Alternate;
+            }
+
+            return GetValueInternal();
         }
 
         protected virtual String? GetValueInternal()
@@ -672,7 +733,7 @@ namespace NetExtender.Configuration.Properties
 
         public virtual Boolean Save()
         {
-            if (IsReadOnly || IsDisableSave || !Internal.IsValueCreated)
+            if (IsReadOnly || IsDisableSave || !IsInitialize && !Internal.IsValueCreated)
             {
                 return false;
             }
@@ -687,7 +748,7 @@ namespace NetExtender.Configuration.Properties
 
         public virtual Task<Boolean> SaveAsync(CancellationToken token)
         {
-            if (IsReadOnly || IsDisableSave || !Internal.IsValueCreated)
+            if (IsReadOnly || IsDisableSave || !IsInitialize && !Internal.IsValueCreated)
             {
                 return TaskUtilities.False;
             }

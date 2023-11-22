@@ -62,16 +62,20 @@ namespace NetExtender.ImageSharp.Utilities
 
             for (Int32 y = 0; y < Height; y++)
             {
+                Int32 index = y;
+                UInt32 sum = 0;
+                
                 void ProcessPixels(PixelAccessor<Rgba32> accessor)
                 {
-                    Span<Rgba32> row = accessor.GetRowSpan(y);
+                    Span<Rgba32> row = accessor.GetRowSpan(index);
                     for (Int32 x = 0; x < Width; x++)
                     {
-                        average += row[x].R;
+                        sum += row[x].R;
                     }
                 }
 
                 image.ProcessPixelRows(ProcessPixels);
+                average += sum;
             }
 
             average /= Size;
@@ -81,9 +85,11 @@ namespace NetExtender.ImageSharp.Utilities
 
             for (Int32 y = 0; y < Height; y++)
             {
+                Int32 index = y;
+
                 void ProcessPixels(PixelAccessor<Rgba32> accessor)
                 {
-                    Span<Rgba32> row = accessor.GetRowSpan(y);
+                    Span<Rgba32> row = accessor.GetRowSpan(index);
 
                     for (Int32 x = 0; x < Width; x++)
                     {
@@ -119,9 +125,11 @@ namespace NetExtender.ImageSharp.Utilities
 
             for (Int32 y = 0; y < Height; y++)
             {
+                Int32 index = y;
+                
                 void ProcessPixels(PixelAccessor<Rgba32> accessor)
                 {
-                    Span<Rgba32> row = accessor.GetRowSpan(y);
+                    Span<Rgba32> row = accessor.GetRowSpan(index);
                     Rgba32 left = row[0];
 
                     for (Int32 x = 1; x < Width; x++)

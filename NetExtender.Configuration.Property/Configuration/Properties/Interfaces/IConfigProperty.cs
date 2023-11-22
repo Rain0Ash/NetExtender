@@ -5,6 +5,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using NetExtender.Configuration.Common;
+using NetExtender.Types.Converters.Interfaces;
 using NetExtender.Interfaces;
 using NetExtender.Types.Behavior.Interfaces;
 
@@ -13,7 +14,7 @@ namespace NetExtender.Configuration.Properties.Interfaces
     public interface IConfigProperty<T> : IConfigPropertyValueInfo<T>, IChangeableBehavior<ConfigPropertyOptions>, IReadOnlyValidable<T>, IFormattable
     {
         public new T Value { get; set; }
-        public TryConverter<String?, T> Converter { get; }
+        public ITwoWayConverter<String?, T> Converter { get; }
         public T GetValue();
         public T GetValue(Func<T, Boolean>? predicate);
         public Task<T> GetValueAsync();

@@ -55,7 +55,6 @@ namespace NetExtender.NewtonSoft.Types.Trees
 
                 Type[] generic = objectType.GetGenericArguments();
                 return DictionaryTypeDifinition.MakeGenericType(generic[0], DictionaryTreeNodeTypeDifinition.MakeGenericType(generic[0], generic[1]));
-
             }
             catch (Exception exception)
             {
@@ -93,7 +92,7 @@ namespace NetExtender.NewtonSoft.Types.Trees
                 IEqualityComparerTypeDifinition.MakeGenericType(generic[0])
             });
 
-            return method?.Invoke(new[] {obj, null});
+            return method?.Invoke(new[] { obj, null });
         }
 
         public override void WriteJson(JsonWriter writer, Object? value, JsonSerializer serializer)

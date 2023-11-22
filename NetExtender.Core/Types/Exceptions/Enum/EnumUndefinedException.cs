@@ -35,24 +35,24 @@ namespace NetExtender.Types.Exceptions
         }
 
         public EnumUndefinedException(T value)
+            : this(value, null, (String?) null)
         {
             Value = value;
         }
 
         public EnumUndefinedException(T value, String? paramName)
-            : base(paramName, value, null)
+            : this(value, paramName, (String?) null)
         {
-            Value = value;
         }
 
         public EnumUndefinedException(T value, String? message, Exception? innerException)
-            : base(message, innerException)
+            : base(message ?? $"Specified value '{value}' was out of the range of valid values of enum type '{typeof(T)}'.", innerException)
         {
             Value = value;
         }
 
         public EnumUndefinedException(T value, String? paramName, String? message)
-            : base(paramName, value, message)
+            : base(paramName, value, message ?? $"Specified value '{value}' was out of the range of valid values of enum type '{typeof(T)}'.")
         {
             Value = value;
         }
@@ -91,17 +91,17 @@ namespace NetExtender.Types.Exceptions
         }
 
         protected EnumUndefinedException(String? message, Exception? innerException)
-            : base(message, innerException)
+            : base(message ?? "Specified value was out of the range of valid values of enum.", innerException)
         {
         }
 
-        protected EnumUndefinedException(String? paramName, Enum? actualValue, String? message)
-            : base(paramName, actualValue, message)
+        protected EnumUndefinedException(String? paramName, Enum? value, String? message)
+            : base(paramName, value, message is null && value is not null ? $"Specified value '{value}' was out of the range of valid values of enum type '{value.GetType()}'." : message)
         {
         }
 
         protected EnumUndefinedException(String? paramName, String? message)
-            : base(paramName, message)
+            : base(paramName, message ?? "Specified value was out of the range of valid values of enum.")
         {
         }
 

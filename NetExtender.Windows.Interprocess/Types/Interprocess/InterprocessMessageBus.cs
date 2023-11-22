@@ -151,12 +151,14 @@ namespace NetExtender.Types.Interprocess
 
             if (messages is null)
             {
-                throw new ArgumentNullException(nameof(messages), @"Message list can not be empty");
+                throw new ArgumentNullException(nameof(messages), "Message list can not be empty");
             }
 
             void Internal()
             {
-                Queue<InterprocessLogEntry> queue = new Queue<InterprocessLogEntry>(messages.Select(message => new InterprocessLogEntry { Instance = InstanceId, Message = message }));
+                // ReSharper disable once PossibleMultipleEnumeration
+                IEnumerable<InterprocessLogEntry> entries = messages.Select(message => new InterprocessLogEntry { Instance = InstanceId, Message = message });
+                Queue<InterprocessLogEntry> queue = new Queue<InterprocessLogEntry>(entries);
 
                 while (queue.Count > 0)
                 {

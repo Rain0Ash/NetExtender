@@ -15,7 +15,9 @@ using NetExtender.Configuration.Cryptography.Utilities;
 using NetExtender.Configuration.Interfaces;
 using NetExtender.Configuration.Properties;
 using NetExtender.Cryptography.Keys.Interfaces;
+using NetExtender.Types.Converters.Interfaces;
 using NetExtender.Utilities.Cryptography;
+using NetExtender.Utilities.Types;
 
 namespace NetExtender.Configuration.Cryptography.Properties
 {
@@ -100,12 +102,28 @@ namespace NetExtender.Configuration.Cryptography.Properties
         {
         }
 
+        internal ReadOnlyCryptographyConfigProperty(IReadOnlyConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate, IOneWayConverter<String?, T>? converter, ConfigPropertyOptions options, IEnumerable<String>? sections)
+            : this(new ReadOnlyCryptographyConfigPropertyWrapper(config, key, null, cryptor, options, sections), alternate, validate, converter)
+        {
+        }
+
         internal ReadOnlyCryptographyConfigProperty(IReadOnlyCryptographyConfig config, String? key, T alternate, IStringCryptor? cryptor, Func<T, Boolean>? validate, TryConverter<String?, T>? converter, ConfigPropertyOptions options, IEnumerable<String>? sections)
             : this(new ReadOnlyCryptographyConfigProperty(config, key, null, cryptor, options, sections), alternate, validate, converter)
         {
         }
 
+        internal ReadOnlyCryptographyConfigProperty(IReadOnlyCryptographyConfig config, String? key, T alternate, IStringCryptor? cryptor, Func<T, Boolean>? validate, IOneWayConverter<String?, T>? converter, ConfigPropertyOptions options, IEnumerable<String>? sections)
+            : this(new ReadOnlyCryptographyConfigProperty(config, key, null, cryptor, options, sections), alternate, validate, converter)
+        {
+        }
+
         internal ReadOnlyCryptographyConfigProperty(IReadOnlyCryptographyConfigProperty property, T alternate, Func<T, Boolean>? validate, TryConverter<String?, T>? converter)
+            : base(property, alternate, validate, converter)
+        {
+            Internal = property ?? throw new ArgumentNullException(nameof(property));
+        }
+
+        internal ReadOnlyCryptographyConfigProperty(IReadOnlyCryptographyConfigProperty property, T alternate, Func<T, Boolean>? validate, IOneWayConverter<String?, T>? converter)
             : base(property, alternate, validate, converter)
         {
             Internal = property ?? throw new ArgumentNullException(nameof(property));
@@ -195,6 +213,11 @@ namespace NetExtender.Configuration.Cryptography.Properties
         {
             Cryptography = config ?? throw new ArgumentNullException(nameof(config));
             InternalCryptor = cryptor?.AsCryptor(Cryptography.CryptographyOptions);
+            
+            if (IsInitialize)
+            {
+                Internal.TryInitialize();
+            }
         }
 
         protected override Boolean KeyExistInternal()
@@ -295,6 +318,11 @@ namespace NetExtender.Configuration.Cryptography.Properties
             }
 
             Cryptor = cryptor.AsCryptor();
+            
+            if (IsInitialize)
+            {
+                Internal.TryInitialize();
+            }
         }
 
         protected virtual Boolean TryEncryptKey(String? key, IStringEncryptor? encryptor, out String? result)

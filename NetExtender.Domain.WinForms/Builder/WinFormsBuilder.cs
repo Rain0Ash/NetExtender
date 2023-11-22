@@ -2,6 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Collections.Immutable;
 using System.Windows.Forms;
 using NetExtender.Domains.Builder;
 
@@ -13,14 +14,9 @@ namespace NetExtender.Domains.WinForms.Builder
 
     public class WinFormsBuilder<T> : ApplicationBuilder<T> where T : Form
     {
-        public override T Build(String[] arguments)
+        public override T Build(ImmutableArray<String> arguments)
         {
-            if (arguments is null)
-            {
-                throw new ArgumentNullException(nameof(arguments));
-            }
-
-            return New();
+            return New(arguments);
         }
     }
 }

@@ -10,13 +10,17 @@ using NetExtender.Types.Strings.Interfaces;
 
 namespace NetExtender.Localization.Common.Interfaces
 {
-    public interface ILocalizationString : IFormatString, IReadOnlyDictionary<LocalizationIdentifier, String>, ICloneable<ILocalizationString>
+    public interface ILocalizableString
     {
-        public new IEnumerable<LocalizationIdentifier> Keys { get; }
-        public new IReadOnlyDictionary<LocalizationIdentifier, String> Values { get; }
         public Boolean Contains(LocalizationIdentifier identifier);
         public String? Get(LocalizationIdentifier identifier);
         public Boolean Get(LocalizationIdentifier identifier, [MaybeNullWhen(false)] out String result);
+    }
+    
+    public interface ILocalizationString : ILocalizableString, IFormatString, IReadOnlyDictionary<LocalizationIdentifier, String>, ICloneable<ILocalizationString>
+    {
+        public new IEnumerable<LocalizationIdentifier> Keys { get; }
+        public new IReadOnlyDictionary<LocalizationIdentifier, String> Values { get; }
         public new IEnumerator<KeyValuePair<LocalizationIdentifier, String>> GetEnumerator();
         public new ILocalizationString Clone();
         public IMutableLocalizationString? ToMutable();

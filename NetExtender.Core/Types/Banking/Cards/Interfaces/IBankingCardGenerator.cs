@@ -3,7 +3,7 @@
 
 using System;
 
-namespace NetExtender.Initializer.Types.Banking.Cards.Interfaces
+namespace NetExtender.Types.Banking.Cards.Interfaces
 {
     public interface IBankingCardGenerator
     {

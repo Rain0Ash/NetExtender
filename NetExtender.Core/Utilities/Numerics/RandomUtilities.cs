@@ -82,6 +82,54 @@ namespace NetExtender.Utilities.Numerics
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Span<Byte> Update(this Random random, Span<Byte> value)
+        {
+            if (random is null)
+            {
+                throw new ArgumentNullException(nameof(random));
+            }
+            
+            random.NextBytes(value);
+            return value;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Span<Byte> Update(this Random random, Byte[] value)
+        {
+            if (random is null)
+            {
+                throw new ArgumentNullException(nameof(random));
+            }
+            
+            random.NextBytes(value);
+            return value;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Span<Byte> Update<T>(this T random, Span<Byte> value) where T : IRandom
+        {
+            if (random is null)
+            {
+                throw new ArgumentNullException(nameof(random));
+            }
+            
+            random.NextBytes(value);
+            return value;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Span<Byte> Update<T>(this T random, Byte[] value) where T : IRandom
+        {
+            if (random is null)
+            {
+                throw new ArgumentNullException(nameof(random));
+            }
+            
+            random.NextBytes(value);
+            return value;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Int32 Next()
         {
             return NextInt32();

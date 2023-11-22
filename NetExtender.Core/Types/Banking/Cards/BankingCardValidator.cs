@@ -3,9 +3,9 @@
 
 using System;
 using System.Text.RegularExpressions;
-using NetExtender.Initializer.Types.Banking.Cards.Interfaces;
+using NetExtender.Types.Banking.Cards.Interfaces;
 
-namespace NetExtender.Initializer.Types.Banking.Cards
+namespace NetExtender.Types.Banking.Cards
 {
     public abstract class BankingCardValidator : IBankingCardValidator
     {

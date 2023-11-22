@@ -2,7 +2,13 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Collections.Specialized;
+using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
+using NetExtender.Types.Network;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace NetExtender.Utilities.Types
 {
@@ -174,6 +180,87 @@ namespace NetExtender.Utilities.Types
             }
 
             return new Uri(parent, new Uri(uri, UriKind.Relative));
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static NameValueCollection ParseQueryString(this Uri address)
+        {
+            return address is not null ? new FormDataCollection(address).Collection : throw new ArgumentNullException(nameof(address));
+        }
+
+        public static Boolean TryParseQueryString(this Uri address, [MaybeNullWhen(false)] out NameValueCollection result)
+        {
+            if (address is null)
+            {
+                throw new ArgumentNullException(nameof(address));
+            }
+
+            try
+            {
+                result = new FormDataCollection(address).Collection;
+                return true;
+            }
+            catch (Exception)
+            {
+                result = default;
+                return false;
+            }
+        }
+
+        public static Boolean TryReadQueryAs(this Uri address, Type type, [MaybeNullWhen(false)] out Object result)
+        {
+            return TryReadQueryAs(address, type, null, out result);
+        }
+
+        public static Boolean TryReadQueryAs(this Uri address, Type type, JsonSerializer? serializer, [MaybeNullWhen(false)] out Object result)
+        {
+            if (address is null)
+            {
+                throw new ArgumentNullException(nameof(address));
+            }
+
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            if (!FormUrlEncodedJson.TryParse(new FormDataCollection(address)!, out JObject? token))
+            {
+                result = null;
+                return false;
+            }
+
+            using JTokenReader reader = new JTokenReader(token);
+            serializer ??= new JsonSerializer();
+            result = serializer.Deserialize(reader, type);
+            return result is not null;
+        }
+
+        public static Boolean TryReadQueryAs<T>(this Uri address, [MaybeNullWhen(false)] out T result)
+        {
+            if (address is null)
+            {
+                throw new ArgumentNullException(nameof(address));
+            }
+
+            if (!FormUrlEncodedJson.TryParse(new FormDataCollection(address)!, out JObject? jobject))
+            {
+                result = default;
+                return false;
+            }
+
+            result = jobject.ToObject<T>();
+            return result is not null;
+        }
+
+        public static Boolean TryReadQueryAsJson(this Uri address, [MaybeNullWhen(false)] out JObject result)
+        {
+            if (address is null)
+            {
+                throw new ArgumentNullException(nameof(address));
+            }
+
+            return FormUrlEncodedJson.TryParse(new FormDataCollection(address)!, out result);
         }
 
         public static Uri SetQueryParameter(this Uri uri, String key, String? value)

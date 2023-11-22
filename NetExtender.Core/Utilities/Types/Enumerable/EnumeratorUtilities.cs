@@ -19,7 +19,7 @@ namespace NetExtender.Utilities.Types
             return Enumerable.Empty<T>().GetEnumerator();
         }
 
-        public static Boolean TryReset(this IEnumerator enumerator)
+        public static Boolean TryReset<TEnumerator>(this TEnumerator enumerator) where TEnumerator : IEnumerator
         {
             if (enumerator is null)
             {
@@ -37,13 +37,8 @@ namespace NetExtender.Utilities.Types
             }
         }
 
-        public static Boolean TryReset<T>(this IEnumerator<T> enumerator)
+        public static Boolean TryReset<TEnumerator>(this ref TEnumerator enumerator) where TEnumerator : struct, IEnumerator
         {
-            if (enumerator is null)
-            {
-                throw new ArgumentNullException(nameof(enumerator));
-            }
-
             try
             {
                 enumerator.Reset();
@@ -55,13 +50,25 @@ namespace NetExtender.Utilities.Types
             }
         }
 
-        public static Boolean MoveNext<T>(this IEnumerator<T> enumerator, [MaybeNullWhen(false)] out T result)
+        public static Boolean MoveNext<T, TEnumerator>(this TEnumerator enumerator, [MaybeNullWhen(false)] out T result) where TEnumerator : IEnumerator<T>
         {
             if (enumerator is null)
             {
                 throw new ArgumentNullException(nameof(enumerator));
             }
 
+            if (!enumerator.MoveNext())
+            {
+                result = default;
+                return false;
+            }
+
+            result = enumerator.Current;
+            return true;
+        }
+
+        public static Boolean MoveNext<T, TEnumerator>(this ref TEnumerator enumerator, [MaybeNullWhen(false)] out T result) where TEnumerator : struct, IEnumerator<T>
+        {
             if (!enumerator.MoveNext())
             {
                 result = default;

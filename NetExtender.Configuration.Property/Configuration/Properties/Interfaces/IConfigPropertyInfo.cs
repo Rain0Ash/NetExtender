@@ -15,6 +15,7 @@ namespace NetExtender.Configuration.Properties.Interfaces
         public String? Key { get; }
         public ImmutableArray<String> Sections { get; }
         public Boolean HasValue { get; }
+        public Boolean IsInitialize { get; }
         public Boolean IsCaching { get; }
         public Boolean IsThrowWhenValueSetInvalid { get; }
         public Boolean IsReadOnly { get; }

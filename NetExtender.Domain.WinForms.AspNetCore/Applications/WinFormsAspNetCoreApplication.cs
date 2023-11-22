@@ -5,6 +5,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using NetExtender.Domains.Applications.Interfaces;
 using NetExtender.Domains.AspNetCore.Server;
@@ -13,23 +14,23 @@ using NetExtender.Domains.WinForms.Applications;
 
 namespace NetExtender.Domains.WinForms.AspNetCore.Applications
 {
-    public class WinFormsAspNetCoreApplication : WinFormsApplication
+    public class WinFormsAspNetCoreApplicationAbstraction<THost> : WinFormsApplication where THost : class
     {
-        protected IAspNetCoreApplicationServer? Server { get; set; }
+        protected IAspNetCoreApplicationServer<THost>? Server { get; set; }
         
-        protected IAspNetCoreApplicationServer Create(IHost host)
+        protected IAspNetCoreApplicationServer<THost> Create(THost host)
         {
-            return Create<IHost>(host);
+            return Create<THost>(host);
         }
 
-        protected virtual IAspNetCoreApplicationServer Create<THost>(THost host) where THost : class, IHost
+        protected virtual IAspNetCoreApplicationServer<T> Create<T>(T host) where T : class
         {
             if (host is null)
             {
                 throw new ArgumentNullException(nameof(host));
             }
 
-            return new AspNetCoreApplicationServer<THost>(host);
+            return AspNetCoreApplicationServerAbstraction<T>.Create(host);
         }
 
         public override Task<IApplication> RunAsync(CancellationToken token)
@@ -42,13 +43,13 @@ namespace NetExtender.Domains.WinForms.AspNetCore.Applications
             return RunAsync(form, null, token);
         }
 
-        public virtual Task<IApplication> RunAsync(IHost? host, CancellationToken token)
+        public virtual Task<IApplication> RunAsync(THost? host, CancellationToken token)
         {
             return RunAsync(null, host, token);
         }
 
         [STAThread]
-        public virtual async Task<IApplication> RunAsync(Form? form, IHost? host, CancellationToken token)
+        public virtual async Task<IApplication> RunAsync(Form? form, THost? host, CancellationToken token)
         {
             if (host is null)
             {
@@ -72,5 +73,13 @@ namespace NetExtender.Domains.WinForms.AspNetCore.Applications
                 base.Shutdown(code);
             }
         }
+    }
+    
+    public class WinFormsAspNetCoreApplication : WinFormsAspNetCoreApplicationAbstraction<IHost>
+    {
+    }
+    
+    public class WinFormsAspNetCoreWebApplication : WinFormsAspNetCoreApplicationAbstraction<IWebHost>
+    {
     }
 }

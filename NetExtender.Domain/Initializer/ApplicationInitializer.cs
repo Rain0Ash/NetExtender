@@ -6,12 +6,14 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using NetExtender.Domains.Applications.Interfaces;
 using NetExtender.Domains.Initializer.Interfaces;
 using NetExtender.Domains.View.Interfaces;
 using NetExtender.Initializer;
+using NetExtender.Types.Tasks;
 using NetExtender.Types.Dispatchers.Interfaces;
 using NetExtender.Utilities.Application;
 using NetExtender.Utilities.Threading;
@@ -96,35 +98,44 @@ namespace NetExtender.Domains.Initializer
             }
         }
 
-        protected static Int32 Sync(String[]? args)
+        protected static Awaiter<Int32> Sync(String[]? args)
         {
             return Instance.Start(args);
         }
 
-        protected static Task<Int32> Async(String[]? args)
+        protected static Awaiter<Int32> Async(String[]? args)
         {
             return Instance.StartAsync(args);
         }
 
-        protected static Task<Int32> Async(String[]? args, CancellationToken token)
+        protected static Awaiter<Int32> Async(String[]? args, CancellationToken token)
         {
             return Instance.StartAsync(args, token);
         }
 
-        protected Int32 Start(String[]? args)
+        protected Awaiter<Int32> Start(String[]? args)
         {
-            return ThreadUtilities.STA(Internal, args);
+            return new Awaiter<Int32>(ThreadUtilities.STA(Internal, args));
         }
 
-        protected Task<Int32> StartAsync(String[]? args)
+        protected Awaiter<Int32> StartAsync(String[]? args)
         {
             return StartAsync(args, CancellationToken.None);
         }
-
-        protected async Task<Int32> StartAsync(String[]? args, CancellationToken token)
+        
+        protected Awaiter<Int32> StartAsync(String[]? args, CancellationToken token)
         {
-            // ReSharper disable once AsyncConverter.AsyncAwaitMayBeElidedHighlighting
-            return await ThreadUtilities.STA(InternalAsync, args, token).ConfigureAwait(false);
+            static async Task<Int32> Execute(ApplicationInitializer initializer, String[]? args, CancellationToken token)
+            {
+                if (initializer is null)
+                {
+                    throw new ArgumentNullException(nameof(initializer));
+                }
+
+                return await ThreadUtilities.STA(initializer.InternalAsync, args, token).ConfigureAwait(false);
+            }
+            
+            return new Awaiter<Int32>(Execute(this, args, token));
         }
 
         protected override void Shutdown(Object? sender, Int32 code, Boolean exit)
@@ -155,6 +166,116 @@ namespace NetExtender.Domains.Initializer
 
             Domain.Shutdown(code, true);
         }
+
+        protected new readonly struct Awaiter<T> : IEquatable<Awaiter<T>>
+        {
+            public static implicit operator Awaiter<T>(NetExtender.Initializer.Initializer.Awaiter<T> value)
+            {
+                return value != default ? new Awaiter<T>(value) : default;
+            }
+            
+            public static implicit operator T(Awaiter<T> value)
+            {
+                return value.Internal;
+            }
+
+            public static implicit operator Task<T>(Awaiter<T> value)
+            {
+                return value.Internal;
+            }
+            
+            public static implicit operator ValueTask<T>(Awaiter<T> value)
+            {
+                return value.Internal;
+            }
+            
+            public static Boolean operator true(Awaiter<T> value)
+            {
+                return value != default;
+            }
+
+            public static Boolean operator false(Awaiter<T> value)
+            {
+                return value == default;
+            }
+            
+            public static Boolean operator ==(Awaiter<T> first, Awaiter<T> second)
+            {
+                return first.Equals(second);
+            }
+
+            public static Boolean operator !=(Awaiter<T> first, Awaiter<T> second)
+            {
+                return !(first == second);
+            }
+
+            public static Awaiter<T> operator |(Awaiter<T> first, Awaiter<T> second)
+            {
+                return first != default ? first : second;
+            }
+
+            private AsyncResult<T> Internal { get; }
+
+            public Awaiter(T value)
+            {
+                Internal = new AsyncResult<T>(value);
+            }
+
+            public Awaiter(Task<T> value)
+            {
+                if (value is null)
+                {
+                    throw new ArgumentNullException(nameof(value));
+                }
+
+                Internal = new AsyncResult<T>(value);
+            }
+
+            public Awaiter(ValueTask<T> value)
+            {
+                Internal = new AsyncResult<T>(value);
+            }
+
+            public T AsValue()
+            {
+                return this;
+            }
+
+            public Task<T> AsTask()
+            {
+                return this;
+            }
+
+            public ValueTask<T> AsValueTask()
+            {
+                return this;
+            }
+
+            public ValueTaskAwaiter<T> GetAwaiter()
+            {
+                return Internal.GetAwaiter();
+            }
+            
+            public ConfiguredValueTaskAwaitable<T> ConfigureAwait(Boolean continueOnCapturedContext)
+            {
+                return Internal.ConfigureAwait(continueOnCapturedContext);
+            }
+            
+            public override Int32 GetHashCode()
+            {
+                return Internal.GetHashCode();
+            }
+
+            public override Boolean Equals(Object? obj)
+            {
+                return obj is Awaiter<T> result && Equals(result);
+            }
+
+            public Boolean Equals(Awaiter<T> other)
+            {
+                return Internal.Equals(other.Internal);
+            }
+        }
     }
 
     [SuppressMessage("ReSharper", "MethodSupportsCancellation")]
@@ -172,7 +293,8 @@ namespace NetExtender.Domains.Initializer
             return application?.View;
         }
 
-        protected TApplication Application { get; }
+        protected TApplication Application { get; } = new TApplication();
+
         IApplication IApplicationInitializer.Application
         {
             get
@@ -181,7 +303,8 @@ namespace NetExtender.Domains.Initializer
             }
         }
 
-        protected TView View { get; }
+        protected TView View { get; } = new TView();
+
         IApplicationView IApplicationInitializer.View
         {
             get
@@ -232,12 +355,6 @@ namespace NetExtender.Domains.Initializer
             {
                 return Application.ShutdownToken;
             }
-        }
-
-        protected ApplicationInitializer()
-        {
-            Application = new TApplication();
-            View = new TView();
         }
 
         public IApplicationView Start()

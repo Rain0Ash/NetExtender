@@ -8,11 +8,11 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using NetExtender.Utilities.Types;
 
-namespace NetExtender.Initializer.Types.Tries
+namespace NetExtender.Types.Tries
 {
     public class TrieSet<T> : ICollection<IEnumerable<T>> where T : notnull
     {
-        private TrieNode Root { get; }
+        private TrieNode? Root { get; }
         private IEqualityComparer<T> Comparer { get; }
 
         Boolean ICollection<IEnumerable<T>>.IsReadOnly
@@ -43,6 +43,12 @@ namespace NetExtender.Initializer.Types.Tries
             return node is not null && node.IsTerminal;
         }
 
+        public Boolean Contains(ReadOnlySpan<T> item)
+        {
+            TrieNode? node = GetNode(item);
+            return node is not null && node.IsTerminal;
+        }
+
         /// <summary>
         /// Gets items by key prefix.
         /// </summary>
@@ -56,14 +62,20 @@ namespace NetExtender.Initializer.Types.Tries
             }
 
             TrieNode? node = Root;
-            return prefix.All(item => node.Children.TryGetValue(item, out node)) ? Get(node) : Array.Empty<IEnumerable<T>>();
+            return prefix.All(item => node is not null && node.Children.TryGetValue(item, out node)) ? Get(node) : Array.Empty<IEnumerable<T>>();
+        }
+        
+        public IEnumerable<IEnumerable<T>> Get(ReadOnlySpan<T> prefix)
+        {
+            TrieNode? node = Root;
+            return prefix.All(item => node is not null && node.Children.TryGetValue(item, out node)) ? Get(node) : Array.Empty<IEnumerable<T>>();
         }
 
-        private static IEnumerable<IEnumerable<T>> Get(TrieNode node)
+        private static IEnumerable<IEnumerable<T>> Get(TrieNode? node)
         {
             if (node is null)
             {
-                throw new ArgumentNullException(nameof(node));
+                yield break;
             }
 
             Stack<TrieNode> stack = new Stack<TrieNode>();
@@ -100,7 +112,13 @@ namespace NetExtender.Initializer.Types.Tries
             }
 
             TrieNode? node = Root;
-            return key.All(item => node.Children.TryGetValue(item, out node)) ? node : null;
+            return key.All(item => node is not null && node.Children.TryGetValue(item, out node)) ? node : null;
+        }
+
+        private TrieNode? GetNode(ReadOnlySpan<T> key)
+        {
+            TrieNode? node = Root;
+            return key.All(item => node is not null && node.Children.TryGetValue(item, out node)) ? node : null;
         }
 
         internal Boolean TryGetNode(IEnumerable<T> key, [MaybeNullWhen(false)] out TrieNode node)
@@ -109,11 +127,11 @@ namespace NetExtender.Initializer.Types.Tries
             return node is not null && node.IsTerminal;
         }
 
-        private static IEnumerable<TrieNode> GetAllNodes(TrieNode node)
+        private static IEnumerable<TrieNode> GetAllNodes(TrieNode? node)
         {
             if (node is null)
             {
-                throw new ArgumentNullException(nameof(node));
+                yield break;
             }
 
             foreach (KeyValuePair<T, TrieNode> child in node.Children)
@@ -157,6 +175,20 @@ namespace NetExtender.Initializer.Types.Tries
             result = node.Item;
             return result is not null;
         }
+        
+        public Boolean TryGetItem(ReadOnlySpan<T> key, [MaybeNullWhen(false)] out IEnumerable<T> result)
+        {
+            TrieNode? node = GetNode(key);
+            result = null;
+
+            if (node is null || !node.IsTerminal)
+            {
+                return false;
+            }
+
+            result = node.Item;
+            return result is not null;
+        }
 
         [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
         public void Add(IEnumerable<T> key)
@@ -166,9 +198,9 @@ namespace NetExtender.Initializer.Types.Tries
                 throw new ArgumentNullException(nameof(key));
             }
 
-            TrieNode node = key.Aggregate(Root, AddItem);
+            TrieNode? node = key.Aggregate(Root, AddItem);
 
-            if (node.IsTerminal)
+            if (node is null || node.IsTerminal)
             {
                 throw new ArgumentException($"An element with the same key already exists: '{key}'", nameof(key));
             }
@@ -178,11 +210,26 @@ namespace NetExtender.Initializer.Types.Tries
             Count++;
         }
 
-        private TrieNode AddItem(TrieNode node, T key)
+        [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
+        public void Add(ReadOnlySpan<T> key)
+        {
+            TrieNode? node = key.Aggregate(Root, AddItem);
+
+            if (node is null || node.IsTerminal)
+            {
+                throw new ArgumentException($"An element with the same key already exists: '{key.ToArray()}'", nameof(key));
+            }
+
+            node.IsTerminal = true;
+            node.Item = key.ToArray();
+            Count++;
+        }
+
+        private TrieNode? AddItem(TrieNode? node, T key)
         {
             if (node is null)
             {
-                throw new ArgumentNullException(nameof(node));
+                return null;
             }
 
             if (node.Children.TryGetValue(key, out TrieNode? child))
@@ -216,6 +263,18 @@ namespace NetExtender.Initializer.Types.Tries
                 throw new ArgumentNullException(nameof(key));
             }
 
+            TrieNode? node = GetNode(key);
+            if (node is null || !node.IsTerminal)
+            {
+                return false;
+            }
+
+            RemoveNode(node);
+            return true;
+        }
+
+        public Boolean Remove(ReadOnlySpan<T> key)
+        {
             TrieNode? node = GetNode(key);
             if (node is null || !node.IsTerminal)
             {
@@ -284,7 +343,7 @@ namespace NetExtender.Initializer.Types.Tries
 
         public void Clear()
         {
-            Root.Children.Clear();
+            Root?.Children.Clear();
             Count = 0;
         }
 

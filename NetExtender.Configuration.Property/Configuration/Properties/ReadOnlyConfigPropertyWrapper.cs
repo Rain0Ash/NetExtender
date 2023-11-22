@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using NetExtender.Configuration.Common;
 using NetExtender.Configuration.Interfaces;
 using NetExtender.Configuration.Properties.Interfaces;
+using NetExtender.Types.Converters.Interfaces;
 
 namespace NetExtender.Configuration.Properties
 {
@@ -78,6 +79,14 @@ namespace NetExtender.Configuration.Properties
             get
             {
                 return Internal.HasValue;
+            }
+        }
+
+        public Boolean IsInitialize
+        {
+            get
+            {
+                return Internal.IsInitialize;
             }
         }
 
@@ -169,7 +178,7 @@ namespace NetExtender.Configuration.Properties
             }
         }
 
-        public TryConverter<String?, T> Converter
+        public ITwoWayConverter<String?, T> Converter
         {
             get
             {
@@ -184,7 +193,17 @@ namespace NetExtender.Configuration.Properties
         {
         }
 
+        internal ReadOnlyConfigPropertyWrapper(IConfig config, String? key, T alternate, Func<T, Boolean>? validate, IOneWayConverter<String?, T>? converter, ConfigPropertyOptions options, IEnumerable<String>? sections)
+            : this(new ConfigProperty(config, key, null, options, sections), alternate, validate, converter)
+        {
+        }
+
         internal ReadOnlyConfigPropertyWrapper(IConfigProperty property, T alternate, Func<T, Boolean>? validate, TryConverter<String?, T>? converter)
+            : this(new ConfigProperty<T>(property, alternate, validate, converter), true)
+        {
+        }
+
+        internal ReadOnlyConfigPropertyWrapper(IConfigProperty property, T alternate, Func<T, Boolean>? validate, IOneWayConverter<String?, T>? converter)
             : this(new ConfigProperty<T>(property, alternate, validate, converter), true)
         {
         }
@@ -344,6 +363,14 @@ namespace NetExtender.Configuration.Properties
             get
             {
                 return Internal.HasValue;
+            }
+        }
+
+        public Boolean IsInitialize
+        {
+            get
+            {
+                return Internal.IsInitialize;
             }
         }
 

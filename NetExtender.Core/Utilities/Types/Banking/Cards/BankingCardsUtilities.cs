@@ -3,8 +3,8 @@
 
 using System;
 using System.Runtime.CompilerServices;
-using NetExtender.Initializer.Types.Banking.Cards;
-using NetExtender.Initializer.Types.Banking.Cards.Interfaces;
+using NetExtender.Types.Banking.Cards;
+using NetExtender.Types.Banking.Cards.Interfaces;
 using NetExtender.Types.Exceptions;
 
 namespace NetExtender.Utilities.Types.Banking.Cards

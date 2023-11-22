@@ -113,9 +113,9 @@ namespace NetExtender.Types.Collections
         {
         }
 
-        public ThreadSafeEnumerator(IEnumerator<T> inner, Object synchronization)
+        public ThreadSafeEnumerator(IEnumerator<T> source, Object synchronization)
         {
-            Enumerator = inner ?? throw new ArgumentNullException(nameof(inner));
+            Enumerator = source ?? throw new ArgumentNullException(nameof(source));
             Synchronization = synchronization ?? throw new ArgumentNullException(nameof(synchronization));
 
             Monitor.Enter(Synchronization);

@@ -450,6 +450,45 @@ namespace NetExtender.Utilities.Core
 
             return method.IsGenericMethod ? method.GetGenericArguments() : null;
         }
+        
+        public static Type[]? GetGenericArguments(this Type generic, Type @base)
+        {
+            if (generic is null)
+            {
+                throw new ArgumentNullException(nameof(generic));
+            }
+
+            if (@base is null)
+            {
+                throw new ArgumentNullException(nameof(@base));
+            }
+
+            Type? type = generic;
+            while (type is not null && type != typeof(Object))
+            {
+                if (@base == type.TryGetGenericTypeDefinition())
+                {
+                    return type.GetGenericArguments();
+                }
+
+                type = type.BaseType;
+            }
+
+            return null;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Type? TryGetGenericInterface(this Type type, Type @interface)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            type = type.TryGetGenericTypeDefinition();
+            @interface = @interface.TryGetGenericTypeDefinition();
+            return type.TryGetGenericTypeDefinitionInterfaces().FirstOrDefault(item => item == @interface);
+        }
 
         public static Boolean IsInheritable(this MethodBase method)
         {
@@ -3444,23 +3483,22 @@ namespace NetExtender.Utilities.Core
         /// Determines whether the specified type to check derives from this generic type.
         /// </summary>
         /// <param name="generic">The parent generic type.</param>
-        /// <param name="check">The type to check if it derives from the specified generic type.</param>
-        public static Boolean IsSubclassOfRawGeneric(Type generic, Type? check)
+        /// <param name="type">The type to check if it derives from the specified generic type.</param>
+        public static Boolean IsSubclassOfRawGeneric(Type generic, Type? type)
         {
             if (generic is null)
             {
                 throw new ArgumentNullException(nameof(generic));
             }
 
-            while (check is not null && check != typeof(Object))
+            while (type is not null && type != typeof(Object))
             {
-                Type current = check.IsGenericType ? check.GetGenericTypeDefinition() : check;
-                if (generic == current)
+                if (generic == type.TryGetGenericTypeDefinition())
                 {
                     return true;
                 }
 
-                check = check.BaseType;
+                type = type.BaseType;
             }
 
             return false;

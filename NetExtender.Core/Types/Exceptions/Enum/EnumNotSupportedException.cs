@@ -35,18 +35,18 @@ namespace NetExtender.Types.Exceptions
         }
 
         public EnumNotSupportedException(T value)
+            : this(value, null)
         {
-            Value = value;
         }
 
         public EnumNotSupportedException(T value, String? message)
-            : base(message)
+            : base(message ?? $"Specified value '{value}' of enum type '{typeof(T)}' is not supported.")
         {
             Value = value;
         }
 
         public EnumNotSupportedException(T value, String? message, Exception? innerException)
-            : base(message, innerException)
+            : base(message ?? $"Specified value '{value}' of enum type '{typeof(T)}' is not supported.", innerException)
         {
             Value = value;
         }

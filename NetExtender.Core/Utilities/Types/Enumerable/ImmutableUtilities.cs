@@ -7,6 +7,7 @@ using System.Collections.Immutable;
 using System.Runtime.CompilerServices;
 using NetExtender.Types.Immutable.Maps;
 using NetExtender.Types.Immutable.Maps.Interfaces;
+using NetExtender.Utilities.Numerics;
 
 namespace NetExtender.Utilities.Types
 {
@@ -212,6 +213,35 @@ namespace NetExtender.Utilities.Types
             IEqualityComparer<TKey>? keyComparer, IEqualityComparer<TValue>? valueComparer) where TKey : notnull where TValue : notnull
         {
             return source is not null ? source as ImmutableMap<TKey, TValue> ?? source.ToImmutableMap(keyComparer, valueComparer) : ImmutableMap<TKey, TValue>.Empty.WithComparers(keyComparer, valueComparer);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T GetRandom<T>(this ImmutableArray<T> source)
+        {
+            return source.Length > 0 ? source[RandomUtilities.NextNonNegative(source.Length - 1)] : throw new InvalidOperationException();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T GetRandomOrDefault<T>(this ImmutableArray<T> source, T alternate)
+        {
+            return source.Length > 0 ? source[RandomUtilities.NextNonNegative(source.Length - 1)] : alternate;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T GetRandomOrDefault<T>(this ImmutableArray<T> source, Func<T> alternate)
+        {
+            if (alternate is null)
+            {
+                throw new ArgumentNullException(nameof(alternate));
+            }
+
+            return source.Length > 0 ? source[RandomUtilities.NextNonNegative(source.Length - 1)] : alternate();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T? GetRandomOrDefault<T>(this ImmutableArray<T> source)
+        {
+            return source.Length > 0 ? source[RandomUtilities.NextNonNegative(source.Length - 1)] : default;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

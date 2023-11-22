@@ -177,6 +177,23 @@ namespace NetExtender.Utilities.Types
             }
         }
 
+        public static Boolean TryGetResult<T>(this Task<T> source, [MaybeNullWhen(false)] out T result)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (!source.IsCompletedSuccessfully)
+            {
+                result = default;
+                return false;
+            }
+
+            result = source.Result;
+            return true;
+        }
+
         public static Task Delay(this CancellationToken token)
         {
             return Delay(Timeout.InfiniteTimeSpan, token);

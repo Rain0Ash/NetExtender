@@ -4,7 +4,7 @@
 using System;
 using System.Text;
 
-namespace NetExtender.Initializer.Types.Banking.Cards
+namespace NetExtender.Types.Banking.Cards
 {
     public class LoyaltyBankingCardFormatter : BankingCardFormatter
     {

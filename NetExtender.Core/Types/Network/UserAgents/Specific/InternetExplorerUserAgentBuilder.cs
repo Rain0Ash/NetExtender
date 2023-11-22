@@ -31,8 +31,11 @@ namespace NetExtender.Types.Network.UserAgents.Specific
             String arch = GetArchitecture(architecture);
             String culture = GetCultureName(info);
             (String explorer, String trident) = RandomInternetExplorerVersion();
+            trident = UseTrident ? $"; Trident/{trident}" : String.Empty;
 
-            return $"Mozilla/5.0 (compatible; MSIE {explorer}{(!String.IsNullOrEmpty(arch) ? $"; {arch}" : String.Empty)}{(!String.IsNullOrEmpty(culture) ? $"; {culture}" : String.Empty)}{(UseTrident ? $"; Trident/{trident}" : String.Empty)})";
+            arch = !String.IsNullOrEmpty(arch) ? $"; {arch}" : String.Empty;
+            culture = !String.IsNullOrEmpty(culture) ? $"; {culture}" : String.Empty;
+            return $"Mozilla/5.0 (compatible; MSIE {explorer}{arch}{culture}{trident})";
         }
     }
 }

@@ -6,14 +6,15 @@ using System;
 namespace NetExtender.Configuration.Common
 {
     [Flags]
-    public enum ConfigPropertyOptions
+    public enum ConfigPropertyOptions : Byte
     {
         None = 0,
-        Caching = 1,
-        ThrowWhenValueSetInvalid = 2,
-        ReadOnly = 4,
-        IgnoreEvent = 8,
-        DisableSave = 16,
+        Initialize = 1,
+        Caching = 2,
+        ThrowWhenValueSetInvalid = 4,
+        ReadOnly = 8,
+        IgnoreEvent = 16,
+        DisableSave = 32,
         AlwaysDefault = Caching | ReadOnly | IgnoreEvent | DisableSave
     }
 }

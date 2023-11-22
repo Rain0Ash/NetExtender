@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
-namespace NetExtender.Initializer.Types.Tries
+namespace NetExtender.Types.Tries
 {
     /// <summary>
     /// Implementation of trie data structure.
@@ -99,6 +99,11 @@ namespace NetExtender.Initializer.Types.Tries
                 throw new ArgumentNullException(nameof(key));
             }
 
+            return ContainsKey(key.AsSpan());
+        }
+        
+        public Boolean ContainsKey(ReadOnlySpan<Char> key)
+        {
             return Trie.ContainsKey(key);
         }
 
@@ -111,15 +116,20 @@ namespace NetExtender.Initializer.Types.Tries
         /// Gets items by key prefix.
         /// </summary>
         /// <param name="prefix">Key prefix.</param>
-        /// <returns>Collection of <see cref="StringEntry{TValue}"/> items which have key with specified key.</returns>
-        public IEnumerable<StringEntry<TValue>> Get(String prefix)
+        /// <returns>Collection of <see cref="StringTrieEntry{TValue}"/> items which have key with specified key.</returns>
+        public IEnumerable<StringTrieEntry<TValue>> Get(String prefix)
         {
             if (prefix is null)
             {
                 throw new ArgumentNullException(nameof(prefix));
             }
 
-            return Trie.Get(prefix).Select(entry => new StringEntry<TValue>(new String(entry.Key.ToArray()), entry.Value));
+            return Get(prefix.AsSpan());
+        }
+        
+        public IEnumerable<StringTrieEntry<TValue>> Get(ReadOnlySpan<Char> prefix)
+        {
+            return Trie.Get(prefix).Select(entry => new StringTrieEntry<TValue>(new String(entry.Key.ToArray()), entry.Value));
         }
 
         /// <summary>
@@ -138,6 +148,11 @@ namespace NetExtender.Initializer.Types.Tries
                 throw new ArgumentNullException(nameof(key));
             }
 
+            return TryGetValue(key.AsSpan(), out value);
+        }
+        
+        public Boolean TryGetValue(ReadOnlySpan<Char> key, [MaybeNullWhen(false)] out TValue value)
+        {
             return Trie.TryGetValue(key, out value);
         }
 
@@ -155,6 +170,11 @@ namespace NetExtender.Initializer.Types.Tries
                 throw new ArgumentNullException(nameof(key));
             }
 
+            Add(key.AsSpan(), value);
+        }
+        
+        public void Add(ReadOnlySpan<Char> key, TValue value)
+        {
             Trie.Add(key, value);
         }
 
@@ -168,11 +188,19 @@ namespace NetExtender.Initializer.Types.Tries
         /// </summary>
         /// <param name="collection">The collection whose elements should be added to the <see cref="StringTrie{TValue}"/>. The items should have unique keys.</param>
         /// <exception cref="T:System.ArgumentException">An element with the same charKey already exists in the <see cref="StringTrie{TValue}"/>.</exception>
-        public void AddRange(IEnumerable<StringEntry<TValue>> collection)
+        public void AddRange(IEnumerable<StringTrieEntry<TValue>> collection)
         {
-            foreach (StringEntry<TValue> item in collection)
+            foreach (StringTrieEntry<TValue> item in collection)
             {
-                Trie.Add(item.Key, item.Value);
+                Trie.Add(item.Key.AsSpan(), item.Value);
+            }
+        }
+        
+        public void AddRange(ReadOnlySpan<StringTrieEntry<TValue>> collection)
+        {
+            foreach (StringTrieEntry<TValue> item in collection)
+            {
+                Trie.Add(item.Key.AsSpan(), item.Value);
             }
         }
 
@@ -192,6 +220,11 @@ namespace NetExtender.Initializer.Types.Tries
                 throw new ArgumentNullException(nameof(key));
             }
 
+            return Remove(key.AsSpan());
+        }
+        
+        public Boolean Remove(ReadOnlySpan<Char> key)
+        {
             return Trie.Remove(key);
         }
 
@@ -255,7 +288,7 @@ namespace NetExtender.Initializer.Types.Tries
                     throw new ArgumentNullException(nameof(key));
                 }
 
-                return Trie[key];
+                return this[key.AsSpan()];
             }
 
             set
@@ -265,6 +298,19 @@ namespace NetExtender.Initializer.Types.Tries
                     throw new ArgumentNullException(nameof(key));
                 }
 
+                this[key.AsSpan()] = value;
+            }
+        }
+        
+        public TValue this[ReadOnlySpan<Char> key]
+        {
+            get
+            {
+                return Trie[key];
+            }
+
+            set
+            {
                 Trie[key] = value;
             }
         }

@@ -7,36 +7,21 @@ using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using NetExtender.Types.Anonymous.Interfaces;
+using NetExtender.Types.Reflection;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Anonymous
 {
-    public abstract class AnonymousTypeGeneratorAbstraction
+    public abstract class AnonymousTypeGeneratorAbstraction : ReflectionTypeGeneratorAbstraction
     {
-        protected AssemblyName AssemblyName { get; }
-        protected AssemblyBuilder Assembly { get; }
-        protected String ModuleName { get; }
-        protected ModuleBuilder Module { get; }
-
         protected AnonymousTypeGeneratorAbstraction(String assembly)
+            : base(assembly)
         {
-            if (assembly is null)
-            {
-                throw new ArgumentNullException(nameof(assembly));
-            }
-
-            AssemblyName = new AssemblyName(assembly);
-            Assembly = AssemblyBuilder.DefineDynamicAssembly(AssemblyName, AssemblyBuilderAccess.Run);
-            ModuleName = AssemblyName.Name ?? assembly;
-            Module = Assembly.GetDynamicModule(ModuleName) ?? Assembly.DefineDynamicModule(ModuleName);
         }
 
         protected AnonymousTypeGeneratorAbstraction(AssemblyName assemblyname, AssemblyBuilder assembly, String modulename, ModuleBuilder module)
+            : base(assemblyname, assembly, modulename, module)
         {
-            AssemblyName = assemblyname ?? throw new ArgumentNullException(nameof(assemblyname));
-            Assembly = assembly ?? throw new ArgumentNullException(nameof(assembly));
-            ModuleName = modulename ?? throw new ArgumentNullException(nameof(modulename));
-            Module = module ?? throw new ArgumentNullException(nameof(module));
         }
 
         protected abstract String GenerateTypeName(AnonymousTypePropertyInfo[] properties);

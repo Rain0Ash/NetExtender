@@ -781,11 +781,18 @@ namespace NetExtender.Utilities.Types
                 return value;
             }
 
-            Span<Char> buffer = value.Length <= 10000 ? stackalloc Char[value.Length] : new Char[value.Length];
+            Span<Char> buffer = value.Length <= 2000 ? stackalloc Char[value.Length] : new Char[value.Length];
+            value.AsSpan().CopyTo(buffer);
 
-            for (Int32 i = 0; i < value.Length; i++)
+            Int32 left = 0;
+            Int32 right = buffer.Length - 1;
+
+            while (left < right)
             {
-                buffer[i] = value[^i];
+                (buffer[left], buffer[right]) = (buffer[right], buffer[left]);
+
+                left++;
+                right--;
             }
 
             return new String(buffer);
@@ -3318,16 +3325,36 @@ namespace NetExtender.Utilities.Types
 
         public static Int32 DamerauLevenshteinDistance(this String first, String second)
         {
+            if (first is null)
+            {
+                throw new ArgumentNullException(nameof(first));
+            }
+
+            if (second is null)
+            {
+                throw new ArgumentNullException(nameof(second));
+            }
+            
             return DamerauLevenshteinDistance(first, second, new Int32[first.Length + 1, second.Length + 1]);
         }
 
         public static Int32 DamerauLevenshteinDistance(this String first, String second, StringComparison comparison)
         {
+            if (first is null)
+            {
+                throw new ArgumentNullException(nameof(first));
+            }
+
+            if (second is null)
+            {
+                throw new ArgumentNullException(nameof(second));
+            }
+            
             return DamerauLevenshteinDistance(first, second, comparison, new Int32[first.Length + 1, second.Length + 1]);
         }
 
         // ReSharper disable once CognitiveComplexity
-        public static Int32 DamerauLevenshteinDistance(this String first, String second, Int32[,] values)
+        private static Int32 DamerauLevenshteinDistance(this String first, String second, Int32[,] values)
         {
             if (first is null)
             {
@@ -3339,22 +3366,24 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(second));
             }
 
-            Int32 flength = first.Length;
-            Int32 slength = second.Length;
+            if (values is null)
+            {
+                throw new ArgumentNullException(nameof(values));
+            }
 
-            for (Int32 i = 0; i <= flength; ++i)
+            for (Int32 i = 0; i <= first.Length; ++i)
             {
                 values[i, 0] = i;
             }
 
-            for (Int32 j = 1; j <= slength; ++j)
+            for (Int32 j = 1; j <= second.Length; ++j)
             {
                 values[0, j] = j;
             }
 
-            for (Int32 i = 1; i <= flength; ++i)
+            for (Int32 i = 1; i <= first.Length; ++i)
             {
-                for (Int32 j = 1; j <= slength; ++j)
+                for (Int32 j = 1; j <= second.Length; ++j)
                 {
                     Char fchar = first[i - 1];
                     Char schar = second[j - 1];
@@ -3376,11 +3405,26 @@ namespace NetExtender.Utilities.Types
                 }
             }
 
-            return values[flength, slength];
+            return values[first.Length, second.Length];
         }
 
-        public static Int32 DamerauLevenshteinDistance(this String first, String second, StringComparison comparison, Int32[,] values)
+        private static Int32 DamerauLevenshteinDistance(this String first, String second, StringComparison comparison, Int32[,] values)
         {
+            if (first is null)
+            {
+                throw new ArgumentNullException(nameof(first));
+            }
+
+            if (second is null)
+            {
+                throw new ArgumentNullException(nameof(second));
+            }
+
+            if (values is null)
+            {
+                throw new ArgumentNullException(nameof(values));
+            }
+
             return comparison switch
             {
                 StringComparison.CurrentCulture => DamerauLevenshteinDistance(first, second, values),

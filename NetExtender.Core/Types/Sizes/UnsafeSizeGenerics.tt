@@ -1,0 +1,171 @@
+<#@ template language="C#v3.5" #>
+<#@ output extension=".cs" encoding="utf-8"#>
+<#@ assembly name="System.Core"#>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Linq" #>
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
+using System;
+using NetExtender.Types.Sizes.Interfaces;
+using NetExtender.Utilities.Core;
+
+// ReSharper disable MemberCanBePrivate.Global
+#pragma warning disable CS0169
+#pragma warning disable CS0649
+namespace NetExtender.Types.Sizes
+{
+<#
+    void ForEach(IEnumerable<String> types, Action<String> action, Boolean line = true)
+    {
+        String[] type = types.ToArray();
+
+        for (Int32 i = 0; i < type.Length; i++)
+        {
+            action(type[i]);
+
+            if (line && i <= type.Length - 2)
+            {
+                WriteLine(String.Empty);
+            }
+        }
+    }
+    
+    void UnsafeSizeImplementation(String size)
+    {
+        WriteLine($"\tpublic unsafe struct {nameof(UnsafeSize)}{size} : I{nameof(UnsafeSize)}<{nameof(UnsafeSize)}{size}>");
+        WriteLine("\t{");
+        WriteLine($"\t\tpublic static implicit operator ReadOnlySpan<{nameof(Byte)}>(in {nameof(UnsafeSize)}{size} value)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\tfixed ({nameof(Byte)}* pointer = value.Internal)");
+        WriteLine("\t\t\t{");
+        WriteLine($"\t\t\t\treturn new ReadOnlySpan<{nameof(Byte)}>(pointer, value.Count);");
+        WriteLine("\t\t\t}");
+        WriteLine("\t\t}");
+        WriteLine(String.Empty);
+        WriteLine($"\t\tpublic static implicit operator Span<{nameof(Byte)}>(in {nameof(UnsafeSize)}{size} value)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\tfixed ({nameof(Byte)}* pointer = value.Internal)");
+        WriteLine("\t\t\t{");
+        WriteLine($"\t\t\t\treturn new Span<{nameof(Byte)}>(pointer, value.Count);");
+        WriteLine("\t\t\t}");
+        WriteLine("\t\t}");
+        WriteLine(String.Empty);
+        WriteLine($"\t\tpublic const {nameof(Int32)} Size = {size};");
+        WriteLine($"\t\tprivate fixed {nameof(Byte)} Internal[Size];");
+        WriteLine(String.Empty);
+        WriteLine($"\t\tpublic readonly {nameof(Int32)} Length");
+        WriteLine("\t\t{");
+        WriteLine("\t\t\tget");
+        WriteLine("\t\t\t{");
+        WriteLine("\t\t\t\treturn Size;");
+        WriteLine("\t\t\t}");
+        WriteLine("\t\t}");
+        WriteLine(String.Empty);
+        WriteLine($"\t\treadonly {nameof(Int32)} I{nameof(UnsafeSize)}.Size");
+        WriteLine("\t\t{");
+        WriteLine("\t\t\tget");
+        WriteLine("\t\t\t{");
+        WriteLine("\t\t\t\treturn Count;");
+        WriteLine("\t\t\t}");
+        WriteLine("\t\t}");
+        WriteLine(String.Empty);
+        WriteLine($"\t\tprivate {nameof(Int32)} _count;");
+        WriteLine($"\t\tpublic {nameof(Int32)} Count");
+        WriteLine("\t\t{");
+        WriteLine("\t\t\treadonly get");
+        WriteLine("\t\t\t{");
+        WriteLine("\t\t\t\treturn _count;");
+        WriteLine("\t\t\t}");
+        WriteLine("\t\t\tset");
+        WriteLine("\t\t\t{");
+        WriteLine("\t\t\t\tif (value < 0 || value > Size)");
+        WriteLine("\t\t\t\t{");
+        WriteLine($"\t\t\t\t\tthrow new {nameof(ArgumentOutOfRangeException)}(nameof(value), value, $\"Count must be between {0} and {{Size}}\");");
+        WriteLine("\t\t\t\t}");
+        WriteLine(String.Empty);
+        WriteLine("\t\t\t\t_count = value;");
+        WriteLine("\t\t\t}");
+        WriteLine("\t\t}");
+        WriteLine(String.Empty);
+        WriteLine($"\t\tpublic readonly {nameof(Boolean)} IsEmpty");
+        WriteLine("\t\t{");
+        WriteLine("\t\t\tget");
+        WriteLine("\t\t\t{");
+        WriteLine("\t\t\t\treturn Count <= 0;");
+        WriteLine("\t\t\t}");
+        WriteLine("\t\t}");
+        WriteLine(String.Empty);
+        WriteLine($"\t\tpublic {nameof(UnsafeSize)}{size}(Span<{nameof(Byte)}> value)");
+        WriteLine("\t\t{");
+        WriteLine("\t\t\tif (value.Length > Size)");
+        WriteLine("\t\t\t{");
+        WriteLine($"\t\t\t\tthrow new {nameof(ArgumentOutOfRangeException)}(nameof(value), value.Length, $\"Length must be less or equals {{Size}}\");");
+        WriteLine("\t\t\t}");
+        WriteLine(String.Empty);
+        WriteLine($"\t\t\tfixed ({nameof(Byte)}* source = value)");
+        WriteLine($"\t\t\tfixed ({nameof(Byte)}* destination = Internal)");
+        WriteLine("\t\t\t{");
+        WriteLine("\t\t\t\tUnsafeUtilities.CopyBlock(destination, source, _count = value.Length);");
+        WriteLine("\t\t\t}");
+        WriteLine("\t\t}");
+        WriteLine(String.Empty);
+        WriteLine("\t\tpublic readonly ref T As<T>()");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\tfixed ({nameof(Byte)}* pointer = Internal)");
+        WriteLine("\t\t\t{");
+        WriteLine("\t\t\t\treturn ref UnsafeUtilities.AsRef<T>(pointer);");
+        WriteLine("\t\t\t}");
+        WriteLine("\t\t}");
+        WriteLine(String.Empty);
+        WriteLine($"\t\tpublic readonly ReadOnlySpan<{nameof(Byte)}> AsReadOnlySpan()");
+        WriteLine("\t\t{");
+        WriteLine("\t\t\treturn this;");
+        WriteLine("\t\t}");
+        WriteLine(String.Empty);
+        WriteLine($"\t\tpublic readonly Span<{nameof(Byte)}> AsSpan()");
+        WriteLine("\t\t{");
+        WriteLine("\t\t\treturn this;");
+        WriteLine("\t\t}");
+        WriteLine(String.Empty);
+        WriteLine($"\t\tpublic ref {nameof(Byte)} GetPinnableReference()");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\tfixed ({nameof(Byte)}* pointer = this)");
+        WriteLine("\t\t\t{");
+        WriteLine("\t\t\t\treturn ref *pointer;");
+        WriteLine("\t\t\t}");
+        WriteLine("\t\t}");
+        WriteLine("\t}");
+    }
+
+    void UnsafeSize()
+    {
+        static IEnumerable<Int32> GenerateNumbers(Int32 limit)
+        {
+            Int32 current = 8;
+
+            while (current <= limit)
+            {
+                yield return current;
+                Int32 step = current switch
+                {
+                    < 64 => 8,
+                    < 256 => 16,
+                    < 512 => 32,
+                    < 1024 => 64,
+                    _ => 128
+                };
+
+                current += step;
+            }
+        }
+        
+        ForEach(GenerateNumbers(4096).Select(number => number.ToString()), UnsafeSizeImplementation);
+    }
+#>
+<#
+    UnsafeSize();
+#>
+}
+#pragma warning restore CS0649
+#pragma warning restore CS0169

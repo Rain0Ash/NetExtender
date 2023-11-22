@@ -4,6 +4,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using NetExtender.Domains.Applications;
 using NetExtender.Domains.Applications.Interfaces;
@@ -11,7 +12,7 @@ using NetExtender.Types.Dispatchers.Interfaces;
 
 namespace NetExtender.Domains.AspNetCore.Applications
 {
-    public class AspNetCoreApplication : Application<IHost?>
+    public abstract class AspNetCoreApplication<T> : Application<T> where T : class?
     {
         public override IDispatcher? Dispatcher
         {
@@ -31,8 +32,39 @@ namespace NetExtender.Domains.AspNetCore.Applications
             {
             }
         }
+    }
 
+    public class AspNetCoreApplication : AspNetCoreApplication<IHost?>
+    {
         public override async Task<IApplication> RunAsync(IHost? host, CancellationToken token)
+        {
+            if (host is null)
+            {
+                return this;
+            }
+
+            Context = host;
+            RegisterShutdownToken(token);
+            await Context.RunAsync(token).ConfigureAwait(false);
+            return this;
+        }
+
+        public override void Shutdown(Int32 code)
+        {
+            try
+            {
+                Context?.StopAsync().GetAwaiter().GetResult();
+            }
+            finally
+            {
+                base.Shutdown(code);
+            }
+        }
+    }
+    
+    public class AspNetCoreWebApplication : AspNetCoreApplication<IWebHost?>
+    {
+        public override async Task<IApplication> RunAsync(IWebHost? host, CancellationToken token)
         {
             if (host is null)
             {

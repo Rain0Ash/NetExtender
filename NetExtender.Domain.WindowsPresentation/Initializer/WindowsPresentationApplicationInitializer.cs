@@ -10,11 +10,29 @@ using NetExtender.Domains.WindowsPresentation.Applications;
 using NetExtender.Domains.WindowsPresentation.Builder;
 using NetExtender.Domains.WindowsPresentation.View;
 using NetExtender.Initializer;
+using NetExtender.Types.Exceptions;
+using NetExtender.Utilities.IO;
 
 namespace NetExtender.Domains.WindowsPresentation.Initializer
 {
     public abstract class WindowsPresentationApplicationInitializer : ApplicationInitializer
     {
+        protected enum ApplicationExceptionHandleType : Byte
+        {
+            Custom,
+            Console,
+            Message,
+            MessageConsole
+        }
+
+        protected virtual ApplicationExceptionHandleType ExceptionHandleType
+        {
+            get
+            {
+                return ApplicationExceptionHandleType.Custom;
+            }
+        }
+        
         protected override void UnhandledException(Object? sender, Exception? exception, ref InitializerUnhandledExceptionState action)
         {
             base.UnhandledException<MessageBoxExceptionHandler>(sender, exception, ref action);
@@ -61,15 +79,45 @@ namespace NetExtender.Domains.WindowsPresentation.Initializer
                     return MessageBoxOptions.None;
                 }
             }
+            
+            protected virtual void Handle(WindowsPresentationApplicationInitializer initializer, Object? sender, Exception? exception, ref InitializerUnhandledExceptionState action)
+            {
+                switch (initializer.ExceptionHandleType)
+                {
+                    case ApplicationExceptionHandleType.Custom:
+                        Handle(sender, exception, ref action);
+                        return;
+                    case ApplicationExceptionHandleType.Console:
+                        Console(sender, exception, ref action);
+                        return;
+                    case ApplicationExceptionHandleType.Message:
+                        Message(sender, exception, ref action);
+                        return;
+                    case ApplicationExceptionHandleType.MessageConsole:
+                        Console(sender, exception, ref action);
+                        goto case ApplicationExceptionHandleType.Message;
+                    default:
+                        throw new EnumUndefinedOrNotSupportedException<ApplicationExceptionHandleType>(initializer.ExceptionHandleType, nameof(ExceptionHandleType), null);
+                }
+            }
+            
+            protected virtual void Console(Object? sender, Exception? exception, ref InitializerUnhandledExceptionState action)
+            {
+                Text(sender, exception, action).ToConsole();
+            }
+
+            protected virtual void Message(Object? sender, Exception? exception, ref InitializerUnhandledExceptionState action)
+            {
+                MessageBox.Show(Text(sender, exception, action), Title, Button, Icon, Result, Options);
+            }
 
             public override void Handle(Object? sender, Exception? exception, ref InitializerUnhandledExceptionState action)
             {
-                String? message = Message(sender, exception, action);
-                MessageBox.Show(message, Title, Button, Icon, Result, Options);
+                Message(sender, exception, ref action);
             }
 
             [return: NotNullIfNotNull("exception")]
-            protected virtual String? Message(Object? sender, Exception? exception, InitializerUnhandledExceptionState action)
+            protected virtual String? Text(Object? sender, Exception? exception, InitializerUnhandledExceptionState action)
             {
                 return exception?.ToString();
             }

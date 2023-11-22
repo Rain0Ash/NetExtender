@@ -23,6 +23,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.4" />
         <PackageReference Include="Microsoft.Extensions.Primitives" Version="6.0.0" />
         <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="2.3.2" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
@@ -36,6 +37,8 @@
     <ItemGroup>
         <Folder Include="Interfaces" />
         <Folder Include="IO\Shortcut" />
+        <Folder Include="NewtonSoft\Network\Http\" />
+        <Folder Include="Types\Enums\Converters\" />
     </ItemGroup>
 
     <ItemGroup>
@@ -185,6 +188,10 @@
           <DependentUpon>BusinessException.cs</DependentUpon>
           <Generator>TextTemplatingFileGenerator</Generator>
           <LastGenOutput>GenericBusinessStatusException.cs</LastGenOutput>
+        </None>
+        <None Update="Types\Sizes\UnsafeSizeGenerics.tt">
+          <Generator>TextTemplatingFileGenerator</Generator>
+          <LastGenOutput>UnsafeSizeGenerics.cs</LastGenOutput>
         </None>
     </ItemGroup>
 

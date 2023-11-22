@@ -4,10 +4,10 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
-using NetExtender.Initializer.Types.Banking.Cards.Interfaces;
+using NetExtender.Types.Banking.Cards.Interfaces;
 using NetExtender.Utilities.Types.Banking.Cards;
 
-namespace NetExtender.Initializer.Types.Banking.Cards
+namespace NetExtender.Types.Banking.Cards
 {
     public readonly struct BankingCard : IEquatable<BankingCard>, IEquatable<String>
     {

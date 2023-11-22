@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using NetExtender.Configuration;
 using NetExtender.Configuration.Common;
 using NetExtender.Configuration.Properties.Interfaces;
+using NetExtender.Types.Converters.Interfaces;
 using NetExtender.Localization.Common;
 using NetExtender.Localization.Common.Interfaces;
 using NetExtender.Localization.Events;
@@ -143,6 +144,14 @@ namespace NetExtender.Localization.Properties
             }
         }
 
+        public Boolean IsInitialize
+        {
+            get
+            {
+                return Internal.IsInitialize;
+            }
+        }
+
         public Boolean IsCaching
         {
             get
@@ -247,7 +256,7 @@ namespace NetExtender.Localization.Properties
             }
         }
 
-        public TryConverter<String?, ILocalizationString?> Converter
+        public ITwoWayConverter<String?, ILocalizationString?> Converter
         {
             get
             {
@@ -467,6 +476,14 @@ namespace NetExtender.Localization.Properties
             get
             {
                 return Internal.HasValue;
+            }
+        }
+
+        public Boolean IsInitialize
+        {
+            get
+            {
+                return Internal.IsInitialize;
             }
         }
 

@@ -5,6 +5,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using NetExtender.NewtonSoft.Utilities;
 using NetExtender.Types.Exceptions;
 using NetExtender.Types.Trees;
 using NetExtender.Types.Trees.Interfaces;
@@ -12,6 +13,7 @@ using NetExtender.Utilities.Core;
 using NetExtender.Utilities.Serialization;
 using NetExtender.Utilities.Types;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace NetExtender.NewtonSoft.Types.Trees
 {
@@ -37,10 +39,11 @@ namespace NetExtender.NewtonSoft.Types.Trees
                 throw new JsonException();
             }
 
-            WriteNode(writer, node.Node);
+            NamingStrategy? strategy = (serializer.ContractResolver as DefaultContractResolver)?.NamingStrategy;
+            WriteNode(writer, node.Node, strategy);
         }
 
-        private static void WriteNode(JsonWriter writer, IDictionaryTreeNode<TKey, TValue> node)
+        private static void WriteNode(JsonWriter writer, IDictionaryTreeNode<TKey, TValue> node, NamingStrategy? strategy)
         {
             if (node.IsEmpty)
             {
@@ -58,22 +61,22 @@ namespace NetExtender.NewtonSoft.Types.Trees
 
             if (node.HasValue)
             {
-                writer.WritePropertyName("Value");
+                writer.WritePropertyName(strategy.NamingStrategy("Value", false));
                 writer.WriteValue(node.Value);
             }
 
             foreach ((TKey key, IDictionaryTreeNode<TKey, TValue>? child) in node)
             {
                 writer.WritePropertyName(key.ToString()!, true);
-                WriteNode(writer, child);
+                WriteNode(writer, child, strategy);
             }
 
             writer.WriteEndObject();
         }
 
-        private static KeyState ReadJsonKey(JsonTokenEntry token, out TKey key)
+        private static KeyState ReadJsonKey(JsonTokenEntry token, NamingStrategy? strategy, out TKey key)
         {
-            if (token.Current == "Value")
+            if (token.Current == strategy.NamingStrategy("Value", false))
             {
                 key = default!;
                 return KeyState.Value;
@@ -108,7 +111,8 @@ namespace NetExtender.NewtonSoft.Types.Trees
 
             void PropertyName(JsonTokenEntry token, String? name)
             {
-                KeyState state = ReadJsonKey(token, out TKey key);
+                NamingStrategy? strategy = (serializer.ContractResolver as DefaultContractResolver)?.NamingStrategy;
+                KeyState state = ReadJsonKey(token, strategy, out TKey key);
 
                 switch (state)
                 {

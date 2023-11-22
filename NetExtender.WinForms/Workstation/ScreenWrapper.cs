@@ -126,7 +126,7 @@ namespace NetExtender.Workstation
             return Screen.GetHashCode();
         }
 
-        public override String ToString()
+        public override String? ToString()
         {
             return Screen.ToString();
         }

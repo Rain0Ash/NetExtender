@@ -45,7 +45,8 @@ namespace NetExtender.Utilities.Network
 
             const String address = "https://google.com";
 
-            using HttpClient client = new HttpClient(new HttpClientHandler { Proxy = proxy }) { Timeout = timeout };
+            using HttpClient client = new HttpClient(new HttpClientHandler { Proxy = proxy });
+            client.Timeout = timeout;
             client.AddUserAgentHeader(UserAgentUtilities.CurrentSessionUserAgent);
 
             try

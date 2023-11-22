@@ -4,7 +4,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace NetExtender.Initializer.Types.Tries
+namespace NetExtender.Types.Tries
 {
     /// <summary>
     /// Defines a key/value pair that can be set or retrieved from <see cref="StringTrie{TValue}"/>.
@@ -22,7 +22,7 @@ namespace NetExtender.Initializer.Types.Tries
         public TValue Value { get; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="StringEntry{TValue}"/> structure with the specified key and value.
+        /// Initializes a new instance of the <see cref="StringTrieEntry{TValue}"/> structure with the specified key and value.
         /// </summary>
         /// <param name="key">The key.</param>
         /// <param name="value">The definition associated with key.</param>

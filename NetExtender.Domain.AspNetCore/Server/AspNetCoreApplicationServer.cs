@@ -5,25 +5,37 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using NetExtender.Domains.AspNetCore.Server.Interfaces;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Domains.AspNetCore.Server
 {
-    public sealed class AspNetCoreApplicationServer<THost> : AspNetCoreApplicationServer, IAspNetCoreApplicationServer<THost> where THost : class, IHost
+    public abstract class AspNetCoreApplicationServerAbstraction<T> : IAspNetCoreApplicationServer<T> where T : class
     {
-        public override THost Context { get; }
-
-        public AspNetCoreApplicationServer(THost context)
+        public static AspNetCoreApplicationServerAbstraction<T> Create(T value)
         {
-            Context = context ?? throw new ArgumentNullException(nameof(context));
+            switch (value)
+            {
+                case null:
+                    throw new ArgumentNullException(nameof(value));
+                case IHost host:
+                {
+                    Type type = typeof(AspNetCoreApplicationServer<>).MakeGenericType(typeof(T));
+                    return Activator.CreateInstance(type, host) as AspNetCoreApplicationServerAbstraction<T> ?? throw new InvalidOperationException();
+                }
+                case IWebHost host:
+                {
+                    Type type = typeof(AspNetCoreApplicationWebServer<>).MakeGenericType(typeof(T));
+                    return Activator.CreateInstance(type, host) as AspNetCoreApplicationServerAbstraction<T> ?? throw new InvalidOperationException();
+                }
+                default:
+                    throw new NotSupportedException();
+            }
         }
-    }
-    
-    public abstract class AspNetCoreApplicationServer : IAspNetCoreApplicationServer
-    {
-        public abstract IHost Context { get; }
+        
+        public abstract T Context { get; }
         protected Task? Server { get; set; }
         protected CancellationTokenSource? Source { get; set; }
 
@@ -48,11 +60,18 @@ namespace NetExtender.Domains.AspNetCore.Server
             }
 
             Source = new CancellationTokenSource();
-            Server = Context.RunAsync(Source.Token);
+            Server = Start(Context, Source.Token);
+        }
+
+        protected abstract Task Start(T context, CancellationToken token);
+
+        public virtual void Stop()
+        {
+            Stop(Time.Minute.Half);
         }
 
         [SuppressMessage("ReSharper", "AsyncConverter.AsyncWait")]
-        public virtual void Stop()
+        public virtual void Stop(TimeSpan timeout)
         {
             if (!IsStarted || Server is null || Source is null)
             {
@@ -63,7 +82,7 @@ namespace NetExtender.Domains.AspNetCore.Server
 
             try
             {
-                Server.Wait(Time.Minute.Half);
+                Server.Wait(timeout);
             }
             catch (Exception)
             {
@@ -75,6 +94,46 @@ namespace NetExtender.Domains.AspNetCore.Server
                 Source = null;
                 Server = null;
             }
+        }
+    }
+
+    public class AspNetCoreApplicationServer<T> : AspNetCoreApplicationServerAbstraction<T>, IAspNetCoreApplicationServer<T> where T : class, IHost
+    {
+        public sealed override T Context { get; }
+
+        public AspNetCoreApplicationServer(T context)
+        {
+            Context = context ?? throw new ArgumentNullException(nameof(context));
+        }
+
+        protected override Task Start(T context, CancellationToken token)
+        {
+            if (context is null)
+            {
+                throw new ArgumentNullException(nameof(context));
+            }
+
+            return context.RunAsync(token);
+        }
+    }
+    
+    public class AspNetCoreApplicationWebServer<T> : AspNetCoreApplicationServerAbstraction<T>, IAspNetCoreApplicationServer<T> where T : class, IWebHost
+    {
+        public sealed override T Context { get; }
+
+        public AspNetCoreApplicationWebServer(T context)
+        {
+            Context = context ?? throw new ArgumentNullException(nameof(context));
+        }
+
+        protected override Task Start(T context, CancellationToken token)
+        {
+            if (context is null)
+            {
+                throw new ArgumentNullException(nameof(context));
+            }
+
+            return context.RunAsync(token);
         }
     }
 }

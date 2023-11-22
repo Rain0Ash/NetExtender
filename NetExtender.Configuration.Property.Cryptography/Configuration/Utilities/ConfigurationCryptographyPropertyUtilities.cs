@@ -9,6 +9,7 @@ using NetExtender.Configuration.Cryptography.Properties;
 using NetExtender.Configuration.Cryptography.Properties.Interfaces;
 using NetExtender.Configuration.Interfaces;
 using NetExtender.Cryptography.Keys.Interfaces;
+using NetExtender.Types.Converters.Interfaces;
 
 namespace NetExtender.Configuration.Cryptography.Utilities
 {
@@ -21,10 +22,15 @@ namespace NetExtender.Configuration.Cryptography.Utilities
 
         public static IReadOnlyCryptographyConfigProperty<T?> Converter<T>(this IReadOnlyCryptographyConfigProperty property, Func<T, Boolean>? validate)
         {
-            return Converter<T>(property, validate, null);
+            return Converter(property, validate, (TryConverter<String?, T>?) null);
         }
 
         public static IReadOnlyCryptographyConfigProperty<T?> Converter<T>(this IReadOnlyCryptographyConfigProperty property, TryConverter<String?, T>? converter)
+        {
+            return Converter(property, null, converter);
+        }
+
+        public static IReadOnlyCryptographyConfigProperty<T?> Converter<T>(this IReadOnlyCryptographyConfigProperty property, IOneWayConverter<String?, T>? converter)
         {
             return Converter(property, null, converter);
         }
@@ -35,14 +41,20 @@ namespace NetExtender.Configuration.Cryptography.Utilities
             return Converter(property, default, validate!, converter!);
         }
 
+        public static IReadOnlyCryptographyConfigProperty<T?> Converter<T>(this IReadOnlyCryptographyConfigProperty property, Func<T, Boolean>? validate,
+            IOneWayConverter<String?, T>? converter)
+        {
+            return Converter(property, default, validate!, converter!);
+        }
+
         public static IReadOnlyCryptographyConfigProperty<T> Converter<T>(this IReadOnlyCryptographyConfigProperty property, T alternate)
         {
-            return Converter(property, alternate, null, null);
+            return Converter(property, alternate, null, (TryConverter<String?, T>?) null);
         }
 
         public static IReadOnlyCryptographyConfigProperty<T> Converter<T>(this IReadOnlyCryptographyConfigProperty property, T alternate, Func<T, Boolean>? validate)
         {
-            return Converter(property, alternate, validate, null);
+            return Converter(property, alternate, validate, (TryConverter<String?, T>?) null);
         }
 
         public static IReadOnlyCryptographyConfigProperty<T> Converter<T>(this IReadOnlyCryptographyConfigProperty property, T alternate, TryConverter<String?, T>? converter)
@@ -50,8 +62,24 @@ namespace NetExtender.Configuration.Cryptography.Utilities
             return Converter(property, alternate, null, converter);
         }
 
+        public static IReadOnlyCryptographyConfigProperty<T> Converter<T>(this IReadOnlyCryptographyConfigProperty property, T alternate, IOneWayConverter<String?, T>? converter)
+        {
+            return Converter(property, alternate, null, converter);
+        }
+
         public static IReadOnlyCryptographyConfigProperty<T> Converter<T>(this IReadOnlyCryptographyConfigProperty property, T alternate, Func<T, Boolean>? validate,
             TryConverter<String?, T>? converter)
+        {
+            if (property is null)
+            {
+                throw new ArgumentNullException(nameof(property));
+            }
+
+            return new ReadOnlyCryptographyConfigProperty<T>(property, alternate, validate, converter);
+        }
+
+        public static IReadOnlyCryptographyConfigProperty<T> Converter<T>(this IReadOnlyCryptographyConfigProperty property, T alternate, Func<T, Boolean>? validate,
+            IOneWayConverter<String?, T>? converter)
         {
             if (property is null)
             {
@@ -68,10 +96,15 @@ namespace NetExtender.Configuration.Cryptography.Utilities
 
         public static ICryptographyConfigProperty<T?> Converter<T>(this ICryptographyConfigProperty property, Func<T, Boolean>? validate)
         {
-            return Converter<T>(property, validate, null);
+            return Converter(property, validate, (TryConverter<String?, T>?) null);
         }
 
         public static ICryptographyConfigProperty<T?> Converter<T>(this ICryptographyConfigProperty property, TryConverter<String?, T>? converter)
+        {
+            return Converter(property, null, converter);
+        }
+
+        public static ICryptographyConfigProperty<T?> Converter<T>(this ICryptographyConfigProperty property, IOneWayConverter<String?, T>? converter)
         {
             return Converter(property, null, converter);
         }
@@ -81,14 +114,19 @@ namespace NetExtender.Configuration.Cryptography.Utilities
             return Converter(property, default, validate!, converter!);
         }
 
+        public static ICryptographyConfigProperty<T?> Converter<T>(this ICryptographyConfigProperty property, Func<T, Boolean>? validate, IOneWayConverter<String?, T>? converter)
+        {
+            return Converter(property, default, validate!, converter!);
+        }
+
         public static ICryptographyConfigProperty<T> Converter<T>(this ICryptographyConfigProperty property, T alternate)
         {
-            return Converter(property, alternate, null, null);
+            return Converter(property, alternate, null, (TryConverter<String?, T>?) null);
         }
 
         public static ICryptographyConfigProperty<T> Converter<T>(this ICryptographyConfigProperty property, T alternate, Func<T, Boolean>? validate)
         {
-            return Converter(property, alternate, validate, null);
+            return Converter(property, alternate, validate, (TryConverter<String?, T>?) null);
         }
 
         public static ICryptographyConfigProperty<T> Converter<T>(this ICryptographyConfigProperty property, T alternate, TryConverter<String?, T>? converter)
@@ -96,8 +134,24 @@ namespace NetExtender.Configuration.Cryptography.Utilities
             return Converter(property, alternate, null, converter);
         }
 
+        public static ICryptographyConfigProperty<T> Converter<T>(this ICryptographyConfigProperty property, T alternate, IOneWayConverter<String?, T>? converter)
+        {
+            return Converter(property, alternate, null, converter);
+        }
+
         public static ICryptographyConfigProperty<T> Converter<T>(this ICryptographyConfigProperty property, T alternate, Func<T, Boolean>? validate,
             TryConverter<String?, T>? converter)
+        {
+            if (property is null)
+            {
+                throw new ArgumentNullException(nameof(property));
+            }
+
+            return new CryptographyConfigProperty<T>(property, alternate, validate, converter);
+        }
+
+        public static ICryptographyConfigProperty<T> Converter<T>(this ICryptographyConfigProperty property, T alternate, Func<T, Boolean>? validate,
+            IOneWayConverter<String?, T>? converter)
         {
             if (property is null)
             {
@@ -419,7 +473,7 @@ namespace NetExtender.Configuration.Cryptography.Utilities
         public static IReadOnlyCryptographyConfigProperty<T> GetConfigurationProperty<T>(this IReadOnlyConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
             ConfigPropertyOptions options, IEnumerable<String>? sections)
         {
-            return GetConfigurationProperty(config, key, alternate, cryptor, validate, null, options, sections);
+            return GetConfigurationProperty(config, key, alternate, cryptor, validate, (TryConverter<String?, T>?) null, options, sections);
         }
 
         public static IReadOnlyCryptographyConfigProperty<T> GetConfigurationProperty<T>(this IReadOnlyConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
@@ -429,7 +483,19 @@ namespace NetExtender.Configuration.Cryptography.Utilities
         }
 
         public static IReadOnlyCryptographyConfigProperty<T> GetConfigurationProperty<T>(this IReadOnlyConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
+            IOneWayConverter<String?, T>? converter, ConfigPropertyOptions options, params String[]? sections)
+        {
+            return GetConfigurationProperty(config, key, alternate, cryptor, validate, converter, options, (IEnumerable<String>?) sections);
+        }
+
+        public static IReadOnlyCryptographyConfigProperty<T> GetConfigurationProperty<T>(this IReadOnlyConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
             TryConverter<String?, T>? converter, ConfigPropertyOptions options, IEnumerable<String>? sections)
+        {
+            return new ReadOnlyCryptographyConfigProperty<T>(config, key, alternate, cryptor, validate, converter, options, sections);
+        }
+
+        public static IReadOnlyCryptographyConfigProperty<T> GetConfigurationProperty<T>(this IReadOnlyConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
+            IOneWayConverter<String?, T>? converter, ConfigPropertyOptions options, IEnumerable<String>? sections)
         {
             return new ReadOnlyCryptographyConfigProperty<T>(config, key, alternate, cryptor, validate, converter, options, sections);
         }
@@ -487,7 +553,7 @@ namespace NetExtender.Configuration.Cryptography.Utilities
         public static ICryptographyConfigProperty<T> GetConfigurationProperty<T>(this IConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
             ConfigPropertyOptions options, IEnumerable<String>? sections)
         {
-            return GetConfigurationProperty(config, key, alternate, cryptor, validate, null, options, sections);
+            return GetConfigurationProperty(config, key, alternate, cryptor, validate, (TryConverter<String?, T>?) null, options, sections);
         }
 
         public static ICryptographyConfigProperty<T> GetConfigurationProperty<T>(this IConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
@@ -497,7 +563,19 @@ namespace NetExtender.Configuration.Cryptography.Utilities
         }
 
         public static ICryptographyConfigProperty<T> GetConfigurationProperty<T>(this IConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
+            IOneWayConverter<String?, T>? converter, ConfigPropertyOptions options, params String[]? sections)
+        {
+            return GetConfigurationProperty(config, key, alternate, cryptor, validate, converter, options, (IEnumerable<String>?) sections);
+        }
+
+        public static ICryptographyConfigProperty<T> GetConfigurationProperty<T>(this IConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
             TryConverter<String?, T>? converter, ConfigPropertyOptions options, IEnumerable<String>? sections)
+        {
+            return new CryptographyConfigProperty<T>(config, key, alternate, cryptor, validate, converter, options, sections);
+        }
+
+        public static ICryptographyConfigProperty<T> GetConfigurationProperty<T>(this IConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
+            IOneWayConverter<String?, T>? converter, ConfigPropertyOptions options, IEnumerable<String>? sections)
         {
             return new CryptographyConfigProperty<T>(config, key, alternate, cryptor, validate, converter, options, sections);
         }
@@ -555,7 +633,7 @@ namespace NetExtender.Configuration.Cryptography.Utilities
         public static IReadOnlyCryptographyConfigProperty<T> GetConfigurationProperty<T>(this IReadOnlyCryptographyConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
             ConfigPropertyOptions options, IEnumerable<String>? sections)
         {
-            return GetConfigurationProperty(config, key, alternate, cryptor, validate, null, options, sections);
+            return GetConfigurationProperty(config, key, alternate, cryptor, validate, (TryConverter<String?, T>?) null, options, sections);
         }
 
         public static IReadOnlyCryptographyConfigProperty<T> GetConfigurationProperty<T>(this IReadOnlyCryptographyConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
@@ -565,7 +643,19 @@ namespace NetExtender.Configuration.Cryptography.Utilities
         }
 
         public static IReadOnlyCryptographyConfigProperty<T> GetConfigurationProperty<T>(this IReadOnlyCryptographyConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
+            IOneWayConverter<String?, T>? converter, ConfigPropertyOptions options, params String[]? sections)
+        {
+            return GetConfigurationProperty(config, key, alternate, cryptor, validate, converter, options, (IEnumerable<String>?) sections);
+        }
+
+        public static IReadOnlyCryptographyConfigProperty<T> GetConfigurationProperty<T>(this IReadOnlyCryptographyConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
             TryConverter<String?, T>? converter, ConfigPropertyOptions options, IEnumerable<String>? sections)
+        {
+            return new ReadOnlyCryptographyConfigProperty<T>(config, key, alternate, cryptor, validate, converter, options, sections);
+        }
+
+        public static IReadOnlyCryptographyConfigProperty<T> GetConfigurationProperty<T>(this IReadOnlyCryptographyConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
+            IOneWayConverter<String?, T>? converter, ConfigPropertyOptions options, IEnumerable<String>? sections)
         {
             return new ReadOnlyCryptographyConfigProperty<T>(config, key, alternate, cryptor, validate, converter, options, sections);
         }
@@ -623,7 +713,7 @@ namespace NetExtender.Configuration.Cryptography.Utilities
         public static ICryptographyConfigProperty<T> GetConfigurationProperty<T>(this ICryptographyConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
             ConfigPropertyOptions options, IEnumerable<String>? sections)
         {
-            return GetConfigurationProperty(config, key, alternate, cryptor, validate, null, options, sections);
+            return GetConfigurationProperty(config, key, alternate, cryptor, validate, (TryConverter<String?, T>?) null, options, sections);
         }
 
         public static ICryptographyConfigProperty<T> GetConfigurationProperty<T>(this ICryptographyConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
@@ -633,7 +723,19 @@ namespace NetExtender.Configuration.Cryptography.Utilities
         }
 
         public static ICryptographyConfigProperty<T> GetConfigurationProperty<T>(this ICryptographyConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
+            IOneWayConverter<String?, T>? converter, ConfigPropertyOptions options, params String[]? sections)
+        {
+            return GetConfigurationProperty(config, key, alternate, cryptor, validate, converter, options, (IEnumerable<String>?) sections);
+        }
+
+        public static ICryptographyConfigProperty<T> GetConfigurationProperty<T>(this ICryptographyConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
             TryConverter<String?, T>? converter, ConfigPropertyOptions options, IEnumerable<String>? sections)
+        {
+            return new CryptographyConfigProperty<T>(config, key, alternate, cryptor, validate, converter, options, sections);
+        }
+
+        public static ICryptographyConfigProperty<T> GetConfigurationProperty<T>(this ICryptographyConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
+            IOneWayConverter<String?, T>? converter, ConfigPropertyOptions options, IEnumerable<String>? sections)
         {
             return new CryptographyConfigProperty<T>(config, key, alternate, cryptor, validate, converter, options, sections);
         }

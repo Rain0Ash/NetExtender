@@ -7,17 +7,40 @@ using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Exceptions
 {
-    [Serializable]
-    public class EnumUndefinedOrNotSupportedException<T> : IncorrentEnumTypeException<T> where T : unmanaged, Enum
+    public class EnumUndefinedOrNotSupportedException<T> : ExceptionWrapper<Exception> where T : unmanaged, Enum
     {
         public EnumUndefinedOrNotSupportedException(T value)
+            : base(EnumUtilities.IsDefined(value) ? new EnumNotSupportedException<T>(value) : new EnumUndefinedException<T>(value))
+        {
+        }
+
+        public EnumUndefinedOrNotSupportedException(T value, String? message)
+            : base(EnumUtilities.IsDefined(value) ? new EnumNotSupportedException<T>(value, message) : new EnumUndefinedException<T>(value, null, message))
+        {
+        }
+
+        public EnumUndefinedOrNotSupportedException(T value, String? paramName, String? message)
+            : base(EnumUtilities.IsDefined(value) ? new EnumNotSupportedException<T>(value, message) : new EnumUndefinedException<T>(value, paramName, message))
+        {
+        }
+
+        public EnumUndefinedOrNotSupportedException(T value, String? paramName, String? message, Exception? innerException)
+            : base(EnumUtilities.IsDefined(value) ? throw new EnumNotSupportedException<T>(value, message, innerException) : innerException is not null ? new EnumUndefinedException<T>(value, message, innerException) : new EnumUndefinedException<T>(value, paramName, message))
+        {
+        }
+    }
+    
+    [Serializable]
+    public class EnumUndefinedOrNotSupportedThrowableException<T> : IncorrentEnumTypeException<T> where T : unmanaged, Enum
+    {
+        public EnumUndefinedOrNotSupportedThrowableException(T value)
             : this(value, true)
         {
         }
 
-        protected EnumUndefinedOrNotSupportedException(T value, Boolean isThrow)
+        public EnumUndefinedOrNotSupportedThrowableException(T value, Boolean @throw)
         {
-            if (!isThrow)
+            if (!@throw)
             {
                 return;
             }
@@ -25,15 +48,15 @@ namespace NetExtender.Types.Exceptions
             throw EnumUtilities.IsDefined(value) ? new EnumNotSupportedException<T>(value) : new EnumUndefinedException<T>(value);
         }
 
-        public EnumUndefinedOrNotSupportedException(T value, String? message)
+        public EnumUndefinedOrNotSupportedThrowableException(T value, String? message)
             : this(value, message, true)
         {
         }
 
-        protected EnumUndefinedOrNotSupportedException(T value, String? message, Boolean isThrow)
+        public EnumUndefinedOrNotSupportedThrowableException(T value, String? message, Boolean @throw)
             : base(message)
         {
-            if (!isThrow)
+            if (!@throw)
             {
                 return;
             }
@@ -41,15 +64,15 @@ namespace NetExtender.Types.Exceptions
             throw EnumUtilities.IsDefined(value) ? new EnumNotSupportedException<T>(value, message) : new EnumUndefinedException<T>(value, null, message);
         }
 
-        public EnumUndefinedOrNotSupportedException(T value, String? paramName, String? message)
+        public EnumUndefinedOrNotSupportedThrowableException(T value, String? paramName, String? message)
             : this(value, paramName, message, true)
         {
         }
 
-        protected EnumUndefinedOrNotSupportedException(T value, String? paramName, String? message, Boolean isThrow)
+        public EnumUndefinedOrNotSupportedThrowableException(T value, String? paramName, String? message, Boolean @throw)
             : base(message, paramName)
         {
-            if (!isThrow)
+            if (!@throw)
             {
                 return;
             }
@@ -57,15 +80,15 @@ namespace NetExtender.Types.Exceptions
             throw EnumUtilities.IsDefined(value) ? new EnumNotSupportedException<T>(value, message) : new EnumUndefinedException<T>(value, paramName, message);
         }
 
-        public EnumUndefinedOrNotSupportedException(T value, String? paramName, String? message, Exception? innerException)
+        public EnumUndefinedOrNotSupportedThrowableException(T value, String? paramName, String? message, Exception? innerException)
             : this(value, paramName, message, innerException, true)
         {
         }
 
-        protected EnumUndefinedOrNotSupportedException(T value, String? paramName, String? message, Exception? innerException, Boolean isThrow)
+        public EnumUndefinedOrNotSupportedThrowableException(T value, String? paramName, String? message, Exception? innerException, Boolean @throw)
             : base(message, innerException)
         {
-            if (!isThrow)
+            if (!@throw)
             {
                 return;
             }
@@ -78,7 +101,7 @@ namespace NetExtender.Types.Exceptions
             throw innerException is not null ? new EnumUndefinedException<T>(value, message, innerException) : new EnumUndefinedException<T>(value, paramName, message);
         }
 
-        protected EnumUndefinedOrNotSupportedException(SerializationInfo info, StreamingContext context)
+        protected EnumUndefinedOrNotSupportedThrowableException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
         }

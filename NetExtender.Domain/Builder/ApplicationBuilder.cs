@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Immutable;
-using System.Linq;
 using System.Reflection;
 using NetExtender.Domains.Builder.Interfaces;
 
@@ -11,12 +10,12 @@ namespace NetExtender.Domains.Builder
 {
     public abstract class ApplicationBuilder<T> : IApplicationBuilder<T> where T : class
     {
-        protected virtual T New()
+        protected virtual T New(ImmutableArray<String> arguments)
         {
-            return New<T>();
+            return New<T>(arguments);
         }
 
-        protected virtual TType New<TType>() where TType : class
+        protected virtual TType New<TType>(ImmutableArray<String> arguments) where TType : class
         {
             try
             {
@@ -34,11 +33,11 @@ namespace NetExtender.Domains.Builder
             return Build(ImmutableArray<String>.Empty);
         }
 
-        public abstract T Build(String[] arguments);
-
-        public virtual T Build(ImmutableArray<String> arguments)
+        public virtual T Build(String[]? arguments)
         {
-            return Build(arguments.ToArray());
+            return Build(arguments?.ToImmutableArray() ?? ImmutableArray<String>.Empty);
         }
+
+        public abstract T Build(ImmutableArray<String> arguments);
     }
 }

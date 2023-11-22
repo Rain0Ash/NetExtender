@@ -15,12 +15,7 @@ namespace NetExtender.WindowsPresentation.Types.Converters
 
     public class WindowConverterWrapper<T, TWindow> : WindowConverter<TWindow> where T : class, IValueConverter, new() where TWindow : Window
     {
-        public T Converter { get; }
-
-        public WindowConverterWrapper()
-        {
-            Converter = new T();
-        }
+        public T Converter { get; } = new T();
 
         public override Object? Convert(Object? value, Type? targetType, Object? parameter, CultureInfo? culture)
         {
@@ -35,12 +30,7 @@ namespace NetExtender.WindowsPresentation.Types.Converters
 
     public abstract class WindowConverter<TWindow> : IValueConverter where TWindow : Window
     {
-        public TWindow Window { get; }
-
-        protected WindowConverter()
-        {
-            Window = WindowStoreUtilities<TWindow>.Require();
-        }
+        public TWindow Window { get; } = WindowStoreUtilities<TWindow>.Require();
 
         public abstract Object? Convert(Object? value, Type? targetType, Object? parameter, CultureInfo? culture);
         public abstract Object? ConvertBack(Object? value, Type? targetType, Object? parameter, CultureInfo? culture);

@@ -319,7 +319,9 @@ namespace NetExtender.Windows.Services.Utilities
                 return service;
             }
 
-            using FilterTextWriterWrapper filter = new ConsoleOutLockedFilterTextWriter {ServiceRunMessage};
+            using FilterTextWriterWrapper filter = new ConsoleOutLockedFilterTextWriter();
+            filter.Add(ServiceRunMessage);
+            
             ServiceBase.Run(service);
             return service;
         }
@@ -389,7 +391,9 @@ namespace NetExtender.Windows.Services.Utilities
                 return;
             }
 
-            using TextWriter filter = new ConsoleOutLockedFilterTextWriter {ServiceRunMessage};
+            using ConsoleOutLockedFilterTextWriter filter = new ConsoleOutLockedFilterTextWriter();
+            filter.Add(ServiceRunMessage);
+            
             ServiceBase.Run(services);
         }
 
@@ -749,10 +753,10 @@ namespace NetExtender.Windows.Services.Utilities
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Boolean> StartServiceAsync(String name, String? machine)
+        public static async Task<Boolean> StartServiceAsync(String name, String? machine)
         {
             using ServiceController controller = CreateServiceController(name, machine);
-            return controller.StartServiceAsync();
+            return await controller.StartServiceAsync();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -762,10 +766,10 @@ namespace NetExtender.Windows.Services.Utilities
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Boolean> StartServiceAsync(String name, String? machine, CancellationToken token)
+        public static async Task<Boolean> StartServiceAsync(String name, String? machine, CancellationToken token)
         {
             using ServiceController controller = CreateServiceController(name, machine);
-            return controller.StartServiceAsync(token);
+            return await controller.StartServiceAsync(token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -775,10 +779,10 @@ namespace NetExtender.Windows.Services.Utilities
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Boolean> StartServiceAsync(String name, String? machine, IEnumerable<String>? arguments)
+        public static async Task<Boolean> StartServiceAsync(String name, String? machine, IEnumerable<String>? arguments)
         {
             using ServiceController controller = CreateServiceController(name, machine);
-            return controller.StartServiceAsync(arguments);
+            return await controller.StartServiceAsync(arguments);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -788,10 +792,10 @@ namespace NetExtender.Windows.Services.Utilities
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Boolean> StartServiceAsync(String name, String? machine, IEnumerable<String>? arguments, CancellationToken token)
+        public static async Task<Boolean> StartServiceAsync(String name, String? machine, IEnumerable<String>? arguments, CancellationToken token)
         {
             using ServiceController controller = CreateServiceController(name, machine);
-            return controller.StartServiceAsync(arguments, token);
+            return await controller.StartServiceAsync(arguments, token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -801,10 +805,10 @@ namespace NetExtender.Windows.Services.Utilities
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Boolean> StartServiceAsync(String name, String? machine, Int32 milliseconds)
+        public static async Task<Boolean> StartServiceAsync(String name, String? machine, Int32 milliseconds)
         {
             using ServiceController controller = CreateServiceController(name, machine);
-            return controller.StartServiceAsync(milliseconds);
+            return await controller.StartServiceAsync(milliseconds);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -814,10 +818,10 @@ namespace NetExtender.Windows.Services.Utilities
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Boolean> StartServiceAsync(String name, String? machine, Int32 milliseconds, CancellationToken token)
+        public static async Task<Boolean> StartServiceAsync(String name, String? machine, Int32 milliseconds, CancellationToken token)
         {
             using ServiceController controller = CreateServiceController(name, machine);
-            return controller.StartServiceAsync(milliseconds, token);
+            return await controller.StartServiceAsync(milliseconds, token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -827,10 +831,10 @@ namespace NetExtender.Windows.Services.Utilities
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Boolean> StartServiceAsync(String name, String? machine, TimeSpan timeout)
+        public static async Task<Boolean> StartServiceAsync(String name, String? machine, TimeSpan timeout)
         {
             using ServiceController controller = CreateServiceController(name, machine);
-            return controller.StartServiceAsync(timeout);
+            return await controller.StartServiceAsync(timeout);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -840,10 +844,10 @@ namespace NetExtender.Windows.Services.Utilities
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Boolean> StartServiceAsync(String name, String? machine, TimeSpan timeout, CancellationToken token)
+        public static async Task<Boolean> StartServiceAsync(String name, String? machine, TimeSpan timeout, CancellationToken token)
         {
             using ServiceController controller = CreateServiceController(name, machine);
-            return controller.StartServiceAsync(timeout, token);
+            return await controller.StartServiceAsync(timeout, token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -853,10 +857,10 @@ namespace NetExtender.Windows.Services.Utilities
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Boolean> StartServiceAsync(String name, String? machine, IEnumerable<String>? arguments, Int32 milliseconds)
+        public static async Task<Boolean> StartServiceAsync(String name, String? machine, IEnumerable<String>? arguments, Int32 milliseconds)
         {
             using ServiceController controller = CreateServiceController(name, machine);
-            return controller.StartServiceAsync(arguments, milliseconds);
+            return await controller.StartServiceAsync(arguments, milliseconds);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -866,10 +870,10 @@ namespace NetExtender.Windows.Services.Utilities
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Boolean> StartServiceAsync(String name, String? machine, IEnumerable<String>? arguments, Int32 milliseconds, CancellationToken token)
+        public static async Task<Boolean> StartServiceAsync(String name, String? machine, IEnumerable<String>? arguments, Int32 milliseconds, CancellationToken token)
         {
             using ServiceController controller = CreateServiceController(name, machine);
-            return controller.StartServiceAsync(arguments, milliseconds, token);
+            return await controller.StartServiceAsync(arguments, milliseconds, token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -879,10 +883,10 @@ namespace NetExtender.Windows.Services.Utilities
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Boolean> StartServiceAsync(String name, String? machine, IEnumerable<String>? arguments, TimeSpan timeout)
+        public static async Task<Boolean> StartServiceAsync(String name, String? machine, IEnumerable<String>? arguments, TimeSpan timeout)
         {
             using ServiceController controller = CreateServiceController(name, machine);
-            return controller.StartServiceAsync(arguments, timeout);
+            return await controller.StartServiceAsync(arguments, timeout);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -892,10 +896,10 @@ namespace NetExtender.Windows.Services.Utilities
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Boolean> StartServiceAsync(String name, String? machine, IEnumerable<String>? arguments, TimeSpan timeout, CancellationToken token)
+        public static async Task<Boolean> StartServiceAsync(String name, String? machine, IEnumerable<String>? arguments, TimeSpan timeout, CancellationToken token)
         {
             using ServiceController controller = CreateServiceController(name, machine);
-            return controller.StartServiceAsync(arguments, timeout, token);
+            return await controller.StartServiceAsync(arguments, timeout, token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -905,10 +909,10 @@ namespace NetExtender.Windows.Services.Utilities
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Boolean> TryStartServiceAsync(String name, String? machine)
+        public static async Task<Boolean> TryStartServiceAsync(String name, String? machine)
         {
             using ServiceController? controller = TryCreateServiceController(name, machine);
-            return controller?.TryStartServiceAsync() ?? TaskUtilities.False;
+            return controller is not null && await controller.TryStartServiceAsync();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -918,10 +922,10 @@ namespace NetExtender.Windows.Services.Utilities
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Boolean> TryStartServiceAsync(String name, String? machine, CancellationToken token)
+        public static async Task<Boolean> TryStartServiceAsync(String name, String? machine, CancellationToken token)
         {
             using ServiceController? controller = TryCreateServiceController(name, machine);
-            return controller?.TryStartServiceAsync(token) ?? TaskUtilities.False;
+            return controller is not null && await controller.TryStartServiceAsync(token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -931,10 +935,10 @@ namespace NetExtender.Windows.Services.Utilities
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Boolean> TryStartServiceAsync(String name, String? machine, IEnumerable<String>? arguments)
+        public static async Task<Boolean> TryStartServiceAsync(String name, String? machine, IEnumerable<String>? arguments)
         {
             using ServiceController? controller = TryCreateServiceController(name, machine);
-            return controller?.TryStartServiceAsync(arguments) ?? TaskUtilities.False;
+            return controller is not null && await controller.TryStartServiceAsync(arguments);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -944,10 +948,10 @@ namespace NetExtender.Windows.Services.Utilities
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Boolean> TryStartServiceAsync(String name, String? machine, IEnumerable<String>? arguments, CancellationToken token)
+        public static async Task<Boolean> TryStartServiceAsync(String name, String? machine, IEnumerable<String>? arguments, CancellationToken token)
         {
             using ServiceController? controller = TryCreateServiceController(name, machine);
-            return controller?.TryStartServiceAsync(arguments, token) ?? TaskUtilities.False;
+            return controller is not null && await controller.TryStartServiceAsync(arguments, token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -957,10 +961,10 @@ namespace NetExtender.Windows.Services.Utilities
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Boolean> TryStartServiceAsync(String name, String? machine, Int32 milliseconds)
+        public static async Task<Boolean> TryStartServiceAsync(String name, String? machine, Int32 milliseconds)
         {
             using ServiceController? controller = TryCreateServiceController(name, machine);
-            return controller?.TryStartServiceAsync(milliseconds) ?? TaskUtilities.False;
+            return controller is not null && await controller.TryStartServiceAsync(milliseconds);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -970,10 +974,10 @@ namespace NetExtender.Windows.Services.Utilities
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Boolean> TryStartServiceAsync(String name, String? machine, Int32 milliseconds, CancellationToken token)
+        public static async Task<Boolean> TryStartServiceAsync(String name, String? machine, Int32 milliseconds, CancellationToken token)
         {
             using ServiceController? controller = TryCreateServiceController(name, machine);
-            return controller?.TryStartServiceAsync(milliseconds, token) ?? TaskUtilities.False;
+            return controller is not null && await controller.TryStartServiceAsync(milliseconds, token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -983,10 +987,10 @@ namespace NetExtender.Windows.Services.Utilities
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Boolean> TryStartServiceAsync(String name, String? machine, TimeSpan timeout)
+        public static async Task<Boolean> TryStartServiceAsync(String name, String? machine, TimeSpan timeout)
         {
             using ServiceController? controller = TryCreateServiceController(name, machine);
-            return controller?.TryStartServiceAsync(timeout) ?? TaskUtilities.False;
+            return controller is not null && await controller.TryStartServiceAsync(timeout);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -996,10 +1000,10 @@ namespace NetExtender.Windows.Services.Utilities
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Boolean> TryStartServiceAsync(String name, String? machine, TimeSpan timeout, CancellationToken token)
+        public static async Task<Boolean> TryStartServiceAsync(String name, String? machine, TimeSpan timeout, CancellationToken token)
         {
             using ServiceController? controller = TryCreateServiceController(name, machine);
-            return controller?.TryStartServiceAsync(timeout, token) ?? TaskUtilities.False;
+            return controller is not null && await controller.TryStartServiceAsync(timeout, token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1009,10 +1013,10 @@ namespace NetExtender.Windows.Services.Utilities
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Boolean> TryStartServiceAsync(String name, String? machine, IEnumerable<String>? arguments, Int32 milliseconds)
+        public static async Task<Boolean> TryStartServiceAsync(String name, String? machine, IEnumerable<String>? arguments, Int32 milliseconds)
         {
             using ServiceController? controller = TryCreateServiceController(name, machine);
-            return controller?.TryStartServiceAsync(arguments, milliseconds) ?? TaskUtilities.False;
+            return controller is not null && await controller.TryStartServiceAsync(arguments, milliseconds);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1022,10 +1026,10 @@ namespace NetExtender.Windows.Services.Utilities
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Boolean> TryStartServiceAsync(String name, String? machine, IEnumerable<String>? arguments, Int32 milliseconds, CancellationToken token)
+        public static async Task<Boolean> TryStartServiceAsync(String name, String? machine, IEnumerable<String>? arguments, Int32 milliseconds, CancellationToken token)
         {
             using ServiceController? controller = TryCreateServiceController(name, machine);
-            return controller?.TryStartServiceAsync(arguments, milliseconds, token) ?? TaskUtilities.False;
+            return controller is not null && await controller.TryStartServiceAsync(arguments, milliseconds, token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1035,10 +1039,10 @@ namespace NetExtender.Windows.Services.Utilities
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Boolean> TryStartServiceAsync(String name, String? machine, IEnumerable<String>? arguments, TimeSpan timeout)
+        public static async Task<Boolean> TryStartServiceAsync(String name, String? machine, IEnumerable<String>? arguments, TimeSpan timeout)
         {
             using ServiceController? controller = TryCreateServiceController(name, machine);
-            return controller?.TryStartServiceAsync(arguments, timeout) ?? TaskUtilities.False;
+            return controller is not null && await controller.TryStartServiceAsync(arguments, timeout);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1048,10 +1052,10 @@ namespace NetExtender.Windows.Services.Utilities
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Boolean> TryStartServiceAsync(String name, String? machine, IEnumerable<String>? arguments, TimeSpan timeout, CancellationToken token)
+        public static async Task<Boolean> TryStartServiceAsync(String name, String? machine, IEnumerable<String>? arguments, TimeSpan timeout, CancellationToken token)
         {
             using ServiceController? controller = TryCreateServiceController(name, machine);
-            return controller?.TryStartServiceAsync(arguments, timeout, token) ?? TaskUtilities.False;
+            return controller is not null && await controller.TryStartServiceAsync(arguments, timeout, token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1472,10 +1476,10 @@ namespace NetExtender.Windows.Services.Utilities
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Boolean> StopServiceAsync(String name, String? machine)
+        public static async Task<Boolean> StopServiceAsync(String name, String? machine)
         {
             using ServiceController controller = CreateServiceController(name, machine);
-            return controller.StopServiceAsync();
+            return await controller.StopServiceAsync();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1485,10 +1489,10 @@ namespace NetExtender.Windows.Services.Utilities
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Boolean> StopServiceAsync(String name, String? machine, CancellationToken token)
+        public static async Task<Boolean> StopServiceAsync(String name, String? machine, CancellationToken token)
         {
             using ServiceController controller = CreateServiceController(name, machine);
-            return controller.StopServiceAsync(token);
+            return await controller.StopServiceAsync(token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1498,10 +1502,10 @@ namespace NetExtender.Windows.Services.Utilities
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Boolean> StopServiceAsync(String name, String? machine, Int32 milliseconds)
+        public static async Task<Boolean> StopServiceAsync(String name, String? machine, Int32 milliseconds)
         {
             using ServiceController controller = CreateServiceController(name, machine);
-            return controller.StopServiceAsync(milliseconds);
+            return await controller.StopServiceAsync(milliseconds);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1511,10 +1515,10 @@ namespace NetExtender.Windows.Services.Utilities
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Boolean> StopServiceAsync(String name, String? machine, Int32 milliseconds, CancellationToken token)
+        public static async Task<Boolean> StopServiceAsync(String name, String? machine, Int32 milliseconds, CancellationToken token)
         {
             using ServiceController controller = CreateServiceController(name, machine);
-            return controller.StopServiceAsync(milliseconds, token);
+            return await controller.StopServiceAsync(milliseconds, token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1524,10 +1528,10 @@ namespace NetExtender.Windows.Services.Utilities
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Boolean> StopServiceAsync(String name, String? machine, TimeSpan timeout)
+        public static async Task<Boolean> StopServiceAsync(String name, String? machine, TimeSpan timeout)
         {
             using ServiceController controller = CreateServiceController(name, machine);
-            return controller.StopServiceAsync(timeout);
+            return await controller.StopServiceAsync(timeout);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1537,10 +1541,10 @@ namespace NetExtender.Windows.Services.Utilities
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Boolean> StopServiceAsync(String name, String? machine, TimeSpan timeout, CancellationToken token)
+        public static async Task<Boolean> StopServiceAsync(String name, String? machine, TimeSpan timeout, CancellationToken token)
         {
             using ServiceController controller = CreateServiceController(name, machine);
-            return controller.StopServiceAsync(timeout, token);
+            return await controller.StopServiceAsync(timeout, token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1550,10 +1554,10 @@ namespace NetExtender.Windows.Services.Utilities
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Boolean> TryStopServiceAsync(String name, String? machine)
+        public static async Task<Boolean> TryStopServiceAsync(String name, String? machine)
         {
             using ServiceController? controller = TryCreateServiceController(name, machine);
-            return controller?.TryStopServiceAsync() ?? TaskUtilities.False;
+            return controller is not null && await controller.TryStopServiceAsync();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1563,10 +1567,10 @@ namespace NetExtender.Windows.Services.Utilities
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Boolean> TryStopServiceAsync(String name, String? machine, CancellationToken token)
+        public static async Task<Boolean> TryStopServiceAsync(String name, String? machine, CancellationToken token)
         {
             using ServiceController? controller = TryCreateServiceController(name, machine);
-            return controller?.TryStopServiceAsync(token) ?? TaskUtilities.False;
+            return controller is not null && await controller.TryStopServiceAsync(token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1576,10 +1580,10 @@ namespace NetExtender.Windows.Services.Utilities
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Boolean> TryStopServiceAsync(String name, String? machine, Int32 milliseconds)
+        public static async Task<Boolean> TryStopServiceAsync(String name, String? machine, Int32 milliseconds)
         {
             using ServiceController? controller = TryCreateServiceController(name, machine);
-            return controller?.TryStopServiceAsync(milliseconds) ?? TaskUtilities.False;
+            return controller is not null && await controller.TryStopServiceAsync(milliseconds);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1589,10 +1593,10 @@ namespace NetExtender.Windows.Services.Utilities
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Boolean> TryStopServiceAsync(String name, String? machine, Int32 milliseconds, CancellationToken token)
+        public static async Task<Boolean> TryStopServiceAsync(String name, String? machine, Int32 milliseconds, CancellationToken token)
         {
             using ServiceController? controller = TryCreateServiceController(name, machine);
-            return controller?.TryStopServiceAsync(milliseconds, token) ?? TaskUtilities.False;
+            return controller is not null && await controller.TryStopServiceAsync(milliseconds, token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1602,10 +1606,10 @@ namespace NetExtender.Windows.Services.Utilities
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Boolean> TryStopServiceAsync(String name, String? machine, TimeSpan timeout)
+        public static async Task<Boolean> TryStopServiceAsync(String name, String? machine, TimeSpan timeout)
         {
             using ServiceController? controller = TryCreateServiceController(name, machine);
-            return controller?.TryStopServiceAsync(timeout) ?? TaskUtilities.False;
+            return controller is not null && await controller.TryStopServiceAsync(timeout);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1615,10 +1619,10 @@ namespace NetExtender.Windows.Services.Utilities
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Boolean> TryStopServiceAsync(String name, String? machine, TimeSpan timeout, CancellationToken token)
+        public static async Task<Boolean> TryStopServiceAsync(String name, String? machine, TimeSpan timeout, CancellationToken token)
         {
             using ServiceController? controller = TryCreateServiceController(name, machine);
-            return controller?.TryStopServiceAsync(timeout, token) ?? TaskUtilities.False;
+            return controller is not null && await controller.TryStopServiceAsync(timeout, token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -2079,10 +2083,10 @@ namespace NetExtender.Windows.Services.Utilities
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Boolean> ContinueServiceAsync(String name, String? machine)
+        public static async Task<Boolean> ContinueServiceAsync(String name, String? machine)
         {
             using ServiceController controller = CreateServiceController(name, machine);
-            return controller.ContinueServiceAsync();
+            return await controller.ContinueServiceAsync();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -2092,10 +2096,10 @@ namespace NetExtender.Windows.Services.Utilities
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Boolean> ContinueServiceAsync(String name, String? machine, CancellationToken token)
+        public static async Task<Boolean> ContinueServiceAsync(String name, String? machine, CancellationToken token)
         {
             using ServiceController controller = CreateServiceController(name, machine);
-            return controller.ContinueServiceAsync(token);
+            return await controller.ContinueServiceAsync(token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -2105,10 +2109,10 @@ namespace NetExtender.Windows.Services.Utilities
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Boolean> ContinueServiceAsync(String name, String? machine, IEnumerable<String>? arguments)
+        public static async Task<Boolean> ContinueServiceAsync(String name, String? machine, IEnumerable<String>? arguments)
         {
             using ServiceController controller = CreateServiceController(name, machine);
-            return controller.ContinueServiceAsync(arguments);
+            return await controller.ContinueServiceAsync(arguments);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -2118,10 +2122,10 @@ namespace NetExtender.Windows.Services.Utilities
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Boolean> ContinueServiceAsync(String name, String? machine, IEnumerable<String>? arguments, CancellationToken token)
+        public static async Task<Boolean> ContinueServiceAsync(String name, String? machine, IEnumerable<String>? arguments, CancellationToken token)
         {
             using ServiceController controller = CreateServiceController(name, machine);
-            return controller.ContinueServiceAsync(arguments, token);
+            return await controller.ContinueServiceAsync(arguments, token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -2131,10 +2135,10 @@ namespace NetExtender.Windows.Services.Utilities
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Boolean> ContinueServiceAsync(String name, String? machine, Int32 milliseconds)
+        public static async Task<Boolean> ContinueServiceAsync(String name, String? machine, Int32 milliseconds)
         {
             using ServiceController controller = CreateServiceController(name, machine);
-            return controller.ContinueServiceAsync(milliseconds);
+            return await controller.ContinueServiceAsync(milliseconds);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -2144,10 +2148,10 @@ namespace NetExtender.Windows.Services.Utilities
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Boolean> ContinueServiceAsync(String name, String? machine, Int32 milliseconds, CancellationToken token)
+        public static async Task<Boolean> ContinueServiceAsync(String name, String? machine, Int32 milliseconds, CancellationToken token)
         {
             using ServiceController controller = CreateServiceController(name, machine);
-            return controller.ContinueServiceAsync(milliseconds, token);
+            return await controller.ContinueServiceAsync(milliseconds, token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -2157,10 +2161,10 @@ namespace NetExtender.Windows.Services.Utilities
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Boolean> ContinueServiceAsync(String name, String? machine, TimeSpan timeout)
+        public static async Task<Boolean> ContinueServiceAsync(String name, String? machine, TimeSpan timeout)
         {
             using ServiceController controller = CreateServiceController(name, machine);
-            return controller.ContinueServiceAsync(timeout);
+            return await controller.ContinueServiceAsync(timeout);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -2170,10 +2174,10 @@ namespace NetExtender.Windows.Services.Utilities
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Boolean> ContinueServiceAsync(String name, String? machine, TimeSpan timeout, CancellationToken token)
+        public static async Task<Boolean> ContinueServiceAsync(String name, String? machine, TimeSpan timeout, CancellationToken token)
         {
             using ServiceController controller = CreateServiceController(name, machine);
-            return controller.ContinueServiceAsync(timeout, token);
+            return await controller.ContinueServiceAsync(timeout, token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -2183,10 +2187,10 @@ namespace NetExtender.Windows.Services.Utilities
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Boolean> ContinueServiceAsync(String name, String? machine, IEnumerable<String>? arguments, Int32 milliseconds)
+        public static async Task<Boolean> ContinueServiceAsync(String name, String? machine, IEnumerable<String>? arguments, Int32 milliseconds)
         {
             using ServiceController controller = CreateServiceController(name, machine);
-            return controller.ContinueServiceAsync(arguments, milliseconds);
+            return await controller.ContinueServiceAsync(arguments, milliseconds);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -2196,10 +2200,10 @@ namespace NetExtender.Windows.Services.Utilities
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Boolean> ContinueServiceAsync(String name, String? machine, IEnumerable<String>? arguments, Int32 milliseconds, CancellationToken token)
+        public static async Task<Boolean> ContinueServiceAsync(String name, String? machine, IEnumerable<String>? arguments, Int32 milliseconds, CancellationToken token)
         {
             using ServiceController controller = CreateServiceController(name, machine);
-            return controller.ContinueServiceAsync(arguments, milliseconds, token);
+            return await controller.ContinueServiceAsync(arguments, milliseconds, token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -2209,10 +2213,10 @@ namespace NetExtender.Windows.Services.Utilities
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Boolean> ContinueServiceAsync(String name, String? machine, IEnumerable<String>? arguments, TimeSpan timeout)
+        public static async Task<Boolean> ContinueServiceAsync(String name, String? machine, IEnumerable<String>? arguments, TimeSpan timeout)
         {
             using ServiceController controller = CreateServiceController(name, machine);
-            return controller.ContinueServiceAsync(arguments, timeout);
+            return await controller.ContinueServiceAsync(arguments, timeout);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -2222,10 +2226,10 @@ namespace NetExtender.Windows.Services.Utilities
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Boolean> ContinueServiceAsync(String name, String? machine, IEnumerable<String>? arguments, TimeSpan timeout, CancellationToken token)
+        public static async Task<Boolean> ContinueServiceAsync(String name, String? machine, IEnumerable<String>? arguments, TimeSpan timeout, CancellationToken token)
         {
             using ServiceController controller = CreateServiceController(name, machine);
-            return controller.ContinueServiceAsync(arguments, timeout, token);
+            return await controller.ContinueServiceAsync(arguments, timeout, token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -2235,10 +2239,10 @@ namespace NetExtender.Windows.Services.Utilities
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Boolean> TryContinueServiceAsync(String name, String? machine)
+        public static async Task<Boolean> TryContinueServiceAsync(String name, String? machine)
         {
             using ServiceController? controller = TryCreateServiceController(name, machine);
-            return controller?.TryContinueServiceAsync() ?? TaskUtilities.False;
+            return controller is not null && await controller.TryContinueServiceAsync();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -2248,10 +2252,10 @@ namespace NetExtender.Windows.Services.Utilities
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Boolean> TryContinueServiceAsync(String name, String? machine, CancellationToken token)
+        public static async Task<Boolean> TryContinueServiceAsync(String name, String? machine, CancellationToken token)
         {
             using ServiceController? controller = TryCreateServiceController(name, machine);
-            return controller?.TryContinueServiceAsync(token) ?? TaskUtilities.False;
+            return controller is not null && await controller.TryContinueServiceAsync(token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -2261,10 +2265,10 @@ namespace NetExtender.Windows.Services.Utilities
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Boolean> TryContinueServiceAsync(String name, String? machine, IEnumerable<String>? arguments)
+        public static async Task<Boolean> TryContinueServiceAsync(String name, String? machine, IEnumerable<String>? arguments)
         {
             using ServiceController? controller = TryCreateServiceController(name, machine);
-            return controller?.TryContinueServiceAsync(arguments) ?? TaskUtilities.False;
+            return controller is not null && await controller.TryContinueServiceAsync(arguments);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -2274,10 +2278,10 @@ namespace NetExtender.Windows.Services.Utilities
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Boolean> TryContinueServiceAsync(String name, String? machine, IEnumerable<String>? arguments, CancellationToken token)
+        public static async Task<Boolean> TryContinueServiceAsync(String name, String? machine, IEnumerable<String>? arguments, CancellationToken token)
         {
             using ServiceController? controller = TryCreateServiceController(name, machine);
-            return controller?.TryContinueServiceAsync(arguments, token) ?? TaskUtilities.False;
+            return controller is not null && await controller.TryContinueServiceAsync(arguments, token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -2287,10 +2291,10 @@ namespace NetExtender.Windows.Services.Utilities
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Boolean> TryContinueServiceAsync(String name, String? machine, Int32 milliseconds)
+        public static async Task<Boolean> TryContinueServiceAsync(String name, String? machine, Int32 milliseconds)
         {
             using ServiceController? controller = TryCreateServiceController(name, machine);
-            return controller?.TryContinueServiceAsync(milliseconds) ?? TaskUtilities.False;
+            return controller is not null && await controller.TryContinueServiceAsync(milliseconds);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -2300,10 +2304,10 @@ namespace NetExtender.Windows.Services.Utilities
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Boolean> TryContinueServiceAsync(String name, String? machine, Int32 milliseconds, CancellationToken token)
+        public static async Task<Boolean> TryContinueServiceAsync(String name, String? machine, Int32 milliseconds, CancellationToken token)
         {
             using ServiceController? controller = TryCreateServiceController(name, machine);
-            return controller?.TryContinueServiceAsync(milliseconds, token) ?? TaskUtilities.False;
+            return controller is not null && await controller.TryContinueServiceAsync(milliseconds, token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -2313,10 +2317,10 @@ namespace NetExtender.Windows.Services.Utilities
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Boolean> TryContinueServiceAsync(String name, String? machine, TimeSpan timeout)
+        public static async Task<Boolean> TryContinueServiceAsync(String name, String? machine, TimeSpan timeout)
         {
             using ServiceController? controller = TryCreateServiceController(name, machine);
-            return controller?.TryContinueServiceAsync(timeout) ?? TaskUtilities.False;
+            return controller is not null && await controller.TryContinueServiceAsync(timeout);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -2326,10 +2330,10 @@ namespace NetExtender.Windows.Services.Utilities
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Boolean> TryContinueServiceAsync(String name, String? machine, TimeSpan timeout, CancellationToken token)
+        public static async Task<Boolean> TryContinueServiceAsync(String name, String? machine, TimeSpan timeout, CancellationToken token)
         {
             using ServiceController? controller = TryCreateServiceController(name, machine);
-            return controller?.TryContinueServiceAsync(timeout, token) ?? TaskUtilities.False;
+            return controller is not null && await controller.TryContinueServiceAsync(timeout, token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -2339,10 +2343,10 @@ namespace NetExtender.Windows.Services.Utilities
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Boolean> TryContinueServiceAsync(String name, String? machine, IEnumerable<String>? arguments, Int32 milliseconds)
+        public static async Task<Boolean> TryContinueServiceAsync(String name, String? machine, IEnumerable<String>? arguments, Int32 milliseconds)
         {
             using ServiceController? controller = TryCreateServiceController(name, machine);
-            return controller?.TryContinueServiceAsync(arguments, milliseconds) ?? TaskUtilities.False;
+            return controller is not null && await controller.TryContinueServiceAsync(arguments, milliseconds);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -2352,10 +2356,10 @@ namespace NetExtender.Windows.Services.Utilities
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Boolean> TryContinueServiceAsync(String name, String? machine, IEnumerable<String>? arguments, Int32 milliseconds, CancellationToken token)
+        public static async Task<Boolean> TryContinueServiceAsync(String name, String? machine, IEnumerable<String>? arguments, Int32 milliseconds, CancellationToken token)
         {
             using ServiceController? controller = TryCreateServiceController(name, machine);
-            return controller?.TryContinueServiceAsync(arguments, milliseconds, token) ?? TaskUtilities.False;
+            return controller is not null && await controller.TryContinueServiceAsync(arguments, milliseconds, token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -2365,10 +2369,10 @@ namespace NetExtender.Windows.Services.Utilities
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Boolean> TryContinueServiceAsync(String name, String? machine, IEnumerable<String>? arguments, TimeSpan timeout)
+        public static async Task<Boolean> TryContinueServiceAsync(String name, String? machine, IEnumerable<String>? arguments, TimeSpan timeout)
         {
             using ServiceController? controller = TryCreateServiceController(name, machine);
-            return controller?.TryContinueServiceAsync(arguments, timeout) ?? TaskUtilities.False;
+            return controller is not null && await controller.TryContinueServiceAsync(arguments, timeout);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -2378,10 +2382,10 @@ namespace NetExtender.Windows.Services.Utilities
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Boolean> TryContinueServiceAsync(String name, String? machine, IEnumerable<String>? arguments, TimeSpan timeout, CancellationToken token)
+        public static async Task<Boolean> TryContinueServiceAsync(String name, String? machine, IEnumerable<String>? arguments, TimeSpan timeout, CancellationToken token)
         {
             using ServiceController? controller = TryCreateServiceController(name, machine);
-            return controller?.TryContinueServiceAsync(arguments, timeout, token) ?? TaskUtilities.False;
+            return controller is not null && await controller.TryContinueServiceAsync(arguments, timeout, token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -2798,10 +2802,10 @@ namespace NetExtender.Windows.Services.Utilities
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Boolean> PauseServiceAsync(String name, String? machine)
+        public static async Task<Boolean> PauseServiceAsync(String name, String? machine)
         {
             using ServiceController controller = CreateServiceController(name, machine);
-            return controller.PauseServiceAsync();
+            return await controller.PauseServiceAsync();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -2811,10 +2815,10 @@ namespace NetExtender.Windows.Services.Utilities
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Boolean> PauseServiceAsync(String name, String? machine, CancellationToken token)
+        public static async Task<Boolean> PauseServiceAsync(String name, String? machine, CancellationToken token)
         {
             using ServiceController controller = CreateServiceController(name, machine);
-            return controller.PauseServiceAsync(token);
+            return await controller.PauseServiceAsync(token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -2824,10 +2828,10 @@ namespace NetExtender.Windows.Services.Utilities
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Boolean> PauseServiceAsync(String name, String? machine, Int32 milliseconds)
+        public static async Task<Boolean> PauseServiceAsync(String name, String? machine, Int32 milliseconds)
         {
             using ServiceController controller = CreateServiceController(name, machine);
-            return controller.PauseServiceAsync(milliseconds);
+            return await controller.PauseServiceAsync(milliseconds);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -2837,10 +2841,10 @@ namespace NetExtender.Windows.Services.Utilities
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Boolean> PauseServiceAsync(String name, String? machine, Int32 milliseconds, CancellationToken token)
+        public static async Task<Boolean> PauseServiceAsync(String name, String? machine, Int32 milliseconds, CancellationToken token)
         {
             using ServiceController controller = CreateServiceController(name, machine);
-            return controller.PauseServiceAsync(milliseconds, token);
+            return await controller.PauseServiceAsync(milliseconds, token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -2850,10 +2854,10 @@ namespace NetExtender.Windows.Services.Utilities
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Boolean> PauseServiceAsync(String name, String? machine, TimeSpan timeout)
+        public static async Task<Boolean> PauseServiceAsync(String name, String? machine, TimeSpan timeout)
         {
             using ServiceController controller = CreateServiceController(name, machine);
-            return controller.PauseServiceAsync(timeout);
+            return await controller.PauseServiceAsync(timeout);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -2863,10 +2867,10 @@ namespace NetExtender.Windows.Services.Utilities
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Boolean> PauseServiceAsync(String name, String? machine, TimeSpan timeout, CancellationToken token)
+        public static async Task<Boolean> PauseServiceAsync(String name, String? machine, TimeSpan timeout, CancellationToken token)
         {
             using ServiceController controller = CreateServiceController(name, machine);
-            return controller.PauseServiceAsync(timeout, token);
+            return await controller.PauseServiceAsync(timeout, token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -2876,10 +2880,10 @@ namespace NetExtender.Windows.Services.Utilities
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Boolean> TryPauseServiceAsync(String name, String? machine)
+        public static async Task<Boolean> TryPauseServiceAsync(String name, String? machine)
         {
             using ServiceController? controller = TryCreateServiceController(name, machine);
-            return controller?.TryPauseServiceAsync() ?? TaskUtilities.False;
+            return controller is not null && await controller.TryPauseServiceAsync();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -2889,10 +2893,10 @@ namespace NetExtender.Windows.Services.Utilities
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Boolean> TryPauseServiceAsync(String name, String? machine, CancellationToken token)
+        public static async Task<Boolean> TryPauseServiceAsync(String name, String? machine, CancellationToken token)
         {
             using ServiceController? controller = TryCreateServiceController(name, machine);
-            return controller?.TryPauseServiceAsync(token) ?? TaskUtilities.False;
+            return controller is not null && await controller.TryPauseServiceAsync(token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -2902,10 +2906,10 @@ namespace NetExtender.Windows.Services.Utilities
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Boolean> TryPauseServiceAsync(String name, String? machine, Int32 milliseconds)
+        public static async Task<Boolean> TryPauseServiceAsync(String name, String? machine, Int32 milliseconds)
         {
             using ServiceController? controller = TryCreateServiceController(name, machine);
-            return controller?.TryPauseServiceAsync(milliseconds) ?? TaskUtilities.False;
+            return controller is not null && await controller.TryPauseServiceAsync(milliseconds);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -2915,10 +2919,10 @@ namespace NetExtender.Windows.Services.Utilities
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Boolean> TryPauseServiceAsync(String name, String? machine, Int32 milliseconds, CancellationToken token)
+        public static async Task<Boolean> TryPauseServiceAsync(String name, String? machine, Int32 milliseconds, CancellationToken token)
         {
             using ServiceController? controller = TryCreateServiceController(name, machine);
-            return controller?.TryPauseServiceAsync(milliseconds, token) ?? TaskUtilities.False;
+            return controller is not null && await controller.TryPauseServiceAsync(milliseconds, token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -2928,10 +2932,10 @@ namespace NetExtender.Windows.Services.Utilities
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Boolean> TryPauseServiceAsync(String name, String? machine, TimeSpan timeout)
+        public static async Task<Boolean> TryPauseServiceAsync(String name, String? machine, TimeSpan timeout)
         {
             using ServiceController? controller = TryCreateServiceController(name, machine);
-            return controller?.TryPauseServiceAsync(timeout) ?? TaskUtilities.False;
+            return controller is not null && await controller.TryPauseServiceAsync(timeout);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -2941,10 +2945,10 @@ namespace NetExtender.Windows.Services.Utilities
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Boolean> TryPauseServiceAsync(String name, String? machine, TimeSpan timeout, CancellationToken token)
+        public static async Task<Boolean> TryPauseServiceAsync(String name, String? machine, TimeSpan timeout, CancellationToken token)
         {
             using ServiceController? controller = TryCreateServiceController(name, machine);
-            return controller?.TryPauseServiceAsync(timeout, token) ?? TaskUtilities.False;
+            return controller is not null && await controller.TryPauseServiceAsync(timeout, token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

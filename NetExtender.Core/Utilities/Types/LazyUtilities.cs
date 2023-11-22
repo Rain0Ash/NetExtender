@@ -51,6 +51,54 @@ namespace NetExtender.Utilities.Types
 
             return source.Value;
         }
+        
+        public static Boolean TryInitialize<T>(this Lazy<T> source)
+        {
+            return TryInitialize(source, out _);
+        }
+
+        public static Boolean TryInitialize<T>(this Lazy<T> source, [MaybeNullWhen(false)] out T result)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            try
+            {
+                result = source.Value;
+                return true;
+            }
+            catch (Exception)
+            {
+                result = default;
+                return false;
+            }
+        }
+
+        public static Boolean TryInitialize<T>(this ILazy<T> source)
+        {
+            return TryInitialize(source, out _);
+        }
+
+        public static Boolean TryInitialize<T>(this ILazy<T> source, [MaybeNullWhen(false)] out T result)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            try
+            {
+                result = source.Value;
+                return true;
+            }
+            catch (Exception)
+            {
+                result = default;
+                return false;
+            }
+        }
 
         public static Lazy<T> Force<T>(this Lazy<T> source)
         {

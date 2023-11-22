@@ -4,6 +4,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using NetExtender.Domains.AspNetCore.Service.Applications;
 using NetExtender.Domains.AspNetCore.Service.Builder;
@@ -67,6 +68,69 @@ namespace NetExtender.Domains.AspNetCore.Service.View
     }
 
     public abstract class AspNetCoreWindowsServiceView : ContextApplicationView<IHost, AspNetCoreWindowsServiceApplication>
+    {
+        protected override ApplicationShutdownMode? ShutdownMode
+        {
+            get
+            {
+                return ApplicationShutdownMode.OnExplicitShutdown;
+            }
+        }
+    }
+    
+    public class AspNetCoreWindowsServiceWebView<T> : AspNetCoreWindowsServiceWebView<T, AspNetCoreWindowsServiceWebBuilder<T>> where T : class, IWebHost, new()
+    {
+        public AspNetCoreWindowsServiceWebView()
+            : base(new T())
+        {
+        }
+
+        public AspNetCoreWindowsServiceWebView(T host)
+            : base(host)
+        {
+        }
+    }
+    
+    public class AspNetCoreWindowsServiceWebView<T, TBuilder> : AspNetCoreWindowsServiceWebView where T : class, IWebHost where TBuilder : IApplicationBuilder<T>, new()
+    {
+        protected T? Internal { get; set; }
+
+        protected sealed override IWebHost? Context
+        {
+            get
+            {
+                return Internal;
+            }
+            set
+            {
+                Internal = value is not null ? value as T ?? throw new InitializeException($"{nameof(value)} is not {typeof(T).Name}") : null;
+            }
+        }
+
+        protected TBuilder? Builder { get; }
+
+        public AspNetCoreWindowsServiceWebView()
+        {
+            Builder = new TBuilder();
+        }
+
+        public AspNetCoreWindowsServiceWebView(T host)
+        {
+            Context = host ?? throw new ArgumentNullException(nameof(host));
+        }
+        
+        public AspNetCoreWindowsServiceWebView(TBuilder builder)
+        {
+            Builder = builder ?? throw new ArgumentNullException(nameof(builder));
+        }
+
+        protected override Task<IApplicationView> RunAsync(CancellationToken token)
+        {
+            return RunAsync(Context ?? Builder?.Build(Arguments), token);
+        }
+    }
+
+    public abstract class AspNetCoreWindowsServiceWebView : ContextApplicationView<IWebHost, AspNetCoreWindowsServiceWebApplication>
     {
         protected override ApplicationShutdownMode? ShutdownMode
         {

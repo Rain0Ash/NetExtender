@@ -37,7 +37,17 @@ namespace NetExtender.Configuration.Behavior
 
         protected static String ValidatePathOrGetDefault(String? path, String? extension)
         {
-            return !String.IsNullOrWhiteSpace(path) && PathUtilities.IsValidFilePath(path) ? path : GetDefaultPath(extension);
+            if (String.IsNullOrWhiteSpace(path))
+            {
+                return GetDefaultPath(extension);
+            }
+
+            if (!PathUtilities.IsValidFilePath(path))
+            {
+                return GetDefaultPath(extension);
+            }
+
+            return !System.IO.Path.IsPathFullyQualified(path) ? System.IO.Path.Combine(Environment.CurrentDirectory, path) : path;
         }
 
         public event ConfigurationChangedEventHandler? Changed;

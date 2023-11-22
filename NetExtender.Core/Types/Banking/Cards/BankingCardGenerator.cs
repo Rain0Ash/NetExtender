@@ -2,9 +2,9 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
-using NetExtender.Initializer.Types.Banking.Cards.Interfaces;
+using NetExtender.Types.Banking.Cards.Interfaces;
 
-namespace NetExtender.Initializer.Types.Banking.Cards
+namespace NetExtender.Types.Banking.Cards
 {
     public class BankingCardGenerator : IBankingCardGenerator
     {
@@ -50,11 +50,6 @@ namespace NetExtender.Initializer.Types.Banking.Cards
             }
             
             return checksum % 10 != 0 ? Formatter.Format(number + (10 - checksum % 10)) : Formatter.Format(number + "0");
-        }
-
-        public String Generate()
-        {
-            throw new NotImplementedException();
         }
     }
 }

@@ -6,7 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace NetExtender.Initializer.Types.Tries
+namespace NetExtender.Types.Tries
 {
     public class StringTrieSet : ICollection<String>
     {
@@ -45,6 +45,11 @@ namespace NetExtender.Initializer.Types.Tries
                 throw new ArgumentNullException(nameof(prefix));
             }
 
+            return Get(prefix.AsSpan());
+        }
+        
+        public IEnumerable<String> Get(ReadOnlySpan<Char> prefix)
+        {
             return Trie.Get(prefix).Select(entry => new String(entry.ToArray()));
         }
 
@@ -55,6 +60,11 @@ namespace NetExtender.Initializer.Types.Tries
                 throw new ArgumentNullException(nameof(item));
             }
 
+            return Contains(item.AsSpan());
+        }
+
+        public Boolean Contains(ReadOnlySpan<Char> item)
+        {
             return Trie.Contains(item);
         }
 
@@ -65,6 +75,11 @@ namespace NetExtender.Initializer.Types.Tries
                 throw new ArgumentNullException(nameof(item));
             }
 
+            Add(item.AsSpan());
+        }
+
+        public void Add(ReadOnlySpan<Char> item)
+        {
             Trie.Add(item);
         }
 
@@ -78,6 +93,14 @@ namespace NetExtender.Initializer.Types.Tries
             Trie.AddRange(item);
         }
 
+        public void AddRange(ReadOnlySpan<String> item)
+        {
+            foreach (String value in item)
+            {
+                Trie.Add(value.AsSpan());
+            }
+        }
+
         public Boolean Remove(String item)
         {
             if (item is null)
@@ -85,6 +108,11 @@ namespace NetExtender.Initializer.Types.Tries
                 throw new ArgumentNullException(nameof(item));
             }
 
+            return Remove(item.AsSpan());
+        }
+
+        public Boolean Remove(ReadOnlySpan<Char> item)
+        {
             return Trie.Remove(item);
         }
 

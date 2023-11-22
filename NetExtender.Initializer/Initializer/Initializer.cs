@@ -3,6 +3,8 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using NetExtender.Types.Exceptions;
 
@@ -10,7 +12,7 @@ namespace NetExtender.Initializer
 {
     public abstract class Initializer
     {
-        protected static Task Stop
+        private static Task Stop
         {
             get
             {
@@ -18,7 +20,15 @@ namespace NetExtender.Initializer
             }
         }
 
-        protected static Task<Int32> Zero
+        protected static Awaiter<Int32> Negative
+        {
+            get
+            {
+                return Stop.ContinueWith(_ => -1);
+            }
+        }
+
+        protected static Awaiter<Int32> Zero
         {
             get
             {
@@ -26,11 +36,107 @@ namespace NetExtender.Initializer
             }
         }
 
-        protected static Task<Int32> One
+        protected static Awaiter<Int32> One
         {
             get
             {
                 return Stop.ContinueWith(_ => 1);
+            }
+        }
+
+        protected static Awaiter<Int32> Two
+        {
+            get
+            {
+                return Stop.ContinueWith(_ => 2);
+            }
+        }
+        
+        protected static Awaiter<Int32> Three
+        {
+            get
+            {
+                return Stop.ContinueWith(_ => 3);
+            }
+        }
+
+        protected static Awaiter<Int32> Four
+        {
+            get
+            {
+                return Stop.ContinueWith(_ => 4);
+            }
+        }
+
+        protected static Awaiter<Int32> Five
+        {
+            get
+            {
+                return Stop.ContinueWith(_ => 5);
+            }
+        }
+
+        protected static Awaiter<Int32> Six
+        {
+            get
+            {
+                return Stop.ContinueWith(_ => 6);
+            }
+        }
+
+        protected static Awaiter<Int32> Seven
+        {
+            get
+            {
+                return Stop.ContinueWith(_ => 7);
+            }
+        }
+
+        protected static Awaiter<Int32> Eight
+        {
+            get
+            {
+                return Stop.ContinueWith(_ => 8);
+            }
+        }
+
+        protected static Awaiter<Int32> Nine
+        {
+            get
+            {
+                return Stop.ContinueWith(_ => 9);
+            }
+        }
+
+        protected static Awaiter<Int32> Ten
+        {
+            get
+            {
+                return Stop.ContinueWith(_ => 10);
+            }
+        }
+
+        protected static Awaiter<Int32> Eleven
+        {
+            get
+            {
+                return Stop.ContinueWith(_ => 11);
+            }
+        }
+
+        protected static Awaiter<Int32> Twelve
+        {
+            get
+            {
+                return Stop.ContinueWith(_ => 12);
+            }
+        }
+
+        protected static Awaiter<Int32> Random
+        {
+            get
+            {
+                return Stop.ContinueWith(_ => System.Random.Shared.Next());
             }
         }
 
@@ -110,15 +216,15 @@ namespace NetExtender.Initializer
             T handler = new T();
             UnhandledException(handler, sender, exception, ref action);
         }
-        
-        protected virtual void UnhandledException(ExceptionHandler handler, Object? sender, Exception? exception, ref InitializerUnhandledExceptionState action)
+
+        private void UnhandledException(ExceptionHandler handler, Object? sender, Exception? exception, ref InitializerUnhandledExceptionState action)
         {
             if (handler is null)
             {
                 throw new ArgumentNullException(nameof(handler));
             }
 
-            handler.Handle(sender, exception, ref action);
+            handler.Handle(this, sender, exception, ref action);
         }
 
         protected virtual void ShutdownException(Object? sender, ShutdownException exception, ref InitializerUnhandledExceptionState action)
@@ -162,30 +268,42 @@ namespace NetExtender.Initializer
         }
 
         // ReSharper disable once AsyncConverter.AsyncMethodNamingHighlighting
-        protected static Task<Int32> Exit()
+        protected static Awaiter<Int32> Exit()
         {
             return Zero;
         }
 
         // ReSharper disable once AsyncConverter.AsyncMethodNamingHighlighting
-        protected static Task<Int32> Exit(Int32 code)
+        protected static Awaiter<Int32> Exit(Int32 code)
         {
             return code switch
             {
+                -1 => Negative,
                 0 => Zero,
                 1 => One,
-                _ => Task.Delay(TimeSpan.FromMilliseconds(100)).ContinueWith(_ => code)
+                2 => Two,
+                3 => Three,
+                4 => Four,
+                5 => Five,
+                6 => Six,
+                7 => Seven,
+                8 => Eight,
+                9 => Nine,
+                10 => Ten,
+                11 => Eleven,
+                12 => Twelve,
+                _ => Stop.ContinueWith(_ => code)
             };
         }
 
         // ReSharper disable once AsyncConverter.AsyncMethodNamingHighlighting
-        protected static Task<Int32> Exit(TimeSpan delay)
+        protected static Awaiter<Int32> Exit(TimeSpan delay)
         {
             return Exit(delay, 0);
         }
 
         // ReSharper disable once AsyncConverter.AsyncMethodNamingHighlighting
-        protected static Task<Int32> Exit(TimeSpan delay, Int32 code)
+        protected static Awaiter<Int32> Exit(TimeSpan delay, Int32 code)
         {
             return Task.Delay(delay).ContinueWith(_ => code);
         }
@@ -196,8 +314,157 @@ namespace NetExtender.Initializer
         
         protected class ExceptionHandler
         {
+            private Boolean DynamicHandle(Initializer initializer, Object? sender, Exception? exception, ref InitializerUnhandledExceptionState action)
+            {
+                if (initializer is null)
+                {
+                    throw new ArgumentNullException(nameof(initializer));
+                }
+
+                Type current = GetType();
+                MethodInfo? handler = null;
+                Type? type = initializer.GetType();
+                while (type is not null && type != typeof(Initializer).BaseType)
+                {
+                    const BindingFlags binding = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+                    handler = current.GetMethod(nameof(Handle), binding, null, new[] { type, typeof(Object), typeof(Exception), typeof(InitializerUnhandledExceptionState).MakeByRefType() }, null);
+
+                    if (handler is not null)
+                    {
+                        break;
+                    }
+
+                    type = type.BaseType;
+                }
+                
+                if (handler is null)
+                {
+                    return false;
+                }
+
+                Object?[] parameters = { initializer, sender, exception, action };
+                handler.Invoke(this, parameters);
+
+                action = (InitializerUnhandledExceptionState) (parameters[3] ?? action);
+                return true;
+            }
+
+            internal Boolean Handle(Initializer initializer, Object? sender, Exception? exception, ref InitializerUnhandledExceptionState action)
+            {
+                if (initializer is null)
+                {
+                    throw new ArgumentNullException(nameof(initializer));
+                }
+
+                if (DynamicHandle(initializer, sender, exception, ref action))
+                {
+                    return true;
+                }
+                
+                Handle(sender, exception, ref action);
+                return false;
+            }
+
             public virtual void Handle(Object? sender, Exception? exception, ref InitializerUnhandledExceptionState action)
             {
+                Console.WriteLine(exception);
+            }
+        }
+        
+        public readonly struct Awaiter<T> : IEquatable<Awaiter<T>>
+        {
+            public static implicit operator Awaiter<T>(Task<T>? value)
+            {
+                return value is not null ? new Awaiter<T>(value) : default;
+            }
+            
+            public static implicit operator Task<T>(Awaiter<T> value)
+            {
+                return value.Internal ?? Task.FromResult(default(T)!);
+            }
+            
+            public static Boolean operator ==(Awaiter<T> first, Awaiter<T> second)
+            {
+                return first.Equals(second);
+            }
+
+            public static Boolean operator !=(Awaiter<T> first, Awaiter<T> second)
+            {
+                return !(first == second);
+            }
+            
+            private Task<T>? Internal { get; }
+
+            public Boolean IsCompleted
+            {
+                get
+                {
+                    return Internal?.IsCompleted ?? true;
+                }
+            }
+
+            public Boolean IsCompletedSuccessfully
+            {
+                get
+                {
+                    return Internal?.IsCompletedSuccessfully ?? true;
+                }
+            }
+
+            public Boolean IsCanceled
+            {
+                get
+                {
+                    return Internal?.IsCanceled ?? false;
+                }
+            }
+
+            public Boolean IsFaulted
+            {
+                get
+                {
+                    return Internal?.IsFaulted ?? false;
+                }
+            }
+            
+            public Awaiter(Task<T> value)
+            {
+                Internal = value ?? throw new ArgumentNullException(nameof(value));
+            }
+            
+            public TaskAwaiter<T> GetAwaiter()
+            {
+                return Internal?.GetAwaiter() ?? Task.FromResult(default(T)!).GetAwaiter();
+            }
+
+            public ConfiguredTaskAwaitable<T> ConfigureAwait(Boolean continueOnCapturedContext)
+            {
+                return Internal?.ConfigureAwait(continueOnCapturedContext) ?? Task.FromResult(default(T)!).ConfigureAwait(continueOnCapturedContext);
+            }
+        
+            public override Int32 GetHashCode()
+            {
+                return Internal?.GetHashCode() ?? 0;
+            }
+
+            public override Boolean Equals(Object? obj)
+            {
+                return obj switch
+                {
+                    Awaiter<T> result => Equals(result),
+                    Task<T> result => Equals(result),
+                    _ => false
+                };
+            }
+
+            public Boolean Equals(Task<T>? other)
+            {
+                return Internal?.Equals(other) ?? Internal == other;
+            }
+
+            public Boolean Equals(Awaiter<T> other)
+            {
+                return Internal?.Equals(other.Internal) ?? Internal == other.Internal;
             }
         }
     }

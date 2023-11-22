@@ -4,10 +4,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using NetExtender.Initializer.Types.Banking.Cards.Interfaces;
+using NetExtender.Types.Banking.Cards.Interfaces;
 using NetExtender.Utilities.Types;
 
-namespace NetExtender.Initializer.Types.Banking.Cards
+namespace NetExtender.Types.Banking.Cards
 {
     public class BankingCardFormatter : IBankingCardFormatter
     {
