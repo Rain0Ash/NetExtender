@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using NetExtender.Utilities.Network.Formatters;
@@ -106,7 +107,7 @@ namespace NetExtender.Types.Network.Formatters
             throw new InvalidOperationException($"The '{GetType()}' serializer cannot serialize the type '{type}'.");
         }
 
-        public override Task<Object?> ReadFromStreamAsync(Type type, Stream stream, HttpContent content, ILogger? logger)
+        public override Task<Object?> ReadFromStreamAsync(Type type, Stream stream, HttpContent content, ILogger? logger, CancellationToken token)
         {
             if (type is null)
             {
@@ -117,6 +118,13 @@ namespace NetExtender.Types.Network.Formatters
             {
                 throw new ArgumentNullException(nameof(stream));
             }
+
+            if (content is null)
+            {
+                throw new ArgumentNullException(nameof(content));
+            }
+
+            token.ThrowIfCancellationRequested();
 
             try
             {

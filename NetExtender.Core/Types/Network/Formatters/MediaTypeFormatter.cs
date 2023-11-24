@@ -120,7 +120,7 @@ namespace NetExtender.Types.Network.Formatters
             return true;
         }
 
-        public virtual Task<Object?> ReadFromStreamAsync(Type type, Stream stream, HttpContent content, ILogger? logger)
+        public Task<Object?> ReadFromStreamAsync(Type type, Stream stream, HttpContent content, ILogger? logger)
         {
             return ReadFromStreamAsync(type, stream, content, logger, CancellationToken.None);
         }
@@ -145,7 +145,7 @@ namespace NetExtender.Types.Network.Formatters
             throw new NotSupportedException($"The media type formatter of type '{GetType()}' does not support reading because it does not implement the {nameof(ReadFromStreamAsync)} method.");
         }
 
-        public virtual Task WriteToStreamAsync(Type type, Object? value, Stream stream, HttpContent content, TransportContext? context)
+        public Task WriteToStreamAsync(Type type, Object? value, Stream stream, HttpContent content, TransportContext? context)
         {
             return WriteToStreamAsync(type, value, stream, content, context, CancellationToken.None);
         }

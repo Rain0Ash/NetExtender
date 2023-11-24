@@ -11,7 +11,6 @@ using NetExtender.Domains.WindowsPresentation.Builder;
 using NetExtender.Domains.WindowsPresentation.View;
 using NetExtender.Initializer;
 using NetExtender.Types.Exceptions;
-using NetExtender.Utilities.IO;
 
 namespace NetExtender.Domains.WindowsPresentation.Initializer
 {
@@ -21,8 +20,8 @@ namespace NetExtender.Domains.WindowsPresentation.Initializer
         {
             Custom,
             Console,
-            Message,
-            MessageConsole
+            MessageBox,
+            MessageBoxConsole
         }
 
         protected virtual ApplicationExceptionHandleType ExceptionHandleType
@@ -90,12 +89,12 @@ namespace NetExtender.Domains.WindowsPresentation.Initializer
                     case ApplicationExceptionHandleType.Console:
                         Console(sender, exception, ref action);
                         return;
-                    case ApplicationExceptionHandleType.Message:
-                        Message(sender, exception, ref action);
+                    case ApplicationExceptionHandleType.MessageBox:
+                        MessageBox(sender, exception, ref action);
                         return;
-                    case ApplicationExceptionHandleType.MessageConsole:
+                    case ApplicationExceptionHandleType.MessageBoxConsole:
                         Console(sender, exception, ref action);
-                        goto case ApplicationExceptionHandleType.Message;
+                        goto case ApplicationExceptionHandleType.MessageBox;
                     default:
                         throw new EnumUndefinedOrNotSupportedException<ApplicationExceptionHandleType>(initializer.ExceptionHandleType, nameof(ExceptionHandleType), null);
                 }
@@ -103,17 +102,17 @@ namespace NetExtender.Domains.WindowsPresentation.Initializer
             
             protected virtual void Console(Object? sender, Exception? exception, ref InitializerUnhandledExceptionState action)
             {
-                Text(sender, exception, action).ToConsole();
+                System.Console.WriteLine(Text(sender, exception, action));
             }
 
-            protected virtual void Message(Object? sender, Exception? exception, ref InitializerUnhandledExceptionState action)
+            protected virtual void MessageBox(Object? sender, Exception? exception, ref InitializerUnhandledExceptionState action)
             {
-                MessageBox.Show(Text(sender, exception, action), Title, Button, Icon, Result, Options);
+                System.Windows.MessageBox.Show(Text(sender, exception, action), Title, Button, Icon, Result, Options);
             }
 
             public override void Handle(Object? sender, Exception? exception, ref InitializerUnhandledExceptionState action)
             {
-                Message(sender, exception, ref action);
+                MessageBox(sender, exception, ref action);
             }
 
             [return: NotNullIfNotNull("exception")]

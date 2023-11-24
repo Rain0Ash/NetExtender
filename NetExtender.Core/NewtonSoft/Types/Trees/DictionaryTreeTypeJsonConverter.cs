@@ -2,6 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Reflection;
 using NetExtender.Types.Trees;
@@ -18,6 +19,8 @@ namespace NetExtender.NewtonSoft.Types.Trees
         private static Type DictionaryTreeNodeTypeDifinition { get; } = typeof(DictionaryTreeNode<,>);
         private static Type EqualityComparerTypeDifinition { get; } = typeof(EqualityComparer<>);
         private static Type IEqualityComparerTypeDifinition { get; } = typeof(IEqualityComparer<>);
+        
+        private static ConcurrentDictionary<Type, Type> Cache { get; } = new ConcurrentDictionary<Type, Type>();
 
         public override Boolean CanWrite
         {
@@ -27,60 +30,90 @@ namespace NetExtender.NewtonSoft.Types.Trees
             }
         }
 
-        public override Boolean CanConvert(Type objectType)
+        public override Boolean CanConvert(Type? objectType)
         {
             return false;
         }
 
-        private static Type MakeGenericType(Type objectType)
+        private static Type MakeGenericType(Type type)
         {
-            try
+            if (type is null)
             {
-                if (!objectType.IsGenericType)
-                {
-                    return objectType;
-                }
-
-                Type definition = objectType.GetGenericTypeDefinition();
-
-                if (definition == IEqualityComparerTypeDifinition)
-                {
-                    return EqualityComparerTypeDifinition.MakeGenericType(objectType.GetGenericArguments());
-                }
-
-                if (definition != DictionaryTreeTypeDifinition && definition != IDictionaryTreeTypeDifinition)
-                {
-                    return objectType;
-                }
-
-                Type[] generic = objectType.GetGenericArguments();
-                return DictionaryTypeDifinition.MakeGenericType(generic[0], DictionaryTreeNodeTypeDifinition.MakeGenericType(generic[0], generic[1]));
+                throw new ArgumentNullException(nameof(type));
             }
-            catch (Exception exception)
+
+            static Type Internal(Type type)
             {
-                throw new JsonSerializationException($"Unable to construct concrete type from generic {objectType}", exception);
+                if (type is null)
+                {
+                    throw new ArgumentNullException(nameof(type));
+                }
+
+                try
+                {
+                    if (!type.IsGenericType)
+                    {
+                        return type;
+                    }
+
+                    Type definition = type.GetGenericTypeDefinition();
+
+                    if (definition == IEqualityComparerTypeDifinition)
+                    {
+                        return EqualityComparerTypeDifinition.MakeGenericType(type.GetGenericArguments());
+                    }
+
+                    if (definition != DictionaryTreeTypeDifinition && definition != IDictionaryTreeTypeDifinition)
+                    {
+                        return type;
+                    }
+
+                    Type[] generic = type.GetGenericArguments();
+                    return DictionaryTypeDifinition.MakeGenericType(generic[0], DictionaryTreeNodeTypeDifinition.MakeGenericType(generic[0], generic[1]));
+                }
+                catch (Exception exception)
+                {
+                    throw new JsonSerializationException($"Unable to construct type from generic {type}", exception);
+                }
             }
+
+            return Cache.GetOrAdd(type, Internal);
         }
 
-        public override Object? ReadJson(JsonReader reader, Type objectType, Object? existingValue, JsonSerializer serializer)
+        public override Object? ReadJson(JsonReader reader, Type type, Object? existingValue, JsonSerializer serializer)
         {
-            Object? obj = serializer.Deserialize(reader, MakeGenericType(objectType));
+            if (reader is null)
+            {
+                throw new ArgumentNullException(nameof(reader));
+            }
 
-            if (obj is null)
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            if (serializer is null)
+            {
+                throw new ArgumentNullException(nameof(serializer));
+            }
+            
+            Object? @object = serializer.Deserialize(reader, MakeGenericType(type));
+
+            if (@object is null)
             {
                 return null;
             }
 
-            Type type = obj.GetType();
+            type = @object.GetType();
 
             if (!type.IsGenericType)
             {
-                return obj;
+                return @object;
             }
 
             if (type.GetGenericTypeDefinition() != DictionaryTypeDifinition)
             {
-                return obj;
+                return @object;
             }
 
             Type[] generic = type.GetGenericArguments()[1].GetGenericArguments();
@@ -92,7 +125,7 @@ namespace NetExtender.NewtonSoft.Types.Trees
                 IEqualityComparerTypeDifinition.MakeGenericType(generic[0])
             });
 
-            return method?.Invoke(new[] { obj, null });
+            return method?.Invoke(new[] { @object, null });
         }
 
         public override void WriteJson(JsonWriter writer, Object? value, JsonSerializer serializer)

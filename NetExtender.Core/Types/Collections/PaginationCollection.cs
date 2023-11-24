@@ -12,8 +12,8 @@ namespace NetExtender.Types.Collections
     {
         public TCollection Source { get; }
         
-        protected PaginationCollection(TCollection source, Int32 page, Int32 size, Int32 count)
-            : base(page, size, count)
+        protected PaginationCollection(TCollection source, Int32 index, Int32 size, Int32 count)
+            : base(index, size, count)
         {
             Source = source ?? throw new ArgumentNullException(nameof(source));
         }
@@ -21,8 +21,8 @@ namespace NetExtender.Types.Collections
     
     public abstract class PaginationCollection<T> : PaginationCollection, IPaginationEnumerable<T>
     {
-        protected PaginationCollection(Int32 page, Int32 size, Int32 count)
-            : base(page, size, count)
+        protected PaginationCollection(Int32 index, Int32 size, Int32 count)
+            : base(index, size, count)
         {
         }
 
@@ -36,7 +36,7 @@ namespace NetExtender.Types.Collections
 
     public abstract class PaginationCollection : IPaginationEnumerable
     {
-        public Int32 Page { get; }
+        public Int32 Index { get; }
         public Int32 Total { get; }
         public Int32 Items { get; }
         public Int32 Size { get; }
@@ -45,7 +45,7 @@ namespace NetExtender.Types.Collections
         {
             get
             {
-                return Page > 1;
+                return Index > 1;
             }
         }
 
@@ -53,13 +53,13 @@ namespace NetExtender.Types.Collections
         {
             get
             {
-                return Page < Total;
+                return Index < Total;
             }
         }
 
-        protected PaginationCollection(Int32 page, Int32 size, Int32 count)
+        protected PaginationCollection(Int32 index, Int32 size, Int32 count)
         {
-            Page = page >= 1 ? page : throw new ArgumentOutOfRangeException(nameof(page), page, null);
+            Index = index >= 1 ? index : throw new ArgumentOutOfRangeException(nameof(index), index, null);
             Size = size > 0 ? size : throw new ArgumentOutOfRangeException(nameof(size), size, null);
             Items = count >= 0 ? count : throw new ArgumentOutOfRangeException(nameof(count), count, null);
             Total = Math.Abs((Int32) Math.Ceiling(Items / (Double) Size));

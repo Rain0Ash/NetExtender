@@ -10,8 +10,8 @@ namespace NetExtender.Types.Lists
 {
     public class PaginationListWrapper<T, TCollection> : PaginationCollectionWrapper<T, TCollection>, IPaginationList<T, TCollection> where TCollection : class, IList<T>
     {
-        public PaginationListWrapper(TCollection source, Int32 page, Int32 size, Int32 count)
-            : base(source, page, size, count)
+        public PaginationListWrapper(TCollection source, Int32 index, Int32 size, Int32 count)
+            : base(source, index, size, count)
         {
         }
 

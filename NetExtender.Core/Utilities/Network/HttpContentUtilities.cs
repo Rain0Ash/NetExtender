@@ -65,9 +65,33 @@ namespace NetExtender.Utilities.Network
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Task<Object?> ReadAsAsync(this HttpContent content, Type type, MediaTypeFormatter formatter)
+        {
+            return ReadAsAsync(content, type, formatter, CancellationToken.None);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Task<Object?> ReadAsAsync(this HttpContent content, Type type, params MediaTypeFormatter[] formatters)
+        {
+            return ReadAsAsync(content, type, (IEnumerable<MediaTypeFormatter>) formatters);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<Object?> ReadAsAsync(this HttpContent content, Type type, IEnumerable<MediaTypeFormatter> formatters)
         {
             return ReadAsAsync(content, type, formatters, CancellationToken.None);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Task<Object?> ReadAsAsync(this HttpContent content, Type type, MediaTypeFormatter formatter, CancellationToken token)
+        {
+            return ReadAsAsync(content, type, formatter, null, token);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Task<Object?> ReadAsAsync(this HttpContent content, Type type, CancellationToken token, params MediaTypeFormatter[] formatters)
+        {
+            return ReadAsAsync(content, type, formatters, token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -75,11 +99,35 @@ namespace NetExtender.Utilities.Network
         {
             return ReadAsAsync<Object>(content, type, formatters, null, token);
         }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Task<Object?> ReadAsAsync(this HttpContent content, Type type, MediaTypeFormatter formatter, ILogger? logger)
+        {
+            return ReadAsAsync(content, type, formatter, logger, CancellationToken.None);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Task<Object?> ReadAsAsync(this HttpContent content, Type type, ILogger? logger, params MediaTypeFormatter[] formatters)
+        {
+            return ReadAsAsync(content, type, formatters, logger);
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<Object?> ReadAsAsync(this HttpContent content, Type type, IEnumerable<MediaTypeFormatter> formatters, ILogger? logger)
         {
             return ReadAsAsync(content, type, formatters, logger, CancellationToken.None);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Task<Object?> ReadAsAsync(this HttpContent content, Type type, MediaTypeFormatter formatter, ILogger? logger, CancellationToken token)
+        {
+            return ReadAsAsync<Object>(content, type, formatter, logger, token);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Task<Object?> ReadAsAsync(this HttpContent content, Type type, ILogger? logger, CancellationToken token, params MediaTypeFormatter[] formatters)
+        {
+            return ReadAsAsync(content, type, formatters, logger, token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -101,15 +149,51 @@ namespace NetExtender.Utilities.Network
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Task<T?> ReadAsAsync<T>(this HttpContent content, MediaTypeFormatter formatter)
+        {
+            return ReadAsAsync<T>(content, formatter, CancellationToken.None);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Task<T?> ReadAsAsync<T>(this HttpContent content, params MediaTypeFormatter[] formatters)
+        {
+            return ReadAsAsync<T>(content, (IEnumerable<MediaTypeFormatter>) formatters);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<T?> ReadAsAsync<T>(this HttpContent content, IEnumerable<MediaTypeFormatter> formatters)
         {
-            return ReadAsAsync<T>(content, formatters, null, CancellationToken.None);
+            return ReadAsAsync<T>(content, formatters, CancellationToken.None);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Task<T?> ReadAsAsync<T>(this HttpContent content, MediaTypeFormatter formatter, CancellationToken token)
+        {
+            return ReadAsAsync<T>(content, formatter, null, token);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Task<T?> ReadAsAsync<T>(this HttpContent content, CancellationToken token, params MediaTypeFormatter[] formatters)
+        {
+            return ReadAsAsync<T>(content, formatters, token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<T?> ReadAsAsync<T>(this HttpContent content, IEnumerable<MediaTypeFormatter> formatters, CancellationToken token)
         {
-            return ReadAsAsync<T>(content, typeof(T), formatters, null, token);
+            return ReadAsAsync<T>(content, formatters, null, token);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Task<T?> ReadAsAsync<T>(this HttpContent content, MediaTypeFormatter formatter, ILogger? logger)
+        {
+            return ReadAsAsync<T>(content, formatter, logger, CancellationToken.None);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Task<T?> ReadAsAsync<T>(this HttpContent content, ILogger? logger, params MediaTypeFormatter[] formatters)
+        {
+            return ReadAsAsync<T>(content, formatters, logger);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -119,15 +203,41 @@ namespace NetExtender.Utilities.Network
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Task<T?> ReadAsAsync<T>(this HttpContent content, MediaTypeFormatter formatter, ILogger? logger, CancellationToken token)
+        {
+            return ReadAsAsync<T>(content, typeof(T), formatter, logger, token);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Task<T?> ReadAsAsync<T>(this HttpContent content, ILogger? logger, CancellationToken token, params MediaTypeFormatter[] formatters)
+        {
+            return ReadAsAsync<T>(content, formatters, logger, token);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<T?> ReadAsAsync<T>(this HttpContent content, IEnumerable<MediaTypeFormatter> formatters, ILogger? logger, CancellationToken token)
         {
             return ReadAsAsync<T>(content, typeof(T), formatters, logger, token);
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static Task<T?> ReadAsAsync<T>(HttpContent content, Type type, IEnumerable<MediaTypeFormatter> formatters, ILogger? logger)
+        private static Task<T?> ReadAsAsync<T>(HttpContent content, Type type, MediaTypeFormatter formatter, ILogger? logger, CancellationToken token)
         {
-            return ReadAsAsync<T>(content, type, formatters, logger, CancellationToken.None);
+            if (content is null)
+            {
+                throw new ArgumentNullException(nameof(content));
+            }
+
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            if (formatter is null)
+            {
+                throw new ArgumentNullException(nameof(formatter));
+            }
+
+            return ReadAsAsync<T>(content, type, new MediaTypeFormatterCollection(formatter), logger, token);
         }
 
         private static Task<T?> ReadAsAsync<T>(HttpContent content, Type type, IEnumerable<MediaTypeFormatter> formatters, ILogger? logger, CancellationToken token)
@@ -153,13 +263,14 @@ namespace NetExtender.Utilities.Network
             }
             
             MediaTypeHeaderValue mediatype = content.Headers.ContentType ?? MediaTypeFormatterUtilities.ApplicationOctetStreamMediaType;
-            MediaTypeFormatter? reader = new MediaTypeFormatterCollection(formatters).FindReader(type, mediatype);
+            
+            MediaTypeFormatter? reader = (formatters as MediaTypeFormatterCollection ?? new MediaTypeFormatterCollection(formatters)).FindReader(type, mediatype);
             if (reader is not null)
             {
                 return ReadAsAsyncCore<T>(content, type, reader, logger, token);
             }
 
-            if (content.Headers.ContentLength == 0)
+            if (content.Headers.ContentLength <= 0)
             {
                 return Task.FromResult((T?) ReflectionUtilities.Default(type));
             }

@@ -3,6 +3,10 @@
 
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using NetExtender.NewtonSoft.Utilities;
@@ -23,6 +27,7 @@ namespace NetExtender.NewtonSoft.Types.Enums
             public Type Underlying { get; }
             public Func<Object, Object> GetId { get; }
             public Func<Object, String> GetTitle { get; }
+            public ImmutableArray<KeyValuePair<String, Func<Object, Object>>> Others { get; }
             public CreateMethod Create { get; }
             public TryParseMethod TryParse { get; }
 
@@ -38,10 +43,22 @@ namespace NetExtender.NewtonSoft.Types.Enums
                 }
 
                 Underlying = arguments[0];
-                PropertyInfo id = type.GetProperty("Id") ?? throw new InvalidOperationException($"Type '{type}' doesn't contains property 'Id'.");
-                PropertyInfo title = type.GetProperty("Title") ?? throw new InvalidOperationException($"Type '{type}' doesn't contains property 'Title'.");
+                PropertyInfo id = type.GetProperty("Id", BindingFlags.Public | BindingFlags.Instance) ?? throw new InvalidOperationException($"Type '{type}' doesn't contains property 'Id'.");
+                PropertyInfo title = type.GetProperty("Title", BindingFlags.Public | BindingFlags.Instance) ?? throw new InvalidOperationException($"Type '{type}' doesn't contains property 'Title'.");
                 GetId = CreateGetExpression<Object>(type, id).Compile();
                 GetTitle = CreateGetExpression<String>(type, title).Compile();
+
+                Boolean IsProperty(PropertyInfo property)
+                {
+                    return property.CanRead && property != id && property != title && !property.HasAttribute<JsonIgnoreAttribute>();
+                }
+
+                KeyValuePair<String, Func<Object, Object>> Convert(PropertyInfo property)
+                {
+                    return new KeyValuePair<String, Func<Object, Object>>(property.Name, CreateGetExpression<Object>(type, property).Compile());
+                }
+                
+                Others = type.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy).Where(IsProperty).Select(Convert).ToImmutableArray();
                 Create = new CreateMethod(type);
                 TryParse = new TryParseMethod(type);
             }
@@ -63,6 +80,33 @@ namespace NetExtender.NewtonSoft.Types.Enums
                 MemberExpression access = Expression.Property(source, property);
                 UnaryExpression result = Expression.Convert(access, typeof(TValue));
                 return Expression.Lambda<Func<Object, TValue>>(result, value);
+            }
+            
+            public ImmutableArray<KeyValuePair<String, Func<Object, Object>>>.Enumerator GetEnumerator()
+            {
+                return Others.GetEnumerator();
+            }
+            
+            private static Boolean TryGetGenericArguments(Type type, [MaybeNullWhen(false)] out Type underlying, [MaybeNullWhen(false)] out Type @enum, [MaybeNullWhen(false)] out Type[] arguments)
+            {
+                if (type is null)
+                {
+                    throw new ArgumentNullException(nameof(type));
+                }
+                    
+                arguments = type.GetGenericArguments(typeof(Enum<,>)) ?? type.GetGenericArguments(typeof(Enum<>));
+
+                if (arguments is not null && arguments.Length > 0)
+                {
+                    underlying = arguments[0];
+                    @enum = arguments.Length > 1 ? arguments[1] : type;
+                    return true;
+                }
+
+                arguments = default;
+                underlying = default;
+                @enum = default;
+                return false;
             }
 
             public record CreateMethod
@@ -89,22 +133,35 @@ namespace NetExtender.NewtonSoft.Types.Enums
                         throw new ArgumentNullException(nameof(type));
                     }
 
-                    Type[]? arguments = type.GetGenericArguments(typeof(Enum<,>)) ?? type.GetGenericArguments(typeof(Enum<>));
-
-                    if (arguments is null || arguments.Length <= 0)
+                    if (!TryGetGenericArguments(type, out Type? underlying, out Type? @enum, out Type[]? _))
                     {
                         throw new ArgumentException($"Can't get generic arguments of '{type}'.", nameof(type));
                     }
-    
-                    Type underlying = arguments[0];
-                    Type @enum = arguments.Length > 1 ? arguments[1] : typeof(Enum<>).MakeGenericType(underlying);
 
-                    const BindingFlags binding = BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy;
-                    MethodInfo? method = @enum.GetMethod("Create", binding, new[] { underlying });
+                    static MethodInfo? GetMethod(Type type, Type underlying, Type @enum, params Type[] types)
+                    {
+                        if (type is null)
+                        {
+                            throw new ArgumentNullException(nameof(type));
+                        }
+
+                        const BindingFlags binding = BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy;
+                        Int32? generic = type.IsSuperclassOfRawGeneric(typeof(Enum<,>)) ? 0 : type.IsSuperclassOfRawGeneric(typeof(Enum<>)) ? 1 : null;
+
+                        return generic switch
+                        {
+                            null => null,
+                            0 => @enum.GetMethod("Create", 0, binding, types),
+                            1 => @enum.GetMethod("Create", 1, binding, types)?.MakeGenericMethod(type),
+                            _ => throw new NotSupportedException($"Type '{type}' with underlying '{underlying}' and enum type '{@enum}' is not supported for get method 'Create'.")
+                        };
+                    }
+
+                    MethodInfo? method = GetMethod(type, underlying, @enum, underlying);
                 
                     if (method is null)
                     {
-                        throw new InvalidOperationException($"Type '{@enum}' doesn't contain method 'Create'.");
+                        throw new InvalidOperationException($"Type '{@enum}' doesn't contain method 'Create({underlying.Name} value)'.");
                     }
                 
                     ParameterExpression value = Expression.Parameter(typeof(Enum), nameof(value));
@@ -113,11 +170,11 @@ namespace NetExtender.NewtonSoft.Types.Enums
                     UnaryExpression result = Expression.Convert(call, typeof(Object));
                     Expression<Func<Enum, Object>> enumlambda = Expression.Lambda<Func<Enum, Object>>(result, value);
                     
-                    method = @enum.GetMethod("Create", binding, new[] { underlying, typeof(String) });
+                    method = GetMethod(type, underlying, @enum, underlying, typeof(String));
                 
                     if (method is null)
                     {
-                        throw new InvalidOperationException($"Type '{@enum}' doesn't contain method 'Create'.");
+                        throw new InvalidOperationException($"Type '{@enum}' doesn't contain method 'Create({underlying.Name} value, {nameof(String)} title)'.");
                     }
                     
                     ParameterExpression title = Expression.Parameter(typeof(String), nameof(title));
@@ -151,20 +208,33 @@ namespace NetExtender.NewtonSoft.Types.Enums
                     {
                         throw new ArgumentNullException(nameof(type));
                     }
-
-                    Type[]? arguments = type.GetGenericArguments(typeof(Enum<,>)) ?? type.GetGenericArguments(typeof(Enum<>));
-
-                    if (arguments is null || arguments.Length <= 0)
+                    
+                    if (!TryGetGenericArguments(type, out Type? underlying, out Type? @enum, out Type[]? _))
                     {
                         throw new ArgumentException($"Can't get generic arguments of '{type}'.", nameof(type));
                     }
                     
-                    Type underlying = arguments[0];
-                    Type @enum = arguments.Length > 1 ? arguments[1] : typeof(Enum<>).MakeGenericType(underlying);
+                    static MethodInfo? GetMethod(Type type, Type underlying, Type @enum, params Type[] types)
+                    {
+                        if (type is null)
+                        {
+                            throw new ArgumentNullException(nameof(type));
+                        }
 
-                    const BindingFlags binding = BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy;
-                    Type generic = typeof(TInput) == typeof(String) ? typeof(String) : underlying;
-                    MethodInfo? method = type.GetMethod(nameof(System.Enum.TryParse), binding, new[] { generic, @enum.MakeByRefType() });
+                        const BindingFlags binding = BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy;
+                        Int32? generic = type.IsSuperclassOfRawGeneric(typeof(Enum<,>)) ? 0 : type.IsSuperclassOfRawGeneric(typeof(Enum<>)) ? 1 : null;
+
+                        return generic switch
+                        {
+                            null => null,
+                            0 => @enum.GetMethod(nameof(System.Enum.TryParse), 0, binding, types),
+                            1 => @enum.GetMethod(nameof(Enum.TryParse), binding, new []{ type }, types),
+                            _ => throw new NotSupportedException($"Type '{type}' with underlying '{underlying}' and enum type '{@enum}' is not supported for get method '{nameof(System.Enum.TryParse)}'.")
+                        };
+                    }
+
+                    underlying = typeof(TInput) == typeof(String) ? typeof(String) : underlying;
+                    MethodInfo? method = GetMethod(type, underlying, @enum, underlying, @enum.MakeByRefType());
 
                     if (method is null)
                     {
@@ -190,7 +260,7 @@ namespace NetExtender.NewtonSoft.Types.Enums
         
         public override Boolean CanConvert(Type objectType)
         {
-            return EnumPropertiesCache.ContainsKey(objectType) || ReflectionUtilities.IsSubclassOfRawGeneric(typeof(Enum<>), objectType);
+            return EnumPropertiesCache.ContainsKey(objectType) || typeof(Enum<>).IsSubclassOfRawGeneric(objectType);
         }
         
         private static EnumProperties Properties(Type objectType)
@@ -229,6 +299,13 @@ namespace NetExtender.NewtonSoft.Types.Enums
             writer.WriteValue(properties.GetId(value));
             writer.WritePropertyName(strategy.NamingStrategy("Title", false));
             writer.WriteValue(properties.GetTitle(value));
+
+            foreach ((String property, Func<Object, Object> getter) in properties)
+            {
+                writer.WritePropertyName(strategy.NamingStrategy(property, false));
+                writer.WriteValue(getter(value));
+            }
+            
             writer.WriteEndObject();
         }
 
@@ -237,6 +314,11 @@ namespace NetExtender.NewtonSoft.Types.Enums
             if (reader is null)
             {
                 throw new ArgumentNullException(nameof(reader));
+            }
+
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
             }
 
             if (serializer is null)

@@ -302,7 +302,7 @@ namespace NetExtender.Utilities.Network
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<HttpResponseMessage> PostAsJsonAsync<T>(this HttpClient client, String requestUri, JsonMediaTypeFormatter? formatter, T value)
+        public static Task<HttpResponseMessage> PostAsJsonAsync<T>(this HttpClient client, String requestUri, T value, JsonMediaTypeFormatter? formatter)
         {
             return PostAsJsonAsync(client, requestUri, value, formatter, CancellationToken.None);
         }
@@ -326,7 +326,7 @@ namespace NetExtender.Utilities.Network
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<HttpResponseMessage> PostAsJsonAsync<T>(this HttpClient client, Uri requestUri, JsonMediaTypeFormatter? formatter, T value)
+        public static Task<HttpResponseMessage> PostAsJsonAsync<T>(this HttpClient client, Uri requestUri, T value, JsonMediaTypeFormatter? formatter)
         {
             return PostAsJsonAsync(client, requestUri, value, formatter, CancellationToken.None);
         }
@@ -350,7 +350,7 @@ namespace NetExtender.Utilities.Network
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<HttpResponseMessage> PostAsXmlAsync<T>(this HttpClient client, String requestUri, XmlMediaTypeFormatter? formatter, T value)
+        public static Task<HttpResponseMessage> PostAsXmlAsync<T>(this HttpClient client, String requestUri, T value, XmlMediaTypeFormatter? formatter)
         {
             return PostAsXmlAsync(client, requestUri, value, formatter, CancellationToken.None);
         }
@@ -500,7 +500,7 @@ namespace NetExtender.Utilities.Network
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<HttpResponseMessage> PutAsJsonAsync<T>(this HttpClient client, String requestUri, JsonMediaTypeFormatter? formatter, T value)
+        public static Task<HttpResponseMessage> PutAsJsonAsync<T>(this HttpClient client, String requestUri, T value, JsonMediaTypeFormatter? formatter)
         {
             return PutAsJsonAsync(client, requestUri, value, formatter, CancellationToken.None);
         }
@@ -524,7 +524,7 @@ namespace NetExtender.Utilities.Network
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<HttpResponseMessage> PutAsJsonAsync<T>(this HttpClient client, Uri requestUri, JsonMediaTypeFormatter? formatter, T value)
+        public static Task<HttpResponseMessage> PutAsJsonAsync<T>(this HttpClient client, Uri requestUri, T value, JsonMediaTypeFormatter? formatter)
         {
             return PutAsJsonAsync(client, requestUri, value, formatter, CancellationToken.None);
         }
@@ -548,7 +548,7 @@ namespace NetExtender.Utilities.Network
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<HttpResponseMessage> PutAsXmlAsync<T>(this HttpClient client, String requestUri, XmlMediaTypeFormatter? formatter, T value)
+        public static Task<HttpResponseMessage> PutAsXmlAsync<T>(this HttpClient client, String requestUri, T value, XmlMediaTypeFormatter? formatter)
         {
             return PutAsXmlAsync(client, requestUri, value, formatter, CancellationToken.None);
         }
@@ -698,7 +698,7 @@ namespace NetExtender.Utilities.Network
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<HttpResponseMessage> PatchAsJsonAsync<T>(this HttpClient client, String requestUri, JsonMediaTypeFormatter? formatter, T value)
+        public static Task<HttpResponseMessage> PatchAsJsonAsync<T>(this HttpClient client, String requestUri, T value, JsonMediaTypeFormatter? formatter)
         {
             return PatchAsJsonAsync(client, requestUri, value, formatter, CancellationToken.None);
         }
@@ -722,7 +722,7 @@ namespace NetExtender.Utilities.Network
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<HttpResponseMessage> PatchAsJsonAsync<T>(this HttpClient client, Uri requestUri, JsonMediaTypeFormatter? formatter, T value)
+        public static Task<HttpResponseMessage> PatchAsJsonAsync<T>(this HttpClient client, Uri requestUri, T value, JsonMediaTypeFormatter? formatter)
         {
             return PatchAsJsonAsync(client, requestUri, value, formatter, CancellationToken.None);
         }
@@ -746,7 +746,7 @@ namespace NetExtender.Utilities.Network
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<HttpResponseMessage> PatchAsXmlAsync<T>(this HttpClient client, String requestUri, XmlMediaTypeFormatter? formatter, T value)
+        public static Task<HttpResponseMessage> PatchAsXmlAsync<T>(this HttpClient client, String requestUri, T value, XmlMediaTypeFormatter? formatter)
         {
             return PatchAsXmlAsync(client, requestUri, value, formatter, CancellationToken.None);
         }

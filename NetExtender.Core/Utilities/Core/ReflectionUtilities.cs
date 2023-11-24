@@ -687,6 +687,120 @@ namespace NetExtender.Utilities.Core
                 _ => throw new ArgumentException($"Member {info.GetType().Name} is not {nameof(FieldInfo)} or {nameof(PropertyInfo)}")
             };
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static MethodInfo? GetMethod(this Type type, String name, Int32 genericParameterCount, BindingFlags bindingAttr, Type[] types)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            if (name is null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
+            if (types is null)
+            {
+                throw new ArgumentNullException(nameof(types));
+            }
+
+            return type.GetMethod(name, genericParameterCount, bindingAttr, null, types, null);
+        }
+
+        private static IEnumerable<MethodInfo> Filter(this MethodInfo[] methods, String name, Type[] generics, Type[] types)
+        {
+            if (methods is null)
+            {
+                throw new ArgumentNullException(nameof(methods));
+            }
+
+            if (name is null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
+            if (generics is null)
+            {
+                throw new ArgumentNullException(nameof(generics));
+            }
+
+            if (types is null)
+            {
+                throw new ArgumentNullException(nameof(types));
+            }
+            
+            return methods.Where(info => info.Name == name && info.IsGenericMethod && info.GetGenericArguments().Length == generics.Length)
+                .Select(info => info.MakeGenericMethod(generics))
+                .Select(method => new KeyValuePair<MethodInfo, ParameterInfo[]>(method, method.GetParameters()))
+                .Where(pair => pair.Value.Length == types.Length && pair.Value.Select(parameter => parameter.ParameterType).SequenceEqual(types))
+                .Keys();
+        }
+        
+        public static MethodInfo? GetMethod(this Type type, String name, Type[] generics, Type[] types)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            if (name is null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
+            if (generics is null)
+            {
+                throw new ArgumentNullException(nameof(generics));
+            }
+
+            if (types is null)
+            {
+                throw new ArgumentNullException(nameof(types));
+            }
+
+            MethodInfo[] array = type.GetMethods().Filter(name, generics, types).ToArray();
+
+            return array.Length switch
+            {
+                <= 0 => null,
+                1 => array[0],
+                _ => throw new AmbiguousMatchException()
+            };
+        }
+        
+        public static MethodInfo? GetMethod(this Type type, String name, BindingFlags bindingAttr, Type[] generics, Type[] types)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            if (name is null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
+            if (generics is null)
+            {
+                throw new ArgumentNullException(nameof(generics));
+            }
+
+            if (types is null)
+            {
+                throw new ArgumentNullException(nameof(types));
+            }
+
+            MethodInfo[] array = type.GetMethods(bindingAttr).Filter(name, generics, types).ToArray();
+
+            return array.Length switch
+            {
+                <= 0 => null,
+                1 => array[0],
+                _ => throw new AmbiguousMatchException()
+            };
+        }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Type GetEntryPointType()
@@ -3023,7 +3137,9 @@ namespace NetExtender.Utilities.Core
                     return new ReflectionDifferenceItem<MemberInfo>(difference.Current, difference.Other, difference.Equality);
                 }
                 default:
+                {
                     throw new NotSupportedException($"Member type '{first.GetType()}' is not supported.");
+                }
             }
         }
 
@@ -3484,7 +3600,7 @@ namespace NetExtender.Utilities.Core
         /// </summary>
         /// <param name="generic">The parent generic type.</param>
         /// <param name="type">The type to check if it derives from the specified generic type.</param>
-        public static Boolean IsSubclassOfRawGeneric(Type generic, Type? type)
+        public static Boolean IsSubclassOfRawGeneric(this Type generic, Type? type)
         {
             if (generic is null)
             {
@@ -3503,7 +3619,18 @@ namespace NetExtender.Utilities.Core
 
             return false;
         }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsSuperclassOfRawGeneric(this Type type, Type? generic)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
 
+            return generic is not null && IsSubclassOfRawGeneric(generic, type);
+        }
+        
         /// <inheritdoc cref="IsPrimitive(System.Type,PrimitiveType)"/>
         public static Boolean IsPrimitive(this Type type)
         {

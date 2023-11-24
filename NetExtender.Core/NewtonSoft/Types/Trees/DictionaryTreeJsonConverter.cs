@@ -28,6 +28,16 @@ namespace NetExtender.NewtonSoft.Types.Trees
 
         public override void WriteJson(JsonWriter writer, Object? value, JsonSerializer serializer)
         {
+            if (writer is null)
+            {
+                throw new ArgumentNullException(nameof(writer));
+            }
+
+            if (serializer is null)
+            {
+                throw new ArgumentNullException(nameof(serializer));
+            }
+
             if (value is null)
             {
                 writer.WriteNull();
@@ -45,6 +55,11 @@ namespace NetExtender.NewtonSoft.Types.Trees
 
         private static void WriteNode(JsonWriter writer, IDictionaryTreeNode<TKey, TValue> node, NamingStrategy? strategy)
         {
+            if (writer is null)
+            {
+                throw new ArgumentNullException(nameof(writer));
+            }
+
             if (node.IsEmpty)
             {
                 writer.WriteNull();
@@ -93,6 +108,21 @@ namespace NetExtender.NewtonSoft.Types.Trees
 
         public override Object? ReadJson(JsonReader reader, Type type, Object? value, JsonSerializer serializer)
         {
+            if (reader is null)
+            {
+                throw new ArgumentNullException(nameof(reader));
+            }
+
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            if (serializer is null)
+            {
+                throw new ArgumentNullException(nameof(serializer));
+            }
+
             DictionaryTree<TKey, TValue> dictionary = new DictionaryTree<TKey, TValue>();
             List<TKey> keys = new List<TKey>();
 
@@ -175,9 +205,9 @@ namespace NetExtender.NewtonSoft.Types.Trees
             }
         }
 
-        public sealed override Boolean CanConvert(Type type)
+        public sealed override Boolean CanConvert(Type? type)
         {
-            return Cache.GetOrAdd(type, IsConvertible);
+            return type is not null && Cache.GetOrAdd(type, IsConvertible);
         }
     }
 }

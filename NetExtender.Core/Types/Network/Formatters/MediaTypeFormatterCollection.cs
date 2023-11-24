@@ -25,7 +25,7 @@ namespace NetExtender.Types.Network.Formatters
             }
         }
 
-        public event EventHandler Changed;
+        public event EventHandler? Changed;
 
         public XmlMediaTypeFormatter? XmlFormatter
         {
@@ -52,7 +52,23 @@ namespace NetExtender.Types.Network.Formatters
         }
 
         public MediaTypeFormatterCollection()
-            : this(null)
+            : this((IEnumerable<MediaTypeFormatter?>?) null)
+        {
+        }
+
+        public MediaTypeFormatterCollection(MediaTypeFormatter formatter)
+        {
+            if (formatter is null)
+            {
+                throw new ArgumentNullException(nameof(formatter));
+            }
+
+            Add(formatter);
+            Changed += OnChanged;
+        }
+
+        public MediaTypeFormatterCollection(params MediaTypeFormatter?[]? formatters)
+            : this((IEnumerable<MediaTypeFormatter?>?) formatters)
         {
         }
 
@@ -65,16 +81,7 @@ namespace NetExtender.Types.Network.Formatters
                 new FormUrlEncodedMediaTypeFormatter()
             };
             
-            foreach (MediaTypeFormatter? formatter in formatters)
-            {
-                if (formatter is null)
-                {
-                    continue;
-                }
-
-                Add(formatter);
-            }
-
+            AddRange(formatters);
             Changed += OnChanged;
         }
 
@@ -126,18 +133,23 @@ namespace NetExtender.Types.Network.Formatters
         protected override void SetItem(Int32 index, MediaTypeFormatter item)
         {
             base.SetItem(index, item);
-            Changed.Invoke(this, EventArgs.Empty);
+            Changed?.Invoke(this, EventArgs.Empty);
         }
 
-        public void AddRange(IEnumerable<MediaTypeFormatter> items)
+        public void AddRange(IEnumerable<MediaTypeFormatter?> items)
         {
             if (items is null)
             {
                 throw new ArgumentNullException(nameof(items));
             }
 
-            foreach (MediaTypeFormatter formatter in items)
+            foreach (MediaTypeFormatter? formatter in items)
             {
+                if (formatter is null)
+                {
+                    continue;
+                }
+                
                 Add(formatter);
             }
         }
@@ -145,7 +157,7 @@ namespace NetExtender.Types.Network.Formatters
         protected override void InsertItem(Int32 index, MediaTypeFormatter item)
         {
             base.InsertItem(index, item);
-            Changed.Invoke(this, EventArgs.Empty);
+            Changed?.Invoke(this, EventArgs.Empty);
         }
 
         public void InsertRange(Int32 index, IEnumerable<MediaTypeFormatter> items)
@@ -164,13 +176,13 @@ namespace NetExtender.Types.Network.Formatters
         protected override void RemoveItem(Int32 index)
         {
             base.RemoveItem(index);
-            Changed.Invoke(this, EventArgs.Empty);
+            Changed?.Invoke(this, EventArgs.Empty);
         }
 
         protected override void ClearItems()
         {
             base.ClearItems();
-            Changed.Invoke(this, EventArgs.Empty);
+            Changed?.Invoke(this, EventArgs.Empty);
         }
     }
 }

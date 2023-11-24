@@ -17,8 +17,8 @@ namespace NetExtender.Types.Collections
             }
         }
 
-        public PaginationReadOnlyCollectionWrapper(TCollection source, Int32 page, Int32 size, Int32 count)
-            : base(source, page, size, count)
+        public PaginationReadOnlyCollectionWrapper(TCollection source, Int32 index, Int32 size, Int32 count)
+            : base(source, index, size, count)
         {
         }
 

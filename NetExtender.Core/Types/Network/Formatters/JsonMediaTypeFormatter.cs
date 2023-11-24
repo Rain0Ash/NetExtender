@@ -168,7 +168,7 @@ namespace NetExtender.Types.Network.Formatters
             }
         }
 
-        public override Task<Object?> ReadFromStreamAsync(Type type, Stream stream, HttpContent content, ILogger? logger)
+        public override Task<Object?> ReadFromStreamAsync(Type type, Stream stream, HttpContent content, ILogger? logger, CancellationToken token)
         {
             if (type is null)
             {
@@ -184,6 +184,8 @@ namespace NetExtender.Types.Network.Formatters
             {
                 throw new ArgumentNullException(nameof(content));
             }
+            
+            token.ThrowIfCancellationRequested();
 
             try
             {

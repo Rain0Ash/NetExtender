@@ -9,8 +9,8 @@ namespace NetExtender.Types.Collections
 {
     public class PaginationReadOnlyListWrapper<T, TCollection> : PaginationReadOnlyCollectionWrapper<T, TCollection>, IPaginationReadOnlyList<T, TCollection> where TCollection : class, IReadOnlyList<T>
     {
-        public PaginationReadOnlyListWrapper(TCollection source, Int32 page, Int32 size, Int32 count)
-            : base(source, page, size, count)
+        public PaginationReadOnlyListWrapper(TCollection source, Int32 index, Int32 size, Int32 count)
+            : base(source, index, size, count)
         {
         }
 

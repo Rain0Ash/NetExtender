@@ -128,7 +128,7 @@ EndProject
 
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.EntityFrameworkCore", "NetExtender.EntityFrameworkCore\NetExtender.EntityFrameworkCore.csproj", "{1566851A-7963-45CA-A2B6-6ACEDF041ACA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.EntityFrameworkCore.Mapster", "NetExtender.EntityFrameworkCore.Mapster\NetExtender.EntityFrameworkCore.Mapster.csproj", "{1566851B-7863-45CA-A2B6-6ACEDF041ACY}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.EntityFrameworkCore.Mapster", "NetExtender.EntityFrameworkCore.Mapster\NetExtender.EntityFrameworkCore.Mapster.csproj", "{A1FEB727-F79E-42B8-897A-4CCE6D8BCCE8}"
 EndProject
 
 
@@ -226,6 +226,7 @@ EndProject
 
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.Core", "NetExtender.Core\NetExtender.Core.csproj", "{19E3C7A6-6110-4CA1-9F8E-049BB5191C28}"
 EndProject
+
 
 
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.Initializer", "NetExtender.Initializer\NetExtender.Initializer.csproj", "{A21B4E21-0794-4384-9A6B-40823247B32B}"
@@ -463,10 +464,10 @@ Global
                 {1566851A-7963-45CA-A2B6-6ACEDF041ACA}.Release|Any CPU.ActiveCfg = Release|Any CPU
                 {1566851A-7963-45CA-A2B6-6ACEDF041ACA}.Release|Any CPU.Build.0 = Release|Any CPU
 
-                {1566851B-7863-45CA-A2B6-6ACEDF041ACY}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-                {1566851B-7863-45CA-A2B6-6ACEDF041ACY}.Debug|Any CPU.Build.0 = Debug|Any CPU
-                {1566851B-7863-45CA-A2B6-6ACEDF041ACY}.Release|Any CPU.ActiveCfg = Release|Any CPU
-                {1566851B-7863-45CA-A2B6-6ACEDF041ACY}.Release|Any CPU.Build.0 = Release|Any CPU
+                {A1FEB727-F79E-42B8-897A-4CCE6D8BCCE8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+                {A1FEB727-F79E-42B8-897A-4CCE6D8BCCE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+                {A1FEB727-F79E-42B8-897A-4CCE6D8BCCE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+                {A1FEB727-F79E-42B8-897A-4CCE6D8BCCE8}.Release|Any CPU.Build.0 = Release|Any CPU
 
 
 
@@ -699,7 +700,7 @@ Global
                 {B1628C4E-3A11-4A9D-B592-3982E2B0EB7A} = {57E5B92C-BB28-4EA3-B380-1CC3B8B2F71A}
 
                 {1566851A-7963-45CA-A2B6-6ACEDF041ACA} = {0B0D27E3-898C-4D84-AF56-13C54F9F1EC1}
-                {1566851B-7863-45CA-A2B6-6ACEDF041ACY} = {0B0D27E3-898C-4D84-AF56-13C54F9F1EC1}
+                {A1FEB727-F79E-42B8-897A-4CCE6D8BCCE8} = {0B0D27E3-898C-4D84-AF56-13C54F9F1EC1}
 
                 {3165AF7B-F29C-4FC7-BAF0-13A92CB0ACDB} = {93B62F24-8CA7-430C-AFA3-87FFBE152731}
                 {8F13ECC7-6A93-4863-A03F-E7DF616DB603} = {93B62F24-8CA7-430C-AFA3-87FFBE152731}

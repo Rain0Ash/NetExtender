@@ -18,7 +18,7 @@ namespace NetExtender.Types.Enumerables.Interfaces
 
     public interface IPaginationEnumerable : IEnumerable
     {
-        public Int32 Page { get; }
+        public Int32 Index { get; }
         public Int32 Total { get; }
         public Int32 Items { get; }
         public Int32 Size { get; }

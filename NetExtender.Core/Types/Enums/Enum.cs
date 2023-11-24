@@ -259,6 +259,7 @@ namespace NetExtender.Types.Enums
             return first.CompareTo(second) >= 0;
         }
 
+        [JsonIgnore]
         public Type Type
         {
             get
@@ -270,6 +271,7 @@ namespace NetExtender.Types.Enums
         public T Id { get; private init; }
         public String Title { get; private init; }
 
+        [JsonIgnore]
         public virtual Boolean IsIntern
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
