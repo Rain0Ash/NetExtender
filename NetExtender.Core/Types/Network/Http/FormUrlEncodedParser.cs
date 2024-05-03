@@ -74,6 +74,7 @@ namespace NetExtender.Types.Network
             }
         }
 
+        // ReSharper disable once CognitiveComplexity
         protected virtual HttpParserState ParseNameValuePairs(ICollection<KeyValuePair<String, String>> source, Byte[] buffer, Int32 ready, ref Int32 read, ref NameValueState state, Int64 length, ref Int64 total, CurrentNameValuePair current)
         {
             Int32 startread = read;

@@ -82,7 +82,6 @@ namespace NetExtender.IO.FileSystem.Lock.Common
             }
             catch (Exception)
             {
-                // ignored
             }
         }
     }

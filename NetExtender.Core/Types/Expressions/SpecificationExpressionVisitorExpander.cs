@@ -5,6 +5,7 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using NetExtender.Types.Entities;
 using NetExtender.Types.Expressions.Specification;
 using NetExtender.Types.Expressions.Specification.Interfaces;
 using NetExtender.Utilities.Numerics;
@@ -32,7 +33,7 @@ namespace NetExtender.Types.Expressions
                 return base.VisitUnary(node);
             }
 
-            const String name = nameof(EntitySpecification<Object>.ToExpression);
+            const String name = nameof(EntitySpecification<Any>.ToExpression);
             method = declaring.GetMethod(name);
             return method is not null ? ExpandSpecification(node.Operand, method) : base.VisitUnary(node);
         }
@@ -40,7 +41,7 @@ namespace NetExtender.Types.Expressions
         protected override Expression VisitMethodCall(MethodCallExpression node)
         {
             MethodInfo method = node.Method;
-            if (method.Name != nameof(IEntitySpecification<Object>.ToExpression))
+            if (method.Name != nameof(IEntitySpecification<Any>.ToExpression))
             {
                 return base.VisitMethodCall(node);
             }

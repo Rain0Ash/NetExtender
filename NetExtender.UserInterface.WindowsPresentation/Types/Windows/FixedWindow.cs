@@ -9,6 +9,7 @@ using NetExtender.UserInterface.Events;
 using NetExtender.UserInterface.Interfaces;
 using NetExtender.UserInterface.Utilities;
 using NetExtender.UserInterface.Windows.Types;
+using NetExtender.Utilities.UserInterface;
 using NetExtender.Utilities.Windows.IO;
 using NetExtender.Windows;
 
@@ -16,6 +17,11 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
 {
     public abstract class FixedWindow : HotKeyWindow, IWindow
     {
+        public static readonly DependencyProperty IsAltF4EnabledProperty = DependencyProperty.Register(nameof(IsAltF4Enabled), typeof(Boolean), typeof(Window), new PropertyMetadata(true));
+        public static readonly DependencyProperty IsExitOnFocusLostProperty = DependencyProperty.Register(nameof(IsExitOnFocusLost), typeof(Boolean), typeof(Window), new PropertyMetadata(false));
+        public static readonly DependencyProperty IsSystemMenuEnabledProperty = DependencyProperty.Register(nameof(IsSystemMenuEnabled), typeof(Boolean), typeof(Window), new PropertyMetadata(true, IsSystemMenuEnabledChanged));
+        public static readonly DependencyProperty DisplayAffinityProperty = DependencyProperty.Register(nameof(DisplayAffinity), typeof(WindowDisplayAffinity), typeof(Window), new PropertyMetadata(WindowDisplayAffinity.None, DisplayAffinityChanged));
+
         public new Window? Owner
         {
             get
@@ -32,8 +38,8 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
                 return parent is null || parent == this;
             }
         }
-        
-        public Boolean TopMost
+
+        Boolean IWindow.TopMost
         {
             get
             {
@@ -65,20 +71,98 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
             }
         }
 
-        public virtual Boolean IsAltF4Enabled { get; set; } = true;
+        public Boolean IsAltF4Enabled
+        {
+            get
+            {
+                return (Boolean) GetValue(IsAltF4EnabledProperty);
+            }
+            set
+            {
+                SetValue(IsAltF4EnabledProperty, value);
+            }
+        }
 
-        public Boolean IsExitOnFocusLost { get; set; }
+        public Boolean IsExitOnFocusLost
+        {
+            get
+            {
+                return (Boolean) GetValue(IsExitOnFocusLostProperty);
+            }
+            set
+            {
+                SetValue(IsExitOnFocusLostProperty, value);
+            }
+        }
+
+        public Boolean? IsSystemMenuEnabled
+        {
+            get
+            {
+                return this.GetWindowSystemMenu();
+            }
+            set
+            {
+                if (value is { } state)
+                {
+                    SetValue(IsSystemMenuEnabledProperty, state);
+                }
+            }
+        }
+
+        public WindowDisplayAffinity? DisplayAffinity
+        {
+            get
+            {
+                return this.GetWindowDisplayAffinity(out WindowDisplayAffinity affinity) ? affinity : null;
+            }
+            set
+            {
+                if (value is { } affinity)
+                {
+                    this.SetWindowDisplayAffinity(affinity);
+                }
+            }
+        }
 
         public event InterfaceClosingEventHandler? WindowClosing;
         public event SizeChangeToggleHandler? SizeChangeToggle;
 
         protected FixedWindow()
         {
+            BeginConstructorInit();
             WindowStartupLocation = WindowStartupLocation.CenterOwner;
             WindowStyle = WindowStyle.SingleBorderWindow;
+            Loaded += SystemMenuInitialize;
+            Loaded += DisplayAffinityInitialize;
             Deactivated += OnDeactivated;
             Closing += OnClosing;
             WindowClosing += DisableIconClickExit;
+            EndConstructorInit();
+        }
+
+        private void SystemMenuInitialize(Object? sender, RoutedEventArgs args)
+        {
+            if (sender is not DependencyObject dependency)
+            {
+                return;
+            }
+
+            Object? current = GetValue(IsSystemMenuEnabledProperty);
+            DependencyPropertyChangedEventArgs @event = new DependencyPropertyChangedEventArgs(IsSystemMenuEnabledProperty, IsSystemMenuEnabled, current);
+            IsSystemMenuEnabledChanged(dependency, @event);
+        }
+
+        private void DisplayAffinityInitialize(Object? sender, RoutedEventArgs args)
+        {
+            if (sender is not DependencyObject dependency)
+            {
+                return;
+            }
+
+            Object? current = GetValue(DisplayAffinityProperty);
+            DependencyPropertyChangedEventArgs @event = new DependencyPropertyChangedEventArgs(DisplayAffinityProperty, DisplayAffinity, current);
+            DisplayAffinityChanged(dependency, @event);
         }
 
         protected override Boolean WndProc(ref WinMessage message)
@@ -89,7 +173,6 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
                 case WM.ENDSESSION:
                     CloseReason = InterfaceCloseReason.SystemShutdown;
                     break;
-
                 case WM.SYSCOMMAND:
                     if (((UInt16) message.WParam & 0xFFF0) == 0xF060)
                     {
@@ -184,6 +267,36 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
             }
 
             args.Cancel = true;
+        }
+        
+        private static void IsSystemMenuEnabledChanged(DependencyObject @object, DependencyPropertyChangedEventArgs args)
+        {
+            if (@object is not Window window)
+            {
+                return;
+            }
+
+            if (Equals(args.OldValue, args.NewValue) || args.NewValue is not Boolean menu)
+            {
+                return;
+            }
+
+            window.SetWindowSystemMenu(menu);
+        }
+        
+        private static void DisplayAffinityChanged(DependencyObject @object, DependencyPropertyChangedEventArgs args)
+        {
+            if (@object is not Window window)
+            {
+                return;
+            }
+
+            if (Equals(args.OldValue, args.NewValue) || args.NewValue is not WindowDisplayAffinity affinity)
+            {
+                return;
+            }
+
+            window.SetWindowDisplayAffinity(affinity);
         }
 
         public new InterfaceDialogResult ShowDialog()

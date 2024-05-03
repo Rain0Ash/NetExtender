@@ -76,25 +76,25 @@ namespace NetExtender.Types.Numerics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Boolean IsSubRange(Range<T> other)
         {
-            return Minimum.MoreEquals(other.Minimum) && Maximum.LessEquals(other.Maximum);
+            return Minimum.GreaterOrEquals(other.Minimum) && Maximum.LessOrEquals(other.Maximum);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Boolean IsSuperRange(Range<T> other)
         {
-            return Minimum.LessEquals(other.Minimum) && Maximum.MoreEquals(other.Maximum);
+            return Minimum.LessOrEquals(other.Minimum) && Maximum.GreaterOrEquals(other.Maximum);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Boolean Intersect(Range<T> other)
         {
-            return Minimum.LessEquals(other.Maximum) && other.Minimum.LessEquals(Maximum);
+            return Minimum.LessOrEquals(other.Maximum) && other.Minimum.LessOrEquals(Maximum);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Boolean Contains(T value)
         {
-            return Minimum.LessEquals(value) && Maximum.MoreEquals(value);
+            return Minimum.LessOrEquals(value) && Maximum.GreaterOrEquals(value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -110,7 +110,7 @@ namespace NetExtender.Types.Numerics
                 return 0;
             }
 
-            if (Minimum.More(other.Maximum))
+            if (Minimum.Greater(other.Maximum))
             {
                 return Int32.MaxValue;
             }
@@ -123,6 +123,11 @@ namespace NetExtender.Types.Numerics
             return Minimum.CompareTo(other.Minimum) + Maximum.CompareTo(other.Maximum);
         }
 
+        public override Int32 GetHashCode()
+        {
+            return HashCode.Combine(Minimum, Maximum);
+        }
+
         public Boolean Equals(Range<T> other)
         {
             return EqualityComparer<T>.Default.Equals(Minimum, other.Minimum) && EqualityComparer<T>.Default.Equals(Maximum, other.Maximum);
@@ -133,9 +138,9 @@ namespace NetExtender.Types.Numerics
             return obj is Range<T> other && Equals(other);
         }
 
-        public override Int32 GetHashCode()
+        public override String ToString()
         {
-            return HashCode.Combine(Minimum, Maximum);
+            return (((T Min, T Max)) this).ToString();
         }
     }
 }

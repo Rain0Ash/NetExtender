@@ -158,7 +158,6 @@ namespace NetExtender.Windows.Services.Utilities
                 }
                 catch (Exception)
                 {
-                    // ignored
                 }
 
                 if (controller is not null)
@@ -203,7 +202,6 @@ namespace NetExtender.Windows.Services.Utilities
                 }
                 catch (Exception)
                 {
-                    // ignored
                 }
             }
 

@@ -17,7 +17,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(semaphore));
             }
 
-            Mutex mutex = (Mutex?) semaphore ?? throw new ObjectDisposedException(nameof(Mutex));
+            Mutex mutex = (Mutex?) semaphore ?? throw new ObjectDisposedException(nameof(Mutex)); //-V3022
             return mutex.GetAccessControl();
         }
 
@@ -33,7 +33,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(security));
             }
 
-            Mutex mutex = (Mutex?) semaphore ?? throw new ObjectDisposedException(nameof(Mutex));
+            Mutex mutex = (Mutex?) semaphore ?? throw new ObjectDisposedException(nameof(Mutex)); //-V3022
             mutex.SetAccessControl(security);
         }
     }

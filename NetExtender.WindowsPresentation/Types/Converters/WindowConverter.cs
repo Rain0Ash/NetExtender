@@ -28,10 +28,13 @@ namespace NetExtender.WindowsPresentation.Types.Converters
         }
     }
 
-    public abstract class WindowConverter<TWindow> : IValueConverter where TWindow : Window
+    public abstract class WindowConverter<TWindow> : WindowConverter where TWindow : Window
     {
         public TWindow Window { get; } = WindowStoreUtilities<TWindow>.Require();
-
+    }
+    
+    public abstract class WindowConverter : IValueConverter
+    {
         public abstract Object? Convert(Object? value, Type? targetType, Object? parameter, CultureInfo? culture);
         public abstract Object? ConvertBack(Object? value, Type? targetType, Object? parameter, CultureInfo? culture);
     }

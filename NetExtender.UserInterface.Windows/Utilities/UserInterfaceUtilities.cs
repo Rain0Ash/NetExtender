@@ -8,6 +8,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
+using NetExtender.Types.Exceptions;
 using NetExtender.Types.Native.Windows;
 using NetExtender.UserInterface;
 using NetExtender.UserInterface.Interfaces;
@@ -16,6 +17,13 @@ using NetExtender.Workstation.Interfaces;
 
 namespace NetExtender.Utilities.UserInterface
 {
+    public enum WindowDisplayAffinity : Byte
+    {
+        None = 0,
+        Monitor = 1,
+        ExcludeFromCapture = 0x11
+    }
+    
     public static class UserInterfaceUtilities
     {
         public static UserInterfaceActionType Additional(this UserInterfaceActionType action, Byte additional)
@@ -53,6 +61,85 @@ namespace NetExtender.Utilities.UserInterface
         [DllImport("user32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern Boolean GetWindowRect(IntPtr handle, out WinRectangle rectangle);
+        
+        [DllImport("user32.dll", SetLastError = true)]
+        private static extern Int32 GetWindowLong(IntPtr handle, Int32 index);
+        
+        [DllImport("user32.dll")]
+        private static extern Int32 SetWindowLong(IntPtr handle, Int32 index, Int32 value);
+        
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern Boolean GetWindowDisplayAffinity(IntPtr hWnd, out UInt32 affinity);
+        
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern Boolean SetWindowDisplayAffinity(IntPtr handle, UInt32 affinity);
+
+        public static Boolean GetWindowDisplayAffinity(IntPtr handle, out WindowDisplayAffinity affinity)
+        {
+            if (handle == IntPtr.Zero || !GetWindowDisplayAffinity(handle, out UInt32 result) || result > Byte.MaxValue)
+            {
+                affinity = default;
+                return false;
+            }
+
+            affinity = (WindowDisplayAffinity) result;
+            return affinity switch
+            {
+                WindowDisplayAffinity.None => true,
+                WindowDisplayAffinity.Monitor => true,
+                WindowDisplayAffinity.ExcludeFromCapture => true,
+                _ => false
+            };
+        }
+        
+        public static Boolean SetWindowDisplayAffinity(IntPtr handle, WindowDisplayAffinity affinity)
+        {
+            switch (affinity)
+            {
+                case WindowDisplayAffinity.None:
+                case WindowDisplayAffinity.Monitor:
+                case WindowDisplayAffinity.ExcludeFromCapture:
+                    return handle != IntPtr.Zero && SetWindowDisplayAffinity(handle, (Byte) affinity);
+                default:
+                    throw new EnumUndefinedOrNotSupportedException<WindowDisplayAffinity>(affinity, nameof(affinity), null);
+            }
+        }
+
+        public static Boolean? GetWindowSystemMenu(IntPtr handle)
+        {
+            if (handle == IntPtr.Zero)
+            {
+                return null;
+            }
+            
+            const Int32 gwlstyle = -16;
+            const Int32 sysmenu = 0x80000;
+
+            Int32 current = GetWindowLong(handle, gwlstyle);
+            return (current & sysmenu) == sysmenu;
+        }
+
+        public static Boolean SetWindowSystemMenu(IntPtr handle, Boolean value)
+        {
+            const Int32 gwlstyle = -16;
+            const Int32 sysmenu = 0x80000;
+            
+            if (handle == IntPtr.Zero)
+            {
+                return false;
+            }
+            
+            Int32 current = GetWindowLong(handle, gwlstyle);
+
+            if (value)
+            {
+                return SetWindowLong(handle, gwlstyle,  current | sysmenu) == 0;
+            }
+            
+            return SetWindowLong(handle, gwlstyle,  current & ~sysmenu) == 0;
+        }
 
         public static Rectangle GetClientRectangle(IntPtr handle)
         {

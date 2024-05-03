@@ -12,7 +12,9 @@ using System.Linq;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Text;
+using NetExtender.Types.Tuples;
 using NetExtender.Types.Collections;
+using NetExtender.Types.Monads.Interfaces;
 using NetExtender.Types.Strings.Interfaces;
 using NetExtender.Utilities.Core;
 using NetExtender.Utilities.Numerics;
@@ -649,6 +651,7 @@ namespace NetExtender.Utilities.Types
                 TimeSpan number => number.GetString(provider),
                 Enum number => number.GetString(escape, provider),
                 IString @string => escape.HasFlag(EscapeType.Full) ? $"\"{@string.ToString(provider)}\"" : @string.ToString(provider),
+                ITuple tuple => tuple.GetString(escape, provider),
                 IEnumerable enumerable => enumerable.GetString(escape, provider),
                 IFormattable formattable => formattable.ToString(null, provider),
                 IConvertible convertible => convertible.ToString(provider),
@@ -694,6 +697,7 @@ namespace NetExtender.Utilities.Types
                 TimeSpan number => number.GetString(format, provider),
                 Enum number => number.GetString(escape, format, provider),
                 IString @string => escape.HasFlag(EscapeType.Full) ? $"\"{@string.ToString(format, provider)}\"" : @string.ToString(format, provider),
+                ITuple tuple => tuple.GetString(escape, format, provider),
                 IEnumerable enumerable => enumerable.GetString(escape, format, provider),
                 IFormattable formattable => formattable.ToString(format, provider),
                 IConvertible convertible => convertible.ToString(provider),
@@ -720,83 +724,13 @@ namespace NetExtender.Utilities.Types
                 return false;
             }
 
-            if (value is DictionaryEntry entry)
-            {
-                result = $"{{{entry.Key.GetString(escape, provider)} : {entry.Value.GetString(escape, provider)}}}";
-                return true;
-            }
-
             Type? type = value.GetType();
-            Type generic = type.TryGetGenericTypeDefinition();
-            dynamic item = value;
 
-            if (generic == GenericTypeUtilities.KeyValuePairType)
+            if (UnknownTypeCache.TryGetAccessor(type, out UnknownTypeCache.ConvertAccessor? accessor))
             {
-                result = $"{{{GetString((Object) item.Key, escape, provider)} : {GetString((Object) item.Value, escape, provider)}}}";
-                return true;
+                return accessor.TryConvert(value, escape, provider, out result);
             }
 
-            if (generic == GenericTypeUtilities.MaybeType)
-            {
-                result = GetString(item.HasValue ? (Object) item.Value : null, escape, provider);
-            }
-
-            if (generic == GenericTypeUtilities.NullMaybeType)
-            {
-                result = GetString((Object) item.Value, escape, provider);
-                return true;
-            }
-
-            if (GenericTypeUtilities.IsTuple(type, out Int32 count))
-            {
-                String? Selector(Int32 index)
-                {
-                    dynamic tuple = item;
-
-                    while (true)
-                    {
-                        switch (index)
-                        {
-                            case 0:
-                                return GetString((Object) tuple.Item1, escape, provider);
-                            case 1:
-                                return GetString((Object) tuple.Item2, escape, provider);
-                            case 2:
-                                return GetString((Object) tuple.Item3, escape, provider);
-                            case 3:
-                                return GetString((Object) tuple.Item4, escape, provider);
-                            case 4:
-                                return GetString((Object) tuple.Item5, escape, provider);
-                            case 5:
-                                return GetString((Object) tuple.Item6, escape, provider);
-                            case 6:
-                                return GetString((Object) tuple.Item7, escape, provider);
-                            case 7:
-                                if (!GenericTypeUtilities.IsTuple((Type) tuple.Rest.GetType()))
-                                {
-                                    return GetString((Object) tuple.Rest, escape, provider);
-                                }
-
-                                goto default;
-                            default:
-                                tuple = tuple.Rest;
-                                index -= 7;
-                                continue;
-                        }
-                    }
-                }
-
-                result = $"({String.Join(", ", MathUtilities.Range(0, count).Select(Selector).Select(GetString))})";
-                return true;
-            }
-
-            if (GenericTypeUtilities.IsMemorySpan(generic))
-            {
-                result = GetString(item, escape, provider);
-                return true;
-            }
-
-            type = value.GetType();
             while (type is not null)
             {
                 if (StringConverters.TryGetValue(type, out StringConverterInfo converter))
@@ -831,83 +765,13 @@ namespace NetExtender.Utilities.Types
                 return false;
             }
 
-            if (value is DictionaryEntry entry)
-            {
-                result = $"{{{entry.Key.GetString(escape, format, provider)} : {entry.Value.GetString(escape, format, provider)}}}";
-                return true;
-            }
-
             Type? type = value.GetType();
-            Type generic = type.TryGetGenericTypeDefinition();
-            dynamic item = value;
 
-            if (generic == GenericTypeUtilities.KeyValuePairType)
+            if (UnknownTypeCache.TryGetAccessor(type, out UnknownTypeCache.ConvertAccessor? accessor))
             {
-                result = $"{{{GetString((Object) item.Key, escape, format, provider)} : {GetString((Object) item.Value, escape, format, provider)}}}";
-                return true;
+                return accessor.TryFormatConvert(value, escape, format, provider, out result);
             }
 
-            if (generic == GenericTypeUtilities.MaybeType)
-            {
-                result = GetString(item.HasValue ? (Object) item.Value : null, escape, format, provider);
-            }
-
-            if (generic == GenericTypeUtilities.NullMaybeType)
-            {
-                result = GetString((Object) item.Value, escape, format, provider);
-                return true;
-            }
-
-            if (GenericTypeUtilities.IsTuple(type, out Int32 count))
-            {
-                String? Selector(Int32 index)
-                {
-                    dynamic tuple = item;
-
-                    while (true)
-                    {
-                        switch (index)
-                        {
-                            case 0:
-                                return GetString((Object) tuple.Item1, escape, format, provider);
-                            case 1:
-                                return GetString((Object) tuple.Item2, escape, format, provider);
-                            case 2:
-                                return GetString((Object) tuple.Item3, escape, format, provider);
-                            case 3:
-                                return GetString((Object) tuple.Item4, escape, format, provider);
-                            case 4:
-                                return GetString((Object) tuple.Item5, escape, format, provider);
-                            case 5:
-                                return GetString((Object) tuple.Item6, escape, format, provider);
-                            case 6:
-                                return GetString((Object) tuple.Item7, escape, format, provider);
-                            case 7:
-                                if (!GenericTypeUtilities.IsTuple((Type) tuple.Rest.GetType()))
-                                {
-                                    return GetString((Object) tuple.Rest, escape, format, provider);
-                                }
-
-                                goto default;
-                            default:
-                                tuple = tuple.Rest;
-                                index -= 7;
-                                continue;
-                        }
-                    }
-                }
-
-                result = $"({String.Join(", ", MathUtilities.Range(0, count).Select(Selector).Select(GetString))})";
-                return true;
-            }
-
-            if (GenericTypeUtilities.IsMemorySpan(generic))
-            {
-                result = GetString(item, escape, format, provider);
-                return true;
-            }
-
-            type = value.GetType();
             while (type is not null)
             {
                 if (StringConverters.TryGetValue(type, out StringConverterInfo converter))
@@ -921,6 +785,301 @@ namespace NetExtender.Utilities.Types
 
             result = default;
             return false;
+        }
+
+        private static class UnknownTypeCache
+        {
+            public delegate Boolean TryUnknownConvertDelegate(Object? value, EscapeType escape, IFormatProvider? provider, out String? result);
+
+            public delegate Boolean TryUnknownFormatConvertDelegate(Object? value, EscapeType escape, String? format, IFormatProvider? provider, out String? result);
+
+            private static ConcurrentDictionary<Type, ConvertAccessor> Cache { get; } = new ConcurrentDictionary<Type, ConvertAccessor>();
+
+            public record ConvertAccessor
+            {
+                public Type Type { get; }
+                public TryUnknownConvertDelegate TryConvert { get; }
+                public TryUnknownFormatConvertDelegate TryFormatConvert { get; }
+
+                private ConvertAccessor(Type type)
+                {
+                    Type = type ?? throw new ArgumentNullException(nameof(type));
+                    (TryConvert, TryFormatConvert) = CreateAccessor(type);
+                }
+
+                public static ConvertAccessor Create(Type type)
+                {
+                    return new ConvertAccessor(type);
+                }
+
+                // ReSharper disable once CognitiveComplexity
+                private static (TryUnknownConvertDelegate, TryUnknownFormatConvertDelegate) CreateAccessor(Type type)
+                {
+                    if (type is null)
+                    {
+                        throw new ArgumentNullException(nameof(type));
+                    }
+
+                    if (type == typeof(DictionaryEntry))
+                    {
+                        static Boolean DictionaryEntryConvert(Object? value, EscapeType escape, IFormatProvider? provider, out String? result)
+                        {
+                            if (value is not DictionaryEntry entry)
+                            {
+                                result = default;
+                                return false;
+                            }
+
+                            result = $"{{{entry.Key.GetString(escape, provider)} : {entry.Value.GetString(escape, provider)}}}";
+                            return true;
+                        }
+
+                        static Boolean DictionaryEntryFormatConvert(Object? value, EscapeType escape, String? format, IFormatProvider? provider, out String? result)
+                        {
+                            if (value is not DictionaryEntry entry)
+                            {
+                                result = default;
+                                return false;
+                            }
+
+                            result = $"{{{entry.Key.GetString(escape, format, provider)} : {entry.Value.GetString(escape, format, provider)}}}";
+                            return true;
+                        }
+
+                        return (DictionaryEntryConvert, DictionaryEntryFormatConvert);
+                    }
+
+                    if (type.IsAnonymousType())
+                    {
+                        Boolean AnonymousTypeConvert(Object? value, EscapeType escape, IFormatProvider? provider, out String? result)
+                        {
+                            if (value is null || type.GetAnonymousProperties() is not { } properties)
+                            {
+                                result = default;
+                                return false;
+                            }
+
+                            IEnumerable<String> strings = properties.Select(property => $"{property.Property.Name}: {GetString(property.Getter(value), escape, provider)}");
+                            result = $"{{{String.Join(", ", strings)}}}";
+                            return true;
+                        }
+
+                        Boolean AnonymousTypeFormatConvert(Object? value, EscapeType escape, String? format, IFormatProvider? provider, out String? result)
+                        {
+                            if (value is null || type.GetAnonymousProperties() is not { } properties)
+                            {
+                                result = default;
+                                return false;
+                            }
+
+                            IEnumerable<String> strings = properties.Select(property => $"{property.Property.Name}: {GetString(property.Getter(value), escape, format, provider)}");
+                            result = $"{{{String.Join(", ", strings)}}}";
+                            return true;
+                        }
+
+                        return (AnonymousTypeConvert, AnonymousTypeFormatConvert);
+                    }
+                    
+                    Type generic = type.TryGetGenericTypeDefinition();
+                    
+                    if (generic == KeyValuePairUtilities.KeyValuePairType)
+                    {
+                        static Boolean KeyValuePairConvert(Object? value, EscapeType escape, IFormatProvider? provider, out String? result)
+                        {
+                            if (value is null || !KeyValuePairUtilities.TryGetAccessor(value.GetType(), out KeyValuePairAccessor? accessors))
+                            {
+                                result = default;
+                                return false;
+                            }
+                            
+                            result = $"{{{accessors.Key.Invoke(value).GetString(escape, provider)} : {accessors.Value.Invoke(value).GetString(escape, provider)}}}";
+                            return true;
+                        }
+
+                        static Boolean KeyValuePairFormatConvert(Object? value, EscapeType escape, String? format, IFormatProvider? provider, out String? result)
+                        {
+                            if (value is null || !KeyValuePairUtilities.TryGetAccessor(value.GetType(), out KeyValuePairAccessor? accessors))
+                            {
+                                result = default;
+                                return false;
+                            }
+                            
+                            result = $"{{{accessors.Key.Invoke(value).GetString(escape, format, provider)} : {accessors.Value.Invoke(value).GetString(escape, format, provider)}}}";
+                            return true;
+                        }
+
+                        return (KeyValuePairConvert, KeyValuePairFormatConvert);
+                    }
+
+                    if (generic == MaybeUtilities.MaybeType)
+                    {
+                        static Boolean MaybeConvert(Object? value, EscapeType escape, IFormatProvider? provider, out String? result)
+                        {
+                            switch (value)
+                            {
+                                case null:
+                                    result = default;
+                                    return false;
+                                case IMaybe maybe:
+                                    result = GetString(maybe.Value, escape, provider);
+                                    return true;
+                                default:
+                                {
+                                    try
+                                    {
+                                        dynamic item = value;
+                                        result = GetString(item.HasValue ? (Object) item.Value : null, escape, provider);
+                                        return true;
+                                    }
+                                    catch (Exception)
+                                    {
+                                        result = default;
+                                        return false;
+                                    }
+                                }
+                            }
+                        }
+
+                        static Boolean MaybeFormatConvert(Object? value, EscapeType escape, String? format, IFormatProvider? provider, out String? result)
+                        {
+                            switch (value)
+                            {
+                                case null:
+                                    result = default;
+                                    return false;
+                                case IMaybe maybe:
+                                    result = GetString(maybe.Value, escape, format, provider);
+                                    return true;
+                                default:
+                                {
+                                    try
+                                    {
+                                        dynamic item = value;
+                                        result = GetString(item.HasValue ? (Object) item.Value : null, escape, format, provider);
+                                        return true;
+                                    }
+                                    catch (Exception)
+                                    {
+                                        result = default;
+                                        return false;
+                                    }
+                                }
+                            }
+                        }
+
+                        return (MaybeConvert, MaybeFormatConvert);
+                    }
+
+                    if (generic == MaybeUtilities.NullMaybeType)
+                    {
+                        static Boolean NullMaybeConvert(Object? value, EscapeType escape, IFormatProvider? provider, out String? result)
+                        {
+                            switch (value)
+                            {
+                                case null:
+                                    result = default;
+                                    return false;
+                                case INullMaybe maybe:
+                                    result = GetString(maybe.Value, escape, provider);
+                                    return true;
+                                default:
+                                {
+                                    try
+                                    {
+                                        dynamic item = value;
+                                        result = GetString((Object) item.Value, escape, provider);
+                                        return true;
+                                    }
+                                    catch (Exception)
+                                    {
+                                        result = default;
+                                        return false;
+                                    }
+                                }
+                            }
+                        }
+
+                        static Boolean NullMaybeFormatConvert(Object? value, EscapeType escape, String? format, IFormatProvider? provider, out String? result)
+                        {
+                            switch (value)
+                            {
+                                case null:
+                                    result = default;
+                                    return false;
+                                case INullMaybe maybe:
+                                    result = GetString(maybe.Value, escape, format, provider);
+                                    return true;
+                                default:
+                                {
+                                    try
+                                    {
+                                        dynamic item = value;
+                                        result = GetString((Object) item.Value, escape, format, provider);
+                                        return true;
+                                    }
+                                    catch (Exception)
+                                    {
+                                        result = default;
+                                        return false;
+                                    }
+                                }
+                            }
+                        }
+
+                        return (NullMaybeConvert, NullMaybeFormatConvert);
+                    }
+                    
+                    if (generic.IsMemorySpan())
+                    {
+                        static Boolean MemorySpanConvert(Object? value, EscapeType escape, IFormatProvider? provider, out String? result)
+                        {
+                            if (value is null)
+                            {
+                                result = default;
+                                return false;
+                            }
+                            
+                            result = GetString((dynamic) value, escape, provider);
+                            return true;
+                        }
+
+                        static Boolean MemorySpanFormatConvert(Object? value, EscapeType escape, String? format, IFormatProvider? provider, out String? result)
+                        {
+                            if (value is null)
+                            {
+                                result = default;
+                                return false;
+                            }
+                            
+                            result = GetString((dynamic) value, escape, format, provider);
+                            return true;
+                        }
+
+                        return (MemorySpanConvert, MemorySpanFormatConvert);
+                    }
+
+                    throw new NotSupportedException();
+                }
+            }
+
+            public static Boolean TryGetAccessor(Type type, [MaybeNullWhen(false)] out ConvertAccessor result)
+            {
+                if (type is null)
+                {
+                    throw new ArgumentNullException(nameof(type));
+                }
+
+                try
+                {
+                    result = Cache.GetOrAdd(type, ConvertAccessor.Create);
+                    return true;
+                }
+                catch (Exception)
+                {
+                    result = default;
+                    return false;
+                }
+            }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1263,6 +1422,94 @@ namespace NetExtender.Utilities.Types
         public static String GetString(this Enum value, EscapeType escape, String? format, IFormatProvider? provider)
         {
             return GetString(value, escape);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String GetString(this ITuple source)
+        {
+            return GetString(source, EscapeType.None);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String GetString(this ITuple source, IFormatProvider? provider)
+        {
+            return GetString(source, EscapeType.None, provider);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String GetString(this ITuple source, EscapeType escape)
+        {
+            return GetString(source, escape, CultureInfo.InvariantCulture);
+        }
+
+        public static String GetString(this ITuple source, EscapeType escape, IFormatProvider? provider)
+        {
+            switch (source.Length)
+            {
+                case 0:
+                    return "[]";
+                case 1:
+                    return $"[{GetString(source[0], escape, provider)}]";
+                default:
+                {
+                    StringBuilder builder = new StringBuilder();
+                    builder.Append('(');
+
+                    using TupleEnumerator<ITuple> enumerator = source.GetEnumerator();
+
+                    if (enumerator.MoveNext())
+                    {
+                        builder.Append(GetString(enumerator.Current, escape, provider));
+
+                        while (enumerator.MoveNext())
+                        {
+                            builder.Append(", ");
+                            builder.Append(GetString(enumerator.Current, escape, provider));
+                        }
+                    }
+
+                    builder.Append(')');
+                    return builder.ToString();
+                }
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String GetString(this ITuple source, String? format, IFormatProvider? provider)
+        {
+            return GetString(source, EscapeType.None, format, provider);
+        }
+
+        public static String GetString(this ITuple source, EscapeType escape, String? format, IFormatProvider? provider)
+        {
+            switch (source.Length)
+            {
+                case 0:
+                    return "[]";
+                case 1:
+                    return $"[{GetString(source[0], escape, format, provider)}]";
+                default:
+                {
+                    StringBuilder builder = new StringBuilder();
+                    builder.Append('(');
+
+                    using TupleEnumerator<ITuple> enumerator = source.GetEnumerator();
+
+                    if (enumerator.MoveNext())
+                    {
+                        builder.Append(GetString(enumerator.Current, escape, format, provider));
+
+                        while (enumerator.MoveNext())
+                        {
+                            builder.Append(", ");
+                            builder.Append(GetString(enumerator.Current, escape, format, provider));
+                        }
+                    }
+
+                    builder.Append(')');
+                    return builder.ToString();
+                }
+            }
         }
 
 #if NETCOREAPP3_1_OR_GREATER

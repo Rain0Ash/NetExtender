@@ -230,7 +230,7 @@ namespace NetExtender.Types.Network.Formatters
                 throw new ArgumentNullException(nameof(type));
             }
 
-            return SerializerCache.TryRemove(type, out Object _);
+            return SerializerCache.TryRemove(type, out _);
         }
         
         protected internal virtual XmlReader CreateXmlReader(Stream stream, HttpContent content)

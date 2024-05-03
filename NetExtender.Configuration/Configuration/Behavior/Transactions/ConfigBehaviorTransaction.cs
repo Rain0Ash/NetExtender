@@ -4,6 +4,8 @@
 using System;
 using NetExtender.Configuration.Behavior.Interfaces;
 using NetExtender.Configuration.Behavior.Transactions.Interfaces;
+using NetExtender.Types.Transactions;
+using NetExtender.Utilities.Types;
 
 namespace NetExtender.Configuration.Behavior.Transactions
 {
@@ -11,7 +13,8 @@ namespace NetExtender.Configuration.Behavior.Transactions
     {
         public IConfigBehavior Original { get; }
         public IConfigBehavior Transaction { get; }
-        protected Boolean? IsCommit { get; set; }
+        public Boolean? IsCommit { get; protected set; }
+        public TransactionCommitPolicy Policy { get; init; } = TransactionCommitPolicy.Manual;
 
         public ConfigBehaviorTransaction(IConfigBehavior original, IConfigBehavior transaction)
         {
@@ -19,20 +22,27 @@ namespace NetExtender.Configuration.Behavior.Transactions
             Transaction = transaction ?? throw new ArgumentNullException(nameof(transaction));
         }
 
-        public virtual void Commit()
+        public virtual Boolean Commit()
         {
             IsCommit = true;
             Original.Replace(Transaction.GetExistsValues(null));
+            return true;
         }
 
-        public virtual void Rollback()
+        public virtual Boolean Rollback()
         {
+            if (IsCommit == true)
+            {
+                return false;
+            }
+            
             IsCommit = false;
+            return true;
         }
 
         public virtual void Dispose()
         {
-            if (IsCommit is null)
+            if (Policy.IsCommit(IsCommit))
             {
                 Rollback();
             }

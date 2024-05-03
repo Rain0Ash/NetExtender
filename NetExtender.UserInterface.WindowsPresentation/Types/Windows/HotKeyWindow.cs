@@ -17,7 +17,9 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
 
         protected HotKeyWindow()
         {
+            BeginConstructorInit();
             Started += RegisterHotKeys;
+            EndConstructorInit();
         }
 
         protected virtual void RegisterHotKeys(Object sender, RoutedEventArgs args)

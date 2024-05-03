@@ -11,6 +11,9 @@ using NetExtender.Localization.Behavior.Settings;
 using NetExtender.Localization.Events;
 using NetExtender.Localization.Interfaces;
 using NetExtender.Types.Culture;
+using NetExtender.Types.Singletons;
+using NetExtender.Types.Singletons.Interfaces;
+using NetExtender.WindowsPresentation.Localization.Types.Collections;
 using NetExtender.WindowsPresentation.Localization.Types.Flags;
 using NetExtender.WindowsPresentation.Utilities;
 using ReactiveUI;
@@ -30,7 +33,7 @@ namespace NetExtender.WindowsPresentation.ReactiveUI.Types.Models
     
     public abstract class SettingsReactiveViewModelAbstraction<T> : SettingsReactiveViewModelAbstraction where T : SettingsReactiveViewModelInitializer, new()
     {
-        public ObservableCollection<LocalizationFlagBitmapSourceEntry> Languages { get; }
+        public LocalizationCollection Languages { get; }
         
         public sealed override Int32 Count
         {
@@ -148,13 +151,13 @@ namespace NetExtender.WindowsPresentation.ReactiveUI.Types.Models
     
     public abstract class SettingsReactiveViewModelAbstractionSingleton<T, TInitializer> : SettingsReactiveViewModelAbstraction<TInitializer> where T : SettingsReactiveViewModelAbstraction<TInitializer>, new() where TInitializer : SettingsReactiveViewModelInitializer, new()
     {
-        private static Lazy<T> Internal { get; } = new Lazy<T>(() => new T(), true);
+        private static ISingleton<T> Internal { get; } = new Singleton<T>();
 
         public static T Instance
         {
             get
             {
-                return Internal.Value;
+                return Internal.Instance;
             }
         }
 
@@ -166,13 +169,13 @@ namespace NetExtender.WindowsPresentation.ReactiveUI.Types.Models
     
     public abstract class SettingsReactiveViewModelAbstractionSingleton<T, TWindow, TInitializer> : SettingsReactiveViewModelAbstraction<TWindow, TInitializer> where T : SettingsReactiveViewModelAbstraction<TWindow, TInitializer>, new() where TWindow : Window where TInitializer : SettingsReactiveViewModelInitializer, new()
     {
-        private static Lazy<T> Internal { get; } = new Lazy<T>(() => new T(), true);
+        private static ISingleton<T> Internal { get; } = new Singleton<T>();
 
         public static T Instance
         {
             get
             {
-                return Internal.Value;
+                return Internal.Instance;
             }
         }
 

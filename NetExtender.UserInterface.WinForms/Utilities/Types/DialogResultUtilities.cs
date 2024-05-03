@@ -2,11 +2,12 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 using NetExtender.Types.Exceptions;
 using NetExtender.UserInterface;
 
-namespace NetExtender.Utilities.Types
+namespace NetExtender.Utilities.UserInterface.Types
 {
     public static class DialogResultUtilities
     {
@@ -77,6 +78,66 @@ namespace NetExtender.Utilities.Types
                 DialogResult.Continue => InterfaceDialogResult.Continue,
                 _ => throw new EnumUndefinedOrNotSupportedException<DialogResult>(value, nameof(value), null)
             };
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean None(this DialogResult value)
+        {
+            return value == DialogResult.None;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean OK(this DialogResult value)
+        {
+            return value == DialogResult.OK;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Cancel(this DialogResult value)
+        {
+            return value == DialogResult.Cancel;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Abort(this DialogResult value)
+        {
+            return value == DialogResult.Abort;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Retry(this DialogResult value)
+        {
+            return value == DialogResult.Retry;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Ignore(this DialogResult value)
+        {
+            return value == DialogResult.Ignore;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Yes(this DialogResult value)
+        {
+            return value == DialogResult.Yes;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean No(this DialogResult value)
+        {
+            return value == DialogResult.No;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean TryAgain(this DialogResult value)
+        {
+            return value == DialogResult.TryAgain;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Continue(this DialogResult value)
+        {
+            return value == DialogResult.Continue;
         }
     }
 }

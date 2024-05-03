@@ -242,8 +242,7 @@ namespace NetExtender.Cryptography.Hash
             lsalt.CopyTo(buffer.Slice(offset += lpepper.Length, lsalt.Length));
             value.CopyTo(buffer.Slice(offset += lsalt.Length, value.Length));
             rsalt.CopyTo(buffer.Slice(offset += value.Length, rsalt.Length));
-            // ReSharper disable once RedundantAssignment
-            rpepper.CopyTo(buffer.Slice(offset += rsalt.Length, rpepper.Length));
+            rpepper.CopyTo(buffer.Slice(offset + rsalt.Length, rpepper.Length));
 
             Span<Byte> current = stackalloc Byte[(UInt16) HashType];
 

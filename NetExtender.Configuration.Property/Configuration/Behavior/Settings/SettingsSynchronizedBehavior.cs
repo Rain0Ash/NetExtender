@@ -9,18 +9,20 @@ using System.Threading.Tasks;
 using NetExtender.Configuration.Properties.Interfaces;
 using NetExtender.Configuration.Synchronizers;
 using NetExtender.Configuration.Synchronizers.Interfaces;
+using NetExtender.Types.Singletons;
+using NetExtender.Types.Singletons.Interfaces;
 
 namespace NetExtender.Configuration.Behavior.Settings
 {
     public abstract class SettingsSynchronizedBehavior<T> : SettingsSynchronizedBehavior where T : SettingsSynchronizedBehavior, new()
     {
-        private static Lazy<T> Internal { get; } = new Lazy<T>(() => new T(), true);
+        private static ISingleton<T> Internal { get; } = new Singleton<T>();
 
         public static T Instance
         {
             get
             {
-                return Internal.Value;
+                return Internal.Instance;
             }
         }
     }

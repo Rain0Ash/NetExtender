@@ -25,6 +25,15 @@ namespace NetExtender.Utilities.Network
 {
     public static class HttpContentUtilities
     {
+        private static MediaTypeFormatterCollection? collection;
+        private static MediaTypeFormatterCollection DefaultMediaTypeFormatterCollection
+        {
+            get
+            {
+                return collection ??= new MediaTypeFormatterCollection();
+            }
+        }
+        
         public static void CopyTo(this HttpContentHeaders source, HttpContentHeaders destination)
         {
             if (source is null)
@@ -43,13 +52,149 @@ namespace NetExtender.Utilities.Network
             }
         }
 
-        private static MediaTypeFormatterCollection? collection;
-        private static MediaTypeFormatterCollection DefaultMediaTypeFormatterCollection
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T SetTextContentType<T>(this T content) where T : HttpContent
         {
-            get
+            if (content is null)
             {
-                return collection ??= new MediaTypeFormatterCollection();
+                throw new ArgumentNullException(nameof(content));
             }
+
+            SetTextContentType(content.Headers);
+            return content;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T SetTextJsonContentType<T>(this T content) where T : HttpContent
+        {
+            if (content is null)
+            {
+                throw new ArgumentNullException(nameof(content));
+            }
+
+            SetTextJsonContentType(content.Headers);
+            return content;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T SetTextXmlContentType<T>(this T content) where T : HttpContent
+        {
+            if (content is null)
+            {
+                throw new ArgumentNullException(nameof(content));
+            }
+
+            SetTextXmlContentType(content.Headers);
+            return content;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T SetJsonContentType<T>(this T content) where T : HttpContent
+        {
+            if (content is null)
+            {
+                throw new ArgumentNullException(nameof(content));
+            }
+
+            SetJsonContentType(content.Headers);
+            return content;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T SetXmlContentType<T>(this T content) where T : HttpContent
+        {
+            if (content is null)
+            {
+                throw new ArgumentNullException(nameof(content));
+            }
+
+            SetXmlContentType(content.Headers);
+            return content;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T SetContentType<T>(this T content, MediaTypeHeaderValueType type) where T : HttpContent
+        {
+            if (content is null)
+            {
+                throw new ArgumentNullException(nameof(content));
+            }
+
+            SetContentType(content.Headers, type);
+            return content;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T SetContentType<T>(this T content, MediaTypeHeaderValue? type) where T : HttpContent
+        {
+            if (content is null)
+            {
+                throw new ArgumentNullException(nameof(content));
+            }
+
+            SetContentType(content.Headers, type);
+            return content;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean SetTextContentType(this HttpContentHeaders source)
+        {
+            return SetContentType(source, MediaTypeHeaderValueType.Text);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean SetTextJsonContentType(this HttpContentHeaders source)
+        {
+            return SetContentType(source, MediaTypeHeaderValueType.TextJson);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean SetTextXmlContentType(this HttpContentHeaders source)
+        {
+            return SetContentType(source, MediaTypeHeaderValueType.TextXml);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean SetJsonContentType(this HttpContentHeaders source)
+        {
+            return SetContentType(source, MediaTypeHeaderValueType.Json);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean SetXmlContentType(this HttpContentHeaders source)
+        {
+            return SetContentType(source, MediaTypeHeaderValueType.Xml);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean SetContentType(this HttpContentHeaders source, MediaTypeHeaderValueType type)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return SetContentType(source, type.Create());
+        }
+
+        public static Boolean SetContentType(this HttpContentHeaders source, MediaTypeHeaderValue? type)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (type is not null && String.IsNullOrEmpty(type.CharSet))
+            {
+                MediaTypeHeaderValue? current = source.ContentType;
+                if (current is not null && !String.IsNullOrEmpty(current.CharSet))
+                {
+                    type.CharSet = current.CharSet;
+                }
+            }
+
+            source.ContentType = type;
+            return true;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -824,6 +969,7 @@ namespace NetExtender.Utilities.Network
             return stream;
         }
 
+        // ReSharper disable once CognitiveComplexity
         private static async Task MultipartReadAsync(MultipartAsyncContext context, CancellationToken token)
         {
             if (context is null)

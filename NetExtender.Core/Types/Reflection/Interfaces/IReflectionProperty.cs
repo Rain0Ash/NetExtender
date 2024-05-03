@@ -19,6 +19,8 @@ namespace NetExtender.Types.Reflection.Interfaces
     
     public interface IReflectionProperty
     {
+        public String Name { get; }
+        public ReflectionPropertyType Type { get; }
         public Type Source { get; }
         public Type Property { get; }
         

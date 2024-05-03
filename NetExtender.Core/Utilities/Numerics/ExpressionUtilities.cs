@@ -13,6 +13,30 @@ namespace NetExtender.Utilities.Numerics
 {
     public static class ExpressionUtilities
     {
+        public static String GetMemberName<T, TResult>(this Expression<Func<T, TResult>> expression)
+        {
+            if (expression is null)
+            {
+                throw new ArgumentNullException(nameof(expression));
+            }
+
+            MemberExpression? member = expression.Body as MemberExpression;
+            if (member is null)
+            {
+                if (expression.Body is UnaryExpression unary)
+                {
+                    member = unary.Operand as MemberExpression;
+                }
+            }
+
+            if (member?.Expression is ParameterExpression parameter && parameter.Name == expression.Parameters[0].Name)
+            {
+                return member.Member.Name;
+            }
+
+            throw new InvalidOperationException("Invalid expression.");
+        }
+        
         public static Func<T, TResult> CreateExpression<T, TResult>(this Func<Expression, UnaryExpression> function)
         {
             if (function is null)
@@ -358,7 +382,36 @@ namespace NetExtender.Utilities.Numerics
 
             return CreateGetExpression<TSource, TValue>(member);
         }
-        
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Expression<Func<Object, Object?>> CreateGetExpression(String name, Type source, Type value)
+        {
+            if (name is null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            const BindingFlags binding = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+            MemberInfo? member = source.GetProperty(name, binding) ?? (MemberInfo?) source.GetField(name, binding);
+
+            if (member is null)
+            {
+                throw new MissingMemberException(source.Name, name);
+            }
+
+            return CreateGetExpression(member, source, value);
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static Boolean TryCreateGetExpression<TSource, TValue>(String name, [MaybeNullWhen(false)] out Expression<Func<TSource, TValue>> result)
         {
@@ -377,6 +430,44 @@ namespace NetExtender.Utilities.Numerics
                 if (member is not null)
                 {
                     return TryCreateGetExpression(member, out result);
+                }
+
+                result = default;
+                return false;
+            }
+            catch (Exception)
+            {
+                result = default;
+                return false;
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Boolean TryCreateGetExpression(String name, Type source, Type value, [MaybeNullWhen(false)] out Expression<Func<Object, Object?>> result)
+        {
+            if (name is null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            try
+            {
+                const BindingFlags binding = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+                MemberInfo? member = source.GetProperty(name, binding) ?? (MemberInfo?) source.GetField(name, binding);
+
+                if (member is not null)
+                {
+                    return TryCreateGetExpression(member, source, value, out result);
                 }
 
                 result = default;
@@ -416,6 +507,41 @@ namespace NetExtender.Utilities.Numerics
         }
 
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Expression<Func<Object, Object?>> CreateGetExpression(MemberInfo member, Type source, Type value)
+        {
+            if (member is null)
+            {
+                throw new ArgumentNullException(nameof(member));
+            }
+
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            if (member is not PropertyInfo && member is not FieldInfo)
+            {
+                throw new ArgumentException($"Member with type {member.GetType()} is not {nameof(PropertyInfo)} or {nameof(FieldInfo)}", nameof(member));
+            }
+
+            if (member is PropertyInfo { CanRead: false })
+            {
+                throw new MissingMethodException($"Member is {nameof(PropertyInfo)} without getter");
+            }
+
+            ParameterExpression parameter = Expression.Parameter(source, "source");
+
+            MemberExpression access = Expression.MakeMemberAccess(parameter, member);
+            UnaryExpression convert = Expression.Convert(access, value);
+            return Expression.Lambda<Func<Object, Object?>>(convert, parameter);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static Boolean TryCreateGetExpression<TSource, TValue>(MemberInfo member, [MaybeNullWhen(false)] out Expression<Func<TSource, TValue>> result)
         {
             if (member is null)
@@ -451,6 +577,51 @@ namespace NetExtender.Utilities.Numerics
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Boolean TryCreateGetExpression(MemberInfo member, Type source, Type value, [MaybeNullWhen(false)] out Expression<Func<Object, Object?>> result)
+        {
+            if (member is null)
+            {
+                throw new ArgumentNullException(nameof(member));
+            }
+
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            if (member is not PropertyInfo && member is not FieldInfo)
+            {
+                throw new ArgumentException($"Member with type {member.GetType()} is not {nameof(PropertyInfo)} or {nameof(FieldInfo)}", nameof(member));
+            }
+
+            if (member is PropertyInfo { CanRead: false })
+            {
+                result = default;
+                return false;
+            }
+
+            try
+            {
+                ParameterExpression parameter = Expression.Parameter(source, "source");
+
+                MemberExpression access = Expression.MakeMemberAccess(parameter, member);
+                UnaryExpression convert = Expression.Convert(access, value);
+                result = Expression.Lambda<Func<Object, Object?>>(convert, parameter);
+                return true;
+            }
+            catch (Exception)
+            {
+                result = default;
+                return false;
+            }
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Expression<Func<TSource, TValue>> CreateGetExpression<TSource, TValue>(this FieldInfo field)
         {
@@ -458,9 +629,45 @@ namespace NetExtender.Utilities.Numerics
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Expression<Func<Object, Object?>> CreateGetExpression(this FieldInfo field, Type source, Type value)
+        {
+            return CreateGetExpression((MemberInfo) field, source, value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean TryCreateGetExpression<TSource, TValue>(this FieldInfo field, [MaybeNullWhen(false)] out Expression<Func<TSource, TValue>> result)
+        {
+            return TryCreateGetExpression((MemberInfo) field, out result);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean TryCreateGetExpression(this FieldInfo field, Type source, Type value, [MaybeNullWhen(false)] out Expression<Func<Object, Object?>> result)
+        {
+            return TryCreateGetExpression((MemberInfo) field, source, value, out result);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Expression<Func<TSource, TValue>> CreateGetExpression<TSource, TValue>(this PropertyInfo field)
         {
             return CreateGetExpression<TSource, TValue>((MemberInfo) field);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Expression<Func<Object, Object?>> CreateGetExpression(this PropertyInfo field, Type source, Type value)
+        {
+            return CreateGetExpression((MemberInfo) field, source, value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean TryCreateGetExpression<TSource, TValue>(this PropertyInfo field, [MaybeNullWhen(false)] out Expression<Func<TSource, TValue>> result)
+        {
+            return TryCreateGetExpression((MemberInfo) field, out result);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean TryCreateGetExpression(this PropertyInfo field, Type source, Type value, [MaybeNullWhen(false)] out Expression<Func<Object, Object?>> result)
+        {
+            return TryCreateGetExpression((MemberInfo) field, source, value, out result);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]

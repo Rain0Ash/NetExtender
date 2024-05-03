@@ -141,18 +141,16 @@ namespace NetExtender.Utilities.Types
         /// </summary>
         public static ValueTask DisposeAsync(this IDisposable disposable)
         {
-            if (disposable is null)
+            switch (disposable)
             {
-                throw new ArgumentNullException(nameof(disposable));
+                case null:
+                    throw new ArgumentNullException(nameof(disposable));
+                case IAsyncDisposable async:
+                    return async.DisposeAsync();
+                default:
+                    disposable.Dispose();
+                    return ValueTask.CompletedTask;
             }
-
-            if (disposable is IAsyncDisposable async)
-            {
-                return async.DisposeAsync();
-            }
-
-            disposable.Dispose();
-            return ValueTask.CompletedTask;
         }
 
         public static ValueTask TryDisposeAllAsync<T>(this IEnumerable<T?> source)

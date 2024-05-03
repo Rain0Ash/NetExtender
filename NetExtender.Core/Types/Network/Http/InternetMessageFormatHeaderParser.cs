@@ -76,6 +76,7 @@ namespace NetExtender.Types.Network
             }
         }
 
+        // ReSharper disable once CognitiveComplexity
         private static HttpParserState ParseHeaderFields(Byte[] buffer, Int32 ready, ref Int32 consumed, ref HeaderFieldState state, Int32 length, ref Int32 total, CurrentHeaderFieldStore current, HttpHeaders headers, Boolean validation)
         {
             Int32 start = consumed;

@@ -6,14 +6,37 @@ using System.Collections.Generic;
 
 namespace NetExtender.Types.Counters.Interfaces
 {
-    public interface ICounter<T> : IReadOnlyDictionary<T, Int32> where T : notnull
+    public interface ICounter<T> : ICounter<T, Int32>
     {
-        public Int32 Add(T item);
+    }
+    
+    public interface ICounter64<T> : ICounter<T, Int64>
+    {
+    }
+    
+    public interface ICounter<T, TCount> : IDictionary<T, TCount> where TCount : unmanaged, IConvertible
+    {
+        public Boolean Contains(T item);
+        public Boolean Contains(T item, TCount count);
+        public TCount Add(T item);
+        public new TCount Add(T item, TCount count);
         public Boolean TryAdd(T item);
-        public Boolean TryAdd(T item, out Int32 count);
-        public void AddRange(IEnumerable<T> source);
-        public Boolean Remove(T item);
-        public Boolean Remove(T item, out Int32 count);
-        public void RemoveRange(IEnumerable<T> source);
+        public Boolean TryAdd(T item, TCount count);
+        public Boolean TryAdd(T item, out TCount result);
+        public Boolean TryAdd(T item, TCount count, out TCount result);
+        public Boolean AddRange(IEnumerable<T> source);
+        public Boolean AddRange(IEnumerable<KeyValuePair<T, TCount>> source);
+        public new Boolean Remove(T item);
+        public Boolean Remove(T item, TCount count);
+        public Boolean Remove(T item, out TCount result);
+        public Boolean Remove(T item, TCount count, out TCount result);
+        public Boolean RemoveRange(IEnumerable<T> source);
+        public Boolean RemoveRange(IEnumerable<KeyValuePair<T, TCount>> source);
+        public Boolean Clear(T item);
+        public Boolean Clear(IEnumerable<T> source);
+
+        public IEnumerable<T> Enumerate();
+        public T[]? ToItemsArray();
+        public T[]? ToItemsArray(Int32 length);
     }
 }

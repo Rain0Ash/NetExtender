@@ -12,6 +12,7 @@ using NetExtender.Utilities.Types;
 
 namespace NetExtender.WindowsPresentationForms.Types.Converters
 {
+    [ValueConversion(typeof(Bitmap), typeof(BitmapSource))]
     public class BitmapToBitmapSourceConverter : IValueConverter
     {
         [return: NotNullIfNotNull("value")]

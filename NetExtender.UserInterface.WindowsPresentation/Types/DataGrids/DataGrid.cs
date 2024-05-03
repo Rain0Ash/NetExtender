@@ -1,0 +1,44 @@
+using System;
+using System.Collections.Specialized;
+using System.Windows.Controls;
+using System.Windows.Data;
+using NetExtender.UserInterface.WindowsPresentation.Types.TextBlocks;
+using NetExtender.WindowsPresentation.Utilities.Types;
+
+namespace NetExtender.UserInterface.WindowsPresentation.Types.DataGrids
+{
+    public class DataGrid : ViewDataGrid
+    {
+        public DataGrid()
+        {
+            Columns.CollectionChanged += Bind;
+        }
+
+        protected virtual void Bind(Object? sender, NotifyCollectionChangedEventArgs args)
+        {
+            if (args.NewItems is null)
+            {
+                return;
+            }
+
+            foreach (Object? item in args.NewItems)
+            {
+                if (item is not DataGridTextColumn { View: null } column)
+                {
+                    continue;
+                }
+
+                Binding? binding = column.GetBinding(DataGridTextColumn.HeaderProperty);
+
+                if (binding is null)
+                {
+                    continue;
+                }
+
+                TextBlock block = new CenterTextBlock();
+                block.SetBinding(TextBlock.TextProperty, binding);
+                column.View = block;
+            }
+        }
+    }
+}

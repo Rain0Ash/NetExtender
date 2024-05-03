@@ -28,10 +28,13 @@ namespace NetExtender.WindowsPresentation.Types.Converters
         }
     }
 
-    public abstract class WindowMultiConverter<TWindow> : IMultiValueConverter where TWindow : Window
+    public abstract class WindowMultiConverter<TWindow> : WindowMultiConverter where TWindow : Window
     {
         public TWindow Window { get; } = WindowStoreUtilities<TWindow>.Require();
+    }
 
+    public abstract class WindowMultiConverter : IMultiValueConverter
+    {
         public abstract Object? Convert(Object?[]? values, Type? targetType, Object? parameter, CultureInfo? culture);
         public abstract Object?[]? ConvertBack(Object? value, Type?[]? targetTypes, Object? parameter, CultureInfo? culture);
     }

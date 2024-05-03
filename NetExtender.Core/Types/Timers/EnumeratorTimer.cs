@@ -57,6 +57,26 @@ namespace NetExtender.Types.Timers
                 return Timer.IsStarted;
             }
         }
+        
+        public DateTime Now
+        {
+            get
+            {
+                return Timer.Now;
+            }
+        }
+
+        public DateTimeKind Kind
+        {
+            get
+            {
+                return Timer.Kind;
+            }
+            set
+            {
+                Timer.Kind = value;
+            }
+        }
 
         public TimeSpan Interval
         {
@@ -119,6 +139,11 @@ namespace NetExtender.Types.Timers
 
             Finished?.Invoke(this, EventArgs.Empty);
             Dispose();
+        }
+
+        public Boolean TrySetKind(DateTimeKind kind)
+        {
+            return Timer.TrySetKind(kind);
         }
 
         public void Start()

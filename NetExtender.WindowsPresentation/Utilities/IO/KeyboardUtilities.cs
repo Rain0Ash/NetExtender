@@ -2,7 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
-using System.Collections.ObjectModel;
+using System.Collections.Immutable;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using NetExtender.Types.Exceptions;
@@ -76,8 +76,8 @@ namespace NetExtender.Utilities.Windows.IO
                 throw new ArgumentNullException(nameof(handler));
             }
 
-            ReadOnlyCollection<Key> values = EnumUtilities.GetValuesWithoutDefault<Key>();
-            Span<Key> keys = stackalloc Key[values.Count];
+            ImmutableArray<Key> values = EnumUtilities.GetValuesWithoutDefault<Key>();
+            Span<Key> keys = stackalloc Key[values.Length];
 
             Int32 counter = 0;
             foreach (Key key in values)

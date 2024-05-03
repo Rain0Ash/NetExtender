@@ -13,6 +13,7 @@ using NetExtender.Utilities.Core;
 // ReSharper disable MemberCanBePrivate.Global
 #pragma warning disable CS0169
 #pragma warning disable CS0649
+#pragma warning disable CS9084
 namespace NetExtender.Types.Sizes
 {
 <#
@@ -53,6 +54,22 @@ namespace NetExtender.Types.Sizes
         WriteLine(String.Empty);
         WriteLine($"\t\tpublic const {nameof(Int32)} Size = {size};");
         WriteLine($"\t\tprivate fixed {nameof(Byte)} Internal[Size];");
+        WriteLine(String.Empty);
+        WriteLine($"\t\tpublic {nameof(Type)} Type");
+        WriteLine("\t\t{");
+        WriteLine("\t\t\tget");
+        WriteLine("\t\t\t{");
+        WriteLine($"\t\t\t\treturn typeof({nameof(UnsafeSize)}{size});");
+        WriteLine("\t\t\t}");
+        WriteLine("\t\t}");
+        WriteLine(String.Empty);
+        WriteLine($"\t\tref {nameof(UnsafeSize)}{size} IUnsafeSize<{nameof(UnsafeSize)}{size}>.Self");
+        WriteLine("\t\t{");
+        WriteLine("\t\t\tget");
+        WriteLine("\t\t\t{");
+        WriteLine("\t\t\t\treturn ref this;");
+        WriteLine("\t\t\t}");
+        WriteLine("\t\t}");
         WriteLine(String.Empty);
         WriteLine($"\t\tpublic readonly {nameof(Int32)} Length");
         WriteLine("\t\t{");
@@ -110,7 +127,7 @@ namespace NetExtender.Types.Sizes
         WriteLine("\t\t\t}");
         WriteLine("\t\t}");
         WriteLine(String.Empty);
-        WriteLine("\t\tpublic readonly ref T As<T>()");
+        WriteLine("\t\tpublic readonly ref T As<T>() where T : struct");
         WriteLine("\t\t{");
         WriteLine($"\t\t\tfixed ({nameof(Byte)}* pointer = Internal)");
         WriteLine("\t\t\t{");

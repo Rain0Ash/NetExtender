@@ -46,6 +46,50 @@ namespace NetExtender.Utilities.UserInterface
 
             return UserInterfaceUtilities.BringToForegroundWindow(form.Handle);
         }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean? GetWindowSystemMenu(this Form form)
+        {
+            if (form is null)
+            {
+                throw new ArgumentNullException(nameof(form));
+            }
+
+            return UserInterfaceUtilities.GetWindowSystemMenu(form.Handle);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean SetWindowSystemMenu(this Form form, Boolean value)
+        {
+            if (form is null)
+            {
+                throw new ArgumentNullException(nameof(form));
+            }
+
+            return UserInterfaceUtilities.SetWindowSystemMenu(form.Handle, value);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean GetWindowDisplayAffinity(this Form form, out WindowDisplayAffinity affinity)
+        {
+            if (form is null)
+            {
+                throw new ArgumentNullException(nameof(form));
+            }
+            
+            return UserInterfaceUtilities.GetWindowDisplayAffinity(form.Handle, out affinity);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean SetWindowDisplayAffinity(this Form form, WindowDisplayAffinity affinity)
+        {
+            if (form is null)
+            {
+                throw new ArgumentNullException(nameof(form));
+            }
+            
+            return UserInterfaceUtilities.SetWindowDisplayAffinity(form.Handle, affinity);
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void SetPrimaryScreenPercentageSize(this Form form)

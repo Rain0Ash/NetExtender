@@ -173,32 +173,34 @@ namespace NetExtender.Types.Exceptions
         }
 
         public BusinessException()
+            : base(nameof(BusinessException))
         {
         }
 
         public BusinessException(HttpStatusCode status)
+            : base(Format(null, status))
         {
             Status = status;
         }
 
         public BusinessException(String? message)
-            : base(message)
+            : base(message ?? nameof(BusinessException))
         {
         }
 
         public BusinessException(String? message, HttpStatusCode status)
-            : base(message)
+            : base(Format(message, status))
         {
             Status = status;
         }
 
         public BusinessException(String? message, Exception? innerException)
-            : base(message, innerException)
+            : base(message ?? nameof(BusinessException), innerException)
         {
         }
 
         public BusinessException(String? message, HttpStatusCode status, Exception? innerException)
-            : base(message, innerException)
+            : base(Format(message, status), innerException)
         {
             Status = status;
         }
@@ -208,6 +210,11 @@ namespace NetExtender.Types.Exceptions
         {
             Description = info.GetString(nameof(Description));
             Status = info.GetValueOrDefault<HttpStatusCode?>(nameof(Status));
+        }
+
+        private static String Format(String? message, HttpStatusCode status)
+        {
+            return message ?? $"{nameof(BusinessException)}: {(Int32) status} ({status})";
         }
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)

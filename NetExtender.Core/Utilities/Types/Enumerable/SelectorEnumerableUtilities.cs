@@ -2118,7 +2118,7 @@ namespace NetExtender.Utilities.Types
             {
                 chunk1[0] = enumerator1.Current;
                 chunk2[0] = enumerator2.Current;
-                chunk2[0] = enumerator2.Current;
+                chunk3[0] = enumerator3.Current;
                 chunk4[0] = enumerator4.Current;
 
                 Int32 i;

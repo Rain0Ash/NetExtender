@@ -98,7 +98,7 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Single ConvertInformation(this Single value, InformationSize from, InformationSize to)
         {
-            if (from == to)
+            if (from <= default(InformationSize) || to <= default(InformationSize) || from == to)
             {
                 return value;
             }
@@ -115,7 +115,7 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double ConvertInformation(this Double value, InformationSize from, InformationSize to)
         {
-            if (from == to)
+            if (from <= default(InformationSize) || to <= default(InformationSize) || from == to)
             {
                 return value;
             }
@@ -132,7 +132,7 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Decimal ConvertInformation(this Decimal value, InformationSize from, InformationSize to)
         {
-            if (from == to)
+            if (from <= default(InformationSize) || to <= default(InformationSize) || from == to)
             {
                 return value;
             }
@@ -185,7 +185,7 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static UInt64 ConvertInformation(this UInt64 value, InformationSize from, InformationSize to)
         {
-            if (from == to)
+            if (from <= default(InformationSize) || to <= default(InformationSize) || from == to)
             {
                 return value;
             }

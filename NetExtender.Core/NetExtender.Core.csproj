@@ -24,6 +24,7 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.4" />
+        <PackageReference Include="Microsoft.Extensions.ObjectPool" Version="6.0.25" />
         <PackageReference Include="Microsoft.Extensions.Primitives" Version="6.0.0" />
         <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="2.3.2" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
@@ -160,6 +161,15 @@
         </Compile>
         <Compile Update="Utilities\Types\SizeFEnumerator.cs">
           <DependentUpon>SizeUtilities.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\Sizes\UnsafeSizeGenerics.cs">
+          <DependentUpon>UnsafeSizeGenerics.tt</DependentUpon>
+        </Compile>
+        <Compile Update="Utilities\Types\EnumUtilities.Cache.cs">
+          <DependentUpon>EnumUtilities.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Utilities\Types\EnumUtilities.Properties.cs">
+          <DependentUpon>EnumUtilities.cs</DependentUpon>
         </Compile>
     </ItemGroup>
 

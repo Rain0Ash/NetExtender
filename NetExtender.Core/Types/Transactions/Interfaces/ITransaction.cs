@@ -2,12 +2,16 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using NetExtender.Types.Transactions;
 
 namespace NetExtender.Types.Transactions.Interfaces
 {
     public interface ITransaction : IDisposable
     {
-        void Commit();
-        void Rollback();
+        public Boolean? IsCommit { get; }
+        public TransactionCommitPolicy Policy { get; }
+        
+        public Boolean Commit();
+        public Boolean Rollback();
     }
 }

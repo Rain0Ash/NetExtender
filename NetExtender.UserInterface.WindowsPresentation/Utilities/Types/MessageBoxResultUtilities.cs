@@ -2,6 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Runtime.CompilerServices;
 using System.Windows;
 using NetExtender.Types.Exceptions;
 using NetExtender.UserInterface;
@@ -67,6 +68,36 @@ namespace NetExtender.Utilities.UserInterface.Types
                 MessageBoxResult.No => InterfaceDialogResult.No,
                 _ => throw new EnumUndefinedOrNotSupportedException<MessageBoxResult>(value, nameof(value), null)
             };
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean None(this MessageBoxResult value)
+        {
+            return value == MessageBoxResult.None;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean OK(this MessageBoxResult value)
+        {
+            return value == MessageBoxResult.OK;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Cancel(this MessageBoxResult value)
+        {
+            return value == MessageBoxResult.Cancel;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Yes(this MessageBoxResult value)
+        {
+            return value == MessageBoxResult.Yes;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean No(this MessageBoxResult value)
+        {
+            return value == MessageBoxResult.No;
         }
     }
 }

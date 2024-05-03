@@ -9,12 +9,25 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
     public abstract class StartedWindow : HandleWindow
     {
         public event RoutedEventHandler? Started;
+        public event RoutedEventHandler? Showed;
 
         private Boolean IsStarted { get; set; }
 
         protected StartedWindow()
         {
+            BeginConstructorInit();
             Loaded += OnStarted;
+            EndConstructorInit();
+        }
+
+        protected void BeginConstructorInit()
+        {
+            Loaded -= OnShow;
+        }
+
+        protected void EndConstructorInit()
+        {
+            Loaded += OnShow;
         }
 
         private void OnStarted(Object? sender, RoutedEventArgs args)
@@ -26,8 +39,12 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
 
             Loaded -= OnStarted;
             Started?.Invoke(sender, args);
-
             IsStarted = true;
+        }
+
+        private void OnShow(Object? sender, RoutedEventArgs args)
+        {
+            Showed?.Invoke(sender, args);
         }
     }
 }

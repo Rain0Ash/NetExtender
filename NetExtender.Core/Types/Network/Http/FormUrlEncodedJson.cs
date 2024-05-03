@@ -50,6 +50,7 @@ namespace NetExtender.Types.Network
             return true;
         }
 
+        // ReSharper disable once CognitiveComplexity
         private static JObject? ParseInternal(IEnumerable<KeyValuePair<String?, String?>> source, Int32 depth, Boolean @throw)
         {
             if (source is null)
@@ -158,6 +159,7 @@ namespace NetExtender.Types.Network
             return builder.ToString();
         }
 
+        // ReSharper disable once CognitiveComplexity
         private static Boolean ValidateQueryString(String key, Boolean @throw)
         {
             if (key is null)
@@ -296,6 +298,7 @@ namespace NetExtender.Types.Network
             return true;
         }
 
+        // ReSharper disable once CognitiveComplexity
         private static Boolean Insert(JObject root, String[] path, String? value, Boolean @throw)
         {
             if (root is null)

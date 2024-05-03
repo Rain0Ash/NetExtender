@@ -536,6 +536,7 @@ namespace NetExtender.Utilities.Windows.IO
             return String.IsNullOrEmpty(name) || name.IndexOfAny(InvalidStreamNameChars) == -1;
         }
 
+        //TODO: refactoring
         [SuppressMessage("ReSharper", "CognitiveComplexity")]
         private static IEnumerable<Win32StreamInfo> GetDataStreams(String path)
         {
@@ -607,7 +608,7 @@ namespace NetExtender.Utilities.Windows.IO
                     }
 
                     // Skip the contents of the stream:
-                    if (streamId.Size.Low == 0 && streamId.Size.High == 0)
+                    if (streamId.Size is { Low: 0, High: 0 })
                     {
                         continue;
                     }

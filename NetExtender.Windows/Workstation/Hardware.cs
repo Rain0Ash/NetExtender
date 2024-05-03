@@ -123,7 +123,7 @@ namespace NetExtender.Workstation
             using ManagementObjectCollection collection = searcher.Get();
 
             return collection.AsEnumerable()
-                .Where(management => management["IPEnabled"] is Boolean ip && ip)
+                .Where(management => management["IPEnabled"] is true)
                 .Select(management => management["MacAddress"]).FirstOrDefault()?.ToString();
         }
 
@@ -211,7 +211,7 @@ namespace NetExtender.Workstation
             using ManagementObjectCollection collection = searcher.Get();
 
             return collection.AsEnumerable()
-                .Where(management => management["IPEnabled"] is Boolean ip && ip)
+                .Where(management => management["IPEnabled"] is true)
                 .Select(management => management["DefaultIPGateway"]).FirstOrDefault()?.ToString();
         }
 

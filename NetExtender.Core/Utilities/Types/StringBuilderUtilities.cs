@@ -1425,7 +1425,7 @@ namespace NetExtender.Utilities.Types
 
             if (count < 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(count), start, null);
+                throw new ArgumentOutOfRangeException(nameof(count), count, null);
             }
 
             if (count < value.Length)

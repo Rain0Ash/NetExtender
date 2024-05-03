@@ -2,63 +2,246 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
-using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using NetExtender.Types.Counters;
-using NetExtender.Types.Counters.Interfaces;
-using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Concurrent.Counters
 {
-    public class ConcurrentCounter<T> : ICounter<T>, IReadOnlyCounter<T> where T : notnull
+    public class ConcurrentCounter<T> : ConcurrentCounter<T, Int32> where T : notnull
     {
-        private ConcurrentDictionary<T, Int32> Internal { get; }
-
         public ConcurrentCounter()
         {
-            Internal = new ConcurrentDictionary<T, Int32>();
         }
 
         public ConcurrentCounter(Int32 concurrencyLevel, Int32 capacity)
+            : base(concurrencyLevel, capacity)
         {
-            Internal = new ConcurrentDictionary<T, Int32>(concurrencyLevel, capacity);
         }
 
         public ConcurrentCounter(IEqualityComparer<T>? comparer)
+            : base(comparer)
         {
-            Internal = new ConcurrentDictionary<T, Int32>(comparer);
         }
 
         public ConcurrentCounter(IEnumerable<T> collection)
+            : base(collection)
         {
-            if (collection is null)
-            {
-                throw new ArgumentNullException(nameof(collection));
-            }
+        }
 
-            Internal = new ConcurrentDictionary<T, Int32>(new Counter<T>(collection));
+        public ConcurrentCounter(IEnumerable<KeyValuePair<T, Int32>> collection)
+            : base(collection)
+        {
         }
 
         public ConcurrentCounter(IEnumerable<T> collection, IEqualityComparer<T>? comparer)
+            : base(collection, comparer)
         {
-            if (collection is null)
-            {
-                throw new ArgumentNullException(nameof(collection));
-            }
+        }
 
-            Internal = new ConcurrentDictionary<T, Int32>(new Counter<T>(collection, comparer), comparer);
+        public ConcurrentCounter(IEnumerable<KeyValuePair<T, Int32>> collection, IEqualityComparer<T>? comparer)
+            : base(collection, comparer)
+        {
         }
 
         public ConcurrentCounter(Int32 concurrencyLevel, IEnumerable<T> collection, IEqualityComparer<T>? comparer)
+            : base(concurrencyLevel, collection, comparer)
         {
-            if (collection is null)
-            {
-                throw new ArgumentNullException(nameof(collection));
-            }
-
-            Internal = new ConcurrentDictionary<T, Int32>(concurrencyLevel, new Counter<T>(collection, comparer), comparer);
         }
+
+        public ConcurrentCounter(Int32 concurrencyLevel, IEnumerable<KeyValuePair<T, Int32>> collection, IEqualityComparer<T>? comparer)
+            : base(concurrencyLevel, collection, comparer)
+        {
+        }
+
+        protected sealed override Boolean LessOrEquals(Int32 value, Int32 count)
+        {
+            return value <= count;
+        }
+
+        protected sealed override Boolean GreaterOrEquals(Int32 value, Int32 count)
+        {
+            return value >= count;
+        }
+
+        protected sealed override Int32 Increment(Int32 value)
+        {
+            return ++value;
+        }
+
+        protected sealed override Int32 Decrement(Int32 value)
+        {
+            return --value;
+        }
+
+        protected sealed override Int32 Add(Int32 left, Int32 right)
+        {
+            return left + right;
+        }
+
+        protected sealed override Int32 Substract(Int32 left, Int32 right)
+        {
+            return left - right;
+        }
+    }
+    
+    public class ConcurrentCounter64<T> : ConcurrentCounter<T, Int64> where T : notnull
+    {
+        public ConcurrentCounter64()
+        {
+        }
+
+        public ConcurrentCounter64(Int32 concurrencyLevel, Int32 capacity)
+            : base(concurrencyLevel, capacity)
+        {
+        }
+
+        public ConcurrentCounter64(IEqualityComparer<T>? comparer)
+            : base(comparer)
+        {
+        }
+
+        public ConcurrentCounter64(IEnumerable<T> collection)
+            : base(collection)
+        {
+        }
+
+        public ConcurrentCounter64(IEnumerable<KeyValuePair<T, Int64>> collection)
+            : base(collection)
+        {
+        }
+
+        public ConcurrentCounter64(IEnumerable<T> collection, IEqualityComparer<T>? comparer)
+            : base(collection, comparer)
+        {
+        }
+
+        public ConcurrentCounter64(IEnumerable<KeyValuePair<T, Int64>> collection, IEqualityComparer<T>? comparer)
+            : base(collection, comparer)
+        {
+        }
+
+        public ConcurrentCounter64(Int32 concurrencyLevel, IEnumerable<T> collection, IEqualityComparer<T>? comparer)
+            : base(concurrencyLevel, collection, comparer)
+        {
+        }
+
+        public ConcurrentCounter64(Int32 concurrencyLevel, IEnumerable<KeyValuePair<T, Int64>> collection, IEqualityComparer<T>? comparer)
+            : base(concurrencyLevel, collection, comparer)
+        {
+        }
+
+        protected sealed override Boolean LessOrEquals(Int64 value, Int64 count)
+        {
+            return value <= count;
+        }
+
+        protected sealed override Boolean GreaterOrEquals(Int64 value, Int64 count)
+        {
+            return value >= count;
+        }
+
+        protected sealed override Int64 Increment(Int64 value)
+        {
+            return ++value;
+        }
+
+        protected sealed override Int64 Decrement(Int64 value)
+        {
+            return --value;
+        }
+
+        protected sealed override Int64 Add(Int64 left, Int64 right)
+        {
+            return left + right;
+        }
+
+        protected sealed override Int64 Substract(Int64 left, Int64 right)
+        {
+            return left - right;
+        }
+    }
+    
+    public class ConcurrentDecimalCounter<T> : ConcurrentCounter<T, Decimal> where T : notnull
+    {
+        public ConcurrentDecimalCounter()
+        {
+        }
+
+        public ConcurrentDecimalCounter(Int32 concurrencyLevel, Int32 capacity)
+            : base(concurrencyLevel, capacity)
+        {
+        }
+
+        public ConcurrentDecimalCounter(IEqualityComparer<T>? comparer)
+            : base(comparer)
+        {
+        }
+
+        public ConcurrentDecimalCounter(IEnumerable<T> collection)
+            : base(collection)
+        {
+        }
+
+        public ConcurrentDecimalCounter(IEnumerable<KeyValuePair<T, Decimal>> collection)
+            : base(collection)
+        {
+        }
+
+        public ConcurrentDecimalCounter(IEnumerable<T> collection, IEqualityComparer<T>? comparer)
+            : base(collection, comparer)
+        {
+        }
+
+        public ConcurrentDecimalCounter(IEnumerable<KeyValuePair<T, Decimal>> collection, IEqualityComparer<T>? comparer)
+            : base(collection, comparer)
+        {
+        }
+
+        public ConcurrentDecimalCounter(Int32 concurrencyLevel, IEnumerable<T> collection, IEqualityComparer<T>? comparer)
+            : base(concurrencyLevel, collection, comparer)
+        {
+        }
+
+        public ConcurrentDecimalCounter(Int32 concurrencyLevel, IEnumerable<KeyValuePair<T, Decimal>> collection, IEqualityComparer<T>? comparer)
+            : base(concurrencyLevel, collection, comparer)
+        {
+        }
+
+        protected sealed override Boolean LessOrEquals(Decimal value, Decimal count)
+        {
+            return value <= count;
+        }
+
+        protected sealed override Boolean GreaterOrEquals(Decimal value, Decimal count)
+        {
+            return value >= count;
+        }
+
+        protected sealed override Decimal Increment(Decimal value)
+        {
+            return ++value;
+        }
+
+        protected sealed override Decimal Decrement(Decimal value)
+        {
+            return --value;
+        }
+
+        protected sealed override Decimal Add(Decimal left, Decimal right)
+        {
+            return left + right;
+        }
+
+        protected sealed override Decimal Substract(Decimal left, Decimal right)
+        {
+            return left - right;
+        }
+    }
+    
+    public class ConcurrentCounter<T, TCount> : CounterAbstraction<T, TCount> where T : notnull where TCount : unmanaged, IConvertible
+    {
+        protected sealed override ConcurrentDictionary<T, TCount> Internal { get; }
 
         public Boolean IsEmpty
         {
@@ -68,186 +251,88 @@ namespace NetExtender.Types.Concurrent.Counters
             }
         }
 
-        public Int32 Count
+        public ConcurrentCounter()
         {
-            get
-            {
-                return Internal.Count;
-            }
+            Internal = new ConcurrentDictionary<T, TCount>();
         }
 
-        public ICollection<T> Keys
+        public ConcurrentCounter(Int32 concurrencyLevel, Int32 capacity)
         {
-            get
-            {
-                return Internal.Keys;
-            }
+            Internal = new ConcurrentDictionary<T, TCount>(concurrencyLevel, capacity);
         }
 
-        IEnumerable<T> IReadOnlyDictionary<T, Int32>.Keys
+        public ConcurrentCounter(IEqualityComparer<T>? comparer)
         {
-            get
-            {
-                return Keys;
-            }
+            Internal = new ConcurrentDictionary<T, TCount>(comparer);
         }
 
-        public ICollection<Int32> Values
+        public ConcurrentCounter(IEnumerable<T> collection)
         {
-            get
+            if (collection is null)
             {
-                return Internal.Values;
+                throw new ArgumentNullException(nameof(collection));
             }
+
+            Internal = new ConcurrentDictionary<T, TCount>();
+            AddRange(collection);
         }
 
-        IEnumerable<Int32> IReadOnlyDictionary<T, Int32>.Values
+        public ConcurrentCounter(IEnumerable<KeyValuePair<T, TCount>> collection)
         {
-            get
+            if (collection is null)
             {
-                return Values;
+                throw new ArgumentNullException(nameof(collection));
             }
+
+            Internal = new ConcurrentDictionary<T, TCount>();
+            AddRange(collection);
         }
 
-        private static Int32 Increment(T item, Int32 current)
+        public ConcurrentCounter(IEnumerable<T> collection, IEqualityComparer<T>? comparer)
         {
-            return ++current;
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
+            Internal = new ConcurrentDictionary<T, TCount>(comparer);
+            AddRange(collection);
         }
 
-        private static Int32 Decrement(T item, Int32 current)
+        public ConcurrentCounter(IEnumerable<KeyValuePair<T, TCount>> collection, IEqualityComparer<T>? comparer)
         {
-            return --current;
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
+            Internal = new ConcurrentDictionary<T, TCount>(comparer);
+            AddRange(collection);
         }
 
-        public Boolean ContainsKey(T key)
+        public ConcurrentCounter(Int32 concurrencyLevel, IEnumerable<T> collection, IEqualityComparer<T>? comparer)
         {
-            if (key is null)
+            if (collection is null)
             {
-                throw new ArgumentNullException(nameof(key));
+                throw new ArgumentNullException(nameof(collection));
             }
 
-            return Internal.ContainsKey(key);
+            Internal = new ConcurrentDictionary<T, TCount>(concurrencyLevel, new Counter<T, TCount>(collection, comparer), comparer);
         }
 
-        public Boolean TryGetValue(T key, out Int32 value)
+        public ConcurrentCounter(Int32 concurrencyLevel, IEnumerable<KeyValuePair<T, TCount>> collection, IEqualityComparer<T>? comparer)
         {
-            if (key is null)
+            if (collection is null)
             {
-                throw new ArgumentNullException(nameof(key));
+                throw new ArgumentNullException(nameof(collection));
             }
 
-            return Internal.TryGetValue(key, out value);
+            Internal = new ConcurrentDictionary<T, TCount>(concurrencyLevel, new Counter<T, TCount>(collection, comparer), comparer);
         }
 
-        public Int32 Add(T item)
-        {
-            if (item is null)
-            {
-                throw new ArgumentNullException(nameof(item));
-            }
-
-            return Internal.AddOrUpdate(item, 1, Increment);
-        }
-
-        public Boolean TryAdd(T item)
-        {
-            return TryAdd(item, out _);
-        }
-
-        public Boolean TryAdd(T item, out Int32 count)
-        {
-            if (item is null)
-            {
-                throw new ArgumentNullException(nameof(item));
-            }
-
-            try
-            {
-                count = Internal.AddOrUpdate(item, 1, Increment);
-                return true;
-            }
-            catch (OverflowException)
-            {
-                count = default;
-                return false;
-            }
-        }
-
-        public void AddRange(IEnumerable<T> source)
-        {
-            if (source is null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-
-            foreach (T item in source.WhereNotNull())
-            {
-                TryAdd(item);
-            }
-        }
-
-        public Boolean Remove(T item)
-        {
-            return Remove(item, out _);
-        }
-
-        public Boolean Remove(T item, out Int32 count)
-        {
-            if (item is null)
-            {
-                throw new ArgumentNullException(nameof(item));
-            }
-
-            lock (Internal)
-            {
-                if (!Internal.TryGetValue(item, out count))
-                {
-                    return false;
-                }
-
-                if (count <= 1)
-                {
-                    return Internal.TryRemove(item, out count);
-                }
-
-                count = Internal.AddOrUpdate(item, 0, Decrement);
-                return count > 0;
-            }
-        }
-
-        public void RemoveRange(IEnumerable<T> source)
-        {
-            if (source is null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-
-            foreach (T item in source.WhereNotNull())
-            {
-                Remove(item);
-            }
-        }
-
-        public KeyValuePair<T, Int32>[] ToArray()
+        public sealed override KeyValuePair<T, TCount>[] ToArray()
         {
             return Internal.ToArray();
-        }
-
-        public IEnumerator<KeyValuePair<T, Int32>> GetEnumerator()
-        {
-            return Internal.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
-
-        public Int32 this[T key]
-        {
-            get
-            {
-                return Internal[key];
-            }
         }
     }
 }

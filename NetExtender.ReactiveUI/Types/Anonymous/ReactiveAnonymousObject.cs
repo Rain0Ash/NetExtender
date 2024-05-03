@@ -13,6 +13,16 @@ namespace NetExtender.ReactiveUI.Anonymous.Core
 {
     public abstract class ReactiveAnonymousObject : ReactiveObject, IReactiveAnonymousObject
     {
+        public IEnumerator<KeyValuePair<String, Object?>> GetEnumerator()
+        {
+            return AnonymousTypeUtilities.Values(this).GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+        
         public AnonymousObjectProperty this[Int32 index]
         {
             get
@@ -27,16 +37,6 @@ namespace NetExtender.ReactiveUI.Anonymous.Core
             {
                 return new AnonymousObjectProperty(this, property);
             }
-        }
-
-        public IEnumerator<KeyValuePair<String, Object?>> GetEnumerator()
-        {
-            return AnonymousTypeUtilities.Values(this).GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
         }
     }
 }

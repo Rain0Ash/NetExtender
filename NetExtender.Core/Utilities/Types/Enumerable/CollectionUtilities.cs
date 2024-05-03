@@ -304,10 +304,42 @@ namespace NetExtender.Utilities.Types
                 throw new NotSupportedException();
             }
 
+            if (collection is List<T> list)
+            {
+                list.AddRange(source);
+                return;
+            }
+
             foreach (T item in source)
             {
                 collection.Add(item);
             }
+        }
+
+        public static void Reload<T>(this ICollection<T> collection, params T[] items)
+        {
+            Reload(collection, (IEnumerable<T>) items);
+        }
+
+        public static void Reload<T>(this ICollection<T> collection, IEnumerable<T> source)
+        {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (collection.IsReadOnly)
+            {
+                throw new NotSupportedException();
+            }
+            
+            collection.Clear();
+            collection.AddRange(source);
         }
 
         public static void RemoveRange<T>(this ICollection<T> collection, params T[] items)

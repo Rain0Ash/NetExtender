@@ -69,6 +69,7 @@ namespace NetExtender.Types.Network
             }
         }
 
+        // ReSharper disable once CognitiveComplexity
         private static HttpParserState ParseStatusLine(Byte[] buffer, HttpUnsortedResponse response, Int32 ready, ref Int32 consumed, ref HttpStatusLineState state, Int32 header, ref Int32 total, StringBuilder current)
         {
             if (buffer is null)

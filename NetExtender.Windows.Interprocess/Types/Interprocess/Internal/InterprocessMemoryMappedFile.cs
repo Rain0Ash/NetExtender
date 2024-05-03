@@ -78,12 +78,12 @@ namespace NetExtender.Types.Interprocess
         {
             if (String.IsNullOrWhiteSpace(name))
             {
-                throw new ArgumentException(@"File must be named", nameof(name));
+                throw new ArgumentException("File must be named", nameof(name));
             }
 
             if (size <= 0)
             {
-                throw new ArgumentException(@"Max file size can not be less than 1 byte", nameof(size));
+                throw new ArgumentException("Max file size can not be less than 1 byte", nameof(size));
             }
 
             return MemoryMappedFile.CreateOrOpen($"{nameof(InterprocessMemoryMappedFile)}_MemoryMappedFile_{name}", size + sizeof(Int32));
@@ -158,7 +158,7 @@ namespace NetExtender.Types.Interprocess
 
             if (data.Length > MaximumFileSize)
             {
-                throw new ArgumentOutOfRangeException(nameof(data), @"Length greater than max file size");
+                throw new ArgumentOutOfRangeException(nameof(data), "Length greater than max file size");
             }
 
             ReadWriteLock.AcquireWriteLock();
@@ -247,7 +247,7 @@ namespace NetExtender.Types.Interprocess
 
             if (data.Length > MaximumFileSize)
             {
-                throw new ArgumentOutOfRangeException(nameof(data), @"Length greater than max file size");
+                throw new ArgumentOutOfRangeException(nameof(data), "Length greater than max file size");
             }
 
             using MemoryMappedViewAccessor accessor = MappedFile.CreateViewAccessor();

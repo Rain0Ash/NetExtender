@@ -27,4 +27,8 @@
       <ProjectReference Include="..\NetExtender.WinForms\NetExtender.WinForms.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Utilities\Controls\" />
+    </ItemGroup>
+
 </Project>

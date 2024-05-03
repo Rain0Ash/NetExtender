@@ -3,18 +3,36 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using NetExtender.Types.Random.Interfaces;
 using NetExtender.Types.Spans;
+using NetExtender.Utilities.Core;
 using NetExtender.Utilities.Numerics;
 
 namespace NetExtender.Utilities.Types
 {
     public static partial class SpanUtilities
     {
+        public static IImmutableSet<Type> MemorySpanType { get; } = new HashSet<Type>
+        {
+            typeof(Memory<>), typeof(ReadOnlyMemory<>), typeof(Span<>), typeof(ReadOnlySpan<>)
+        }.ToImmutableHashSet();
+
+        public static Boolean IsMemorySpan(this Type type)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            Type generic = type.TryGetGenericTypeDefinition();
+            return MemorySpanType.Contains(generic);
+        }
+        
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ReadOnlyMemory<T> AsReadOnly<T>(this Memory<T> span)
         {

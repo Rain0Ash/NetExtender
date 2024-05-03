@@ -11,7 +11,7 @@ using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Drawing.Colors
 {
-    public enum AnsiColorSequenceMode
+    public enum AnsiColorSequenceMode : Byte
     {
         None,
         Foreground,

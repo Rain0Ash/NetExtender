@@ -18,7 +18,7 @@ namespace NetExtender.Types.Monitors
         {
             get
             {
-                return Devmode.dmPositionX == 0 && Devmode.dmPositionY == 0;
+                return Devmode is { dmPositionX: 0, dmPositionY: 0 };
             }
         }
 

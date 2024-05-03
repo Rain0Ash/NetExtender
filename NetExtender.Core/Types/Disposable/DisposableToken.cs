@@ -25,12 +25,7 @@ namespace NetExtender.Types.Disposable
             }
         }
 
-        public Boolean Active { get; private set; }
-
-        public DisposableToken()
-        {
-            Active = true;
-        }
+        public Boolean Active { get; private set; } = true;
 
         public void Dispose()
         {

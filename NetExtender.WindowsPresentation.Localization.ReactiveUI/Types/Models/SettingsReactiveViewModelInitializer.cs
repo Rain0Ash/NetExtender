@@ -1,13 +1,14 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using NetExtender.Localization.Interfaces;
 using NetExtender.Types.Culture;
 using NetExtender.Utilities.Types;
+using NetExtender.WindowsPresentation.Localization.Types.Collections;
 using NetExtender.WindowsPresentation.Localization.Types.Flags;
+using NetExtender.WindowsPresentation.Localization.Utilities;
 
 namespace NetExtender.WindowsPresentation.ReactiveUI.Types.Models
 {
@@ -38,7 +39,7 @@ namespace NetExtender.WindowsPresentation.ReactiveUI.Types.Models
             return Current() ?? System() ?? config.Default;
         }
 
-        public virtual ObservableCollection<LocalizationFlagBitmapSourceEntry> InitializeIdentifiers(IEnumerable<LocalizationIdentifier> identifiers, Handler handler)
+        public virtual LocalizationCollection InitializeIdentifiers(IEnumerable<LocalizationIdentifier> identifiers, Handler handler)
         {
             if (identifiers is null)
             {
@@ -50,7 +51,7 @@ namespace NetExtender.WindowsPresentation.ReactiveUI.Types.Models
                 throw new ArgumentNullException(nameof(handler));
             }
 
-            ObservableCollection<LocalizationFlagBitmapSourceEntry> languages = identifiers.Normalize().Select(LocalizationFlagBitmapSourceEntry.Convert).ToObservableCollection();
+            LocalizationCollection languages = identifiers.ToLocalizationCollection();
             return Subscribe(languages, handler);
         }
         

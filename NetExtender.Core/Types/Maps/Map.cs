@@ -222,7 +222,7 @@ namespace NetExtender.Types.Maps
             foreach ((TKey key, TValue value) in source)
             {
                 Base.Add(key, value);
-                Reversed.Add(value, key);
+                Reversed.Add(value, key); //-V3066
             }
         }
 

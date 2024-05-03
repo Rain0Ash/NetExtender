@@ -24,6 +24,7 @@ namespace NetExtender.Types.Network
             HeaderParser = new InternetMessageFormatHeaderParser(Response.HttpHeaders, header);
         }
 
+        // ReSharper disable once CognitiveComplexity
         public HttpParserState ParseBuffer(Byte[] buffer, Int32 ready, ref Int32 consumed)
         {
             if (buffer is null)

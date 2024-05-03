@@ -63,7 +63,7 @@ namespace NetExtender.Types.Progress
 
         protected Func<T, T> Handler { get; }
 
-        public LimitProgressAbstraction(T value, T maximum, Func<T, T> next)
+        protected LimitProgressAbstraction(T value, T maximum, Func<T, T> next)
         {
             Value = value;
             Maximum = maximum;

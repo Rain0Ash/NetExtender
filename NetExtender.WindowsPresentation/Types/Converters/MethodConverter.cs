@@ -32,7 +32,6 @@ namespace NetExtender.WindowsPresentation.Types.Converters
             }
 
             return Fallback.Convert(value, targetType, parameter, culture);
-
         }
 
         public Object? ConvertBack(Object? value, Type? targetType, Object? parameter, CultureInfo? culture)

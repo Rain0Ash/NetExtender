@@ -88,7 +88,7 @@ namespace NetExtender.Domains.WindowsPresentation.Applications
         private void InitializeComponent()
         {
             Application.GetType()
-                .GetMethod("InitializeComponent", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.InvokeMethod)?
+                .GetMethod("InitializeComponent", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.InvokeMethod)?
                 .Invoke(Application, null);
         }
     }

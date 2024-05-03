@@ -105,7 +105,7 @@ namespace NetExtender.Domains.View
                 SaveArguments(args);
 
                 IApplication application = Domain.Current.Application;
-                if (application.Elevate == true && application.IsElevate == false)
+                if (application is { Elevate: true, IsElevate: false })
                 {
                     await ElevateAsync(application, token).ConfigureAwait(false);
                 }

@@ -69,6 +69,7 @@ namespace NetExtender.Types.Network
             }
         }
 
+        // ReSharper disable once CognitiveComplexity
         protected virtual HttpParserState ParseRequestLine(Byte[] buffer, HttpUnsortedRequest request, Int32 ready, ref Int32 consumed, ref HttpRequestLineState state, Int32 header, ref Int32 total, StringBuilder current)
         {
             if (buffer is null)

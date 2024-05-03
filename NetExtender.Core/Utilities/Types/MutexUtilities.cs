@@ -10,6 +10,168 @@ namespace NetExtender.Utilities.Types
 {
     public static class MutexUtilities
     {
+        public static Boolean TryWaitOne(this Mutex mutex, Int32 timeout)
+        {
+            if (mutex is null)
+            {
+                throw new ArgumentNullException(nameof(mutex));
+            }
+
+            try
+            {
+                return mutex.WaitOne(timeout);
+            }
+            catch (AbandonedMutexException)
+            {
+                return true;
+            }
+            catch (InvalidOperationException)
+            {
+                return false;
+            }
+        }
+        
+        public static Boolean TryWaitOne(this Mutex mutex, Int32 timeout, Boolean exit)
+        {
+            if (mutex is null)
+            {
+                throw new ArgumentNullException(nameof(mutex));
+            }
+
+            try
+            {
+                return mutex.WaitOne(timeout, exit);
+            }
+            catch (AbandonedMutexException)
+            {
+                return true;
+            }
+            catch (InvalidOperationException)
+            {
+                return false;
+            }
+        }
+
+        public static Boolean TryWaitOne(this Mutex mutex, TimeSpan timeout)
+        {
+            if (mutex is null)
+            {
+                throw new ArgumentNullException(nameof(mutex));
+            }
+
+            try
+            {
+                return mutex.WaitOne(timeout);
+            }
+            catch (AbandonedMutexException)
+            {
+                return true;
+            }
+            catch (InvalidOperationException)
+            {
+                return false;
+            }
+        }
+
+        public static Boolean TryWaitOne(this Mutex mutex, TimeSpan timeout, Boolean exit)
+        {
+            if (mutex is null)
+            {
+                throw new ArgumentNullException(nameof(mutex));
+            }
+
+            try
+            {
+                return mutex.WaitOne(timeout, exit);
+            }
+            catch (AbandonedMutexException)
+            {
+                return true;
+            }
+            catch (InvalidOperationException)
+            {
+                return false;
+            }
+        }
+
+        public static Boolean TryWaitOne(this SemaphoreMutex mutex, Int32 timeout)
+        {
+            if (mutex is null)
+            {
+                throw new ArgumentNullException(nameof(mutex));
+            }
+
+            try
+            {
+                return mutex.WaitOne(timeout);
+            }
+            catch (AbandonedMutexException)
+            {
+                return true;
+            }
+            catch (InvalidOperationException)
+            {
+                return false;
+            }
+        }
+
+        public static Boolean TryWaitOne(this SemaphoreMutex mutex, TimeSpan timeout)
+        {
+            if (mutex is null)
+            {
+                throw new ArgumentNullException(nameof(mutex));
+            }
+
+            try
+            {
+                return mutex.WaitOne(timeout);
+            }
+            catch (AbandonedMutexException)
+            {
+                return true;
+            }
+            catch (InvalidOperationException)
+            {
+                return false;
+            }
+        }
+
+        public static Boolean TryReleaseMutex(this Mutex mutex)
+        {
+            if (mutex is null)
+            {
+                throw new ArgumentNullException(nameof(mutex));
+            }
+
+            try
+            {
+                mutex.ReleaseMutex();
+                return true;
+            }
+            catch (ApplicationException)
+            {
+                return false;
+            }
+        }
+
+        public static Boolean TryRelease(this SemaphoreMutex mutex)
+        {
+            if (mutex is null)
+            {
+                throw new ArgumentNullException(nameof(mutex));
+            }
+
+            try
+            {
+                mutex.Release();
+                return true;
+            }
+            catch (ApplicationException)
+            {
+                return false;
+            }
+        }
+
         public static Boolean Capture(this Mutex mutex)
         {
             if (mutex is null)

@@ -21,9 +21,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="DynamicData" Version="8.1.1" />
+      <PackageReference Include="DynamicData" Version="8.4.1" />
       <PackageReference Include="DynamicData.ReactiveUI" Version="6.11.0.2613" />
-      <PackageReference Include="ReactiveUI" Version="19.5.1" />
+      <PackageReference Include="ReactiveUI" Version="19.5.41" />
     </ItemGroup>
 
     <ItemGroup>

@@ -31,12 +31,14 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
 
         protected CenterWindow()
         {
+            BeginConstructorInit();
             Started += SetSizeTo;
             Started += CenterTo;
             Started += ScaleTo;
             Started += DuplicateOwnerIcon;
             Started += SetTaskbarVisible;
             Loaded += BringToForeground;
+            EndConstructorInit();
         }
 
         private void SetSizeTo(Object? sender, EventArgs args)
@@ -128,7 +130,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
 
         public void ScaleTo()
         {
-            if (Scale is Size scale)
+            if (Scale is { } scale)
             {
                 ScaleTo(scale);
             }

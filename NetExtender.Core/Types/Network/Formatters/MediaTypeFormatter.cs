@@ -184,6 +184,7 @@ namespace NetExtender.Types.Network.Formatters
             return encoding ?? throw new InvalidOperationException($"No encoding found for media type formatter '{GetType()}'. There must be at least one supported encoding registered in order for the media type formatter to read or write content.");
         }
 
+        // ReSharper disable once CognitiveComplexity
         public virtual void SetDefaultContentHeaders(Type type, HttpContentHeaders headers, MediaTypeHeaderValue? media)
         {
             if (type is null)

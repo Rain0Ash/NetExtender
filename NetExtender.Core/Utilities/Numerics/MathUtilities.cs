@@ -401,7 +401,7 @@ namespace NetExtender.Utilities.Numerics
         {
             if (first == Int32.MinValue || second == Int32.MinValue)
             {
-                throw new ArgumentOutOfRangeException(nameof(first), first, @"Values can't be Int32.MinValue");
+                throw new ArgumentOutOfRangeException(nameof(first), first, "Values can't be Int32.MinValue");
             }
 
             first = first.Abs();
@@ -454,7 +454,7 @@ namespace NetExtender.Utilities.Numerics
         {
             if (first == Int64.MinValue || second == Int64.MinValue)
             {
-                throw new ArgumentOutOfRangeException(nameof(first), first, @"Values can't be Int64.MinValue");
+                throw new ArgumentOutOfRangeException(nameof(first), first, "Values can't be Int64.MinValue");
             }
 
             first = first.Abs();
@@ -5846,7 +5846,7 @@ namespace NetExtender.Utilities.Numerics
         {
             if (!@base.InRange(MinimumBase, MaximumBase))
             {
-                throw new ArgumentOutOfRangeException(nameof(@base), @base, $@"Base out of range. Minimum base: {MinimumBase}. Maximum base: {MaximumBase}");
+                throw new ArgumentOutOfRangeException(nameof(@base), @base, $"Base out of range. Minimum base: {MinimumBase}. Maximum base: {MaximumBase}");
             }
 
             if (IsEpsilon(value))
@@ -5917,7 +5917,7 @@ namespace NetExtender.Utilities.Numerics
         {
             if (!@base.InRange(MinimumBase, MaximumBase))
             {
-                throw new ArgumentOutOfRangeException(nameof(@base), @base, $@"Base out of range. Minimum base: {MinimumBase}. Maximum base: {MaximumBase}");
+                throw new ArgumentOutOfRangeException(nameof(@base), @base, $"Base out of range. Minimum base: {MinimumBase}. Maximum base: {MaximumBase}");
             }
 
             if (value == 0)
@@ -5988,7 +5988,7 @@ namespace NetExtender.Utilities.Numerics
 
             if (!@base.InRange(MinimumBase, MaximumBase))
             {
-                throw new ArgumentOutOfRangeException(nameof(@base), @"Base out of range");
+                throw new ArgumentOutOfRangeException(nameof(@base), "Base out of range");
             }
 
             UInt64 result = 0;
@@ -6014,7 +6014,7 @@ namespace NetExtender.Utilities.Numerics
         {
             if (value < 0)
             {
-                throw new ArgumentException(@"Value can't be less than 0", nameof(value));
+                throw new ArgumentException("Value can't be less than 0", nameof(value));
             }
 
             return FromBase(value.ToString(CultureInfo.InvariantCulture), @base);
@@ -6029,7 +6029,7 @@ namespace NetExtender.Utilities.Numerics
         {
             if (value < 0)
             {
-                throw new ArgumentException(@"Value can't be less than 0", nameof(value));
+                throw new ArgumentException("Value can't be less than 0", nameof(value));
             }
 
             return FromBase(value.ToString(CultureInfo.InvariantCulture), @base);
@@ -6044,7 +6044,7 @@ namespace NetExtender.Utilities.Numerics
         {
             if (value < 0)
             {
-                throw new ArgumentException(@"Value can't be less than 0", nameof(value));
+                throw new ArgumentException("Value can't be less than 0", nameof(value));
             }
 
             return FromBase(value.ToString(CultureInfo.InvariantCulture), @base);
@@ -6059,7 +6059,7 @@ namespace NetExtender.Utilities.Numerics
         {
             if (value < 0)
             {
-                throw new ArgumentException(@"Value can't be less than 0", nameof(value));
+                throw new ArgumentException("Value can't be less than 0", nameof(value));
             }
 
             return FromBase(value.ToString(CultureInfo.InvariantCulture), @base);
@@ -6079,7 +6079,7 @@ namespace NetExtender.Utilities.Numerics
         {
             if (value < 0)
             {
-                throw new ArgumentException(@"Value can't be less than 0", nameof(value));
+                throw new ArgumentException("Value can't be less than 0", nameof(value));
             }
 
             return ConvertBase(value.ToString(CultureInfo.InvariantCulture), from, to);
@@ -6094,7 +6094,7 @@ namespace NetExtender.Utilities.Numerics
         {
             if (value < 0)
             {
-                throw new ArgumentException(@"Value can't be less than 0", nameof(value));
+                throw new ArgumentException("Value can't be less than 0", nameof(value));
             }
 
             return ConvertBase(value.ToString(CultureInfo.InvariantCulture), from, to);
@@ -6109,7 +6109,7 @@ namespace NetExtender.Utilities.Numerics
         {
             if (value < 0)
             {
-                throw new ArgumentException(@"Value can't be less than 0", nameof(value));
+                throw new ArgumentException("Value can't be less than 0", nameof(value));
             }
 
             return ConvertBase(value.ToString(CultureInfo.InvariantCulture), from, to);
@@ -6124,7 +6124,7 @@ namespace NetExtender.Utilities.Numerics
         {
             if (value < 0)
             {
-                throw new ArgumentException(@"Value can't be less than 0", nameof(value));
+                throw new ArgumentException("Value can't be less than 0", nameof(value));
             }
 
             return ConvertBase(value.ToString(CultureInfo.InvariantCulture), from, to);

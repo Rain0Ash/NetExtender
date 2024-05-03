@@ -86,7 +86,7 @@ namespace NetExtender.Utilities.Threading
 
             if (String.IsNullOrEmpty(name))
             {
-                throw new ArgumentException(@"Value cannot be null or empty.", nameof(name));
+                throw new ArgumentException("Value cannot be null or empty.", nameof(name));
             }
 
             using ParallelQueue pqueue = new ParallelQueue(provider, name + "_provider_");
@@ -139,7 +139,7 @@ namespace NetExtender.Utilities.Threading
 
             if (String.IsNullOrEmpty(name))
             {
-                throw new ArgumentException(@"Value cannot be null or empty.", nameof(name));
+                throw new ArgumentException("Value cannot be null or empty.", nameof(name));
             }
 
             using ParallelQueue queue = new ParallelQueue(count, name + '_');
@@ -180,7 +180,7 @@ namespace NetExtender.Utilities.Threading
 
             if (String.IsNullOrEmpty(name))
             {
-                throw new ArgumentException(@"Value cannot be null or empty.", nameof(name));
+                throw new ArgumentException("Value cannot be null or empty.", nameof(name));
             }
 
             using ParallelQueue queue = new ParallelQueue(count, name + '_');

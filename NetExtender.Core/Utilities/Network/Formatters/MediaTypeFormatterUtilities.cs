@@ -2,8 +2,10 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Net.Http.Headers;
+using NetExtender.Types.Exceptions;
 using NetExtender.Types.Network.Formatters;
 
 namespace NetExtender.Utilities.Network.Formatters
@@ -14,9 +16,89 @@ namespace NetExtender.Utilities.Network.Formatters
         SubtypeMediaRange,
         AllMediaRange
     }
+
+    public enum MediaTypeHeaderValueType : Byte
+    {
+        Text,
+        TextJson,
+        TextXml,
+        Json,
+        Xml,
+        Bson,
+        OctetStream,
+        FormUrlEncoded
+    }
     
     public static class MediaTypeFormatterUtilities
     {
+        [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
+        public static class Utf8
+        {
+            public static MediaTypeHeaderValue ApplicationOctetStreamMediaType
+            {
+                get
+                {
+                    return new MediaTypeHeaderValue("application/octet-stream") { CharSet = "utf-8" };
+                }
+            }
+
+            public static MediaTypeHeaderValue ApplicationJsonMediaType
+            {
+                get
+                {
+                    return new MediaTypeHeaderValue("application/json") { CharSet = "utf-8" };
+                }
+            }
+
+            public static MediaTypeHeaderValue ApplicationXmlMediaType
+            {
+                get
+                {
+                    return new MediaTypeHeaderValue("application/xml") { CharSet = "utf-8" };
+                }
+            }
+
+            public static MediaTypeHeaderValue TextPlainMediaType
+            {
+                get
+                {
+                    return new MediaTypeHeaderValue("text/plain") { CharSet = "utf-8" };
+                }
+            }
+
+            public static MediaTypeHeaderValue TextJsonMediaType
+            {
+                get
+                {
+                    return new MediaTypeHeaderValue("text/json") { CharSet = "utf-8" };
+                }
+            }
+
+            public static MediaTypeHeaderValue TextXmlMediaType
+            {
+                get
+                {
+                    return new MediaTypeHeaderValue("text/xml") { CharSet = "utf-8" };
+                }
+            }
+
+            public static MediaTypeHeaderValue ApplicationFormUrlEncodedMediaType
+            {
+                get
+                {
+                    return new MediaTypeHeaderValue("application/x-www-form-urlencoded") { CharSet = "utf-8" };
+                }
+            }
+
+            public static MediaTypeHeaderValue ApplicationBsonMediaType
+            {
+                get
+                {
+                    return new MediaTypeHeaderValue("application/bson") { CharSet = "utf-8" };
+                }
+            }
+        }
+        
         public static MediaTypeHeaderValue ApplicationOctetStreamMediaType
         {
             get
@@ -38,6 +120,14 @@ namespace NetExtender.Utilities.Network.Formatters
             get
             {
                 return new MediaTypeHeaderValue("application/xml");
+            }
+        }
+
+        public static MediaTypeHeaderValue TextPlainMediaType
+        {
+            get
+            {
+                return new MediaTypeHeaderValue("text/plain");
             }
         }
 
@@ -71,6 +161,45 @@ namespace NetExtender.Utilities.Network.Formatters
             {
                 return new MediaTypeHeaderValue("application/bson");
             }
+        }
+
+        public static MediaTypeHeaderValue Create(this MediaTypeHeaderValueType type)
+        {
+            return type switch
+            {
+                MediaTypeHeaderValueType.Text => TextPlainMediaType,
+                MediaTypeHeaderValueType.TextJson => TextJsonMediaType,
+                MediaTypeHeaderValueType.TextXml => TextXmlMediaType,
+                MediaTypeHeaderValueType.Json => ApplicationJsonMediaType,
+                MediaTypeHeaderValueType.Xml => ApplicationXmlMediaType,
+                MediaTypeHeaderValueType.Bson => ApplicationBsonMediaType,
+                MediaTypeHeaderValueType.OctetStream => ApplicationOctetStreamMediaType,
+                MediaTypeHeaderValueType.FormUrlEncoded => ApplicationFormUrlEncodedMediaType,
+                _ => throw new EnumUndefinedOrNotSupportedException<MediaTypeHeaderValueType>(type, nameof(type), null)
+            };
+        }
+
+        public static MediaTypeHeaderValue Create(this MediaTypeHeaderValueType type, Boolean utf8)
+        {
+            return !utf8 ? Create(type) : type switch
+            {
+                MediaTypeHeaderValueType.Text => Utf8.TextPlainMediaType,
+                MediaTypeHeaderValueType.TextJson => Utf8.TextJsonMediaType,
+                MediaTypeHeaderValueType.TextXml => Utf8.TextXmlMediaType,
+                MediaTypeHeaderValueType.Json => Utf8.ApplicationJsonMediaType,
+                MediaTypeHeaderValueType.Xml => Utf8.ApplicationXmlMediaType,
+                MediaTypeHeaderValueType.Bson => Utf8.ApplicationBsonMediaType,
+                MediaTypeHeaderValueType.OctetStream => Utf8.ApplicationOctetStreamMediaType,
+                MediaTypeHeaderValueType.FormUrlEncoded => Utf8.ApplicationFormUrlEncodedMediaType,
+                _ => throw new EnumUndefinedOrNotSupportedException<MediaTypeHeaderValueType>(type, nameof(type), null)
+            };
+        }
+
+        public static MediaTypeHeaderValue Create(this MediaTypeHeaderValueType type, String? charset)
+        {
+            MediaTypeHeaderValue header = Create(type);
+            header.CharSet = charset;
+            return header;
         }
 
         public static void AddQueryStringMapping(this MediaTypeFormatter formatter, String name, String value, String media)

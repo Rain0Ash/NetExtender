@@ -277,7 +277,7 @@ namespace NetExtender.Utilities.Types
 
             String uristring = uri.ToString();
 
-            Match match = Regex.Match(uristring, $@"[?&]({Regex.Escape(key)}=?.*?)(?:&|/|$)");
+            Match match = Regex.Match(uristring, $"[?&]({Regex.Escape(key)}=?.*?)(?:&|/|$)");
 
             if (match.Success)
             {
@@ -308,7 +308,7 @@ namespace NetExtender.Utilities.Types
 
             String uristring = uri.ToString();
 
-            Match match = Regex.Match(uristring, $@"/({Regex.Escape(key)}/?.*?)(?:/|$)");
+            Match match = Regex.Match(uristring, $"/({Regex.Escape(key)}/?.*?)(?:/|$)");
 
             if (match.Success)
             {

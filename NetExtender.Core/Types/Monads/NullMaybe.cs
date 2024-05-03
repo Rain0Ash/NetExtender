@@ -3,11 +3,12 @@
 
 using System;
 using System.Collections.Generic;
+using NetExtender.Types.Monads.Interfaces;
 
 namespace NetExtender.Types.Monads
 {
     [Serializable]
-    public readonly struct NullMaybe<T> : IEquatable<T>, IEquatable<Maybe<T>>, IEquatable<NullMaybe<T>>
+    public readonly struct NullMaybe<T> : INullMaybe<T>, IEquatable<Maybe<T>>, IEquatable<NullMaybe<T>>
     {
         public static implicit operator NullMaybe<T>(Maybe<T> value)
         {
@@ -40,6 +41,14 @@ namespace NetExtender.Types.Monads
         }
 
         public T Value { get; }
+        
+        Object? INullMaybe.Value
+        {
+            get
+            {
+                return Value;
+            }
+        }
 
         public NullMaybe(T value)
         {
@@ -68,9 +77,19 @@ namespace NetExtender.Types.Monads
             return other.HasValue && EqualityComparer<T>.Default.Equals(Value, other.Value);
         }
 
+        public Boolean Equals(IMaybe<T>? other)
+        {
+            return other is not null && other.HasValue && EqualityComparer<T>.Default.Equals(Value, other.Value);
+        }
+
         public Boolean Equals(NullMaybe<T> other)
         {
             return EqualityComparer<T>.Default.Equals(Value, other.Value);
+        }
+
+        public Boolean Equals(INullMaybe<T>? other)
+        {
+            return other is not null && EqualityComparer<T>.Default.Equals(Value, other.Value);
         }
 
         public override Int32 GetHashCode()

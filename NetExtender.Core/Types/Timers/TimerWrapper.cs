@@ -25,6 +25,27 @@ namespace NetExtender.Types.Timers
         }
 
         private Timer Timer { get; }
+        public event TickHandler? Tick;
+
+        public DateTime Now
+        {
+            get
+            {
+                return Kind.Now();
+            }
+        }
+
+        public DateTimeKind Kind
+        {
+            get
+            {
+                return DateTimeKind.Local;
+            }
+            set
+            {
+                throw new NotSupportedException();
+            }
+        }
 
         public Boolean IsStarted
         {
@@ -49,8 +70,6 @@ namespace NetExtender.Types.Timers
                 Timer.Interval = TimerUtilities.CheckInterval(value.TotalMilliseconds);
             }
         }
-
-        public event TickHandler? Tick;
 
         public TimerWrapper(Int32 interval)
             : this((Double) interval)
@@ -77,6 +96,11 @@ namespace NetExtender.Types.Timers
         {
             Tick?.Invoke(sender, args);
         }
+        
+        public Boolean TrySetKind(DateTimeKind kind)
+        {
+            return false;
+        }
 
         public void Start()
         {
@@ -86,6 +110,21 @@ namespace NetExtender.Types.Timers
         public void Stop()
         {
             Timer.Stop();
+        }
+
+        public override Int32 GetHashCode()
+        {
+            return Timer.GetHashCode();
+        }
+
+        public override Boolean Equals(Object? obj)
+        {
+            return ReferenceEquals(this, obj) || Timer.Equals(obj);
+        }
+
+        public override String ToString()
+        {
+            return Timer.ToString();
         }
 
         public void Dispose()
@@ -98,21 +137,6 @@ namespace NetExtender.Types.Timers
         {
             Dispose();
             return ValueTask.CompletedTask;
-        }
-
-        public override Boolean Equals(Object? obj)
-        {
-            return ReferenceEquals(this, obj) || Timer.Equals(obj);
-        }
-
-        public override Int32 GetHashCode()
-        {
-            return Timer.GetHashCode();
-        }
-
-        public override String ToString()
-        {
-            return Timer.ToString();
         }
     }
 }

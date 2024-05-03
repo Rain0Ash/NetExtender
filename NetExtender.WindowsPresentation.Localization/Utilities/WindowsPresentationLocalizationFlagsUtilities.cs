@@ -2,12 +2,17 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Windows.Media.Imaging;
 using NetExtender.Localization.Utilities;
 using NetExtender.Types.Culture;
+using NetExtender.Utilities.Types;
+using NetExtender.WindowsPresentation.Localization.Types.Collections;
+using NetExtender.WindowsPresentation.Localization.Types.Flags;
 
 namespace NetExtender.WindowsPresentation.Localization.Utilities
 {
@@ -80,6 +85,16 @@ namespace NetExtender.WindowsPresentation.Localization.Utilities
         public static LocalizationIdentifier SetFlagImage(this LocalizationIdentifier identifier, BitmapSource? image)
         {
             return identifier.SetFlagImage<BitmapSource>(image);
+        }
+
+        public static LocalizationCollection ToLocalizationCollection(this IEnumerable<LocalizationIdentifier> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return new LocalizationCollection(source.Normalize().Select(LocalizationFlagBitmapSourceEntry.Convert)) { IsAllowSuppress = false };
         }
     }
 }

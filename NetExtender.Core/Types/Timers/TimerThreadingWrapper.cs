@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using NetExtender.Types.Events;
 using NetExtender.Types.Timers.Interfaces;
+using NetExtender.Types.Times;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Timers
@@ -20,10 +21,30 @@ namespace NetExtender.Types.Timers
         }
 
         private Timer? Timer { get; set; }
-
-        public Boolean IsStarted { get; private set; }
-
         public event TickHandler? Tick;
+        public Boolean IsStarted { get; private set; }
+        
+        private DateTimeFactory _factory = DateTimeFactory.Factory;
+
+        public DateTime Now
+        {
+            get
+            {
+                return _factory.Now;
+            }
+        }
+        
+        public DateTimeKind Kind
+        {
+            get
+            {
+                return _factory.Kind;
+            }
+            set
+            {
+                _factory.Kind = value;
+            }
+        }
 
         private TimeSpan _interval = Time.Second.One;
         public TimeSpan Interval
@@ -40,6 +61,11 @@ namespace NetExtender.Types.Timers
                 }
 
                 _interval = TimerUtilities.CheckInterval(value);
+                
+                if (IsStarted && Timer is not null)
+                {
+                    Timer.Change(Interval, Interval);
+                }
             }
         }
 
@@ -60,10 +86,8 @@ namespace NetExtender.Types.Timers
 
         public TimerThreadingWrapper(TimeSpan interval)
         {
-            interval = TimerUtilities.CheckInterval(interval);
-
-            Timer = new Timer(OnTick);
-            Interval = interval;
+            Interval = TimerUtilities.CheckInterval(interval);
+            Timer = new Timer(OnTick, null, Timeout.Infinite, Timeout.Infinite);
         }
 
         private void OnTick(Object? state)
@@ -80,21 +104,26 @@ namespace NetExtender.Types.Timers
                 return;
             }
 
-            Tick?.Invoke(timer, new TimeEventArgs());
-            timer?.TryChange(TimeSpan.Zero, Interval);
+            Tick?.Invoke(timer, new TimeEventArgs(DateTime.Now));
+        }
+
+        public Boolean TrySetKind(DateTimeKind kind)
+        {
+            Kind = kind;
+            return true;
         }
 
         public void Start()
         {
             Timer timer = Timer ?? throw new ObjectDisposedException(nameof(TimerThreadingWrapper));
-            timer?.Change(TimeSpan.Zero, Interval);
+            timer.Change(Interval, Interval);
             IsStarted = true;
         }
 
         public void Stop()
         {
             Timer timer = Timer ?? throw new ObjectDisposedException(nameof(TimerThreadingWrapper));
-            timer.Stop();
+            timer.Change(Timeout.Infinite, Timeout.Infinite);
             IsStarted = false;
         }
 

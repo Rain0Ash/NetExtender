@@ -2,9 +2,11 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Threading;
+using System.Threading.Tasks;
 
 // ReSharper disable HeapView.CanAvoidClosure
 
@@ -140,6 +142,46 @@ namespace NetExtender.Utilities.Threading
             {
                 throw exception;
             }
+        }
+
+        public static Boolean TryJoin(this Thread thread)
+        {
+            if (thread is null)
+            {
+                throw new ArgumentNullException(nameof(thread));
+            }
+
+            try
+            {
+                thread.Join();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        public static Task WaitAll(this IEnumerable<Thread> threads)
+        {
+            if (threads is null)
+            {
+                throw new ArgumentNullException(nameof(threads));
+            }
+
+            TaskCompletionSource source = new TaskCompletionSource();
+            
+            new Thread(() =>
+                {
+                    foreach (Thread thread in threads)
+                    {
+                        thread.TryJoin();
+                    }
+
+                    source.SetResult();
+                }) { IsBackground = true }.Start();
+
+            return source.Task;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]

@@ -16,6 +16,21 @@ namespace NetExtender.Utilities.AspNetCore.Types
     public static class MiddlewareUtilities
     {
         private const DynamicallyAccessedMemberTypes MiddlewareAccessibility = DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.PublicMethods;
+
+        public static IApplicationBuilder UseBusinessExceptionHandler(this IApplicationBuilder builder)
+        {
+            return UseBusinessExceptionHandler<BusinessExceptionHandlerMiddleware>(builder);
+        }
+        
+        public static IApplicationBuilder UseBusinessExceptionHandler<T>(this IApplicationBuilder builder) where T : BusinessExceptionHandlerMiddleware
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            return builder.UseMiddleware<T>();
+        }
         
         public static IApplicationBuilder UseMiddlewareIf(this IApplicationBuilder builder, Type middleware, Boolean condition, params Object?[] args)
         {

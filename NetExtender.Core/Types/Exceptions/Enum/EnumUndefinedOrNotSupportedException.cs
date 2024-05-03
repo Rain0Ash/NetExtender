@@ -3,29 +3,63 @@
 
 using System;
 using System.Runtime.Serialization;
+using NetExtender.Types.Enums;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Exceptions
 {
+    public class EnumUndefinedOrNotSupportedException<T, TEnum> : EnumUndefinedOrNotSupportedException<T> where T : unmanaged, Enum where TEnum : Enum<T, TEnum>, new()
+    {
+        public EnumUndefinedOrNotSupportedException(TEnum value)
+            : this(value.Id.In() ? EnumNotSupportedException<T, TEnum>.Create(value) : EnumUndefinedException<T, TEnum>.Create(value))
+        {
+        }
+
+        public EnumUndefinedOrNotSupportedException(TEnum value, String? message)
+            : this(value.Id.In() ? EnumNotSupportedException<T, TEnum>.Create(value, message) : EnumUndefinedException<T, TEnum>.Create(value, null, message))
+        {
+        }
+
+        public EnumUndefinedOrNotSupportedException(TEnum value, String? paramName, String? message)
+            : this(value.Id.In() ? EnumNotSupportedException<T, TEnum>.Create(value, message) : EnumUndefinedException<T, TEnum>.Create(value, paramName, message))
+        {
+        }
+
+        public EnumUndefinedOrNotSupportedException(TEnum value, String? paramName, String? message, Exception? innerException)
+            : this(value.Id.In() ? throw EnumNotSupportedException<T, TEnum>.Create(value, message, innerException) : innerException is not null ? EnumUndefinedException<T, TEnum>.Create(value, message, innerException) : EnumUndefinedException<T, TEnum>.Create(value, paramName, message))
+        {
+        }
+        
+        protected EnumUndefinedOrNotSupportedException(Exception exception)
+            : base(exception)
+        {
+        }
+    }
+    
     public class EnumUndefinedOrNotSupportedException<T> : ExceptionWrapper<Exception> where T : unmanaged, Enum
     {
         public EnumUndefinedOrNotSupportedException(T value)
-            : base(EnumUtilities.IsDefined(value) ? new EnumNotSupportedException<T>(value) : new EnumUndefinedException<T>(value))
+            : base(value.In() ? EnumNotSupportedException<T>.Create(value) : EnumUndefinedException<T>.Create(value))
         {
         }
 
         public EnumUndefinedOrNotSupportedException(T value, String? message)
-            : base(EnumUtilities.IsDefined(value) ? new EnumNotSupportedException<T>(value, message) : new EnumUndefinedException<T>(value, null, message))
+            : base(value.In() ? EnumNotSupportedException<T>.Create(value, message) : EnumUndefinedException<T>.Create(value, null, message))
         {
         }
 
         public EnumUndefinedOrNotSupportedException(T value, String? paramName, String? message)
-            : base(EnumUtilities.IsDefined(value) ? new EnumNotSupportedException<T>(value, message) : new EnumUndefinedException<T>(value, paramName, message))
+            : base(value.In() ? EnumNotSupportedException<T>.Create(value, message) : EnumUndefinedException<T>.Create(value, paramName, message))
         {
         }
 
         public EnumUndefinedOrNotSupportedException(T value, String? paramName, String? message, Exception? innerException)
-            : base(EnumUtilities.IsDefined(value) ? throw new EnumNotSupportedException<T>(value, message, innerException) : innerException is not null ? new EnumUndefinedException<T>(value, message, innerException) : new EnumUndefinedException<T>(value, paramName, message))
+            : base(value.In() ? throw EnumNotSupportedException<T>.Create(value, message, innerException) : innerException is not null ? EnumUndefinedException<T>.Create(value, message, innerException) : EnumUndefinedException<T>.Create(value, paramName, message))
+        {
+        }
+
+        protected EnumUndefinedOrNotSupportedException(Exception exception)
+            : base(exception)
         {
         }
     }
@@ -45,7 +79,7 @@ namespace NetExtender.Types.Exceptions
                 return;
             }
             
-            throw EnumUtilities.IsDefined(value) ? new EnumNotSupportedException<T>(value) : new EnumUndefinedException<T>(value);
+            throw value.In() ? EnumNotSupportedException<T>.Create(value) : EnumUndefinedException<T>.Create(value);
         }
 
         public EnumUndefinedOrNotSupportedThrowableException(T value, String? message)
@@ -61,7 +95,7 @@ namespace NetExtender.Types.Exceptions
                 return;
             }
             
-            throw EnumUtilities.IsDefined(value) ? new EnumNotSupportedException<T>(value, message) : new EnumUndefinedException<T>(value, null, message);
+            throw value.In() ? EnumNotSupportedException<T>.Create(value, message) : EnumUndefinedException<T>.Create(value, null, message);
         }
 
         public EnumUndefinedOrNotSupportedThrowableException(T value, String? paramName, String? message)
@@ -77,7 +111,7 @@ namespace NetExtender.Types.Exceptions
                 return;
             }
             
-            throw EnumUtilities.IsDefined(value) ? new EnumNotSupportedException<T>(value, message) : new EnumUndefinedException<T>(value, paramName, message);
+            throw value.In() ? EnumNotSupportedException<T>.Create(value, message) : EnumUndefinedException<T>.Create(value, paramName, message);
         }
 
         public EnumUndefinedOrNotSupportedThrowableException(T value, String? paramName, String? message, Exception? innerException)
@@ -93,12 +127,12 @@ namespace NetExtender.Types.Exceptions
                 return;
             }
             
-            if (EnumUtilities.IsDefined(value))
+            if (value.In())
             {
-                throw new EnumNotSupportedException<T>(value, message, innerException);
+                throw EnumNotSupportedException<T>.Create(value, message, innerException);
             }
 
-            throw innerException is not null ? new EnumUndefinedException<T>(value, message, innerException) : new EnumUndefinedException<T>(value, paramName, message);
+            throw innerException is not null ? EnumUndefinedException<T>.Create(value, message, innerException) : EnumUndefinedException<T>.Create(value, paramName, message);
         }
 
         protected EnumUndefinedOrNotSupportedThrowableException(SerializationInfo info, StreamingContext context)

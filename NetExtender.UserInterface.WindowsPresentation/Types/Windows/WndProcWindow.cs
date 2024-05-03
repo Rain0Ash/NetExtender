@@ -8,7 +8,7 @@ using NetExtender.UserInterface.Windows.Types;
 
 namespace NetExtender.UserInterface.WindowsPresentation.Windows
 {
-    public abstract class WndProcWindow : StartedWindow
+    public abstract class WndProcWindow : SoundWindow
     {
         private HwndSource? Hwnd { get; set; }
 

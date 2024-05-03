@@ -76,6 +76,7 @@ namespace NetExtender.Types.Network
             return false;
         }
 
+        // ReSharper disable once CognitiveComplexity
         protected virtual Boolean ParseCookieSegment(CookieHeaderValue instance, String? segment)
         {
             if (instance is null)

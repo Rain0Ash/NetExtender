@@ -5,6 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using NetExtender.Types.Comparers;
@@ -22,6 +23,17 @@ namespace NetExtender.Types.Disposable
 
     public class DisposeCollection<T> : ICollection<T>, IReadOnlyCollection<T>, IDisposable where T : IDisposable
     {
+        [return: NotNullIfNotNull("collection")]
+        public static DisposeCollection<T>? operator +(DisposeCollection<T>? collection, T? item)
+        {
+            if (collection is not null && item is not null)
+            {
+                collection.Add(item);
+            }
+            
+            return collection;
+        }
+        
         private ConcurrentDictionary<T, Boolean> Internal { get; }
 
         public Boolean Active { get; set; }
@@ -116,6 +128,17 @@ namespace NetExtender.Types.Disposable
 
     public class AsyncDisposeCollection<T> : ICollection<T>, IReadOnlyCollection<T>, IAsyncDisposable where T : IAsyncDisposable
     {
+        [return: NotNullIfNotNull("collection")]
+        public static AsyncDisposeCollection<T>? operator +(AsyncDisposeCollection<T>? collection, T? item)
+        {
+            if (collection is not null && item is not null)
+            {
+                collection.Add(item);
+            }
+            
+            return collection;
+        }
+        
         private ConcurrentDictionary<T, Boolean> Internal { get; }
 
         public Int32 Count

@@ -5,46 +5,175 @@ using System.Windows.Data;
 
 namespace NetExtender.WindowsPresentation.Types.Converters
 {
-    public sealed class BooleanToVisibilityConverter : IValueConverter
+    [ValueConversion(typeof(Boolean), typeof(Visibility))]
+    public abstract class BooleanToVisibilityConverterAbstraction : IValueConverter
+    {
+        protected abstract Visibility Convert(Boolean value);
+        protected abstract Boolean Convert(Visibility value);
+
+        protected virtual Object Convert(Object value)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            try
+            {
+                return Convert((Boolean) (dynamic) value);
+            }
+            catch (Exception)
+            {
+                return DependencyProperty.UnsetValue;
+            }
+        }
+
+        public virtual Object? Convert(Object? value, Type? target, Object? parameter, CultureInfo? culture)
+        {
+            return value switch
+            {
+                null => DependencyProperty.UnsetValue,
+                Boolean result => Convert(result),
+                _ => Convert(value)
+            };
+        }
+
+        public virtual Object? ConvertBack(Object? value, Type? target, Object? parameter, CultureInfo? culture)
+        {
+            return value switch
+            {
+                null => DependencyProperty.UnsetValue,
+                Visibility visibility => Convert(visibility),
+                _ => DependencyProperty.UnsetValue
+            };
+        }
+    }
+    
+    [ValueConversion(typeof(Boolean), typeof(Visibility))]
+    public class BooleanToVisibilityConverter : BooleanToVisibilityConverterAbstraction
     {
         public static implicit operator BooleanToVisibilityConverter(Boolean collapsed)
         {
             return collapsed ? Collapsed : Hidden;
         }
 
-        public static BooleanToVisibilityConverter Collapsed { get; } = new BooleanToVisibilityConverter(true);
-        public static BooleanToVisibilityConverter Hidden { get; } = new BooleanToVisibilityConverter(false);
+        public static BooleanToVisibilityConverter Collapsed { get; } = new CollapsedBooleanToVisibilityConverter();
+        public static BooleanToVisibilityConverter Hidden { get; } = new HiddenBooleanToVisibilityConverter();
 
-        public Boolean FalseIsCollapsed { get; }
+        public virtual Boolean FalseIsCollapsed { get; set; } = true;
 
-        public BooleanToVisibilityConverter()
-            : this(true)
+        protected override Visibility Convert(Boolean value)
         {
+            return value ? Visibility.Visible : FalseIsCollapsed ? Visibility.Collapsed : Visibility.Hidden;
         }
 
-        public BooleanToVisibilityConverter(Boolean collapsed)
+        protected override Boolean Convert(Visibility value)
         {
-            FalseIsCollapsed = collapsed;
+            return value == Visibility.Visible;
         }
 
-        public Object? Convert(Object? value, Type? target, Object? parameter, CultureInfo? culture)
+        private sealed class CollapsedBooleanToVisibilityConverter : BooleanToVisibilityConverter
         {
-            if (value is null)
+            public override Boolean FalseIsCollapsed
             {
-                return null;
+                get
+                {
+                    return true;
+                }
+                set
+                {
+                    throw new InvalidOperationException();
+                }
             }
-
-            if (value is not Boolean result)
+            
+            protected override Visibility Convert(Boolean value)
             {
-                result = (Boolean) (dynamic) value;
+                return value ? Visibility.Visible : Visibility.Collapsed;
             }
-
-            return result ? Visibility.Visible : FalseIsCollapsed ? Visibility.Collapsed : Visibility.Hidden;
         }
 
-        public Object? ConvertBack(Object? value, Type? target, Object? parameter, CultureInfo? culture)
+        private sealed class HiddenBooleanToVisibilityConverter : BooleanToVisibilityConverter
         {
-            return value is not null ? (Visibility) value == Visibility.Visible : null;
+            public override Boolean FalseIsCollapsed
+            {
+                get
+                {
+                    return false;
+                }
+                set
+                {
+                    throw new InvalidOperationException();
+                }
+            }
+            
+            protected override Visibility Convert(Boolean value)
+            {
+                return value ? Visibility.Visible : Visibility.Hidden;
+            }
+        }
+    }
+    
+    [ValueConversion(typeof(Boolean), typeof(Visibility))]
+    public class NotBooleanToVisibilityConverter : BooleanToVisibilityConverterAbstraction
+    {
+        public static implicit operator NotBooleanToVisibilityConverter(Boolean collapsed)
+        {
+            return collapsed ? Collapsed : Hidden;
+        }
+
+        public static NotBooleanToVisibilityConverter Collapsed { get; } = new CollapsedNotBooleanToVisibilityConverter();
+        public static NotBooleanToVisibilityConverter Hidden { get; } = new HiddenNotBooleanToVisibilityConverter();
+
+        public virtual Boolean TrueIsCollapsed { get; set; } = true;
+
+        protected override Visibility Convert(Boolean value)
+        {
+            return value ? TrueIsCollapsed ? Visibility.Collapsed : Visibility.Hidden : Visibility.Visible;
+        }
+
+        protected override Boolean Convert(Visibility value)
+        {
+            return value != Visibility.Visible;
+        }
+        
+        private sealed class CollapsedNotBooleanToVisibilityConverter : NotBooleanToVisibilityConverter
+        {
+            public override Boolean TrueIsCollapsed
+            {
+                get
+                {
+                    return true;
+                }
+                set
+                {
+                    throw new InvalidOperationException();
+                }
+            }
+            
+            protected override Visibility Convert(Boolean value)
+            {
+                return value ? Visibility.Collapsed : Visibility.Visible;
+            }
+        }
+
+        private sealed class HiddenNotBooleanToVisibilityConverter : NotBooleanToVisibilityConverter
+        {
+            public override Boolean TrueIsCollapsed
+            {
+                get
+                {
+                    return false;
+                }
+                set
+                {
+                    throw new InvalidOperationException();
+                }
+            }
+            
+            protected override Visibility Convert(Boolean value)
+            {
+                return value ? Visibility.Hidden : Visibility.Visible;
+            }
         }
     }
 }

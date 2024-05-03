@@ -3195,5 +3195,69 @@ namespace NetExtender.Utilities.Types
         {
             return value > TimeSpan.Zero || value == Timeout.InfiniteTimeSpan ? Task.Delay(value).GetAwaiter() : Task.CompletedTask.GetAwaiter();
         }
+        
+        public static Task Run(this TaskFactory factory, Action action)
+        {
+            if (factory is null)
+            {
+                throw new ArgumentNullException(nameof(factory));
+            }
+
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            const TaskCreationOptions deny = TaskCreationOptions.DenyChildAttach;
+            return factory.StartNew(action, factory.CancellationToken, factory.CreationOptions | deny, factory.Scheduler ?? TaskScheduler.Default);
+        }
+
+        public static Task<TResult> Run<TResult>(this TaskFactory factory, Func<TResult> action)
+        {
+            if (factory is null)
+            {
+                throw new ArgumentNullException(nameof(factory));
+            }
+
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            const TaskCreationOptions deny = TaskCreationOptions.DenyChildAttach;
+            return factory.StartNew(action, factory.CancellationToken, factory.CreationOptions | deny, factory.Scheduler ?? TaskScheduler.Default);
+        }
+
+        public static Task Run(this TaskFactory factory, Func<Task> action)
+        {
+            if (factory is null)
+            {
+                throw new ArgumentNullException(nameof(factory));
+            }
+
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            const TaskCreationOptions deny = TaskCreationOptions.DenyChildAttach;
+            return factory.StartNew(action, factory.CancellationToken, factory.CreationOptions | deny, factory.Scheduler ?? TaskScheduler.Default).Unwrap();
+        }
+
+        public static Task<TResult> Run<TResult>(this TaskFactory factory, Func<Task<TResult>> action)
+        {
+            if (factory is null)
+            {
+                throw new ArgumentNullException(nameof(factory));
+            }
+
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            const TaskCreationOptions deny = TaskCreationOptions.DenyChildAttach;
+            return factory.StartNew(action, factory.CancellationToken, factory.CreationOptions | deny, factory.Scheduler ?? TaskScheduler.Default).Unwrap();
+        }
     }
 }

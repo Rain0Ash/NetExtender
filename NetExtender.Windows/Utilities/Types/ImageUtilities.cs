@@ -79,7 +79,7 @@ namespace NetExtender.Utilities.Types
             }
         }
 
-        public static ImageType GetImageFormatType(Image? image)
+        public static ImageType GetImageFormatType(this Image? image)
         {
             return image?.RawFormat.ToString() switch
             {
@@ -765,7 +765,6 @@ namespace NetExtender.Utilities.Types
                         integer[0] = lookup[integer[0]]; // B
                         integer[1] = lookup[integer[1]]; // G
                         integer[2] = lookup[integer[2]]; // R
-                        integer[3] = integer[3]; // A
 
                         point.Color = Color.FromArgb(MemoryMarshal.Read<Int32>(integer));
                     }

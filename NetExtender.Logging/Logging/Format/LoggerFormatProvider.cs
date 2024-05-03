@@ -28,7 +28,7 @@ namespace NetExtender.Logging.Format
             String? time = Time(level, options, offset, provider);
             String? thread = Thread(level, options, offset, provider);
 
-            Int32 capacity = time?.Length ?? 0 + prefix?.Length ?? 0 + thread?.Length ?? 0 + message.Length;
+            Int32 capacity = (time?.Length ?? 0) + (prefix?.Length ?? 0) + (thread?.Length ?? 0) + message.Length;
 
             if (capacity <= 0)
             {

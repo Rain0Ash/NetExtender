@@ -10,6 +10,10 @@ namespace NetExtender.Types.Timers.Interfaces
     public interface ITimer : IStartable, IDisposable, IAsyncDisposable
     {
         public event TickHandler Tick;
+        public DateTime Now { get; }
+        public DateTimeKind Kind { get; set; }
         public TimeSpan Interval { get; set; }
+
+        public Boolean TrySetKind(DateTimeKind kind);
     }
 }

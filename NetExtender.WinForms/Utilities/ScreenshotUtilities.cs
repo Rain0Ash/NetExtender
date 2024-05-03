@@ -48,7 +48,6 @@ namespace NetExtender.Utilities.Windows
             }
             catch (Exception)
             {
-                // ignored
             }
 
             return bitmap;
@@ -80,7 +79,6 @@ namespace NetExtender.Utilities.Windows
             }
             catch (Exception)
             {
-                // ignored
             }
 
             return bitmap;
@@ -116,7 +114,7 @@ namespace NetExtender.Utilities.Windows
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static Boolean ClientInScreen(IntPtr handle, out Point point)
         {
-            if (handle != IntPtr.Zero && ClientToScreen(handle, out point) && point.X >= 0 && point.Y >= 0)
+            if (handle != IntPtr.Zero && ClientToScreen(handle, out point) && point is { X: >= 0, Y: >= 0 })
             {
                 return true;
             }
@@ -255,6 +253,7 @@ namespace NetExtender.Utilities.Windows
             return MakeScreenshot(handle, ScreenshotType.Content);
         }
 
+        // TODO: Check
         public static Bitmap? MakeScreenshot(IntPtr handle, ScreenshotType type)
         {
             if (handle == IntPtr.Zero)

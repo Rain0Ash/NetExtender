@@ -3,8 +3,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Runtime.CompilerServices;
 using NetExtender.Types.Network;
+using NetExtender.Utilities.Network.Formatters;
 
 namespace NetExtender.Utilities.Network
 {
@@ -31,6 +34,90 @@ namespace NetExtender.Utilities.Network
 
                 source.TryAddWithoutValidation("Set-Cookie", cookie.ToString());
             }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T SetTextContentType<T>(this T response) where T : HttpResponseMessage
+        {
+            if (response is null)
+            {
+                throw new ArgumentNullException(nameof(response));
+            }
+
+            response.Content.SetTextContentType();
+            return response;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T SetTextJsonContentType<T>(this T response) where T : HttpResponseMessage
+        {
+            if (response is null)
+            {
+                throw new ArgumentNullException(nameof(response));
+            }
+
+            response.Content.SetTextJsonContentType();
+            return response;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T SetTextXmlContentType<T>(this T response) where T : HttpResponseMessage
+        {
+            if (response is null)
+            {
+                throw new ArgumentNullException(nameof(response));
+            }
+
+            response.Content.SetTextXmlContentType();
+            return response;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T SetJsonContentType<T>(this T response) where T : HttpResponseMessage
+        {
+            if (response is null)
+            {
+                throw new ArgumentNullException(nameof(response));
+            }
+
+            response.Content.SetJsonContentType();
+            return response;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T SetXmlContentType<T>(this T response) where T : HttpResponseMessage
+        {
+            if (response is null)
+            {
+                throw new ArgumentNullException(nameof(response));
+            }
+
+            response.Content.SetXmlContentType();
+            return response;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T SetContentType<T>(this T response, MediaTypeHeaderValueType type) where T : HttpResponseMessage
+        {
+            if (response is null)
+            {
+                throw new ArgumentNullException(nameof(response));
+            }
+
+            response.Content.SetContentType(type);
+            return response;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T SetContentType<T>(this T response, MediaTypeHeaderValue? type) where T : HttpResponseMessage
+        {
+            if (response is null)
+            {
+                throw new ArgumentNullException(nameof(response));
+            }
+
+            response.Content.SetContentType(type);
+            return response;
         }
     }
 }

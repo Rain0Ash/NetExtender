@@ -763,7 +763,7 @@ namespace NetExtender.Configuration.Properties
 
         public Task<Boolean> ResetAsync()
         {
-            return ReadAsync(CancellationToken.None);
+            return ResetAsync(CancellationToken.None);
         }
 
         public virtual Task<Boolean> ResetAsync(CancellationToken token)

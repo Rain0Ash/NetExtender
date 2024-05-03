@@ -3,16 +3,242 @@
 
 using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
+using NetExtender.Types.Tuples;
+using NetExtender.Utilities.Core;
 
 namespace NetExtender.Utilities.Types
 {
     [SuppressMessage("ReSharper", "UseDeconstructionOnParameter")]
     public static class TupleUtilities
     {
+        public const Int32 TupleMaximumGeneric = 7;
+        
+        public static IImmutableDictionary<Type, Int32> TupleType { get; } = new HashSet<Type>
+        {
+            typeof(Tuple<>), typeof(Tuple<,>), typeof(Tuple<,,>), typeof(Tuple<,,,>),
+            typeof(Tuple<,,,,>), typeof(Tuple<,,,,,>), typeof(Tuple<,,,,,,>), typeof(Tuple<,,,,,,,>)
+        }.ToImmutableDictionary(type => type, ReflectionUtilities.GetGenericArgumentsCount);
+
+        public static IImmutableDictionary<Type, Int32> ValueTupleType { get; } = new HashSet<Type>
+        {
+            typeof(ValueTuple<>), typeof(ValueTuple<,>), typeof(ValueTuple<,,>), typeof(ValueTuple<,,,>),
+            typeof(ValueTuple<,,,,>), typeof(ValueTuple<,,,,,>), typeof(ValueTuple<,,,,,,>), typeof(ValueTuple<,,,,,,,>)
+        }.ToImmutableDictionary(type => type, ReflectionUtilities.GetGenericArgumentsCount);
+        
+        private static class TupleCache
+        {
+            private static ConcurrentDictionary<Type, ImmutableArray<Func<ITuple, Object>>> Cache { get; } = new ConcurrentDictionary<Type, ImmutableArray<Func<ITuple, Object>>>();
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static Boolean Contains(Type type)
+            {
+                if (type is null)
+                {
+                    throw new ArgumentNullException(nameof(type));
+                }
+
+                return Cache.TryGetValue(type, out ImmutableArray<Func<ITuple, Object>> result) && result.Length > 0;
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static Boolean TryGetValue(Type type, out ImmutableArray<Func<ITuple, Object>> result)
+            {
+                if (type is null)
+                {
+                    throw new ArgumentNullException(nameof(type));
+                }
+
+                result = Cache.GetOrAdd(type, Create);
+                return result.Length > 0;
+            }
+
+            private static ImmutableArray<Func<ITuple, Object>> Create(Type type)
+            {
+                if (type is null)
+                {
+                    throw new ArgumentNullException(nameof(type));
+                }
+                
+                if (!type.IsTuple(out Int32 count))
+                {
+                    throw new NotSupportedException();
+                }
+                
+                Func<ITuple, Object>[] array = new Func<ITuple, Object>[count];
+
+                for (Int32 index = 0; index < count; index++)
+                {
+                    array[index] = Index(type, index).Compile();
+                }
+
+                static Expression<Func<ITuple, Object>> Index(Type type, Int32 index)
+                {
+                    (Int32 depth, Int32 remainder) = Math.DivRem(index, 7);
+
+                    ParameterExpression parameter = Expression.Parameter(typeof(ITuple), "tuple");
+                    Expression current = Expression.Convert(parameter, type);
+
+                    for (Int32 i = 0; i < depth; i++)
+                    {
+                        Type rest = TupleRestType(current.Type) ?? throw new InvalidOperationException();
+                        current = Expression.PropertyOrField(current, TupleFieldName(TupleMaximumGeneric));
+                        current = Expression.Convert(current, rest);
+                    }
+
+                    current = Expression.PropertyOrField(current, TupleFieldName(remainder));
+
+                    return Expression.Lambda<Func<ITuple, Object>>(Expression.Convert(current, typeof(ITuple)), parameter);
+                }
+
+                return array.ToImmutableArray();
+            }
+        }
+
+        public static Type CreateTupleType(params Type[] arguments)
+        {
+            if (arguments is null)
+            {
+                throw new ArgumentNullException(nameof(arguments));
+            }
+
+            if (arguments.Length <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(arguments), arguments.Length, null);
+            }
+
+            return arguments.Length switch
+            {
+                1 => typeof(Tuple<>).MakeGenericType(arguments),
+                2 => typeof(Tuple<,>).MakeGenericType(arguments),
+                3 => typeof(Tuple<,,>).MakeGenericType(arguments),
+                4 => typeof(Tuple<,,,>).MakeGenericType(arguments),
+                5 => typeof(Tuple<,,,,>).MakeGenericType(arguments),
+                6 => typeof(Tuple<,,,,,>).MakeGenericType(arguments),
+                7 => typeof(Tuple<,,,,,,>).MakeGenericType(arguments),
+                TupleMaximumGeneric + 1 when TupleType.ContainsKey(arguments[7].TryGetGenericTypeDefinition()) => typeof(Tuple<,,,,,,,>).MakeGenericType(arguments),
+                _ => typeof(Tuple<,,,,,,,>).MakeGenericType(arguments[0], arguments[1], arguments[2], arguments[3], arguments[4], arguments[5], arguments[6], CreateTupleType(arguments.Skip(7).ToArray()))
+            };
+        }
+
+        public static Type CreateValueTupleType(params Type[] arguments)
+        {
+            if (arguments is null)
+            {
+                throw new ArgumentNullException(nameof(arguments));
+            }
+
+            if (arguments.Length <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(arguments), arguments.Length, null);
+            }
+
+            return arguments.Length switch
+            {
+                1 => typeof(ValueTuple<>).MakeGenericType(arguments),
+                2 => typeof(ValueTuple<,>).MakeGenericType(arguments),
+                3 => typeof(ValueTuple<,,>).MakeGenericType(arguments),
+                4 => typeof(ValueTuple<,,,>).MakeGenericType(arguments),
+                5 => typeof(ValueTuple<,,,,>).MakeGenericType(arguments),
+                6 => typeof(ValueTuple<,,,,,>).MakeGenericType(arguments),
+                7 => typeof(ValueTuple<,,,,,,>).MakeGenericType(arguments),
+                TupleMaximumGeneric + 1 when ValueTupleType.ContainsKey(arguments[7].TryGetGenericTypeDefinition()) => typeof(ValueTuple<,,,,,,,>).MakeGenericType(arguments),
+                _ => typeof(ValueTuple<,,,,,,,>).MakeGenericType(arguments[0], arguments[1], arguments[2], arguments[3], arguments[4], arguments[5], arguments[6], CreateValueTupleType(arguments.Skip(7).ToArray()))
+            };
+        }
+
+        public static Boolean IsTuple(this Type type)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            Type generic = type.TryGetGenericTypeDefinition();
+            return TupleType.ContainsKey(generic) || ValueTupleType.ContainsKey(generic);
+        }
+
+        public static Boolean IsTuple(this Type type, out Int32 count)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            Type generic = type.TryGetGenericTypeDefinition();
+            if (!TupleType.TryGetValue(generic, out count) && !ValueTupleType.TryGetValue(generic, out count))
+            {
+                return false;
+            }
+
+            if (count < 8)
+            {
+                return true;
+            }
+
+            if (!IsTuple(type.GetGenericArguments()[^1], out Int32 inner))
+            {
+                return true;
+            }
+
+            count += inner - 1;
+            return true;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean TryGetTupleFields(this Type type, out ImmutableArray<Func<ITuple, Object>> result)
+        {
+            return TupleCache.TryGetValue(type, out result);
+        }
+
+        public static String TupleFieldName(Int32 index)
+        {
+            return index switch
+            {
+                0 => "Item1",
+                1 => "Item2",
+                2 => "Item3",
+                3 => "Item4",
+                4 => "Item5",
+                5 => "Item6",
+                6 => "Item7",
+                TupleMaximumGeneric => "Rest",
+                _ => throw new ArgumentOutOfRangeException(nameof(index), index, null)
+            };
+        }
+
+        public static Type? TupleRestType(this Type type)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            if (!IsTuple(type))
+            {
+                return null;
+            }
+
+            Type[] arguments = type.GetGenericArguments();
+            return arguments.Length > TupleMaximumGeneric ? arguments[TupleMaximumGeneric] : null;
+        }
+
+        public static TupleEnumerator<T> GetEnumerator<T>(this T value) where T : ITuple
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            return new TupleEnumerator<T>(value);
+        }
+        
         public static IEnumerable<T> AsEnumerable<T>(this Tuple<T> value)
         {
             if (value is null)
@@ -409,35 +635,35 @@ namespace NetExtender.Utilities.Types
 
             Int32 index = 0;
             Type[] types = new Type[items.Count];
-            foreach (T item in items)
+            foreach (T? item in items)
             {
                 types[index++] = item?.GetType() ?? typeof(Object);
             }
 
-            Func<Type[], Type> factory = value ? GenericTypeUtilities.CreateValueTupleType : GenericTypeUtilities.CreateTupleType;
+            Func<Type[], Type> factory = value ? CreateValueTupleType : CreateTupleType;
 
-            if (items.Count <= GenericTypeUtilities.TupleMaximumGeneric)
+            if (items.Count <= TupleMaximumGeneric)
             {
                 return (ITuple?) Activator.CreateInstance(factory(types), items.Cast<Object?>().ToArray());
             }
 
             Object? inner = null;
 
-            Type[] typearray = new Type[GenericTypeUtilities.TupleMaximumGeneric + 1];
+            Type[] typearray = new Type[TupleMaximumGeneric + 1];
             Object?[] itemarray = new Object?[typearray.Length];
-            foreach (Int32 count in types.Reverse().ZipChunk(items.Reverse().Cast<Object?>(), typearray, itemarray, GenericTypeUtilities.TupleMaximumGeneric))
+            foreach (Int32 count in types.Reverse().ZipChunk(items.Reverse().Cast<Object?>(), typearray, itemarray, TupleMaximumGeneric))
             {
-                Array.Reverse(typearray, 0, GenericTypeUtilities.TupleMaximumGeneric);
-                Array.Reverse(itemarray, 0, GenericTypeUtilities.TupleMaximumGeneric);
+                Array.Reverse(typearray, 0, TupleMaximumGeneric);
+                Array.Reverse(itemarray, 0, TupleMaximumGeneric);
 
-                if (inner is not null && count >= GenericTypeUtilities.TupleMaximumGeneric)
+                if (inner is not null && count >= TupleMaximumGeneric)
                 {
-                    typearray[GenericTypeUtilities.TupleMaximumGeneric] = inner.GetType();
-                    itemarray[GenericTypeUtilities.TupleMaximumGeneric] = inner;
+                    typearray[TupleMaximumGeneric] = inner.GetType();
+                    itemarray[TupleMaximumGeneric] = inner;
                 }
 
-                Type type = factory(inner is not null && count >= GenericTypeUtilities.TupleMaximumGeneric ? typearray : typearray.Slice(0, count).ToArray());
-                inner = Activator.CreateInstance(type, inner is not null && count >= GenericTypeUtilities.TupleMaximumGeneric ? itemarray : itemarray.Slice(0, count).ToArray());
+                Type type = factory(inner is not null && count >= TupleMaximumGeneric ? typearray : typearray.Slice(0, count).ToArray());
+                inner = Activator.CreateInstance(type, inner is not null && count >= TupleMaximumGeneric ? itemarray : itemarray.Slice(0, count).ToArray());
             }
 
             return (ITuple?) inner;

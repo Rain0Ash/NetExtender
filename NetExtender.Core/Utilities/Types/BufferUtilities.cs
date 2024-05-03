@@ -53,8 +53,7 @@ namespace NetExtender.Utilities.Types
             Int32 offset = 0;
             Buffer.BlockCopy(first, 0, result, offset, first.Length);
             Buffer.BlockCopy(second, 0, result, offset += first.Length, second.Length);
-            // ReSharper disable once RedundantAssignment
-            Buffer.BlockCopy(third, 0, result, offset += second.Length, third.Length);
+            Buffer.BlockCopy(third, 0, result, offset + second.Length, third.Length);
 
             return result;
         }

@@ -337,7 +337,7 @@ namespace NetExtender.Types.Immutable.Maps
         {
             return GetEnumerator();
         }
-
+        
         public IEnumerator<KeyValuePair<TValue, TKey>> GetValuesEnumerator()
         {
             return Reversed.GetEnumerator();

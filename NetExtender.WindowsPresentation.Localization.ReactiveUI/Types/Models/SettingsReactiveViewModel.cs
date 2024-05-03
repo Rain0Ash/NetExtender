@@ -4,6 +4,8 @@
 using System;
 using System.Windows;
 using NetExtender.Localization.Behavior.Settings;
+using NetExtender.Types.Singletons;
+using NetExtender.Types.Singletons.Interfaces;
 using NetExtender.WindowsPresentation.Utilities;
 
 namespace NetExtender.WindowsPresentation.ReactiveUI.Types.Models
@@ -29,13 +31,13 @@ namespace NetExtender.WindowsPresentation.ReactiveUI.Types.Models
 
     public abstract class SettingsReactiveViewModelSingleton<T> : SettingsReactiveViewModel where T : SettingsReactiveViewModel, new()
     {
-        private static Lazy<T> Internal { get; } = new Lazy<T>(() => new T(), true);
+        private static ISingleton<T> Internal { get; } = new Singleton<T>();
 
         public static T Instance
         {
             get
             {
-                return Internal.Value;
+                return Internal.Instance;
             }
         }
 
@@ -47,13 +49,13 @@ namespace NetExtender.WindowsPresentation.ReactiveUI.Types.Models
 
     public abstract class SettingsReactiveViewModelSingleton<T, TWindow> : SettingsReactiveViewModel<TWindow> where T : SettingsReactiveViewModel<TWindow>, new() where TWindow : Window
     {
-        private static Lazy<T> Internal { get; } = new Lazy<T>(() => new T(), true);
+        private static ISingleton<T> Internal { get; } = new Singleton<T>();
 
         public static T Instance
         {
             get
             {
-                return Internal.Value;
+                return Internal.Instance;
             }
         }
 

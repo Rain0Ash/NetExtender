@@ -11,7 +11,7 @@ namespace NetExtender.AspNetCore.Types.Middlewares
 {
     public class BusinessExceptionHandlerMiddleware : ExceptionHandlerMiddleware<BusinessException>
     {
-        private BusinessExceptionHandlerMiddleware(RequestDelegate next)
+        public BusinessExceptionHandlerMiddleware(RequestDelegate next)
             : base(next, Internal)
         {
         }

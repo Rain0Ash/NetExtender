@@ -3,9 +3,19 @@
 
 namespace NetExtender.Types.Entities.Interfaces
 {
-    public interface IEntity<T> : IEntity
+    public interface IEntityId<T> : IEntity<T>
     {
         public T Id { get; init; }
+    }
+    
+    public interface IEntityValue<T> : IEntity<T>
+    {
+        public T Value { get; init; }
+    }
+    
+    public interface IEntity<out T> : IEntity
+    {
+        public T Get();
     }
     
     public interface IEntity

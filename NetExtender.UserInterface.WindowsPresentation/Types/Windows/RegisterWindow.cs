@@ -23,5 +23,30 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
             Initialized -= OnInitialized;
             WindowStoreUtilities.Unlock();
         }
+
+        public new virtual Boolean Activate()
+        {
+            return base.Activate();
+        }
+
+        public new virtual void Show()
+        {
+            base.Show();
+        }
+
+        public new virtual Boolean? ShowDialog()
+        {
+            return base.ShowDialog();
+        }
+
+        public new virtual void Hide()
+        {
+            base.Hide();
+        }
+
+        public new virtual void Close()
+        {
+            base.Close();
+        }
     }
 }

@@ -15,12 +15,7 @@ namespace NetExtender.Types.Banking.Cards
     {
         protected String? Level { get; set; }
         protected String? CustomerId { get; set; }
-        protected String Year { get; set; }
-
-        public BankingCardCustomerFactory()
-        {
-            Year = DateTime.Now.ToString("yy");
-        }
+        protected String Year { get; set; } = DateTime.Now.ToString("yy");
 
         public override String Get()
         {

@@ -21,6 +21,16 @@ namespace NetExtender.NewtonSoft.Types.Network.Formatters
 
         private void ConfigureProperty(MemberInfo member, JsonProperty property)
         {
+            if (member is null)
+            {
+                throw new ArgumentNullException(nameof(member));
+            }
+
+            if (property is null)
+            {
+                throw new ArgumentNullException(nameof(property));
+            }
+
             if (Formatter.Selector is null || !Formatter.Selector.IsRequired(member))
             {
                 property.Required = Required.Default;

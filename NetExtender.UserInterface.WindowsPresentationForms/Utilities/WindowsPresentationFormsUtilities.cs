@@ -7,7 +7,7 @@ using System.Windows;
 using System.Windows.Forms;
 using NetExtender.Types.Exceptions;
 using NetExtender.UserInterface;
-using NetExtender.Utilities.Types;
+using NetExtender.Utilities.UserInterface.Types;
 
 namespace NetExtender.Utilities.UserInterface
 {

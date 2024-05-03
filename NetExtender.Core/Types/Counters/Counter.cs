@@ -2,59 +2,286 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using NetExtender.Types.Counters.Interfaces;
-using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Counters
 {
-    public class Counter<T> : ICounter<T>, IReadOnlyCounter<T> where T : notnull
+    public class Counter<T> : Counter<T, Int32> where T : notnull
     {
-        private Dictionary<T, Int32> Internal { get; }
-
-        public Int32 Count
+        public Counter()
         {
-            get
-            {
-                return Internal.Count;
-            }
         }
 
-        public IEnumerable<T> Keys
+        public Counter(Int32 capacity)
+            : base(capacity)
         {
-            get
-            {
-                return Internal.Keys;
-            }
         }
 
-        public IEnumerable<Int32> Values
+        public Counter(IEqualityComparer<T>? comparer)
+            : base(comparer)
+        {
+        }
+
+        public Counter(Int32 capacity, IEqualityComparer<T>? comparer)
+            : base(capacity, comparer)
+        {
+        }
+
+        public Counter(IEnumerable<T> collection)
+            : base(collection)
+        {
+        }
+
+        public Counter(IEnumerable<KeyValuePair<T, Int32>> collection)
+            : base(collection)
+        {
+        }
+
+        public Counter(IEnumerable<T> collection, IEqualityComparer<T>? comparer)
+            : base(collection, comparer)
+        {
+        }
+
+        public Counter(IEnumerable<KeyValuePair<T, Int32>> collection, IEqualityComparer<T>? comparer)
+            : base(collection, comparer)
+        {
+        }
+
+        protected sealed override Boolean Less(Int32 value, Int32 count)
+        {
+            return value < count;
+        }
+
+        protected sealed override Boolean LessOrEquals(Int32 value, Int32 count)
+        {
+            return value <= count;
+        }
+
+        protected sealed override Boolean Greater(Int32 value, Int32 count)
+        {
+            return value > count;
+        }
+
+        protected sealed override Boolean GreaterOrEquals(Int32 value, Int32 count)
+        {
+            return value >= count;
+        }
+
+        protected sealed override Int32 Increment(Int32 value)
+        {
+            return ++value;
+        }
+
+        protected sealed override Int32 Decrement(Int32 value)
+        {
+            return --value;
+        }
+
+        protected sealed override Int32 Add(Int32 left, Int32 right)
+        {
+            return left + right;
+        }
+
+        protected sealed override Int32 Substract(Int32 left, Int32 right)
+        {
+            return left - right;
+        }
+    }
+    
+    public class Counter64<T> : Counter<T, Int64> where T : notnull
+    {
+        public Counter64()
+        {
+        }
+
+        public Counter64(Int32 capacity)
+            : base(capacity)
+        {
+        }
+
+        public Counter64(IEqualityComparer<T>? comparer)
+            : base(comparer)
+        {
+        }
+
+        public Counter64(Int32 capacity, IEqualityComparer<T>? comparer)
+            : base(capacity, comparer)
+        {
+        }
+
+        public Counter64(IEnumerable<T> collection)
+            : base(collection)
+        {
+        }
+
+        public Counter64(IEnumerable<KeyValuePair<T, Int64>> collection)
+            : base(collection)
+        {
+        }
+
+        public Counter64(IEnumerable<T> collection, IEqualityComparer<T>? comparer)
+            : base(collection, comparer)
+        {
+        }
+
+        public Counter64(IEnumerable<KeyValuePair<T, Int64>> collection, IEqualityComparer<T>? comparer)
+            : base(collection, comparer)
+        {
+        }
+
+        protected sealed override Boolean Less(Int64 value, Int64 count)
+        {
+            return value < count;
+        }
+
+        protected sealed override Boolean LessOrEquals(Int64 value, Int64 count)
+        {
+            return value <= count;
+        }
+
+        protected sealed override Boolean Greater(Int64 value, Int64 count)
+        {
+            return value > count;
+        }
+
+        protected sealed override Boolean GreaterOrEquals(Int64 value, Int64 count)
+        {
+            return value >= count;
+        }
+
+        protected sealed override Int64 Increment(Int64 value)
+        {
+            return ++value;
+        }
+
+        protected sealed override Int64 Decrement(Int64 value)
+        {
+            return --value;
+        }
+
+        protected sealed override Int64 Add(Int64 left, Int64 right)
+        {
+            return left + right;
+        }
+
+        protected sealed override Int64 Substract(Int64 left, Int64 right)
+        {
+            return left - right;
+        }
+    }
+    
+    public class DecimalCounter<T> : Counter<T, Decimal> where T : notnull
+    {
+        public DecimalCounter()
+        {
+        }
+
+        public DecimalCounter(Int32 capacity)
+            : base(capacity)
+        {
+        }
+
+        public DecimalCounter(IEqualityComparer<T>? comparer)
+            : base(comparer)
+        {
+        }
+
+        public DecimalCounter(Int32 capacity, IEqualityComparer<T>? comparer)
+            : base(capacity, comparer)
+        {
+        }
+
+        public DecimalCounter(IEnumerable<T> collection)
+            : base(collection)
+        {
+        }
+
+        public DecimalCounter(IEnumerable<KeyValuePair<T, Decimal>> collection)
+            : base(collection)
+        {
+        }
+
+        public DecimalCounter(IEnumerable<T> collection, IEqualityComparer<T>? comparer)
+            : base(collection, comparer)
+        {
+        }
+
+        public DecimalCounter(IEnumerable<KeyValuePair<T, Decimal>> collection, IEqualityComparer<T>? comparer)
+            : base(collection, comparer)
+        {
+        }
+
+        protected sealed override Boolean Less(Decimal value, Decimal count)
+        {
+            return value < count;
+        }
+
+        protected sealed override Boolean LessOrEquals(Decimal value, Decimal count)
+        {
+            return value <= count;
+        }
+
+        protected sealed override Boolean Greater(Decimal value, Decimal count)
+        {
+            return value > count;
+        }
+
+        protected sealed override Boolean GreaterOrEquals(Decimal value, Decimal count)
+        {
+            return value >= count;
+        }
+
+        protected sealed override Decimal Increment(Decimal value)
+        {
+            return ++value;
+        }
+
+        protected sealed override Decimal Decrement(Decimal value)
+        {
+            return --value;
+        }
+
+        protected sealed override Decimal Add(Decimal left, Decimal right)
+        {
+            return left + right;
+        }
+
+        protected sealed override Decimal Substract(Decimal left, Decimal right)
+        {
+            return left - right;
+        }
+    }
+    
+    public class Counter<T, TCount> : CounterAbstraction<T, TCount> where T : notnull where TCount : unmanaged, IConvertible
+    {
+        protected sealed override Dictionary<T, TCount> Internal { get; }
+        
+        public IEqualityComparer<T> Comparer
         {
             get
             {
-                return Internal.Values;
+                return Internal.Comparer;
             }
         }
 
         public Counter()
         {
-            Internal = new Dictionary<T, Int32>();
+            Internal = new Dictionary<T, TCount>();
         }
 
         public Counter(Int32 capacity)
         {
-            Internal = new Dictionary<T, Int32>(capacity);
+            Internal = new Dictionary<T, TCount>(capacity);
         }
 
         public Counter(IEqualityComparer<T>? comparer)
         {
-            Internal = new Dictionary<T, Int32>(comparer);
+            Internal = new Dictionary<T, TCount>(comparer);
         }
 
         public Counter(Int32 capacity, IEqualityComparer<T>? comparer)
         {
-            Internal = new Dictionary<T, Int32>(capacity, comparer);
+            Internal = new Dictionary<T, TCount>(capacity, comparer);
         }
 
         public Counter(IEnumerable<T> collection)
@@ -64,7 +291,18 @@ namespace NetExtender.Types.Counters
                 throw new ArgumentNullException(nameof(collection));
             }
 
-            Internal = new Dictionary<T, Int32>();
+            Internal = new Dictionary<T, TCount>();
+            AddRange(collection);
+        }
+
+        public Counter(IEnumerable<KeyValuePair<T, TCount>> collection)
+        {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
+            Internal = new Dictionary<T, TCount>();
             AddRange(collection);
         }
 
@@ -75,140 +313,24 @@ namespace NetExtender.Types.Counters
                 throw new ArgumentNullException(nameof(collection));
             }
 
-            Internal = new Dictionary<T, Int32>(comparer);
+            Internal = new Dictionary<T, TCount>(comparer);
             AddRange(collection);
         }
 
-        public Boolean ContainsKey(T key)
+        public Counter(IEnumerable<KeyValuePair<T, TCount>> collection, IEqualityComparer<T>? comparer)
         {
-            if (key is null)
+            if (collection is null)
             {
-                throw new ArgumentNullException(nameof(key));
+                throw new ArgumentNullException(nameof(collection));
             }
 
-            return Internal.ContainsKey(key);
+            Internal = new Dictionary<T, TCount>(comparer);
+            AddRange(collection);
         }
 
-        public Boolean TryGetValue(T key, out Int32 value)
+        public sealed override KeyValuePair<T, TCount>[] ToArray()
         {
-            if (key is null)
-            {
-                throw new ArgumentNullException(nameof(key));
-            }
-
-            return Internal.TryGetValue(key, out value);
-        }
-
-        public Int32 Add(T item)
-        {
-            if (item is null)
-            {
-                throw new ArgumentNullException(nameof(item));
-            }
-
-            if (Internal.TryGetValue(item, out Int32 count))
-            {
-                Internal[item] = ++count;
-                return count;
-            }
-
-            Internal.Add(item, ++count);
-            return count;
-        }
-
-        public Boolean TryAdd(T item)
-        {
-            return TryAdd(item, out _);
-        }
-
-        public Boolean TryAdd(T item, out Int32 count)
-        {
-            if (item is null)
-            {
-                throw new ArgumentNullException(nameof(item));
-            }
-
-            try
-            {
-                count = Add(item);
-                return true;
-            }
-            catch (OverflowException)
-            {
-                count = default;
-                return false;
-            }
-        }
-
-        public void AddRange(IEnumerable<T> source)
-        {
-            if (source is null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-
-            foreach (T item in source.WhereNotNull())
-            {
-                TryAdd(item);
-            }
-        }
-
-        public Boolean Remove(T item)
-        {
-            return Remove(item, out _);
-        }
-
-        public Boolean Remove(T item, out Int32 count)
-        {
-            if (item is null)
-            {
-                throw new ArgumentNullException(nameof(item));
-            }
-
-            if (!Internal.TryGetValue(item, out count))
-            {
-                return false;
-            }
-
-            if (count <= 1)
-            {
-                count = 0;
-                return Internal.Remove(item);
-            }
-
-            Internal[item] = --count;
-            return true;
-        }
-
-        public void RemoveRange(IEnumerable<T> source)
-        {
-            if (source is null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-
-            foreach (T item in source.WhereNotNull())
-            {
-                Remove(item);
-            }
-        }
-
-        public IEnumerator<KeyValuePair<T, Int32>> GetEnumerator()
-        {
-            return Internal.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
-
-        public Int32 this[T key]
-        {
-            get
-            {
-                return Internal[key];
-            }
+            return base.ToArray();
         }
     }
 }

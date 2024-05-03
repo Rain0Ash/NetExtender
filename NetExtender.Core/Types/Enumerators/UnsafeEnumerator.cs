@@ -16,6 +16,18 @@ namespace NetExtender.Types.Enumerators
     public unsafe struct UnsafeEnumerator<T, TSize> : IUnsafeEnumerator<T> where T : struct where TSize : struct, IUnsafeSize<TSize>
     {
         private TSize Internal;
+        
+        public Type Type
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+            get
+            {
+                fixed (void* pointer = Internal)
+                {
+                    return _type(pointer);
+                }
+            }
+        }
 
         public readonly Int32 Length
         {
@@ -64,13 +76,14 @@ namespace NetExtender.Types.Enumerators
                 return Current;
             }
         }
-
+        
+        private readonly delegate*<void*, Type> _type;
         private readonly delegate*<void*, T> _current;
         private readonly delegate*<void*, Boolean> _next;
         private readonly delegate*<void*, void> _reset;
         private readonly delegate*<void*, void> _dispose;
 
-        public UnsafeEnumerator(Span<Byte> value, delegate*<void*, T> current, delegate*<void*, Boolean> next, delegate*<void*, void> reset, delegate*<void*, void> dispose)
+        public UnsafeEnumerator(Span<Byte> value, delegate*<void*, Type> type, delegate*<void*, T> current, delegate*<void*, Boolean> next, delegate*<void*, void> reset, delegate*<void*, void> dispose)
         {
             Internal = default;
             if (value.Length > Internal.Length || !value.TryCopyTo(Internal.AsSpan()))
@@ -79,12 +92,13 @@ namespace NetExtender.Types.Enumerators
             }
             
             Internal.Count = value.Length;
+            _type = type;
             _current = current;
             _next = next;
             _reset = reset;
             _dispose = dispose;
         }
-
+        
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public Boolean MoveNext()
         {

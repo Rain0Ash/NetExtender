@@ -42,7 +42,7 @@ namespace NetExtender.Utilities.Cryptography
                 }
                 catch (CryptographicException)
                 {
-                    throw new ArgumentException($@"Invalid key size: {size}", nameof(key));
+                    throw new ArgumentException($"Invalid key size: {size}", nameof(key));
                 }
 
                 switch (type)

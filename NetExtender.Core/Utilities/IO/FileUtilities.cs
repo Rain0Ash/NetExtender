@@ -904,7 +904,6 @@ namespace NetExtender.Utilities.IO
                 }
                 catch (Exception)
                 {
-                    // ignored
                 }
 
                 if (exist)
@@ -918,7 +917,6 @@ namespace NetExtender.Utilities.IO
                 }
                 catch (Exception)
                 {
-                    // ignored
                 }
 
                 return null;

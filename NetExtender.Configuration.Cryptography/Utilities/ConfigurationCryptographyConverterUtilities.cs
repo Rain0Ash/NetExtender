@@ -1035,7 +1035,7 @@ namespace NetExtender.Configuration.Cryptography.Convert.Utilities
 
         public static Task<Boolean> SetValueAsync<T>(this ICryptographyConfig config, String? key, T value, IStringCryptor? cryptor, CancellationToken token, params String[]? sections)
         {
-            return SetValueAsync(config, key, value, cryptor, sections, CancellationToken.None);
+            return SetValueAsync(config, key, value, cryptor, sections, token);
         }
 
         public static async Task<Boolean> SetValueAsync<T>(this ICryptographyConfig config, String? key, T value, IStringCryptor? cryptor, IEnumerable<String>? sections, CancellationToken token)

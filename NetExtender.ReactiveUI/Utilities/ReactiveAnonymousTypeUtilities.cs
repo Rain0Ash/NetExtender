@@ -91,5 +91,23 @@ namespace NetExtender.ReactiveUI.Utilities
         {
             return ReactiveAnonymousType.Generator.CreateAnonymousObject<ReactiveAnonymousObject>(value);
         }
+
+        /*[MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ReactiveAnonymousRecord CreateReactiveAnonymousRecord(this IEnumerable<KeyValuePair<String, Object?>> properties)
+        {
+            return ReactiveAnonymousType.Generator.CreateAnonymousObject<ReactiveAnonymousRecord>(properties);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ReactiveAnonymousRecord CreateReactiveAnonymousRecord(this IEnumerable<KeyValuePair<String, (Type Type, Object? Value)>> properties)
+        {
+            return ReactiveAnonymousType.Generator.CreateAnonymousObject<ReactiveAnonymousRecord>(properties);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ReactiveAnonymousRecord CreateReactiveAnonymousRecord(this ExpandoObject value)
+        {
+            return ReactiveAnonymousType.Generator.CreateAnonymousObject<ReactiveAnonymousRecord>(value);
+        }*/
     }
 }

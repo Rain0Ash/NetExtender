@@ -16,6 +16,7 @@ using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
+using NetExtender.Types.Anonymous;
 using NetExtender.Types.Attributes;
 using NetExtender.Types.Exceptions;
 using NetExtender.Types.Reflection;
@@ -392,6 +393,86 @@ namespace NetExtender.Utilities.Core
 
             return type.ImplementedInterfaces.Contains(@interface);
         }
+        
+        public static Boolean HasInterface(this Type type, params Type?[]? interfaces)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            if (interfaces is null)
+            {
+                return true;
+            }
+            
+            return interfaces.Length switch
+            {
+                <= 0 => true,
+                1 => interfaces[0] is null || type.GetInterfaces().Contains(interfaces[0]),
+                _ => interfaces.WhereNotNull().All(new HashSet<Type>(type.GetInterfaces()).Contains)
+            };
+        }
+
+        public static Boolean HasInterface(this TypeInfo type, params Type?[]? interfaces)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            if (interfaces is null)
+            {
+                return true;
+            }
+
+            return interfaces.Length switch
+            {
+                <= 0 => true,
+                1 => interfaces[0] is null || type.ImplementedInterfaces.Contains(interfaces[0]),
+                _ => interfaces.WhereNotNull().All(new HashSet<Type>(type.ImplementedInterfaces).Contains)
+            };
+        }
+        
+        public static Boolean HasAnyInterface(this Type type, params Type?[]? interfaces)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            if (interfaces is null)
+            {
+                return false;
+            }
+            
+            return interfaces.Length switch
+            {
+                <= 0 => false,
+                1 => interfaces[0] is not null && type.GetInterfaces().Contains(interfaces[0]),
+                _ => interfaces.WhereNotNull().Any(new HashSet<Type>(type.GetInterfaces()).Contains)
+            };
+        }
+
+        public static Boolean HasAnyInterface(this TypeInfo type, params Type?[]? interfaces)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            if (interfaces is null)
+            {
+                return false;
+            }
+
+            return interfaces.Length switch
+            {
+                <= 0 => false,
+                1 => interfaces[0] is not null && type.ImplementedInterfaces.Contains(interfaces[0]),
+                _ => interfaces.WhereNotNull().Any(new HashSet<Type>(type.ImplementedInterfaces).Contains)
+            };
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Type TryGetGenericTypeDefinition(this Type type)
@@ -549,7 +630,7 @@ namespace NetExtender.Utilities.Core
                 return true;
             }
 
-            if (info.BaseType is not Type @base)
+            if (info.BaseType is not { } @base)
             {
                 return false;
             }
@@ -572,6 +653,65 @@ namespace NetExtender.Utilities.Core
         public static Boolean IsAnonymousType(this Type? type)
         {
             return type is not null && type.Namespace is null;
+        }
+
+        private static class AnonymousTypeCache
+        {
+            private static ConcurrentDictionary<Type, AnonymousTypeProperties> Cache { get; } = new ConcurrentDictionary<Type, AnonymousTypeProperties>();
+
+            public static AnonymousTypeProperties? Get(Type type)
+            {
+                if (type is null)
+                {
+                    throw new ArgumentNullException(nameof(type));
+                }
+
+                if (!type.IsAnonymousType())
+                {
+                    throw new NotSupportedException();
+                }
+
+                try
+                {
+                    return Cache.GetOrAdd(type, AnonymousTypeProperties.Create);
+                }
+                catch (Exception)
+                {
+                    return default;
+                }
+            }
+        }
+
+        public static AnonymousTypeProperties? GetAnonymousProperties(this Object? value)
+        {
+            return value is not null ? GetAnonymousProperties(value.GetType()) : null;
+        }
+
+        public static AnonymousTypeProperties? GetAnonymousProperties(this Type type)
+        {
+            return AnonymousTypeCache.Get(type);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsDefined<T>(this MemberInfo info) where T : Attribute
+        {
+            if (info is null)
+            {
+                throw new ArgumentNullException(nameof(info));
+            }
+
+            return info.IsDefined(typeof(T));
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsDefined<T>(this MemberInfo info, Boolean inherit) where T : Attribute
+        {
+            if (info is null)
+            {
+                throw new ArgumentNullException(nameof(info));
+            }
+
+            return info.IsDefined(typeof(T), inherit);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1699,18 +1839,29 @@ namespace NetExtender.Utilities.Core
             return $"{Path.GetFileName(frame.GetFileName())}::{method.DeclaringType?.FullName ?? String.Empty}.{method.Name} - Line {frame.GetFileLineNumber()}";
         }
 
-        public static IEnumerable<Assembly> DomainCustomAssemblies
+        public static class Domain
         {
-            get
+            public static IEnumerable<Assembly> CustomAssemblies
             {
-                Assembly calling = Assembly.GetCallingAssembly();
-                Assembly? entry = Assembly.GetEntryAssembly();
-                return AppDomain.CurrentDomain.GetAssemblies().WhereNot(IsSystemAssembly).Append(entry).Append(calling).WhereNotNull().Distinct()
-                    .OrderByDescending(assembly => assembly == Assembly.GetExecutingAssembly())
-                    .ThenByDescending(assembly => assembly.GetName().FullName.StartsWith(nameof(NetExtender)))
-                    .ThenByDescending(assembly => assembly == calling)
-                    .ThenByDescending(assembly => assembly == entry)
-                    .ThenBy(assembly => assembly.GetName().FullName);
+                get
+                {
+                    Assembly calling = Assembly.GetCallingAssembly();
+                    Assembly? entry = Assembly.GetEntryAssembly();
+                    return AppDomain.CurrentDomain.GetAssemblies().WhereNot(IsSystemAssembly).Append(entry).Append(calling).WhereNotNull().Distinct()
+                        .OrderByDescending(assembly => assembly == Assembly.GetExecutingAssembly())
+                        .ThenByDescending(assembly => assembly.GetName().FullName.StartsWith(nameof(NetExtender)))
+                        .ThenByDescending(assembly => assembly == calling)
+                        .ThenByDescending(assembly => assembly == entry)
+                        .ThenBy(assembly => assembly.GetName().FullName);
+                }
+            }
+
+            public static IEnumerable<Type> CustomTypes
+            {
+                get
+                {
+                    return CustomAssemblies.GetTypes();
+                }
             }
         }
 
@@ -1839,7 +1990,7 @@ namespace NetExtender.Utilities.Core
 
         public static IEnumerable<Assembly> CallStaticInitializerAttribute()
         {
-            return CallStaticInitializerAttribute(DomainCustomAssemblies);
+            return CallStaticInitializerAttribute(Domain.CustomAssemblies);
         }
 
         internal static IEnumerable<Assembly> CallStaticInitializerRequiredAttribute()
@@ -1849,7 +2000,7 @@ namespace NetExtender.Utilities.Core
                 CallStaticInitializerAttributeInternal<StaticInitializerRequiredAttribute>(assembly);
             }
 
-            return DomainCustomAssemblies.ForEach(Call).Materialize();
+            return Domain.CustomAssemblies.ForEach(Call).Materialize();
         }
 
         /// <summary>
@@ -1954,14 +2105,15 @@ namespace NetExtender.Utilities.Core
                 type = obj.GetType();
             }
 
-            PropertyInfo? property = type.GetProperty(name, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            const BindingFlags binding = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+            PropertyInfo? property = type.GetProperty(name, binding);
             if (property is not null)
             {
                 result = property.GetValue(obj);
                 return true;
             }
 
-            FieldInfo? field = type.GetField(name, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            FieldInfo? field = type.GetField(name, binding);
             if (field is not null)
             {
                 result = field.GetValue(obj);
@@ -2042,17 +2194,17 @@ namespace NetExtender.Utilities.Core
                 throw new ArgumentNullException(nameof(name));
             }
 
-            if (GetPropertyValue(obj, name, out Object? value))
+            if (GetPropertyValue(obj, name, out Object? property))
             {
-                if (value is T resval)
+                if (property is T value)
                 {
-                    result = resval;
+                    result = value;
                     return true;
                 }
 
                 try
                 {
-                    return value.TryConvert(out result);
+                    return property.TryConvert(out result);
                 }
                 catch (Exception)
                 {
@@ -2280,6 +2432,23 @@ namespace NetExtender.Utilities.Core
             return info.GetIndexParameters().Length > 0;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsVoid(this Type? type)
+        {
+            return type == typeof(void);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsVoid(this MethodInfo method)
+        {
+            if (method is null)
+            {
+                throw new ArgumentNullException(nameof(method));
+            }
+
+            return method.ReturnType.IsVoid();
+        }
+
         public static FieldAttributes Access(this FieldAttributes attributes)
         {
             return attributes & FieldAttributes.FieldAccessMask;
@@ -2461,24 +2630,24 @@ namespace NetExtender.Utilities.Core
             return type.GetFields(binding).Where(field => field.IsLiteral && !field.IsInitOnly);
         }
 
-        public static IEnumerable<EventInfo> GetAccessibleEvents(this Type type)
-        {
-            return GetAccessibleMembers(type, RuntimeReflectionExtensions.GetRuntimeEvents);
-        }
-
         public static IEnumerable<FieldInfo> GetAccessibleFields(this Type type)
         {
             return GetAccessibleMembers(type, RuntimeReflectionExtensions.GetRuntimeFields);
         }
 
-        public static IEnumerable<MethodInfo> GetAccessibleMethods(this Type type)
-        {
-            return GetAccessibleMembers(type, RuntimeReflectionExtensions.GetRuntimeMethods);
-        }
-
         public static IEnumerable<PropertyInfo> GetAccessibleProperties(this Type type)
         {
             return GetAccessibleMembers(type, RuntimeReflectionExtensions.GetRuntimeProperties);
+        }
+
+        public static IEnumerable<EventInfo> GetAccessibleEvents(this Type type)
+        {
+            return GetAccessibleMembers(type, RuntimeReflectionExtensions.GetRuntimeEvents);
+        }
+
+        public static IEnumerable<MethodInfo> GetAccessibleMethods(this Type type)
+        {
+            return GetAccessibleMembers(type, RuntimeReflectionExtensions.GetRuntimeMethods);
         }
 
         private static IEnumerable<T> GetAccessibleMembers<T>(this Type type, Func<Type, IEnumerable<T>> finder) where T : MemberInfo
@@ -2534,108 +2703,108 @@ namespace NetExtender.Utilities.Core
             return result;
         }
 
-        public static Boolean Equality(this MethodBody first, MethodBody second)
+        public static Boolean Equality(this MethodBody source, MethodBody other)
         {
-            if (first is null)
+            if (source is null)
             {
-                throw new ArgumentNullException(nameof(first));
+                throw new ArgumentNullException(nameof(source));
             }
 
-            if (second is null)
+            if (other is null)
             {
-                throw new ArgumentNullException(nameof(second));
+                throw new ArgumentNullException(nameof(other));
             }
 
-            if (first == second)
+            if (source == other)
             {
                 return true;
             }
 
-            Byte[]? il1 = first.GetILAsByteArray();
-            Byte[]? il2 = second.GetILAsByteArray();
+            Byte[]? il1 = source.GetILAsByteArray();
+            Byte[]? il2 = other.GetILAsByteArray();
 
             return il1 == il2 || il1 is not null && il2 is not null && il1.SequenceEqual(il2);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean Equality(this ConstructorInfo first, ConstructorInfo second)
+        public static Boolean Equality(this ConstructorInfo source, ConstructorInfo other)
         {
-            return Difference(first, second) == ReflectionEqualityType.Equals;
+            return Difference(source, other) == ReflectionEqualityType.Equals;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean Equality(this ConstructorInfo first, ConstructorInfo second, Boolean strict)
+        public static Boolean Equality(this ConstructorInfo source, ConstructorInfo other, Boolean strict)
         {
-            return Difference(first, second, strict) == ReflectionEqualityType.Equals;
+            return Difference(source, other, strict) == ReflectionEqualityType.Equals;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean Equality(this ConstructorInfo first, ConstructorInfo second, ConstructorDifferenceStrictMode strict)
+        public static Boolean Equality(this ConstructorInfo source, ConstructorInfo other, ConstructorDifferenceStrictMode strict)
         {
-            return Difference(first, second, strict) == ReflectionEqualityType.Equals;
+            return Difference(source, other, strict) == ReflectionEqualityType.Equals;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ReflectionDifferenceItem<ConstructorInfo> Difference(this ConstructorInfo first, ConstructorInfo second)
+        public static ReflectionDifferenceItem<ConstructorInfo> Difference(this ConstructorInfo source, ConstructorInfo other)
         {
-            return Difference(first, second, false);
+            return Difference(source, other, false);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ReflectionDifferenceItem<ConstructorInfo> Difference(this ConstructorInfo first, ConstructorInfo second, Boolean strict)
+        public static ReflectionDifferenceItem<ConstructorInfo> Difference(this ConstructorInfo source, ConstructorInfo other, Boolean strict)
         {
-            return Difference(first, second, strict ? ConstructorDifferenceStrictMode.Strict : ConstructorDifferenceStrictMode.NotStrict);
+            return Difference(source, other, strict ? ConstructorDifferenceStrictMode.Strict : ConstructorDifferenceStrictMode.NotStrict);
         }
 
         // ReSharper disable once CognitiveComplexity
-        public static ReflectionDifferenceItem<ConstructorInfo> Difference(this ConstructorInfo first, ConstructorInfo second, ConstructorDifferenceStrictMode strict)
+        public static ReflectionDifferenceItem<ConstructorInfo> Difference(this ConstructorInfo source, ConstructorInfo other, ConstructorDifferenceStrictMode strict)
         {
-            if (first is null)
+            if (source is null)
             {
-                throw new ArgumentNullException(nameof(first));
+                throw new ArgumentNullException(nameof(source));
             }
 
-            if (second is null)
+            if (other is null)
             {
-                throw new ArgumentNullException(nameof(second));
+                throw new ArgumentNullException(nameof(other));
             }
 
-            if (first == second)
+            if (source == other)
             {
-                return new ReflectionDifferenceItem<ConstructorInfo>(first, second, ReflectionEqualityType.Equals);
+                return new ReflectionDifferenceItem<ConstructorInfo>(source, other, ReflectionEqualityType.Equals);
             }
 
-            if (first.DeclaringType != second.DeclaringType)
+            if (source.DeclaringType != other.DeclaringType)
             {
-                return new ReflectionDifferenceItem<ConstructorInfo>(first, second, ReflectionEqualityType.TypeNotEquals);
+                return new ReflectionDifferenceItem<ConstructorInfo>(source, other, ReflectionEqualityType.TypeNotEquals);
             }
 
-            if (strict.HasFlag(ConstructorDifferenceStrictMode.Name) && first.Name != second.Name)
+            if (strict.HasFlag(ConstructorDifferenceStrictMode.Name) && source.Name != other.Name)
             {
-                return new ReflectionDifferenceItem<ConstructorInfo>(first, second, ReflectionEqualityType.NameNotEquals);
+                return new ReflectionDifferenceItem<ConstructorInfo>(source, other, ReflectionEqualityType.NameNotEquals);
             }
 
-            if (strict.HasFlag(ConstructorDifferenceStrictMode.CallingConvention) && first.CallingConvention != second.CallingConvention)
+            if (strict.HasFlag(ConstructorDifferenceStrictMode.CallingConvention) && source.CallingConvention != other.CallingConvention)
             {
-                return new ReflectionDifferenceItem<ConstructorInfo>(first, second, ReflectionEqualityType.AttributeNotEquals);
+                return new ReflectionDifferenceItem<ConstructorInfo>(source, other, ReflectionEqualityType.AttributeNotEquals);
             }
 
-            if (strict.HasFlag(ConstructorDifferenceStrictMode.Attribute) && first.Attributes != second.Attributes)
+            if (strict.HasFlag(ConstructorDifferenceStrictMode.Attribute) && source.Attributes != other.Attributes)
             {
-                return new ReflectionDifferenceItem<ConstructorInfo>(first, second, ReflectionEqualityType.AttributeNotEquals);
+                return new ReflectionDifferenceItem<ConstructorInfo>(source, other, ReflectionEqualityType.AttributeNotEquals);
             }
 
-            if (strict.HasFlag(ConstructorDifferenceStrictMode.Access) && first.Attributes.Access() != second.Attributes.Access())
+            if (strict.HasFlag(ConstructorDifferenceStrictMode.Access) && source.Attributes.Access() != other.Attributes.Access())
             {
-                return new ReflectionDifferenceItem<ConstructorInfo>(first, second, ReflectionEqualityType.SignatureNotEquals);
+                return new ReflectionDifferenceItem<ConstructorInfo>(source, other, ReflectionEqualityType.SignatureNotEquals);
             }
 
-            ParameterInfo[] parameters1 = first.GetParameters();
-            ParameterInfo[] parameters2 = second.GetParameters();
+            ParameterInfo[] parameters1 = source.GetParameters();
+            ParameterInfo[] parameters2 = other.GetParameters();
 
             if (parameters1.Length != parameters2.Length)
             {
-                return new ReflectionDifferenceItem<ConstructorInfo>(first, second, ReflectionEqualityType.SignatureNotEquals);
+                return new ReflectionDifferenceItem<ConstructorInfo>(source, other, ReflectionEqualityType.SignatureNotEquals);
             }
 
             static ReflectionDifferenceItem<ParameterInfo> Check((ParameterInfo First, ParameterInfo Second) value)
@@ -2644,262 +2813,262 @@ namespace NetExtender.Utilities.Core
             }
 
             Boolean equals = parameters1.Zip(parameters2).Select(Check).All(difference => difference.Equality == ReflectionEqualityType.Equals);
-            return new ReflectionDifferenceItem<ConstructorInfo>(first, second, equals ? ReflectionEqualityType.Equals : ReflectionEqualityType.SignatureNotEquals);
+            return new ReflectionDifferenceItem<ConstructorInfo>(source, other, equals ? ReflectionEqualityType.Equals : ReflectionEqualityType.SignatureNotEquals);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean Equality(this FieldInfo first, FieldInfo second)
+        public static Boolean Equality(this FieldInfo source, FieldInfo other)
         {
-            return Difference(first, second) == ReflectionEqualityType.Equals;
+            return Difference(source, other) == ReflectionEqualityType.Equals;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean Equality(this FieldInfo first, FieldInfo second, Boolean strict)
+        public static Boolean Equality(this FieldInfo source, FieldInfo other, Boolean strict)
         {
-            return Difference(first, second, strict) == ReflectionEqualityType.Equals;
+            return Difference(source, other, strict) == ReflectionEqualityType.Equals;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean Equality(this FieldInfo first, FieldInfo second, FieldDifferenceStrictMode strict)
+        public static Boolean Equality(this FieldInfo source, FieldInfo other, FieldDifferenceStrictMode strict)
         {
-            return Difference(first, second, strict) == ReflectionEqualityType.Equals;
+            return Difference(source, other, strict) == ReflectionEqualityType.Equals;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ReflectionDifferenceItem<FieldInfo> Difference(this FieldInfo first, FieldInfo second)
+        public static ReflectionDifferenceItem<FieldInfo> Difference(this FieldInfo source, FieldInfo other)
         {
-            return Difference(first, second, false);
+            return Difference(source, other, false);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ReflectionDifferenceItem<FieldInfo> Difference(this FieldInfo first, FieldInfo second, Boolean strict)
+        public static ReflectionDifferenceItem<FieldInfo> Difference(this FieldInfo source, FieldInfo other, Boolean strict)
         {
-            return Difference(first, second, strict ? FieldDifferenceStrictMode.Strict : FieldDifferenceStrictMode.NotStrict);
+            return Difference(source, other, strict ? FieldDifferenceStrictMode.Strict : FieldDifferenceStrictMode.NotStrict);
         }
 
         // ReSharper disable once CognitiveComplexity
-        public static ReflectionDifferenceItem<FieldInfo> Difference(this FieldInfo first, FieldInfo second, FieldDifferenceStrictMode strict)
+        public static ReflectionDifferenceItem<FieldInfo> Difference(this FieldInfo source, FieldInfo other, FieldDifferenceStrictMode strict)
         {
-            if (first is null)
+            if (source is null)
             {
-                throw new ArgumentNullException(nameof(first));
+                throw new ArgumentNullException(nameof(source));
             }
 
-            if (second is null)
+            if (other is null)
             {
-                throw new ArgumentNullException(nameof(second));
+                throw new ArgumentNullException(nameof(other));
             }
 
-            if (first == second)
+            if (source == other)
             {
-                return new ReflectionDifferenceItem<FieldInfo>(first, second, ReflectionEqualityType.Equals);
+                return new ReflectionDifferenceItem<FieldInfo>(source, other, ReflectionEqualityType.Equals);
             }
 
-            if (strict.HasFlag(FieldDifferenceStrictMode.Name) && first.Name != second.Name)
+            if (strict.HasFlag(FieldDifferenceStrictMode.Name) && source.Name != other.Name)
             {
-                return new ReflectionDifferenceItem<FieldInfo>(first, second, ReflectionEqualityType.NameNotEquals);
+                return new ReflectionDifferenceItem<FieldInfo>(source, other, ReflectionEqualityType.NameNotEquals);
             }
 
-            if (first.FieldType != second.FieldType)
+            if (source.FieldType != other.FieldType)
             {
-                return new ReflectionDifferenceItem<FieldInfo>(first, second, ReflectionEqualityType.SignatureNotEquals);
+                return new ReflectionDifferenceItem<FieldInfo>(source, other, ReflectionEqualityType.SignatureNotEquals);
             }
 
-            if (first.IsStatic != second.IsStatic)
+            if (source.IsStatic != other.IsStatic)
             {
-                return new ReflectionDifferenceItem<FieldInfo>(first, second, ReflectionEqualityType.AttributeNotEquals);
+                return new ReflectionDifferenceItem<FieldInfo>(source, other, ReflectionEqualityType.AttributeNotEquals);
             }
 
-            if (strict.HasFlag(FieldDifferenceStrictMode.Attribute) && first.Attributes != second.Attributes)
+            if (strict.HasFlag(FieldDifferenceStrictMode.Attribute) && source.Attributes != other.Attributes)
             {
-                return new ReflectionDifferenceItem<FieldInfo>(first, second, ReflectionEqualityType.AttributeNotEquals);
+                return new ReflectionDifferenceItem<FieldInfo>(source, other, ReflectionEqualityType.AttributeNotEquals);
             }
 
-            if (strict.HasFlag(FieldDifferenceStrictMode.Access) && first.Attributes.Access() != second.Attributes.Access())
+            if (strict.HasFlag(FieldDifferenceStrictMode.Access) && source.Attributes.Access() != other.Attributes.Access())
             {
-                return new ReflectionDifferenceItem<FieldInfo>(first, second, ReflectionEqualityType.SignatureNotEquals);
+                return new ReflectionDifferenceItem<FieldInfo>(source, other, ReflectionEqualityType.SignatureNotEquals);
             }
 
-            if (strict.HasFlag(FieldDifferenceStrictMode.InitOnly) && first.IsInitOnly != second.IsInitOnly)
+            if (strict.HasFlag(FieldDifferenceStrictMode.InitOnly) && source.IsInitOnly != other.IsInitOnly)
             {
-                return new ReflectionDifferenceItem<FieldInfo>(first, second, ReflectionEqualityType.SignatureNotEquals);
+                return new ReflectionDifferenceItem<FieldInfo>(source, other, ReflectionEqualityType.SignatureNotEquals);
             }
 
-            return new ReflectionDifferenceItem<FieldInfo>(first, second, ReflectionEqualityType.Equals);
+            return new ReflectionDifferenceItem<FieldInfo>(source, other, ReflectionEqualityType.Equals);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean Equality(this PropertyInfo first, PropertyInfo second)
+        public static Boolean Equality(this PropertyInfo source, PropertyInfo other)
         {
-            return Difference(first, second) == ReflectionEqualityType.Equals;
+            return Difference(source, other) == ReflectionEqualityType.Equals;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean Equality(this PropertyInfo first, PropertyInfo second, Boolean strict)
+        public static Boolean Equality(this PropertyInfo source, PropertyInfo other, Boolean strict)
         {
-            return Difference(first, second, strict) == ReflectionEqualityType.Equals;
+            return Difference(source, other, strict) == ReflectionEqualityType.Equals;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean Equality(this PropertyInfo first, PropertyInfo second, PropertyDifferenceStrictMode strict)
+        public static Boolean Equality(this PropertyInfo source, PropertyInfo other, PropertyDifferenceStrictMode strict)
         {
-            return Difference(first, second, strict) == ReflectionEqualityType.Equals;
+            return Difference(source, other, strict) == ReflectionEqualityType.Equals;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ReflectionDifferenceItem<PropertyInfo> Difference(this PropertyInfo first, PropertyInfo second)
+        public static ReflectionDifferenceItem<PropertyInfo> Difference(this PropertyInfo source, PropertyInfo other)
         {
-            return Difference(first, second, false);
+            return Difference(source, other, false);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ReflectionDifferenceItem<PropertyInfo> Difference(this PropertyInfo first, PropertyInfo second, Boolean strict)
+        public static ReflectionDifferenceItem<PropertyInfo> Difference(this PropertyInfo source, PropertyInfo other, Boolean strict)
         {
-            return Difference(first, second, strict ? PropertyDifferenceStrictMode.Strict : PropertyDifferenceStrictMode.NotStrict);
+            return Difference(source, other, strict ? PropertyDifferenceStrictMode.Strict : PropertyDifferenceStrictMode.NotStrict);
         }
 
         // ReSharper disable once CognitiveComplexity
-        public static ReflectionDifferenceItem<PropertyInfo> Difference(this PropertyInfo first, PropertyInfo second, PropertyDifferenceStrictMode strict)
+        public static ReflectionDifferenceItem<PropertyInfo> Difference(this PropertyInfo source, PropertyInfo other, PropertyDifferenceStrictMode strict)
         {
-            if (first is null)
+            if (source is null)
             {
-                throw new ArgumentNullException(nameof(first));
+                throw new ArgumentNullException(nameof(source));
             }
 
-            if (second is null)
+            if (other is null)
             {
-                throw new ArgumentNullException(nameof(second));
+                throw new ArgumentNullException(nameof(other));
             }
 
-            if (first == second)
+            if (source == other)
             {
-                return new ReflectionDifferenceItem<PropertyInfo>(first, second, ReflectionEqualityType.Equals);
+                return new ReflectionDifferenceItem<PropertyInfo>(source, other, ReflectionEqualityType.Equals);
             }
 
-            if (strict.HasFlag(PropertyDifferenceStrictMode.Name) && first.Name != second.Name)
+            if (strict.HasFlag(PropertyDifferenceStrictMode.Name) && source.Name != other.Name)
             {
-                return new ReflectionDifferenceItem<PropertyInfo>(first, second, ReflectionEqualityType.NameNotEquals);
+                return new ReflectionDifferenceItem<PropertyInfo>(source, other, ReflectionEqualityType.NameNotEquals);
             }
 
-            if (first.PropertyType != second.PropertyType)
+            if (source.PropertyType != other.PropertyType)
             {
-                return new ReflectionDifferenceItem<PropertyInfo>(first, second, ReflectionEqualityType.SignatureNotEquals);
+                return new ReflectionDifferenceItem<PropertyInfo>(source, other, ReflectionEqualityType.SignatureNotEquals);
             }
 
-            if (first.CanRead != second.CanRead || first.CanWrite != second.CanWrite)
+            if (source.CanRead != other.CanRead || source.CanWrite != other.CanWrite)
             {
-                return new ReflectionDifferenceItem<PropertyInfo>(first, second, ReflectionEqualityType.SignatureNotEquals);
+                return new ReflectionDifferenceItem<PropertyInfo>(source, other, ReflectionEqualityType.SignatureNotEquals);
             }
 
-            if (strict.HasFlag(PropertyDifferenceStrictMode.Attribute) && first.Attributes != second.Attributes)
+            if (strict.HasFlag(PropertyDifferenceStrictMode.Attribute) && source.Attributes != other.Attributes)
             {
-                return new ReflectionDifferenceItem<PropertyInfo>(first, second, ReflectionEqualityType.AttributeNotEquals);
+                return new ReflectionDifferenceItem<PropertyInfo>(source, other, ReflectionEqualityType.AttributeNotEquals);
             }
 
             if (!strict.HasFlag(PropertyDifferenceStrictMode.Access))
             {
-                return new ReflectionDifferenceItem<PropertyInfo>(first, second, ReflectionEqualityType.Equals);
+                return new ReflectionDifferenceItem<PropertyInfo>(source, other, ReflectionEqualityType.Equals);
             }
 
-            MethodInfo? get1 = first.GetMethod;
-            MethodInfo? get2 = second.GetMethod;
+            MethodInfo? firstget = source.GetMethod;
+            MethodInfo? secondget = other.GetMethod;
             MethodDifferenceStrictMode difference = strict.ToMethodDifferenceStrictMode();
 
-            if (get1 is not null && get2 is not null && !Equality(get1, get2, difference))
+            if (firstget is not null && secondget is not null && !Equality(firstget, secondget, difference))
             {
-                return new ReflectionDifferenceItem<PropertyInfo>(first, second, ReflectionEqualityType.SignatureNotEquals);
+                return new ReflectionDifferenceItem<PropertyInfo>(source, other, ReflectionEqualityType.SignatureNotEquals);
             }
 
-            MethodInfo? set1 = first.SetMethod;
-            MethodInfo? set2 = second.SetMethod;
+            MethodInfo? firstset = source.SetMethod;
+            MethodInfo? secondset = other.SetMethod;
 
-            if (set1 is not null && set2 is not null && !Equality(set1, set2, difference))
+            if (firstset is not null && secondset is not null && !Equality(firstset, secondset, difference))
             {
-                return new ReflectionDifferenceItem<PropertyInfo>(first, second, ReflectionEqualityType.SignatureNotEquals);
+                return new ReflectionDifferenceItem<PropertyInfo>(source, other, ReflectionEqualityType.SignatureNotEquals);
             }
 
-            return new ReflectionDifferenceItem<PropertyInfo>(first, second, ReflectionEqualityType.Equals);
+            return new ReflectionDifferenceItem<PropertyInfo>(source, other, ReflectionEqualityType.Equals);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean Equality(this MethodInfo first, MethodInfo second)
+        public static Boolean Equality(this MethodInfo source, MethodInfo other)
         {
-            return Difference(first, second) == ReflectionEqualityType.Equals;
+            return Difference(source, other) == ReflectionEqualityType.Equals;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean Equality(this MethodInfo first, MethodInfo second, Boolean strict)
+        public static Boolean Equality(this MethodInfo source, MethodInfo other, Boolean strict)
         {
-            return Difference(first, second, strict) == ReflectionEqualityType.Equals;
+            return Difference(source, other, strict) == ReflectionEqualityType.Equals;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean Equality(this MethodInfo first, MethodInfo second, MethodDifferenceStrictMode strict)
+        public static Boolean Equality(this MethodInfo source, MethodInfo other, MethodDifferenceStrictMode strict)
         {
-            return Difference(first, second, strict) == ReflectionEqualityType.Equals;
+            return Difference(source, other, strict) == ReflectionEqualityType.Equals;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ReflectionDifferenceItem<MethodInfo> Difference(this MethodInfo first, MethodInfo second)
+        public static ReflectionDifferenceItem<MethodInfo> Difference(this MethodInfo source, MethodInfo other)
         {
-            return Difference(first, second, false);
+            return Difference(source, other, false);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ReflectionDifferenceItem<MethodInfo> Difference(this MethodInfo first, MethodInfo second, Boolean strict)
+        public static ReflectionDifferenceItem<MethodInfo> Difference(this MethodInfo source, MethodInfo other, Boolean strict)
         {
-            return Difference(first, second, strict ? MethodDifferenceStrictMode.Strict : MethodDifferenceStrictMode.NotStrict);
+            return Difference(source, other, strict ? MethodDifferenceStrictMode.Strict : MethodDifferenceStrictMode.NotStrict);
         }
 
         // ReSharper disable once CognitiveComplexity
-        public static ReflectionDifferenceItem<MethodInfo> Difference(this MethodInfo first, MethodInfo second, MethodDifferenceStrictMode strict)
+        public static ReflectionDifferenceItem<MethodInfo> Difference(this MethodInfo source, MethodInfo other, MethodDifferenceStrictMode strict)
         {
-            if (first is null)
+            if (source is null)
             {
-                throw new ArgumentNullException(nameof(first));
+                throw new ArgumentNullException(nameof(source));
             }
 
-            if (second is null)
+            if (other is null)
             {
-                throw new ArgumentNullException(nameof(second));
+                throw new ArgumentNullException(nameof(other));
             }
 
-            if (first == second)
+            if (source == other)
             {
-                return new ReflectionDifferenceItem<MethodInfo>(first, second, ReflectionEqualityType.Equals);
+                return new ReflectionDifferenceItem<MethodInfo>(source, other, ReflectionEqualityType.Equals);
             }
 
-            if (strict.HasFlag(MethodDifferenceStrictMode.Name) && first.Name != second.Name)
+            if (strict.HasFlag(MethodDifferenceStrictMode.Name) && source.Name != other.Name)
             {
-                return new ReflectionDifferenceItem<MethodInfo>(first, second, ReflectionEqualityType.NameNotEquals);
+                return new ReflectionDifferenceItem<MethodInfo>(source, other, ReflectionEqualityType.NameNotEquals);
             }
 
-            if (first.ReturnType != second.ReturnType)
+            if (source.ReturnType != other.ReturnType)
             {
-                return new ReflectionDifferenceItem<MethodInfo>(first, second, ReflectionEqualityType.SignatureNotEquals);
+                return new ReflectionDifferenceItem<MethodInfo>(source, other, ReflectionEqualityType.SignatureNotEquals);
             }
 
-            if (strict.HasFlag(MethodDifferenceStrictMode.CallingConvention) && first.CallingConvention != second.CallingConvention)
+            if (strict.HasFlag(MethodDifferenceStrictMode.CallingConvention) && source.CallingConvention != other.CallingConvention)
             {
-                return new ReflectionDifferenceItem<MethodInfo>(first, second, ReflectionEqualityType.AttributeNotEquals);
+                return new ReflectionDifferenceItem<MethodInfo>(source, other, ReflectionEqualityType.AttributeNotEquals);
             }
 
-            if (strict.HasFlag(MethodDifferenceStrictMode.Attribute) && first.Attributes != second.Attributes)
+            if (strict.HasFlag(MethodDifferenceStrictMode.Attribute) && source.Attributes != other.Attributes)
             {
-                return new ReflectionDifferenceItem<MethodInfo>(first, second, ReflectionEqualityType.AttributeNotEquals);
+                return new ReflectionDifferenceItem<MethodInfo>(source, other, ReflectionEqualityType.AttributeNotEquals);
             }
 
-            if (strict.HasFlag(MethodDifferenceStrictMode.Access) && first.Attributes.Access() != second.Attributes.Access())
+            if (strict.HasFlag(MethodDifferenceStrictMode.Access) && source.Attributes.Access() != other.Attributes.Access())
             {
-                return new ReflectionDifferenceItem<MethodInfo>(first, second, ReflectionEqualityType.SignatureNotEquals);
+                return new ReflectionDifferenceItem<MethodInfo>(source, other, ReflectionEqualityType.SignatureNotEquals);
             }
 
-            ParameterInfo[] parameters1 = first.GetParameters();
-            ParameterInfo[] parameters2 = second.GetParameters();
+            ParameterInfo[] first = source.GetParameters();
+            ParameterInfo[] second = other.GetParameters();
 
-            if (parameters1.Length != parameters2.Length)
+            if (first.Length != second.Length)
             {
-                return new ReflectionDifferenceItem<MethodInfo>(first, second, ReflectionEqualityType.SignatureNotEquals);
+                return new ReflectionDifferenceItem<MethodInfo>(source, other, ReflectionEqualityType.SignatureNotEquals);
             }
 
             static ReflectionDifferenceItem<ParameterInfo> Check((ParameterInfo First, ParameterInfo Second) value)
@@ -2907,238 +3076,238 @@ namespace NetExtender.Utilities.Core
                 return Difference(value.First, value.Second);
             }
 
-            Boolean equals = parameters1.Zip(parameters2).Select(Check).All(difference => difference.Equality == ReflectionEqualityType.Equals);
-            return new ReflectionDifferenceItem<MethodInfo>(first, second, equals ? ReflectionEqualityType.Equals : ReflectionEqualityType.SignatureNotEquals);
+            Boolean equals = first.Zip(second).Select(Check).All(difference => difference.Equality == ReflectionEqualityType.Equals);
+            return new ReflectionDifferenceItem<MethodInfo>(source, other, equals ? ReflectionEqualityType.Equals : ReflectionEqualityType.SignatureNotEquals);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean Equality(this EventInfo first, EventInfo second)
+        public static Boolean Equality(this EventInfo source, EventInfo other)
         {
-            return Difference(first, second) == ReflectionEqualityType.Equals;
+            return Difference(source, other) == ReflectionEqualityType.Equals;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean Equality(this EventInfo first, EventInfo second, Boolean strict)
+        public static Boolean Equality(this EventInfo source, EventInfo other, Boolean strict)
         {
-            return Difference(first, second, strict) == ReflectionEqualityType.Equals;
+            return Difference(source, other, strict) == ReflectionEqualityType.Equals;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean Equality(this EventInfo first, EventInfo second, EventDifferenceStrictMode strict)
+        public static Boolean Equality(this EventInfo source, EventInfo other, EventDifferenceStrictMode strict)
         {
-            return Difference(first, second, strict) == ReflectionEqualityType.Equals;
+            return Difference(source, other, strict) == ReflectionEqualityType.Equals;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ReflectionDifferenceItem<EventInfo> Difference(this EventInfo first, EventInfo second)
+        public static ReflectionDifferenceItem<EventInfo> Difference(this EventInfo source, EventInfo other)
         {
-            return Difference(first, second, false);
+            return Difference(source, other, false);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ReflectionDifferenceItem<EventInfo> Difference(this EventInfo first, EventInfo second, Boolean strict)
+        public static ReflectionDifferenceItem<EventInfo> Difference(this EventInfo source, EventInfo other, Boolean strict)
         {
-            return Difference(first, second, strict ? EventDifferenceStrictMode.Strict : EventDifferenceStrictMode.NotStrict);
+            return Difference(source, other, strict ? EventDifferenceStrictMode.Strict : EventDifferenceStrictMode.NotStrict);
         }
 
-        public static ReflectionDifferenceItem<EventInfo> Difference(this EventInfo first, EventInfo second, EventDifferenceStrictMode strict)
+        public static ReflectionDifferenceItem<EventInfo> Difference(this EventInfo source, EventInfo other, EventDifferenceStrictMode strict)
         {
-            if (first is null)
+            if (source is null)
             {
-                throw new ArgumentNullException(nameof(first));
+                throw new ArgumentNullException(nameof(source));
             }
 
-            if (second is null)
+            if (other is null)
             {
-                throw new ArgumentNullException(nameof(second));
+                throw new ArgumentNullException(nameof(other));
             }
 
-            if (first == second)
+            if (source == other)
             {
-                return new ReflectionDifferenceItem<EventInfo>(first, second, ReflectionEqualityType.Equals);
+                return new ReflectionDifferenceItem<EventInfo>(source, other, ReflectionEqualityType.Equals);
             }
 
-            if (strict.HasFlag(EventDifferenceStrictMode.Name) && first.Name != second.Name)
+            if (strict.HasFlag(EventDifferenceStrictMode.Name) && source.Name != other.Name)
             {
-                return new ReflectionDifferenceItem<EventInfo>(first, second, ReflectionEqualityType.NameNotEquals);
+                return new ReflectionDifferenceItem<EventInfo>(source, other, ReflectionEqualityType.NameNotEquals);
             }
 
-            if (first.EventHandlerType != second.EventHandlerType)
+            if (source.EventHandlerType != other.EventHandlerType)
             {
-                return new ReflectionDifferenceItem<EventInfo>(first, second, ReflectionEqualityType.SignatureNotEquals);
+                return new ReflectionDifferenceItem<EventInfo>(source, other, ReflectionEqualityType.SignatureNotEquals);
             }
 
-            if (strict.HasFlag(EventDifferenceStrictMode.Attribute) && first.Attributes != second.Attributes)
+            if (strict.HasFlag(EventDifferenceStrictMode.Attribute) && source.Attributes != other.Attributes)
             {
-                return new ReflectionDifferenceItem<EventInfo>(first, second, ReflectionEqualityType.AttributeNotEquals);
+                return new ReflectionDifferenceItem<EventInfo>(source, other, ReflectionEqualityType.AttributeNotEquals);
             }
 
-            if (strict.HasFlag(EventDifferenceStrictMode.Multicast) && first.IsMulticast != second.IsMulticast)
+            if (strict.HasFlag(EventDifferenceStrictMode.Multicast) && source.IsMulticast != other.IsMulticast)
             {
-                return new ReflectionDifferenceItem<EventInfo>(first, second, ReflectionEqualityType.AttributeNotEquals);
+                return new ReflectionDifferenceItem<EventInfo>(source, other, ReflectionEqualityType.AttributeNotEquals);
             }
 
-            return new ReflectionDifferenceItem<EventInfo>(first, second, ReflectionEqualityType.Equals);
+            return new ReflectionDifferenceItem<EventInfo>(source, other, ReflectionEqualityType.Equals);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean Equality(this ParameterInfo first, ParameterInfo second)
+        public static Boolean Equality(this ParameterInfo source, ParameterInfo other)
         {
-            return Difference(first, second) == ReflectionEqualityType.Equals;
+            return Difference(source, other) == ReflectionEqualityType.Equals;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean Equality(this ParameterInfo first, ParameterInfo second, Boolean strict)
+        public static Boolean Equality(this ParameterInfo source, ParameterInfo other, Boolean strict)
         {
-            return Difference(first, second, strict) == ReflectionEqualityType.Equals;
+            return Difference(source, other, strict) == ReflectionEqualityType.Equals;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean Equality(this ParameterInfo first, ParameterInfo second, ParameterDifferenceStrictMode strict)
+        public static Boolean Equality(this ParameterInfo source, ParameterInfo other, ParameterDifferenceStrictMode strict)
         {
-            return Difference(first, second, strict) == ReflectionEqualityType.Equals;
+            return Difference(source, other, strict) == ReflectionEqualityType.Equals;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ReflectionDifferenceItem<ParameterInfo> Difference(this ParameterInfo first, ParameterInfo second)
+        public static ReflectionDifferenceItem<ParameterInfo> Difference(this ParameterInfo source, ParameterInfo other)
         {
-            return Difference(first, second, false);
+            return Difference(source, other, false);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ReflectionDifferenceItem<ParameterInfo> Difference(this ParameterInfo first, ParameterInfo second, Boolean strict)
+        public static ReflectionDifferenceItem<ParameterInfo> Difference(this ParameterInfo source, ParameterInfo other, Boolean strict)
         {
-            return Difference(first, second, strict ? ParameterDifferenceStrictMode.Strict : ParameterDifferenceStrictMode.NotStrict);
+            return Difference(source, other, strict ? ParameterDifferenceStrictMode.Strict : ParameterDifferenceStrictMode.NotStrict);
         }
 
         // ReSharper disable once CognitiveComplexity
-        public static ReflectionDifferenceItem<ParameterInfo> Difference(this ParameterInfo first, ParameterInfo second, ParameterDifferenceStrictMode strict)
+        public static ReflectionDifferenceItem<ParameterInfo> Difference(this ParameterInfo source, ParameterInfo other, ParameterDifferenceStrictMode strict)
         {
-            if (first is null)
+            if (source is null)
             {
-                throw new ArgumentNullException(nameof(first));
+                throw new ArgumentNullException(nameof(source));
             }
 
-            if (second is null)
+            if (other is null)
             {
-                throw new ArgumentNullException(nameof(second));
+                throw new ArgumentNullException(nameof(other));
             }
 
-            if (first == second)
+            if (source == other)
             {
-                return new ReflectionDifferenceItem<ParameterInfo>(first, second, ReflectionEqualityType.Equals);
+                return new ReflectionDifferenceItem<ParameterInfo>(source, other, ReflectionEqualityType.Equals);
             }
 
-            if (strict.HasFlag(ParameterDifferenceStrictMode.Name) && first.Name != second.Name)
+            if (strict.HasFlag(ParameterDifferenceStrictMode.Name) && source.Name != other.Name)
             {
-                return new ReflectionDifferenceItem<ParameterInfo>(first, second, ReflectionEqualityType.NameNotEquals);
+                return new ReflectionDifferenceItem<ParameterInfo>(source, other, ReflectionEqualityType.NameNotEquals);
             }
 
-            if (first.Position != second.Position)
+            if (source.Position != other.Position)
             {
-                return new ReflectionDifferenceItem<ParameterInfo>(first, second, ReflectionEqualityType.SignatureNotEquals);
+                return new ReflectionDifferenceItem<ParameterInfo>(source, other, ReflectionEqualityType.SignatureNotEquals);
             }
 
-            if (first.ParameterType != second.ParameterType)
+            if (source.ParameterType != other.ParameterType)
             {
-                return new ReflectionDifferenceItem<ParameterInfo>(first, second, ReflectionEqualityType.SignatureNotEquals);
+                return new ReflectionDifferenceItem<ParameterInfo>(source, other, ReflectionEqualityType.SignatureNotEquals);
             }
 
-            if (strict.HasFlag(ParameterDifferenceStrictMode.Attribute) && first.Attributes != second.Attributes)
+            if (strict.HasFlag(ParameterDifferenceStrictMode.Attribute) && source.Attributes != other.Attributes)
             {
-                return new ReflectionDifferenceItem<ParameterInfo>(first, second, ReflectionEqualityType.AttributeNotEquals);
+                return new ReflectionDifferenceItem<ParameterInfo>(source, other, ReflectionEqualityType.AttributeNotEquals);
             }
 
-            if (strict.HasFlag(ParameterDifferenceStrictMode.In) && first.IsIn != second.IsIn)
+            if (strict.HasFlag(ParameterDifferenceStrictMode.In) && source.IsIn != other.IsIn)
             {
-                return new ReflectionDifferenceItem<ParameterInfo>(first, second, ReflectionEqualityType.AttributeNotEquals);
+                return new ReflectionDifferenceItem<ParameterInfo>(source, other, ReflectionEqualityType.AttributeNotEquals);
             }
 
-            if (strict.HasFlag(ParameterDifferenceStrictMode.Out) && first.IsOut != second.IsOut)
+            if (strict.HasFlag(ParameterDifferenceStrictMode.Out) && source.IsOut != other.IsOut)
             {
-                return new ReflectionDifferenceItem<ParameterInfo>(first, second, ReflectionEqualityType.AttributeNotEquals);
+                return new ReflectionDifferenceItem<ParameterInfo>(source, other, ReflectionEqualityType.AttributeNotEquals);
             }
 
-            if (strict.HasFlag(ParameterDifferenceStrictMode.Retval) && first.IsRetval != second.IsRetval)
+            if (strict.HasFlag(ParameterDifferenceStrictMode.Retval) && source.IsRetval != other.IsRetval)
             {
-                return new ReflectionDifferenceItem<ParameterInfo>(first, second, ReflectionEqualityType.AttributeNotEquals);
+                return new ReflectionDifferenceItem<ParameterInfo>(source, other, ReflectionEqualityType.AttributeNotEquals);
             }
 
-            if (strict.HasFlag(ParameterDifferenceStrictMode.Optional) && first.IsOptional != second.IsOptional)
+            if (strict.HasFlag(ParameterDifferenceStrictMode.Optional) && source.IsOptional != other.IsOptional)
             {
-                return new ReflectionDifferenceItem<ParameterInfo>(first, second, ReflectionEqualityType.SignatureNotEquals);
+                return new ReflectionDifferenceItem<ParameterInfo>(source, other, ReflectionEqualityType.SignatureNotEquals);
             }
 
-            if (strict.HasFlag(ParameterDifferenceStrictMode.DefaultValue) && first.HasDefaultValue != second.HasDefaultValue)
+            if (strict.HasFlag(ParameterDifferenceStrictMode.DefaultValue) && source.HasDefaultValue != other.HasDefaultValue)
             {
-                return new ReflectionDifferenceItem<ParameterInfo>(first, second, ReflectionEqualityType.SignatureNotEquals);
+                return new ReflectionDifferenceItem<ParameterInfo>(source, other, ReflectionEqualityType.SignatureNotEquals);
             }
 
-            if (strict.HasFlag(ParameterDifferenceStrictMode.DefaultValueEquals) && first.DefaultValue != second.DefaultValue)
+            if (strict.HasFlag(ParameterDifferenceStrictMode.DefaultValueEquals) && source.DefaultValue != other.DefaultValue)
             {
-                return new ReflectionDifferenceItem<ParameterInfo>(first, second, ReflectionEqualityType.SignatureNotEquals);
+                return new ReflectionDifferenceItem<ParameterInfo>(source, other, ReflectionEqualityType.SignatureNotEquals);
             }
 
-            return new ReflectionDifferenceItem<ParameterInfo>(first, second, ReflectionEqualityType.Equals);
+            return new ReflectionDifferenceItem<ParameterInfo>(source, other, ReflectionEqualityType.Equals);
         }
 
-        public static Boolean Equality(this MemberInfo first, MemberInfo second)
+        public static Boolean Equality(this MemberInfo source, MemberInfo other)
         {
-            return Difference(first, second) == ReflectionEqualityType.Equals;
+            return Difference(source, other) == ReflectionEqualityType.Equals;
         }
 
-        public static ReflectionDifferenceItem<MemberInfo> Difference(this MemberInfo first, MemberInfo second)
+        public static ReflectionDifferenceItem<MemberInfo> Difference(this MemberInfo source, MemberInfo other)
         {
-            if (first is null)
+            if (source is null)
             {
-                throw new ArgumentNullException(nameof(first));
+                throw new ArgumentNullException(nameof(source));
             }
 
-            if (second is null)
+            if (other is null)
             {
-                throw new ArgumentNullException(nameof(second));
+                throw new ArgumentNullException(nameof(other));
             }
 
-            if (first == second)
+            if (source == other)
             {
-                return new ReflectionDifferenceItem<MemberInfo>(first, second, ReflectionEqualityType.Equals);
+                return new ReflectionDifferenceItem<MemberInfo>(source, other, ReflectionEqualityType.Equals);
             }
 
-            if (first.GetType() != second.GetType())
+            if (source.GetType() != other.GetType())
             {
-                throw new ArgumentException($"Type of first argument '{first.GetType()}' is not equals type of second argument '{second.GetType()}'", nameof(second));
+                throw new ArgumentException($"Type of source argument '{source.GetType()}' is not equals type of other argument '{other.GetType()}'", nameof(other));
             }
 
-            switch (first)
+            switch (source)
             {
-                case ConstructorInfo constructor1 when second is ConstructorInfo constructor2:
+                case ConstructorInfo first when other is ConstructorInfo second:
                 {
-                    ReflectionDifferenceItem<ConstructorInfo> difference = Difference(constructor1, constructor2);
+                    ReflectionDifferenceItem<ConstructorInfo> difference = Difference(first, second);
                     return new ReflectionDifferenceItem<MemberInfo>(difference.Current, difference.Other, difference.Equality);
                 }
-                case FieldInfo field1 when second is FieldInfo field2:
+                case FieldInfo first when other is FieldInfo second:
                 {
-                    ReflectionDifferenceItem<FieldInfo> difference = Difference(field1, field2);
+                    ReflectionDifferenceItem<FieldInfo> difference = Difference(first, second);
                     return new ReflectionDifferenceItem<MemberInfo>(difference.Current, difference.Other, difference.Equality);
                 }
-                case PropertyInfo property1 when second is PropertyInfo property2:
+                case PropertyInfo first when other is PropertyInfo second:
                 {
-                    ReflectionDifferenceItem<PropertyInfo> difference = Difference(property1, property2);
+                    ReflectionDifferenceItem<PropertyInfo> difference = Difference(first, second);
                     return new ReflectionDifferenceItem<MemberInfo>(difference.Current, difference.Other, difference.Equality);
                 }
-                case MethodInfo method1 when second is MethodInfo method2:
+                case MethodInfo first when other is MethodInfo second:
                 {
-                    ReflectionDifferenceItem<MethodInfo> difference = Difference(method1, method2);
+                    ReflectionDifferenceItem<MethodInfo> difference = Difference(first, second);
                     return new ReflectionDifferenceItem<MemberInfo>(difference.Current, difference.Other, difference.Equality);
                 }
-                case EventInfo event1 when second is EventInfo event2:
+                case EventInfo first when other is EventInfo second:
                 {
-                    ReflectionDifferenceItem<EventInfo> difference = Difference(event1, event2);
+                    ReflectionDifferenceItem<EventInfo> difference = Difference(first, second);
                     return new ReflectionDifferenceItem<MemberInfo>(difference.Current, difference.Other, difference.Equality);
                 }
                 default:
                 {
-                    throw new NotSupportedException($"Member type '{first.GetType()}' is not supported.");
+                    throw new NotSupportedException($"Member type '{source.GetType()}' is not supported.");
                 }
             }
         }
@@ -3374,63 +3543,228 @@ namespace NetExtender.Utilities.Core
             return type is not null && (type == typeof(MulticastDelegate) || type.IsSubclassOf(typeof(MulticastDelegate)));
         }
 
-        // ReSharper disable once CognitiveComplexity
-        public static FieldInfo? GetEventField(this Type type, String eventname)
+        public static FieldInfo? GetEventField(this Type type, String name)
         {
             if (type is null)
             {
                 throw new ArgumentNullException(nameof(type));
             }
 
-            if (eventname is null)
+            if (name is null)
             {
-                throw new ArgumentNullException(nameof(eventname));
+                throw new ArgumentNullException(nameof(name));
             }
 
+            Type? current = type;
             FieldInfo? field = null;
-
-            while (type is not null)
+            while (current is not null)
             {
-                field = type.GetField(eventname, BindingFlags.Static | BindingFlags.Instance | BindingFlags.NonPublic);
+                const BindingFlags binding = BindingFlags.Static | BindingFlags.Instance | BindingFlags.NonPublic;
+                field = current.GetField(name, binding);
 
                 if (field is not null && field.FieldType.IsMulticastDelegateFieldType())
                 {
-                    break;
+                    return field;
                 }
 
-                field = type.GetField("EVENT_" + eventname.ToUpper(), BindingFlags.Static | BindingFlags.Instance | BindingFlags.NonPublic);
+                field = current.GetField("EVENT_" + name.ToUpper(), binding);
 
-                if (field is not null)
+                if (field is not null && field.FieldType.IsMulticastDelegateFieldType())
                 {
-                    break;
+                    return field;
                 }
 
-                if (type.BaseType is null)
-                {
-                    break;
-                }
-
-                type = type.BaseType;
+                current = current.BaseType;
             }
 
             return field;
         }
 
-        public static Boolean ClearEventInvocations(Object value, String eventname)
+        public static FieldInfo? GetEventField<T>(this Type type) where T : Delegate
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+            
+            Type? current = type;
+            while (current is not null)
+            {
+                const BindingFlags binding = BindingFlags.Static | BindingFlags.Instance | BindingFlags.NonPublic;
+                FieldInfo? field = current.GetFields(binding).FirstOrDefault(field => field.FieldType.IsMulticastDelegateFieldType() && field.FieldType.IsAssignableFrom(typeof(T)));
+                
+                if (field is not null)
+                {
+                    return field;
+                }
+
+                current = current.BaseType;
+            }
+
+            return null;
+        }
+
+        public static FieldInfo[] GetEventFields(this Type type)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            Type? current = type;
+            List<FieldInfo> fields = new List<FieldInfo>(8);
+            while (current is not null)
+            {
+                const BindingFlags binding = BindingFlags.Static | BindingFlags.Instance | BindingFlags.NonPublic;
+                fields.AddRange(current.GetFields(binding).Where(field => field.FieldType.IsMulticastDelegateFieldType()));
+                current = current.BaseType;
+            }
+
+            return fields.ToArray();
+        }
+        
+        public static FieldInfo[] GetEventFields<T>(this Type type) where T : Delegate
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            Type? current = type;
+            List<FieldInfo> fields = new List<FieldInfo>(8);
+            while (current is not null)
+            {
+                const BindingFlags binding = BindingFlags.Static | BindingFlags.Instance | BindingFlags.NonPublic;
+                fields.AddRange(current.GetFields(binding).Where(field => field.FieldType.IsMulticastDelegateFieldType() && field.FieldType.IsAssignableFrom(typeof(T))));
+                current = current.BaseType;
+            }
+
+            return fields.ToArray();
+        }
+        
+        public static MethodInfo? GetEventRaiseMethod(this Type type, String name)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            if (name is null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
+            return type.GetEventField(name)?.FieldType.GetMethod("Invoke");
+        }
+        
+        public static MethodInfo? GetEventRaiseMethod<T>(this Type type) where T : Delegate
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            return type.GetEventField<T>()?.FieldType.GetMethod("Invoke");
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static MulticastDelegate? GetEventDelegate(this Type type, String name, Object? @object)
+        {
+            return GetEventDelegate(type, name, @object, out _);
+        }
+
+        public static MulticastDelegate? GetEventDelegate(this Type type, String name, Object? @object, out FieldInfo? field)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            if (name is null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
+            field = type.GetEventField(name);
+            return (MulticastDelegate?) field?.GetValue(@object);
+        }
+
+        public static T? GetEventDelegate<T>(this Type type, Object? @object) where T : Delegate
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            KeyValuePair<FieldInfo, T>[] delegates = GetEventDelegates<T>(type, @object);
+
+            return delegates.Length switch
+            {
+                <= 0 => null,
+                1 => delegates[0].Value,
+                _ => throw new AmbiguousMatchException()
+            };
+        }
+
+        public static T? GetEventDelegate<T>(this Type type, Object? @object, out FieldInfo? field) where T : Delegate
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            KeyValuePair<FieldInfo, T>[] delegates = GetEventDelegates<T>(type, @object);
+
+            switch (delegates.Length)
+            {
+                case <= 0:
+                    field = null;
+                    return null;
+                case 1:
+                    (field, T @delegate) = delegates[0];
+                    return @delegate;
+                default:
+                    throw new AmbiguousMatchException();
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T? GetEventDelegate<T>(this Type type, String name, Object? @object) where T : Delegate
+        {
+            return GetEventDelegate(type, name, @object) as T;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T? GetEventDelegate<T>(this Type type, String name, Object? @object, out FieldInfo? field) where T : Delegate
+        {
+            return GetEventDelegate(type, name, @object, out field) as T;
+        }
+        
+        public static KeyValuePair<FieldInfo, T>[] GetEventDelegates<T>(this Type type, Object? @object) where T : Delegate
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            return type.GetEventFields<T>().Select(field => new KeyValuePair<FieldInfo, T?>(field, field.GetValue(@object) as T)).WhereValueNotNull().ToArray();
+        }
+
+        public static Boolean ClearEventInvocations(Object value, String name)
         {
             if (value is null)
             {
                 throw new ArgumentNullException(nameof(value));
             }
 
-            if (eventname is null)
+            if (name is null)
             {
-                throw new ArgumentNullException(nameof(eventname));
+                throw new ArgumentNullException(nameof(name));
             }
 
             try
             {
-                FieldInfo? info = value.GetType().GetEventField(eventname);
+                FieldInfo? info = value.GetType().GetEventField(name);
 
                 if (info is null)
                 {
@@ -3820,7 +4154,7 @@ namespace NetExtender.Utilities.Core
             }
 
             Int32 i = 0;
-            while (i < stack.FrameCount && stack.GetFrame(i++) is StackFrame frame)
+            while (i < stack.FrameCount && stack.GetFrame(i++) is { } frame)
             {
                 yield return frame;
             }
@@ -3835,7 +4169,7 @@ namespace NetExtender.Utilities.Core
 
             foreach (StackFrame frame in stack)
             {
-                if (frame.GetMethod()?.DeclaringType is Type type)
+                if (frame.GetMethod()?.DeclaringType is { } type)
                 {
                     yield return type;
                 }

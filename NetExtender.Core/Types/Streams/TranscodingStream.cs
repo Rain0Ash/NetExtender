@@ -334,6 +334,7 @@ namespace NetExtender.Types.Streams
             }
         }
 
+        // ReSharper disable once CognitiveComplexity
         public override void Write(Byte[] buffer, Int32 offset, Int32 count)
         {
             if (Stream is null)
@@ -467,6 +468,7 @@ namespace NetExtender.Types.Streams
             }
         }
 
+        // ReSharper disable once CognitiveComplexity
         public override async Task WriteAsync(Byte[] buffer, Int32 offset, Int32 count, CancellationToken token)
         {
             if (Stream is null)

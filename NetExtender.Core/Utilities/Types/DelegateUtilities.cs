@@ -386,11 +386,8 @@ namespace NetExtender.Utilities.Types
         }
 
         private static ConcurrentDictionary<FieldInfo, DynamicMethod> DynamicGetMethods { get; } = new ConcurrentDictionary<FieldInfo, DynamicMethod>();
-
         private static ConcurrentDictionary<FieldInfo, DynamicMethod> DynamicSetMethods { get; } = new ConcurrentDictionary<FieldInfo, DynamicMethod>();
-
         private static ConcurrentDictionary<ConstructorInfo, DynamicMethod> DynamicCreateMethods { get; } = new ConcurrentDictionary<ConstructorInfo, DynamicMethod>();
-
         private static ConcurrentDictionary<MethodInfo, DynamicMethod> DynamicInvokeMethods { get; } = new ConcurrentDictionary<MethodInfo, DynamicMethod>();
 
         public static Func<Object?, Object?> CreateDynamicGetDelegate(this FieldInfo field)

@@ -21,6 +21,7 @@ using NetExtender.NewtonSoft.Types.Network.Formatters;
 using NetExtender.Types.Streams;
 using NetExtender.Utilities.Core;
 using NetExtender.Utilities.Network.Formatters;
+using NetExtender.Utilities.Types;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
@@ -369,9 +370,15 @@ namespace NetExtender.Types.Network.Formatters
         }
 
         public JsonMediaTypeFormatter()
+            : this(false)
+        {
+        }
+
+        public JsonMediaTypeFormatter(Boolean text)
         {
             SupportedMediaType.Add(MediaTypeFormatterUtilities.ApplicationJsonMediaType);
             SupportedMediaType.Add(MediaTypeFormatterUtilities.TextJsonMediaType);
+            SupportedMediaType.AddIf(MediaTypeFormatterUtilities.TextPlainMediaType, text);
             RequestHeaderMapping = new XmlRequestHeaderMapping();
             MediaTypeFormatterMapping.Add(RequestHeaderMapping);
         }

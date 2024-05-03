@@ -132,7 +132,7 @@ namespace NetExtender.Types.Interprocess
 
             if (message is null || message.Length == 0)
             {
-                throw new ArgumentException(@"Message can not be empty", nameof(message));
+                throw new ArgumentException("Message can not be empty", nameof(message));
             }
 
             return SendMessageAsync(new[] { message });

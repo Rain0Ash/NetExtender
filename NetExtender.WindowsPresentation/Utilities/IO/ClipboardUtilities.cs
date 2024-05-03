@@ -35,7 +35,7 @@ namespace NetExtender.Utilities.Windows.IO
 
         static ClipboardUtilities()
         {
-            DataFormats = typeof(DataFormats).GetFields(BindingFlags.Public | BindingFlags.Static).Select(x => x.Name).ToImmutableList();
+            DataFormats = typeof(DataFormats).GetFields(BindingFlags.Static | BindingFlags.Public).Select(x => x.Name).ToImmutableList();
         }
 
         public static Boolean IsEmpty

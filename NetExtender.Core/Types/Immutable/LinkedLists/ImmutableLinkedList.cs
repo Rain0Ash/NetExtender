@@ -888,9 +888,6 @@ namespace NetExtender.Types.Immutable.LinkedLists
                 Current = default!;
             }
 
-            /// <summary>
-            /// Advances the enumerator, returning false if the end of the list has been reached
-            /// </summary>
             public Boolean MoveNext()
             {
                 if (Next is null)
@@ -909,9 +906,6 @@ namespace NetExtender.Types.Immutable.LinkedLists
                 throw new NotSupportedException();
             }
 
-            /// <summary>
-            /// Cleans up any resources held by the enumerator (currently none)
-            /// </summary>
             public void Dispose()
             {
             }

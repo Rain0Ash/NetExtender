@@ -5,13 +5,191 @@ using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Windows;
+using System.Windows.Data;
 using NetExtender.Utilities.Core;
+using NetExtender.Utilities.Types;
 
 namespace NetExtender.WindowsPresentation.Utilities.Types
 {
     public static class DependencyPropertyUtilities
     {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void SetConverter(this DependencyObject target, DependencyProperty property, IValueConverter? converter)
+        {
+            SetConverter(property, target, converter);
+        }
+
+        public static void SetConverter(this DependencyProperty property, DependencyObject target, IValueConverter? converter)
+        {
+            if (property is null)
+            {
+                throw new ArgumentNullException(nameof(property));
+            }
+
+            if (target is null)
+            {
+                throw new ArgumentNullException(nameof(target));
+            }
+
+            Binding? binding = property.GetBinding(target);
+
+            if (binding is null)
+            {
+                return;
+            }
+
+            binding = binding.MemberwiseClone();
+            binding.Converter = converter;
+            
+            BindingOperations.SetBinding(target, property, binding);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void SetConverter(this DependencyObject target, DependencyProperty property, Func<IValueConverter?, IValueConverter?> converter)
+        {
+            SetConverter(property, target, converter);
+        }
+        
+        public static void SetConverter(this DependencyProperty property, DependencyObject target, Func<IValueConverter?, IValueConverter?> converter)
+        {
+            if (property is null)
+            {
+                throw new ArgumentNullException(nameof(property));
+            }
+
+            if (target is null)
+            {
+                throw new ArgumentNullException(nameof(target));
+            }
+
+            if (converter is null)
+            {
+                throw new ArgumentNullException(nameof(converter));
+            }
+
+            Binding? binding = property.GetBinding(target);
+
+            if (binding is null)
+            {
+                return;
+            }
+
+            binding = binding.MemberwiseClone();
+            binding.Converter = converter(binding.Converter);
+
+            BindingOperations.SetBinding(target, property, binding);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Binding? GetBinding(this DependencyObject target, DependencyProperty property)
+        {
+            return GetBinding(property, target);
+        }
+
+        public static Binding? GetBinding(this DependencyProperty property, DependencyObject target)
+        {
+            if (property is null)
+            {
+                throw new ArgumentNullException(nameof(property));
+            }
+
+            if (target is null)
+            {
+                throw new ArgumentNullException(nameof(target));
+            }
+            
+            return BindingOperations.GetBinding(target, property);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void SetBinding(this DependencyObject target, DependencyProperty property, Binding binding)
+        {
+            SetBinding(property, target, binding);
+        }
+
+        public static void SetBinding(this DependencyProperty property, DependencyObject target, Binding binding)
+        {
+            if (property is null)
+            {
+                throw new ArgumentNullException(nameof(property));
+            }
+
+            if (target is null)
+            {
+                throw new ArgumentNullException(nameof(target));
+            }
+
+            if (binding is null)
+            {
+                throw new ArgumentNullException(nameof(binding));
+            }
+            
+            BindingOperations.SetBinding(target, property, binding);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void SetBinding(this DependencyObject target, DependencyProperty property, Func<Binding?, Binding> factory)
+        {
+            SetBinding(property, target, factory);
+        }
+
+        public static void SetBinding(this DependencyProperty property, DependencyObject target, Func<Binding?, Binding> factory)
+        {
+            if (property is null)
+            {
+                throw new ArgumentNullException(nameof(property));
+            }
+
+            if (target is null)
+            {
+                throw new ArgumentNullException(nameof(target));
+            }
+
+            if (factory is null)
+            {
+                throw new ArgumentNullException(nameof(factory));
+            }
+            
+            Binding? binding = property.GetBinding(target);
+            BindingOperations.SetBinding(target, property, factory(binding));
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void ModifyBinding(this DependencyObject target, DependencyProperty property, Action<Binding> action)
+        {
+            ModifyBinding(property, target, action);
+        }
+
+        public static void ModifyBinding(this DependencyProperty property, DependencyObject target, Action<Binding> action)
+        {
+            if (property is null)
+            {
+                throw new ArgumentNullException(nameof(property));
+            }
+
+            if (target is null)
+            {
+                throw new ArgumentNullException(nameof(target));
+            }
+
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            Binding? binding = property.GetBinding(target);
+
+            if (binding is null)
+            {
+                return;
+            }
+
+            action(binding);
+            property.SetBinding(target, binding);
+        }
+        
         private sealed record AnalysisInformation
         {
             public static Type[] CallbackMethodTypes { get; } = { typeof(DependencyObject), typeof(DependencyPropertyChangedEventArgs) };

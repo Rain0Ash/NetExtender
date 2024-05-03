@@ -8,22 +8,303 @@ using NetExtender.Types.Entities.Interfaces;
 
 namespace NetExtender.Types.Entities
 {
-    public sealed class Id<T> : Entity<T>
-    {
-    }
-    
-    public class Entity<T> : IEntity<T>, IEquatable<T>, IEquatable<Entity<T>>, IComparable<T>, IComparable<Entity<T>>, IFormattable
+    public sealed class Id<T> : EntityId<T>
     {
         [return: NotNullIfNotNull("value")]
-        public static implicit operator T?(Entity<T>? value)
+        public static implicit operator Id<T>?(T? value)
+        {
+            return value is not null ? new Id<T>(value) : null;
+        }
+        
+        public Id()
+        {
+        }
+
+        public Id(T value)
+            : base(value)
+        {
+        }
+    }
+    
+    public class EntityId<T> : Entity<T>, IEntityId<T>, IEquatable<EntityId<T>>, IComparable<EntityId<T>>
+    {
+        [return: NotNullIfNotNull("value")]
+        public static implicit operator T?(EntityId<T>? value)
         {
             return value is not null ? value.Id : default;
         }
         
         [return: NotNullIfNotNull("value")]
-        public static implicit operator Entity<T>?(T? value)
+        public static implicit operator EntityId<T>?(T? value)
         {
-            return value is not null ? new Entity<T>(value) : null;
+            return value is not null ? new EntityId<T>(value) : null;
+        }
+        
+        public static Boolean operator ==(EntityId<T>? first, EntityId<T>? second)
+        {
+            if (ReferenceEquals(first, second))
+            {
+                return true;
+            }
+
+            if (first is null || second is null)
+            {
+                return false;
+            }
+
+            return first.Equals(second);
+        }
+
+        public static Boolean operator !=(EntityId<T>? first, EntityId<T>? second)
+        {
+            return !(first == second);
+        }
+
+        public static Boolean operator <(EntityId<T>? first, EntityId<T>? second)
+        {
+            if (first is null)
+            {
+                return second is not null;
+            }
+
+            return first.CompareTo(second) < 0;
+        }
+
+        public static Boolean operator <=(EntityId<T>? first, EntityId<T>? second)
+        {
+            if (first is null)
+            {
+                return true;
+            }
+
+            return first.CompareTo(second) <= 0;
+        }
+
+        public static Boolean operator >(EntityId<T>? first, EntityId<T>? second)
+        {
+            return !(first <= second);
+        }
+
+        public static Boolean operator >=(EntityId<T>? first, EntityId<T>? second)
+        {
+            return !(first < second);
+        }
+        
+        public T Id { get; init; }
+
+        public EntityId()
+            : this(default!)
+        {
+        }
+
+        public EntityId(T value)
+        {
+            Id = value;
+        }
+
+        public sealed override T Get()
+        {
+            return Id;
+        }
+
+        public override Int32 CompareTo(Object? obj)
+        {
+            return obj switch
+            {
+                EntityId<T> other => CompareTo(other),
+                Entity<T> other => CompareTo(other),
+                T other => CompareToInternal(other),
+                _ => 1
+            };
+        }
+
+        public Int32 CompareTo(EntityId<T>? other)
+        {
+            return other is not null ? CompareToInternal(other.Id) : 1;
+        }
+
+        protected override Int32 CompareToInternal(T? other)
+        {
+            return Comparer<T>.Default.Compare(Id, other);
+        }
+
+        public override Int32 GetHashCode()
+        {
+            return Id?.GetHashCode() ?? 0;
+        }
+
+        public override Boolean Equals(Object? obj)
+        {
+            return obj switch
+            {
+                EntityId<T> other => Equals(other),
+                Entity<T> other => Equals(other),
+                T other => EqualsInternal(other),
+                _ => false
+            };
+        }
+
+        public Boolean Equals(EntityId<T>? other)
+        {
+            return other is not null && EqualsInternal(other.Id);
+        }
+
+        protected override Boolean EqualsInternal(T? other)
+        {
+            return EqualityComparer<T>.Default.Equals(Id, other);
+        }
+
+        public override String? ToString()
+        {
+            return Id?.ToString();
+        }
+
+        public override String ToString(String? format, IFormatProvider? provider)
+        {
+            return Id is IFormattable formattable ? formattable.ToString(format, provider) : ToString() ?? String.Empty;
+        }
+    }
+
+    public class EntityValue<T> : Entity<T>, IEntityValue<T>, IEquatable<EntityValue<T>>, IComparable<EntityValue<T>>
+    {
+        [return: NotNullIfNotNull("value")]
+        public static implicit operator T?(EntityValue<T>? value)
+        {
+            return value is not null ? value.Value : default;
+        }
+        
+        [return: NotNullIfNotNull("value")]
+        public static implicit operator EntityValue<T>?(T? value)
+        {
+            return value is not null ? new EntityValue<T>(value) : null;
+        }
+        
+        public static Boolean operator ==(EntityValue<T>? first, EntityValue<T>? second)
+        {
+            if (ReferenceEquals(first, second))
+            {
+                return true;
+            }
+
+            if (first is null || second is null)
+            {
+                return false;
+            }
+
+            return first.Equals(second);
+        }
+
+        public static Boolean operator !=(EntityValue<T>? first, EntityValue<T>? second)
+        {
+            return !(first == second);
+        }
+
+        public static Boolean operator <(EntityValue<T>? first, EntityValue<T>? second)
+        {
+            if (first is null)
+            {
+                return second is not null;
+            }
+
+            return first.CompareTo(second) < 0;
+        }
+
+        public static Boolean operator <=(EntityValue<T>? first, EntityValue<T>? second)
+        {
+            if (first is null)
+            {
+                return true;
+            }
+
+            return first.CompareTo(second) <= 0;
+        }
+
+        public static Boolean operator >(EntityValue<T>? first, EntityValue<T>? second)
+        {
+            return !(first <= second);
+        }
+
+        public static Boolean operator >=(EntityValue<T>? first, EntityValue<T>? second)
+        {
+            return !(first < second);
+        }
+        
+        public T Value { get; init; }
+
+        public EntityValue(T value)
+        {
+            Value = value;
+        }
+
+        public sealed override T Get()
+        {
+            return Value;
+        }
+
+        public override Int32 CompareTo(Object? obj)
+        {
+            return obj switch
+            {
+                EntityValue<T> other => CompareTo(other),
+                Entity<T> other => CompareTo(other),
+                T other => CompareToInternal(other),
+                _ => 1
+            };
+        }
+
+        public Int32 CompareTo(EntityValue<T>? other)
+        {
+            return other is not null ? CompareToInternal(other.Value) : 1;
+        }
+
+        protected override Int32 CompareToInternal(T? other)
+        {
+            return Comparer<T>.Default.Compare(Value, other);
+        }
+
+        public override Int32 GetHashCode()
+        {
+            return Value?.GetHashCode() ?? 0;
+        }
+
+        public override Boolean Equals(Object? obj)
+        {
+            return obj switch
+            {
+                EntityValue<T> other => Equals(other),
+                Entity<T> other => Equals(other),
+                T other => EqualsInternal(other),
+                _ => false
+            };
+        }
+
+        public Boolean Equals(EntityValue<T>? other)
+        {
+            return other is not null && EqualsInternal(other.Value);
+        }
+
+        protected override Boolean EqualsInternal(T? other)
+        {
+            return EqualityComparer<T>.Default.Equals(Value, other);
+        }
+
+        public override String? ToString()
+        {
+            return Value?.ToString();
+        }
+
+        public override String ToString(String? format, IFormatProvider? provider)
+        {
+            return Value is IFormattable formattable ? formattable.ToString(format, provider) : ToString() ?? String.Empty;
+        }
+    }
+    
+    public abstract class Entity<T> : IEntity<T>, IEquatable<T>, IEquatable<Entity<T>>, IComparable, IComparable<T>, IComparable<Entity<T>>, IFormattable
+    {
+        [return: NotNullIfNotNull("value")]
+        public static implicit operator T?(Entity<T>? value)
+        {
+            return value is not null ? value.Get() : default;
         }
         
         public static Boolean operator ==(Entity<T>? first, Entity<T>? second)
@@ -75,22 +356,37 @@ namespace NetExtender.Types.Entities
         {
             return !(first < second);
         }
-        
-        public T Id { get; init; }
 
-        public Entity()
-            : this(default!)
+        public abstract T Get();
+        
+        public virtual Int32 CompareTo(Object? obj)
         {
+            return obj switch
+            {
+                Entity<T> other => CompareTo(other),
+                T other => CompareToInternal(other),
+                _ => 1
+            };
         }
 
-        public Entity(T value)
+        public Int32 CompareTo(T? other)
         {
-            Id = value;
+            return CompareToInternal(other);
+        }
+
+        public Int32 CompareTo(Entity<T>? other)
+        {
+            return other is not null ? CompareTo(other.Get()) : 1;
+        }
+
+        protected virtual Int32 CompareToInternal(T? other)
+        {
+            return Comparer<T>.Default.Compare(Get(), other);
         }
 
         public override Int32 GetHashCode()
         {
-            return Id?.GetHashCode() ?? 0;
+            return Get()?.GetHashCode() ?? 0;
         }
 
         public override Boolean Equals(Object? obj)
@@ -98,34 +394,29 @@ namespace NetExtender.Types.Entities
             return obj switch
             {
                 Entity<T> other => Equals(other),
-                T other => Equals(other),
+                T other => EqualsInternal(other),
                 _ => false
             };
         }
 
-        public virtual Boolean Equals(T? other)
+        public Boolean Equals(T? other)
         {
-            return EqualityComparer<T>.Default.Equals(Id, other);
+            return EqualsInternal(other);
         }
 
-        public virtual Boolean Equals(Entity<T>? other)
+        public Boolean Equals(Entity<T>? other)
         {
-            return other is not null && EqualityComparer<T>.Default.Equals(Id, other.Id);
+            return other is not null && EqualsInternal(other.Get());
         }
 
-        public virtual Int32 CompareTo(T? other)
+        protected virtual Boolean EqualsInternal(T? other)
         {
-            return Comparer<T>.Default.Compare(Id, other);
-        }
-
-        public virtual Int32 CompareTo(Entity<T>? other)
-        {
-            return other is not null ? Comparer<T>.Default.Compare(Id, other.Id) : 1;
+            return EqualityComparer<T>.Default.Equals(Get(), other);
         }
 
         public override String? ToString()
         {
-            return Id?.ToString();
+            return Get()?.ToString();
         }
 
         public String ToString(String? format)
@@ -135,7 +426,7 @@ namespace NetExtender.Types.Entities
 
         public virtual String ToString(String? format, IFormatProvider? provider)
         {
-            return Id is IFormattable formattable ? formattable.ToString(format, provider) : ToString() ?? String.Empty;
+            return Get() is IFormattable formattable ? formattable.ToString(format, provider) : ToString() ?? String.Empty;
         }
     }
 }

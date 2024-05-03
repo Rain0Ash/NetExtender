@@ -78,6 +78,7 @@ namespace NetExtender.Types.Network
             GC.SuppressFinalize(this);
         }
 
+        // ReSharper disable once CognitiveComplexity
         public IEnumerable<MimeBodyPart> ParseBuffer(Byte[] data, Int32 read)
         {
             if (Parser is null)
@@ -175,6 +176,7 @@ namespace NetExtender.Types.Network
             }
         }
 
+        // ReSharper disable once CognitiveComplexity
         protected static String? ValidateArguments(HttpContent content, Int64 size, Boolean @throw)
         {
             if (content is null)

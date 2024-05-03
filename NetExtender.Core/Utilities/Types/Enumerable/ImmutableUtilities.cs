@@ -5,6 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Runtime.CompilerServices;
+using NetExtender.Types.Immutable.Counters;
+using NetExtender.Types.Immutable.Counters.Interfaces;
 using NetExtender.Types.Immutable.Maps;
 using NetExtender.Types.Immutable.Maps.Interfaces;
 using NetExtender.Utilities.Numerics;
@@ -213,6 +215,42 @@ namespace NetExtender.Utilities.Types
             IEqualityComparer<TKey>? keyComparer, IEqualityComparer<TValue>? valueComparer) where TKey : notnull where TValue : notnull
         {
             return source is not null ? source as ImmutableMap<TKey, TValue> ?? source.ToImmutableMap(keyComparer, valueComparer) : ImmutableMap<TKey, TValue>.Empty.WithComparers(keyComparer, valueComparer);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IImmutableCounter<TKey, TValue> AsIImmutableCounter<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>>? source) where TKey : notnull where TValue : unmanaged, IConvertible
+        {
+            return source is not null ? source as IImmutableCounter<TKey, TValue> ?? source.ToImmutableCounter() : ImmutableCounter<TKey, TValue>.Empty;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IImmutableCounter<TKey, TValue> AsIImmutableCounter<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>>? source, IEqualityComparer<TKey>? comparer) where TKey : notnull where TValue : unmanaged, IConvertible
+        {
+            return source is not null ? source as IImmutableCounter<TKey, TValue> ?? source.ToImmutableCounter(comparer) : ImmutableCounter<TKey, TValue>.Empty.WithComparers(comparer);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableCounter<TKey, TValue> AsImmutableCounter<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>>? source) where TKey : notnull where TValue : unmanaged, IConvertible
+        {
+            return source is not null ? source as ImmutableCounter<TKey, TValue> ?? source.ToImmutableCounter() : ImmutableCounter<TKey, TValue>.Empty;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableCounter<TKey, TValue> AsImmutableCounter<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>>? source, IEqualityComparer<TKey>? comparer) where TKey : notnull where TValue : unmanaged, IConvertible
+        {
+            return source is not null ? source as ImmutableCounter<TKey, TValue> ?? source.ToImmutableCounter(comparer) : ImmutableCounter<TKey, TValue>.Empty.WithComparers(comparer);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableSortedCounter<TKey, TValue> AsImmutableSortedCounter<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>>? source) where TKey : notnull where TValue : unmanaged, IConvertible
+        {
+            return source is not null ? source as ImmutableSortedCounter<TKey, TValue> ?? source.ToImmutableSortedCounter() : ImmutableSortedCounter<TKey, TValue>.Empty;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableSortedCounter<TKey, TValue> AsImmutableSortedCounter<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>>? source, IComparer<TKey>? comparer) where TKey : notnull where TValue : unmanaged, IConvertible
+        {
+            return source is not null ? source as ImmutableSortedCounter<TKey, TValue> ?? source.ToImmutableSortedCounter(comparer) : ImmutableSortedCounter<TKey, TValue>.Empty.WithComparers(comparer);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

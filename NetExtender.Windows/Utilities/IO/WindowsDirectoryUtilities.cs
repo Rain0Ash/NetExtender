@@ -79,7 +79,6 @@ namespace NetExtender.Utilities.Windows.IO
                 }
                 catch (Exception)
                 {
-                    // ignored
                 }
             }
         }

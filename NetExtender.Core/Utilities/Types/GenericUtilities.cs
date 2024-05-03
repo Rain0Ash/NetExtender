@@ -422,7 +422,7 @@ namespace NetExtender.Utilities.Types
             return !condition(value) ? selector(value, first, second, third) : value;
         }
 
-        private static MethodInfo MemberwiseCloneMethod { get; } = typeof(Object).GetMethod("MemberwiseClone", BindingFlags.NonPublic | BindingFlags.Instance)!;
+        private static MethodInfo MemberwiseCloneMethod { get; } = typeof(Object).GetMethod("MemberwiseClone", BindingFlags.Instance | BindingFlags.NonPublic)!;
         private static Converter<Object, Object> MemberwiseCloneDelegate { get; } = (Converter<Object, Object>) MemberwiseCloneMethod.CreateDelegate(typeof(Converter<Object, Object>));
 
         [return: NotNullIfNotNull("value")]
@@ -549,9 +549,12 @@ namespace NetExtender.Utilities.Types
             return clone;
         }
 
-        private const BindingFlags DeepCopyFieldsBinding = BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.FlattenHierarchy;
-        private static void DeepCopyFields(Object original, IDictionary<Object, Object?> visited, Object clone, IReflect type,
-            BindingFlags binding = DeepCopyFieldsBinding, Func<FieldInfo, Boolean>? filter = null)
+        private static void DeepCopyFields(Object original, IDictionary<Object, Object?> visited, Object clone, IReflect type, Func<FieldInfo, Boolean>? filter = null)
+        {
+            DeepCopyFields(original, visited, clone, type, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy, filter);
+        }
+
+        private static void DeepCopyFields(Object original, IDictionary<Object, Object?> visited, Object clone, IReflect type, BindingFlags binding, Func<FieldInfo, Boolean>? filter = null)
         {
             IEnumerable<FieldInfo> fields = type.GetFields(binding);
 

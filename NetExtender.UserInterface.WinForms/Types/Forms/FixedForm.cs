@@ -7,8 +7,8 @@ using System.Windows.Forms;
 using NetExtender.UserInterface.Events;
 using NetExtender.UserInterface.Interfaces;
 using NetExtender.Utilities.Numerics;
-using NetExtender.Utilities.Types;
 using NetExtender.Utilities.UserInterface;
+using NetExtender.Utilities.UserInterface.Types;
 using NetExtender.Windows;
 
 namespace NetExtender.UserInterface.WinForms.Forms
@@ -62,9 +62,62 @@ namespace NetExtender.UserInterface.WinForms.Forms
                 Height = (Int32) value.Round();
             }
         }
+        
+        private CloseReason _reason;
+        public CloseReason CloseReason
+        {
+            get
+            {
+                return _reason;
+            }
+            set
+            {
+                if (value == CloseReason.None)
+                {
+                    _reason = value;
+                    return;
+                }
+
+                _reason = value;
+                OnClosing(this, new FormClosingEventArgs(value, false));
+            }
+        }
+        
+        public Boolean IsAltF4Enabled { get; set; }
+
+        public Boolean IsExitOnFocusLost { get; set; }
+
+        public Boolean? IsSystemMenuEnabled
+        {
+            get
+            {
+                return this.GetWindowSystemMenu();
+            }
+            set
+            {
+                if (value is { } state)
+                {
+                    this.SetWindowSystemMenu(state);
+                }
+            }
+        }
+
+        public WindowDisplayAffinity? DisplayAffinity
+        {
+            get
+            {
+                return this.GetWindowDisplayAffinity(out WindowDisplayAffinity affinity) ? affinity : null;
+            }
+            set
+            {
+                if (value is { } affinity)
+                {
+                    this.SetWindowDisplayAffinity(affinity);
+                }
+            }
+        }
 
         public event InterfaceClosingEventHandler? WindowClosing;
-
         public event SizeChangeToggleHandler? SizeChangeToggle;
 
         protected FixedForm()
@@ -78,21 +131,21 @@ namespace NetExtender.UserInterface.WinForms.Forms
         {
             switch ((WM) message.Msg)
             {
-                case WM.ENTERSIZEMOVE:
-                {
-                    SizeChangeToggleEventArgs args = new SizeChangeToggleEventArgs { End = false };
-                    OnSizeChangeToggle(args);
-
-                    if (args.Handled)
+                case WM.QUERYENDSESSION:
+                case WM.ENDSESSION:
+                    CloseReason = CloseReason.WindowsShutDown;
+                    break;
+                case WM.SYSCOMMAND:
+                    if (((UInt16) message.WParam & 0xFFF0) == 0xF060)
                     {
-                        return;
+                        CloseReason = CloseReason.UserClosing;
                     }
 
                     break;
-                }
+                case WM.ENTERSIZEMOVE:
                 case WM.EXITSIZEMOVE:
                 {
-                    SizeChangeToggleEventArgs args = new SizeChangeToggleEventArgs { End = true };
+                    SizeChangeToggleEventArgs args = new SizeChangeToggleEventArgs { End = message.Msg == (Int32) WM.EXITSIZEMOVE };
                     OnSizeChangeToggle(args);
 
                     if (args.Handled)
@@ -118,6 +171,16 @@ namespace NetExtender.UserInterface.WinForms.Forms
         {
             DoubleBuffered = true;
         }
+        
+        private void OnDeactivated(Object? sender, EventArgs args)
+        {
+            if (!IsExitOnFocusLost)
+            {
+                return;
+            }
+
+            CloseReason = CloseReason.MdiFormClosing;
+        }
 
         protected virtual void BringToFront(Object? sender, EventArgs args)
         {
@@ -130,6 +193,8 @@ namespace NetExtender.UserInterface.WinForms.Forms
             {
                 return;
             }
+            
+            // TODO: ALT-F4
 
             if (args.CloseReason == CloseReason.UserClosing)
             {

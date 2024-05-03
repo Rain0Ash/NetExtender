@@ -15,7 +15,7 @@ namespace NetExtender.Types.Collections
     public class ExpireCollection<T> : ICollection<KeyValuePair<DateTime, T>>, ICollection<T>, IDisposable
     {
         protected SortedList<DateTime, T> Internal { get; }
-        protected ITimer Timer { get; }
+        protected ITimer? Timer { get; private set; }
 
         private TimeSpan _expire;
         public TimeSpan Expire
@@ -27,7 +27,7 @@ namespace NetExtender.Types.Collections
             set
             {
                 _expire = value;
-                Expiration(Timer, new TimeEventArgs(DateTime.Now));
+                Expiration(Timer, new TimeEventArgs(DateTime.UtcNow));
             }
         }
 
@@ -35,10 +35,20 @@ namespace NetExtender.Types.Collections
         {
             get
             {
+                if (Timer is null)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+                
                 return Timer.Interval;
             }
             set
             {
+                if (Timer is null)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+                
                 Timer.Interval = value;
             }
         }
@@ -76,7 +86,7 @@ namespace NetExtender.Types.Collections
 
         public void Expiration()
         {
-            Expiration(Timer, new TimeEventArgs(DateTime.Now));
+            Expiration(Timer, new TimeEventArgs(DateTime.UtcNow));
         }
 
         private void Expiration(Object? sender, TimeEventArgs args)
@@ -111,7 +121,7 @@ namespace NetExtender.Types.Collections
 
         public void Add(T item, TimeSpan expire)
         {
-            Internal.Add(DateTime.Now.Add(expire), item);
+            Internal.Add(DateTime.UtcNow.Add(expire), item);
         }
 
         public Boolean Remove(KeyValuePair<DateTime, T> item)
@@ -169,8 +179,15 @@ namespace NetExtender.Types.Collections
         protected virtual void Dispose(Boolean disposing)
         {
             Tick = null;
+
+            if (Timer is null)
+            {
+                return;
+            }
+            
             Timer.Stop();
             Timer.Dispose();
+            Timer = null;
         }
 
         ~ExpireCollection()

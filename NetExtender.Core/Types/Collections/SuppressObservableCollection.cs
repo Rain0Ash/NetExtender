@@ -25,7 +25,6 @@ namespace NetExtender.Types.Collections
     {
         private ObservableCollectionSuppressionHandler Suppression { get; }
         protected Boolean IsChanged { get; set; }
-
         public Boolean IsAllowSuppress { get; set; } = true;
 
         public Boolean IsSuppressed
@@ -59,6 +58,36 @@ namespace NetExtender.Types.Collections
             : base(list)
         {
             Suppression = new ObservableCollectionSuppressionHandler(this);
+        }
+
+        public void AddRange(IEnumerable<T> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            using IDisposable? suppress = Suppress();
+            
+            foreach (T item in source)
+            {
+                Add(item);
+            }
+        }
+        
+        public void RemoveRange(IEnumerable<T> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            using IDisposable? suppress = Suppress();
+            
+            foreach (T item in source)
+            {
+                Remove(item);
+            }
         }
 
         public virtual IDisposable? Suppress()
@@ -113,9 +142,7 @@ namespace NetExtender.Types.Collections
     public sealed class SuppressObservableCollectionWrapper<T> : ISuppressObservableCollection<T>, IReadOnlySuppressObservableCollection<T>, ISuppressObservableCollectionHandler
     {
         private ObservableCollection<T> Internal { get; }
-
         public event NotifyCollectionChangedEventHandler? CollectionChanged;
-
         private event PropertyChangedEventHandler? PropertyChanged;
 
         event PropertyChangedEventHandler? INotifyPropertyChanged.PropertyChanged

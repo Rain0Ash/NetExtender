@@ -303,7 +303,7 @@ namespace NetExtender.WindowsPresentation.ActiveBinding
                 return NodeType.Variable;
             }
 
-            StringBuilder builder = new StringBuilder(name.Length + left?.Length ?? 0 + right?.Length ?? 0 + 5);
+            StringBuilder builder = new StringBuilder(name.Length + (left?.Length ?? 0) + (right?.Length ?? 0) + 5);
             builder.Append(name);
             builder.Append("(");
             builder.Append(left);

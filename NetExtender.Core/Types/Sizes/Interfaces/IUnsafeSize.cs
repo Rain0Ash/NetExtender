@@ -7,6 +7,7 @@ namespace NetExtender.Types.Sizes.Interfaces
 {
     public interface IUnsafeSize
     {
+        public Type Type { get; }
         public Int32 Length { get; }
         public Int32 Size { get; }
         public Boolean IsEmpty { get; }
@@ -16,9 +17,11 @@ namespace NetExtender.Types.Sizes.Interfaces
 
     public interface IUnsafeSize<T> : IUnsafeSize where T : struct, IUnsafeSize<T>
     {
+        public ref T Self { get; }
         public Int32 Count { get; set; }
+
+        public ref TStruct As<TStruct>() where TStruct : struct;
         
-        public ref TStruct As<TStruct>();
         public ReadOnlySpan<Byte> AsReadOnlySpan();
         public Span<Byte> AsSpan();
     }

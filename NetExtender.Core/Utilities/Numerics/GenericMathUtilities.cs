@@ -6068,7 +6068,7 @@ namespace NetExtender.Utilities.Numerics
 		{
 			if (!@base.InRange(MinimumBase, MaximumBase))
 			{
-				throw new ArgumentOutOfRangeException(nameof(@base), @base, @"Base out of range");
+				throw new ArgumentOutOfRangeException(nameof(@base), @base, "Base out of range");
 			}
 
 			if (value == 0)
@@ -6102,7 +6102,7 @@ namespace NetExtender.Utilities.Numerics
 		{
 			if (!@base.InRange(MinimumBase, MaximumBase))
 			{
-				throw new ArgumentOutOfRangeException(nameof(@base), @base, @"Base out of range");
+				throw new ArgumentOutOfRangeException(nameof(@base), @base, "Base out of range");
 			}
 
 			if (value <= 0)
@@ -6130,7 +6130,7 @@ namespace NetExtender.Utilities.Numerics
 		{
 			if (!@base.InRange(MinimumBase, MaximumBase))
 			{
-				throw new ArgumentOutOfRangeException(nameof(@base), @base, @"Base out of range");
+				throw new ArgumentOutOfRangeException(nameof(@base), @base, "Base out of range");
 			}
 
 			if (value == 0)
@@ -6164,7 +6164,7 @@ namespace NetExtender.Utilities.Numerics
 		{
 			if (!@base.InRange(MinimumBase, MaximumBase))
 			{
-				throw new ArgumentOutOfRangeException(nameof(@base), @base, @"Base out of range");
+				throw new ArgumentOutOfRangeException(nameof(@base), @base, "Base out of range");
 			}
 
 			if (value <= 0)
@@ -6192,7 +6192,7 @@ namespace NetExtender.Utilities.Numerics
 		{
 			if (!@base.InRange(MinimumBase, MaximumBase))
 			{
-				throw new ArgumentOutOfRangeException(nameof(@base), @base, @"Base out of range");
+				throw new ArgumentOutOfRangeException(nameof(@base), @base, "Base out of range");
 			}
 
 			if (value == 0)
@@ -6226,7 +6226,7 @@ namespace NetExtender.Utilities.Numerics
 		{
 			if (!@base.InRange(MinimumBase, MaximumBase))
 			{
-				throw new ArgumentOutOfRangeException(nameof(@base), @base, @"Base out of range");
+				throw new ArgumentOutOfRangeException(nameof(@base), @base, "Base out of range");
 			}
 
 			if (value <= 0)
@@ -6254,7 +6254,7 @@ namespace NetExtender.Utilities.Numerics
 		{
 			if (!@base.InRange(MinimumBase, MaximumBase))
 			{
-				throw new ArgumentOutOfRangeException(nameof(@base), @base, @"Base out of range");
+				throw new ArgumentOutOfRangeException(nameof(@base), @base, "Base out of range");
 			}
 
 			if (value == 0)
@@ -6288,7 +6288,7 @@ namespace NetExtender.Utilities.Numerics
 		{
 			if (!@base.InRange(MinimumBase, MaximumBase))
 			{
-				throw new ArgumentOutOfRangeException(nameof(@base), @base, @"Base out of range");
+				throw new ArgumentOutOfRangeException(nameof(@base), @base, "Base out of range");
 			}
 
 			if (value <= 0)
@@ -6316,7 +6316,7 @@ namespace NetExtender.Utilities.Numerics
 		{
 			if (!@base.InRange(MinimumBase, MaximumBase))
 			{
-				throw new ArgumentOutOfRangeException(nameof(@base), @base, @"Base out of range");
+				throw new ArgumentOutOfRangeException(nameof(@base), @base, "Base out of range");
 			}
 
 			if (value == 0)

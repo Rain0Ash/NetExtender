@@ -128,6 +128,7 @@ namespace NetExtender.Types.Network
             return state;
         }
 
+        // ReSharper disable once CognitiveComplexity
         protected virtual MimeParserState ParseBodyPart(Byte[] buffer, CurrentBodyPartStore current, Int32 ready, ref Int64 consumed, ref BodyPartState state, Int64 length, ref Int64 total)
         {
             if (buffer is null)

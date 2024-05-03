@@ -890,7 +890,7 @@ namespace NetExtender.Utilities.Numerics
                 (min, max) = (max, min);
             }
 
-            return min.Add(TimeSpan.FromTicks(NextInt64(random, min.Ticks, max.Ticks)));
+            return min.Add(TimeSpan.FromTicks(NextInt64(random, 0, max.Ticks - min.Ticks)));
         }
 
         public static TimeSpan NextTimeSpan<T>(this T random, TimeSpan min, TimeSpan max) where T : IRandom
@@ -910,7 +910,7 @@ namespace NetExtender.Utilities.Numerics
                 (min, max) = (max, min);
             }
 
-            return min.Add(TimeSpan.FromTicks(NextInt64(random, min.Ticks, max.Ticks)));
+            return min.Add(TimeSpan.FromTicks(NextInt64(random, 0, max.Ticks - min.Ticks)));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1489,16 +1489,6 @@ namespace NetExtender.Utilities.Numerics
             Generator = type.Create(seed);
         }
 
-        public static void Reset<T>(T random) where T : IRandom
-        {
-            if (random is null)
-            {
-                throw new ArgumentNullException(nameof(random));
-            }
-
-            Generator = random;
-        }
-
         public static void Reset(Random random)
         {
             if (random is null)
@@ -1507,6 +1497,16 @@ namespace NetExtender.Utilities.Numerics
             }
 
             Generator = random as IRandom ?? new RandomAdapter(random);
+        }
+
+        public static void Reset<T>(T random) where T : IRandom
+        {
+            if (random is null)
+            {
+                throw new ArgumentNullException(nameof(random));
+            }
+
+            Generator = random;
         }
     }
 }

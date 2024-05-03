@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using NetExtender.Types.Events;
 using NetExtender.Types.Timers.Interfaces;
+using NetExtender.Types.Times;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Timers
@@ -26,6 +27,7 @@ namespace NetExtender.Types.Timers
         }
 
         private Timer Timer { get; }
+        public event TickHandler? Tick;
 
         public Boolean IsStarted
         {
@@ -36,6 +38,28 @@ namespace NetExtender.Types.Timers
             set
             {
                 Timer.Enabled = value;
+            }
+        }
+
+        private DateTimeFactory _factory = DateTimeFactory.Factory;
+
+        public DateTime Now
+        {
+            get
+            {
+                return _factory.Now;
+            }
+        }
+        
+        public DateTimeKind Kind
+        {
+            get
+            {
+                return _factory.Kind;
+            }
+            set
+            {
+                _factory.Kind = value;
             }
         }
 
@@ -50,8 +74,6 @@ namespace NetExtender.Types.Timers
                 Timer.Interval = TimerUtilities.ToInterval(value);
             }
         }
-
-        public event TickHandler? Tick;
 
         public TimerWinFormsWrapper(Int32 interval)
             : this(new Timer { Interval = interval })
@@ -76,7 +98,13 @@ namespace NetExtender.Types.Timers
 
         private void OnTick(Object? sender, EventArgs _)
         {
-            Tick?.Invoke(sender, new TimeEventArgs());
+            Tick?.Invoke(sender, new TimeEventArgs(Now));
+        }
+        
+        public Boolean TrySetKind(DateTimeKind kind)
+        {
+            Kind = kind;
+            return true;
         }
 
         public void Start()

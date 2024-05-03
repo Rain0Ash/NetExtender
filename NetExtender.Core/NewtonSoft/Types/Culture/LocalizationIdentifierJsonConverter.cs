@@ -66,6 +66,16 @@ namespace NetExtender.NewtonSoft.Types.Culture
         // ReSharper disable once CognitiveComplexity
         public override Object? ReadJson(JsonReader reader, Type objectType, Object? existingValue, JsonSerializer serializer)
         {
+            if (reader is null)
+            {
+                throw new ArgumentNullException(nameof(reader));
+            }
+
+            if (serializer is null)
+            {
+                throw new ArgumentNullException(nameof(serializer));
+            }
+
             if (!reader.ReadFirstToken(out JsonTokenEntry token))
             {
                 throw new JsonException("Expected a value but found end of input.");
@@ -77,6 +87,7 @@ namespace NetExtender.NewtonSoft.Types.Culture
                     return null;
                 case JsonToken.None:
                 case JsonToken.PropertyName:
+                {
                     if (!reader.ReadToken(out token))
                     {
                         throw new JsonException("Expected a value but found end of input.");
@@ -98,6 +109,7 @@ namespace NetExtender.NewtonSoft.Types.Culture
                     }
 
                     goto default;
+                }
                 case JsonToken.Integer:
                 {
                     if (!ConvertUtilities.TryChangeType(token.Value, out Int32 code))
@@ -129,14 +141,26 @@ namespace NetExtender.NewtonSoft.Types.Culture
                     return identifier;
                 }
                 default:
+                {
                     throw new JsonException($"Expected a value but found {token.Token}.");
+                }
             }
         }
 
         // ReSharper disable once CognitiveComplexity
-        // ReSharper disable once UnusedParameter.Local
+        // ReSharper disable once ParameterOnlyUsedForPreconditionCheck.Local
         private void WriteJson(JsonWriter writer, LocalizationIdentifier identifier, JsonSerializer serializer)
         {
+            if (writer is null)
+            {
+                throw new ArgumentNullException(nameof(writer));
+            }
+
+            if (serializer is null)
+            {
+                throw new ArgumentNullException(nameof(serializer));
+            }
+
             switch (Convert)
             {
                 case LocalizationIdentifierJsonConvertType.Default:
@@ -215,6 +239,16 @@ namespace NetExtender.NewtonSoft.Types.Culture
 
         public override void WriteJson(JsonWriter writer, Object? value, JsonSerializer serializer)
         {
+            if (writer is null)
+            {
+                throw new ArgumentNullException(nameof(writer));
+            }
+
+            if (serializer is null)
+            {
+                throw new ArgumentNullException(nameof(serializer));
+            }
+
             switch (value)
             {
                 case null:
@@ -222,28 +256,30 @@ namespace NetExtender.NewtonSoft.Types.Culture
                     return;
                 case LocalizationIdentifier identifier:
                     WriteJson(writer, identifier, serializer);
-                    break;
+                    return;
                 case CultureIdentifier identifier:
                     WriteJson(writer, identifier, serializer);
-                    break;
+                    return;
                 case CultureInfo culture:
                     WriteJson(writer, culture, serializer);
-                    break;
+                    return;
                 case String identifier:
+                {
                     if (CultureUtilities.TryGetIdentifier(identifier, out LocalizationIdentifier localization))
                     {
                         WriteJson(writer, localization, serializer);
-                        break;
+                        return;
                     }
 
                     writer.WriteValue(identifier);
-                    break;
+                    return;
+                }
                 case UInt16 identifier:
                     WriteJson(writer, identifier, serializer);
-                    break;
+                    return;
                 case Int32 identifier:
                     WriteJson(writer, identifier, serializer);
-                    break;
+                    return;
             }
         }
     }

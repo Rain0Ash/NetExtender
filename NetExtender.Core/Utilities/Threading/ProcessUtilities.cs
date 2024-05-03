@@ -389,7 +389,6 @@ namespace NetExtender.Utilities.Threading
                 }
                 catch (Exception)
                 {
-                    // ignored
                 }
 
                 start.SetResult(time);

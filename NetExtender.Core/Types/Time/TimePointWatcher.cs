@@ -167,7 +167,7 @@ namespace NetExtender.Types.Times
                 return 0;
             }
 
-            if (ReferenceEquals(null, other))
+            if (other is null)
             {
                 return 1;
             }
@@ -192,7 +192,7 @@ namespace NetExtender.Types.Times
 
         public Boolean Equals(TimePointWatcher? other)
         {
-            return ReferenceEquals(this, other) || !ReferenceEquals(null, other) && Point.Equals(other.Point);
+            return ReferenceEquals(this, other) || other is not null && Point.Equals(other.Point);
         }
 
         public override Boolean Equals(Object? obj)

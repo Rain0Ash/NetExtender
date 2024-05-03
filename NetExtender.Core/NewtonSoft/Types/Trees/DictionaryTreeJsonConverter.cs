@@ -26,69 +26,6 @@ namespace NetExtender.NewtonSoft.Types.Trees
             Value
         }
 
-        public override void WriteJson(JsonWriter writer, Object? value, JsonSerializer serializer)
-        {
-            if (writer is null)
-            {
-                throw new ArgumentNullException(nameof(writer));
-            }
-
-            if (serializer is null)
-            {
-                throw new ArgumentNullException(nameof(serializer));
-            }
-
-            if (value is null)
-            {
-                writer.WriteNull();
-                return;
-            }
-
-            if (value is not IDictionaryTree<TKey, TValue> node)
-            {
-                throw new JsonException();
-            }
-
-            NamingStrategy? strategy = (serializer.ContractResolver as DefaultContractResolver)?.NamingStrategy;
-            WriteNode(writer, node.Node, strategy);
-        }
-
-        private static void WriteNode(JsonWriter writer, IDictionaryTreeNode<TKey, TValue> node, NamingStrategy? strategy)
-        {
-            if (writer is null)
-            {
-                throw new ArgumentNullException(nameof(writer));
-            }
-
-            if (node.IsEmpty)
-            {
-                writer.WriteNull();
-                return;
-            }
-
-            if (node.TreeIsEmpty && node.HasValue)
-            {
-                writer.WriteValue(node.Value);
-                return;
-            }
-
-            writer.WriteStartObject();
-
-            if (node.HasValue)
-            {
-                writer.WritePropertyName(strategy.NamingStrategy("Value", false));
-                writer.WriteValue(node.Value);
-            }
-
-            foreach ((TKey key, IDictionaryTreeNode<TKey, TValue>? child) in node)
-            {
-                writer.WritePropertyName(key.ToString()!, true);
-                WriteNode(writer, child, strategy);
-            }
-
-            writer.WriteEndObject();
-        }
-
         private static KeyState ReadJsonKey(JsonTokenEntry token, NamingStrategy? strategy, out TKey key)
         {
             if (token.Current == strategy.NamingStrategy("Value", false))
@@ -176,6 +113,69 @@ namespace NetExtender.NewtonSoft.Types.Trees
             }
 
             return dictionary;
+        }
+
+        public override void WriteJson(JsonWriter writer, Object? value, JsonSerializer serializer)
+        {
+            if (writer is null)
+            {
+                throw new ArgumentNullException(nameof(writer));
+            }
+
+            if (serializer is null)
+            {
+                throw new ArgumentNullException(nameof(serializer));
+            }
+
+            if (value is null)
+            {
+                writer.WriteNull();
+                return;
+            }
+
+            if (value is not IDictionaryTree<TKey, TValue> node)
+            {
+                throw new JsonException();
+            }
+
+            NamingStrategy? strategy = (serializer.ContractResolver as DefaultContractResolver)?.NamingStrategy;
+            WriteNode(writer, node.Node, strategy);
+        }
+
+        private static void WriteNode(JsonWriter writer, IDictionaryTreeNode<TKey, TValue> node, NamingStrategy? strategy)
+        {
+            if (writer is null)
+            {
+                throw new ArgumentNullException(nameof(writer));
+            }
+
+            if (node.IsEmpty)
+            {
+                writer.WriteNull();
+                return;
+            }
+
+            if (node.TreeIsEmpty && node.HasValue)
+            {
+                writer.WriteValue(node.Value);
+                return;
+            }
+
+            writer.WriteStartObject();
+
+            if (node.HasValue)
+            {
+                writer.WritePropertyName(strategy.NamingStrategy("Value", false));
+                writer.WriteValue(node.Value);
+            }
+
+            foreach ((TKey key, IDictionaryTreeNode<TKey, TValue>? child) in node)
+            {
+                writer.WritePropertyName(key.ToString()!, true);
+                WriteNode(writer, child, strategy);
+            }
+
+            writer.WriteEndObject();
         }
     }
 

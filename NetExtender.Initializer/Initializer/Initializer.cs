@@ -324,7 +324,7 @@ namespace NetExtender.Initializer
                 Type current = GetType();
                 MethodInfo? handler = null;
                 Type? type = initializer.GetType();
-                while (type is not null && type != typeof(Initializer).BaseType)
+                while (type is not null && type != typeof(Initializer))
                 {
                     const BindingFlags binding = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
                     handler = current.GetMethod(nameof(Handle), binding, null, new[] { type, typeof(Object), typeof(Exception), typeof(InitializerUnhandledExceptionState).MakeByRefType() }, null);
@@ -337,14 +337,13 @@ namespace NetExtender.Initializer
                     type = type.BaseType;
                 }
                 
-                if (handler is null)
+                if (handler is null || handler.DeclaringType == typeof(ExceptionHandler))
                 {
                     return false;
                 }
 
                 Object?[] parameters = { initializer, sender, exception, action };
                 handler.Invoke(this, parameters);
-
                 action = (InitializerUnhandledExceptionState) (parameters[3] ?? action);
                 return true;
             }

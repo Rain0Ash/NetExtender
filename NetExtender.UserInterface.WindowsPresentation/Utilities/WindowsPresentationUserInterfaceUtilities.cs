@@ -13,6 +13,28 @@ namespace NetExtender.Utilities.UserInterface
     public static class WindowsPresentationUserInterfaceUtilities
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean? GetWindowSystemMenu(this Window window)
+        {
+            if (window is null)
+            {
+                throw new ArgumentNullException(nameof(window));
+            }
+
+            return UserInterfaceUtilities.GetWindowSystemMenu(window.GetHandle());
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean SetWindowSystemMenu(this Window window, Boolean value)
+        {
+            if (window is null)
+            {
+                throw new ArgumentNullException(nameof(window));
+            }
+
+            return UserInterfaceUtilities.SetWindowSystemMenu(window.GetHandle(), value);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Rectangle GetWindowRectangle(this Window window)
         {
             if (window is null)
@@ -43,6 +65,28 @@ namespace NetExtender.Utilities.UserInterface
             }
 
             return UserInterfaceUtilities.BringToForegroundWindow(window.GetHandle());
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean GetWindowDisplayAffinity(this Window window, out WindowDisplayAffinity affinity)
+        {
+            if (window is null)
+            {
+                throw new ArgumentNullException(nameof(window));
+            }
+            
+            return UserInterfaceUtilities.GetWindowDisplayAffinity(window.GetHandle(), out affinity);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean SetWindowDisplayAffinity(this Window window, WindowDisplayAffinity affinity)
+        {
+            if (window is null)
+            {
+                throw new ArgumentNullException(nameof(window));
+            }
+            
+            return UserInterfaceUtilities.SetWindowDisplayAffinity(window.GetHandle(), affinity);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

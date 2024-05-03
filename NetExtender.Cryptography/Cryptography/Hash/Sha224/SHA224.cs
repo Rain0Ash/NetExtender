@@ -5,7 +5,7 @@ namespace System.Security.Cryptography
 {
     public abstract class SHA224 : HashAlgorithm
     {
-        public SHA224()
+        protected SHA224()
         {
             HashSizeValue = 224;
         }

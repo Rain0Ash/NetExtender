@@ -5,7 +5,6 @@ using System;
 using System.Drawing;
 using System.IO;
 using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Advanced;
 using SixLabors.ImageSharp.Formats;
 using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.PixelFormats;
@@ -23,7 +22,7 @@ namespace NetExtender.ImageSharp.Utilities
 
             using MemoryStream stream = new MemoryStream();
 
-            IImageEncoder encoder = image.GetConfiguration().ImageFormatsManager.GetEncoder(PngFormat.Instance);
+            IImageEncoder encoder = image.Configuration.ImageFormatsManager.GetEncoder(PngFormat.Instance);
             image.Save(stream, encoder);
 
             stream.Seek(0, SeekOrigin.Begin);

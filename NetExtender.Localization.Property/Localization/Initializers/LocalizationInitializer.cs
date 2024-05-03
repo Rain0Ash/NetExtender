@@ -7,6 +7,8 @@ using System.Linq;
 using System.Reflection;
 using NetExtender.Localization.Properties.Interfaces;
 using NetExtender.Types.Dictionaries;
+using NetExtender.Types.Singletons;
+using NetExtender.Types.Singletons.Interfaces;
 using NetExtender.Utilities.Core;
 
 namespace NetExtender.Localization.Property.Localization.Initializers
@@ -25,7 +27,11 @@ namespace NetExtender.Localization.Property.Localization.Initializers
                     continue;
                 }
 
-                Store.Add(info, property);
+                if (!Store.TryAdd(info, property))
+                {
+                    continue;
+                }
+
                 info.PropertyChanged += OnPropertyChanged;
             }
         }
@@ -110,39 +116,39 @@ namespace NetExtender.Localization.Property.Localization.Initializers
 
     public abstract class LocalizationInitializerSingleton<T> : LocalizationInitializerAbstraction where T : LocalizationInitializerAbstraction, new()
     {
-        private static Lazy<T> Internal { get; } = new Lazy<T>(() => new T(), true);
+        private static ISingleton<T> Internal { get; } = new Singleton<T>();
 
         public static T Instance
         {
             get
             {
-                return Internal.Value;
+                return Internal.Instance;
             }
         }
     }
 
     public abstract class LocalizationManualInitializerSingleton<T> : LocalizationInitializer where T : LocalizationInitializer, new()
     {
-        private static Lazy<T> Internal { get; } = new Lazy<T>(() => new T(), true);
+        private static ISingleton<T> Internal { get; } = new Singleton<T>();
 
         public static T Instance
         {
             get
             {
-                return Internal.Value;
+                return Internal.Instance;
             }
         }
     }
 
     public abstract class LocalizationAutoInitializerSingleton<T> : LocalizationAutoInitializer where T : LocalizationAutoInitializer, new()
     {
-        private static Lazy<T> Internal { get; } = new Lazy<T>(() => new T(), true);
+        private static ISingleton<T> Internal { get; } = new Singleton<T>();
 
         public static T Instance
         {
             get
             {
-                return Internal.Value;
+                return Internal.Instance;
             }
         }
     }

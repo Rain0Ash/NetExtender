@@ -11,7 +11,7 @@ using NetExtender.Utilities.Types;
 namespace NetExtender.UserInterface.WindowsPresentation.Windows
 {
     [SuppressMessage("ReSharper", "StaticMemberInGenericType")]
-    public class SingletonWindow<T> where T : Window
+    public class SingletonWindow<T> : SingletonWindow where T : Window
     {
         private static SingletonWindow<T>? _singleton;
         public static SingletonWindow<T> Singleton
@@ -47,6 +47,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
         private Func<T> Factory { get; }
         private TimePointWatcher Watcher { get; } = new TimePointWatcher();
         public Boolean IsExitOnFocusLost { get; set; }
+        public TimeSpan TimeDelay { get; set; } = Time.Second.Quarter;
 
         public SingletonWindow()
             : this(Create)
@@ -85,6 +86,14 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
                 return _singleton = new SingletonWindow<T>(factory ?? Create) { IsExitOnFocusLost = exit };
             }
         }
+        
+        public Boolean? Activate()
+        {
+            lock (Synchronization)
+            {
+                return _window?.Activate() ?? Show();
+            }
+        }
 
         public Boolean? Show()
         {
@@ -96,7 +105,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
                     return true;
                 }
 
-                if (Watcher.UpdateNow(Time.Second.Quarter, TimeWatcherComparison.GreaterOrEqualAbsolute) && (Window.WindowState == WindowState.Minimized || !Window.IsActive))
+                if (Watcher.UpdateNow(TimeDelay, TimeWatcherComparison.GreaterOrEqualAbsolute) && (Window.WindowState == WindowState.Minimized || !Window.IsActive))
                 {
                     Window.WindowState = WindowState.Normal;
                     Window.Activate();
@@ -117,7 +126,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
                     return Window.ShowDialog();
                 }
 
-                if (Watcher.UpdateNow(Time.Second.Quarter, TimeWatcherComparison.GreaterOrEqualAbsolute) && (Window.WindowState == WindowState.Minimized || !Window.IsActive))
+                if (Watcher.UpdateNow(TimeDelay, TimeWatcherComparison.GreaterOrEqualAbsolute) && (Window.WindowState == WindowState.Minimized || !Window.IsActive))
                 {
                     Window.WindowState = WindowState.Normal;
                     Window.Activate();
@@ -129,11 +138,38 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
             }
         }
 
-        public void Close()
+        public Boolean? Hide()
         {
             lock (Synchronization)
             {
-                _window?.Close();
+                if (_window is null)
+                {
+                    return false;
+                }
+
+                try
+                {
+                    _window.Hide();
+                    return true;
+                }
+                catch (Exception)
+                {
+                    return null;
+                }
+            }
+        }
+
+        public Boolean Close()
+        {
+            lock (Synchronization)
+            {
+                if (_window is null)
+                {
+                    return false;
+                }
+                
+                _window.Close();
+                return true;
             }
         }
 
@@ -165,13 +201,40 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
                 }
                 catch (Exception)
                 {
-                    // ignored
                 }
                 finally
                 {
                     _window = null;
                 }
             }
+        }
+    }
+
+    public abstract class SingletonWindow
+    {
+        public static Boolean Activate<TWindow>() where TWindow : Window
+        {
+            return SingletonWindow<TWindow>.Singleton.Activate() is not null;
+        }
+        
+        public static Boolean Show<TWindow>() where TWindow : Window
+        {
+            return SingletonWindow<TWindow>.Singleton.Show() is not null;
+        }
+        
+        public static Boolean ShowDialog<TWindow>() where TWindow : Window
+        {
+            return SingletonWindow<TWindow>.Singleton.ShowDialog() is not null;
+        }
+        
+        public static Boolean Hide<TWindow>() where TWindow : Window
+        {
+            return SingletonWindow<TWindow>.Singleton.Hide() != false;
+        }
+        
+        public static Boolean Close<TWindow>() where TWindow : Window
+        {
+            return SingletonWindow<TWindow>.Singleton.Close();
         }
     }
 }

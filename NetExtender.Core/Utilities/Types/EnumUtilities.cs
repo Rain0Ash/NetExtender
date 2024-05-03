@@ -5,24 +5,20 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
+using NetExtender.Types.Culture;
 using NetExtender.Types.Enums;
 using NetExtender.Types.Enums.Attributes;
-using NetExtender.Types.Enums.Interfaces;
 using NetExtender.Types.Exceptions;
 using NetExtender.Utilities.Numerics;
 
-// ReSharper disable StaticMemberInGenericType
-
 namespace NetExtender.Utilities.Types
 {
-    public static class EnumUtilities
+    public static partial class EnumUtilities
     {
         private const String IsDefinedTypeMismatchMessage = "The underlying type of the enum and the value must be the same type.";
 
@@ -33,7 +29,7 @@ namespace NetExtender.Utilities.Types
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static TEnum As<T, TEnum>(this T value) where T : unmanaged, Enum where TEnum : Enum<T>, new()
+        public static TEnum As<T, TEnum>(this T value) where T : unmanaged, Enum where TEnum : Enum<T, TEnum>, new()
         {
             return CacheEnum<T>.TryParse<TEnum>(value, out TEnum? result) ? result : Enum<T>.Create<TEnum>(value);
         }
@@ -50,7 +46,7 @@ namespace NetExtender.Utilities.Types
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static TEnum As<T, TEnum>(this String value) where T : unmanaged, Enum where TEnum : Enum<T>, new()
+        public static TEnum As<T, TEnum>(this String value) where T : unmanaged, Enum where TEnum : Enum<T, TEnum>, new()
         {
             if (value is null)
             {
@@ -68,9 +64,29 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String GetDescriptionOrName<T>(this T value, LocalizationIdentifier identifier) where T : unmanaged, Enum
+        {
+            TryGetDescriptionOrName(value, identifier, out String result);
+            return result;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryGetDescriptionOrName<T>(this T value, out String result) where T : unmanaged, Enum
         {
             if (TryGetDescription(value, out String? description))
+            {
+                result = description;
+                return true;
+            }
+
+            result = value.ToString();
+            return false;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean TryGetDescriptionOrName<T>(this T value, LocalizationIdentifier identifier, out String result) where T : unmanaged, Enum
+        {
+            if (TryGetDescription(value, identifier, out String? description) || TryGetDescription(value, out description))
             {
                 result = description;
                 return true;
@@ -87,14 +103,33 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String? GetDescription<T>(this T value, LocalizationIdentifier identifier) where T : unmanaged, Enum
+        {
+            return CacheDescription<T>.GetValue(value, identifier);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryGetDescription<T>(this T value, [MaybeNullWhen(false)] out String result) where T : unmanaged, Enum
         {
             return CacheDescription<T>.TryGetValue(value, out result);
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean TryGetDescription<T>(this T value, LocalizationIdentifier identifier, [MaybeNullWhen(false)] out String result) where T : unmanaged, Enum
+        {
+            return CacheDescription<T>.TryGetValue(value, identifier, out result);
+        }
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryFromDescriptionOrName<T>(this String key, out T result) where T : unmanaged, Enum
         {
             return CacheDescriptionToEnum<T>.TryGetValue(key, out result);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean TryFromDescriptionOrName<T>(this String key, LocalizationIdentifier identifier, out T result) where T : unmanaged, Enum
+        {
+            return CacheDescriptionToEnum<T>.TryGetValue(identifier, key, out result);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
@@ -107,7 +142,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentOutOfRangeException(nameof(value), value, "The value is not defined in the enum.");
             }
 
-            return CacheValues<T>.Values[(index + 1) % CacheValues<T>.Values.Count];
+            return CacheValues<T>.Values[(index + 1) % CacheValues<T>.Values.Length];
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -126,7 +161,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentOutOfRangeException(nameof(value), value, "The value is not defined in the enum without default.");
             }
 
-            return CacheValuesWithoutDefault<T>.Values[(index + 1) % CacheValuesWithoutDefault<T>.Values.Count];
+            return CacheValuesWithoutDefault<T>.Values[(index + 1) % CacheValuesWithoutDefault<T>.Values.Length];
         }
 
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
@@ -139,7 +174,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentOutOfRangeException(nameof(value), value, "The value is not defined in the enum.");
             }
             
-            return CacheValues<T>.Values[index > 0 ? index - 1 : CacheValues<T>.Values.Count - 1];
+            return CacheValues<T>.Values[index > 0 ? index - 1 : CacheValues<T>.Values.Length - 1];
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -158,7 +193,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentOutOfRangeException(nameof(value), value, "The value is not defined in the enum without default.");
             }
 
-            return CacheValuesWithoutDefault<T>.Values[index > 0 ? index - 1 : CacheValuesWithoutDefault<T>.Values.Count - 1];
+            return CacheValuesWithoutDefault<T>.Values[index > 0 ? index - 1 : CacheValuesWithoutDefault<T>.Values.Length - 1];
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -200,7 +235,7 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Int32 Count<T>() where T : unmanaged, Enum
         {
-            return CacheValues<T>.Values.Count;
+            return CacheValues<T>.Values.Length;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -212,13 +247,13 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Int32 CountWithoutDefault<T>() where T : unmanaged, Enum
         {
-            return CacheValuesWithoutDefault<T>.Values.Count;
+            return CacheValuesWithoutDefault<T>.Values.Length;
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T Minimum<T>() where T : unmanaged, Enum
         {
-            return CacheValues<T>.Minimum ?? throw new InvalidOperationException($"{nameof(Enum)} {typeof(T)} is empty.");
+            return CacheValues<T>.Minimum ?? default;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -230,7 +265,7 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T MinimumWithoutDefault<T>() where T : unmanaged, Enum
         {
-            return CacheValuesWithoutDefault<T>.Minimum ?? throw new InvalidOperationException($"{nameof(Enum)} {typeof(T)} is empty.");
+            return CacheValuesWithoutDefault<T>.Minimum ?? default;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -254,7 +289,7 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryGetMinimum<T>(out T result) where T : unmanaged, Enum
         {
-            if (CacheValues<T>.Minimum is T maximum)
+            if (CacheValues<T>.Minimum is { } maximum)
             {
                 result = maximum;
                 return true;
@@ -273,7 +308,7 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryGetMinimumWithoutDefault<T>(out T result) where T : unmanaged, Enum
         {
-            if (CacheValuesWithoutDefault<T>.Minimum is T maximum)
+            if (CacheValuesWithoutDefault<T>.Minimum is { } maximum)
             {
                 result = maximum;
                 return true;
@@ -286,7 +321,7 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T Maximum<T>() where T : unmanaged, Enum
         {
-            return CacheValues<T>.Maximum ?? throw new InvalidOperationException($"{nameof(Enum)} {typeof(T)} is empty.");
+            return CacheValues<T>.Maximum ?? default;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -298,7 +333,7 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T MaximumWithoutDefault<T>() where T : unmanaged, Enum
         {
-            return CacheValuesWithoutDefault<T>.Maximum ?? throw new InvalidOperationException($"{nameof(Enum)} {typeof(T)} is empty.");
+            return CacheValuesWithoutDefault<T>.Maximum ?? default;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -322,7 +357,7 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryGetMaximum<T>(out T result) where T : unmanaged, Enum
         {
-            if (CacheValues<T>.Maximum is T maximum)
+            if (CacheValues<T>.Maximum is { } maximum)
             {
                 result = maximum;
                 return true;
@@ -341,7 +376,7 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryGetMaximumWithoutDefault<T>(out T result) where T : unmanaged, Enum
         {
-            if (CacheValuesWithoutDefault<T>.Maximum is T maximum)
+            if (CacheValuesWithoutDefault<T>.Maximum is { } maximum)
             {
                 result = maximum;
                 return true;
@@ -358,7 +393,7 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static TEnum Random<T, TEnum>() where T : unmanaged, Enum where TEnum : Enum<T>, new()
+        public static TEnum Random<T, TEnum>() where T : unmanaged, Enum where TEnum : Enum<T, TEnum>, new()
         {
             return CacheEnum<T>.Get<TEnum>().GetRandom();
         }
@@ -623,7 +658,7 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Type GetUnderlyingType<T>() where T : unmanaged, Enum
         {
-            return CacheType<T>.UnderlyingType;
+            return CacheType<T>.Underlying;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -668,7 +703,7 @@ namespace NetExtender.Utilities.Types
         /// <typeparam name="T">Enum type</typeparam>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ReadOnlyCollection<T> GetValues<T>() where T : unmanaged, Enum
+        public static ImmutableArray<T> GetValues<T>() where T : unmanaged, Enum
         {
             return CacheValues<T>.Values;
         }
@@ -679,7 +714,7 @@ namespace NetExtender.Utilities.Types
         /// <typeparam name="T">Enum type</typeparam>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ReadOnlyCollection<T> GetValues<T>(Boolean without) where T : unmanaged, Enum
+        public static ImmutableArray<T> GetValues<T>(Boolean without) where T : unmanaged, Enum
         {
             return without ? GetValuesWithoutDefault<T>() : GetValues<T>();
         }
@@ -690,7 +725,7 @@ namespace NetExtender.Utilities.Types
         /// <typeparam name="T">Enum type</typeparam>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ReadOnlyCollection<T> GetValuesWithoutDefault<T>() where T : unmanaged, Enum
+        public static ImmutableArray<T> GetValuesWithoutDefault<T>() where T : unmanaged, Enum
         {
             return CacheValuesWithoutDefault<T>.Values;
         }
@@ -763,7 +798,7 @@ namespace NetExtender.Utilities.Types
         /// <typeparam name="T">Enum type</typeparam>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ReadOnlyCollection<EnumMember<T>> GetMembers<T>() where T : unmanaged, Enum
+        public static ImmutableArray<EnumMember<T>> GetMembers<T>() where T : unmanaged, Enum
         {
             return CacheMembers<T>.Members;
         }
@@ -774,7 +809,7 @@ namespace NetExtender.Utilities.Types
         /// <typeparam name="T">Enum type</typeparam>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ReadOnlyCollection<EnumMember<T>> GetMembers<T>(Boolean without) where T : unmanaged, Enum
+        public static ImmutableArray<EnumMember<T>> GetMembers<T>(Boolean without) where T : unmanaged, Enum
         {
             return without ? GetMembersWithoutDefault<T>() : GetMembers<T>();
         }
@@ -785,7 +820,7 @@ namespace NetExtender.Utilities.Types
         /// <typeparam name="T">Enum type</typeparam>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ReadOnlyCollection<EnumMember<T>> GetMembersWithoutDefault<T>() where T : unmanaged, Enum
+        public static ImmutableArray<EnumMember<T>> GetMembersWithoutDefault<T>() where T : unmanaged, Enum
         {
             return CacheMembersWithoutDefault<T>.Members;
         }
@@ -798,7 +833,7 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static EnumMember<T> GetMember<T>(T value) where T : unmanaged, Enum
         {
-            return CacheUnderlyingOperation<T>.UnderlyingOperation.GetMember(ref value);
+            return CacheUnderlyingOperation<T>.Operation.GetMember(ref value);
         }
 
         /// <summary>
@@ -820,7 +855,7 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsContinuous<T>() where T : unmanaged, Enum
         {
-            return CacheUnderlyingOperation<T>.UnderlyingOperation.IsContinuous;
+            return CacheUnderlyingOperation<T>.Operation.IsContinuous;
         }
 
         /// <summary>
@@ -843,7 +878,7 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsDefined<T>(T value) where T : unmanaged, Enum
         {
-            return CacheUnderlyingOperation<T>.UnderlyingOperation.IsDefined(ref value);
+            return CacheUnderlyingOperation<T>.Operation.IsDefined(ref value);
         }
 
         /// <summary>
@@ -917,7 +952,7 @@ namespace NetExtender.Utilities.Types
         {
             if (!String.IsNullOrEmpty(value))
             {
-                return IsNumeric(value[0]) ? CacheUnderlyingOperation<T>.UnderlyingOperation.TryParse(value, out result) : TryParseName(value, ignoreCase, out result);
+                return IsNumeric(value[0]) ? CacheUnderlyingOperation<T>.Operation.TryParse(value, out result) : TryParseName(value, ignoreCase, out result);
             }
 
             result = default;
@@ -955,7 +990,7 @@ namespace NetExtender.Utilities.Types
         {
             if (!insensitive)
             {
-                if (CacheMembersByName<T>.MemberByName.TryGetValue(name, out EnumMember<T>? member))
+                if (CacheMembersByName<T>.MembersByName.TryGetValue(name, out EnumMember<T>? member))
                 {
                     result = member.Value;
                     return true;
@@ -1155,7 +1190,7 @@ namespace NetExtender.Utilities.Types
         /// <returns></returns>
         public static Boolean IsDefined<T>(SByte value) where T : unmanaged, Enum
         {
-            if (CacheUnderlyingOperation<T>.UnderlyingType == typeof(SByte))
+            if (CacheUnderlyingOperation<T>.Underlying == typeof(SByte))
             {
                 return SByteOperation<T>.IsDefined(ref value);
             }
@@ -1171,7 +1206,7 @@ namespace NetExtender.Utilities.Types
         /// <returns></returns>
         public static Boolean IsDefined<T>(Byte value) where T : unmanaged, Enum
         {
-            if (CacheUnderlyingOperation<T>.UnderlyingType == typeof(Byte))
+            if (CacheUnderlyingOperation<T>.Underlying == typeof(Byte))
             {
                 return ByteOperation<T>.IsDefined(ref value);
             }
@@ -1187,7 +1222,7 @@ namespace NetExtender.Utilities.Types
         /// <returns></returns>
         public static Boolean IsDefined<T>(Int16 value) where T : unmanaged, Enum
         {
-            if (CacheUnderlyingOperation<T>.UnderlyingType == typeof(Int16))
+            if (CacheUnderlyingOperation<T>.Underlying == typeof(Int16))
             {
                 return Int16Operation<T>.IsDefined(ref value);
             }
@@ -1203,7 +1238,7 @@ namespace NetExtender.Utilities.Types
         /// <returns></returns>
         public static Boolean IsDefined<T>(UInt16 value) where T : unmanaged, Enum
         {
-            if (CacheUnderlyingOperation<T>.UnderlyingType == typeof(UInt16))
+            if (CacheUnderlyingOperation<T>.Underlying == typeof(UInt16))
             {
                 return UInt16Operation<T>.IsDefined(ref value);
             }
@@ -1219,7 +1254,7 @@ namespace NetExtender.Utilities.Types
         /// <returns></returns>
         public static Boolean IsDefined<T>(Int32 value) where T : unmanaged, Enum
         {
-            if (CacheUnderlyingOperation<T>.UnderlyingType == typeof(Int32))
+            if (CacheUnderlyingOperation<T>.Underlying == typeof(Int32))
             {
                 return Int32Operation<T>.IsDefined(ref value);
             }
@@ -1235,7 +1270,7 @@ namespace NetExtender.Utilities.Types
         /// <returns></returns>
         public static Boolean IsDefined<T>(UInt32 value) where T : unmanaged, Enum
         {
-            if (CacheUnderlyingOperation<T>.UnderlyingType == typeof(UInt32))
+            if (CacheUnderlyingOperation<T>.Underlying == typeof(UInt32))
             {
                 return UInt32Operation<T>.IsDefined(ref value);
             }
@@ -1251,7 +1286,7 @@ namespace NetExtender.Utilities.Types
         /// <returns></returns>
         public static Boolean IsDefined<T>(Int64 value) where T : unmanaged, Enum
         {
-            if (CacheUnderlyingOperation<T>.UnderlyingType == typeof(Int64))
+            if (CacheUnderlyingOperation<T>.Underlying == typeof(Int64))
             {
                 return Int64Operation<T>.IsDefined(ref value);
             }
@@ -1267,567 +1302,12 @@ namespace NetExtender.Utilities.Types
         /// <returns></returns>
         public static Boolean IsDefined<T>(UInt64 value) where T : unmanaged, Enum
         {
-            if (CacheUnderlyingOperation<T>.UnderlyingType == typeof(UInt64))
+            if (CacheUnderlyingOperation<T>.Underlying == typeof(UInt64))
             {
                 return UInt64Operation<T>.IsDefined(ref value);
             }
 
             throw new ArgumentException(IsDefinedTypeMismatchMessage, nameof(value));
-        }
-
-        private static class CacheType<T> where T : unmanaged, Enum
-        {
-            public static Type Type { get; }
-            public static Type UnderlyingType { get; }
-
-            static CacheType()
-            {
-                Type = typeof(T);
-                UnderlyingType = Enum.GetUnderlyingType(Type);
-            }
-        }
-
-        private static class CacheValues<T> where T : unmanaged, Enum
-        {
-            public static ReadOnlyCollection<T> Values { get; }
-            public static ImmutableDictionary<T, Int32> Set { get; }
-            public static ImmutableDictionary<T, Decimal> Decimal { get; }
-            public static T? Minimum { get; }
-            public static T? Maximum { get; }
-            
-            public static Boolean IsEmpty
-            {
-                get
-                {
-                    return Values.Count <= 0;
-                }
-            }
-
-            static CacheValues()
-            {
-                Type type = CacheType<T>.Type;
-                T[] values = Enum.GetValues(type) as T[] ?? throw new ArgumentException(nameof(T));
-                Values = values.ToReadOnlyArray();
-                Int32 i = 0;
-                Set = Values.ToImmutableDictionary(value => value, _ => i++);
-                Decimal = Values.ToImmutableDictionary(value => value, value => ((IConvertible) value).ToDecimal());
-                (Minimum, Maximum) = Values.Count > 0 ? Values.MinMax() : (default(T?), default(T?));
-            }
-
-            public static Boolean Contains(T value)
-            {
-                return Set.ContainsKey(value);
-            }
-            
-            public static Boolean TryGetValue(T value, out Decimal result)
-            {
-                if (Decimal.TryGetValue(value, out result))
-                {
-                    return true;
-                }
-
-                result = value.ToDecimal();
-                return false;
-            }
-
-            public static Int32 IndexOf(T value)
-            {
-                return TryIndexOf(value, out Int32 result) ? result : -1;
-            }
-
-            public static Boolean TryIndexOf(T value, out Int32 result)
-            {
-                return Set.TryGetValue(value, out result);
-            }
-        }
-
-        private static class CacheValuesWithoutDefault<T> where T : unmanaged, Enum
-        {
-            public static ReadOnlyCollection<T> Values { get; }
-            public static ImmutableDictionary<T, Int32> Set { get; }
-            public static ImmutableDictionary<T, Decimal> Decimal { get; }
-            public static T? Minimum { get; }
-            public static T? Maximum { get; }
-            
-            public static Boolean IsEmpty
-            {
-                get
-                {
-                    return Values.Count <= 0;
-                }
-            }
-
-            static CacheValuesWithoutDefault()
-            {
-                Values = CacheValues<T>.Values.Where(GenericUtilities.IsNotDefault).ToReadOnlyArray();
-                Int32 i = 0;
-                Set = Values.ToImmutableDictionary(value => value, _ => i++);
-                Decimal = Values.ToImmutableDictionary(value => value, value => ((IConvertible) value).ToDecimal());
-                (Minimum, Maximum) = Values.Count > 0 ? Values.MinMax() : (default(T?), default(T?));
-            }
-
-            public static Boolean Contains(T value)
-            {
-                return Set.ContainsKey(value);
-            }
-            
-            public static Boolean TryGetValue(T value, out Decimal result)
-            {
-                if (Decimal.TryGetValue(value, out result))
-                {
-                    return true;
-                }
-
-                result = value.ToDecimal();
-                return false;
-            }
-
-            public static Int32 IndexOf(T value)
-            {
-                return TryIndexOf(value, out Int32 result) ? result : -1;
-            }
-
-            public static Boolean TryIndexOf(T value, out Int32 result)
-            {
-                return Set.TryGetValue(value, out result);
-            }
-        }
-
-        private static class CacheNames<T> where T : unmanaged, Enum
-        {
-            public static ReadOnlyCollection<String> Names { get; }
-            public static ImmutableHashSet<String> Set { get; }
-
-            static CacheNames()
-            {
-                Type type = CacheType<T>.Type;
-                Names = Enum.GetNames(type).ToReadOnlyArray();
-                Set = Names.ToImmutableHashSet();
-            }
-
-            public static Boolean Contains(String name)
-            {
-                return Set.Contains(name);
-            }
-        }
-
-        private static class CacheNamesWithoutDefault<T> where T : unmanaged, Enum
-        {
-            public static ReadOnlyCollection<String> Names { get; }
-            public static ImmutableHashSet<String> Set { get; }
-
-            static CacheNamesWithoutDefault()
-            {
-                Names = CacheNames<T>.Names.Where(GenericUtilities.IsNotDefault).ToReadOnlyArray();
-                Set = Names.ToImmutableHashSet();
-            }
-
-            public static Boolean Contains(String name)
-            {
-                return Set.Contains(name);
-            }
-        }
-
-        private static class CacheDescription<T> where T : unmanaged, Enum
-        {
-            public static ImmutableDictionary<T, String> Values { get; }
-
-            static CacheDescription()
-            {
-                Values = CacheValues<T>.Values.Select(item => new KeyValuePair<T, String?>(item, Get(item))).WhereValueNotNull().ToImmutableDictionary();
-            }
-
-            public static Boolean Contains(T value)
-            {
-                return Values.ContainsKey(value);
-            }
-
-            public static String? GetValue(T value)
-            {
-                return TryGetValue(value, out String? result) ? result : null;
-            }
-
-            public static Boolean TryGetValue(T value, [MaybeNullWhen(false)] out String result)
-            {
-                return Values.TryGetValue(value, out result);
-            }
-
-            private static String? Get(T value)
-            {
-                Type type = typeof(T);
-                String? name = Enum.GetName(type, value);
-
-                if (name is null)
-                {
-                    return null;
-                }
-
-                FieldInfo? field = type.GetField(name);
-                if (field is null)
-                {
-                    return null;
-                }
-
-                if (Attribute.GetCustomAttribute(field, typeof(DescriptionAttribute)) is DescriptionAttribute attribute)
-                {
-                    return attribute.Description;
-                }
-
-                return null;
-            }
-        }
-        
-        private static class CacheDescriptionToEnum<T> where T : unmanaged, Enum
-        {
-            public static ImmutableDictionary<String, T> Values { get; }
-
-            static CacheDescriptionToEnum()
-            {
-                Dictionary<String, T> values = new Dictionary<String, T>();
-
-                foreach (T @enum in CacheValues<T>.Values)
-                {
-                    String name = @enum.ToString();
-
-                    if (!CacheDescription<T>.TryGetValue(@enum, out String? description))
-                    {
-                        values[name] = @enum;
-                        continue;
-                    }
-
-                    if (values.ContainsKey(name))
-                    {
-                        values[description] = @enum;
-                        continue;
-                    }
-
-                    values[name] = @enum;
-                    values[description] = @enum;
-                }
-
-                Values = values.ToImmutableDictionary();
-            }
-
-            public static Boolean Contains(String key)
-            {
-                if (key is null)
-                {
-                    throw new ArgumentNullException(nameof(key));
-                }
-
-                return Values.ContainsKey(key);
-            }
-
-            public static Boolean TryGetValue(String key, out T result)
-            {
-                if (key is null)
-                {
-                    throw new ArgumentNullException(nameof(key));
-                }
-
-                return Values.TryGetValue(key, out result);
-            }
-        }
-
-        private static class CacheMembers<T> where T : unmanaged, Enum
-        {
-            public static ReadOnlyCollection<EnumMember<T>> Members { get; }
-
-            static CacheMembers()
-            {
-                Members = CacheNames<T>.Names.Select(value => new EnumMember<T>(value)).ToReadOnlyArray();
-            }
-        }
-
-        private static class CacheMembersWithoutDefault<T> where T : unmanaged, Enum
-        {
-            public static ReadOnlyCollection<EnumMember<T>> Members { get; }
-
-            static CacheMembersWithoutDefault()
-            {
-                Members = CacheMembers<T>.Members.Where(GenericUtilities.IsNotDefault).ToReadOnlyArray();
-            }
-        }
-
-        /// <summary>
-        /// Provides cache for enum attributes.
-        /// </summary>
-        /// <typeparam name="T">Enum Type</typeparam>
-        /// <typeparam name="TAttribute">Attribute Type</typeparam>
-        internal static class CacheAttributes<T, TAttribute> where T : unmanaged, Enum where TAttribute : Attribute
-        {
-            public static ImmutableDictionary<T, ReadOnlyCollection<TAttribute>> Cache { get; }
-
-            static CacheAttributes()
-            {
-                Cache = GetValues<T>().ToImmutableDictionary(key => key, value => value.ToMember().FieldInfo!
-                    .GetCustomAttributes(typeof(TAttribute), true).OfType<TAttribute>().ToReadOnlyArray());
-            }
-
-            public static IReadOnlyList<TAttribute> Get(T value)
-            {
-                return Cache[value];
-            }
-        }
-
-        private static class CacheIsFlags<T> where T : unmanaged, Enum
-        {
-            public static Boolean IsFlags { get; }
-
-            static CacheIsFlags()
-            {
-                Type type = CacheType<T>.Type;
-                IsFlags = Attribute.IsDefined(type, typeof(FlagsAttribute));
-            }
-        }
-
-        private static class CacheMembersByName<T> where T : unmanaged, Enum
-        {
-            public static IImmutableDictionary<String, EnumMember<T>> MemberByName { get; }
-            public static IImmutableDictionary<String, EnumMember<T>> MemberByNameInsensitive { get; }
-
-            static CacheMembersByName()
-            {
-                static String Selector(EnumMember<T> member)
-                {
-                    return member.Name;
-                }
-
-                MemberByName = CacheMembers<T>.Members.ToImmutableDictionary(Selector);
-                MemberByNameInsensitive = CacheMembers<T>.Members.DistinctBy(Selector, StringComparer.OrdinalIgnoreCase).ToImmutableDictionary(Selector, StringComparer.OrdinalIgnoreCase);
-            }
-        }
-
-        private static class CacheUnderlyingOperation<T> where T : unmanaged, Enum
-        {
-            public static Type UnderlyingType { get; }
-            public static IUnderlyingEnumOperation<T> UnderlyingOperation { get; }
-
-            static CacheUnderlyingOperation()
-            {
-                Type type = CacheType<T>.Type;
-                T minimum = Minimum<T>();
-                T maximum = Maximum<T>();
-                EnumMember<T>[] distincted = CacheMembers<T>.Members.OrderBy(member => member.Value).Distinct(new EnumMember<T>.ValueComparer()).ToArray();
-                UnderlyingType = CacheType<T>.UnderlyingType;
-
-                // ReSharper disable once SwitchExpressionHandlesSomeKnownEnumValuesWithExceptionInDefault
-                UnderlyingOperation = Type.GetTypeCode(type) switch
-                {
-                    TypeCode.SByte => SByteOperation<T>.Create(minimum, maximum, distincted),
-                    TypeCode.Byte => ByteOperation<T>.Create(minimum, maximum, distincted),
-                    TypeCode.Int16 => Int16Operation<T>.Create(minimum, maximum, distincted),
-                    TypeCode.UInt16 => UInt16Operation<T>.Create(minimum, maximum, distincted),
-                    TypeCode.Int32 => Int32Operation<T>.Create(minimum, maximum, distincted),
-                    TypeCode.UInt32 => UInt32Operation<T>.Create(minimum, maximum, distincted),
-                    TypeCode.Int64 => Int64Operation<T>.Create(minimum, maximum, distincted),
-                    TypeCode.UInt64 => UInt64Operation<T>.Create(minimum, maximum, distincted),
-                    _ => throw new InvalidOperationException()
-                };
-            }
-        }
-
-        [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
-        internal static class CacheEnum<T> where T : unmanaged, Enum
-        {
-            public static ImmutableSortedSet<Enum<T>> Values { get; }
-            public static ImmutableDictionary<T, Enum<T>> Enums { get; }
-
-            static CacheEnum()
-            {
-                Values = CacheValues<T>.Values.Select(Enum<T>.Create).ToImmutableSortedSet();
-                Enums = Values.ToImmutableDictionary(value => value.Id, value => value);
-            }
-
-            private static class Type<TEnum> where TEnum : Enum<T>, new()
-            {
-                public static ImmutableSortedSet<TEnum> Values { get; }
-                public static ImmutableDictionary<T, TEnum> Enums { get; }
-
-                static Type()
-                {
-                    Values = CacheValues<T>.Values.Select(Enum<T>.Create<TEnum>).ToImmutableSortedSet();
-                    Enums = Values.ToImmutableDictionary(value => value.Id, value => value);
-                }
-                
-                [MethodImpl(MethodImplOptions.AggressiveInlining)]
-                public static ImmutableSortedSet<TEnum> Get()
-                {
-                    return Values;
-                }
-                
-                [MethodImpl(MethodImplOptions.AggressiveInlining)]
-                public static Boolean Contains(T value)
-                {
-                    return Enums.ContainsKey(value);
-                }
-
-                [MethodImpl(MethodImplOptions.AggressiveInlining)]
-                public static Boolean Contains(String value)
-                {
-                    if (value is null)
-                    {
-                        throw new ArgumentNullException(nameof(value));
-                    }
-
-                    return CacheDescriptionToEnum<T>.TryGetValue(value, out T @enum) && Contains(@enum);
-                }
-            
-                [MethodImpl(MethodImplOptions.AggressiveInlining)]
-                public static Boolean Contains(TEnum value)
-                {
-                    if (value is null)
-                    {
-                        throw new ArgumentNullException(nameof(value));
-                    }
-
-                    return TryParse(value.Id, out TEnum? @enum) && String.Equals(value.Title, @enum.Title, StringComparison.Ordinal);
-                }
-            
-                [MethodImpl(MethodImplOptions.AggressiveInlining)]
-                public static Boolean IsIntern(TEnum value)
-                {
-                    if (value is null)
-                    {
-                        throw new ArgumentNullException(nameof(value));
-                    }
-
-                    return Values.Contains(value);
-                }
-                
-                [MethodImpl(MethodImplOptions.AggressiveInlining)]
-                public static Boolean TryParse(T value, [MaybeNullWhen(false)] out TEnum result)
-                {
-                    return Enums.TryGetValue(value, out result);
-                }
-
-                [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-                public static Boolean TryParse(String value, [MaybeNullWhen(false)] out TEnum result)
-                {
-                    if (value is null)
-                    {
-                        throw new ArgumentNullException(nameof(value));
-                    }
-                    
-                    if (CacheDescriptionToEnum<T>.TryGetValue(value, out T @enum))
-                    {
-                        return TryParse(@enum, out result);
-                    }
-
-                    result = default;
-                    return false;
-                }
-            }
-            
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static ImmutableSortedSet<Enum<T>> Get()
-            {
-                return Values;
-            }
-            
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static ImmutableSortedSet<TEnum> Get<TEnum>() where TEnum : Enum<T>, new()
-            {
-                return Type<TEnum>.Get();
-            }
-
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static Boolean Contains(T value)
-            {
-                return Enums.ContainsKey(value);
-            }
-
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static Boolean Contains(String value)
-            {
-                if (value is null)
-                {
-                    throw new ArgumentNullException(nameof(value));
-                }
-
-                return CacheDescriptionToEnum<T>.TryGetValue(value, out T @enum) && Contains(@enum);
-            }
-            
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static Boolean Contains(Enum<T> value)
-            {
-                if (value is null)
-                {
-                    throw new ArgumentNullException(nameof(value));
-                }
-
-                return TryParse(value.Id, out Enum<T>? @enum) && String.Equals(value.Title, @enum.Title, StringComparison.Ordinal);
-            }
-            
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static Boolean IsIntern(Enum<T> value)
-            {
-                if (value is null)
-                {
-                    throw new ArgumentNullException(nameof(value));
-                }
-
-                return Values.Contains(value);
-            }
-
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static Boolean Contains<TEnum>(T value) where TEnum : Enum<T>, new()
-            {
-                return Type<TEnum>.Contains(value);
-            }
-
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static Boolean Contains<TEnum>(String value) where TEnum : Enum<T>, new()
-            {
-                return Type<TEnum>.Contains(value);
-            }
-            
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static Boolean Contains<TEnum>(TEnum value) where TEnum : Enum<T>, new()
-            {
-                return Type<TEnum>.Contains(value);
-            }
-            
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static Boolean IsIntern<TEnum>(TEnum value) where TEnum : Enum<T>, new()
-            {
-                return Type<TEnum>.IsIntern(value);
-            }
-            
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static Boolean TryParse(T value, [MaybeNullWhen(false)] out Enum<T> result)
-            {
-                return Enums.TryGetValue(value, out result);
-            }
-        
-            [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-            public static Boolean TryParse(String value, [MaybeNullWhen(false)] out Enum<T> result)
-            {
-                if (value is null)
-                {
-                    throw new ArgumentNullException(nameof(value));
-                }
-
-                if (CacheDescriptionToEnum<T>.TryGetValue(value, out T @enum))
-                {
-                    return TryParse(@enum, out result);
-                }
-
-                result = default;
-                return false;
-            }
-            
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static Boolean TryParse<TEnum>(T value, [MaybeNullWhen(false)] out TEnum result) where TEnum : Enum<T>, new()
-            {
-                return Type<TEnum>.TryParse(value, out result);
-            }
-
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static Boolean TryParse<TEnum>(String value, [MaybeNullWhen(false)] out TEnum result) where TEnum : Enum<T>, new()
-            {
-                return Type<TEnum>.TryParse(value, out result);
-            }
         }
     }
 }

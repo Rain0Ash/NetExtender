@@ -75,7 +75,7 @@ namespace NetExtender.Types.Interprocess
         {
             if (String.IsNullOrWhiteSpace(name))
             {
-                throw new ArgumentException(@"Lock must be named", nameof(name));
+                throw new ArgumentException("Lock must be named", nameof(name));
             }
 
             if (count < 1)

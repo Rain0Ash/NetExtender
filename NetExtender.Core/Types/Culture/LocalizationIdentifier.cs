@@ -475,7 +475,7 @@ namespace NetExtender.Types.Culture
             }
         }
 
-        public ImmutableHashSet<CountryIdentifier>? CountryBorder
+        public ImmutableHashSet<CountryInfo>? CountryBorder
         {
             get
             {
