@@ -170,7 +170,7 @@ namespace NetExtender.Utilities.IO
             }
 
             return IsValidPath(path) && !IsNetworkPath(path) && Path.IsPathRooted(path) &&
-                   Path.GetPathRoot(path)?.Equals(Path.DirectorySeparatorChar.ToString(), StringComparison.Ordinal) == false;
+                   Path.GetPathRoot(path)?.Equals(Path.DirectorySeparatorChar.ToString(), StringComparison.Ordinal) is false;
         }
 
         public static FileSystemInfo? GetInfo(String path)

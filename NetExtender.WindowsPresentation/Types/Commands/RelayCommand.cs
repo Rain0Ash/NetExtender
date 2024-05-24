@@ -20,7 +20,7 @@ namespace NetExtender.WindowsPresentation.Types.Commands
 
         public override Boolean CanExecute(T? parameter)
         {
-            return CanExecuteHandler?.Invoke(parameter) != false;
+            return CanExecuteHandler?.Invoke(parameter) is not false;
         }
 
         public override void Execute(T? parameter)

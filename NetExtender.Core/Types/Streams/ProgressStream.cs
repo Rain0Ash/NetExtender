@@ -44,9 +44,9 @@ namespace NetExtender.Types.Streams
             return HashCode.Combine(Type, Offset, Count);
         }
 
-        public override Boolean Equals(Object? obj)
+        public override Boolean Equals(Object? other)
         {
-            return obj is ProgressStreamInfo info && Equals(info);
+            return other is ProgressStreamInfo info && Equals(info);
         }
 
         public Boolean Equals(ProgressStreamInfo other)

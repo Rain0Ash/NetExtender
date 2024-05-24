@@ -194,13 +194,13 @@ namespace NetExtender.WindowsPresentation.Types.Input
             return Internal.GetHashCode();
         }
 
-        public override Boolean Equals(Object? obj)
+        public override Boolean Equals(Object? other)
         {
-            return obj switch
+            return other switch
             {
                 null => false,
                 Keys keys => Equals(keys),
-                _ => Internal.Equals(obj)
+                _ => Internal.Equals(other)
             };
         }
 

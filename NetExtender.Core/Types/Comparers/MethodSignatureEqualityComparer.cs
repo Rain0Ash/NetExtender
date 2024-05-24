@@ -88,8 +88,8 @@ namespace NetExtender.Types.Comparers
             x = x.TryGetGenericMethodDefinition();
             y = y.TryGetGenericMethodDefinition();
 
-            Type[] xgeneric = x.TryGetGenericArguments() ?? Array.Empty<Type>();
-            Type[] ygeneric = y.TryGetGenericArguments() ?? Array.Empty<Type>();
+            Type[] xgeneric = x.TryGetGenericArguments() ?? Type.EmptyTypes;
+            Type[] ygeneric = y.TryGetGenericArguments() ?? Type.EmptyTypes;
 
             if (xgeneric.Length != ygeneric.Length)
             {

@@ -96,9 +96,9 @@ namespace NetExtender.Types.Drawing.Colors
             return HashCode.Combine(Point, Color);
         }
 
-        public override Boolean Equals(Object? obj)
+        public override Boolean Equals(Object? other)
         {
-            return obj switch
+            return other switch
             {
                 ColorPoint point => Equals(point),
                 Point point => Equals(point),

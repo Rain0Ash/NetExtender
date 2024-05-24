@@ -8,42 +8,8 @@ using NetExtender.NAudio.Types.Sound.Interfaces;
 
 namespace NetExtender.NAudio.Types.Sound
 {
-    public abstract class AudioSoundAbstraction : IAudioSound
+    public abstract class AudioSoundAbstraction : AudioSoundInformation, IAudioSound
     {
-        public abstract Int64 Size { get; }
-        public abstract TimeSpan Start { get; }
-        public abstract TimeSpan Stop { get; }
-
-        public TimeSpan StartActive { get; init; }
-        public TimeSpan StopActive { get; init; }
-
-        public TimeSpan TotalStartActive
-        {
-            get
-            {
-                return Start + StartActive;
-            }
-        }
-
-        public TimeSpan TotalStopActive
-        {
-            get
-            {
-                return Stop - StopActive;
-            }
-        }
-
-        public TimeSpan Length
-        {
-            get
-            {
-                return Stop - Start;
-            }
-        }
-
-        public abstract TimeSpan TotalTime { get; }
-        public Single Volume { get; init; } = 1F;
-
         public abstract Boolean TryRead(Span<Byte> destination, out Int32 written);
         public abstract Byte[] Read();
 
@@ -54,7 +20,6 @@ namespace NetExtender.NAudio.Types.Sound
 
         public virtual async Task<Byte[]> ReadAsync(CancellationToken token)
         {
-            // ReSharper disable once AsyncConverter.AsyncAwaitMayBeElidedHighlighting
             return await Task.Run(Read, token).ConfigureAwait(false);
         }
     }

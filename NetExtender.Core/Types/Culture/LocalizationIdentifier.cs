@@ -603,9 +603,9 @@ namespace NetExtender.Types.Culture
             return Code == (Int32) other;
         }
 
-        public override Boolean Equals(Object? obj)
+        public override Boolean Equals(Object? other)
         {
-            return obj switch
+            return other switch
             {
                 null => false,
                 LocalizationIdentifier identifier => Equals(identifier),

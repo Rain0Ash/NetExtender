@@ -185,7 +185,7 @@ namespace NetExtender.Configuration.Utilities
                 throw new ArgumentNullException(nameof(property));
             }
 
-            return GetValue(property, converter?.Invoke(property.Alternate, out T? result) == true ? result : default, converter!);
+            return GetValue(property, converter?.Invoke(property.Alternate, out T? result) is true ? result : default, converter!);
         }
 
         public static T? GetValue<T>(this IReadOnlyConfigProperty property, IOneWayConverter<String?, T>? converter)
@@ -195,7 +195,7 @@ namespace NetExtender.Configuration.Utilities
                 throw new ArgumentNullException(nameof(property));
             }
 
-            return GetValue(property, converter?.TryConvert(property.Alternate, out T? result) == true ? result : default, converter!);
+            return GetValue(property, converter?.TryConvert(property.Alternate, out T? result) is true ? result : default, converter!);
         }
 
         public static T GetValue<T>(this IReadOnlyConfigProperty property, T alternate)
@@ -251,7 +251,7 @@ namespace NetExtender.Configuration.Utilities
                 throw new ArgumentNullException(nameof(property));
             }
 
-            return GetValueAsync(property, converter?.Invoke(property.Alternate, out T? result) == true ? result : default, converter!, token);
+            return GetValueAsync(property, converter?.Invoke(property.Alternate, out T? result) is true ? result : default, converter!, token);
         }
 
         public static Task<T?> GetValueAsync<T>(this IReadOnlyConfigProperty property, IOneWayConverter<String?, T>? converter)
@@ -266,7 +266,7 @@ namespace NetExtender.Configuration.Utilities
                 throw new ArgumentNullException(nameof(property));
             }
 
-            return GetValueAsync(property, converter?.TryConvert(property.Alternate, out T? result) == true ? result : default, converter!, token);
+            return GetValueAsync(property, converter?.TryConvert(property.Alternate, out T? result) is true ? result : default, converter!, token);
         }
 
         public static Task<T> GetValueAsync<T>(this IReadOnlyConfigProperty property, T alternate)
@@ -332,7 +332,7 @@ namespace NetExtender.Configuration.Utilities
                 throw new ArgumentNullException(nameof(property));
             }
 
-            return GetValue(property, converter?.Invoke(property.Alternate, out T? result) == true ? result : default, converter!);
+            return GetValue(property, converter?.Invoke(property.Alternate, out T? result) is true ? result : default, converter!);
         }
         
         public static T? GetValue<T>(this IConfigProperty property, IOneWayConverter<String?, T>? converter)
@@ -342,7 +342,7 @@ namespace NetExtender.Configuration.Utilities
                 throw new ArgumentNullException(nameof(property));
             }
 
-            return GetValue(property, converter?.TryConvert(property.Alternate, out T? result) == true ? result : default, converter!);
+            return GetValue(property, converter?.TryConvert(property.Alternate, out T? result) is true ? result : default, converter!);
         }
 
         public static T GetValue<T>(this IConfigProperty property, T alternate)
@@ -398,7 +398,7 @@ namespace NetExtender.Configuration.Utilities
                 throw new ArgumentNullException(nameof(property));
             }
 
-            return GetValueAsync(property, converter?.Invoke(property.Alternate, out T? result) == true ? result : default, converter!, token);
+            return GetValueAsync(property, converter?.Invoke(property.Alternate, out T? result) is true ? result : default, converter!, token);
         }
 
         public static Task<T?> GetValueAsync<T>(this IConfigProperty property, IOneWayConverter<String?, T>? converter)
@@ -413,7 +413,7 @@ namespace NetExtender.Configuration.Utilities
                 throw new ArgumentNullException(nameof(property));
             }
 
-            return GetValueAsync(property, converter?.TryConvert(property.Alternate, out T? result) == true ? result : default, converter!, token);
+            return GetValueAsync(property, converter?.TryConvert(property.Alternate, out T? result) is true ? result : default, converter!, token);
         }
 
         public static Task<T> GetValueAsync<T>(this IConfigProperty property, T alternate)

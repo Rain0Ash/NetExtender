@@ -102,7 +102,7 @@ namespace NetExtender.Types.Network
                     continue;
                 }
 
-                if (UnquoteToken(parameter.Value)?.Equals(isrequest ? "request" : "response", StringComparison.OrdinalIgnoreCase) == true)
+                if (UnquoteToken(parameter.Value)?.Equals(isrequest ? "request" : "response", StringComparison.OrdinalIgnoreCase) is true)
                 {
                     return true;
                 }

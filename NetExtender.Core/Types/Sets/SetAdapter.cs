@@ -33,19 +33,19 @@ namespace NetExtender.Types.Sets
             }
         }
 
-        public Boolean IsSynchronized
+        Boolean ICollection.IsSynchronized
         {
             get
             {
-                return false;
+                return Internal is ICollection { IsSynchronized: true };
             }
         }
 
-        public Object SyncRoot
+        Object ICollection.SyncRoot
         {
             get
             {
-                return this;
+                return Internal is ICollection collection ? collection.SyncRoot : this;
             }
         }
 

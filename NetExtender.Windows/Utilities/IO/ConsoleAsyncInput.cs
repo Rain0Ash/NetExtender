@@ -72,11 +72,11 @@ namespace NetExtender.Utilities.IO
 
             private static async Task InputHandlerAsync<T>(Func<CancellationToken, Task<T>> handler, Action<T> action)
             {
-                while (source?.Token.IsCancellationRequested == false)
+                while (source?.Token.IsCancellationRequested is false)
                 {
                     T value = await handler(source.Token).ConfigureAwait(false);
 
-                    if (value?.Equals(default) != false)
+                    if (value?.Equals(default) is not false)
                     {
                         continue;
                     }

@@ -2,13 +2,10 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.ComponentModel;
 
 namespace NetExtender.Types.Collections.Interfaces
 {
-    public interface IReadOnlySuppressObservableCollection<out T> : IReadOnlyList<T>, INotifyCollectionChanged, INotifyPropertyChanged
+    public interface IReadOnlySuppressObservableCollection<out T> : IReadOnlyObservableCollection<T>
     {
         public Boolean IsAllowSuppress { get; }
         public Boolean IsSuppressed { get; }

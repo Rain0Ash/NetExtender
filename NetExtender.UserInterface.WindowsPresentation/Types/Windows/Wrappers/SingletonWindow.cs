@@ -22,14 +22,14 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
             }
         }
 
-        protected static Object Synchronization { get; } = ConcurrentUtilities.Synchronization;
+        protected static Object SyncRoot { get; } = ConcurrentUtilities.SyncRoot;
 
         private T? _window;
         public T Window
         {
             get
             {
-                lock (Synchronization)
+                lock (SyncRoot)
                 {
                     if (_window is not null)
                     {
@@ -76,7 +76,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
 
         public static SingletonWindow<T> Initialize(Func<T>? factory, Boolean exit)
         {
-            lock (Synchronization)
+            lock (SyncRoot)
             {
                 if (_singleton is not null)
                 {
@@ -89,7 +89,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
         
         public Boolean? Activate()
         {
-            lock (Synchronization)
+            lock (SyncRoot)
             {
                 return _window?.Activate() ?? Show();
             }
@@ -97,7 +97,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
 
         public Boolean? Show()
         {
-            lock (Synchronization)
+            lock (SyncRoot)
             {
                 if (_window is null)
                 {
@@ -119,7 +119,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
 
         public Boolean? ShowDialog()
         {
-            lock (Synchronization)
+            lock (SyncRoot)
             {
                 if (_window is null)
                 {
@@ -140,7 +140,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
 
         public Boolean? Hide()
         {
-            lock (Synchronization)
+            lock (SyncRoot)
             {
                 if (_window is null)
                 {
@@ -161,7 +161,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
 
         public Boolean Close()
         {
-            lock (Synchronization)
+            lock (SyncRoot)
             {
                 if (_window is null)
                 {
@@ -175,7 +175,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
 
         private void InstanceClosed(Object? sender, EventArgs args)
         {
-            lock (Synchronization)
+            lock (SyncRoot)
             {
                 _window = null;
             }
@@ -183,7 +183,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
 
         private void InstanceLostFocus(Object? sender, EventArgs args)
         {
-            lock (Synchronization)
+            lock (SyncRoot)
             {
                 Watcher.SetNow();
 
@@ -229,7 +229,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
         
         public static Boolean Hide<TWindow>() where TWindow : Window
         {
-            return SingletonWindow<TWindow>.Singleton.Hide() != false;
+            return SingletonWindow<TWindow>.Singleton.Hide() is not false;
         }
         
         public static Boolean Close<TWindow>() where TWindow : Window

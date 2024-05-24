@@ -182,12 +182,12 @@ namespace NetExtender.Localization.Common
             return Identifier == other.Identifier && Key == other.Key && Value == other.Value && Sections.SequenceEqual(other.Sections);
         }
 
-        public override Boolean Equals(Object? obj)
+        public override Boolean Equals(Object? other)
         {
-            return obj switch
+            return other switch
             {
-                LocalizationValueEntry other => Equals(other),
-                LocalizationEntry other => Equals(other),
+                LocalizationValueEntry entry => Equals(entry),
+                LocalizationEntry entry => Equals(entry),
                 _ => false
             };
         }
@@ -357,12 +357,12 @@ namespace NetExtender.Localization.Common
             return GetEnumerator();
         }
 
-        public override Boolean Equals(Object? obj)
+        public override Boolean Equals(Object? other)
         {
-            return obj switch
+            return other switch
             {
-                LocalizationMultiValueEntry other => Equals(other),
-                LocalizationMultiEntry other => Equals(other),
+                LocalizationMultiValueEntry entry => Equals(entry),
+                LocalizationMultiEntry entry => Equals(entry),
                 _ => false
             };
         }

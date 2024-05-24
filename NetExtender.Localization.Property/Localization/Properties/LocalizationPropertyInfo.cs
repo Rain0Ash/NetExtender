@@ -11,6 +11,7 @@ using NetExtender.Localization.Common.Interfaces;
 using NetExtender.Localization.Events;
 using NetExtender.Localization.Properties.Interfaces;
 using NetExtender.Types.Culture;
+using NetExtender.Types.Strings.Interfaces;
 
 namespace NetExtender.Localization.Properties
 {
@@ -68,6 +69,38 @@ namespace NetExtender.Localization.Properties
             }
         }
 
+        Boolean IString.Immutable
+        {
+            get
+            {
+                return true;
+            }
+        }
+
+        Boolean IString.Constant
+        {
+            get
+            {
+                return false;
+            }
+        }
+
+        Int32 IString.Length
+        {
+            get
+            {
+                return Current.Length;
+            }
+        }
+
+        String IString.Text
+        {
+            get
+            {
+                return Current;
+            }
+        }
+
         protected LocalizationPropertyInfoAbstraction(String? key, T alternate, ConfigPropertyOptions options, IEnumerable<String>? sections)
             : base(key, alternate, options, sections)
         {
@@ -80,7 +113,13 @@ namespace NetExtender.Localization.Properties
             return String.Join(".", sections.Select(section => section.ToUpperInvariant()));
         }
 
+        public abstract override String? ToString();
         public abstract String ToString(IFormatProvider? provider);
         public abstract String ToString(String? format, IFormatProvider? provider);
+
+        String IString.ToString()
+        {
+            return ToString() ?? String.Empty;
+        }
     }
 }

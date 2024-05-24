@@ -24,7 +24,7 @@ namespace NetExtender.Utilities.IO
 
     public static class ConsoleUtilities
     {
-        private static Object Synchronization { get; } = ConcurrentUtilities.Synchronization;
+        private static Object SyncRoot { get; } = ConcurrentUtilities.SyncRoot;
 
         public static event ConsoleCancelEventHandler CancelKeyPress
         {
@@ -149,7 +149,7 @@ namespace NetExtender.Utilities.IO
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static Boolean ClearLine(Int32 line)
         {
-            lock (Synchronization)
+            lock (SyncRoot)
             {
                 try
                 {
@@ -196,7 +196,7 @@ namespace NetExtender.Utilities.IO
                 return;
             }
 
-            lock (Synchronization)
+            lock (SyncRoot)
             {
                 ConsoleColor console = Console.ForegroundColor;
                 Console.ForegroundColor = color.Value;
@@ -214,7 +214,7 @@ namespace NetExtender.Utilities.IO
                 return;
             }
 
-            lock (Synchronization)
+            lock (SyncRoot)
             {
                 ConsoleColor color = Console.BackgroundColor;
                 Console.BackgroundColor = background.Value;
@@ -511,7 +511,7 @@ namespace NetExtender.Utilities.IO
                 return;
             }
 
-            lock (Synchronization)
+            lock (SyncRoot)
             {
                 ConsoleColor console = Console.ForegroundColor;
                 Console.ForegroundColor = color.Value;
@@ -529,7 +529,7 @@ namespace NetExtender.Utilities.IO
                 return;
             }
 
-            lock (Synchronization)
+            lock (SyncRoot)
             {
                 ConsoleColor color = Console.BackgroundColor;
                 Console.BackgroundColor = background.Value;

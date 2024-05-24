@@ -195,13 +195,13 @@ namespace NetExtender.Types.Times
             return ReferenceEquals(this, other) || other is not null && Point.Equals(other.Point);
         }
 
-        public override Boolean Equals(Object? obj)
+        public override Boolean Equals(Object? other)
         {
-            return obj switch
+            return other switch
             {
-                DateTime other => Equals(other),
-                DateTimeOffset other => Equals(other),
-                TimePointWatcher other => Equals(other),
+                DateTime value => Equals(value),
+                DateTimeOffset value => Equals(value),
+                TimePointWatcher value => Equals(value),
                 _ => false
             };
         }

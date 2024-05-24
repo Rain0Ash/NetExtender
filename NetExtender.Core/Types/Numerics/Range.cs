@@ -133,9 +133,9 @@ namespace NetExtender.Types.Numerics
             return EqualityComparer<T>.Default.Equals(Minimum, other.Minimum) && EqualityComparer<T>.Default.Equals(Maximum, other.Maximum);
         }
 
-        public override Boolean Equals(Object? obj)
+        public override Boolean Equals(Object? other)
         {
-            return obj is Range<T> other && Equals(other);
+            return other is Range<T> range && Equals(range);
         }
 
         public override String ToString()

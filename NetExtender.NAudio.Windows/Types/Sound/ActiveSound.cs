@@ -14,7 +14,7 @@ namespace NetExtender.NAudio.Types.Sound
         public ISoundPlayer Player { get; }
         public PlaybackState State { get; private set; }
 
-        public virtual Single Volume
+        public virtual Single? Volume
         {
             get
             {
@@ -42,7 +42,7 @@ namespace NetExtender.NAudio.Types.Sound
                 throw new ObjectDisposedException(nameof(ActiveSound), $"Can't play disposed sound '{Sound.Path}'");
             }
             
-            Device.Volume = Volume;
+            Device.Volume = Volume ?? 0;
             
             switch (State)
             {

@@ -18,13 +18,14 @@ namespace NetExtender.Configuration.Synchronizers
     public sealed class ConfigPropertySynchronizer : IConfigPropertySynchronizer
     {
         private ImmutableList<IConfigPropertyInfo>? Internal { get; set; }
-        private Object Synchronization { get; } = ConcurrentUtilities.Synchronization;
+        
+        private Object SyncRoot { get; } = ConcurrentUtilities.SyncRoot;
 
         public Int32 Count
         {
             get
             {
-                lock (Synchronization)
+                lock (SyncRoot)
                 {
                     return Internal?.Count ?? 0;
                 }
@@ -54,7 +55,7 @@ namespace NetExtender.Configuration.Synchronizers
                 throw new ArgumentNullException(nameof(item));
             }
 
-            lock (Synchronization)
+            lock (SyncRoot)
             {
                 return Internal?.Contains(item) ?? false;
             }
@@ -67,7 +68,7 @@ namespace NetExtender.Configuration.Synchronizers
                 throw new ArgumentNullException(nameof(item));
             }
 
-            lock (Synchronization)
+            lock (SyncRoot)
             {
                 Internal = Internal?.Add(item) ?? ImmutableList.Create(item);
             }
@@ -80,7 +81,7 @@ namespace NetExtender.Configuration.Synchronizers
                 throw new ArgumentNullException(nameof(item));
             }
 
-            lock (Synchronization)
+            lock (SyncRoot)
             {
                 Boolean contains = Contains(item);
                 Internal = Internal?.Remove(item);
@@ -90,7 +91,7 @@ namespace NetExtender.Configuration.Synchronizers
 
         public void Clear()
         {
-            lock (Synchronization)
+            lock (SyncRoot)
             {
                 Internal = Internal?.Clear();
             }
@@ -98,7 +99,7 @@ namespace NetExtender.Configuration.Synchronizers
 
         public void CopyTo(IConfigPropertyInfo[] array, Int32 arrayIndex)
         {
-            lock (Synchronization)
+            lock (SyncRoot)
             {
                 ImmutableList<IConfigPropertyInfo> collection = Internal ?? ImmutableList<IConfigPropertyInfo>.Empty;
                 collection.CopyTo(array, arrayIndex);
@@ -107,7 +108,7 @@ namespace NetExtender.Configuration.Synchronizers
 
         public Boolean Read()
         {
-            lock (Synchronization)
+            lock (SyncRoot)
             {
                 ImmutableList<IConfigPropertyInfo>? collection = Internal;
                 return collection is not null && collection.OfType<IReadableBehavior>().Aggregate(false, (current, info) => current | info.Read());
@@ -159,7 +160,7 @@ namespace NetExtender.Configuration.Synchronizers
 
         public Boolean Save()
         {
-            lock (Synchronization)
+            lock (SyncRoot)
             {
                 ImmutableList<IConfigPropertyInfo>? collection = Internal;
                 return collection is not null && collection.OfType<ISaveableBehavior>().Aggregate(false, (current, info) => current | info.Save());
@@ -211,7 +212,7 @@ namespace NetExtender.Configuration.Synchronizers
 
         public Boolean Reset()
         {
-            lock (Synchronization)
+            lock (SyncRoot)
             {
                 ImmutableList<IConfigPropertyInfo>? collection = Internal;
                 return collection is not null && collection.OfType<IResetableBehavior>().Aggregate(false, (current, info) => current | info.Reset());

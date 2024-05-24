@@ -13,6 +13,9 @@ using NetExtender.Utilities.Core;
 
 namespace NetExtender.Utilities.Types
 {
+    public delegate TDestination RaiseAndSetIfChangedHandler<in TSource, out TDestination>(TSource sender);
+    public delegate TDestination RaiseAndSetIfChangedFactoryHandler<in TSource, TDestination>(TSource sender, TDestination value);
+    
     public static class ReactiveUtilities
     {
         [ReflectionNaming]
@@ -61,8 +64,8 @@ namespace NetExtender.Utilities.Types
             {
                 const BindingFlags binding = BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Public;
                 return
-                    @interface.GetMethod(nameof(RaisePropertyChanging), binding, new[] { typeof(PropertyChangingEventArgs) })?.IsVoid() == true &&
-                    @interface.GetMethod(nameof(RaisePropertyChanged), binding, new[] { typeof(PropertyChangedEventArgs) })?.IsVoid() == true;
+                    @interface.GetMethod(nameof(RaisePropertyChanging), binding, new[] { typeof(PropertyChangingEventArgs) })?.IsVoid() is true &&
+                    @interface.GetMethod(nameof(RaisePropertyChanged), binding, new[] { typeof(PropertyChangedEventArgs) })?.IsVoid() is true;
             }
             
             if (!HasInterfaces(@interface))
@@ -162,7 +165,41 @@ namespace NetExtender.Utilities.Types
                 result = default;
                 return false;
             }
-            
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static Boolean Handle<TSource, TDestination>(TSource source, ref TDestination field, NetExtender.Utilities.Types.RaiseAndSetIfChangedHandler<TSource, TDestination> factory, String? property, [MaybeNullWhen(false)] out TDestination result) where TSource : class
+            {
+                if (source is null)
+                {
+                    throw new ArgumentNullException(nameof(source));
+                }
+
+                if (Cache.GetOrAdd((source.GetType(), !typeof(TDestination).IsValueType && field is not null ? field.GetType() : typeof(TDestination)), Create) is { } handler)
+                {
+                    return handler.Invoke(source, ref field, factory(source), property, out result);
+                }
+
+                result = default;
+                return false;
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static Boolean Handle<TSource, TDestination>(TSource source, ref TDestination field, RaiseAndSetIfChangedFactoryHandler<TSource, TDestination> factory, String? property, [MaybeNullWhen(false)] out TDestination result) where TSource : class
+            {
+                if (source is null)
+                {
+                    throw new ArgumentNullException(nameof(source));
+                }
+
+                if (Cache.GetOrAdd((source.GetType(), !typeof(TDestination).IsValueType && field is not null ? field.GetType() : typeof(TDestination)), Create) is { } handler)
+                {
+                    return handler.Invoke(source, ref field, factory(source, field), property, out result);
+                }
+
+                result = default;
+                return false;
+            }
+
             private static Delegate? CreateHandler(Type type, Type destination)
             {
                 if (type is null)
@@ -315,6 +352,60 @@ namespace NetExtender.Utilities.Types
             return value;
         }
 
+        public static TDestination RaiseProperty<TSource, TDestination>(this TSource source, ref TDestination field, RaiseAndSetIfChangedHandler<TSource, TDestination> factory, [CallerMemberName] String? property = null) where TSource : class
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (factory is null)
+            {
+                throw new ArgumentNullException(nameof(factory));
+            }
+
+            PropertyEventHandler? handler = PropertyEventHandler.Get(source);
+            TDestination value = factory(source);
+            
+            if (handler is null)
+            {
+                field = value;
+                return value;
+            }
+            
+            handler.RaiseChanging(source, property);
+            field = value;
+            handler.RaiseChanged(source, property);
+            return value;
+        }
+
+        public static TDestination RaiseProperty<TSource, TDestination>(this TSource source, ref TDestination field, RaiseAndSetIfChangedFactoryHandler<TSource, TDestination> factory, [CallerMemberName] String? property = null) where TSource : class
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (factory is null)
+            {
+                throw new ArgumentNullException(nameof(factory));
+            }
+
+            PropertyEventHandler? handler = PropertyEventHandler.Get(source);
+            TDestination value = factory(source, field);
+            
+            if (handler is null)
+            {
+                field = value;
+                return value;
+            }
+            
+            handler.RaiseChanging(source, property);
+            field = value;
+            handler.RaiseChanged(source, property);
+            return value;
+        }
+
         public static TDestination RaiseAndSetIfChanged<TSource, TDestination>(this TSource source, ref TDestination field, TDestination value, [CallerMemberName] String? property = null) where TSource : class
         {
             if (source is null)
@@ -323,6 +414,36 @@ namespace NetExtender.Utilities.Types
             }
 
             return ReactiveObjectHandler.Handle(source, ref field, value, property, out TDestination? result) ? result : RaiseProperty(source, ref field, value, property);
+        }
+
+        public static TDestination RaiseAndSetIfChanged<TSource, TDestination>(this TSource source, ref TDestination field, RaiseAndSetIfChangedHandler<TSource, TDestination> factory, [CallerMemberName] String? property = null) where TSource : class
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (factory is null)
+            {
+                throw new ArgumentNullException(nameof(factory));
+            }
+
+            return ReactiveObjectHandler.Handle(source, ref field, factory, property, out TDestination? result) ? result : RaiseProperty(source, ref field, factory, property);
+        }
+
+        public static TDestination RaiseAndSetIfChanged<TSource, TDestination>(this TSource source, ref TDestination field, RaiseAndSetIfChangedFactoryHandler<TSource, TDestination> factory, [CallerMemberName] String? property = null) where TSource : class
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (factory is null)
+            {
+                throw new ArgumentNullException(nameof(factory));
+            }
+
+            return ReactiveObjectHandler.Handle(source, ref field, factory, property, out TDestination? result) ? result : RaiseProperty(source, ref field, factory, property);
         }
         
         public static void RaisePropertyChanging<TSource>(this TSource source, [CallerMemberName] String? property = null) where TSource : class

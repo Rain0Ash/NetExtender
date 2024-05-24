@@ -446,9 +446,9 @@ namespace NetExtender.Initializer
                 return Internal?.GetHashCode() ?? 0;
             }
 
-            public override Boolean Equals(Object? obj)
+            public override Boolean Equals(Object? other)
             {
-                return obj switch
+                return other switch
                 {
                     Awaiter<T> result => Equals(result),
                     Task<T> result => Equals(result),

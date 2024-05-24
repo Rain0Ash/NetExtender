@@ -23,6 +23,19 @@ namespace NetExtender.Types.Collections
 
     public class SuppressObservableCollection<T> : ObservableCollection<T>, ISuppressObservableCollection<T>, IReadOnlySuppressObservableCollection<T>, ISuppressObservableCollectionHandler
     {
+        private event PropertyChangingEventHandler? PropertyChanging;
+        event PropertyChangingEventHandler? INotifyPropertyChanging.PropertyChanging
+        {
+            add
+            {
+                PropertyChanging += value;
+            }
+            remove
+            {
+                PropertyChanging -= value;
+            }
+        }
+
         private ObservableCollectionSuppressionHandler Suppression { get; }
         protected Boolean IsChanged { get; set; }
         public Boolean IsAllowSuppress { get; set; } = true;
@@ -128,6 +141,16 @@ namespace NetExtender.Types.Collections
             base.OnCollectionChanged(args);
         }
 
+        protected virtual void OnPropertyChanging(PropertyChangingEventArgs args)
+        {
+            if (IsSuppressed)
+            {
+                return;
+            }
+
+            PropertyChanging?.Invoke(this, args);
+        }
+
         protected override void OnPropertyChanged(PropertyChangedEventArgs args)
         {
             if (IsSuppressed)
@@ -143,8 +166,21 @@ namespace NetExtender.Types.Collections
     {
         private ObservableCollection<T> Internal { get; }
         public event NotifyCollectionChangedEventHandler? CollectionChanged;
+        
+        private event PropertyChangingEventHandler? PropertyChanging;
+        event PropertyChangingEventHandler? INotifyPropertyChanging.PropertyChanging
+        {
+            add
+            {
+                PropertyChanging += value;
+            }
+            remove
+            {
+                PropertyChanging -= value;
+            }
+        }
+        
         private event PropertyChangedEventHandler? PropertyChanged;
-
         event PropertyChangedEventHandler? INotifyPropertyChanged.PropertyChanged
         {
             add
@@ -198,7 +234,17 @@ namespace NetExtender.Types.Collections
         {
             Internal = collection ?? throw new ArgumentNullException(nameof(collection));
             Internal.CollectionChanged += OnCollectionChanged;
-            ((INotifyPropertyChanged) Internal).PropertyChanged += OnPropertyChanged;
+
+            if (Internal is INotifyPropertyChanging changing)
+            {
+                changing.PropertyChanging += OnPropertyChanging;
+            }
+
+            if (Internal is INotifyPropertyChanged changed)
+            {
+                changed.PropertyChanged += OnPropertyChanged;
+            }
+            
             Suppression = new ObservableCollectionSuppressionHandler(this);
         }
 
@@ -210,6 +256,16 @@ namespace NetExtender.Types.Collections
             }
 
             CollectionChanged?.Invoke(this, args);
+        }
+
+        private void OnPropertyChanging(Object? sender, PropertyChangingEventArgs args)
+        {
+            if (IsSuppressed)
+            {
+                return;
+            }
+
+            PropertyChanging?.Invoke(this, args);
         }
 
         private void OnPropertyChanged(Object? sender, PropertyChangedEventArgs args)
@@ -294,6 +350,16 @@ namespace NetExtender.Types.Collections
             Internal.CopyTo(array, arrayIndex);
         }
 
+        public IEnumerator<T> GetEnumerator()
+        {
+            return Internal.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return ((IEnumerable) Internal).GetEnumerator();
+        }
+
         public T this[Int32 index]
         {
             get
@@ -304,16 +370,6 @@ namespace NetExtender.Types.Collections
             {
                 Internal[index] = value;
             }
-        }
-
-        public IEnumerator<T> GetEnumerator()
-        {
-            return Internal.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return ((IEnumerable) Internal).GetEnumerator();
         }
     }
 

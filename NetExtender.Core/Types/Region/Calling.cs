@@ -188,9 +188,9 @@ namespace NetExtender.Types.Region
                 return HashCode.Combine(Official16, Second16, Third16, Special);
             }
 
-            public override Boolean Equals(Object? obj)
+            public override Boolean Equals(Object? other)
             {
-                return obj switch
+                return other switch
                 {
                     CountryCalling calling => Equals(calling),
                     SByte number => Official16 == number || Second16 == number || Third16 == number || Special == number,

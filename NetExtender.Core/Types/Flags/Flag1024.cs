@@ -390,9 +390,9 @@ namespace NetExtender.Types.Flags
             return HashCodeUtilities.Combine(High7, High6, High5, High4, High3, High2, High1, High0, Low7, Low6, Low5, Low4, Low3, Low2, Low1, Low0);
         }
 
-        public override Boolean Equals(Object? obj)
+        public override Boolean Equals(Object? other)
         {
-            return obj switch
+            return other switch
             {
                 null => false,
                 Flag64 value => Equals(value),

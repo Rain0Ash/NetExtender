@@ -70,9 +70,9 @@ namespace NetExtender.Types.Drawing.Colors
             return HashCode.Combine(L, A, B);
         }
 
-        public override Boolean Equals(Object? obj)
+        public override Boolean Equals(Object? other)
         {
-            return obj is CIELABColor result && Equals(result);
+            return other is CIELABColor color && Equals(color);
         }
 
         public Boolean Equals(CIELABColor other)

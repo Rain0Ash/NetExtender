@@ -117,9 +117,9 @@ namespace NetExtender.Types.Timers
             return Timer.GetHashCode();
         }
 
-        public override Boolean Equals(Object? obj)
+        public override Boolean Equals(Object? other)
         {
-            return ReferenceEquals(this, obj) || Timer.Equals(obj);
+            return ReferenceEquals(this, other) || Timer.Equals(other);
         }
 
         public override String ToString()

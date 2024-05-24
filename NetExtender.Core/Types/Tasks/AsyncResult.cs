@@ -138,9 +138,9 @@ namespace NetExtender.Types.Tasks
             return Internal.GetHashCode();
         }
 
-        public override Boolean Equals(Object? obj)
+        public override Boolean Equals(Object? other)
         {
-            return obj switch
+            return other switch
             {
                 AsyncResult<T> result => Equals(result),
                 ValueTask<T> result => Equals(result),

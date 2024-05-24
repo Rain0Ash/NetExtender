@@ -49,7 +49,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.Types.ComboBoxes
                 }
                 
                 const BindingFlags binding = BindingFlags.FlattenHierarchy | BindingFlags.Public | BindingFlags.Static;
-                MethodInfo? method = type.GetMethod(nameof(Enum<Any.Value>.Get), 0, binding, Array.Empty<Type>());
+                MethodInfo? method = type.GetMethod(nameof(Enum<Any.Value>.Get), 0, binding, Type.EmptyTypes);
 
                 if (method is null)
                 {

@@ -70,9 +70,9 @@ namespace NetExtender.Types.Drawing.Colors
             return HashCode.Combine(X, Y, Z);
         }
 
-        public override Boolean Equals(Object? obj)
+        public override Boolean Equals(Object? other)
         {
-            return obj is XYZColor result && Equals(result);
+            return other is XYZColor color && Equals(color);
         }
 
         public Boolean Equals(XYZColor other)

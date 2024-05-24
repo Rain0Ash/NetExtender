@@ -31,7 +31,7 @@ namespace NetExtender.Interfaces
 
         public Boolean IsValidItem(T item)
         {
-            return ValidateItem?.Invoke(item) != false;
+            return ValidateItem?.Invoke(item) is not false;
         }
 
         public Boolean IsValidIndex(Int32 index)

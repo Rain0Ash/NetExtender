@@ -425,6 +425,46 @@ namespace NetExtender.Utilities.Types
             return count;
         }
 
+        public static Int32 RemoveAll<T>(this ICollection<T> collection, Predicate<T> match)
+        {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
+            if (match is null)
+            {
+                throw new ArgumentNullException(nameof(match));
+            }
+
+            if (collection.IsReadOnly)
+            {
+                throw new NotSupportedException();
+            }
+
+            if (collection is List<T> list)
+            {
+                return list.RemoveAll(match);
+            }
+            
+            List<T> remove = new List<T>();
+
+            foreach (T item in collection)
+            {
+                if (match(item))
+                {
+                    remove.Add(item);
+                }
+            }
+
+            foreach (T item in remove)
+            {
+                collection.Remove(item);
+            }
+
+            return remove.Count;
+        }
+
         public static StringCollection ToStringCollection(this IEnumerable<String?> source)
         {
             if (source is null)

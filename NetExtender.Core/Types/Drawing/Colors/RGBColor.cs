@@ -69,9 +69,9 @@ namespace NetExtender.Types.Drawing.Colors
             return HashCode.Combine(R, G, B);
         }
 
-        public override Boolean Equals(Object? obj)
+        public override Boolean Equals(Object? other)
         {
-            return obj is RGBColor result && Equals(result);
+            return other is RGBColor color && Equals(color);
         }
 
         public Boolean Equals(RGBColor other)

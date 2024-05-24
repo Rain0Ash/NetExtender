@@ -385,16 +385,16 @@ namespace NetExtender.IO.FileSystem.NTFS.DataStreams
         /// <summary>
         /// Indicates whether the current object is equal to another object of the same type.
         /// </summary>
-        /// <param name="obj">
+        /// <param name="other">
         /// An object to compare with this object.
         /// </param>
         /// <returns>
-        /// <see langword="true"/> if the current object is equal to the <paramref name="obj"/> parameter;
+        /// <see langword="true"/> if the current object is equal to the <paramref name="other"/> parameter;
         /// otherwise, <see langword="false"/>.
         /// </returns>
-        public override Boolean Equals(Object? obj)
+        public override Boolean Equals(Object? other)
         {
-            return Equals(obj as AlternateDataStreamInfo);
+            return Equals(other as AlternateDataStreamInfo);
         }
 
         /// <summary>

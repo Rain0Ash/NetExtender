@@ -87,9 +87,9 @@ namespace NetExtender.Types.Trees
             return Equals(Key, other.Key) && Equals(Value, other.Value) && Sections.SequenceEqual(other.Sections);
         }
 
-        public override Boolean Equals(Object? obj)
+        public override Boolean Equals(Object? other)
         {
-            return obj is DictionaryTreeEntry<TKey, TValue> other && Equals(other);
+            return other is DictionaryTreeEntry<TKey, TValue> entry && Equals(entry);
         }
 
         public override Int32 GetHashCode()

@@ -296,9 +296,9 @@ namespace NetExtender.Types.Numerics
             return Value.GetHashCode();
         }
 
-        public override Boolean Equals(Object? obj)
+        public override Boolean Equals(Object? other)
         {
-            return obj is GenericNumber number && Equals(number);
+            return other is GenericNumber number && Equals(number);
         }
 
         public Boolean Equals(ValueType? other)
@@ -552,9 +552,9 @@ namespace NetExtender.Types.Numerics
             return Value.GetHashCode();
         }
 
-        public override Boolean Equals(Object? obj)
+        public override Boolean Equals(Object? other)
         {
-            return Value.Equals(obj);
+            return Value.Equals(other);
         }
 
         public Boolean Equals(ValueType? other)
@@ -754,9 +754,9 @@ namespace NetExtender.Types.Numerics
             return Internal.GetHashCode();
         }
 
-        public override Boolean Equals(Object? obj)
+        public override Boolean Equals(Object? other)
         {
-            return Internal.Equals(obj);
+            return Internal.Equals(other);
         }
 
         public Boolean Equals(ValueType? other)

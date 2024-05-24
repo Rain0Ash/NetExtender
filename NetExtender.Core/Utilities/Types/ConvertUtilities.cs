@@ -9,11 +9,14 @@ using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Text;
+using AgileObjects.ReadableExpressions;
 using NetExtender.Types.Tuples;
 using NetExtender.Types.Collections;
+using NetExtender.Types.Expressions.Interfaces;
 using NetExtender.Types.Monads.Interfaces;
 using NetExtender.Types.Strings.Interfaces;
 using NetExtender.Utilities.Core;
@@ -650,6 +653,8 @@ namespace NetExtender.Utilities.Types
                 DateTime number => number.GetString(provider),
                 TimeSpan number => number.GetString(provider),
                 Enum number => number.GetString(escape, provider),
+                Expression expression => expression.GetString(provider),
+                IReadableExpression expression => expression.ToString(),
                 IString @string => escape.HasFlag(EscapeType.Full) ? $"\"{@string.ToString(provider)}\"" : @string.ToString(provider),
                 ITuple tuple => tuple.GetString(escape, provider),
                 IEnumerable enumerable => enumerable.GetString(escape, provider),
@@ -696,6 +701,8 @@ namespace NetExtender.Utilities.Types
                 DateTime number => number.GetString(format, provider),
                 TimeSpan number => number.GetString(format, provider),
                 Enum number => number.GetString(escape, format, provider),
+                Expression expression => expression.GetString(format, provider),
+                IReadableExpression expression => expression.ToString(),
                 IString @string => escape.HasFlag(EscapeType.Full) ? $"\"{@string.ToString(format, provider)}\"" : @string.ToString(format, provider),
                 ITuple tuple => tuple.GetString(escape, format, provider),
                 IEnumerable enumerable => enumerable.GetString(escape, format, provider),
@@ -1401,27 +1408,57 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static String GetString(this Enum value, IFormatProvider? provider)
+        public static String GetString(this Enum? value, IFormatProvider? provider)
         {
             return GetString(value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static String GetString(this Enum value, String? format, IFormatProvider? provider)
+        public static String GetString(this Enum? value, String? format, IFormatProvider? provider)
         {
             return GetString(value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static String GetString(this Enum value, EscapeType escape, IFormatProvider? provider)
+        public static String GetString(this Enum? value, EscapeType escape, IFormatProvider? provider)
         {
             return GetString(value, escape);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static String GetString(this Enum value, EscapeType escape, String? format, IFormatProvider? provider)
+        public static String GetString(this Enum? value, EscapeType escape, String? format, IFormatProvider? provider)
         {
             return GetString(value, escape);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String GetString(this Expression? value)
+        {
+            if (value is null)
+            {
+                return StringUtilities.NullString;
+            }
+            
+            try
+            {
+                return value.ToReadableString(ExpressionUtilities.Settings);
+            }
+            catch (Exception)
+            {
+                return value.ToString();
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String GetString(this Expression? value, IFormatProvider? provider)
+        {
+            return GetString(value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String GetString(this Expression? value, String? format, IFormatProvider? provider)
+        {
+            return GetString(value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

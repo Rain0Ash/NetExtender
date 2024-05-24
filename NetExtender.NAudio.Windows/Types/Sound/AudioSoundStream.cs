@@ -28,16 +28,34 @@ namespace NetExtender.NAudio.Types.Sound
             }
         }
 
-        public override Int64 Size
+        public override Int64? Size
         {
             get
             {
-                return Stream.Length;
+                try
+                {
+                    return Stream.Length;
+                }
+                catch (ObjectDisposedException)
+                {
+                    throw;
+                }
+                catch (Exception)
+                {
+                    return null;
+                }
             }
         }
 
-        public override TimeSpan Start { get; }
-        public override TimeSpan Stop { get; }
+        protected sealed override Info Information { get; }
+
+        public sealed override Boolean IsVirtual
+        {
+            get
+            {
+                return false;
+            }
+        }
 
         public sealed override TimeSpan TotalTime
         {
@@ -59,19 +77,9 @@ namespace NetExtender.NAudio.Types.Sound
                 throw new ArgumentNullException(nameof(stream));
             }
 
-            if (start < default(TimeSpan))
+            if (Info.Validate(start, stop) is { } exception)
             {
-                throw new ArgumentOutOfRangeException(nameof(start), start, null);
-            }
-
-            if (stop < default(TimeSpan))
-            {
-                throw new ArgumentOutOfRangeException(nameof(stop), stop, null);
-            }
-
-            if (stop != default && stop < start)
-            {
-                throw new ArgumentOutOfRangeException(nameof(stop), stop, "Stop must be greater than start");
+                throw exception;
             }
 
             Stream = stream as WaveStream ?? type switch
@@ -85,16 +93,7 @@ namespace NetExtender.NAudio.Types.Sound
             };
 
             Provider = new AudioSoundSampleProvider(this, new WaveToSampleProvider(Stream));
-
-            TimeSpan total = TotalTime;
-
-            if (start > total)
-            {
-                throw new ArgumentOutOfRangeException(nameof(start), start, "Start must be less than total time");
-            }
-
-            Start = start;
-            Stop = TimeSpan.FromTicks(Math.Clamp(stop == default ? total.Ticks : stop.Ticks, start.Ticks, total.Ticks));
+            Information = new Info(start, stop, TotalTime);
         }
 
         private static WaveStream ToWaveStream(Stream stream)

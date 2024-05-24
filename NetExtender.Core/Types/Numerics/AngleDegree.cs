@@ -268,12 +268,12 @@ namespace NetExtender.Types.Numerics
         /// <summary>
         /// Returns a value indicating whether this instance is equal to a specified object.
         /// </summary>
-        /// <param name="obj">An object to compare with this instance.</param>
+        /// <param name="other">An object to compare with this instance.</param>
         /// <returns>true if value is a <see cref="AngleDegree"/> object that represents the same angle as the current <see cref="AngleDegree"/> structure; otherwise, false.</returns>
         [Pure]
-        public override Boolean Equals(Object? obj)
+        public override Boolean Equals(Object? other)
         {
-            return obj switch
+            return other switch
             {
                 AngleDegree angle => Equals(angle),
                 AngleRadian angle => Equals(angle.ToAngleDegree()),

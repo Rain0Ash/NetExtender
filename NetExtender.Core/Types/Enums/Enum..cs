@@ -635,19 +635,19 @@ namespace NetExtender.Types.Enums
             return HashCode.Combine(Id, Title, Identifier);
         }
 
-        public override Boolean Equals(Object? obj)
+        public override Boolean Equals(Object? other)
         {
-            if (ReferenceEquals(this, obj))
+            if (ReferenceEquals(this, other))
             {
                 return true;
             }
 
-            return obj switch
+            return other switch
             {
                 null => false,
-                Enum<T> other => Equals(other),
-                IEnum<T> other => Equals(other),
-                T other => Equals(other),
+                Enum<T> value => Equals(value),
+                IEnum<T> value => Equals(value),
+                T value => Equals(value),
                 _ => false
             };
         }

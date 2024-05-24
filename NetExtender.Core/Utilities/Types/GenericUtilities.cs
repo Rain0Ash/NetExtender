@@ -15,6 +15,17 @@ namespace NetExtender.Utilities.Types
     public static class GenericUtilities
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        public static Int32? ReferenceCompare(Object? first, Object? second)
+        {
+            if (first is null || second is null)
+            {
+                return second is null ? 1 : -1;
+            }
+
+            return ReferenceEquals(first, second) ? 0 : null;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static Box<T> Box<T>(this T value)
         {
             return value;
@@ -533,7 +544,7 @@ namespace NetExtender.Utilities.Types
 
             if (type.IsArray)
             {
-                if (type.GetElementType()?.IsPrimitive() == false)
+                if (type.GetElementType()?.IsPrimitive() is false)
                 {
                     Array cloned = (Array) clone;
                     cloned.ForEach((arr, indices) => arr.SetValue(DeepCopyInternal(cloned?.GetValue(indices), visited), indices));

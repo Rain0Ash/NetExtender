@@ -10,6 +10,7 @@ using NetExtender.Types.Dictionaries;
 using NetExtender.Types.Singletons;
 using NetExtender.Types.Singletons.Interfaces;
 using NetExtender.Utilities.Core;
+using NetExtender.Utilities.Types;
 
 namespace NetExtender.Localization.Property.Localization.Initializers
 {
@@ -58,7 +59,7 @@ namespace NetExtender.Localization.Property.Localization.Initializers
                 return;
             }
             
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property.Name));
+            PropertyChanged?.Invoke(this, new PropertyChanged(property.Name));
         }
     }
 
@@ -105,7 +106,7 @@ namespace NetExtender.Localization.Property.Localization.Initializers
                 return;
             }
             
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+            PropertyChanged?.Invoke(this, new PropertyChanged(name));
         }
     }
 

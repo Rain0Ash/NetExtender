@@ -33,9 +33,7 @@ namespace NetExtender.WindowsPresentation.Types.Converters
         public TWindow Window { get; } = WindowStoreUtilities<TWindow>.Require();
     }
     
-    public abstract class WindowConverter : IValueConverter
+    public abstract class WindowConverter : ValueConverter
     {
-        public abstract Object? Convert(Object? value, Type? targetType, Object? parameter, CultureInfo? culture);
-        public abstract Object? ConvertBack(Object? value, Type? targetType, Object? parameter, CultureInfo? culture);
     }
 }

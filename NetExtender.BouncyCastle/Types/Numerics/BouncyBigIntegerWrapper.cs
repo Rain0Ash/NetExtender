@@ -100,9 +100,9 @@ namespace NetExtender.BouncyCastle.Types.Numerics
             return Value.GetHashCode();
         }
 
-        public override Boolean Equals(Object? obj)
+        public override Boolean Equals(Object? other)
         {
-            return obj switch
+            return other switch
             {
                 null => false,
                 BouncyBigIntegerWrapper wrapper => Equals(wrapper),

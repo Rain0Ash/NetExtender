@@ -8,11 +8,14 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using AgileObjects.ReadableExpressions;
 
 namespace NetExtender.Utilities.Numerics
 {
     public static class ExpressionUtilities
     {
+        public static Func<ITranslationSettings?, ITranslationSettings>? Settings { get; set; }
+        
         public static String GetMemberName<T, TResult>(this Expression<Func<T, TResult>> expression)
         {
             if (expression is null)

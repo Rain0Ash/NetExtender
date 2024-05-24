@@ -96,9 +96,9 @@ namespace NetExtender.EntityFrameworkCore
             return HashCode.Combine(Timeout, IsolationLevel);
         }
 
-        public override Boolean Equals(Object? obj)
+        public override Boolean Equals(Object? other)
         {
-            return obj is TransactionParameters parameters && Equals(parameters) || obj is TransactionOptions options && Equals(options);
+            return other is TransactionParameters parameters && Equals(parameters) || other is TransactionOptions options && Equals(options);
         }
 
         public Boolean Equals(TransactionOptions other)

@@ -260,7 +260,7 @@ namespace NetExtender.Utilities.Types
 
             public Boolean Rollback()
             {
-                if (IsCommit == true)
+                if (IsCommit is true)
                 {
                     return false;
                 }
@@ -323,7 +323,7 @@ namespace NetExtender.Utilities.Types
 
             public Boolean Rollback()
             {
-                if (IsCommit == true)
+                if (IsCommit is true)
                 {
                     return false;
                 }
@@ -2345,7 +2345,7 @@ namespace NetExtender.Utilities.Types
                 }
 
                 MethodInfo? getter = typeof(CacheEnum<>).GetNestedType(nameof(Type)+"`1", BindingFlags.Static | BindingFlags.NonPublic)?
-                    .MakeGenericType(generic).GetMethod(nameof(Get), BindingFlags.Static | BindingFlags.Public, System.Array.Empty<Type>());
+                    .MakeGenericType(generic).GetMethod(nameof(Get), BindingFlags.Static | BindingFlags.Public, Type.EmptyTypes);
 
                 if (getter?.Invoke(null, null) is not IEnumerable enumerable)
                 {

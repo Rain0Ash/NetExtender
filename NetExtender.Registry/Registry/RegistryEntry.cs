@@ -69,9 +69,9 @@ namespace NetExtender.Registry
             return Key == other.Key && Name == other.Name && Kind == other.Kind && Equals(Value, other.Value) && Sections.SequenceEqual(other.Sections);
         }
 
-        public override Boolean Equals(Object? obj)
+        public override Boolean Equals(Object? other)
         {
-            return obj is RegistryEntry other && Equals(other);
+            return other is RegistryEntry entry && Equals(entry);
         }
 
         public override Int32 GetHashCode()

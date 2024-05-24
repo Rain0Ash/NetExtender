@@ -209,9 +209,9 @@ namespace NetExtender.Types.Streams
             return Stream.GetHashCode();
         }
 
-        public override Boolean Equals(Object? obj)
+        public override Boolean Equals(Object? other)
         {
-            return Stream.Equals(obj);
+            return Stream.Equals(other);
         }
 
         public override String? ToString()

@@ -10,7 +10,7 @@ using NetExtender.Types.Strings.Interfaces;
 
 namespace NetExtender.Localization.Common.Interfaces
 {
-    public interface ILocalizableString
+    public interface ILocalizableString : IString
     {
         public Boolean Contains(LocalizationIdentifier identifier);
         public String? Get(LocalizationIdentifier identifier);

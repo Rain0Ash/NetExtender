@@ -1,4 +1,5 @@
 using System;
+using System.Windows;
 using System.Windows.Input;
 using NetExtender.Types.Events;
 
@@ -21,10 +22,24 @@ namespace NetExtender.UserInterface.WindowsPresentation.Types.DataGrids
     
     public class FixedDataGrid : System.Windows.Controls.DataGrid
     {
+        public static readonly DependencyProperty IsItemSelectEnabledProperty = DependencyProperty.Register(nameof(IsItemSelectEnabled), typeof(Boolean), typeof(FixedDataGrid), new PropertyMetadata(false));
+        
         public event ItemSelectedEventHandler? ItemSelected;
 
         private Object? LastItem { get; set; }
-        
+
+        public Boolean IsItemSelectEnabled
+        {
+            get
+            {
+                return (Boolean) GetValue(IsItemSelectEnabledProperty);
+            }
+            set
+            {
+                SetValue(IsItemSelectEnabledProperty, value);
+            }
+        }
+
         public FixedDataGrid()
         {
             PreviewKeyDown += OnPreviewKeyDown;
@@ -61,6 +76,12 @@ namespace NetExtender.UserInterface.WindowsPresentation.Types.DataGrids
 
         private new void MouseDoubleClick(Object? sender, MouseButtonEventArgs args)
         {
+            if (!IsItemSelectEnabled)
+            {
+                ItemSelected?.Invoke(this, new ItemSelectedEventArgs(SelectedItem));
+                return;
+            }
+            
             args.Handled = true;
             Object? item = LastItem;
             

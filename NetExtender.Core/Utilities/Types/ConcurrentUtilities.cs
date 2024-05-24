@@ -8,7 +8,7 @@ namespace NetExtender.Utilities.Types
 {
     public static class ConcurrentUtilities
     {
-        public static Object Synchronization
+        public static Object SyncRoot
         {
             get
             {

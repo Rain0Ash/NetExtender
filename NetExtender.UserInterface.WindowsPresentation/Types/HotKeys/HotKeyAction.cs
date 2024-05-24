@@ -102,9 +102,9 @@ namespace NetExtender.Types.HotKeys
             return HashCode.Combine(Title, Key, Modifier);
         }
 
-        public override Boolean Equals(Object? obj)
+        public override Boolean Equals(Object? other)
         {
-            return obj is HotKeyAction action && Equals(action);
+            return other is HotKeyAction action && Equals(action);
         }
 
         public Boolean Equals(HotKeyAction other)
@@ -275,9 +275,9 @@ namespace NetExtender.Types.HotKeys
             return HashCode.Combine(Id, Title, Key, Modifier);
         }
         
-        public override Boolean Equals(Object? obj)
+        public override Boolean Equals(Object? other)
         {
-            return obj is HotKeyAction<T> action && Equals(action);
+            return other is HotKeyAction<T> action && Equals(action);
         }
 
         public Boolean Equals(HotKeyAction<T> other)

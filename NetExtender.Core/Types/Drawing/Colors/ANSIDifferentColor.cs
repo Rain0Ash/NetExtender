@@ -120,9 +120,9 @@ namespace NetExtender.Types.Drawing.Colors
             return HashCode.Combine(ForegroundR, ForegroundG, ForegroundB, BackgroundR, BackgroundG, BackgroundB);
         }
 
-        public override Boolean Equals(Object? obj)
+        public override Boolean Equals(Object? other)
         {
-            return obj is ANSIDifferentColor result && Equals(result);
+            return other is ANSIDifferentColor color && Equals(color);
         }
 
         public Boolean Equals(ANSIDifferentColor other)

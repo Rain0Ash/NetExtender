@@ -17,6 +17,7 @@ using NetExtender.Localization.Events;
 using NetExtender.Localization.Interfaces;
 using NetExtender.Localization.Properties.Interfaces;
 using NetExtender.Types.Culture;
+using NetExtender.Types.Strings.Interfaces;
 
 namespace NetExtender.Localization.Properties
 {
@@ -264,6 +265,38 @@ namespace NetExtender.Localization.Properties
             }
         }
 
+        Boolean IString.Immutable
+        {
+            get
+            {
+                return true;
+            }
+        }
+
+        Boolean IString.Constant
+        {
+            get
+            {
+                return false;
+            }
+        }
+
+        Int32 IString.Length
+        {
+            get
+            {
+                return Current.Length;
+            }
+        }
+
+        String IString.Text
+        {
+            get
+            {
+                return Current;
+            }
+        }
+
         private Boolean Disposing { get; }
 
         internal ReadOnlyLocalizationPropertyWrapper(ILocalizationConfig config, String? key, String? alternate, ConfigPropertyOptions options, IEnumerable<String>? sections)
@@ -363,6 +396,11 @@ namespace NetExtender.Localization.Properties
         public override String? ToString()
         {
             return Internal.ToString();
+        }
+
+        String IString.ToString()
+        {
+            return ToString() ?? String.Empty;
         }
 
         public String ToString(String? format, IFormatProvider? provider)
@@ -575,6 +613,38 @@ namespace NetExtender.Localization.Properties
             }
         }
 
+        Boolean IString.Immutable
+        {
+            get
+            {
+                return true;
+            }
+        }
+
+        Boolean IString.Constant
+        {
+            get
+            {
+                return false;
+            }
+        }
+
+        Int32 IString.Length
+        {
+            get
+            {
+                return Current.Length;
+            }
+        }
+
+        String IString.Text
+        {
+            get
+            {
+                return Current;
+            }
+        }
+
         private Boolean Disposing { get; }
 
         internal ReadOnlyLocalizationIdentifierPropertyWrapper(ILocalizationConfig config, String? key, LocalizationIdentifier identifier, String? alternate, ConfigPropertyOptions options, IEnumerable<String>? sections)
@@ -641,6 +711,11 @@ namespace NetExtender.Localization.Properties
         public override String? ToString()
         {
             return Internal.ToString();
+        }
+
+        String IString.ToString()
+        {
+            return ToString() ?? String.Empty;
         }
 
         public String ToString(IFormatProvider? provider)

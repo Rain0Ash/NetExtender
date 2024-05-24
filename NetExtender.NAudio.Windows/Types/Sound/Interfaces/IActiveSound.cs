@@ -11,7 +11,7 @@ namespace NetExtender.NAudio.Types.Sound.Interfaces
         public IAudioSoundFile Sound { get; }
         public ISoundPlayer Player { get; }
         public PlaybackState State { get; }
-        public Single Volume { get; }
+        public Single? Volume { get; }
 
         public IActiveSound Play();
         public void Stop();

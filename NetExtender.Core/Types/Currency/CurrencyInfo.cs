@@ -125,9 +125,9 @@ namespace NetExtender.Types.Currency
             return Identifier.GetHashCode();
         }
 
-        public override Boolean Equals(Object? obj)
+        public override Boolean Equals(Object? other)
         {
-            return obj is CurrencyInfo info && Equals(info);
+            return other is CurrencyInfo info && Equals(info);
         }
 
         public Boolean Equals(CurrencyInfo? other)

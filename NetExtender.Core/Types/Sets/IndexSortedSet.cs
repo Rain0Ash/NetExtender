@@ -12,7 +12,7 @@ using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Sets
 {
-    public class IndexSortedSet<T> : IIndexSortedSet<T>, IReadOnlyIndexSortedSet<T>
+    public class IndexSortedSet<T> : ISet, IIndexSortedSet<T>, IReadOnlyIndexSortedSet<T>
     {
         protected const Int32 MinimalIndexer = 4;
 
@@ -34,14 +34,6 @@ namespace NetExtender.Types.Sets
             }
         }
 
-        public Int32 Count
-        {
-            get
-            {
-                return Internal.Count;
-            }
-        }
-
         public IComparer<T> Comparer
         {
             get
@@ -55,6 +47,46 @@ namespace NetExtender.Types.Sets
             get
             {
                 return Indexer.Comparer;
+            }
+        }
+
+        public Int32 Count
+        {
+            get
+            {
+                return Internal.Count;
+            }
+        }
+
+        public T? Min
+        {
+            get
+            {
+                return Internal.Min;
+            }
+        }
+
+        public T? Max
+        {
+            get
+            {
+                return Internal.Max;
+            }
+        }
+
+        Boolean ICollection.IsSynchronized
+        {
+            get
+            {
+                return ((ICollection) Internal).IsSynchronized;
+            }
+        }
+
+        Object ICollection.SyncRoot
+        {
+            get
+            {
+                return ((ICollection) Internal).SyncRoot;
             }
         }
 
@@ -142,6 +174,16 @@ namespace NetExtender.Types.Sets
             }
 
             return Indexer.ValueOf(index, out value);
+        }
+        
+        public Boolean TryGetValue(T equal, [MaybeNullWhen(false)] out T actual)
+        {
+            return Internal.TryGetValue(equal, out actual);
+        }
+
+        public virtual IndexSortedSet<T> GetViewBetween(T? lower, T? upper)
+        {
+            return new IndexSortedSet<T>(Internal.GetViewBetween(lower, upper));
         }
 
         public Boolean IsSubsetOf(IEnumerable<T> other)
@@ -273,12 +315,39 @@ namespace NetExtender.Types.Sets
             Rebuild = true;
             return true;
         }
+        
+        public virtual Int32 RemoveWhere(Predicate<T> match)
+        {
+            if (match is null)
+            {
+                throw new ArgumentNullException(nameof(match));
+            }
+
+            Int32 count = Internal.RemoveWhere(match);
+            Rebuild = count > 0;
+            return count;
+        }
+
+        public virtual IEnumerable<T> Reverse()
+        {
+            return Internal.Reverse();
+        }
 
         public void Clear()
         {
             Internal.Clear();
             Indexer.Clear();
             Rebuild = false;
+        }
+
+        void ICollection.CopyTo(Array array, Int32 index)
+        {
+            if (array is null)
+            {
+                throw new ArgumentNullException(nameof(array));
+            }
+
+            ((ICollection) Internal).CopyTo(array, index);
         }
 
         public void CopyTo(T[] array)
@@ -299,6 +368,16 @@ namespace NetExtender.Types.Sets
             }
 
             Internal.CopyTo(array, index);
+        }
+
+        public virtual void CopyTo(T[] array, Int32 arrayIndex, Int32 count)
+        {
+            if (array is null)
+            {
+                throw new ArgumentNullException(nameof(array));
+            }
+
+            Internal.CopyTo(array, arrayIndex, count);
         }
 
         public IEnumerator<T> GetEnumerator()

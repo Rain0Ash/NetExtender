@@ -4030,7 +4030,7 @@ namespace NetExtender.Utilities.Core
                     throw new ArgumentException(@"Is not value type", nameof(type));
                 }
 
-                DynamicMethod method = new DynamicMethod("SizeOfType", typeof(Int32), Array.Empty<Type>());
+                DynamicMethod method = new DynamicMethod("SizeOfType", typeof(Int32), Type.EmptyTypes);
                 ILGenerator il = method.GetILGenerator();
                 il.Emit(OpCodes.Sizeof, type);
                 il.Emit(OpCodes.Ret);

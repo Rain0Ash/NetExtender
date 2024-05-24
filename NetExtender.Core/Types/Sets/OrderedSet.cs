@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using NetExtender.Types.Dictionaries;
+using NetExtender.Types.Monads;
 using NetExtender.Types.Sets.Interfaces;
 using NetExtender.Utilities.Types;
 
@@ -14,27 +15,22 @@ namespace NetExtender.Types.Sets
 {
     public class OrderedSet<T> : ISet, ISet<T>
     {
+        private NullableDictionary<T, LinkedListNode<T>> Node { get; }
+        private LinkedList<T> Linked { get; }
+
+        public IEqualityComparer<NullMaybe<T>> Comparer
+        {
+            get
+            {
+                return Node.Comparer;
+            }
+        }
+        
         public Int32 Count
         {
             get
             {
                 return Node.Count;
-            }
-        }
-
-        Boolean ICollection.IsSynchronized
-        {
-            get
-            {
-                return false;
-            }
-        }
-
-        Object ICollection.SyncRoot
-        {
-            get
-            {
-                return this;
             }
         }
 
@@ -46,33 +42,56 @@ namespace NetExtender.Types.Sets
             }
         }
 
-        private NullableDictionary<T, LinkedListNode<T>> Node { get; }
-        private LinkedList<T> Linked { get; }
+        Boolean ICollection.IsSynchronized
+        {
+            get
+            {
+                return ((ICollection) Linked).IsSynchronized;
+            }
+        }
+
+        Object ICollection.SyncRoot
+        {
+            get
+            {
+                return ((ICollection) Linked).SyncRoot;
+            }
+        }
 
         public OrderedSet()
-            : this((IEqualityComparer<T>?) null)
+            : this((IEqualityComparer<NullMaybe<T>>?) null)
         {
         }
 
         public OrderedSet(IEqualityComparer<T>? comparer)
+            : this(comparer?.ToNullMaybeEqualityComparer())
         {
-            Node = new NullableDictionary<T, LinkedListNode<T>>(comparer?.ToNullMaybeEqualityComparer());
+        }
+
+        public OrderedSet(IEqualityComparer<NullMaybe<T>>? comparer)
+        {
+            Node = new NullableDictionary<T, LinkedListNode<T>>(comparer);
             Linked = new LinkedList<T>();
         }
 
         public OrderedSet(IEnumerable<T> collection)
-            : this(collection, null)
+            : this(collection, (IEqualityComparer<NullMaybe<T>>?) null)
         {
         }
 
         public OrderedSet(IEnumerable<T> collection, IEqualityComparer<T>? comparer)
+            : this(collection is not null ? collection : throw new ArgumentNullException(nameof(collection)), comparer?.ToNullMaybeEqualityComparer())
+        {
+        }
+
+        public OrderedSet(IEnumerable<T> collection, IEqualityComparer<NullMaybe<T>>? comparer)
         {
             if (collection is null)
             {
                 throw new ArgumentNullException(nameof(collection));
             }
 
-            Node = new NullableDictionary<T, LinkedListNode<T>>(comparer?.ToNullMaybeEqualityComparer());
+            Node = new NullableDictionary<T, LinkedListNode<T>>(comparer);
             Linked = new LinkedList<T>();
 
             foreach (T item in collection)
@@ -342,9 +361,15 @@ namespace NetExtender.Types.Sets
                 throw new ArgumentNullException(nameof(array));
             }
 
+            if (Linked is ICollection collection)
+            {
+                collection.CopyTo(array, index);
+                return;
+            }
+
             if (array is not T[] generic)
             {
-                throw new ArgumentException(@"Invalid type", nameof(array));
+                throw new ArgumentException("Invalid type", nameof(array));
             }
 
             CopyTo(generic, index);

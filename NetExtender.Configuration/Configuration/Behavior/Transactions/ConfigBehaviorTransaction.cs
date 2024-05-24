@@ -31,7 +31,7 @@ namespace NetExtender.Configuration.Behavior.Transactions
 
         public virtual Boolean Rollback()
         {
-            if (IsCommit == true)
+            if (IsCommit is true)
             {
                 return false;
             }

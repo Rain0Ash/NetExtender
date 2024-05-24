@@ -38,9 +38,9 @@ namespace NetExtender.Types.Interprocess
         private IInterprocessMemoryMappedFile? MappedFile { get; set; }
         private ConcurrentQueue<InterprocessLogEntry> ReceivedMessagesQueue { get; } = new ConcurrentQueue<InterprocessLogEntry>();
 
-        private Object MessageReaderLock { get; } = ConcurrentUtilities.Synchronization;
-        private Object HandlerTaskLock { get; } = ConcurrentUtilities.Synchronization;
-        private Object HandlerLock { get; } = ConcurrentUtilities.Synchronization;
+        private Object MessageReaderLock { get; } = ConcurrentUtilities.SyncRoot;
+        private Object HandlerTaskLock { get; } = ConcurrentUtilities.SyncRoot;
+        private Object HandlerLock { get; } = ConcurrentUtilities.SyncRoot;
         private Int64 LastEntryId { get; set; }
 
         private InterprocessMessageStatistics Statistics { get; } = new InterprocessMessageStatistics();

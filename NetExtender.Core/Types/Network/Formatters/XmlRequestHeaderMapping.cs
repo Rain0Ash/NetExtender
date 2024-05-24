@@ -25,7 +25,7 @@ namespace NetExtender.Types.Network.Formatters
             return request.Headers.Accept.Count switch
             {
                 0 => base.TryMatchMediaType(request),
-                1 => request.Headers.Accept.First().MediaType?.Equals("*/*", StringComparison.Ordinal) == true ? base.TryMatchMediaType(request) : 0,
+                1 => request.Headers.Accept.First().MediaType?.Equals("*/*", StringComparison.Ordinal) is true ? base.TryMatchMediaType(request) : 0,
                 _ => 0
             };
         }

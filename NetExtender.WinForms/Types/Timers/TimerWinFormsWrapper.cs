@@ -129,9 +129,9 @@ namespace NetExtender.Types.Timers
             return ValueTask.CompletedTask;
         }
 
-        public override Boolean Equals(Object? obj)
+        public override Boolean Equals(Object? other)
         {
-            return ReferenceEquals(this, obj) || Timer.Equals(obj);
+            return ReferenceEquals(this, other) || Timer.Equals(other);
         }
 
         public override Int32 GetHashCode()

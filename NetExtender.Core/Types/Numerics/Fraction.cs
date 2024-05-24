@@ -436,18 +436,16 @@ namespace NetExtender.Types.Numerics
         /// <summary>
         /// Determines if the fractions are equal
         /// </summary>
-        /// <param name="obj">object to check</param>
+        /// <param name="other">object to check</param>
         /// <returns>True if they are, false otherwise</returns>
-        public override Boolean Equals(Object? obj)
+        public override Boolean Equals(Object? other)
         {
-            if (obj is not Fraction other)
+            if (other is not Fraction fraction)
             {
                 return false;
             }
 
-            Decimal value1 = this;
-            Decimal value2 = other;
-            return value1 == value2;
+            return (Decimal) this == (Decimal) fraction;
         }
 
         /// <summary>

@@ -84,9 +84,9 @@ namespace NetExtender.Types.HotKeys
             return HashCode.Combine(Title, Key, Modifier);
         }
 
-        public override Boolean Equals(Object? obj)
+        public override Boolean Equals(Object? other)
         {
-            return obj is WindowsHotKeyAction action && Equals(action);
+            return other is WindowsHotKeyAction action && Equals(action);
         }
 
         public Boolean Equals(WindowsHotKeyAction other)
@@ -239,9 +239,9 @@ namespace NetExtender.Types.HotKeys
             return HashCode.Combine(Id, Title, Key, Modifier);
         }
         
-        public override Boolean Equals(Object? obj)
+        public override Boolean Equals(Object? other)
         {
-            return obj is WindowsHotKeyAction<T> action && Equals(action);
+            return other is WindowsHotKeyAction<T> action && Equals(action);
         }
 
         public Boolean Equals(WindowsHotKeyAction<T> other)

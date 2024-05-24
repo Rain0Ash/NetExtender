@@ -36,6 +36,8 @@ namespace NetExtender.NAudio.Types.Sound
             }
         }
 
+        protected sealed override Info Information { get; }
+
         public sealed override TimeSpan TotalTime
         {
             get
@@ -47,7 +49,7 @@ namespace NetExtender.NAudio.Types.Sound
 
                 if (!Exists)
                 {
-                    throw new FileNotFoundException("File not found", Path);
+                    throw new FileNotFoundException(null, Path);
                 }
 
                 using AudioFileReader reader = new AudioFileReader(Path);
@@ -81,8 +83,9 @@ namespace NetExtender.NAudio.Types.Sound
         }
 
         public AudioSoundFile(FileInfo file, TimeSpan start, TimeSpan stop)
-            : base(file, start, stop)
+            : base(file)
         {
+            Information = new Info(start, stop, TotalTime);
         }
 
         public override Int32 Read(Single[] buffer, Int32 offset, Int32 count)

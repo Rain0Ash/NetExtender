@@ -33,9 +33,9 @@ namespace NetExtender.Types.Environments
             Value = value;
         }
 
-        public override Boolean Equals(Object? obj)
+        public override Boolean Equals(Object? other)
         {
-            return obj is EnvironmentValueEntry other && Equals(other);
+            return other is EnvironmentValueEntry entry && Equals(entry);
         }
 
         public Boolean Equals(EnvironmentValueEntry other)

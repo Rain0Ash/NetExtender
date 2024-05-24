@@ -31,14 +31,14 @@ namespace NetExtender.Types.Dispatchers
             Dispatcher.ShutdownFinished += OnShutdownFinished;
         }
 
-        private void OnShutdownStarted(Object? obj, EventArgs args)
+        private void OnShutdownStarted(Object? sender, EventArgs args)
         {
-            Shutdown?.Invoke(obj, new DispatcherShutdownStateEventArgs(DispatcherShutdownState.Started));
+            Shutdown?.Invoke(sender, new DispatcherShutdownStateEventArgs(DispatcherShutdownState.Started));
         }
 
-        private void OnShutdownFinished(Object? obj, EventArgs args)
+        private void OnShutdownFinished(Object? sender, EventArgs args)
         {
-            Shutdown?.Invoke(obj, new DispatcherShutdownStateEventArgs(DispatcherShutdownState.Finished));
+            Shutdown?.Invoke(sender, new DispatcherShutdownStateEventArgs(DispatcherShutdownState.Finished));
         }
 
         public Thread Thread

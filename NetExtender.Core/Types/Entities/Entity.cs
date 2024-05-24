@@ -133,13 +133,13 @@ namespace NetExtender.Types.Entities
             return Id?.GetHashCode() ?? 0;
         }
 
-        public override Boolean Equals(Object? obj)
+        public override Boolean Equals(Object? other)
         {
-            return obj switch
+            return other switch
             {
-                EntityId<T> other => Equals(other),
-                Entity<T> other => Equals(other),
-                T other => EqualsInternal(other),
+                EntityId<T> value => Equals(value),
+                Entity<T> value => Equals(value),
+                T value => EqualsInternal(value),
                 _ => false
             };
         }
@@ -267,13 +267,13 @@ namespace NetExtender.Types.Entities
             return Value?.GetHashCode() ?? 0;
         }
 
-        public override Boolean Equals(Object? obj)
+        public override Boolean Equals(Object? other)
         {
-            return obj switch
+            return other switch
             {
-                EntityValue<T> other => Equals(other),
-                Entity<T> other => Equals(other),
-                T other => EqualsInternal(other),
+                EntityValue<T> value => Equals(value),
+                Entity<T> value => Equals(value),
+                T value => EqualsInternal(value),
                 _ => false
             };
         }
@@ -389,12 +389,12 @@ namespace NetExtender.Types.Entities
             return Get()?.GetHashCode() ?? 0;
         }
 
-        public override Boolean Equals(Object? obj)
+        public override Boolean Equals(Object? other)
         {
-            return obj switch
+            return other switch
             {
-                Entity<T> other => Equals(other),
-                T other => EqualsInternal(other),
+                Entity<T> value => Equals(value),
+                T value => EqualsInternal(value),
                 _ => false
             };
         }

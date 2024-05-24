@@ -19,6 +19,7 @@ using NetExtender.Localization.Events;
 using NetExtender.Localization.Interfaces;
 using NetExtender.Localization.Properties.Interfaces;
 using NetExtender.Types.Culture;
+using NetExtender.Types.Strings.Interfaces;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Localization.Properties
@@ -103,7 +104,7 @@ namespace NetExtender.Localization.Properties
         {
             get
             {
-                return Validate?.Invoke(Internal.Value) != false;
+                return Validate?.Invoke(Internal.Value) is not false;
             }
         }
 
@@ -162,8 +163,8 @@ namespace NetExtender.Localization.Properties
         protected virtual void OnLocalizationChanged(Object? sender, LocalizationChangedEventArgs args)
         {
             LocalizationChanged?.Invoke(this, args);
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Identifier)));
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Current)));
+            PropertyChanged?.Invoke(this, new PropertyChanged(nameof(Identifier)));
+            PropertyChanged?.Invoke(this, new PropertyChanged(nameof(Current)));
         }
 
         protected virtual void OnChanged(LocalizationValueChangedEventArgs args)
@@ -175,8 +176,8 @@ namespace NetExtender.Localization.Properties
             key = Config.Converter.Convert(key, identifier, ref configuration, Config.LocalizationOptions);
             ConfigurationValueEntry<ILocalizationString?> entry = new ConfigurationValueEntry<ILocalizationString?>(key, Value, configuration);
             ConfigurationChanged?.Invoke(this, new ConfigurationChangedEventArgs<ILocalizationString?>(entry, args.Handled));
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Value)));
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Current)));
+            PropertyChanged?.Invoke(this, new PropertyChanged(nameof(Value)));
+            PropertyChanged?.Invoke(this, new PropertyChanged(nameof(Current)));
         }
 
         protected virtual void OnChanged(String? value)
@@ -187,8 +188,8 @@ namespace NetExtender.Localization.Properties
         protected virtual void OnChanged(ILocalizationString? value)
         {
             StringChanged?.Invoke(this, EventArgs.Empty);
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Value)));
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Current)));
+            PropertyChanged?.Invoke(this, new PropertyChanged(nameof(Value)));
+            PropertyChanged?.Invoke(this, new PropertyChanged(nameof(Current)));
         }
 
         protected virtual void OnChanged(Object? sender, LocalizationValueChangedEventArgs args)
@@ -273,7 +274,7 @@ namespace NetExtender.Localization.Properties
             }
 
             ILocalizationString? value = GetValue();
-            return predicate?.Invoke(value) != false ? value : Alternate;
+            return predicate?.Invoke(value) is not false ? value : Alternate;
         }
 
         public Task<ILocalizationString?> GetValueAsync()
@@ -309,7 +310,7 @@ namespace NetExtender.Localization.Properties
             }
 
             ILocalizationString? value = await GetValueAsync(token).ConfigureAwait(false);
-            return predicate?.Invoke(value) != false ? value : Alternate;
+            return predicate?.Invoke(value) is not false ? value : Alternate;
         }
 
         public virtual Boolean SetValue(ILocalizationString? value)
@@ -472,6 +473,11 @@ namespace NetExtender.Localization.Properties
             return value is not null ? new LocalizationValueEntry(Key, Identifier, value.Text, Sections).GetString() : null;
         }
 
+        String IString.ToString()
+        {
+            return ToString() ?? String.Empty;
+        }
+
         public override String ToString(IFormatProvider? provider)
         {
             ILocalizationString? value = Value;
@@ -594,8 +600,8 @@ namespace NetExtender.Localization.Properties
         {
             Changed?.Invoke(this, args);
             ConfigurationChanged?.Invoke(this, new ConfigurationChangedEventArgs(args.Value, args.Handled));
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Value)));
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Current)));
+            PropertyChanged?.Invoke(this, new PropertyChanged(nameof(Value)));
+            PropertyChanged?.Invoke(this, new PropertyChanged(nameof(Current)));
         }
 
         protected virtual void OnChanged(String? value)
@@ -857,6 +863,11 @@ namespace NetExtender.Localization.Properties
         public override String? ToString()
         {
             return new LocalizationValueEntry(Key, Identifier, Value, Sections).GetString();
+        }
+
+        String IString.ToString()
+        {
+            return ToString() ?? String.Empty;
         }
 
         public override String ToString(IFormatProvider? provider)

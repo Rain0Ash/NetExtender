@@ -213,9 +213,9 @@ namespace NetExtender.Domains
             return other is not null && Version.Equals(other.Version) && Status == other.Status && Branch == other.Branch;
         }
 
-        public override Boolean Equals(Object? obj)
+        public override Boolean Equals(Object? other)
         {
-            return obj is ApplicationInfo other && Equals(other);
+            return other is ApplicationInfo info && Equals(info);
         }
 
         public override Int32 GetHashCode()

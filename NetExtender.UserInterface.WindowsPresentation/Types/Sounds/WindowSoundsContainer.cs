@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using NetExtender.Types.Singletons;
 using NetExtender.Types.Singletons.Interfaces;
 using NetExtender.Utilities.Core;
-using NetExtender.Utilities.Types;
 
 namespace NetExtender.UserInterface.WindowsPresentation.Types.Sounds
 {

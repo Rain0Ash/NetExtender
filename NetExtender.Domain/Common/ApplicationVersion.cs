@@ -136,9 +136,9 @@ namespace NetExtender.Domains
             return Major == other.Major && Minor == other.Minor && Patch == other.Patch && BuildTime.Equals(other.BuildTime);
         }
 
-        public override Boolean Equals(Object? obj)
+        public override Boolean Equals(Object? other)
         {
-            return obj is ApplicationVersion other && Equals(other);
+            return other is ApplicationVersion version && Equals(version);
         }
 
         public Int32 CompareTo(ApplicationVersion other)

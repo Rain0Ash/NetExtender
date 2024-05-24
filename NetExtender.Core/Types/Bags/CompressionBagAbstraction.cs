@@ -1,18 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Collections.Specialized;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using NetExtender.Types.Bags.Interfaces;
-using NetExtender.Types.Comparers;
-using NetExtender.Types.Counters;
-using NetExtender.Types.Counters.Interfaces;
-using NetExtender.Types.Immutable.Counters;
-using NetExtender.Utilities.Numerics;
-using NetExtender.Utilities.Types;
-
 namespace NetExtender.Types.Bags
 {
     /*public abstract class CompressionBagAbstraction<T> : ICompressionBag<T>, IReadOnlyCompressionBag<T>, INotifyCollectionChanged where T : notnull

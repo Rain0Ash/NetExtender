@@ -76,9 +76,9 @@ namespace NetExtender.Types.Trees
             return Equals(Key, other.Key) && Equals(Value, other.Value) && Section == other.Section && Separator == other.Separator;
         }
 
-        public override Boolean Equals(Object? obj)
+        public override Boolean Equals(Object? other)
         {
-            return obj is FlattenDictionaryTreeEntry<TKey, TValue> other && Equals(other);
+            return other is FlattenDictionaryTreeEntry<TKey, TValue> entry && Equals(entry);
         }
 
         public override Int32 GetHashCode()

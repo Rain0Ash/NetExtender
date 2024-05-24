@@ -195,7 +195,7 @@ namespace NetExtender.Types.Network
                 return !@throw ? null : throw new ArgumentException($"Invalid '{nameof(HttpContent)}' instance provided. It does not have a content-type header value. '{nameof(HttpContent)}' instances must have a content-type header starting with 'multipart/'.", nameof(content));
             }
 
-            if (type.MediaType?.StartsWith("multipart", StringComparison.OrdinalIgnoreCase) != true)
+            if (type.MediaType?.StartsWith("multipart", StringComparison.OrdinalIgnoreCase) is not true)
             {
                 return !@throw ? null : throw new ArgumentException($"Invalid '{nameof(HttpContent)}' instance provided. It does not have a content type header starting with 'multipart/'.", nameof(content));
             }

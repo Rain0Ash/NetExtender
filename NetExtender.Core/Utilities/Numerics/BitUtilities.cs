@@ -172,6 +172,26 @@ namespace NetExtender.Utilities.Numerics
             return true;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Boolean TryGetSetBits(Byte value, Span<UInt32> destination, out Int32 written)
+        {
+            written = 0;
+            ImmutableArray<Int32> position = SetBitTable[value];
+
+            if (destination.Length < position.Length)
+            {
+                return false;
+            }
+
+            for (Int32 i = 0; i < position.Length; i++)
+            {
+                destination[i] = (UInt32) position[i];
+                written++;
+            }
+
+            return true;
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe Boolean TryGetSetBits<T>(this T value, Span<Int32> destination, out Int32 written) where T : unmanaged
         {
@@ -210,6 +230,65 @@ namespace NetExtender.Utilities.Numerics
 
             Span<Int32> position = stackalloc Int32[BitInByte];
             for (Int32 i = 0; i < length; i++)
+            {
+                Byte value = ((Byte*) pointer)[i];
+                if (!TryGetSetBits(value, position, out Int32 count))
+                {
+                    return false;
+                }
+
+                if (destination.Length < written + count)
+                {
+                    return false;
+                }
+
+                for (Int32 j = 0; j < count; j++)
+                {
+                    destination[written++] = position[j] + BitInByte * i;
+                }
+            }
+
+            return true;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe Boolean TryGetSetBits<T>(this T value, Span<UInt32> destination, out Int32 written) where T : unmanaged
+        {
+            return TryGetSetBits(&value, sizeof(T), destination, out written);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe Boolean TryGetSetBits<T>(in T value, Span<UInt32> destination, out Int32 written) where T : unmanaged
+        {
+            fixed (T* pointer = &value)
+            {
+                return TryGetSetBits(pointer, sizeof(T), destination, out written);
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe Boolean TryGetSetBits(void* pointer, Int32 length, Span<UInt32> destination, out Int32 written)
+        {
+            if (length > 0)
+            {
+                return TryGetSetBits(pointer, (UInt32) length, destination, out written);
+            }
+
+            written = 0;
+            return true;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static unsafe Boolean TryGetSetBits(void* pointer, UInt32 length, Span<UInt32> destination, out Int32 written)
+        {
+            written = 0;
+            if (length <= 0)
+            {
+                return true;
+            }
+
+            Span<UInt32> position = stackalloc UInt32[BitInByte];
+            for (UInt32 i = 0; i < length; i++)
             {
                 Byte value = ((Byte*) pointer)[i];
                 if (!TryGetSetBits(value, position, out Int32 count))

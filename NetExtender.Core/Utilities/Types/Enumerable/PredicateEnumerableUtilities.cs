@@ -1140,9 +1140,9 @@ namespace NetExtender.Utilities.Types
                 Value = value;
             }
 
-            public override Boolean Equals(Object? obj)
+            public override Boolean Equals(Object? other)
             {
-                return obj is TKey key && Equals(key) || obj is DistinctLastByEntry<T, TKey> entry && Equals(entry);
+                return other is TKey key && Equals(key) || other is DistinctLastByEntry<T, TKey> entry && Equals(entry);
             }
 
             public Boolean Equals(DistinctLastByEntry<T, TKey> other)

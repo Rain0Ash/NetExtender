@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
 using NetExtender.Configuration.Interfaces;
+using NetExtender.Interfaces.Notify;
 using NetExtender.Types.Behavior.Interfaces;
 using NetExtender.Types.Singletons;
 using NetExtender.Types.Singletons.Interfaces;
@@ -25,7 +26,7 @@ namespace NetExtender.Configuration.Behavior.Settings
         }
     }
     
-    public abstract class SettingsBehavior : IChangeableBehavior, INotifyPropertyChanging, INotifyPropertyChanged
+    public abstract class SettingsBehavior : IChangeableBehavior, INotifyProperty
     {
         public event PropertyChangingEventHandler? PropertyChanging;
         public event PropertyChangedEventHandler? PropertyChanged;

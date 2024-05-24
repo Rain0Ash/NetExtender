@@ -313,7 +313,7 @@ namespace NetExtender.Utilities.Types
             }
 
             String[] captures = GetCaptures(matches).ToArray();
-            return captures.FirstOrDefault()?.Equals(value) == true ? captures : Array.Empty<String>();
+            return captures.FirstOrDefault()?.Equals(value) is true ? captures : Array.Empty<String>();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

@@ -9,6 +9,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using NetExtender.Interfaces.Notify;
 using NetExtender.Types.Monads;
 using NetExtender.Utilities.Types;
 
@@ -179,7 +180,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.Types.ComboBoxes
             public T? Value { get; }
         }
 
-        protected interface IView : INotifyPropertyChanging, INotifyPropertyChanged
+        protected interface IView : INotifyProperty
         {
             public Boolean HasValue { get; }
 

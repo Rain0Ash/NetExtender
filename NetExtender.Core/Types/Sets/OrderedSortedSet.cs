@@ -11,6 +11,7 @@ using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Sets
 {
+    //TODO: SortedSetMethods
     public class OrderedSortedSet<T> : ISet, ISet<T>, IReadOnlySet<T>
     {
         private SortedSet<T> Set { get; }
@@ -31,6 +32,22 @@ namespace NetExtender.Types.Sets
             get
             {
                 return Set.Count;
+            }
+        }
+
+        public T? Min
+        {
+            get
+            {
+                return Set.Min;
+            }
+        }
+
+        public T? Max
+        {
+            get
+            {
+                return Set.Max;
             }
         }
 

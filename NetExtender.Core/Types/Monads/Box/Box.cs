@@ -42,9 +42,9 @@ namespace NetExtender.Types.Monads
             return Value?.GetHashCode() ?? 0;
         }
 
-        public override Boolean Equals(Object? obj)
+        public override Boolean Equals(Object? other)
         {
-            return obj is T other && Equals(other) || obj is Box<T> box && Equals(box);
+            return other is T value && Equals(value) || other is Box<T> box && Equals(box);
         }
 
         public Boolean Equals(T? other)

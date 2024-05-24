@@ -19,7 +19,8 @@ namespace NetExtender.NAudio.Types.Providers
 
         private const Boolean Silence = false;
 
-        private Object Synchronization { get; } = ConcurrentUtilities.Synchronization;
+        private Object SyncRoot { get; } = ConcurrentUtilities.SyncRoot;
+        
         private ISampleProvider Provider { get; }
         private Int32 FadePosition { get; set; }
         private Int32 FadeCount { get; set; }
@@ -85,7 +86,7 @@ namespace NetExtender.NAudio.Types.Providers
 
         private void BeginFadeIn(TimeSpan duration)
         {
-            lock (Synchronization)
+            lock (SyncRoot)
             {
                 FadePosition = 0;
                 FadeCount = (Int32) (duration.TotalSeconds * Provider.WaveFormat.SampleRate);
@@ -100,7 +101,7 @@ namespace NetExtender.NAudio.Types.Providers
 
         private void BeginFadeOut(TimeSpan delay, TimeSpan duration)
         {
-            lock (Synchronization)
+            lock (SyncRoot)
             {
                 FadePosition = 0;
                 FadeCount = (Int32) (duration.TotalSeconds * Provider.WaveFormat.SampleRate);
@@ -133,7 +134,7 @@ namespace NetExtender.NAudio.Types.Providers
         {
             Int32 read = Provider.Read(buffer, offset, count);
 
-            lock (Synchronization)
+            lock (SyncRoot)
             {
                 if (FadeDelaySamples <= 0)
                 {

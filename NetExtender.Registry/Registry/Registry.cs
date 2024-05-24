@@ -1433,9 +1433,9 @@ namespace NetExtender.Registry
             return HashCode.Combine(Key, FullPath, Permission, Options, Security);
         }
 
-        public override Boolean Equals(Object? obj)
+        public override Boolean Equals(Object? other)
         {
-            return ReferenceEquals(this, obj) || obj is Registry registry &&
+            return ReferenceEquals(this, other) || other is Registry registry &&
                 registry.Key == Key &&
                 registry.FullPath == FullPath &&
                 registry.Permission == Permission &&

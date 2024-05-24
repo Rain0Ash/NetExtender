@@ -301,9 +301,9 @@ namespace NetExtender.Cryptography.Base
         }
 
         /// <inheritdoc/>
-        public override Boolean Equals(Object? obj)
+        public override Boolean Equals(Object? other)
         {
-            return obj is Base16 other && Alphabet.Equals(other.Alphabet);
+            return other is Base16 value && Alphabet.Equals(value.Alphabet);
         }
 
         /// <inheritdoc/>

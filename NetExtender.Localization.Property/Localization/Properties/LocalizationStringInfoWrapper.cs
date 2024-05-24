@@ -7,6 +7,7 @@ using NetExtender.Localization.Events;
 using NetExtender.Localization.Interfaces;
 using NetExtender.Localization.Properties.Interfaces;
 using NetExtender.Types.Culture;
+using NetExtender.Types.Strings.Interfaces;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Localization.Properties
@@ -50,6 +51,38 @@ namespace NetExtender.Localization.Properties
             get
             {
                 return ToString();
+            }
+        }
+
+        Boolean IString.Immutable
+        {
+            get
+            {
+                return true;
+            }
+        }
+
+        Boolean IString.Constant
+        {
+            get
+            {
+                return false;
+            }
+        }
+
+        Int32 IString.Length
+        {
+            get
+            {
+                return Current.Length;
+            }
+        }
+
+        String IString.Text
+        {
+            get
+            {
+                return Current;
             }
         }
 

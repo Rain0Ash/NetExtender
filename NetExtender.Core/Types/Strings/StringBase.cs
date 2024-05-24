@@ -39,9 +39,9 @@ namespace NetExtender.Types.Strings
 
         public abstract String Text { get; protected set; }
 
-        public override Boolean Equals(Object? obj)
+        public override Boolean Equals(Object? other)
         {
-            return ReferenceEquals(this, obj) || ToString().Equals(obj);
+            return ReferenceEquals(this, other) || ToString().Equals(other);
         }
 
         public override Int32 GetHashCode()

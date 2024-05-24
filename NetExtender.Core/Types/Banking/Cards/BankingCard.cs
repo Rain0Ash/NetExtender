@@ -195,13 +195,13 @@ namespace NetExtender.Types.Banking.Cards
             return HashCode.Combine(Type, Number);
         }
 
-        public override Boolean Equals(Object? obj)
+        public override Boolean Equals(Object? other)
         {
-            return obj switch
+            return other switch
             {
-                BankingCard other => Equals(other),
-                String other => Equals(other),
-                BankingCardType type => Type == type,
+                BankingCard value => Equals(value),
+                String value => Equals(value),
+                BankingCardType value => Type == value,
                 _ => false
             };
         }

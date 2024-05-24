@@ -63,14 +63,14 @@ namespace NetExtender.AspNetCore.Types.DependencyInjection
             Service = service ?? throw new ArgumentNullException(nameof(service));
         }
 
-        public override Boolean Equals(Object? obj)
-        {
-            return Service.Equals(obj);
-        }
-
         public override Int32 GetHashCode()
         {
             return Service.GetHashCode();
+        }
+
+        public override Boolean Equals(Object? other)
+        {
+            return Service.Equals(other);
         }
 
         public override String ToString()

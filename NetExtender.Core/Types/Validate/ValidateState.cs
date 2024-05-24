@@ -150,7 +150,7 @@ namespace NetExtender.Types.Validate
             return first.Value switch
             {
                 State.Unknown => second,
-                State.Successful => second != false,
+                State.Successful => second is not false,
                 State.Invalid => false,
                 _ => throw new EnumUndefinedOrNotSupportedException<State>(first.Value, nameof(first), null)
             };
@@ -200,7 +200,7 @@ namespace NetExtender.Types.Validate
             {
                 State.Unknown => second,
                 State.Successful => true,
-                State.Invalid => second != false,
+                State.Invalid => second is not false,
                 _ => throw new EnumUndefinedOrNotSupportedException<State>(first.Value, nameof(first), null)
             };
         }
@@ -251,9 +251,9 @@ namespace NetExtender.Types.Validate
             return (Int32) Value;
         }
 
-        public override Boolean Equals(Object? obj)
+        public override Boolean Equals(Object? other)
         {
-            return obj switch
+            return other switch
             {
                 State value => Equals(value),
                 ValidateState value => Equals(value),

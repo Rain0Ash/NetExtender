@@ -540,9 +540,9 @@ namespace NetExtender.Types.Strings
             return ((IString) this).GetEnumerator();
         }
 
-        public override Boolean Equals(Object? obj)
+        public override Boolean Equals(Object? other)
         {
-            return ReferenceEquals(this, obj) || obj is StringBuilderAdapter other && Equals(other);
+            return ReferenceEquals(this, other) || other is StringBuilderAdapter adapter && Equals(adapter);
         }
 
         public Boolean Equals(StringBuilder? other)

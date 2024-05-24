@@ -3,7 +3,7 @@ using System.Windows.Input;
 
 namespace NetExtender.WindowsPresentation.Types.Commands
 {
-    public abstract class CommandAbstraction<T> : CommandAbstraction
+    public abstract class CommandAbstraction<T> : CommandAbstraction, ICommand<T>
     {
         public sealed override Boolean CanExecute(Object? parameter)
         {
@@ -31,7 +31,7 @@ namespace NetExtender.WindowsPresentation.Types.Commands
                     Execute(value);
                     return;
                 default:
-                    throw new ArgumentException($"Argument is not type '{typeof(T).Name}'.", nameof(parameter));
+                    throw new ArgumentException($"Argument is not of type '{typeof(T).Name}' for {GetType().Name}.", nameof(parameter));
             }
         }
 

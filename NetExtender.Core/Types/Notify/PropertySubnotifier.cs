@@ -229,7 +229,7 @@ namespace NetExtender.Types.Notify
 
             foreach (String? property in collection)
             {
-                Changing?.Invoke(sender, new PropertyChangingEventArgs(property));
+                Changing?.Invoke(sender, new PropertyChanging(property));
             }
         }
 
@@ -249,7 +249,7 @@ namespace NetExtender.Types.Notify
 
             foreach (String? property in collection)
             {
-                Changed?.Invoke(sender, new PropertyChangedEventArgs(property));
+                Changed?.Invoke(sender, new PropertyChanged(property));
             }
         }
     }

@@ -29,7 +29,7 @@ namespace NetExtender.NAudio.Types.Providers
             Sound = sound ?? throw new ArgumentNullException(nameof(sound));
             Provider = provider ?? throw new ArgumentNullException(nameof(provider));
             Offset = new OffsetSampleProvider(Provider) { SkipOver = sound.Start, Take = sound.Length };
-            FadeOut = new FadeOutSampleProvider(Offset, sound.StartActive, sound.Length - sound.StopActive, sound.StopActive);
+            FadeOut = new FadeOutSampleProvider(Offset, sound.Active.Start, sound.Length - sound.Active.Stop, sound.Active.Stop);
         }
 
         public Int32 Read(Single[] buffer, Int32 offset, Int32 count)

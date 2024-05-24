@@ -116,9 +116,9 @@ namespace NetExtender.Workstation
             Screen = screen ?? throw new ArgumentNullException(nameof(screen));
         }
 
-        public override Boolean Equals(Object? obj)
+        public override Boolean Equals(Object? other)
         {
-            return Screen.Equals(obj);
+            return Screen.Equals(other);
         }
 
         public override Int32 GetHashCode()

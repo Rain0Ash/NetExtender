@@ -451,9 +451,9 @@ namespace NetExtender.Types.Numerics
             return (Int32) Value;
         }
 
-        public override Boolean Equals(Object? obj)
+        public override Boolean Equals(Object? other)
         {
-            return obj switch
+            return other switch
             {
                 State value => Equals(value),
                 Trilean value => Equals(value),

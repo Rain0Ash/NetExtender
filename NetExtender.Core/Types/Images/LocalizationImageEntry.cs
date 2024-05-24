@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics.CodeAnalysis;
 using NetExtender.Types.Culture;
 
 namespace NetExtender.Types.Images

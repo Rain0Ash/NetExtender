@@ -92,9 +92,9 @@ namespace NetExtender.Configuration.Common
             return Key == other.Key && Sections.SequenceEqual(other.Sections);
         }
 
-        public override Boolean Equals(Object? obj)
+        public override Boolean Equals(Object? other)
         {
-            return obj is ConfigurationEntry other && Equals(other);
+            return other is ConfigurationEntry entry && Equals(entry);
         }
 
         public override Int32 GetHashCode()

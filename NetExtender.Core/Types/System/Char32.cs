@@ -557,9 +557,9 @@ namespace System
             return Value == other.Value;
         }
 
-        public override Boolean Equals(Object? obj)
+        public override Boolean Equals(Object? other)
         {
-            return base.Equals(obj);
+            return base.Equals(other);
         }
 
         public override Int32 GetHashCode()

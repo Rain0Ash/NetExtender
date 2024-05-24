@@ -141,6 +141,11 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
             EndConstructorInit();
         }
 
+        protected void Set(InterfaceCloseReason value)
+        {
+            _reason = value;
+        }
+
         private void SystemMenuInitialize(Object? sender, RoutedEventArgs args)
         {
             if (sender is not DependencyObject dependency)
@@ -171,12 +176,12 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
             {
                 case WM.QUERYENDSESSION:
                 case WM.ENDSESSION:
-                    CloseReason = InterfaceCloseReason.SystemShutdown;
+                    Set(InterfaceCloseReason.SystemShutdown);
                     break;
                 case WM.SYSCOMMAND:
                     if (((UInt16) message.WParam & 0xFFF0) == 0xF060)
                     {
-                        CloseReason = InterfaceCloseReason.UserClosing;
+                        Set(InterfaceCloseReason.UserClosing);
                     }
 
                     break;

@@ -266,9 +266,9 @@ namespace NetExtender.Domains.Initializer
                 return Internal.GetHashCode();
             }
 
-            public override Boolean Equals(Object? obj)
+            public override Boolean Equals(Object? other)
             {
-                return obj is Awaiter<T> result && Equals(result);
+                return other is Awaiter<T> result && Equals(result);
             }
 
             public Boolean Equals(Awaiter<T> other)

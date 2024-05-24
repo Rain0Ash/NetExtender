@@ -5,7 +5,6 @@ using System.ComponentModel;
 using System.Linq;
 using NetExtender.Localization.Interfaces;
 using NetExtender.Types.Culture;
-using NetExtender.Utilities.Types;
 using NetExtender.WindowsPresentation.Localization.Types.Collections;
 using NetExtender.WindowsPresentation.Localization.Types.Flags;
 using NetExtender.WindowsPresentation.Localization.Utilities;

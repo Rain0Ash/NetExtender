@@ -38,9 +38,9 @@ namespace NetExtender.Types.Anonymous
             return HashCode.Combine(Name, Type);
         }
 
-        public override Boolean Equals(Object? obj)
+        public override Boolean Equals(Object? other)
         {
-            return obj is AnonymousTypePropertyInfo info && Equals(info);
+            return other is AnonymousTypePropertyInfo info && Equals(info);
         }
 
         public Boolean Equals(AnonymousTypePropertyInfo other)

@@ -171,11 +171,11 @@ namespace NetExtender.Types.Times
         /// <summary>
         /// Determines if two objects are equal
         /// </summary>
-        /// <param name="obj">Object to check</param>
+        /// <param name="other">Object to check</param>
         /// <returns>True if they are, false otherwise</returns>
-        public override Boolean Equals(Object? obj)
+        public override Boolean Equals(Object? other)
         {
-            return obj is DateSpan span && span == this;
+            return other is DateSpan value && value == this;
         }
 
         /// <summary>

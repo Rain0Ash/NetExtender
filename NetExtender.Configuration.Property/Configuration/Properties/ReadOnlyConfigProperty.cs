@@ -145,7 +145,7 @@ namespace NetExtender.Configuration.Properties
         {
             get
             {
-                return Validate?.Invoke(Internal.Value) != false;
+                return Validate?.Invoke(Internal.Value) is not false;
             }
         }
 
@@ -229,7 +229,7 @@ namespace NetExtender.Configuration.Properties
             }
 
             (String? key, String? value, ImmutableArray<String> sections) = args.Value;
-            if (Converter.TryConvert(value, out T? result) && Validate?.Invoke(result) != false)
+            if (Converter.TryConvert(value, out T? result) && Validate?.Invoke(result) is not false)
             {
                 ConfigurationValueEntry<T> entry = new ConfigurationValueEntry<T>(key, result, sections);
                 Changed?.Invoke(this, new ConfigurationChangedEventArgs<T>(entry, args.Handled));
@@ -259,7 +259,7 @@ namespace NetExtender.Configuration.Properties
             }
 
             T value = Property.GetValue(Alternate, Converter);
-            return predicate?.Invoke(value) != false ? value : Alternate;
+            return predicate?.Invoke(value) is not false ? value : Alternate;
         }
 
         public Task<T> GetValueAsync()
@@ -285,7 +285,7 @@ namespace NetExtender.Configuration.Properties
             }
 
             T value = await Property.GetValueAsync(Alternate, Converter, token).ConfigureAwait(false);
-            return predicate?.Invoke(value) != false ? value : Alternate;
+            return predicate?.Invoke(value) is not false ? value : Alternate;
         }
 
         public virtual Boolean KeyExist()
@@ -418,7 +418,7 @@ namespace NetExtender.Configuration.Properties
         protected virtual void OnChanged(ConfigurationChangedEventArgs args)
         {
             Changed?.Invoke(this, args);
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Value)));
+            PropertyChanged?.Invoke(this, new PropertyChanged(nameof(Value)));
         }
 
         protected virtual void OnChanged(String? value)

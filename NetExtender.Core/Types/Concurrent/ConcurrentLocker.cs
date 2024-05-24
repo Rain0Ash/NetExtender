@@ -9,7 +9,7 @@ namespace NetExtender.Types.Concurrent
 {
     public sealed class ConcurrentLocker : IDisposable
     {
-        private Object Synchronization { get; } = ConcurrentUtilities.Synchronization;
+        private Object SyncRoot { get; } = ConcurrentUtilities.SyncRoot;
         private Boolean IsLocked { get; set; }
         private Object Item { get; }
         private Boolean Disposed { get; set; }
@@ -21,7 +21,7 @@ namespace NetExtender.Types.Concurrent
 
         public Boolean Lock()
         {
-            lock (Synchronization)
+            lock (SyncRoot)
             {
                 if (IsLocked)
                 {
@@ -42,7 +42,7 @@ namespace NetExtender.Types.Concurrent
 
         public Boolean Unlock()
         {
-            lock (Synchronization)
+            lock (SyncRoot)
             {
                 if (!IsLocked)
                 {

@@ -38,7 +38,7 @@ namespace NetExtender.StrongId.Generator
                 throw new ArgumentNullException(nameof(node));
             }
 
-            return node is AttributeListSyntax attributes && attributes.Target?.Identifier.IsKind(SyntaxKind.AssemblyKeyword) == true;
+            return node is AttributeListSyntax attributes && attributes.Target?.Identifier.IsKind(SyntaxKind.AssemblyKeyword) is true;
         }
 
         public static StructDeclarationSyntax? SemanticTarget(GeneratorSyntaxContext context)

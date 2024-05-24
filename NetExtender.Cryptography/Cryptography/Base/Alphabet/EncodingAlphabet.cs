@@ -88,9 +88,9 @@ namespace NetExtender.Cryptography.Base.Alphabet
         }
 
         /// <inheritdoc/>
-        public override Boolean Equals(Object? obj)
+        public override Boolean Equals(Object? other)
         {
-            return obj switch
+            return other switch
             {
                 null => false,
                 EncodingAlphabet alphabet => Equals(alphabet),

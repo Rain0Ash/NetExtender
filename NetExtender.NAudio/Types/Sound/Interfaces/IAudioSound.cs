@@ -7,18 +7,8 @@ using System.Threading.Tasks;
 
 namespace NetExtender.NAudio.Types.Sound.Interfaces
 {
-    public interface IAudioSound
+    public interface IAudioSound : IAudioSoundInformation
     {
-        public Int64 Size { get; }
-        public TimeSpan Start { get; }
-        public TimeSpan Stop { get; }
-        public TimeSpan StartActive { get; }
-        public TimeSpan StopActive { get; }
-        public TimeSpan TotalStartActive { get; }
-        public TimeSpan TotalStopActive { get; }
-        public TimeSpan Length { get; }
-        public TimeSpan TotalTime { get; }
-        public Single Volume { get; }
         public Boolean TryRead(Span<Byte> destination, out Int32 written);
         public Byte[] Read();
         public Task<Byte[]> ReadAsync();

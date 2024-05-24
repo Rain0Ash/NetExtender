@@ -895,7 +895,7 @@ namespace NetExtender.Utilities.Network
                 throw new ArgumentException("Value cannot be null or whitespace.", nameof(subtype));
             }
 
-            return IsMimeMultipartContent(content) && content.Headers.ContentType?.MediaType?.Equals("multipart/" + subtype, StringComparison.OrdinalIgnoreCase) == true;
+            return IsMimeMultipartContent(content) && content.Headers.ContentType?.MediaType?.Equals("multipart/" + subtype, StringComparison.OrdinalIgnoreCase) is true;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

@@ -86,9 +86,9 @@ namespace NetExtender.Types.Drawing.Colors
             return HashCode.Combine(R, G, B);
         }
 
-        public override Boolean Equals(Object? obj)
+        public override Boolean Equals(Object? other)
         {
-            return obj is ANSIColor result && Equals(result);
+            return other is ANSIColor color && Equals(color);
         }
 
         public Boolean Equals(ANSIColor other)

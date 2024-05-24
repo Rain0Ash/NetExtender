@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using NetExtender.Types.Memento.Builder.Interfaces;
 using NetExtender.Types.Memento.Interfaces;
+using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Memento
 {
@@ -33,12 +34,12 @@ namespace NetExtender.Types.Memento
 
                 if (undo != CanUndo)
                 {
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CanUndo)));
+                    PropertyChanged?.Invoke(this, new PropertyChanged(nameof(CanUndo)));
                 }
 
                 if (redo != CanRedo)
                 {
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CanRedo)));
+                    PropertyChanged?.Invoke(this, new PropertyChanged(nameof(CanRedo)));
                 }
             }
         }

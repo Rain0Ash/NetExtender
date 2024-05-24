@@ -239,9 +239,9 @@ namespace NetExtender.Types.Flags
             return HashCode.Combine(High, Low);
         }
 
-        public override Boolean Equals(Object? obj)
+        public override Boolean Equals(Object? other)
         {
-            return obj switch
+            return other switch
             {
                 null => false,
                 Flag64 value => Equals(value),

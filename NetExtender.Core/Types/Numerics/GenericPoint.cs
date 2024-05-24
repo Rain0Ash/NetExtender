@@ -158,9 +158,9 @@ namespace NetExtender.Types.Numerics
             return HashCode.Combine(X, Y);
         }
 
-        public override Boolean Equals(Object? obj)
+        public override Boolean Equals(Object? other)
         {
-            return obj is Point2<T> point && Equals(point);
+            return other is Point2<T> point && Equals(point);
         }
 
         public Boolean Equals(Point2<T> other)
@@ -277,9 +277,9 @@ namespace NetExtender.Types.Numerics
             return HashCode.Combine(X, Y);
         }
 
-        public override Boolean Equals(Object? obj)
+        public override Boolean Equals(Object? other)
         {
-            return obj is Point3<T> point && Equals(point);
+            return other is Point3<T> point && Equals(point);
         }
 
         public Boolean Equals(Point3<T> other)

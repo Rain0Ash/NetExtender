@@ -12,8 +12,8 @@ namespace NetExtender.Utilities.Types
         {
             return policy switch
             {
-                TransactionCommitPolicy.None => commit != false,
-                TransactionCommitPolicy.Required => commit == true,
+                TransactionCommitPolicy.None => commit is not false,
+                TransactionCommitPolicy.Required => commit is true,
                 TransactionCommitPolicy.Manual => commit == null,
                 _ => throw new EnumUndefinedOrNotSupportedException<TransactionCommitPolicy>(policy, nameof(policy), null)
             };

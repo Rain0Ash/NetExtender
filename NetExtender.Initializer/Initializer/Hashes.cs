@@ -64,7 +64,7 @@ namespace NetExtender.Initializer
 
             if (bytes is null)
             {
-                return strong == false ? Load(assembly, true)! : throw new CryptographicException($"Invalid cryptography for assembly '{assembly}'");
+                return strong is false ? Load(assembly, true)! : throw new CryptographicException($"Invalid cryptography for assembly '{assembly}'");
             }
 
             String token = Convert.ToHexString(bytes);
@@ -75,13 +75,13 @@ namespace NetExtender.Initializer
                     return Load(assembly, true)!;
                 }
 
-                if (strong == true)
+                if (strong is true)
                 {
                     throw new CryptographicException($"Invalid cryptography for assembly '{assembly}'");
                 }
             }
 
-            if (strong == true)
+            if (strong is true)
             {
                 throw new CryptographicException($"Can't find cryptography for assembly: '{assembly}'");
             }
@@ -91,7 +91,7 @@ namespace NetExtender.Initializer
                 return Load(assembly, true)!;
             }
 
-            if (strong != false)
+            if (strong is not false)
             {
                 throw new CryptographicException($"Invalid cryptography for assembly '{assembly}'");
             }
@@ -103,7 +103,7 @@ namespace NetExtender.Initializer
         {
             if (Assemblies.TryGetValue(assembly, out AssemblyVerifyInfo? info) && (info is null || info.Hash is not null))
             {
-                Assembly? result = Load(assembly, info?.Hash, info?.Algorithm ?? System.Configuration.Assemblies.AssemblyHashAlgorithm.None, strong != false);
+                Assembly? result = Load(assembly, info?.Hash, info?.Algorithm ?? System.Configuration.Assemblies.AssemblyHashAlgorithm.None, strong is not false);
 
                 if (result is not null)
                 {
@@ -111,7 +111,7 @@ namespace NetExtender.Initializer
                 }
             }
 
-            if (strong != false)
+            if (strong is not false)
             {
                 throw new CryptographicException($"Can't find cryptography for assembly: '{assembly}'");
             }

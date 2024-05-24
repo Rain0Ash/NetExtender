@@ -50,6 +50,36 @@ namespace NetExtender.Utilities.Numerics
         Acsch
     }
 
+    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
+    public sealed class RoundingAttribute : Attribute
+    {
+        private const MidpointRounding Default = MidpointRounding.ToEven;
+        
+        public Byte Digits { get; }
+        public MidpointRounding Rounding { get; }
+
+        public RoundingAttribute()
+            : this(Default)
+        {
+        }
+
+        public RoundingAttribute(MidpointRounding rounding)
+            : this(2, rounding)
+        {
+        }
+
+        public RoundingAttribute(Byte digits)
+            : this(digits, Default)
+        {
+        }
+
+        public RoundingAttribute(Byte digits, MidpointRounding rounding)
+        {
+            Digits = digits;
+            Rounding = rounding;
+        }
+    }
+
     public static partial class MathUtilities
     {
         public static class SingleConstants
@@ -5211,8 +5241,7 @@ namespace NetExtender.Utilities.Numerics
         {
             value = Round(value, digits, rounding);
         }
-
-
+        
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Round(ref Single value, Int32 digits, MidpointRounding rounding)
         {
@@ -5397,6 +5426,90 @@ namespace NetExtender.Utilities.Numerics
         public static Decimal Round(this Decimal value, Int32 digits, MidpointRounding rounding)
         {
             return Math.Round(value, digits.Clamp(0, 28), rounding);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void Round(this RoundingAttribute attribute, ref Single value)
+        {
+            if (attribute is null)
+            {
+                throw new ArgumentNullException(nameof(attribute));
+            }
+
+            Round(ref value, attribute.Digits, attribute.Rounding);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Single Round(this RoundingAttribute attribute, Single value)
+        {
+            return Round(value, attribute);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Single Round(this Single value, RoundingAttribute attribute)
+        {
+            if (attribute is null)
+            {
+                throw new ArgumentNullException(nameof(attribute));
+            }
+
+            return Round(value, attribute.Digits, attribute.Rounding);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void Round(this RoundingAttribute attribute, ref Double value)
+        {
+            if (attribute is null)
+            {
+                throw new ArgumentNullException(nameof(attribute));
+            }
+
+            Round(ref value, attribute.Digits, attribute.Rounding);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Double Round(this RoundingAttribute attribute, Double value)
+        {
+            return Round(value, attribute);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Double Round(this Double value, RoundingAttribute attribute)
+        {
+            if (attribute is null)
+            {
+                throw new ArgumentNullException(nameof(attribute));
+            }
+
+            return Round(value, attribute.Digits, attribute.Rounding);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void Round(this RoundingAttribute attribute, ref Decimal value)
+        {
+            if (attribute is null)
+            {
+                throw new ArgumentNullException(nameof(attribute));
+            }
+
+            Round(ref value, attribute.Digits, attribute.Rounding);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Decimal Round(this RoundingAttribute attribute, Decimal value)
+        {
+            return Round(value, attribute);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Decimal Round(this Decimal value, RoundingAttribute attribute)
+        {
+            if (attribute is null)
+            {
+                throw new ArgumentNullException(nameof(attribute));
+            }
+
+            return Round(value, attribute.Digits, attribute.Rounding);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

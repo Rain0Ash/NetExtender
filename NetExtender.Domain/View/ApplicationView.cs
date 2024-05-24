@@ -197,7 +197,7 @@ namespace NetExtender.Domains.View
                 throw new ArgumentNullException(nameof(application));
             }
 
-            if (application.IsElevate != false)
+            if (application.IsElevate is not false)
             {
                 return TaskUtilities.True;
             }

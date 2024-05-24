@@ -68,9 +68,9 @@ namespace NetExtender.Types.Random
             return Random.NextDouble();
         }
 
-        public override Boolean Equals(Object? obj)
+        public override Boolean Equals(Object? other)
         {
-            return ReferenceEquals(this, obj) || Random.Equals(obj);
+            return ReferenceEquals(this, other) || Random.Equals(other);
         }
 
         public override Int32 GetHashCode()

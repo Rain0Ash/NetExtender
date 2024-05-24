@@ -72,9 +72,9 @@ namespace NetExtender.Types.Drawing.Colors
             return HashCode.Combine(C, M, Y, K);
         }
 
-        public override Boolean Equals(Object? obj)
+        public override Boolean Equals(Object? other)
         {
-            return obj is CMYKColor result && Equals(result);
+            return other is CMYKColor color && Equals(color);
         }
 
         public Boolean Equals(CMYKColor other)

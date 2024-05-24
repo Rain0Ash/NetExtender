@@ -525,8 +525,8 @@ namespace NetExtender.Utilities.Types
 
                     for (Int32 i = 0; i < written; i++)
                     {
-                        Int32 result = destination[i] + counter * BitUtilities.BitInByte;
-                        yield return Unsafe.As<Int32, T>(ref result);
+                        UInt64 result = 1UL << (destination[i] + counter * BitUtilities.BitInByte);
+                        yield return Unsafe.As<UInt64, T>(ref result);
                     }
                 }
             }

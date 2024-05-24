@@ -1,10 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using NetExtender.Types.Counters;
-using NetExtender.Utilities.Numerics;
-
 namespace NetExtender.Types.Immutable.Bags
 {
     /*public class ImmutableCompressionBagAbstraction<T, TCount, TBag> : ImmutableCompressionBagAbstraction<TCount>, IList<T>, IList, IImmutableList<T> where T : notnull where TCount : unmanaged, IConvertible

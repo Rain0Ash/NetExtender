@@ -51,7 +51,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
                 headers[HeaderNames.Vary] = profile.VaryByHeader;
             }
 
-            if (profile.NoStore == true)
+            if (profile.NoStore is true)
             {
                 if (profile.Location != ResponseCacheLocation.None)
                 {

@@ -112,9 +112,9 @@ namespace NetExtender.Windows.Types.IO
             return Handle.GetHashCode();
         }
 
-        public override Boolean Equals(Object? value)
+        public override Boolean Equals(Object? other)
         {
-            return value is KeyboardLayout other && Equals(other);
+            return other is KeyboardLayout layout && Equals(layout);
         }
 
         public Boolean Equals(KeyboardLayout other)

@@ -33,9 +33,9 @@ namespace NetExtender.Configuration.Common
             Value = value;
         }
 
-        public override Boolean Equals(Object? obj)
+        public override Boolean Equals(Object? other)
         {
-            return obj is ConfigurationSingleKeyEntry other && Equals(other);
+            return other is ConfigurationSingleKeyEntry entry && Equals(entry);
         }
 
         public Boolean Equals(ConfigurationSingleKeyEntry other)

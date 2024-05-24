@@ -113,7 +113,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(collection));
             }
-
+            
             using IDisposable? suppress = collection.Suppress();
             CollectionUtilities.AddRange(collection, source);
         }
@@ -193,6 +193,23 @@ namespace NetExtender.Utilities.Types
 
             using IDisposable? suppress = collection.Suppress();
             return CollectionUtilities.RemoveAll(collection, source);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int32 RemoveAll<T>(this ObservableCollection<T> collection, Predicate<T> match)
+        {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
+            if (match is null)
+            {
+                throw new ArgumentNullException(nameof(match));
+            }
+
+            using IDisposable? suppress = collection.Suppress();
+            return CollectionUtilities.RemoveAll(collection, match);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

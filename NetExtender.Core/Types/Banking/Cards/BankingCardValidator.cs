@@ -181,12 +181,12 @@ namespace NetExtender.Types.Banking.Cards
 
         protected virtual Boolean IsPattern(String number)
         {
-            return Pattern?.IsMatch(number) != false;
+            return Pattern?.IsMatch(number) is not false;
         }
 
         protected virtual Boolean IsNumber(String number)
         {
-            return Validator?.Validate(number) != false;
+            return Validator?.Validate(number) is not false;
         }
 
         protected abstract BankingCardValidator With(IBankingCardChecksumValidator? validator);

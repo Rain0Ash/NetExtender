@@ -248,9 +248,9 @@ namespace NetExtender.Cryptography.Compression
             return Compression.InitializeLifetimeService();
         }
 
-        public override Boolean Equals(Object? obj)
+        public override Boolean Equals(Object? other)
         {
-            return Compression.Equals(obj);
+            return Compression.Equals(other);
         }
 
         public override Int32 GetHashCode()

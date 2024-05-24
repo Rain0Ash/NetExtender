@@ -116,12 +116,12 @@ namespace NetExtender.Configuration.Common
             return Key == other.Key && Value == other.Value && Sections.SequenceEqual(other.Sections);
         }
 
-        public override Boolean Equals(Object? obj)
+        public override Boolean Equals(Object? other)
         {
-            return obj switch
+            return other switch
             {
-                ConfigurationValueEntry other => Equals(other),
-                ConfigurationEntry other => Equals(other),
+                ConfigurationValueEntry entry => Equals(entry),
+                ConfigurationEntry entry => Equals(entry),
                 _ => false
             };
         }
@@ -217,12 +217,12 @@ namespace NetExtender.Configuration.Common
             return Key == other.Key && Equals(Value, other.Value) && Sections.SequenceEqual(other.Sections);
         }
 
-        public override Boolean Equals(Object? obj)
+        public override Boolean Equals(Object? other)
         {
-            return obj switch
+            return other switch
             {
-                ConfigurationValueEntry<T> other => Equals(other),
-                ConfigurationEntry other => Equals(other),
+                ConfigurationValueEntry<T> value => Equals(value),
+                ConfigurationEntry value => Equals(value),
                 _ => false
             };
         }
