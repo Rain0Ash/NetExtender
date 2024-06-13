@@ -286,6 +286,7 @@ namespace NetExtender.Types.Network
     {
         public Func<SocketException, ExceptionHandlerAction>? SocketHandler { get; init; }
         public Func<IOException, ExceptionHandlerAction>? IOHandler { get; init; }
+        public Func<HttpRequestException, ExceptionHandlerAction>? BadRequestHandler { get; init; }
         public Func<HttpRequestException, ExceptionHandlerAction>? ForbiddenHandler { get; init; }
         public Func<HttpRequestException, ExceptionHandlerAction>? NotFoundHandler { get; init; }
         public Func<HttpRequestException, ExceptionHandlerAction>? InternalErrorHandler { get; init; }
@@ -324,6 +325,16 @@ namespace NetExtender.Types.Network
             {
                 case null:
                     return ExceptionHandlerAction.Ignore;
+                case var _ when exception.StatusCode == HttpStatusCode.BadRequest && BadRequestHandler is not null:
+                {
+                    ExceptionHandlerAction result = BadRequestHandler(exception);
+                    if (result == ExceptionHandlerAction.Default)
+                    {
+                        goto ClientError;
+                    }
+
+                    return result;
+                }
                 case var _ when exception.StatusCode == HttpStatusCode.Forbidden && ForbiddenHandler is not null:
                 {
                     ExceptionHandlerAction result = ForbiddenHandler(exception);
@@ -349,7 +360,7 @@ namespace NetExtender.Types.Network
                     ExceptionHandlerAction result = ClientErrorHandler?.Invoke(exception) ?? ExceptionHandlerAction.Default;
                     if (result == ExceptionHandlerAction.Default)
                     {
-                        goto case default;
+                        goto Default;
                     }
 
                     return result;
@@ -379,12 +390,12 @@ namespace NetExtender.Types.Network
                     ExceptionHandlerAction result = ServerErrorHandler?.Invoke(exception) ?? ExceptionHandlerAction.Default;
                     if (result == ExceptionHandlerAction.Default)
                     {
-                        goto case default;
+                        goto Default;
                     }
 
                     return result;
                 }
-                default:
+                default: Default:
                     return HttpHandler?.Invoke(exception) ?? ExceptionHandlerAction.Default;
             }
         }

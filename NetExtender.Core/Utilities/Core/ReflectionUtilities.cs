@@ -173,7 +173,36 @@ namespace NetExtender.Utilities.Core
                 CallStaticInitializerAttribute(args.LoadedAssembly);
             }
         }
-
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String Join(params String[] values)
+        {
+            return Join(null, values);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String Join(Char separator, params String[] values)
+        {
+            if (values is null)
+            {
+                throw new ArgumentNullException(nameof(values));
+            }
+            
+            return String.Join(separator, values);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String Join(String? separator, params String[] values)
+        {
+            if (values is null)
+            {
+                throw new ArgumentNullException(nameof(values));
+            }
+            
+            return separator is not null ? String.Join(separator, values) : Join('.', values);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsVarArgType(this Type type)
         {
             if (type is null)

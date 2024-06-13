@@ -1,5 +1,6 @@
 using System;
 using System.Globalization;
+using System.Windows;
 using System.Windows.Data;
 
 namespace NetExtender.WindowsPresentation.Types.Converters
@@ -34,6 +35,14 @@ namespace NetExtender.WindowsPresentation.Types.Converters
     
     public abstract class ValueConverter : IValueConverter
     {
+        public static Object None
+        {
+            get
+            {
+                return DependencyProperty.UnsetValue;
+            }
+        }
+        
         public abstract Object? Convert(Object? value, Type? targetType, Object? parameter, CultureInfo? culture);
         public abstract Object? ConvertBack(Object? value, Type? targetType, Object? parameter, CultureInfo? culture);
     }
