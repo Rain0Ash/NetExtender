@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Net;
@@ -13,6 +15,8 @@ using Newtonsoft.Json;
 
 namespace NetExtender.Types.Network
 {
+    public delegate ExceptionHandlerAction HttpExceptionHandler(HttpRequestException? exception);
+    
     [SuppressMessage("ReSharper", "CognitiveComplexity")]
     public abstract class HttpRequestHandler : ExceptionHandler
     {
@@ -281,22 +285,28 @@ namespace NetExtender.Types.Network
             return exception is null ? ExceptionHandlerAction.Ignore : ExceptionHandlerAction.Default;
         }
     }
-
+    
     public class DynamicHttpRequestHandler : HttpRequestHandler
     {
-        public Func<SocketException, ExceptionHandlerAction>? SocketHandler { get; init; }
-        public Func<IOException, ExceptionHandlerAction>? IOHandler { get; init; }
-        public Func<HttpRequestException, ExceptionHandlerAction>? BadRequestHandler { get; init; }
-        public Func<HttpRequestException, ExceptionHandlerAction>? ForbiddenHandler { get; init; }
-        public Func<HttpRequestException, ExceptionHandlerAction>? NotFoundHandler { get; init; }
-        public Func<HttpRequestException, ExceptionHandlerAction>? InternalErrorHandler { get; init; }
-        public Func<HttpRequestException, ExceptionHandlerAction>? ServiceUnavailableHandler { get; init; }
-        public Func<HttpRequestException, ExceptionHandlerAction>? ClientErrorHandler { get; init; }
-        public Func<HttpRequestException, ExceptionHandlerAction>? ServerErrorHandler { get; init; }
-        public Func<HttpRequestException, ExceptionHandlerAction>? HttpHandler { get; init; }
-        public Func<JsonException, ExceptionHandlerAction>? JsonHandler { get; init; }
-        public Func<Exception, ExceptionHandlerAction>? DefaultHandler { get; init; }
-        public Action? FinallyHandler { get; init; }
+        //TODO:
+        protected ConcurrentDictionary<HttpStatusCode, HttpExceptionHandler?> Handlers { get; } = new ConcurrentDictionary<HttpStatusCode, HttpExceptionHandler?>();
+        
+        public Func<SocketException, ExceptionHandlerAction>? SocketHandler { get; set; }
+        public Func<IOException, ExceptionHandlerAction>? IOHandler { get; set; }
+        
+        public Func<HttpRequestException, ExceptionHandlerAction>? BadRequestHandler { get; set; }
+        public Func<HttpRequestException, ExceptionHandlerAction>? ForbiddenHandler { get; set; }
+        public Func<HttpRequestException, ExceptionHandlerAction>? NotFoundHandler { get; set; }
+        public Func<HttpRequestException, ExceptionHandlerAction>? InternalServerErrorHandler { get; set; }
+        public Func<HttpRequestException, ExceptionHandlerAction>? BadGatewayHandler { get; set; }
+        public Func<HttpRequestException, ExceptionHandlerAction>? ServiceUnavailableHandler { get; set; }
+        
+        public Func<HttpRequestException, ExceptionHandlerAction>? ClientErrorHandler { get; set; }
+        public Func<HttpRequestException, ExceptionHandlerAction>? ServerErrorHandler { get; set; }
+        public Func<HttpRequestException, ExceptionHandlerAction>? HttpHandler { get; set; }
+        public Func<JsonException, ExceptionHandlerAction>? JsonHandler { get; set; }
+        public Func<Exception, ExceptionHandlerAction>? DefaultHandler { get; set; }
+        public Action? FinallyHandler { get; set; }
         
         protected override ExceptionHandlerAction Handle(SocketException? exception)
         {
@@ -365,9 +375,19 @@ namespace NetExtender.Types.Network
 
                     return result;
                 }
-                case var _ when exception.StatusCode == HttpStatusCode.InternalServerError && InternalErrorHandler is not null:
+                case var _ when exception.StatusCode == HttpStatusCode.InternalServerError && InternalServerErrorHandler is not null:
                 {
-                    ExceptionHandlerAction result = InternalErrorHandler(exception);
+                    ExceptionHandlerAction result = InternalServerErrorHandler(exception);
+                    if (result == ExceptionHandlerAction.Default)
+                    {
+                        goto ServerError;
+                    }
+
+                    return result;
+                }
+                case var _ when exception.StatusCode == HttpStatusCode.BadGateway && BadGatewayHandler is not null:
+                {
+                    ExceptionHandlerAction result = BadGatewayHandler(exception);
                     if (result == ExceptionHandlerAction.Default)
                     {
                         goto ServerError;

@@ -502,11 +502,10 @@ namespace NetExtender.Utilities.Numerics
             }
 
             Type type = typeof(TSource);
-            ParameterExpression parameter = Expression.Parameter(type, "source");
-
-            MemberExpression access = Expression.MakeMemberAccess(parameter, member);
+            ParameterExpression source = Expression.Parameter(type, nameof(source));
+            MemberExpression access = Expression.MakeMemberAccess(source, member);
             UnaryExpression convert = Expression.Convert(access, typeof(TValue));
-            return Expression.Lambda<Func<TSource, TValue>>(convert, parameter);
+            return Expression.Lambda<Func<TSource, TValue>>(convert, source);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
@@ -537,8 +536,7 @@ namespace NetExtender.Utilities.Numerics
                 throw new MissingMethodException($"Member is {nameof(PropertyInfo)} without getter");
             }
 
-            ParameterExpression parameter = Expression.Parameter(source, "source");
-
+            ParameterExpression parameter = Expression.Parameter(source, nameof(source));
             MemberExpression access = Expression.MakeMemberAccess(parameter, member);
             UnaryExpression convert = Expression.Convert(access, value);
             return Expression.Lambda<Func<Object, Object?>>(convert, parameter);
@@ -566,11 +564,10 @@ namespace NetExtender.Utilities.Numerics
             try
             {
                 Type type = typeof(TSource);
-                ParameterExpression parameter = Expression.Parameter(type, "source");
-
-                MemberExpression access = Expression.MakeMemberAccess(parameter, member);
+                ParameterExpression source = Expression.Parameter(type, nameof(source));
+                MemberExpression access = Expression.MakeMemberAccess(source, member);
                 UnaryExpression convert = Expression.Convert(access, typeof(TValue));
-                result = Expression.Lambda<Func<TSource, TValue>>(convert, parameter);
+                result = Expression.Lambda<Func<TSource, TValue>>(convert, source);
                 return true;
             }
             catch (Exception)
@@ -611,8 +608,7 @@ namespace NetExtender.Utilities.Numerics
 
             try
             {
-                ParameterExpression parameter = Expression.Parameter(source, "source");
-
+                ParameterExpression parameter = Expression.Parameter(source, nameof(source));
                 MemberExpression access = Expression.MakeMemberAccess(parameter, member);
                 UnaryExpression convert = Expression.Convert(access, value);
                 result = Expression.Lambda<Func<Object, Object?>>(convert, parameter);
@@ -650,27 +646,27 @@ namespace NetExtender.Utilities.Numerics
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Expression<Func<TSource, TValue>> CreateGetExpression<TSource, TValue>(this PropertyInfo field)
+        public static Expression<Func<TSource, TValue>> CreateGetExpression<TSource, TValue>(this PropertyInfo property)
         {
-            return CreateGetExpression<TSource, TValue>((MemberInfo) field);
+            return CreateGetExpression<TSource, TValue>((MemberInfo) property);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Expression<Func<Object, Object?>> CreateGetExpression(this PropertyInfo field, Type source, Type value)
+        public static Expression<Func<Object, Object?>> CreateGetExpression(this PropertyInfo property, Type source, Type value)
         {
-            return CreateGetExpression((MemberInfo) field, source, value);
+            return CreateGetExpression((MemberInfo) property, source, value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean TryCreateGetExpression<TSource, TValue>(this PropertyInfo field, [MaybeNullWhen(false)] out Expression<Func<TSource, TValue>> result)
+        public static Boolean TryCreateGetExpression<TSource, TValue>(this PropertyInfo property, [MaybeNullWhen(false)] out Expression<Func<TSource, TValue>> result)
         {
-            return TryCreateGetExpression((MemberInfo) field, out result);
+            return TryCreateGetExpression((MemberInfo) property, out result);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean TryCreateGetExpression(this PropertyInfo field, Type source, Type value, [MaybeNullWhen(false)] out Expression<Func<Object, Object?>> result)
+        public static Boolean TryCreateGetExpression(this PropertyInfo property, Type source, Type value, [MaybeNullWhen(false)] out Expression<Func<Object, Object?>> result)
         {
-            return TryCreateGetExpression((MemberInfo) field, source, value, out result);
+            return TryCreateGetExpression((MemberInfo) property, source, value, out result);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]

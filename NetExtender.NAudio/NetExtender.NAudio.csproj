@@ -28,4 +28,9 @@
       <ProjectReference Include="..\NetExtender.Core\NetExtender.Core.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Remove="Types\Sound\AudioSoundBreakpoint.cs" />
+      <Compile Remove="Types\Sound\AudioSoundInformation.cs" />
+    </ItemGroup>
+
 </Project>

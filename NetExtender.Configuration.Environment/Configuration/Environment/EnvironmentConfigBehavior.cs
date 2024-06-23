@@ -15,26 +15,27 @@ namespace NetExtender.Configuration.Environment
 {
     public class EnvironmentConfigBehavior : SingleKeyConfigBehavior
     {
-        public EnvironmentVariableTarget Target { get; init; } = EnvironmentVariableTarget.Process;
+        public EnvironmentVariableTarget Target { get; }
 
-        public EnvironmentConfigBehavior()
-            : this(ConfigOptions.None)
+        public EnvironmentConfigBehavior(EnvironmentVariableTarget target)
+            : this(target, ConfigOptions.None)
         {
         }
 
-        public EnvironmentConfigBehavior(ConfigOptions options)
-            : this(null, options)
+        public EnvironmentConfigBehavior(EnvironmentVariableTarget target, ConfigOptions options)
+            : this(null, target, options)
         {
         }
 
-        public EnvironmentConfigBehavior(String? path)
-            : this(path, ConfigOptions.None)
+        public EnvironmentConfigBehavior(String? path, EnvironmentVariableTarget target)
+            : this(path, target, ConfigOptions.None)
         {
         }
 
-        public EnvironmentConfigBehavior(String? path, ConfigOptions options)
+        public EnvironmentConfigBehavior(String? path, EnvironmentVariableTarget target, ConfigOptions options)
             : base(path ?? nameof(System.Environment), options)
         {
+            Target = target;
         }
 
         protected override String? TryGetValue(String? key)

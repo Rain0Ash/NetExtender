@@ -7,6 +7,7 @@ using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
+using System.Net.Http;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using NetExtender.Types.Exceptions;
@@ -3400,7 +3401,6 @@ namespace NetExtender.Utilities.Numerics
         /// <inheritdoc cref="Math.Cos"/>
         public static Decimal Cos(this Decimal value)
         {
-            //truncating to  [-2*PI;2*PI]
             TruncateToPeriodicInterval(ref value);
 
             switch (value)
