@@ -8,7 +8,7 @@ using System.Runtime.Serialization;
 namespace NetExtender.Types.Exceptions
 {
     [Serializable]
-    public class IncorrentEnumTypeException<T> : IncorrentEnumTypeException
+    public class IncorrectEnumTypeException<T> : IncorrectEnumTypeException
     {
         public sealed override Type Type
         {
@@ -18,72 +18,72 @@ namespace NetExtender.Types.Exceptions
             }
         }
 
-        public IncorrentEnumTypeException()
+        public IncorrectEnumTypeException()
         {
         }
 
-        public IncorrentEnumTypeException(String? message)
+        public IncorrectEnumTypeException(String? message)
             : base(message)
         {
         }
 
-        public IncorrentEnumTypeException(String? message, Exception? innerException)
+        public IncorrectEnumTypeException(String? message, Exception? innerException)
             : base(message, innerException)
         {
         }
 
-        public IncorrentEnumTypeException(String? message, String? paramName)
+        public IncorrectEnumTypeException(String? message, String? paramName)
             : base(message, paramName)
         {
         }
 
-        public IncorrentEnumTypeException(String? message, String? paramName, Exception? innerException)
+        public IncorrectEnumTypeException(String? message, String? paramName, Exception? innerException)
             : base(message, paramName, innerException)
         {
         }
 
-        protected IncorrentEnumTypeException(SerializationInfo info, StreamingContext context)
+        protected IncorrectEnumTypeException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
         }
     }
     
     [Serializable]
-    public abstract class IncorrentEnumTypeException : ArgumentException
+    public abstract class IncorrectEnumTypeException : ArgumentException
     {
         [return: NotNullIfNotNull("exception")]
-        public static implicit operator Type?(IncorrentEnumTypeException? exception)
+        public static implicit operator Type?(IncorrectEnumTypeException? exception)
         {
             return exception?.Type;
         }
         
         public abstract Type Type { get; }
 
-        protected IncorrentEnumTypeException()
+        protected IncorrectEnumTypeException()
         {
         }
 
-        protected IncorrentEnumTypeException(String? message)
+        protected IncorrectEnumTypeException(String? message)
             : base(message)
         {
         }
 
-        protected IncorrentEnumTypeException(String? message, Exception? innerException)
+        protected IncorrectEnumTypeException(String? message, Exception? innerException)
             : base(message, innerException)
         {
         }
 
-        protected IncorrentEnumTypeException(String? message, String? paramName)
+        protected IncorrectEnumTypeException(String? message, String? paramName)
             : base(message, paramName)
         {
         }
 
-        protected IncorrentEnumTypeException(String? message, String? paramName, Exception? innerException)
+        protected IncorrectEnumTypeException(String? message, String? paramName, Exception? innerException)
             : base(message, paramName, innerException)
         {
         }
 
-        protected IncorrentEnumTypeException(SerializationInfo info, StreamingContext context)
+        protected IncorrectEnumTypeException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
         }

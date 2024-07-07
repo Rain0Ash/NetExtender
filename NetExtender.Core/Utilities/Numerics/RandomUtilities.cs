@@ -82,7 +82,7 @@ namespace NetExtender.Utilities.Numerics
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Span<Byte> Update(this Random random, Span<Byte> value)
+        public static Span<Byte> Fill(this Random random, Span<Byte> value)
         {
             if (random is null)
             {
@@ -94,7 +94,7 @@ namespace NetExtender.Utilities.Numerics
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Span<Byte> Update(this Random random, Byte[] value)
+        public static Byte[] Fill(this Random random, Byte[] value)
         {
             if (random is null)
             {
@@ -106,7 +106,7 @@ namespace NetExtender.Utilities.Numerics
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Span<Byte> Update<T>(this T random, Span<Byte> value) where T : IRandom
+        public static Span<Byte> Fill<T>(this T random, Span<Byte> value) where T : IRandom
         {
             if (random is null)
             {
@@ -118,7 +118,7 @@ namespace NetExtender.Utilities.Numerics
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Span<Byte> Update<T>(this T random, Byte[] value) where T : IRandom
+        public static Byte[] Fill<T>(this T random, Byte[] value) where T : IRandom
         {
             if (random is null)
             {

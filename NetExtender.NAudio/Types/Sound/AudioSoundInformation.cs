@@ -142,8 +142,8 @@ namespace NetExtender.NAudio.Types.Sound
                 return Information.Total;
             }
         }
-
-        public virtual Single? Volume { get; init; }
+        
+        public virtual Single? Volume { get; init; } = 1;
 
         protected AudioSoundInformation()
         {

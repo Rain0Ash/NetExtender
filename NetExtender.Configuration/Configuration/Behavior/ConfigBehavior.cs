@@ -46,6 +46,11 @@ namespace NetExtender.Configuration.Behavior
             {
                 return GetDefaultPath(extension);
             }
+            
+            if (!String.IsNullOrWhiteSpace(extension) && !PathUtilities.HasExtension(path))
+            {
+                path = PathUtilities.ChangeExtension(path, extension);
+            }
 
             return !System.IO.Path.IsPathFullyQualified(path) ? System.IO.Path.Combine(Environment.CurrentDirectory, path) : path;
         }

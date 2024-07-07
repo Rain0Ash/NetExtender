@@ -451,12 +451,25 @@ namespace NetExtender.Utilities.Types
             CacheValues<T>.TryGetValue(value, out Decimal result);
             return result;
         }
+        
+        public static IEnumerable<Decimal> ToDecimal<T>(this IEnumerable<T> source) where T : unmanaged, Enum
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            foreach (T value in source)
+            {
+                yield return ToDecimal(value);
+            }
+        }
 
         public static IEnumerable<Decimal> AsDecimal<T>() where T : unmanaged, Enum
         {
             return CacheValues<T>.Values.OfType<IConvertible>().ToDecimal();
         }
-
+        
         public static IEnumerable<UInt64> AsUInt64<T>() where T : unmanaged, Enum
         {
             return AsDecimal<T>().Select(ConvertUtilities.ToUInt64);
@@ -499,13 +512,7 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static Int32 CountOfFlags<T>() where T : unmanaged, Enum
         {
-            if (!IsFlags<T>())
-            {
-                throw new NotFlagsEnumTypeException<T>(null, nameof(T));
-            }
-
-            UInt64[] values = AsUInt64<T>().ToArray();
-            return values.Length < 2 ? values.Length : values.Count(MathUtilities.IsPowerOf2);
+            return CacheValues<T>.Flags ?? throw new NotFlagsEnumTypeException<T>(null, nameof(T));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]

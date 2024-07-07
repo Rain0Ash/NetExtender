@@ -7,7 +7,7 @@ using System.Runtime.Serialization;
 namespace NetExtender.Types.Exceptions
 {
     [Serializable]
-    public class NotEnumTypeException<T> : IncorrentEnumTypeException<T>
+    public class NotEnumTypeException<T> : IncorrectEnumTypeException<T>
     {
         public NotEnumTypeException()
         {

@@ -386,6 +386,12 @@ namespace NetExtender.Types.Monads
             Internal = Internal.Save();
         }
 
+        IState IState.Save()
+        {
+            Save();
+            return this;
+        }
+
         IState<T> IState<T>.Save()
         {
             Save();
@@ -508,6 +514,12 @@ namespace NetExtender.Types.Monads
             }
         }
 
+        IState IState.Swap()
+        {
+            Swap();
+            return this;
+        }
+
         IState<T> IState<T>.Swap()
         {
             Swap();
@@ -517,6 +529,12 @@ namespace NetExtender.Types.Monads
         public virtual void Reset()
         {
             Internal = Internal.Reset();
+        }
+
+        IState IState.Reset()
+        {
+            Reset();
+            return this;
         }
 
         IState<T> IState<T>.Reset()
@@ -605,12 +623,12 @@ namespace NetExtender.Types.Monads
             return Internal.CompareTo(other, equality, comparer);
         }
 
-        public override Int32 GetHashCode()
+        public sealed override Int32 GetHashCode()
         {
             return Internal.GetHashCode();
         }
 
-        public override Boolean Equals(Object? other)
+        public sealed override Boolean Equals(Object? other)
         {
             return Equals(other, null);
         }
@@ -716,30 +734,40 @@ namespace NetExtender.Types.Monads
         {
             return Internal.Equals(other, equality, comparer);
         }
-
-        public override String? ToString()
+        
+        public virtual MutableState<T> Clone()
         {
-            return Internal.ToString();
+            return new MutableState<T>(Internal);
         }
-
+        
         Object ICloneable.Clone()
         {
             return Clone();
         }
-
-        State<T> ICloneable<State<T>>.Clone()
+        
+        IState IState.Clone()
         {
             return Clone();
         }
-
+        
         IState<T> IState<T>.Clone()
         {
             return Clone();
         }
-
-        public virtual MutableState<T> Clone()
+        
+        State<T> ICloneable<State<T>>.Clone()
         {
-            return new MutableState<T>(Internal);
+            return Clone();
+        }
+        
+        public sealed override String? ToString()
+        {
+            return Internal.ToString();
+        }
+        
+        public String? ToString(StateEquality equality)
+        {
+            return Internal.ToString(equality);
         }
     }
 }

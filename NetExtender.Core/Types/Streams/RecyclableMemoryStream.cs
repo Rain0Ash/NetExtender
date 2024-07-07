@@ -162,28 +162,8 @@ namespace NetExtender.Types.Streams
         {
         }
 
-        public RecyclableMemoryStream(Int64 smallpool, Int64 largepool)
-            : this(new RecyclableMemoryStreamManager(smallpool, largepool))
-        {
-        }
-
-        public RecyclableMemoryStream(Int32 block, Int32 multiple, Int32 size)
-            : this(new RecyclableMemoryStreamManager(block, multiple, size))
-        {
-        }
-
-        public RecyclableMemoryStream(Int32 block, Int32 multiple, Int32 size, Boolean exponential)
-            : this(new RecyclableMemoryStreamManager(block, multiple, size, exponential))
-        {
-        }
-
-        public RecyclableMemoryStream(Int32 block, Int32 multiple, Int32 size, Int64 smallpool, Int64 largepool)
-            : this(new RecyclableMemoryStreamManager(block, multiple, size, smallpool, largepool))
-        {
-        }
-
-        public RecyclableMemoryStream(Int32 block, Int32 multiple, Int32 size, Boolean exponential, Int64 smallpool, Int64 largepool)
-            : this(new RecyclableMemoryStreamManager(block, multiple, size, exponential, smallpool, largepool))
+        public RecyclableMemoryStream(RecyclableMemoryStreamManager.Options options)
+            : this(new RecyclableMemoryStreamManager(options))
         {
         }
 
@@ -205,12 +185,6 @@ namespace NetExtender.Types.Streams
             return Stream.ReadByte();
         }
 
-        /// <inheritdoc cref="Microsoft.IO.RecyclableMemoryStream.SafeReadByte(ref Int32)"/>
-        public Int32 SafeReadByte(ref Int32 position)
-        {
-            return Stream.SafeReadByte(ref position);
-        }
-
         /// <inheritdoc cref="Microsoft.IO.RecyclableMemoryStream.SafeReadByte(ref Int64)"/>
         public Int32 SafeReadByte(ref Int64 position)
         {
@@ -223,12 +197,6 @@ namespace NetExtender.Types.Streams
             return Stream.Read(buffer, offset, count);
         }
 
-        /// <inheritdoc cref="Microsoft.IO.RecyclableMemoryStream.SafeRead(Byte[],Int32,Int32,ref Int32)"/>
-        public Int32 Read(Byte[] buffer, Int32 offset, Int32 count, ref Int32 position)
-        {
-            return Stream.SafeRead(buffer, offset, count, ref position);
-        }
-
         /// <inheritdoc cref="Microsoft.IO.RecyclableMemoryStream.SafeRead(Byte[],Int32,Int32,ref Int64)"/>
         public Int32 Read(Byte[] buffer, Int32 offset, Int32 count, ref Int64 position)
         {
@@ -239,12 +207,6 @@ namespace NetExtender.Types.Streams
         public Int32 Read(Span<Byte> buffer)
         {
             return Stream.Read(buffer);
-        }
-
-        /// <inheritdoc cref="Microsoft.IO.RecyclableMemoryStream.SafeRead(Span{Byte},ref Int32)"/>
-        public Int32 Read(Span<Byte> buffer, ref Int32 position)
-        {
-            return Stream.SafeRead(buffer, ref position);
         }
 
         /// <inheritdoc cref="Microsoft.IO.RecyclableMemoryStream.SafeRead(Span{Byte},ref Int64)"/>
@@ -299,12 +261,6 @@ namespace NetExtender.Types.Streams
         public void WriteTo(Stream stream)
         {
             Stream.WriteTo(stream);
-        }
-
-        /// <inheritdoc cref="Microsoft.IO.RecyclableMemoryStream.WriteTo(System.IO.Stream,Int32,Int32)"/>
-        public void WriteTo(Stream stream, Int32 offset, Int32 count)
-        {
-            Stream.WriteTo(stream, offset, count);
         }
 
         /// <inheritdoc cref="Microsoft.IO.RecyclableMemoryStream.WriteTo(System.IO.Stream,Int64,Int64)"/>

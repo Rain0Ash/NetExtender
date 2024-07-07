@@ -2,6 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using NetExtender.Types.Monads;
@@ -34,6 +35,50 @@ namespace NetExtender.Utilities.Types
             }
 
             return maybe.HasValue ? maybe.Value : alternate();
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Unwrap<T>(this Maybe<T> maybe, [MaybeNullWhen(false)] out T result)
+        {
+            if (maybe.HasValue)
+            {
+                result = maybe.Value;
+                return true;
+            }
+            
+            result = default;
+            return false;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Unwrap<T>(this Maybe<T> maybe, T alternate, [MaybeNullWhen(false)] out T result)
+        {
+            if (maybe.HasValue)
+            {
+                result = maybe.Value;
+                return true;
+            }
+            
+            result = alternate;
+            return false;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Unwrap<T>(this Maybe<T> maybe, Func<T> alternate, [MaybeNullWhen(false)] out T result)
+        {
+            if (alternate is null)
+            {
+                throw new ArgumentNullException(nameof(alternate));
+            }
+            
+            if (maybe.HasValue)
+            {
+                result = maybe.Value;
+                return true;
+            }
+            
+            result = alternate();
+            return false;
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

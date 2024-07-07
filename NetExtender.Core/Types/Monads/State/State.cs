@@ -180,6 +180,11 @@ namespace NetExtender.Types.Monads
             return Next ? new State<T>(Next.Value) : this;
         }
 
+        IState IState.Save()
+        {
+            return Save();
+        }
+
         IState<T> IState<T>.Save()
         {
             return Save();
@@ -349,6 +354,11 @@ namespace NetExtender.Types.Monads
             return Next ? new State<T>(Next.Value) { Next = Value } : this;
         }
 
+        IState IState.Swap()
+        {
+            return Swap();
+        }
+
         IState<T> IState<T>.Swap()
         {
             return Swap();
@@ -357,6 +367,11 @@ namespace NetExtender.Types.Monads
         public State<T> Reset()
         {
             return new State<T>(Value);
+        }
+
+        IState IState.Reset()
+        {
+            return Reset();
         }
 
         IState<T> IState<T>.Reset()
@@ -523,27 +538,32 @@ namespace NetExtender.Types.Monads
         {
             return other is not null && Equals(other.Get(equality), equality, comparer);
         }
-
-        Object ICloneable.Clone()
-        {
-            return Clone();
-        }
-
-        IState<T> ICloneable<IState<T>>.Clone()
-        {
-            return Clone();
-        }
-
-        IState<T> IState<T>.Clone()
-        {
-            return Clone();
-        }
-
+        
         public State<T> Clone()
         {
             return this;
         }
-
+        
+        Object ICloneable.Clone()
+        {
+            return Clone();
+        }
+        
+        IState IState.Clone()
+        {
+            return Clone();
+        }
+        
+        IState<T> IState<T>.Clone()
+        {
+            return Clone();
+        }
+        
+        IState<T> ICloneable<IState<T>>.Clone()
+        {
+            return Clone();
+        }
+        
         public override String? ToString()
         {
             return ToString(default);

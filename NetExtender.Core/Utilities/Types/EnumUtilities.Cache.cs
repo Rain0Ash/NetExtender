@@ -17,6 +17,7 @@ using NetExtender.Types.Enums.Interfaces;
 using NetExtender.Types.Exceptions;
 using NetExtender.Types.Transactions.Interfaces;
 using NetExtender.Utilities.Core;
+using NetExtender.Utilities.Numerics;
 
 namespace NetExtender.Utilities.Types
 {
@@ -437,6 +438,7 @@ namespace NetExtender.Utilities.Types
             public static ImmutableDictionary<T, Decimal> Decimal { get; private set; } = null!;
             public static T? Minimum { get; private set; }
             public static T? Maximum { get; private set; }
+            public static Int32? Flags { get; private set; }
             
             public static Boolean IsEmpty
             {
@@ -470,6 +472,7 @@ namespace NetExtender.Utilities.Types
                 Decimal = @decimal;
                 Minimum = minimum;
                 Maximum = maximum;
+                Flags = CountOfFlags(Values);
             }
 
             public static Boolean Contains(T value)
@@ -496,6 +499,12 @@ namespace NetExtender.Utilities.Types
             public static Boolean TryIndexOf(T value, out Int32 result)
             {
                 return Set.TryGetValue(value, out result);
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+            private static Int32? CountOfFlags(ImmutableArray<T> values)
+            {
+                return IsFlags<T>() ? values.Length <= 1 ? values.Length : values.ToDecimal().Select(ConvertUtilities.ToUInt64).Count(MathUtilities.IsPowerOf2) : null;
             }
 
             internal static ITransaction Transaction()
@@ -534,6 +543,7 @@ namespace NetExtender.Utilities.Types
                 public ImmutableDictionary<T, Decimal> Decimal { get; private set; } = null!;
                 public T? Minimum { get; private set; }
                 public T? Maximum { get; private set; }
+                public Int32? Flags { get; private set; }
 
                 protected internal override void Read()
                 {
@@ -542,6 +552,7 @@ namespace NetExtender.Utilities.Types
                     Decimal = CacheValues<T>.Decimal;
                     Minimum = CacheValues<T>.Minimum;
                     Maximum = CacheValues<T>.Maximum;
+                    Flags = CacheValues<T>.Flags;
                 }
 
                 protected internal override void Write()
@@ -551,6 +562,7 @@ namespace NetExtender.Utilities.Types
                     CacheValues<T>.Decimal = Decimal;
                     CacheValues<T>.Minimum = Minimum;
                     CacheValues<T>.Maximum = Maximum;
+                    CacheValues<T>.Flags = Flags;
                 }
             }
         }

@@ -7,6 +7,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using NetExtender.Types.Random.Interfaces;
+using NetExtender.Types.Spans;
 using NetExtender.Utilities.Numerics;
 
 namespace NetExtender.Utilities.Types
@@ -957,6 +958,28 @@ namespace NetExtender.Utilities.Types
             {
                 return BitUtilities.BitwiseEquals(pf, ps, first.Length);
             }
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ReadOnlyPaginationObserver<T> ReadOnlyPaginationObserver<T>(this T[] array, Int32 size)
+        {
+            if (array is null)
+            {
+                throw new ArgumentNullException(nameof(array));
+            }
+            
+            return new ReadOnlyPaginationObserver<T>(array, size);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static PaginationObserver<T> PaginationObserver<T>(this T[] array, Int32 size)
+        {
+            if (array is null)
+            {
+                throw new ArgumentNullException(nameof(array));
+            }
+            
+            return new PaginationObserver<T>(array, size);
         }
     }
 }

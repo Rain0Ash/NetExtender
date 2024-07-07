@@ -398,9 +398,13 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-
+            
             using IEnumerator<T> enumerator = source.GetEnumerator();
-            return enumerator.AsEnumerable();
+            
+            while (enumerator.MoveNext())
+            {
+                yield return enumerator.Current;
+            }
         }
     }
 }

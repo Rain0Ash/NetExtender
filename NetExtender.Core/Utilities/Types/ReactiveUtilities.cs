@@ -352,6 +352,24 @@ namespace NetExtender.Utilities.Types
             return value;
         }
 
+        public static void RaiseProperty<TSource>(this TSource source, [CallerMemberName] String? property = null) where TSource : class
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            PropertyEventHandler? handler = PropertyEventHandler.Get(source);
+
+            if (handler is null)
+            {
+                return;
+            }
+            
+            handler.RaiseChanging(source, property);
+            handler.RaiseChanged(source, property);
+        }
+
         public static TDestination RaiseProperty<TSource, TDestination>(this TSource source, ref TDestination field, RaiseAndSetIfChangedHandler<TSource, TDestination> factory, [CallerMemberName] String? property = null) where TSource : class
         {
             if (source is null)

@@ -12,8 +12,8 @@ namespace NetExtender.Types.Collections
     {
         public TCollection Source { get; }
         
-        protected PaginationCollection(TCollection source, Int32 index, Int32 size, Int32 count)
-            : base(index, size, count)
+        protected PaginationCollection(TCollection source, Int32 index, Int32 size)
+            : base(index, size)
         {
             Source = source ?? throw new ArgumentNullException(nameof(source));
         }
@@ -21,8 +21,8 @@ namespace NetExtender.Types.Collections
     
     public abstract class PaginationCollection<T> : PaginationCollection, IPaginationEnumerable<T>
     {
-        protected PaginationCollection(Int32 index, Int32 size, Int32 count)
-            : base(index, size, count)
+        protected PaginationCollection(Int32 index, Int32 size)
+            : base(index, size)
         {
         }
 
@@ -34,18 +34,68 @@ namespace NetExtender.Types.Collections
         }
     }
 
+    //TODO: Fix logic
     public abstract class PaginationCollection : IPaginationEnumerable
     {
-        public Int32 Index { get; }
-        public Int32 Total { get; }
-        public Int32 Items { get; }
-        public Int32 Size { get; }
+        private Int32 _index;
+        public virtual Int32 Index
+        {
+            get
+            {
+                return _index;
+            }
+            protected set
+            {
+                _index = value;
+            }
+        }
+        
+        public Int32 Page
+        {
+            get
+            {
+                return Index + 1;
+            }
+        }
+        
+        public virtual Int32 Total
+        {
+            get
+            {
+                return Math.Abs((Int32) Math.Ceiling(Count / (Double) Size));
+            }
+        }
+        
+        public abstract Int32 Items { get; }
+        
+        private Int32 _size;
+        public virtual Int32 Size
+        {
+            get
+            {
+                return _size;
+            }
+            protected set
+            {
+                _size = value;
+            }
+        }
+        
+        public virtual Boolean CanResize
+        {
+            get
+            {
+                return false;
+            }
+        }
+        
+        public abstract Int32 Count { get; }
 
         public Boolean HasPrevious
         {
             get
             {
-                return Index > 1;
+                return Index > 0;
             }
         }
 
@@ -53,16 +103,36 @@ namespace NetExtender.Types.Collections
         {
             get
             {
-                return Index < Total;
+                return Page < Total;
             }
         }
 
-        protected PaginationCollection(Int32 index, Int32 size, Int32 count)
+        protected PaginationCollection(Int32 index, Int32 size)
         {
-            Index = index >= 1 ? index : throw new ArgumentOutOfRangeException(nameof(index), index, null);
-            Size = size > 0 ? size : throw new ArgumentOutOfRangeException(nameof(size), size, null);
-            Items = count >= 0 ? count : throw new ArgumentOutOfRangeException(nameof(count), count, null);
-            Total = Math.Abs((Int32) Math.Ceiling(Items / (Double) Size));
+            _index = index >= 0 ? index : throw new ArgumentOutOfRangeException(nameof(index), index, null);
+            _size = size > 0 ? size : throw new ArgumentOutOfRangeException(nameof(size), size, null);
+        }
+        
+        public Boolean Resize(Int32 size)
+        {
+            return Resize(size, false);
+        }
+        
+        public virtual Boolean Resize(Int32 size, Boolean resize)
+        {
+            if (size <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(size), size, null);
+            }
+            
+            if (!CanResize)
+            {
+                return false;
+            }
+            
+            Size = size;
+            Index = resize ? Math.Clamp(Index * Size / size, 0, Total - 1) : 0;
+            return true;
         }
 
         public abstract IEnumerator GetEnumerator();

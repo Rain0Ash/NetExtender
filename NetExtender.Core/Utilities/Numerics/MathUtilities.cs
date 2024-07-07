@@ -7,7 +7,6 @@ using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
-using System.Net.Http;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using NetExtender.Types.Exceptions;
@@ -15,7 +14,7 @@ using NetExtender.Utilities.Types;
 
 namespace NetExtender.Utilities.Numerics
 {
-    public enum MathPositionType
+    public enum MathPositionType : Byte
     {
         None,
         Left,
@@ -23,7 +22,7 @@ namespace NetExtender.Utilities.Numerics
         Both
     }
 
-    public enum TrigonometryType
+    public enum TrigonometryType : Byte
     {
         Sin,
         Sinh,
@@ -49,6 +48,17 @@ namespace NetExtender.Utilities.Numerics
         Csch,
         Acsc,
         Acsch
+    }
+    
+    public enum RomanDigit : UInt16
+    {
+        I = 1,
+        V = 5,
+        X = 10,
+        L = 50,
+        C = 100,
+        D = 500,
+        M = 1000
     }
 
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
@@ -6247,7 +6257,192 @@ namespace NetExtender.Utilities.Numerics
         {
             return ConvertBase(value.ToString(CultureInfo.InvariantCulture), from, to);
         }
-
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static RomanDigit ToRoman(this Char character)
+        {
+            return ToRoman(character, out RomanDigit result) ? result : throw new ArgumentException($"Invalid Roman digit '{character}'.", nameof(character));
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Boolean ToRoman(this Char character, out RomanDigit result)
+        {
+            result = character switch
+            {
+                'i' or 'I' => RomanDigit.I,
+                'v' or 'V' => RomanDigit.V,
+                'x' or 'X' => RomanDigit.X,
+                'l' or 'L' => RomanDigit.L,
+                'c' or 'C' => RomanDigit.C,
+                'd' or 'D' => RomanDigit.D,
+                'm' or 'M' => RomanDigit.M,
+                _ => default
+            };
+            
+            return result != default;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static UInt16 FromRoman(this Char character)
+        {
+            return (UInt16) ToRoman(character);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean FromRoman(this Char character, out UInt16 result)
+        {
+            if (ToRoman(character, out RomanDigit digit))
+            {
+                result = (UInt16) digit;
+                return true;
+            }
+            
+            result = default;
+            return false;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean FromRoman(this Char character, out Int32 result)
+        {
+            if (ToRoman(character, out RomanDigit digit))
+            {
+                result = (UInt16) digit;
+                return true;
+            }
+            
+            result = default;
+            return false;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int32 FromRoman(this String value)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+            
+            return FromRoman((ReadOnlySpan<Char>) value);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int32 FromRoman(this Span<Char> value)
+        {
+            return FromRoman((ReadOnlySpan<Char>) value);
+        }
+        
+        //TODO: ToRoman
+        
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Int32 FromRoman(this ReadOnlySpan<Char> value)
+        {
+            value = value.Trim();
+            
+            switch (value.Length)
+            {
+                case 0:
+                    return 0;
+                case 1:
+                    return FromRoman(value[0]);
+                case 2 when value[0] is '-':
+                    return -FromRoman(value[1]);
+            }
+            
+            Boolean negative = value[0] is '-';
+            Int32 start = negative ? 1 : 0;
+            
+            Int32 result = 0;
+            Int32 previous = FromRoman(value[start]);
+            
+            for (Int32 i = start; i < value.Length; i++)
+            {
+                Int32 current = FromRoman(value[i]);
+                
+                result += current;
+                if (previous < current)
+                {
+                    result -= previous * 2;
+                }
+                
+                previous = current;
+            }
+            
+            return negative ? -result : result;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean FromRoman(this String value, out Int32 result)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+            
+            return FromRoman((ReadOnlySpan<Char>) value, out result);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean FromRoman(this Span<Char> value, out Int32 result)
+        {
+            return FromRoman((ReadOnlySpan<Char>) value, out result);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Boolean FromRoman(this ReadOnlySpan<Char> value, out Int32 result)
+        {
+            value = value.Trim();
+            
+            result = 0;
+            switch (value.Length)
+            {
+                case 0:
+                    return false;
+                case 1:
+                    return FromRoman(value[0], out result);
+                case 2 when value[0] is '-':
+                    if (!FromRoman(value[1], out result))
+                    {
+                        return false;
+                    }
+                    
+                    result = -result;
+                    return true;
+            }
+            
+            Boolean negative = value[0] is '-';
+            Int32 start = negative ? 1 : 0;
+            
+            if (!FromRoman(value[start], out Int32 previous))
+            {
+                result = 0;
+                return false;
+            }
+            
+            for (Int32 i = start; i < value.Length; i++)
+            {
+                if (!FromRoman(value[i], out Int32 current))
+                {
+                    result = 0;
+                    return false;
+                }
+                
+                result += current;
+                if (previous < current)
+                {
+                    result -= previous * 2;
+                }
+                
+                previous = current;
+            }
+            
+            if (negative)
+            {
+                result = -result;
+            }
+            
+            return true;
+        }
+        
         /// <summary>
         /// Returns the quartile values of an ordered set of doubles. The provided list must be already ordered. If it is not, please use method <see cref="FindQuartiles"/>.
         /// <para>
@@ -6308,7 +6503,7 @@ namespace NetExtender.Utilities.Numerics
             Int32 center = count / 2; //this is the mid from a zero based index, eg mid of 7 = 3;
 
             Double left, right;
-            Int32 centerLeft, centerRight;
+            Int32 leftcenter, rightcenter;
 
             Double q1;
             Double q2;
@@ -6323,23 +6518,23 @@ namespace NetExtender.Utilities.Numerics
                 right = array[center];
                 q2 = (left + right) / 2;
 
-                centerLeft = center / 2;
-                centerRight = center + centerLeft;
+                leftcenter = center / 2;
+                rightcenter = center + leftcenter;
 
                 //easy split
                 if (center % 2 == 0)
                 {
-                    left = array[centerLeft - 1];
-                    right = array[centerLeft];
+                    left = array[leftcenter - 1];
+                    right = array[leftcenter];
                     q1 = (left + right) / 2;
-                    left = array[centerRight - 1];
-                    right = array[centerRight];
+                    left = array[rightcenter - 1];
+                    right = array[rightcenter];
                     q3 = (left + right) / 2;
                     return Tuple.Create(q1, q2, q3);
                 }
 
-                q1 = array[centerLeft];
-                q3 = array[centerRight];
+                q1 = array[leftcenter];
+                q3 = array[rightcenter];
                 return Tuple.Create(q1, q2, q3);
             }
 
@@ -6349,26 +6544,26 @@ namespace NetExtender.Utilities.Numerics
             if ((count - 1) % 4 == 0)
             {
                 //======================(4n-1) POINTS =========================
-                centerLeft = (count - 1) / 4;
-                centerRight = centerLeft * 3;
-                left = array[centerLeft - 1];
-                right = array[centerLeft];
+                leftcenter = (count - 1) / 4;
+                rightcenter = leftcenter * 3;
+                left = array[leftcenter - 1];
+                right = array[leftcenter];
                 q1 = left * 0.25 + right * 0.75;
-                left = array[centerRight];
-                right = array[centerRight + 1];
+                left = array[rightcenter];
+                right = array[rightcenter + 1];
                 q3 = left * 0.75 + right * 0.25;
 
                 return Tuple.Create(q1, q2, q3);
             }
 
             //======================(4n-3) POINTS =========================
-            centerLeft = (count - 3) / 4;
-            centerRight = centerLeft * 3 + 1;
-            left = array[centerLeft];
-            right = array[centerLeft + 1];
+            leftcenter = (count - 3) / 4;
+            rightcenter = leftcenter * 3 + 1;
+            left = array[leftcenter];
+            right = array[leftcenter + 1];
             q1 = left * 0.75 + right * 0.25;
-            left = array[centerRight];
-            right = array[centerRight + 1];
+            left = array[rightcenter];
+            right = array[rightcenter + 1];
             q3 = left * 0.25 + right * 0.75;
             return Tuple.Create(q1, q2, q3);
         }

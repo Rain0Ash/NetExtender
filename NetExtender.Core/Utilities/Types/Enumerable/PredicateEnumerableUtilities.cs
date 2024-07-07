@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using NetExtender.Types.Queues;
 using NetExtender.Utilities.Numerics;
@@ -939,6 +940,12 @@ namespace NetExtender.Utilities.Types
             return source;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<T> Page<T>(this IEnumerable<T> source, Int32 size)
+        {
+            return Page(source, 0, size);
+        }
+        
         public static IEnumerable<T> Page<T>(this IEnumerable<T> source, Int32 index, Int32 size)
         {
             if (source is null)

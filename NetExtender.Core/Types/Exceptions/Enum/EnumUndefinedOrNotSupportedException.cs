@@ -65,7 +65,7 @@ namespace NetExtender.Types.Exceptions
     }
     
     [Serializable]
-    public class EnumUndefinedOrNotSupportedThrowableException<T> : IncorrentEnumTypeException<T> where T : unmanaged, Enum
+    public class EnumUndefinedOrNotSupportedThrowableException<T> : IncorrectEnumTypeException<T> where T : unmanaged, Enum
     {
         public EnumUndefinedOrNotSupportedThrowableException(T value)
             : this(value, true)

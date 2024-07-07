@@ -436,8 +436,8 @@ namespace NetExtender.Utilities.Types
         private static MethodInfo MemberwiseCloneMethod { get; } = typeof(Object).GetMethod("MemberwiseClone", BindingFlags.Instance | BindingFlags.NonPublic)!;
         private static Converter<Object, Object> MemberwiseCloneDelegate { get; } = (Converter<Object, Object>) MemberwiseCloneMethod.CreateDelegate(typeof(Converter<Object, Object>));
 
-        [return: NotNullIfNotNull("value")]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [return: NotNullIfNotNull("value")]
         public static T? MemberwiseClone<T>(this T? value)
         {
             return value is not null ? (T) MemberwiseCloneDelegate.Invoke(value) : default;

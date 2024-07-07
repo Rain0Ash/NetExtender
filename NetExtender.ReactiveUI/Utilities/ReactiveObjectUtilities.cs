@@ -15,9 +15,9 @@ namespace NetExtender.ReactiveUI.Utilities
 {
     public static class ReactiveObjectUtilities
     {
-        private static IStore<ReactiveObject, PropertySubnotifier> Store { get; } = new WeakStore<ReactiveObject, PropertySubnotifier>();
+        private static IStore<IReactiveObject, PropertySubnotifier> Store { get; } = new WeakStore<IReactiveObject, PropertySubnotifier>();
 
-        public static PropertySubnotifier<T> Register<T>(this T value) where T : ReactiveObject
+        public static PropertySubnotifier<T> Register<T>(this T value) where T : class, IReactiveObject
         {
             if (value is null)
             {
@@ -37,7 +37,7 @@ namespace NetExtender.ReactiveUI.Utilities
             return Store.GetOrAdd(value, () => new PropertySubnotifier<T>(value, Changing, Changed)) as PropertySubnotifier<T> ?? throw new InvalidOperationException();
         }
 
-        public static PropertySubnotifier<T> Register<T>(this T value, String when, params String?[]? properties) where T : ReactiveObject
+        public static PropertySubnotifier<T> Register<T>(this T value, String when, params String?[]? properties) where T : class, IReactiveObject
         {
             if (value is null)
             {
@@ -47,7 +47,7 @@ namespace NetExtender.ReactiveUI.Utilities
             return value.Register().Register(when, properties);
         }
 
-        public static PropertySubnotifier<T> Register<T>(this T value, String when, IEnumerable<String?>? properties) where T : ReactiveObject
+        public static PropertySubnotifier<T> Register<T>(this T value, String when, IEnumerable<String?>? properties) where T : class, IReactiveObject
         {
             if (value is null)
             {
@@ -57,7 +57,7 @@ namespace NetExtender.ReactiveUI.Utilities
             return value.Register().Register(when, properties);
         }
 
-        public static PropertySubnotifier<T> Register<T, TProperty>(this T value, Expression<Func<T, TProperty>> when, params Expression<Func<T, Object?>>?[]? properties) where T : ReactiveObject
+        public static PropertySubnotifier<T> Register<T, TProperty>(this T value, Expression<Func<T, TProperty>> when, params Expression<Func<T, Object?>>?[]? properties) where T : class, IReactiveObject
         {
             if (when is null)
             {
@@ -67,7 +67,7 @@ namespace NetExtender.ReactiveUI.Utilities
             return value.Register().Register(when, properties);
         }
 
-        public static Boolean TryGetSubnotifier<T>(this T value, [MaybeNullWhen(false)] out PropertySubnotifier<T> subnotifier) where T : ReactiveObject
+        public static Boolean TryGetSubnotifier<T>(this T value, [MaybeNullWhen(false)] out PropertySubnotifier<T> subnotifier) where T : class, IReactiveObject
         {
             if (value is null)
             {

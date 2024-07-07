@@ -5,15 +5,40 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using NetExtender.Types.Comparers;
 using NetExtender.Types.Exceptions;
 using NetExtender.Types.Random.Interfaces;
+using NetExtender.Types.Spans;
 using NetExtender.Utilities.Numerics;
 
 namespace NetExtender.Utilities.Types
 {
     public static class ListUtilities
     {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ReadOnlySpan<T> AsReadOnlySpan<T>(this List<T> collection)
+        {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+            
+            return CollectionsMarshal.AsSpan(collection);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Span<T> AsSpan<T>(this List<T> collection)
+        {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+            
+            return CollectionsMarshal.AsSpan(collection);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ReadOnlyCollection<T> AsReadOnly<T>(this IList<T> collection)
         {
             if (collection is null)
@@ -427,6 +452,28 @@ namespace NetExtender.Utilities.Types
             }
 
             collection.Sort(index, count, new ComparisonComparer<T>(Comparison));
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ReadOnlyPaginationObserver<T> ReadOnlyPaginationObserver<T>(this List<T> collection, Int32 size)
+        {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+            
+            return new ReadOnlyPaginationObserver<T>(collection.AsReadOnlySpan(), size);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static PaginationObserver<T> PaginationObserver<T>(this List<T> collection, Int32 size)
+        {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+            
+            return new PaginationObserver<T>(collection.AsSpan(), size);
         }
     }
 }

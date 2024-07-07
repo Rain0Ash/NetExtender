@@ -40,6 +40,16 @@ namespace NetExtender.UserInterface.WindowsPresentation.Types.ComboBoxes
             return value!;
         }
         
+        public Maybe<T> Get<T>()
+        {
+            return GetSelectedItem<T>();
+        }
+
+        public Boolean Get<T>(out Maybe<T> result)
+        {
+            return TryGetSelectedItem(out result);
+        }
+        
         public Maybe<T> GetSelectedItem<T>()
         {
             return TryGetSelectedItem(out Maybe<T> result) ? result : default;
@@ -55,6 +65,22 @@ namespace NetExtender.UserInterface.WindowsPresentation.Types.ComboBoxes
 
             result = current.Maybe;
             return true;
+        }
+        
+        public Boolean Set<T>(T value)
+        {
+            for (Int32 i = 0; i < Items.Count; i++)
+            {
+                if (Items[i] is not View<T> item || !item.Maybe.Equals(value))
+                {
+                    continue;
+                }
+                
+                SelectedIndex = i;
+                return true;
+            }
+            
+            return false;
         }
 
         protected Boolean Update()

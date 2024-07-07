@@ -205,7 +205,7 @@ namespace NetExtender.Utilities.Types
 
             Int32 count = await source.CountAsync(token).ConfigureAwait(false);
             T[] items = await source.Page(index, size).ToArrayAsync(token).ConfigureAwait(false);
-            return new PaginationListWrapper<T, T[]>(items, index, size, count);
+            return new PaginationPartialListWrapper<T, T[]>(items, index, size, count);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

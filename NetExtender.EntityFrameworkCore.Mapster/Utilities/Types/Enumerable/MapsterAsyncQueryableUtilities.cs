@@ -32,7 +32,7 @@ namespace NetExtender.Utilities.Types
             Int32 count = await source.CountAsync(token).ConfigureAwait(false);
             TSource[] array = await source.Page(index, size).ToArrayAsync(token).ConfigureAwait(false);
             TDestination[] items = array.Adapt<TSource[], TDestination[]>();
-            return new PaginationListWrapper<TDestination, TDestination[]>(items, index, size, count);
+            return new PaginationPartialListWrapper<TDestination, TDestination[]>(items, index, size, count);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -116,7 +116,7 @@ namespace NetExtender.Utilities.Types
 
             Int32 count = await source.CountAsync(token).ConfigureAwait(false);
             TDestination[] items = await source.Page(index, size).ProjectToType<TDestination>().ToArrayAsync(token).ConfigureAwait(false);
-            return new PaginationListWrapper<TDestination, TDestination[]>(items, index, size, count);
+            return new PaginationPartialListWrapper<TDestination, TDestination[]>(items, index, size, count);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

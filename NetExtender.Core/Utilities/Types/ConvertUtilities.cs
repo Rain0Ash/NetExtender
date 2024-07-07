@@ -364,9 +364,7 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Byte ToByte(this Decimal value)
         {
-            return value >= 0
-                ? System.Convert.ToByte(value.Clamp(Byte.MinValue, Byte.MaxValue))
-                : ConvertToUnsigned(ToSByte(value));
+            return value >= 0 ? System.Convert.ToByte(value.Clamp(Byte.MinValue, Byte.MaxValue)) : ConvertToUnsigned(ToSByte(value));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -378,9 +376,7 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static UInt16 ToUInt16(this Decimal value)
         {
-            return value >= 0
-                ? System.Convert.ToUInt16(value.Clamp(UInt16.MinValue, UInt16.MaxValue))
-                : ConvertToUnsigned(ToInt16(value));
+            return value >= 0 ? System.Convert.ToUInt16(value.Clamp(UInt16.MinValue, UInt16.MaxValue)) : ConvertToUnsigned(ToInt16(value));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -392,9 +388,7 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static UInt32 ToUInt32(this Decimal value)
         {
-            return value >= 0
-                ? System.Convert.ToUInt32(value.Clamp(UInt32.MinValue, UInt32.MaxValue))
-                : ConvertToUnsigned(ToInt32(value));
+            return value >= 0 ? System.Convert.ToUInt32(value.Clamp(UInt32.MinValue, UInt32.MaxValue)) : ConvertToUnsigned(ToInt32(value));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -406,9 +400,7 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static UInt64 ToUInt64(this Decimal value)
         {
-            return value >= 0
-                ? System.Convert.ToUInt64(value.Clamp(UInt64.MinValue, UInt64.MaxValue))
-                : ConvertToUnsigned(ToInt64(value));
+            return value >= 0 ? System.Convert.ToUInt64(value.Clamp(UInt64.MinValue, UInt64.MaxValue)) : ConvertToUnsigned(ToInt64(value));
         }
 
         #endregion

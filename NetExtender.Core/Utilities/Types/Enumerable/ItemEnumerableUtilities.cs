@@ -628,7 +628,7 @@ namespace NetExtender.Utilities.Types
                 IReadOnlyList<T> list => list.Count > 0 ? list[RandomUtilities.NextNonNegative(list.Count - 1)] : throw new InvalidOperationException(),
                 ICollection<T> collection => collection.Count > 0 ? collection.ElementAt(RandomUtilities.NextNonNegative(collection.Count - 1)) : throw new InvalidOperationException(),
                 IReadOnlyCollection<T> collection => collection.Count > 0 ? collection.ElementAt(RandomUtilities.NextNonNegative(collection.Count - 1)) : throw new InvalidOperationException(),
-                _ => source.ToList().GetRandom()
+                _ => Random(source, out T? result) ? result : throw new InvalidOperationException()
             };
         }
 
@@ -645,7 +645,7 @@ namespace NetExtender.Utilities.Types
                 IReadOnlyList<T> list => list.Count > 0 ? list[RandomUtilities.NextNonNegative(list.Count - 1)] : alternate,
                 ICollection<T> collection => collection.Count > 0 ? collection.ElementAt(RandomUtilities.NextNonNegative(collection.Count - 1)) : alternate,
                 IReadOnlyCollection<T> collection => collection.Count > 0 ? collection.ElementAt(RandomUtilities.NextNonNegative(collection.Count - 1)) : alternate,
-                _ => source.ToList().GetRandomOrDefault(alternate)
+                _ => Random(source, out T? result) ? result : alternate
             };
         }
 
@@ -667,7 +667,7 @@ namespace NetExtender.Utilities.Types
                 IReadOnlyList<T> list => list.Count > 0 ? list[RandomUtilities.NextNonNegative(list.Count - 1)] : alternate(),
                 ICollection<T> collection => collection.Count > 0 ? collection.ElementAt(RandomUtilities.NextNonNegative(collection.Count - 1)) : alternate(),
                 IReadOnlyCollection<T> collection => collection.Count > 0 ? collection.ElementAt(RandomUtilities.NextNonNegative(collection.Count - 1)) : alternate(),
-                _ => source.ToList().GetRandomOrDefault(alternate)
+                _ => Random(source, out T? result) ? result : alternate()
             };
         }
 
@@ -684,8 +684,35 @@ namespace NetExtender.Utilities.Types
                 IReadOnlyList<T> list => list.Count > 0 ? list[RandomUtilities.NextNonNegative(list.Count - 1)] : default,
                 ICollection<T> collection => collection.Count > 0 ? collection.ElementAtOrDefault(RandomUtilities.NextNonNegative(collection.Count - 1)) : default,
                 IReadOnlyCollection<T> collection => collection.Count > 0 ? collection.ElementAtOrDefault(RandomUtilities.NextNonNegative(collection.Count - 1)) : default,
-                _ => source.ToList().GetRandomOrDefault()
+                _ => Random(source, out T? result) ? result : default
             };
+        }
+        
+        private static Boolean Random<T>(IEnumerable<T> source, [MaybeNullWhen(false)] out T result)
+        {
+            return Random(source, null, out result);
+        }
+        
+        private static Boolean Random<T>(IEnumerable<T> source, Random? random, [MaybeNullWhen(false)] out T result)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            random ??= new Random();
+            
+            Int64 count = 0;
+            result = default!;
+            foreach (T element in source)
+            {
+                if (random.NextInt64(count++) == 0)
+                {
+                    result = element;
+                }
+            }
+            
+            return count > 0;
         }
 
         public static T Aggregate<T>(this IEnumerable<T> source, T seed, Func<T, T, T> selector)
@@ -3687,6 +3714,11 @@ namespace NetExtender.Utilities.Types
 
             while (enumerator.MoveNext())
             {
+            }
+            
+            if (enumerator is IDisposable disposable)
+            {
+                disposable.Dispose();
             }
         }
 

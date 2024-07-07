@@ -6,10 +6,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using NetExtender.Interfaces.Notify;
 
 namespace NetExtender.Types.Collections
 {
-    public class ItemObservableCollection<T> : SuppressObservableCollection<T>
+    public class ItemObservableCollection<T> : SuppressObservableCollection<T>, INotifyItemCollection
     {
         public event PropertyChangingEventHandler? ItemChanging;
         public event PropertyChangedEventHandler? ItemChanged;

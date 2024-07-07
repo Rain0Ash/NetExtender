@@ -97,6 +97,16 @@ namespace NetExtender.Utilities.IO
             }
         }
 
+        public static Boolean HasExtension(String path)
+        {
+            if (path is null)
+            {
+                throw new ArgumentNullException(nameof(path));
+            }
+
+            return Path.HasExtension(path);
+        }
+
         public static String ChangeExtension(String path, String? extension)
         {
             if (path is null)
