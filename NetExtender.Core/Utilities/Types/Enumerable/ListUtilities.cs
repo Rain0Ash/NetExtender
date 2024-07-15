@@ -162,6 +162,115 @@ namespace NetExtender.Utilities.Types
             (collection[first], collection[second]) = (collection[second], collection[first]);
             return true;
         }
+        
+        public static void Replace<T>(this IList<T> collection, params T[] items)
+        {
+            Replace(collection, 0, items);
+        }
+
+        public static void Replace<T>(this IList<T> collection, IEnumerable<T> source)
+        {
+            Replace(collection, 0, source);
+        }
+        
+        public static void Replace<T>(this IList<T> collection, Int32 start, params T[] items)
+        {
+            Replace(collection, start, (IEnumerable<T>) items);
+        }
+        
+        public static void Replace<T>(this IList<T> collection, Int32 start, IEnumerable<T> source)
+        {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+        
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+        
+            if (collection.IsReadOnly)
+            {
+                throw new NotSupportedException();
+            }
+            
+            if (start < 0 || start > collection.Count)
+            {
+                throw new ArgumentOutOfRangeException(nameof(start), start, null);
+            }
+            
+            using IEnumerator<T> enumerator = source.GetEnumerator();
+            
+            Int32 i = start;
+            while (i < collection.Count && enumerator.MoveNext())
+            {
+                collection[i++] = enumerator.Current;
+            }
+            
+            while (enumerator.MoveNext())
+            {
+                collection.Add(enumerator.Current);
+                i++;
+            }
+        }
+        
+        public static void FullReplace<T>(this IList<T> collection, params T[] items)
+        {
+            FullReplace(collection, 0, items);
+        }
+
+        public static void FullReplace<T>(this IList<T> collection, IEnumerable<T> source)
+        {
+            FullReplace(collection, 0, source);
+        }
+        
+        public static void FullReplace<T>(this IList<T> collection, Int32 start, params T[] items)
+        {
+            FullReplace(collection, start, (IEnumerable<T>) items);
+        }
+        
+        public static void FullReplace<T>(this IList<T> collection, Int32 start, IEnumerable<T> source)
+        {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+        
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+        
+            if (collection.IsReadOnly)
+            {
+                throw new NotSupportedException();
+            }
+            
+            if (start < 0 || start > collection.Count)
+            {
+                throw new ArgumentOutOfRangeException(nameof(start), start, null);
+            }
+            
+            using IEnumerator<T> enumerator = source.GetEnumerator();
+            
+            Int32 i = start;
+            while (i < collection.Count && enumerator.MoveNext())
+            {
+                collection[i++] = enumerator.Current;
+            }
+            
+            while (enumerator.MoveNext())
+            {
+                collection.Add(enumerator.Current);
+                i++;
+            }
+            
+            for (Int32 j = collection.Count - 1; j >= i; j--)
+            {
+                collection.RemoveAt(j);
+            }
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Shuffle<T>(this IList<T> collection)
@@ -188,7 +297,13 @@ namespace NetExtender.Utilities.Types
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Shuffle<T>(this IList<T> collection, IRandom random)
+        {
+            Shuffle<T, IRandom>(collection, random);
+        }
+
+        public static void Shuffle<T, TRandom>(this IList<T> collection, TRandom random) where TRandom : IRandom
         {
             if (collection is null)
             {

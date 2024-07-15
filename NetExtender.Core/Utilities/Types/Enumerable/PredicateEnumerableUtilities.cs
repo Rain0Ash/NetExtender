@@ -941,21 +941,21 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IEnumerable<T> Page<T>(this IEnumerable<T> source, Int32 size)
+        public static IEnumerable<T> Index<T>(this IEnumerable<T> source, Int32 size)
         {
-            return Page(source, 0, size);
+            return Index(source, 0, size);
         }
         
-        public static IEnumerable<T> Page<T>(this IEnumerable<T> source, Int32 index, Int32 size)
+        public static IEnumerable<T> Index<T>(this IEnumerable<T> source, Int32 index, Int32 size)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
 
-            if (index > 1 && size > 0)
+            if (index > 0 && size > 0)
             {
-                source = source.Skip((index - 1) * size);
+                source = source.Skip(index * size);
             }
 
             if (size > 0)
@@ -964,6 +964,17 @@ namespace NetExtender.Utilities.Types
             }
 
             return source;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<T> Page<T>(this IEnumerable<T> source, Int32 size)
+        {
+            return Page(source, 1, size);
+        }
+        
+        public static IEnumerable<T> Page<T>(this IEnumerable<T> source, Int32 page, Int32 size)
+        {
+            return Index(source, page - 1, size);
         }
 
         public static IEnumerable<T> ThrowIf<T, TException>(this IEnumerable<T> source, Func<T, Boolean> predicate) where TException : Exception, new()

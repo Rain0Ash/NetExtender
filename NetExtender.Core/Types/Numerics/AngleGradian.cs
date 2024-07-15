@@ -13,7 +13,7 @@ namespace NetExtender.Types.Numerics
         /// <summary>
         /// Represents the zero <see cref="AngleGradian"/> value (0 degrees). This field is read-only.
         /// </summary>
-        public static AngleGradian Zero { get; } = new AngleGradian(AngleUtilities.DoubleGradian.Zero);
+        public static AngleGradian Zero { get; } = new AngleGradian(AngleUtilities.Gradian.Double.Zero);
         
         /// <summary>
         /// Represents the golden <see cref="AngleGradian"/> value (~137.508 degrees).
@@ -23,22 +23,22 @@ namespace NetExtender.Types.Numerics
         /// <summary>
         /// Represents the quarter <see cref="AngleGradian"/> value (90 degrees). This field is read-only.
         /// </summary>
-        public static AngleGradian Quarter { get; } = new AngleGradian(AngleUtilities.DoubleGradian.Quarter);
+        public static AngleGradian Quarter { get; } = new AngleGradian(AngleUtilities.Gradian.Double.Quarter);
 
         /// <summary>
         /// Represents the straight <see cref="AngleGradian"/> value (180 degrees). This field is read-only.
         /// </summary>
-        public static AngleGradian Straight { get; } = new AngleGradian(AngleUtilities.DoubleGradian.Straight);
+        public static AngleGradian Straight { get; } = new AngleGradian(AngleUtilities.Gradian.Double.Straight);
 
         /// <summary>
         /// Represents the three quarter <see cref="AngleGradian"/> value (270 degrees). This field is read-only.
         /// </summary>
-        public static AngleGradian ThreeQuarter { get; } = new AngleGradian(AngleUtilities.DoubleGradian.ThreeQuarter);
+        public static AngleGradian ThreeQuarter { get; } = new AngleGradian(AngleUtilities.Gradian.Double.ThreeQuarter);
 
         /// <summary>
         /// Represents the full <see cref="AngleGradian"/> value (360 degrees). This field is read-only.
         /// </summary>
-        public static AngleGradian Full { get; } = new AngleGradian(AngleUtilities.DoubleGradian.Full);
+        public static AngleGradian Full { get; } = new AngleGradian(AngleUtilities.Gradian.Double.Full);
 
         /// <summary>
         /// Represents the smallest possible value of a <see cref="AngleGradian"/>. This field is read-only.

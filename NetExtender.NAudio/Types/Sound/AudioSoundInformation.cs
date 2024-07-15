@@ -7,8 +7,8 @@ namespace NetExtender.NAudio.Types.Sound
     {
         public readonly struct Info
         {
-            public TimeSpan Start { get; }
-            public TimeSpan Stop { get; }
+            public TimeSpan Start { get; init; }
+            public TimeSpan Stop { get; init; }
             
             public TimeSpan Length
             {
@@ -17,14 +17,30 @@ namespace NetExtender.NAudio.Types.Sound
                     return Stop - Start;
                 }
             }
-            
-            public TimeSpan Total { get; }
-            
+
+            private readonly TimeSpan? _total;
+            public TimeSpan Total
+            {
+                get
+                {
+                    return _total ?? Start - Stop;
+                }
+                init
+                {
+                    _total = value;
+                }
+            }
+
+            public Info(TimeSpan stop)
+                : this(default, stop, null)
+            {
+            }
+
             public Info(TimeSpan start, TimeSpan stop)
                 : this(start, stop, null)
             {
             }
-            
+
             public Info(TimeSpan start, TimeSpan stop, TimeSpan? total)
             {
                 if (Validate(start, stop, total) is { } exception)
@@ -33,7 +49,7 @@ namespace NetExtender.NAudio.Types.Sound
                 }
 
                 Start = start;
-                Total = total ??= stop - start;
+                _total = total ??= stop - start;
                 Stop = TimeSpan.FromTicks(Math.Clamp(stop == default ? total.Value.Ticks : stop.Ticks, start.Ticks, total.Value.Ticks));
             }
 

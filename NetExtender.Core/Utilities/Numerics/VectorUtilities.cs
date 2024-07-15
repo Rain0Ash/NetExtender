@@ -796,21 +796,21 @@ namespace NetExtender.Utilities.Numerics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Single Rotation(this Vector2 value)
         {
-            return MathF.Atan2(value.Y, value.X) * AngleUtilities.SingleDegree.Straight / MathF.PI;
+            return MathF.Atan2(value.Y, value.X) * AngleUtilities.Degree.Single.Straight / MathF.PI;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static Vector2 Rotate(this Vector2 value, Single degree)
         {
-            Single sin = MathF.Sin(MathF.PI / AngleUtilities.SingleDegree.Straight * degree);
-            Single cos = MathF.Cos(MathF.PI / AngleUtilities.SingleDegree.Straight * degree);
+            Single sin = MathF.Sin(MathF.PI / AngleUtilities.Degree.Single.Straight * degree);
+            Single cos = MathF.Cos(MathF.PI / AngleUtilities.Degree.Single.Straight * degree);
             return new Vector2(cos * value.X - sin * value.Y, sin * value.X + cos * value.Y);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Single Rotate(this Vector2 first, Vector2 second)
         {
-            return MathF.Atan2(second.Y - first.Y, second.X - first.X) * AngleUtilities.SingleDegree.Straight / MathF.PI;
+            return MathF.Atan2(second.Y - first.Y, second.X - first.X) * AngleUtilities.Degree.Single.Straight / MathF.PI;
         }
 
         /// <inheritdoc cref="Vector3.Abs"/>

@@ -13,6 +13,23 @@ using NetExtender.Types.Handlers.Chain.Interfaces;
 
 namespace NetExtender.Types.Collections
 {
+    public class ItemObservableChainHandlerCollection<T> : ItemObservableChainHandlerCollection<T, IChainHandler<T>>
+    {
+        public ItemObservableChainHandlerCollection()
+        {
+        }
+        
+        public ItemObservableChainHandlerCollection(IEnumerable<IChainHandler<T>> collection)
+            : base(collection)
+        {
+        }
+        
+        public ItemObservableChainHandlerCollection(List<IChainHandler<T>> list)
+            : base(list)
+        {
+        }
+    }
+    
     public class ItemObservableChainHandlerCollection<T, THandler> : ItemObservableChainHandlerCollection<T, THandler, ItemObservableCollection<THandler>> where THandler : IChainHandler<T>
     {
         public ItemObservableChainHandlerCollection()
@@ -27,6 +44,23 @@ namespace NetExtender.Types.Collections
         
         public ItemObservableChainHandlerCollection(List<THandler> list)
             : base(list is not null ? new ItemObservableCollection<THandler>(list) : throw new ArgumentNullException(nameof(list)))
+        {
+        }
+    }
+    
+    public class SuppressObservableChainHandlerCollection<T> : SuppressObservableChainHandlerCollection<T, IChainHandler<T>>
+    {
+        public SuppressObservableChainHandlerCollection()
+        {
+        }
+        
+        public SuppressObservableChainHandlerCollection(IEnumerable<IChainHandler<T>> collection)
+            : base(collection)
+        {
+        }
+        
+        public SuppressObservableChainHandlerCollection(List<IChainHandler<T>> list)
+            : base(list)
         {
         }
     }
@@ -72,7 +106,7 @@ namespace NetExtender.Types.Collections
         }
     }
     
-    public abstract class SuppressObservableChainHandlerCollection<T, THandler, TCollection> : ObservableChainHandlerCollection<T, THandler, TCollection>, ISuppressObservableCollection<THandler> where THandler : IChainHandler<T> where TCollection : class, ISuppressObservableCollection<THandler>
+    public abstract class SuppressObservableChainHandlerCollection<T, THandler, TCollection> : ObservableChainHandlerCollection<T, THandler, TCollection>, ISuppressObservableChainHandlerCollection<T, THandler> where THandler : IChainHandler<T> where TCollection : class, ISuppressObservableCollection<THandler>
     {
         public Boolean IsAllowSuppress
         {
@@ -114,7 +148,7 @@ namespace NetExtender.Types.Collections
         }
     }
     
-    public abstract class ObservableChainHandlerCollection<T, THandler, TCollection> : IChainHandler<T>, IObservableCollection<THandler> where THandler : IChainHandler<T> where TCollection : class, IObservableCollection<THandler>
+    public abstract class ObservableChainHandlerCollection<T, THandler, TCollection> : IObservableChainHandlerCollection<T, THandler> where THandler : IChainHandler<T> where TCollection : class, IObservableCollection<THandler>
     {
         protected TCollection Internal { get; }
         

@@ -93,124 +93,127 @@ namespace NetExtender.Utilities.Numerics
 
     public static partial class MathUtilities
     {
-        public static class SingleConstants
+        public static class Constants
         {
-            public const Single Epsilon = Single.Epsilon;
+            public static class Single
+            {
+                public const System.Single Epsilon = System.Single.Epsilon;
+                
+                public const System.Single Zero = 0F;
+                public const System.Single Half = 0.5F;
+                public const System.Single One = 1F;
+                
+                public const System.Single PI = MathF.PI;
+                public const System.Single PIx2 = PI * 2;
+                public const System.Single E = MathF.E;
+                public const System.Single Radian = PI / AngleUtilities.Degree.Single.Straight;
+                
+                public const System.Single Sqrt2 = (System.Single) Decimal.Sqrt2;
+                public const System.Single InvertedSqrt2 = (System.Single) Decimal.InvertedSqrt2;
+                public const System.Single Sqrt3 = (System.Single) Decimal.Sqrt3;
+                public const System.Single InvertedSqrt3 = (System.Single) Decimal.InvertedSqrt3;
+                public const System.Single Sqrt5 = (System.Single) Decimal.Sqrt5;
+                public const System.Single InvertedSqrt5 = (System.Single) Decimal.InvertedSqrt5;
+                public const System.Single Sqrt7 = (System.Single) Decimal.Sqrt7;
+                public const System.Single InvertedSqrt7 = (System.Single) Decimal.InvertedSqrt7;
+                public const System.Single Sqrt17 = (System.Single) Decimal.Sqrt17;
+                public const System.Single InvertedSqrt17 = (System.Single) Decimal.InvertedSqrt17;
+            }
+            
+            public static class Double
+            {
+                public const System.Double Epsilon = System.Double.Epsilon;
+                
+                public const System.Double Zero = 0D;
+                public const System.Double Half = 0.5D;
+                public const System.Double One = 1D;
+                
+                public const System.Double PI = Math.PI;
+                public const System.Double PIx2 = PI * 2;
+                public const System.Double E = Math.E;
+                public const System.Double Radian = PI / AngleUtilities.Degree.Double.Straight;
+                
+                public const System.Double Sqrt2 = (System.Double) Decimal.Sqrt2;
+                public const System.Double InvertedSqrt2 = (System.Double) Decimal.InvertedSqrt3;
+                public const System.Double Sqrt3 = (System.Double) Decimal.Sqrt3;
+                public const System.Double InvertedSqrt3 = (System.Double) Decimal.InvertedSqrt3;
+                public const System.Double Sqrt5 = (System.Double) Decimal.Sqrt5;
+                public const System.Double InvertedSqrt5 = (System.Double) Decimal.InvertedSqrt5;
+                public const System.Double Sqrt7 = (System.Double) Decimal.Sqrt7;
+                public const System.Double InvertedSqrt7 = (System.Double) Decimal.InvertedSqrt7;
+                public const System.Double Sqrt17 = (System.Double) Decimal.Sqrt17;
+                public const System.Double InvertedSqrt17 = (System.Double) Decimal.InvertedSqrt17;
+            }
+            
+            public static class Decimal
+            {
+                /// <summary>
+                /// Represents Epsilon
+                /// </summary>
+                public const System.Decimal Epsilon = 0.0000000000000000001M;
 
-            public const Single Zero = 0F;
-            public const Single Half = 0.5F;
-            public const Single One = 1F;
+                public const System.Decimal Zero = System.Decimal.Zero;
+                public const System.Decimal Half = System.Decimal.One / 2;
+                public const System.Decimal One = System.Decimal.One;
+                public const System.Decimal MinusOne = System.Decimal.MinusOne;
+                public const System.Decimal MaxPlaces = 1.000000000000000000000000000000000M;
 
-            public const Single PI = MathF.PI;
-            public const Single PIx2 = PI * 2;
-            public const Single E = MathF.E;
-            public const Single Radian = PI / AngleUtilities.SingleDegree.Straight;
+                public const System.Decimal Sqrt2 = 1.41421356237309504880168872420969807856967187537694807317667973799073247846210703M;
+                public const System.Decimal InvertedSqrt2 = 1M / Sqrt2;
+                public const System.Decimal Sqrt3 = 1.73205080756887729352744634150587236694280525381038062805580697945193301690880003M;
+                public const System.Decimal InvertedSqrt3 = 1M / Sqrt3;
+                public const System.Decimal Sqrt5 = 2.23606797749978969640917366873127623544061835961152572427089724541052092563780489M;
+                public const System.Decimal InvertedSqrt5 = 1M / Sqrt5;
+                public const System.Decimal Sqrt7 = 2.64575131106459059050161575363926042571025918308245018036833445920106882323028362M;
+                public const System.Decimal InvertedSqrt7 = 1M / Sqrt7;
+                public const System.Decimal Sqrt17 = 4.12310562561766054982140985597407702514719922537362043439863357309495434633762159M;
+                public const System.Decimal InvertedSqrt17 = 1M / Sqrt17;
 
-            public const Single Sqrt2 = (Single) DecimalConstants.Sqrt2;
-            public const Single InvertedSqrt2 = (Single) DecimalConstants.InvertedSqrt2;
-            public const Single Sqrt3 = (Single) DecimalConstants.Sqrt3;
-            public const Single InvertedSqrt3 = (Single) DecimalConstants.InvertedSqrt3;
-            public const Single Sqrt5 = (Single) DecimalConstants.Sqrt5;
-            public const Single InvertedSqrt5 = (Single) DecimalConstants.InvertedSqrt5;
-            public const Single Sqrt7 = (Single) DecimalConstants.Sqrt7;
-            public const Single InvertedSqrt7 = (Single) DecimalConstants.InvertedSqrt7;
-            public const Single Sqrt17 = (Single) DecimalConstants.Sqrt17;
-            public const Single InvertedSqrt17 = (Single) DecimalConstants.InvertedSqrt17;
-        }
+                /// <summary>
+                /// Represents PI
+                /// </summary>
+                public const System.Decimal PI = 3.14159265358979323846264338327950288419716939937510M;
 
-        public static class DoubleConstants
-        {
-            public const Double Epsilon = Double.Epsilon;
+                /// <summary>
+                /// Represents 2*PI
+                /// </summary>
+                public const System.Decimal PIx2 = 6.28318530717958647692528676655900576839433879875021M;
 
-            public const Double Zero = 0D;
-            public const Double Half = 0.5D;
-            public const Double One = 1D;
+                /// <summary>
+                /// Represents PI/2
+                /// </summary>
+                public const System.Decimal PIdiv2 = 1.570796326794896619231321691639751442098584699687552910487M;
 
-            public const Double PI = Math.PI;
-            public const Double PIx2 = PI * 2;
-            public const Double E = Math.E;
-            public const Double Radian = PI / AngleUtilities.DoubleDegree.Straight;
+                /// <summary>
+                /// Represents PI/4
+                /// </summary>
+                public const System.Decimal PIdiv4 = 0.785398163397448309615660845819875721049292349843776455243M;
 
-            public const Double Sqrt2 = (Double) DecimalConstants.Sqrt2;
-            public const Double InvertedSqrt2 = (Double) DecimalConstants.InvertedSqrt3;
-            public const Double Sqrt3 = (Double) DecimalConstants.Sqrt3;
-            public const Double InvertedSqrt3 = (Double) DecimalConstants.InvertedSqrt3;
-            public const Double Sqrt5 = (Double) DecimalConstants.Sqrt5;
-            public const Double InvertedSqrt5 = (Double) DecimalConstants.InvertedSqrt5;
-            public const Double Sqrt7 = (Double) DecimalConstants.Sqrt7;
-            public const Double InvertedSqrt7 = (Double) DecimalConstants.InvertedSqrt7;
-            public const Double Sqrt17 = (Double) DecimalConstants.Sqrt17;
-            public const Double InvertedSqrt17 = (Double) DecimalConstants.InvertedSqrt17;
-        }
+                /// <summary>
+                /// Represents E
+                /// </summary>
+                public const System.Decimal E = 2.7182818284590452353602874713526624977572470936999595749M;
 
-        public static class DecimalConstants
-        {
-            /// <summary>
-            /// Represents Epsilon
-            /// </summary>
-            public const Decimal Epsilon = 0.0000000000000000001M;
+                /// <summary>
+                /// Represents 1.0/E
+                /// </summary>
+                public const System.Decimal InvertedE = 0.3678794411714423215955237701614608674458111310317678M;
 
-            public const Decimal Zero = Decimal.Zero;
-            public const Decimal Half = Decimal.One / 2;
-            public const Decimal One = Decimal.One;
-            public const Decimal MinusOne = Decimal.MinusOne;
-            public const Decimal MaxPlaces = 1.000000000000000000000000000000000M;
+                /// <summary>
+                /// Represents PI / 180
+                /// </summary>
+                public const System.Decimal Radian = PI / AngleUtilities.Degree.Decimal.Straight;
 
-            public const Decimal Sqrt2 = 1.41421356237309504880168872420969807856967187537694807317667973799073247846210703M;
-            public const Decimal InvertedSqrt2 = 1M / Sqrt2;
-            public const Decimal Sqrt3 = 1.73205080756887729352744634150587236694280525381038062805580697945193301690880003M;
-            public const Decimal InvertedSqrt3 = 1M / Sqrt3;
-            public const Decimal Sqrt5 = 2.23606797749978969640917366873127623544061835961152572427089724541052092563780489M;
-            public const Decimal InvertedSqrt5 = 1M / Sqrt5;
-            public const Decimal Sqrt7 = 2.64575131106459059050161575363926042571025918308245018036833445920106882323028362M;
-            public const Decimal InvertedSqrt7 = 1M / Sqrt7;
-            public const Decimal Sqrt17 = 4.12310562561766054982140985597407702514719922537362043439863357309495434633762159M;
-            public const Decimal InvertedSqrt17 = 1M / Sqrt17;
+                /// <summary>
+                /// Represents log(2,E) factor
+                /// </summary>
+                public const System.Decimal InvertedLog2 = 1.442695040888963407359924681001892137426645954152985934135M;
 
-            /// <summary>
-            /// Represents PI
-            /// </summary>
-            public const Decimal PI = 3.14159265358979323846264338327950288419716939937510M;
-
-            /// <summary>
-            /// Represents 2*PI
-            /// </summary>
-            public const Decimal PIx2 = 6.28318530717958647692528676655900576839433879875021M;
-
-            /// <summary>
-            /// Represents PI/2
-            /// </summary>
-            public const Decimal PIdiv2 = 1.570796326794896619231321691639751442098584699687552910487M;
-
-            /// <summary>
-            /// Represents PI/4
-            /// </summary>
-            public const Decimal PIdiv4 = 0.785398163397448309615660845819875721049292349843776455243M;
-
-            /// <summary>
-            /// Represents E
-            /// </summary>
-            public const Decimal E = 2.7182818284590452353602874713526624977572470936999595749M;
-
-            /// <summary>
-            /// Represents 1.0/E
-            /// </summary>
-            public const Decimal InvertedE = 0.3678794411714423215955237701614608674458111310317678M;
-
-            /// <summary>
-            /// Represents PI / 180
-            /// </summary>
-            public const Decimal Radian = PI / AngleUtilities.DecimalDegree.Straight;
-
-            /// <summary>
-            /// Represents log(2,E) factor
-            /// </summary>
-            public const Decimal InvertedLog2 = 1.442695040888963407359924681001892137426645954152985934135M;
-
-            /// <summary>
-            /// Represents log(10,E) factor
-            /// </summary>
-            public const Decimal InvertedLog10 = 0.434294481903251827651128918916605082294397005803666566114M;
+                /// <summary>
+                /// Represents log(10,E) factor
+                /// </summary>
+                public const System.Decimal InvertedLog10 = 0.434294481903251827651128918916605082294397005803666566114M;
+            }
         }
 
         /// <summary>
@@ -646,13 +649,13 @@ namespace NetExtender.Utilities.Numerics
                 result += factorial;
             } while (cache != result);
 
-            return count != 0 ? result * Pow(DecimalConstants.E, count) : result;
+            return count != 0 ? result * Pow(Constants.Decimal.E, count) : result;
         }
 
         private static Boolean IsInteger(Decimal value)
         {
             Int64 @long = (Int64) value;
-            return Abs(value - @long) <= DecimalConstants.Epsilon;
+            return Abs(value - @long) <= Constants.Decimal.Epsilon;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1492,13 +1495,13 @@ namespace NetExtender.Utilities.Numerics
             Int32 count = 0;
             while (value >= Decimal.One)
             {
-                value *= DecimalConstants.InvertedE;
+                value *= Constants.Decimal.InvertedE;
                 count++;
             }
 
-            while (value <= DecimalConstants.InvertedE)
+            while (value <= Constants.Decimal.InvertedE)
             {
-                value *= DecimalConstants.E;
+                value *= Constants.Decimal.E;
                 count--;
             }
 
@@ -1556,7 +1559,7 @@ namespace NetExtender.Utilities.Numerics
         /// <returns></returns>
         public static Decimal Log2(this Decimal value)
         {
-            return Log(value) * DecimalConstants.InvertedLog2;
+            return Log(value) * Constants.Decimal.InvertedLog2;
         }
 
         /// <inheritdoc cref="Math.Log10"/>
@@ -1581,7 +1584,7 @@ namespace NetExtender.Utilities.Numerics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Decimal Log10(this Decimal value)
         {
-            return Log(value) * DecimalConstants.InvertedLog10;
+            return Log(value) * Constants.Decimal.InvertedLog10;
         }
 
         #region DigitsCount
@@ -2573,7 +2576,7 @@ namespace NetExtender.Utilities.Numerics
                     return Decimal.Zero;
                 }
 
-                current = (previous + value / previous) * DecimalConstants.Half;
+                current = (previous + value / previous) * Constants.Decimal.Half;
             } while (Abs(previous - current) > epsilon);
 
             return current;
@@ -2638,25 +2641,25 @@ namespace NetExtender.Utilities.Numerics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Single ToDegrees(this Single radians)
         {
-            return AngleUtilities.SingleDegree.Straight / SingleConstants.PI * radians;
+            return AngleUtilities.Degree.Single.Straight / Constants.Single.PI * radians;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double ToDegrees(this Double radians)
         {
-            return AngleUtilities.DoubleDegree.Straight / DoubleConstants.PI * radians;
+            return AngleUtilities.Degree.Double.Straight / Constants.Double.PI * radians;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Decimal ToDegrees(this Decimal radians)
         {
-            return AngleUtilities.DecimalDegree.Straight / DecimalConstants.PI * radians;
+            return AngleUtilities.Degree.Decimal.Straight / Constants.Decimal.PI * radians;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Single ToRadians(this Single value)
         {
-            return value * SingleConstants.Radian;
+            return value * Constants.Single.Radian;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -2686,86 +2689,86 @@ namespace NetExtender.Utilities.Numerics
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static Int32 ToQuarterDegree(this Int32 value, out Quarter quarter)
         {
-            value %= AngleUtilities.Int32Degree.Full;
-            Int32 angle = value < AngleUtilities.Int32Degree.Zero ? AngleUtilities.Int32Degree.Full + value % AngleUtilities.Int32Degree.Full : value % AngleUtilities.Int32Degree.Full;
+            value %= AngleUtilities.Degree.Int32.Full;
+            Int32 angle = value < AngleUtilities.Degree.Int32.Zero ? AngleUtilities.Degree.Int32.Full + value % AngleUtilities.Degree.Int32.Full : value % AngleUtilities.Degree.Int32.Full;
 
             Int32 degree = angle switch
             {
-                <= AngleUtilities.Int32Degree.Quarter => angle,
-                <= AngleUtilities.Int32Degree.ThreeQuarter => AngleUtilities.Int32Degree.Straight - angle,
-                _ => angle - AngleUtilities.Int32Degree.Full
+                <= AngleUtilities.Degree.Int32.Quarter => angle,
+                <= AngleUtilities.Degree.Int32.ThreeQuarter => AngleUtilities.Degree.Int32.Straight - angle,
+                _ => angle - AngleUtilities.Degree.Int32.Full
             };
             
-            quarter = (Quarter) (angle / AngleUtilities.Int32Degree.Quarter + 1);
+            quarter = (Quarter) (angle / AngleUtilities.Degree.Int32.Quarter + 1);
             return degree;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Int32 ToQuarterDegree(this UInt32 value, out Quarter quarter)
         {
-            return ToQuarterDegree((Int32) (value % AngleUtilities.Int32Degree.Full), out quarter);
+            return ToQuarterDegree((Int32) (value % AngleUtilities.Degree.Int32.Full), out quarter);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Int32 ToQuarterDegree(this Int64 value, out Quarter quarter)
         {
-            return ToQuarterDegree((Int32) (value % AngleUtilities.Int32Degree.Full), out quarter);
+            return ToQuarterDegree((Int32) (value % AngleUtilities.Degree.Int32.Full), out quarter);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Int32 ToQuarterDegree(this UInt64 value, out Quarter quarter)
         {
-            return ToQuarterDegree((Int32) (value % AngleUtilities.Int32Degree.Full), out quarter);
+            return ToQuarterDegree((Int32) (value % AngleUtilities.Degree.Int32.Full), out quarter);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static Single ToQuarterDegree(this Single value, out Quarter quarter)
         {
-            value %= AngleUtilities.SingleDegree.Full;
-            Single angle = value < AngleUtilities.SingleDegree.Zero ? AngleUtilities.SingleDegree.Full + value % AngleUtilities.SingleDegree.Full : value % AngleUtilities.SingleDegree.Full;
+            value %= AngleUtilities.Degree.Single.Full;
+            Single angle = value < AngleUtilities.Degree.Single.Zero ? AngleUtilities.Degree.Single.Full + value % AngleUtilities.Degree.Single.Full : value % AngleUtilities.Degree.Single.Full;
             
             Single degree = angle switch
             {
-                <= AngleUtilities.SingleDegree.Quarter => angle,
-                <= AngleUtilities.SingleDegree.ThreeQuarter => AngleUtilities.SingleDegree.Straight - angle,
-                _ => angle - AngleUtilities.SingleDegree.Full
+                <= AngleUtilities.Degree.Single.Quarter => angle,
+                <= AngleUtilities.Degree.Single.ThreeQuarter => AngleUtilities.Degree.Single.Straight - angle,
+                _ => angle - AngleUtilities.Degree.Single.Full
             };
             
-            quarter = (Quarter) (Int32) (angle / AngleUtilities.SingleDegree.Quarter + 1);
+            quarter = (Quarter) (Int32) (angle / AngleUtilities.Degree.Single.Quarter + 1);
             return degree;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static Double ToQuarterDegree(this Double value, out Quarter quarter)
         {
-            value %= AngleUtilities.DoubleDegree.Full;
-            Double angle = value < AngleUtilities.DoubleDegree.Zero ? AngleUtilities.DoubleDegree.Full + value % AngleUtilities.DoubleDegree.Full : value % AngleUtilities.DoubleDegree.Full;
+            value %= AngleUtilities.Degree.Double.Full;
+            Double angle = value < AngleUtilities.Degree.Double.Zero ? AngleUtilities.Degree.Double.Full + value % AngleUtilities.Degree.Double.Full : value % AngleUtilities.Degree.Double.Full;
             
             Double degree = angle switch
             {
-                <= AngleUtilities.DoubleDegree.Quarter => angle,
-                <= AngleUtilities.DoubleDegree.ThreeQuarter => AngleUtilities.DoubleDegree.Straight - angle,
-                _ => angle - AngleUtilities.DoubleDegree.Full
+                <= AngleUtilities.Degree.Double.Quarter => angle,
+                <= AngleUtilities.Degree.Double.ThreeQuarter => AngleUtilities.Degree.Double.Straight - angle,
+                _ => angle - AngleUtilities.Degree.Double.Full
             };
             
-            quarter = (Quarter) (Int32) (angle / AngleUtilities.DoubleDegree.Quarter + 1);
+            quarter = (Quarter) (Int32) (angle / AngleUtilities.Degree.Double.Quarter + 1);
             return degree;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static Decimal ToQuarterDegree(this Decimal value, out Quarter quarter)
         {
-            value %= AngleUtilities.DecimalDegree.Full;
-            Decimal angle = value < AngleUtilities.DecimalDegree.Zero ? AngleUtilities.DecimalDegree.Full + value % AngleUtilities.DecimalDegree.Full : value % AngleUtilities.DecimalDegree.Full;
+            value %= AngleUtilities.Degree.Decimal.Full;
+            Decimal angle = value < AngleUtilities.Degree.Decimal.Zero ? AngleUtilities.Degree.Decimal.Full + value % AngleUtilities.Degree.Decimal.Full : value % AngleUtilities.Degree.Decimal.Full;
             
             Decimal degree = angle switch
             {
-                <= AngleUtilities.DecimalDegree.Quarter => angle,
-                <= AngleUtilities.DecimalDegree.ThreeQuarter => AngleUtilities.DecimalDegree.Straight - angle,
-                _ => angle - AngleUtilities.DecimalDegree.Full
+                <= AngleUtilities.Degree.Decimal.Quarter => angle,
+                <= AngleUtilities.Degree.Decimal.ThreeQuarter => AngleUtilities.Degree.Decimal.Straight - angle,
+                _ => angle - AngleUtilities.Degree.Decimal.Full
             };
             
-            quarter = (Quarter) (Int32) (angle / AngleUtilities.DecimalDegree.Quarter + 1);
+            quarter = (Quarter) (Int32) (angle / AngleUtilities.Degree.Decimal.Quarter + 1);
             return degree;
         }
 
@@ -2863,19 +2866,19 @@ namespace NetExtender.Utilities.Numerics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Single Cot(this Single value)
         {
-            return SingleConstants.One / Tan(value);
+            return Constants.Single.One / Tan(value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Single Coth(this Single value)
         {
-            return SingleConstants.One / Tanh(value);
+            return Constants.Single.One / Tanh(value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Single Acot(this Single value)
         {
-            return Atan(SingleConstants.One / value);
+            return Atan(Constants.Single.One / value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -2887,55 +2890,55 @@ namespace NetExtender.Utilities.Numerics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Single Acoth(this Single value)
         {
-            return Atanh(SingleConstants.One / value);
+            return Atanh(Constants.Single.One / value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Single Sec(this Single value)
         {
-            return SingleConstants.One / Cos(value);
+            return Constants.Single.One / Cos(value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Single Sech(this Single value)
         {
-            return SingleConstants.One / Cosh(value);
+            return Constants.Single.One / Cosh(value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Single Asec(this Single value)
         {
-            return Acos(SingleConstants.One / value);
+            return Acos(Constants.Single.One / value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Single Asech(this Single value)
         {
-            return Cosh(SingleConstants.One / value);
+            return Cosh(Constants.Single.One / value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Single Csc(this Single value)
         {
-            return SingleConstants.One / Sin(value);
+            return Constants.Single.One / Sin(value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Single Csch(this Single value)
         {
-            return SingleConstants.One / Sinh(value);
+            return Constants.Single.One / Sinh(value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Single Acsc(this Single value)
         {
-            return Asin(SingleConstants.One / value);
+            return Asin(Constants.Single.One / value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Single Acsch(this Single value)
         {
-            return Asinh(SingleConstants.One / value);
+            return Asinh(Constants.Single.One / value);
         }
 
         public static Single Trigonometry(this Single value, TrigonometryType type)
@@ -2973,7 +2976,7 @@ namespace NetExtender.Utilities.Numerics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double ToRadians(this Double value)
         {
-            return value * DoubleConstants.Radian;
+            return value * Constants.Double.Radian;
         }
 
         /// <inheritdoc cref="Math.Sin"/>
@@ -3070,19 +3073,19 @@ namespace NetExtender.Utilities.Numerics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Cot(this Double value)
         {
-            return DoubleConstants.One / Math.Tan(value);
+            return Constants.Double.One / Math.Tan(value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Coth(this Double value)
         {
-            return DoubleConstants.One / Math.Tanh(value);
+            return Constants.Double.One / Math.Tanh(value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Acot(this Double value)
         {
-            return Math.Atan(DoubleConstants.One / value);
+            return Math.Atan(Constants.Double.One / value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -3094,55 +3097,55 @@ namespace NetExtender.Utilities.Numerics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Acoth(this Double value)
         {
-            return Math.Atanh(DoubleConstants.One / value);
+            return Math.Atanh(Constants.Double.One / value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Sec(this Double value)
         {
-            return DoubleConstants.One / Math.Cos(value);
+            return Constants.Double.One / Math.Cos(value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Sech(this Double value)
         {
-            return DoubleConstants.One / Math.Cosh(value);
+            return Constants.Double.One / Math.Cosh(value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Asec(this Double value)
         {
-            return Math.Acos(DoubleConstants.One / value);
+            return Math.Acos(Constants.Double.One / value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Asech(this Double value)
         {
-            return Math.Cosh(DoubleConstants.One / value);
+            return Math.Cosh(Constants.Double.One / value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Csc(this Double value)
         {
-            return DoubleConstants.One / Math.Sin(value);
+            return Constants.Double.One / Math.Sin(value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Csch(this Double value)
         {
-            return DoubleConstants.One / Math.Sinh(value);
+            return Constants.Double.One / Math.Sinh(value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Acsc(this Double value)
         {
-            return Math.Asin(DoubleConstants.One / value);
+            return Math.Asin(Constants.Double.One / value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Acsch(this Double value)
         {
-            return Math.Asinh(DoubleConstants.One / value);
+            return Math.Asinh(Constants.Double.One / value);
         }
 
         public static Double Trigonometry(this Double value, TrigonometryType type)
@@ -3180,7 +3183,7 @@ namespace NetExtender.Utilities.Numerics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Decimal ToRadians(this Decimal value)
         {
-            return value * DecimalConstants.Radian;
+            return value * Constants.Decimal.Radian;
         }
         
         /// <summary>
@@ -3201,16 +3204,16 @@ namespace NetExtender.Utilities.Numerics
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static void TruncateToPeriodicInterval(ref Single value)
         {
-            while (value >= SingleConstants.PIx2)
+            while (value >= Constants.Single.PIx2)
             {
-                Int32 divide = Math.Abs((Int32)(value / SingleConstants.PIx2));
-                value -= divide * SingleConstants.PIx2;
+                Int32 divide = Math.Abs((Int32)(value / Constants.Single.PIx2));
+                value -= divide * Constants.Single.PIx2;
             }
 
-            while (value <= -SingleConstants.PIx2)
+            while (value <= -Constants.Single.PIx2)
             {
-                Int32 divide = Math.Abs((Int32)(value / SingleConstants.PIx2));
-                value += divide * SingleConstants.PIx2;
+                Int32 divide = Math.Abs((Int32)(value / Constants.Single.PIx2));
+                value += divide * Constants.Single.PIx2;
             }
         }
         
@@ -3232,16 +3235,16 @@ namespace NetExtender.Utilities.Numerics
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static void TruncateToPeriodicInterval(ref Double value)
         {
-            while (value >= DoubleConstants.PIx2)
+            while (value >= Constants.Double.PIx2)
             {
-                Int32 divide = Math.Abs((Int32)(value / DoubleConstants.PIx2));
-                value -= divide * DoubleConstants.PIx2;
+                Int32 divide = Math.Abs((Int32)(value / Constants.Double.PIx2));
+                value -= divide * Constants.Double.PIx2;
             }
 
-            while (value <= -DoubleConstants.PIx2)
+            while (value <= -Constants.Double.PIx2)
             {
-                Int32 divide = Math.Abs((Int32)(value / DoubleConstants.PIx2));
-                value += divide * DoubleConstants.PIx2;
+                Int32 divide = Math.Abs((Int32)(value / Constants.Double.PIx2));
+                value += divide * Constants.Double.PIx2;
             }
         }
 
@@ -3263,16 +3266,16 @@ namespace NetExtender.Utilities.Numerics
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static void TruncateToPeriodicInterval(ref Decimal value)
         {
-            while (value >= DecimalConstants.PIx2)
+            while (value >= Constants.Decimal.PIx2)
             {
-                Int32 divide = Math.Abs(Decimal.ToInt32(value / DecimalConstants.PIx2));
-                value -= divide * DecimalConstants.PIx2;
+                Int32 divide = Math.Abs(Decimal.ToInt32(value / Constants.Decimal.PIx2));
+                value -= divide * Constants.Decimal.PIx2;
             }
 
-            while (value <= -DecimalConstants.PIx2)
+            while (value <= -Constants.Decimal.PIx2)
             {
-                Int32 divide = Math.Abs(Decimal.ToInt32(value / DecimalConstants.PIx2));
-                value += divide * DecimalConstants.PIx2;
+                Int32 divide = Math.Abs(Decimal.ToInt32(value / Constants.Decimal.PIx2));
+                value += divide * Constants.Decimal.PIx2;
             }
         }
         
@@ -3321,10 +3324,10 @@ namespace NetExtender.Utilities.Numerics
         {
             return TruncateToPeriodicInterval(value) switch
             {
-                >= -DecimalConstants.PIx2 and <= -DecimalConstants.PI => true,
-                >= -DecimalConstants.PI and <= Decimal.Zero => false,
-                >= Decimal.Zero and <= DecimalConstants.PI => true,
-                >= DecimalConstants.PI and <= DecimalConstants.PIx2 => false,
+                >= -Constants.Decimal.PIx2 and <= -Constants.Decimal.PI => true,
+                >= -Constants.Decimal.PI and <= Decimal.Zero => false,
+                >= Decimal.Zero and <= Constants.Decimal.PI => true,
+                >= Constants.Decimal.PI and <= Constants.Decimal.PIx2 => false,
                 _ => throw new ArgumentOutOfRangeException(nameof(value), value, null)
             };
         }
@@ -3349,7 +3352,7 @@ namespace NetExtender.Utilities.Numerics
             Decimal exp = Exp(value);
             Decimal x = Decimal.One / exp;
 
-            return (exp - x) * DecimalConstants.Half;
+            return (exp - x) * Constants.Decimal.Half;
         }
 
         /// <inheritdoc cref="Math.Asin"/>
@@ -3365,7 +3368,7 @@ namespace NetExtender.Utilities.Numerics
                 case Decimal.Zero:
                     return Decimal.Zero;
                 case Decimal.One:
-                    return DecimalConstants.PIdiv2;
+                    return Constants.Decimal.PIdiv2;
             }
 
             if (value < Decimal.Zero)
@@ -3378,7 +3381,7 @@ namespace NetExtender.Utilities.Numerics
             if (Abs(value) > Abs(nx))
             {
                 Decimal t = Asin(nx);
-                return DecimalConstants.Half * (DecimalConstants.PIdiv2 - t);
+                return Constants.Decimal.Half * (Constants.Decimal.PIdiv2 - t);
             }
 
             Decimal x = Decimal.Zero;
@@ -3392,7 +3395,7 @@ namespace NetExtender.Utilities.Numerics
             do
             {
                 cache = result;
-                result *= px * (Decimal.One - DecimalConstants.Half / i);
+                result *= px * (Decimal.One - Constants.Decimal.Half / i);
                 x += result / ((i << 1) + 1);
                 i++;
             } while (cache != result);
@@ -3415,15 +3418,15 @@ namespace NetExtender.Utilities.Numerics
 
             switch (value)
             {
-                case >= DecimalConstants.PI and <= DecimalConstants.PIx2:
-                    return -Cos(value - DecimalConstants.PI);
-                case >= -DecimalConstants.PIx2 and <= -DecimalConstants.PI:
-                    return -Cos(value + DecimalConstants.PI);
+                case >= Constants.Decimal.PI and <= Constants.Decimal.PIx2:
+                    return -Cos(value - Constants.Decimal.PI);
+                case >= -Constants.Decimal.PIx2 and <= -Constants.Decimal.PI:
+                    return -Cos(value + Constants.Decimal.PI);
             }
 
             value *= value;
 
-            Decimal px = -value * DecimalConstants.Half;
+            Decimal px = -value * Constants.Decimal.Half;
             Decimal x = Decimal.One + px;
             Decimal cache = x - Decimal.One;
 
@@ -3431,7 +3434,7 @@ namespace NetExtender.Utilities.Numerics
             {
                 cache = x;
                 Decimal factor = i * ((i << 1) + 3) + 1;
-                factor = -DecimalConstants.Half / factor;
+                factor = -Constants.Decimal.Half / factor;
                 px *= value * factor;
                 x += px;
             }
@@ -3445,7 +3448,7 @@ namespace NetExtender.Utilities.Numerics
             Decimal exp = Exp(value);
             Decimal x = Decimal.One / exp;
 
-            return (exp + x) * DecimalConstants.Half;
+            return (exp + x) * Constants.Decimal.Half;
         }
 
         /// <inheritdoc cref="Math.Acos"/>
@@ -3454,17 +3457,17 @@ namespace NetExtender.Utilities.Numerics
             switch (value)
             {
                 case Decimal.Zero:
-                    return DecimalConstants.PIdiv2;
+                    return Constants.Decimal.PIdiv2;
                 case Decimal.One:
                     return Decimal.Zero;
             }
 
             if (value < Decimal.Zero)
             {
-                return DecimalConstants.PI - Acos(-value);
+                return Constants.Decimal.PI - Acos(-value);
             }
 
-            return DecimalConstants.PIdiv2 - Asin(value);
+            return Constants.Decimal.PIdiv2 - Asin(value);
         }
 
         /// <inheritdoc cref="Math.Acosh"/>
@@ -3502,7 +3505,7 @@ namespace NetExtender.Utilities.Numerics
             return value switch
             {
                 Decimal.Zero => Decimal.Zero,
-                Decimal.One => DecimalConstants.PIdiv4,
+                Decimal.One => Constants.Decimal.PIdiv4,
                 _ => Asin(value / Sqrt(Decimal.One + value * value))
             };
         }
@@ -3517,18 +3520,18 @@ namespace NetExtender.Utilities.Numerics
 
             if (second < Decimal.Zero && value >= Decimal.Zero)
             {
-                return Atan(value / second) + DecimalConstants.PI;
+                return Atan(value / second) + Constants.Decimal.PI;
             }
 
             if (second < Decimal.Zero && value < Decimal.Zero)
             {
-                return Atan(value / second) - DecimalConstants.PI;
+                return Atan(value / second) - Constants.Decimal.PI;
             }
 
             return second switch
             {
-                Decimal.Zero when value > Decimal.Zero => DecimalConstants.PIdiv2,
-                Decimal.Zero when value < Decimal.Zero => -DecimalConstants.PIdiv2,
+                Decimal.Zero when value > Decimal.Zero => Constants.Decimal.PIdiv2,
+                Decimal.Zero when value < Decimal.Zero => -Constants.Decimal.PIdiv2,
                 _ => throw new ArgumentException()
             };
         }
@@ -4534,25 +4537,25 @@ namespace NetExtender.Utilities.Numerics
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static Single Fibonacci(this Single value)
         {
-            const Single plus = (1 + SingleConstants.Sqrt5) / 2;
-            const Single minus = (1 - SingleConstants.Sqrt5) / 2;
-            return SingleConstants.InvertedSqrt5 * (Pow(plus, value) - Pow(minus, value));
+            const Single plus = (1 + Constants.Single.Sqrt5) / 2;
+            const Single minus = (1 - Constants.Single.Sqrt5) / 2;
+            return Constants.Single.InvertedSqrt5 * (Pow(plus, value) - Pow(minus, value));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static Double Fibonacci(this Double value)
         {
-            const Double plus = (1 + DoubleConstants.Sqrt5) / 2;
-            const Double minus = (1 - DoubleConstants.Sqrt5) / 2;
-            return DoubleConstants.InvertedSqrt5 * (Pow(plus, value) - Pow(minus, value));
+            const Double plus = (1 + Constants.Double.Sqrt5) / 2;
+            const Double minus = (1 - Constants.Double.Sqrt5) / 2;
+            return Constants.Double.InvertedSqrt5 * (Pow(plus, value) - Pow(minus, value));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static Decimal Fibonacci(this Decimal value)
         {
-            const Decimal plus = (1 + DecimalConstants.Sqrt5) / 2;
-            const Decimal minus = (1 - DecimalConstants.Sqrt5) / 2;
-            return DecimalConstants.InvertedSqrt5 * (Pow(plus, value) - Pow(minus, value));
+            const Decimal plus = (1 + Constants.Decimal.Sqrt5) / 2;
+            const Decimal minus = (1 - Constants.Decimal.Sqrt5) / 2;
+            return Constants.Decimal.InvertedSqrt5 * (Pow(plus, value) - Pow(minus, value));
         }
 
         public static Decimal DiscreteDifference(this Single value, Single between, Byte digits)
@@ -4609,7 +4612,7 @@ namespace NetExtender.Utilities.Numerics
         {
             Decimal abs = Abs(value - between);
 
-            if (abs < DecimalConstants.Epsilon)
+            if (abs < Constants.Decimal.Epsilon)
             {
                 return 1;
             }
@@ -4980,7 +4983,7 @@ namespace NetExtender.Utilities.Numerics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Decimal Normalize(this Decimal value)
         {
-            return value / DecimalConstants.MaxPlaces;
+            return value / Constants.Decimal.MaxPlaces;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

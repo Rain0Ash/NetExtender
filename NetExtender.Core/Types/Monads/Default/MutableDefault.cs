@@ -11,13 +11,18 @@ namespace NetExtender.Types.Monads.Default
 {
     public class NotifyMutableValueDefault<T> : MutableValueDefault<T>
     {
+        public static implicit operator NotifyMutableValueDefault<T>(T value)
+        {
+            return new NotifyMutableValueDefault<T>(value);
+        }
+        
         public override T Value
         {
             get
             {
                 return base.Value;
             }
-            set
+            protected set
             {
                 Boolean @default = IsDefault;
                 this.RaiseAndSetIfChanged(ref _value, value);
@@ -71,6 +76,11 @@ namespace NetExtender.Types.Monads.Default
     
     public class MutableValueDefault<T> : MutableDefault<T>
     {
+        public static implicit operator MutableValueDefault<T>(T value)
+        {
+            return new MutableValueDefault<T>(value);
+        }
+        
         protected T _default;
         public virtual T Default
         {
@@ -114,7 +124,7 @@ namespace NetExtender.Types.Monads.Default
             {
                 return base.Value;
             }
-            set
+            protected set
             {
                 Boolean @default = IsDefault;
                 this.RaiseAndSetIfChanged(ref _value, value);
@@ -208,12 +218,102 @@ namespace NetExtender.Types.Monads.Default
         }
     }
     
-    public abstract class MutableDefault<T> : IDefault<T>, INotifyProperty
+    public abstract class MutableDefault<T> : IDefault<T>, IDefaultEquatable<T, MutableDefault<T>>, IDefaultComparable<T, MutableDefault<T>>, INotifyProperty
     {
         [return: NotNullIfNotNull("value")]
         public static implicit operator T?(MutableDefault<T>? value)
         {
             return value is not null ? value.Value : default;
+        }
+        
+        public static Boolean operator ==(T? first, MutableDefault<T>? second)
+        {
+            return second == first;
+        }
+
+        public static Boolean operator !=(T? first, MutableDefault<T>? second)
+        {
+            return !(first == second);
+        }
+
+        public static Boolean operator ==(MutableDefault<T>? first, T? second)
+        {
+            return first is not null && first.Equals(second);
+        }
+
+        public static Boolean operator !=(MutableDefault<T>? first, T? second)
+        {
+            return !(first == second);
+        }
+        
+        public static Boolean operator ==(MutableDefault<T>? first, MutableDefault<T>? second)
+        {
+            return ReferenceEquals(first, second) || first is not null && first.Equals(second);
+        }
+
+        public static Boolean operator !=(MutableDefault<T>? first, MutableDefault<T>? second)
+        {
+            return !(first == second);
+        }
+
+        public static Boolean operator >(T? first, MutableDefault<T>? second)
+        {
+            return second < first;
+        }
+
+        public static Boolean operator >=(T? first, MutableDefault<T>? second)
+        {
+            return second <= first;
+        }
+
+        public static Boolean operator <(T? first, MutableDefault<T>? second)
+        {
+            return second > first;
+        }
+
+        public static Boolean operator <=(T? first, MutableDefault<T>? second)
+        {
+            return second >= first;
+        }
+
+        public static Boolean operator >(MutableDefault<T>? first, T? second)
+        {
+            return first is not null && first.CompareTo(second) > 0;
+        }
+
+        public static Boolean operator >=(MutableDefault<T>? first, T? second)
+        {
+            return first is null && second is null || first is not null && first.CompareTo(second) >= 0;
+        }
+
+        public static Boolean operator <(MutableDefault<T>? first, T? second)
+        {
+            return first is not null && first.CompareTo(second) < 0;
+        }
+
+        public static Boolean operator <=(MutableDefault<T>? first, T? second)
+        {
+            return first is null && second is null || first is not null && first.CompareTo(second) <= 0;
+        }
+
+        public static Boolean operator >(MutableDefault<T>? first, MutableDefault<T>? second)
+        {
+            return first is not null && (second is null || first.CompareTo(second) > 0);
+        }
+
+        public static Boolean operator >=(MutableDefault<T>? first, MutableDefault<T>? second)
+        {
+            return ReferenceEquals(first, second) || first is not null && (second is null || first.CompareTo(second) >= 0);
+        }
+
+        public static Boolean operator <(MutableDefault<T>? first, MutableDefault<T>? second)
+        {
+            return first is null && second is not null || first is not null && first.CompareTo(second) < 0;
+        }
+
+        public static Boolean operator <=(MutableDefault<T>? first, MutableDefault<T>? second)
+        {
+            return ReferenceEquals(first, second) || first is null && second is not null || first is not null && first.CompareTo(second) <= 0;
         }
         
         public event PropertyChangingEventHandler? PropertyChanging;
@@ -226,7 +326,7 @@ namespace NetExtender.Types.Monads.Default
             {
                 return _value.Unwrap(GetDefault);
             }
-            set
+            protected set
             {
                 _value = value;
             }
@@ -252,15 +352,27 @@ namespace NetExtender.Types.Monads.Default
         protected abstract T GetDefault();
         protected abstract void SetDefault(T value);
         
-        public virtual void Set(T value)
+        public Boolean Set(T value)
         {
+            if (_value == value)
+            {
+                return false;
+            }
+            
             Value = value;
+            return true;
         }
         
         IDefault<T> IDefault<T>.Set(T value)
         {
             Set(value);
             return this;
+        }
+        
+        Boolean IDefault<T>.Set(T value, [MaybeNullWhen(false)] out IDefault<T> result)
+        {
+            result = this;
+            return Set(value);
         }
         
         public virtual Boolean Swap()
@@ -330,6 +442,16 @@ namespace NetExtender.Types.Monads.Default
             }
         }
         
+        public Int32 CompareTo(MutableDefault<T>? other)
+        {
+            return CompareTo(other, null);
+        }
+        
+        public Int32 CompareTo(MutableDefault<T>? other, IComparer<T>? comparer)
+        {
+            return other is not null ? CompareTo(other.Value, comparer) : 1;
+        }
+        
         public Int32 CompareTo(IDefault<T>? other)
         {
             return CompareTo(other, null);
@@ -356,6 +478,7 @@ namespace NetExtender.Types.Monads.Default
             return other switch
             {
                 T value => Equals(value, comparer),
+                MutableDefault<T> value => Equals(value, comparer),
                 IDefault<T> value => Equals(value, comparer),
                 _ => false
             };
@@ -370,6 +493,16 @@ namespace NetExtender.Types.Monads.Default
         {
             comparer ??= EqualityComparer<T>.Default;
             return comparer.Equals(Value, other);
+        }
+
+        public Boolean Equals(MutableDefault<T>? other)
+        {
+            return Equals(other, null);
+        }
+
+        public Boolean Equals(MutableDefault<T>? other, IEqualityComparer<T>? comparer)
+        {
+            return other is not null && Equals(other.Value, comparer);
         }
 
         public Boolean Equals(IDefault<T>? other)

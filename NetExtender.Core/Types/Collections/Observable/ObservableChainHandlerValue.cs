@@ -6,12 +6,12 @@ using System.Diagnostics.CodeAnalysis;
 using NetExtender.Interfaces.Notify;
 using NetExtender.Types.Collections.Interfaces;
 using NetExtender.Types.Handlers.Chain.Interfaces;
+using NetExtender.Types.Monads;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Collections
 {
-    //TODO: тоже самое к коллекциям-предкам
-    public class ItemObservableChainHandlerValue<T> : ItemObservableChainHandlerValue<T, IChainHandler<T>>
+    public class ItemObservableChainHandlerValue<T> : ItemObservableChainHandlerValue<T, IChainHandler<T>>, IChainHandlerValue<T>
     {
         public ItemObservableChainHandlerValue(T value)
             : base(value)
@@ -77,7 +77,7 @@ namespace NetExtender.Types.Collections
         }
     }
     
-    public class SuppressObservableChainHandlerValue<T> : SuppressObservableChainHandlerValue<T, IChainHandler<T>>
+    public class SuppressObservableChainHandlerValue<T> : SuppressObservableChainHandlerValue<T, IChainHandler<T>>, IChainHandlerValue<T>
     {
         public SuppressObservableChainHandlerValue(T value)
             : base(value)
@@ -170,7 +170,7 @@ namespace NetExtender.Types.Collections
         private void OnItemChanged(Object? sender, PropertyChangedEventArgs args)
         {
             ItemChanged?.Invoke(this, args);
-            Update();
+            Reset();
         }
     }
     
@@ -239,25 +239,35 @@ namespace NetExtender.Types.Collections
             set
             {
                 this.RaiseAndSetIfChanged(ref _initial, value);
-                Update();
+                Reset();
             }
         }
         
-        //TODO: ленивый update
-        private T _value;
+        private Maybe<T> _value;
         public T Value
         {
             get
             {
-                return _value;
+                if (_value.HasValue)
+                {
+                    return _value.Value;
+                }
+                
+                if (!Update(out T? result))
+                {
+                    throw new InvalidOperationException();
+                }
+                
+                Value = result;
+                return Value;
             }
             protected set
             {
-                this.RaiseAndSetIfChanged(ref _value, value);
+                _value = value;
             }
         }
 
-        protected Func<T, T>? Clone { get; }
+        protected Func<T, T> Clone { get; }
         
         protected ObservableChainHandlerValue(T value, TCollection collection)
             : this(value, null, collection)
@@ -268,21 +278,41 @@ namespace NetExtender.Types.Collections
             : base(collection)
         {
             _value = _initial = value;
-            Clone = clone;
+            Clone = clone ?? GenericUtilities.MemberwiseClone;
             
             CollectionChanged += OnCollectionChanged;
         }
         
         private void OnCollectionChanged(Object? sender, NotifyCollectionChangedEventArgs args)
         {
-            Update();
+            Reset();
         }
         
-        public virtual Boolean Update()
+        public void Reset()
         {
+            this.RaisePropertyChanging(nameof(Value));
+            _value = default;
+            this.RaisePropertyChanged(nameof(Value));
+        }
+        
+        public Boolean Update()
+        {
+            if (!Update(out T? result))
+            {
+                return false;
+            }
+            
+            Value = result;
+            return true;
+        }
+        
+        protected virtual Boolean Update([MaybeNullWhen(false)] out T result)
+        {
+            T clone = Clone(Initial);
+            
             try
             {
-                Value = Handle(Initial);
+                result = Handle(clone);
                 return true;
             }
             catch (Exception exception)
@@ -290,23 +320,20 @@ namespace NetExtender.Types.Collections
                 switch (Handle(exception))
                 {
                     case null:
+                        result = default;
                         return false;
                     case true:
+                        result = clone;
                         return true;
                     case false:
                         throw;
                 }
             }
         }
-        
+
         protected virtual Boolean? Handle(Exception? exception)
         {
             return exception is null;
-        }
-        
-        protected virtual T MakeClone()
-        {
-            return Clone is not null ? Clone(Initial) : Initial.MemberwiseClone()!;
         }
     }
 }

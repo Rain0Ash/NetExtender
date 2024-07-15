@@ -550,70 +550,65 @@ namespace NetExtender.Utilities.Windows.IO
                 throw new ArgumentException(@"The specified stream name contains invalid characters.", nameof(path));
             }
 
-            using SafeFileHandle hFile = WindowsPathUtilities.Safe.CreateFile(path, NativeFileAccess.GenericRead, FileShare.Read, IntPtr.Zero, FileMode.Open, NativeFileFlags.BackupSemantics,
-                IntPtr.Zero);
-            using StreamName hName = new StreamName();
+            using SafeFileHandle file = WindowsPathUtilities.Safe.CreateFile(path, NativeFileAccess.GenericRead, FileShare.Read, IntPtr.Zero, FileMode.Open, NativeFileFlags.BackupSemantics, IntPtr.Zero);
+            using StreamName streamname = new StreamName();
 
-            if (hFile.IsInvalid)
+            if (file.IsInvalid)
             {
                 yield break;
             }
 
-            Win32StreamId streamId = new Win32StreamId();
-            Int32 dwStreamHeaderSize = Marshal.SizeOf(streamId);
+            Win32StreamId id = new Win32StreamId();
+            Int32 headersize = Marshal.SizeOf(id);
             Boolean finished = false;
             IntPtr context = IntPtr.Zero;
-            Int32 bytesRead;
+            Int32 read;
 
             try
             {
                 while (!finished)
                 {
                     // Read the next stream header:
-                    if (!BackupRead(hFile, ref streamId, dwStreamHeaderSize, out bytesRead, false, false, ref context))
+                    if (!BackupRead(file, ref id, headersize, out read, false, false, ref context))
                     {
                         break;
                     }
 
-                    if (dwStreamHeaderSize != bytesRead)
+                    if (headersize != read)
                     {
                         break;
                     }
 
-                    // Read the stream name:
                     String? name;
-                    if (streamId.StreamNameSize <= 0)
+                    if (id.StreamNameSize <= 0)
                     {
                         name = null;
                     }
                     else
                     {
-                        hName.EnsureCapacity(streamId.StreamNameSize);
-                        if (!BackupRead(hFile, hName.MemoryBlock, streamId.StreamNameSize, out bytesRead, false, false, ref context))
+                        streamname.EnsureCapacity(id.StreamNameSize);
+                        if (!BackupRead(file, streamname.MemoryBlock, id.StreamNameSize, out read, false, false, ref context))
                         {
                             name = null;
                             finished = true;
                         }
                         else
                         {
-                            // Unicode chars are 2 bytes:
-                            name = hName.ReadStreamName(bytesRead >> 1);
+                            name = streamname.ReadStreamName(read >> 1);
                         }
                     }
 
-                    // Add the stream info to the result:
                     if (!String.IsNullOrEmpty(name))
                     {
-                        yield return new Win32StreamInfo((FileStreamType) streamId.StreamId, (FileStreamAttributes) streamId.StreamAttributes, streamId.Size.ToInt64(), name);
+                        yield return new Win32StreamInfo((FileStreamType) id.StreamId, (FileStreamAttributes) id.StreamAttributes, id.Size.ToInt64(), name);
                     }
 
-                    // Skip the contents of the stream:
-                    if (streamId.Size is { Low: 0, High: 0 })
+                    if (id.Size is { Low: 0, High: 0 })
                     {
                         continue;
                     }
 
-                    if (!finished && !BackupSeek(hFile, streamId.Size.Low, streamId.Size.High, out _, out _, ref context))
+                    if (!finished && !BackupSeek(file, id.Size.Low, id.Size.High, out _, out _, ref context))
                     {
                         finished = true;
                     }
@@ -621,8 +616,7 @@ namespace NetExtender.Utilities.Windows.IO
             }
             finally
             {
-                // Abort the backup:
-                BackupRead(hFile, hName.MemoryBlock, 0, out bytesRead, true, false, ref context);
+                BackupRead(file, streamname.MemoryBlock, 0, out read, true, false, ref context);
             }
         }
     }

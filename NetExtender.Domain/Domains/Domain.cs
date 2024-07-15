@@ -554,11 +554,11 @@ namespace NetExtender.Domains
             }
         }
 
-        public static Boolean AssemblyLoadCallStaticContructor
+        public static Boolean AssemblyLoadCallStaticConstructor
         {
             get
             {
-                return ReflectionUtilities.AssemblyLoadCallStaticContructor;
+                return ReflectionUtilities.AssemblyLoadCallStaticConstructor;
             }
         }
 

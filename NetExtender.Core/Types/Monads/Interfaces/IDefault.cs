@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace NetExtender.Types.Monads.Interfaces
 {
@@ -8,6 +9,7 @@ namespace NetExtender.Types.Monads.Interfaces
         public T Value { get; }
 
         public IDefault<T> Set(T value);
+        public Boolean Set(T value, [MaybeNullWhen(false)] out IDefault<T> result);
         public new IDefault<T> Swap();
         public new IDefault<T> Reset();
         public Boolean Equals(Object? other, IEqualityComparer<T>? comparer);

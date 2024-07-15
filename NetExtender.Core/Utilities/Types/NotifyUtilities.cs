@@ -25,6 +25,15 @@ namespace NetExtender.Utilities.Types
             public static PropertyChangingEventArgs HasNext { get; }
             public static PropertyChangingEventArgs IsActive { get; }
             public static PropertyChangingEventArgs IsEnabled { get; }
+            public static PropertyChangingEventArgs Time { get; }
+            public static PropertyChangingEventArgs IsTime { get; }
+            public static PropertyChangingEventArgs SetTime { get; }
+            public static PropertyChangingEventArgs Period { get; }
+            public static PropertyChangingEventArgs IsPeriod { get; }
+            public static PropertyChangingEventArgs InPeriod { get; }
+            public static PropertyChangingEventArgs Delay { get; }
+            public static PropertyChangingEventArgs IsDelay { get; }
+            public static PropertyChangingEventArgs InDelay { get; }
             public static PropertyChangingEventArgs Status { get; }
             public static PropertyChangingEventArgs Progress { get; }
             public static PropertyChangingEventArgs IsVisible { get; }
@@ -49,6 +58,15 @@ namespace NetExtender.Utilities.Types
                 HasNext = Get(nameof(HasNext));
                 IsActive = Get(nameof(IsActive));
                 IsEnabled = Get(nameof(IsEnabled));
+                Time = Get(nameof(Time));
+                IsTime = Get(nameof(IsTime));
+                SetTime = Get(nameof(SetTime));
+                Period = Get(nameof(Period));
+                IsPeriod = Get(nameof(IsPeriod));
+                InPeriod = Get(nameof(InPeriod));
+                Delay = Get(nameof(Delay));
+                IsDelay = Get(nameof(IsDelay));
+                InDelay = Get(nameof(InDelay));
                 Status = Get(nameof(Status));
                 Progress = Get(nameof(Progress));
                 IsVisible = Get(nameof(IsVisible));
@@ -88,6 +106,15 @@ namespace NetExtender.Utilities.Types
             public static PropertyChangedEventArgs HasNext { get; }
             public static PropertyChangedEventArgs IsActive { get; }
             public static PropertyChangedEventArgs IsEnabled { get; }
+            public static PropertyChangedEventArgs Time { get; }
+            public static PropertyChangedEventArgs IsTime { get; }
+            public static PropertyChangedEventArgs SetTime { get; }
+            public static PropertyChangedEventArgs Period { get; }
+            public static PropertyChangedEventArgs IsPeriod { get; }
+            public static PropertyChangedEventArgs InPeriod { get; }
+            public static PropertyChangedEventArgs Delay { get; }
+            public static PropertyChangedEventArgs IsDelay { get; }
+            public static PropertyChangedEventArgs InDelay { get; }
             public static PropertyChangedEventArgs Status { get; }
             public static PropertyChangedEventArgs Progress { get; }
             public static PropertyChangedEventArgs IsVisible { get; }
@@ -112,6 +139,15 @@ namespace NetExtender.Utilities.Types
                 HasNext = Get(nameof(HasNext));
                 IsActive = Get(nameof(IsActive));
                 IsEnabled = Get(nameof(IsEnabled));
+                Time = Get(nameof(Time));
+                IsTime = Get(nameof(IsTime));
+                SetTime = Get(nameof(SetTime));
+                Period = Get(nameof(Period));
+                IsPeriod = Get(nameof(IsPeriod));
+                InPeriod = Get(nameof(InPeriod));
+                Delay = Get(nameof(Delay));
+                IsDelay = Get(nameof(IsDelay));
+                InDelay = Get(nameof(InDelay));
                 Status = Get(nameof(Status));
                 Progress = Get(nameof(Progress));
                 IsVisible = Get(nameof(IsVisible));

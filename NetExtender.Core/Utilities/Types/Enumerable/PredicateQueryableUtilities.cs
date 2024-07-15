@@ -182,9 +182,9 @@ namespace NetExtender.Utilities.Types
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IQueryable<T> Page<T>(this IQueryable<T> source, Int32 size)
+        public static IQueryable<T> Index<T>(this IQueryable<T> source, Int32 size)
         {
-            return Page(source, 0, size);
+            return Index(source, 0, size);
         }
         
         /// <summary>
@@ -197,16 +197,16 @@ namespace NetExtender.Utilities.Types
         /// <returns>
         /// A new sequence containing elements are at the specified <paramref name="index"/> from the source sequence.
         /// </returns>
-        public static IQueryable<T> Page<T>(this IQueryable<T> source, Int32 index, Int32 size)
+        public static IQueryable<T> Index<T>(this IQueryable<T> source, Int32 index, Int32 size)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
 
-            if (index > 1 && size > 0)
+            if (index > 0 && size > 0)
             {
-                source = source.Skip((index - 1) * size);
+                source = source.Skip(index * size);
             }
 
             if (size > 0)
@@ -215,6 +215,27 @@ namespace NetExtender.Utilities.Types
             }
 
             return source;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IQueryable<T> Page<T>(this IQueryable<T> source, Int32 size)
+        {
+            return Page(source, 1, size);
+        }
+        
+        /// <summary>
+        /// Extracts <paramref name="size"/> elements from a sequence at a particular one-based page number.
+        /// </summary>
+        /// <typeparam name="T">The type of the elements in the source sequence.</typeparam>
+        /// <param name="source">The sequence from which to page.</param>
+        /// <param name="page">The one-based page number.</param>
+        /// <param name="size">The size of the page.</param>
+        /// <returns>
+        /// A new sequence containing elements are at the specified <paramref name="page"/> from the source sequence.
+        /// </returns>
+        public static IQueryable<T> Page<T>(this IQueryable<T> source, Int32 page, Int32 size)
+        {
+            return Index(source, page - 1, size);
         }
     }
 }

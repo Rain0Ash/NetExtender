@@ -11,12 +11,18 @@ namespace NetExtender.Types.Monads.Interfaces
         public new T Value { get; }
         public Boolean Equals(Object? other, IEqualityComparer<T>? comparer);
     }
-
+    
+    public interface IMaybe
+    {
+        public Boolean HasValue { get; }
+        public Object? Value { get; }
+    }
+    
     public interface IMaybeEquatable<out T, TMaybe> : IMaybeEquatable<TMaybe>
     {
         public Boolean Equals(TMaybe? other, IEqualityComparer<T>? comparer);
     }
-
+    
     public interface IMaybeEquatable<T> : IEquatable<T>
     {
     }
@@ -25,14 +31,8 @@ namespace NetExtender.Types.Monads.Interfaces
     {
         public Int32 CompareTo(TMaybe? other, IComparer<T>? comparer);
     }
-
+    
     public interface IMaybeComparable<in T> : IComparable<T>
     {
-    }
-    
-    public interface IMaybe
-    {
-        public Boolean HasValue { get; }
-        public Object? Value { get; }
     }
 }

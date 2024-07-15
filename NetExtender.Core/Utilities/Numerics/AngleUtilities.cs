@@ -36,151 +36,166 @@ namespace NetExtender.Utilities.Numerics
     [SuppressMessage("ReSharper", "InvokeAsExtensionMethod")]
     public static class AngleUtilities
     {
-        public static class Int32Degree
+        public static class Degree
         {
-            public const Int32 Zero = 0;
-            public const Int32 Quarter = 90;
-            public const Int32 Straight = 180;
-            public const Int32 ThreeQuarter = 270;
-            public const Int32 Full = 360;
+            public static class Int32
+            {
+                public const System.Int32 Zero = 0;
+                public const System.Int32 Quarter = 90;
+                public const System.Int32 Straight = 180;
+                public const System.Int32 ThreeQuarter = 270;
+                public const System.Int32 Full = 360;
+            }
+            
+            public static class Single
+            {
+                public const System.Single Zero = 0F;
+                public const System.Single Quarter = 90F;
+                public const System.Single Straight = 180F;
+                public const System.Single ThreeQuarter = 270F;
+                public const System.Single Full = 360F;
+            }
+            
+            public static class Double
+            {
+                public const System.Double Zero = 0D;
+                public const System.Double Quarter = 90D;
+                public const System.Double Straight = 180D;
+                public const System.Double ThreeQuarter = 270D;
+                public const System.Double Full = 360D;
+            }
+            
+            public static class Decimal
+            {
+                public const System.Decimal Zero = 0M;
+                public const System.Decimal Quarter = 90M;
+                public const System.Decimal Straight = 180M;
+                public const System.Decimal ThreeQuarter = 270M;
+                public const System.Decimal Full = 360M;
+            }
         }
         
-        public static class SingleDegree
+        public static class Radian
         {
-            public const Single Zero = 0F;
-            public const Single Quarter = 90F;
-            public const Single Straight = 180F;
-            public const Single ThreeQuarter = 270F;
-            public const Single Full = 360F;
+            public static class Single
+            {
+                public const System.Single Zero = 0.0F;
+                public const System.Single Quarter = MathF.PI * 0.5F;
+                public const System.Single Straight = MathF.PI;
+                public const System.Single ThreeQuarter = MathF.PI * 1.5F;
+                public const System.Single Full = MathF.PI * 2.0F;
+            }
+            
+            public static class Double
+            {
+                public const System.Double Zero = 0.0D;
+                public const System.Double Quarter = Math.PI * 0.5D;
+                public const System.Double Straight = Math.PI;
+                public const System.Double ThreeQuarter = Math.PI * 1.5D;
+                public const System.Double Full = Math.PI * 2.0D;
+            }
+            
+            public static class Decimal
+            {
+                public const System.Decimal Zero = 0.0M;
+                public const System.Decimal Quarter = MathUtilities.Constants.Decimal.PI * 0.5M;
+                public const System.Decimal Straight = MathUtilities.Constants.Decimal.PI;
+                public const System.Decimal ThreeQuarter = MathUtilities.Constants.Decimal.PI * 1.5M;
+                public const System.Decimal Full = MathUtilities.Constants.Decimal.PI * 2.0M;
+            }
         }
         
-        public static class DoubleDegree
+        public static class Gradian
         {
-            public const Double Zero = 0D;
-            public const Double Quarter = 90D;
-            public const Double Straight = 180D;
-            public const Double ThreeQuarter = 270D;
-            public const Double Full = 360D;
+            public static class Int32
+            {
+                public const System.Int32 Zero = 0;
+                public const System.Int32 Quarter = 100;
+                public const System.Int32 Straight = 200;
+                public const System.Int32 ThreeQuarter = 300;
+                public const System.Int32 Full = 400;
+            }
+            
+            public static class Single
+            {
+                public const System.Single Zero = 0F;
+                public const System.Single Quarter = 100F;
+                public const System.Single Straight = 200F;
+                public const System.Single ThreeQuarter = 300F;
+                public const System.Single Full = 400F;
+            }
+            
+            public static class Double
+            {
+                public const System.Double Zero = 0D;
+                public const System.Double Quarter = 100D;
+                public const System.Double Straight = 200D;
+                public const System.Double ThreeQuarter = 300D;
+                public const System.Double Full = 400D;
+            }
+            
+            public static class Decimal
+            {
+                public const System.Decimal Zero = 0M;
+                public const System.Decimal Quarter = 100M;
+                public const System.Decimal Straight = 200M;
+                public const System.Decimal ThreeQuarter = 300M;
+                public const System.Decimal Full = 400M;
+            }
         }
         
-        public static class DecimalDegree
+        public static class Revolution
         {
-            public const Decimal Zero = 0M;
-            public const Decimal Quarter = 90M;
-            public const Decimal Straight = 180M;
-            public const Decimal ThreeQuarter = 270M;
-            public const Decimal Full = 360M;
-        }
-
-        public static class SingleRadian
-        {
-            public const Single Zero = 0.0F;
-            public const Single Quarter = MathF.PI * 0.5F;
-            public const Single Straight = MathF.PI;
-            public const Single ThreeQuarter = MathF.PI * 1.5F;
-            public const Single Full = MathF.PI * 2.0F;
-        }
-
-        public static class DoubleRadian
-        {
-            public const Double Zero = 0.0D;
-            public const Double Quarter = Math.PI * 0.5D;
-            public const Double Straight = Math.PI;
-            public const Double ThreeQuarter = Math.PI * 1.5D;
-            public const Double Full = Math.PI * 2.0D;
-        }
-
-        public static class DecimalRadian
-        {
-            public const Decimal Zero = 0.0M;
-            public const Decimal Quarter = MathUtilities.DecimalConstants.PI * 0.5M;
-            public const Decimal Straight = MathUtilities.DecimalConstants.PI;
-            public const Decimal ThreeQuarter = MathUtilities.DecimalConstants.PI * 1.5M;
-            public const Decimal Full = MathUtilities.DecimalConstants.PI * 2.0M;
+            public static class Single
+            {
+                public const System.Single Zero = 0.0F;
+                public const System.Single Quarter = 0.25F;
+                public const System.Single Straight = 0.5F;
+                public const System.Single ThreeQuarter = 0.75F;
+                public const System.Single Full = 1.0F;
+            }
+            
+            public static class Double
+            {
+                public const System.Double Zero = 0.0D;
+                public const System.Double Quarter = 0.25D;
+                public const System.Double Straight = 0.5D;
+                public const System.Double ThreeQuarter = 0.75D;
+                public const System.Double Full = 1.0D;
+            }
+            
+            public static class Decimal
+            {
+                public const System.Decimal Zero = 0.0M;
+                public const System.Decimal Quarter = 0.25M;
+                public const System.Decimal Straight = 0.5M;
+                public const System.Decimal ThreeQuarter = 0.75M;
+                public const System.Decimal Full = 1.0M;
+            }
         }
         
-        public static class Int32Gradian
+        public static class Relations
         {
-            public const Int32 Zero = 0;
-            public const Int32 Quarter = 100;
-            public const Int32 Straight = 200;
-            public const Int32 ThreeQuarter = 300;
-            public const Int32 Full = 400;
-        }
-
-        public static class SingleGradian
-        {
-            public const Single Zero = 0F;
-            public const Single Quarter = 100F;
-            public const Single Straight = 200F;
-            public const Single ThreeQuarter = 300F;
-            public const Single Full = 400F;
-        }
-
-        public static class DoubleGradian
-        {
-            public const Double Zero = 0D;
-            public const Double Quarter = 100D;
-            public const Double Straight = 200D;
-            public const Double ThreeQuarter = 300D;
-            public const Double Full = 400D;
-        }
-
-        public static class DecimalGradian
-        {
-            public const Decimal Zero = 0M;
-            public const Decimal Quarter = 100M;
-            public const Decimal Straight = 200M;
-            public const Decimal ThreeQuarter = 300M;
-            public const Decimal Full = 400M;
-        }
-
-        public static class SingleRevolution
-        {
-            public const Single Zero = 0.0F;
-            public const Single Quarter = 0.25F;
-            public const Single Straight = 0.5F;
-            public const Single ThreeQuarter = 0.75F;
-            public const Single Full = 1.0F;
-        }
-
-        public static class DoubleRevolution
-        {
-            public const Double Zero = 0.0D;
-            public const Double Quarter = 0.25D;
-            public const Double Straight = 0.5D;
-            public const Double ThreeQuarter = 0.75D;
-            public const Double Full = 1.0D;
-        }
-
-        public static class DecimalRevolution
-        {
-            public const Decimal Zero = 0.0M;
-            public const Decimal Quarter = 0.25M;
-            public const Decimal Straight = 0.5M;
-            public const Decimal ThreeQuarter = 0.75M;
-            public const Decimal Full = 1.0M;
-        }
-
-        public static class SingleRelations
-        {
-            public const Single DegreeInRadian = SingleDegree.Full / SingleRadian.Full;
-            public const Single GradianInRadian = SingleGradian.Full / SingleRadian.Full;
-            public const Single GradianInDegree = SingleGradian.Full / SingleDegree.Full;
-        }
-
-        public static class DoubleRelations
-        {
-            public const Double DegreeInRadian = DoubleDegree.Full / DoubleRadian.Full;
-            public const Double GradianInRadian = DoubleGradian.Full / DoubleRadian.Full;
-            public const Double GradianInDegree = DoubleGradian.Full / DoubleDegree.Full;
-        }
-
-        public static class DecimalRelations
-        {
-            public const Decimal DegreeInRadian = DecimalDegree.Full / DecimalRadian.Full;
-            public const Decimal GradianInRadian = DecimalGradian.Full / DecimalRadian.Full;
-            public const Decimal GradianInDegree = DecimalGradian.Full / DecimalDegree.Full;
+            public static class Single
+            {
+                public const System.Single DegreeInRadian = Degree.Single.Full / Radian.Single.Full;
+                public const System.Single GradianInRadian = Gradian.Single.Full / Radian.Single.Full;
+                public const System.Single GradianInDegree = Gradian.Single.Full / Degree.Single.Full;
+            }
+            
+            public static class Double
+            {
+                public const System.Double DegreeInRadian = Degree.Double.Full / Radian.Double.Full;
+                public const System.Double GradianInRadian = Gradian.Double.Full / Radian.Double.Full;
+                public const System.Double GradianInDegree = Gradian.Double.Full / Degree.Double.Full;
+            }
+            
+            public static class Decimal
+            {
+                public const System.Decimal DegreeInRadian = Degree.Decimal.Full / Radian.Decimal.Full;
+                public const System.Decimal GradianInRadian = Gradian.Decimal.Full / Radian.Decimal.Full;
+                public const System.Decimal GradianInDegree = Gradian.Decimal.Full / Degree.Decimal.Full;
+            }
         }
 
         /// <summary>
@@ -191,7 +206,7 @@ namespace NetExtender.Utilities.Numerics
         [Pure]
         public static AngleDegree ToAngleDegree(this AngleRadian angle)
         {
-            return new AngleDegree((Double) angle * DoubleRelations.DegreeInRadian);
+            return new AngleDegree((Double) angle * Relations.Double.DegreeInRadian);
         }
 
         /// <summary>
@@ -202,7 +217,7 @@ namespace NetExtender.Utilities.Numerics
         [Pure]
         public static AngleDegree ToAngleDegree(this AngleGradian angle)
         {
-            return new AngleDegree((Double) angle / DoubleRelations.GradianInDegree);
+            return new AngleDegree((Double) angle / Relations.Double.GradianInDegree);
         }
 
         /// <summary>
@@ -213,7 +228,7 @@ namespace NetExtender.Utilities.Numerics
         [Pure]
         public static AngleDegree ToAngleDegree(this AngleRevolution angle)
         {
-            return new AngleDegree((Double) angle * DoubleDegree.Full);
+            return new AngleDegree((Double) angle * Degree.Double.Full);
         }
 
         /// <summary>
@@ -224,7 +239,7 @@ namespace NetExtender.Utilities.Numerics
         [Pure]
         public static AngleRadian ToAngleRadian(this AngleDegree angle)
         {
-            return new AngleRadian((Double) angle / DoubleRelations.DegreeInRadian);
+            return new AngleRadian((Double) angle / Relations.Double.DegreeInRadian);
         }
 
         /// <summary>
@@ -235,7 +250,7 @@ namespace NetExtender.Utilities.Numerics
         [Pure]
         public static AngleRadian ToAngleRadian(this AngleGradian angle)
         {
-            return new AngleRadian((Double) angle / DoubleRelations.GradianInRadian);
+            return new AngleRadian((Double) angle / Relations.Double.GradianInRadian);
         }
 
         /// <summary>
@@ -246,7 +261,7 @@ namespace NetExtender.Utilities.Numerics
         [Pure]
         public static AngleRadian ToAngleRadian(this AngleRevolution angle)
         {
-            return new AngleRadian((Double) angle * DoubleRadian.Full);
+            return new AngleRadian((Double) angle * Radian.Double.Full);
         }
 
         /// <summary>
@@ -257,7 +272,7 @@ namespace NetExtender.Utilities.Numerics
         [Pure]
         public static AngleGradian ToAngleGradian(this AngleRadian angle)
         {
-            return new AngleGradian((Double) angle * DoubleRelations.GradianInRadian);
+            return new AngleGradian((Double) angle * Relations.Double.GradianInRadian);
         }
 
         /// <summary>
@@ -268,7 +283,7 @@ namespace NetExtender.Utilities.Numerics
         [Pure]
         public static AngleGradian ToAngleGradian(this AngleDegree angle)
         {
-            return new AngleGradian((Double) angle * DoubleRelations.GradianInDegree);
+            return new AngleGradian((Double) angle * Relations.Double.GradianInDegree);
         }
 
         /// <summary>
@@ -279,7 +294,7 @@ namespace NetExtender.Utilities.Numerics
         [Pure]
         public static AngleGradian ToAngleGradian(this AngleRevolution angle)
         {
-            return new AngleGradian((Double) angle * DoubleGradian.Full);
+            return new AngleGradian((Double) angle * Gradian.Double.Full);
         }
 
         /// <summary>
@@ -290,7 +305,7 @@ namespace NetExtender.Utilities.Numerics
         [Pure]
         public static AngleRevolution ToAngleRevolution(this AngleDegree angle)
         {
-            return new AngleRevolution((Double) angle / DoubleDegree.Full);
+            return new AngleRevolution((Double) angle / Degree.Double.Full);
         }
 
         /// <summary>
@@ -301,7 +316,7 @@ namespace NetExtender.Utilities.Numerics
         [Pure]
         public static AngleRevolution ToAngleRevolution(this AngleGradian angle)
         {
-            return new AngleRevolution((Double) angle / DoubleGradian.Full);
+            return new AngleRevolution((Double) angle / Gradian.Double.Full);
         }
 
         /// <summary>
@@ -312,7 +327,7 @@ namespace NetExtender.Utilities.Numerics
         [Pure]
         public static AngleRevolution ToAngleRevolution(this AngleRadian angle)
         {
-            return new AngleRevolution((Double) angle / DoubleRadian.Full);
+            return new AngleRevolution((Double) angle / Radian.Double.Full);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -708,25 +723,25 @@ namespace NetExtender.Utilities.Numerics
         [Pure]
         public static Double AngleDegreeReduce(Double degree)
         {
-            return AngleReduce(degree, DoubleDegree.Full);
+            return AngleReduce(degree, Degree.Double.Full);
         }
 
         [Pure]
         public static Double AngleRadianReduce(Double radian)
         {
-            return AngleReduce(radian, DoubleRadian.Full);
+            return AngleReduce(radian, Radian.Double.Full);
         }
 
         [Pure]
         public static Double AngleGradianReduce(Double gradian)
         {
-            return AngleReduce(gradian, DoubleGradian.Full);
+            return AngleReduce(gradian, Gradian.Double.Full);
         }
 
         [Pure]
         public static Double AngleRevolutionReduce(Double revolution)
         {
-            return AngleReduce(revolution, DoubleRevolution.Full);
+            return AngleReduce(revolution, Revolution.Double.Full);
         }
 
         /// <summary>
@@ -776,25 +791,25 @@ namespace NetExtender.Utilities.Numerics
         [Pure]
         public static AngleQuadrant GetAngleDegreeQuadrant(Double degree)
         {
-            return GetAngleQuadrant(degree, DoubleDegree.Quarter, DoubleDegree.Straight, DoubleDegree.Full);
+            return GetAngleQuadrant(degree, Degree.Double.Quarter, Degree.Double.Straight, Degree.Double.Full);
         }
 
         [Pure]
         public static AngleQuadrant GetAngleRadianQuadrant(Double radian)
         {
-            return GetAngleQuadrant(radian, DoubleRadian.Quarter, DoubleRadian.Straight, DoubleRadian.Full);
+            return GetAngleQuadrant(radian, Radian.Double.Quarter, Radian.Double.Straight, Radian.Double.Full);
         }
 
         [Pure]
         public static AngleQuadrant GetAngleGradianQuadrant(Double gradian)
         {
-            return GetAngleQuadrant(gradian, DoubleGradian.Quarter, DoubleGradian.Straight, DoubleGradian.Full);
+            return GetAngleQuadrant(gradian, Gradian.Double.Quarter, Gradian.Double.Straight, Gradian.Double.Full);
         }
 
         [Pure]
         public static AngleQuadrant GetAngleRevolutionQuadrant(Double revolution)
         {
-            return GetAngleQuadrant(revolution, DoubleRevolution.Quarter, DoubleRevolution.Straight, DoubleRevolution.Full);
+            return GetAngleQuadrant(revolution, Revolution.Double.Quarter, Revolution.Double.Straight, Revolution.Double.Full);
         }
 
         /// <summary>
@@ -844,25 +859,25 @@ namespace NetExtender.Utilities.Numerics
         [Pure]
         public static Double GetAngleDegreeReference(Double degree)
         {
-            return GetAngleReference(degree, DoubleDegree.Quarter, DoubleDegree.Straight, DoubleDegree.Full);
+            return GetAngleReference(degree, Degree.Double.Quarter, Degree.Double.Straight, Degree.Double.Full);
         }
 
         [Pure]
         public static Double GetAngleRadianReference(Double radian)
         {
-            return GetAngleReference(radian, DoubleRadian.Quarter, DoubleRadian.Straight, DoubleRadian.Full);
+            return GetAngleReference(radian, Radian.Double.Quarter, Radian.Double.Straight, Radian.Double.Full);
         }
 
         [Pure]
         public static Double GetAngleGradianReference(Double gradian)
         {
-            return GetAngleReference(gradian, DoubleGradian.Quarter, DoubleGradian.Straight, DoubleGradian.Full);
+            return GetAngleReference(gradian, Gradian.Double.Quarter, Gradian.Double.Straight, Gradian.Double.Full);
         }
 
         [Pure]
         public static Double GetAngleRevolutionReference(Double revolution)
         {
-            return GetAngleReference(revolution, DoubleRevolution.Quarter, DoubleRevolution.Straight, DoubleRevolution.Full);
+            return GetAngleReference(revolution, Revolution.Double.Quarter, Revolution.Double.Straight, Revolution.Double.Full);
         }
 
         /// <summary>
@@ -921,7 +936,7 @@ namespace NetExtender.Utilities.Numerics
         [Pure]
         public static Boolean IsAngleZero(this AngleDegree angle)
         {
-            return Math.Abs((Double) angle % DoubleDegree.Full) < Double.Epsilon;
+            return Math.Abs((Double) angle % Degree.Double.Full) < Double.Epsilon;
         }
 
         /// <summary>
@@ -932,7 +947,7 @@ namespace NetExtender.Utilities.Numerics
         [Pure]
         public static Boolean IsAngleZero(this AngleRadian angle)
         {
-            return Math.Abs((Double) angle % DoubleRadian.Full) < Double.Epsilon;
+            return Math.Abs((Double) angle % Radian.Double.Full) < Double.Epsilon;
         }
 
         /// <summary>
@@ -943,7 +958,7 @@ namespace NetExtender.Utilities.Numerics
         [Pure]
         public static Boolean IsAngleZero(this AngleGradian angle)
         {
-            return Math.Abs((Double) angle % DoubleGradian.Full) < Double.Epsilon;
+            return Math.Abs((Double) angle % Gradian.Double.Full) < Double.Epsilon;
         }
 
         /// <summary>
@@ -954,7 +969,7 @@ namespace NetExtender.Utilities.Numerics
         [Pure]
         public static Boolean IsAngleZero(this AngleRevolution angle)
         {
-            return Math.Abs((Double) angle % DoubleRevolution.Full) < Double.Epsilon;
+            return Math.Abs((Double) angle % Revolution.Double.Full) < Double.Epsilon;
         }
 
         /// <summary>
@@ -965,7 +980,7 @@ namespace NetExtender.Utilities.Numerics
         [Pure]
         public static Boolean IsAngleAcute(this AngleDegree angle)
         {
-            return AngleDegreeReduce(Math.Abs((Double) angle)) is > 0 and < DoubleDegree.Quarter;
+            return AngleDegreeReduce(Math.Abs((Double) angle)) is > 0 and < Degree.Double.Quarter;
         }
 
         /// <summary>
@@ -976,7 +991,7 @@ namespace NetExtender.Utilities.Numerics
         [Pure]
         public static Boolean IsAngleAcute(this AngleRadian angle)
         {
-            return AngleRadianReduce(Math.Abs((Double) angle)) is > 0 and < DoubleRadian.Quarter;
+            return AngleRadianReduce(Math.Abs((Double) angle)) is > 0 and < Radian.Double.Quarter;
         }
 
         /// <summary>
@@ -987,7 +1002,7 @@ namespace NetExtender.Utilities.Numerics
         [Pure]
         public static Boolean IsAngleAcute(this AngleGradian angle)
         {
-            return AngleGradianReduce(Math.Abs((Double) angle)) is > 0 and < DoubleGradian.Quarter;
+            return AngleGradianReduce(Math.Abs((Double) angle)) is > 0 and < Gradian.Double.Quarter;
         }
 
         /// <summary>
@@ -998,7 +1013,7 @@ namespace NetExtender.Utilities.Numerics
         [Pure]
         public static Boolean IsAngleAcute(this AngleRevolution angle)
         {
-            return AngleRevolutionReduce(Math.Abs((Double) angle)) is > 0 and < DoubleRevolution.Quarter;
+            return AngleRevolutionReduce(Math.Abs((Double) angle)) is > 0 and < Revolution.Double.Quarter;
         }
 
         /// <summary>
@@ -1009,7 +1024,7 @@ namespace NetExtender.Utilities.Numerics
         [Pure]
         public static Boolean IsAngleQuarter(this AngleDegree angle)
         {
-            return Math.Abs(AngleDegreeReduce(Math.Abs((Double) angle)) - DoubleDegree.Quarter) < Double.Epsilon;
+            return Math.Abs(AngleDegreeReduce(Math.Abs((Double) angle)) - Degree.Double.Quarter) < Double.Epsilon;
         }
 
         /// <summary>
@@ -1020,7 +1035,7 @@ namespace NetExtender.Utilities.Numerics
         [Pure]
         public static Boolean IsAngleQuarter(this AngleRadian angle)
         {
-            return Math.Abs(AngleRadianReduce(Math.Abs((Double) angle)) - DoubleRadian.Quarter) < Double.Epsilon;
+            return Math.Abs(AngleRadianReduce(Math.Abs((Double) angle)) - Radian.Double.Quarter) < Double.Epsilon;
         }
 
         /// <summary>
@@ -1031,7 +1046,7 @@ namespace NetExtender.Utilities.Numerics
         [Pure]
         public static Boolean IsAngleQuarter(this AngleGradian angle)
         {
-            return Math.Abs(AngleGradianReduce(Math.Abs((Double) angle)) - DoubleGradian.Quarter) < Double.Epsilon;
+            return Math.Abs(AngleGradianReduce(Math.Abs((Double) angle)) - Gradian.Double.Quarter) < Double.Epsilon;
         }
 
         /// <summary>
@@ -1042,7 +1057,7 @@ namespace NetExtender.Utilities.Numerics
         [Pure]
         public static Boolean IsAngleQuarter(this AngleRevolution angle)
         {
-            return Math.Abs(AngleRevolutionReduce(Math.Abs((Double) angle)) - DoubleRevolution.Quarter) < Double.Epsilon;
+            return Math.Abs(AngleRevolutionReduce(Math.Abs((Double) angle)) - Revolution.Double.Quarter) < Double.Epsilon;
         }
 
         /// <summary>
@@ -1053,7 +1068,7 @@ namespace NetExtender.Utilities.Numerics
         [Pure]
         public static Boolean IsAngleObtuse(this AngleDegree angle)
         {
-            return AngleDegreeReduce(Math.Abs((Double) angle)) is > DoubleDegree.Quarter and < DoubleDegree.Straight;
+            return AngleDegreeReduce(Math.Abs((Double) angle)) is > Degree.Double.Quarter and < Degree.Double.Straight;
         }
 
         /// <summary>
@@ -1064,7 +1079,7 @@ namespace NetExtender.Utilities.Numerics
         [Pure]
         public static Boolean IsAngleObtuse(this AngleRadian angle)
         {
-            return AngleRadianReduce(Math.Abs((Double) angle)) is > DoubleRadian.Quarter and < DoubleRadian.Straight;
+            return AngleRadianReduce(Math.Abs((Double) angle)) is > Radian.Double.Quarter and < Radian.Double.Straight;
         }
 
         /// <summary>
@@ -1075,7 +1090,7 @@ namespace NetExtender.Utilities.Numerics
         [Pure]
         public static Boolean IsAngleObtuse(this AngleGradian angle)
         {
-            return AngleGradianReduce(Math.Abs((Double) angle)) is > DoubleGradian.Quarter and < DoubleGradian.Straight;
+            return AngleGradianReduce(Math.Abs((Double) angle)) is > Gradian.Double.Quarter and < Gradian.Double.Straight;
         }
 
         /// <summary>
@@ -1086,7 +1101,7 @@ namespace NetExtender.Utilities.Numerics
         [Pure]
         public static Boolean IsAngleObtuse(this AngleRevolution angle)
         {
-            return AngleRevolutionReduce(Math.Abs((Double) angle)) is > DoubleRevolution.Quarter and < DoubleRevolution.Straight;
+            return AngleRevolutionReduce(Math.Abs((Double) angle)) is > Revolution.Double.Quarter and < Revolution.Double.Straight;
         }
 
         /// <summary>
@@ -1097,7 +1112,7 @@ namespace NetExtender.Utilities.Numerics
         [Pure]
         public static Boolean IsAngleStraight(this AngleDegree angle)
         {
-            return Math.Abs(AngleDegreeReduce(Math.Abs((Double) angle)) - DoubleDegree.Straight) < Double.Epsilon;
+            return Math.Abs(AngleDegreeReduce(Math.Abs((Double) angle)) - Degree.Double.Straight) < Double.Epsilon;
         }
 
         /// <summary>
@@ -1108,7 +1123,7 @@ namespace NetExtender.Utilities.Numerics
         [Pure]
         public static Boolean IsAngleStraight(this AngleRadian angle)
         {
-            return Math.Abs(AngleRadianReduce(Math.Abs((Double) angle)) - DoubleRadian.Straight) < Double.Epsilon;
+            return Math.Abs(AngleRadianReduce(Math.Abs((Double) angle)) - Radian.Double.Straight) < Double.Epsilon;
         }
 
         /// <summary>
@@ -1119,7 +1134,7 @@ namespace NetExtender.Utilities.Numerics
         [Pure]
         public static Boolean IsAngleStraight(this AngleGradian angle)
         {
-            return Math.Abs(AngleGradianReduce(Math.Abs((Double) angle)) - DoubleGradian.Straight) < Double.Epsilon;
+            return Math.Abs(AngleGradianReduce(Math.Abs((Double) angle)) - Gradian.Double.Straight) < Double.Epsilon;
         }
 
         /// <summary>
@@ -1130,7 +1145,7 @@ namespace NetExtender.Utilities.Numerics
         [Pure]
         public static Boolean IsAngleStraight(this AngleRevolution angle)
         {
-            return Math.Abs(AngleRevolutionReduce(Math.Abs((Double) angle)) - DoubleRevolution.Straight) < Double.Epsilon;
+            return Math.Abs(AngleRevolutionReduce(Math.Abs((Double) angle)) - Revolution.Double.Straight) < Double.Epsilon;
         }
 
         /// <summary>
@@ -1141,7 +1156,7 @@ namespace NetExtender.Utilities.Numerics
         [Pure]
         public static Boolean IsAngleReflex(this AngleDegree angle)
         {
-            return AngleDegreeReduce(Math.Abs((Double) angle)) > DoubleDegree.Straight;
+            return AngleDegreeReduce(Math.Abs((Double) angle)) > Degree.Double.Straight;
         }
 
         /// <summary>
@@ -1152,7 +1167,7 @@ namespace NetExtender.Utilities.Numerics
         [Pure]
         public static Boolean IsAngleReflex(this AngleRadian angle)
         {
-            return AngleRadianReduce(Math.Abs((Double) angle)) > DoubleRadian.Straight;
+            return AngleRadianReduce(Math.Abs((Double) angle)) > Radian.Double.Straight;
         }
 
         /// <summary>
@@ -1163,7 +1178,7 @@ namespace NetExtender.Utilities.Numerics
         [Pure]
         public static Boolean IsAngleReflex(this AngleGradian angle)
         {
-            return AngleGradianReduce(Math.Abs((Double) angle)) > DoubleGradian.Straight;
+            return AngleGradianReduce(Math.Abs((Double) angle)) > Gradian.Double.Straight;
         }
 
         /// <summary>
@@ -1174,7 +1189,7 @@ namespace NetExtender.Utilities.Numerics
         [Pure]
         public static Boolean IsAngleReflex(this AngleRevolution angle)
         {
-            return AngleRevolutionReduce(Math.Abs((Double) angle)) > DoubleRevolution.Straight;
+            return AngleRevolutionReduce(Math.Abs((Double) angle)) > Revolution.Double.Straight;
         }
 
         /// <summary>
@@ -1185,7 +1200,7 @@ namespace NetExtender.Utilities.Numerics
         [Pure]
         public static Boolean IsAngleOblique(this AngleDegree angle)
         {
-            return Math.Abs((Double) angle % DoubleDegree.Quarter) >= Double.Epsilon;
+            return Math.Abs((Double) angle % Degree.Double.Quarter) >= Double.Epsilon;
         }
 
         /// <summary>
@@ -1196,7 +1211,7 @@ namespace NetExtender.Utilities.Numerics
         [Pure]
         public static Boolean IsAngleOblique(this AngleRadian angle)
         {
-            return Math.Abs((Double) angle % DoubleRadian.Quarter) >= Double.Epsilon;
+            return Math.Abs((Double) angle % Radian.Double.Quarter) >= Double.Epsilon;
         }
 
         /// <summary>
@@ -1207,7 +1222,7 @@ namespace NetExtender.Utilities.Numerics
         [Pure]
         public static Boolean IsAngleOblique(this AngleGradian angle)
         {
-            return Math.Abs((Double) angle % DoubleGradian.Quarter) >= Double.Epsilon;
+            return Math.Abs((Double) angle % Gradian.Double.Quarter) >= Double.Epsilon;
         }
 
         /// <summary>
@@ -1218,7 +1233,7 @@ namespace NetExtender.Utilities.Numerics
         [Pure]
         public static Boolean IsAngleOblique(this AngleRevolution angle)
         {
-            return Math.Abs((Double) angle % DoubleRevolution.Quarter) >= Double.Epsilon;
+            return Math.Abs((Double) angle % Revolution.Double.Quarter) >= Double.Epsilon;
         }
 
         /// <summary>
@@ -1277,7 +1292,7 @@ namespace NetExtender.Utilities.Numerics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Sin(this AngleDegree value)
         {
-            return MathUtilities.Sin((Double) value / DoubleRelations.DegreeInRadian);
+            return MathUtilities.Sin((Double) value / Relations.Double.DegreeInRadian);
         }
 
         /// <inheritdoc cref="MathUtilities.Sin(Double)"/>
@@ -1291,21 +1306,21 @@ namespace NetExtender.Utilities.Numerics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Sin(this AngleGradian value)
         {
-            return MathUtilities.Sin((Double) value / DoubleRelations.GradianInRadian);
+            return MathUtilities.Sin((Double) value / Relations.Double.GradianInRadian);
         }
 
         /// <inheritdoc cref="MathUtilities.Sin(Double)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Sin(this AngleRevolution value)
         {
-            return MathUtilities.Sin((Double) value * DoubleRadian.Full);
+            return MathUtilities.Sin((Double) value * Radian.Double.Full);
         }
 
         /// <inheritdoc cref="MathUtilities.Sinh(Double)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Sinh(this AngleDegree value)
         {
-            return MathUtilities.Sinh((Double) value / DoubleRelations.DegreeInRadian);
+            return MathUtilities.Sinh((Double) value / Relations.Double.DegreeInRadian);
         }
 
         /// <inheritdoc cref="MathUtilities.Sinh(Double)"/>
@@ -1319,21 +1334,21 @@ namespace NetExtender.Utilities.Numerics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Sinh(this AngleGradian value)
         {
-            return MathUtilities.Sinh((Double) value / DoubleRelations.GradianInRadian);
+            return MathUtilities.Sinh((Double) value / Relations.Double.GradianInRadian);
         }
 
         /// <inheritdoc cref="MathUtilities.Sinh(Double)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Sinh(this AngleRevolution value)
         {
-            return MathUtilities.Sinh((Double) value * DoubleRadian.Full);
+            return MathUtilities.Sinh((Double) value * Radian.Double.Full);
         }
 
         /// <inheritdoc cref="MathUtilities.Asin(Double)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Asin(this AngleDegree value)
         {
-            return MathUtilities.Asin((Double) value / DoubleRelations.DegreeInRadian);
+            return MathUtilities.Asin((Double) value / Relations.Double.DegreeInRadian);
         }
 
         /// <inheritdoc cref="MathUtilities.Asin(Double)"/>
@@ -1347,21 +1362,21 @@ namespace NetExtender.Utilities.Numerics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Asin(this AngleGradian value)
         {
-            return MathUtilities.Asin((Double) value / DoubleRelations.GradianInRadian);
+            return MathUtilities.Asin((Double) value / Relations.Double.GradianInRadian);
         }
 
         /// <inheritdoc cref="MathUtilities.Asin(Double)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Asin(this AngleRevolution value)
         {
-            return MathUtilities.Asin((Double) value * DoubleRadian.Full);
+            return MathUtilities.Asin((Double) value * Radian.Double.Full);
         }
 
         /// <inheritdoc cref="MathUtilities.Asinh(Double)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Asinh(this AngleDegree value)
         {
-            return MathUtilities.Asinh((Double) value / DoubleRelations.DegreeInRadian);
+            return MathUtilities.Asinh((Double) value / Relations.Double.DegreeInRadian);
         }
 
         /// <inheritdoc cref="MathUtilities.Asinh(Double)"/>
@@ -1375,21 +1390,21 @@ namespace NetExtender.Utilities.Numerics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Asinh(this AngleGradian value)
         {
-            return MathUtilities.Asinh((Double) value / DoubleRelations.GradianInRadian);
+            return MathUtilities.Asinh((Double) value / Relations.Double.GradianInRadian);
         }
 
         /// <inheritdoc cref="MathUtilities.Asinh(Double)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Asinh(this AngleRevolution value)
         {
-            return MathUtilities.Asinh((Double) value * DoubleRadian.Full);
+            return MathUtilities.Asinh((Double) value * Radian.Double.Full);
         }
 
         /// <inheritdoc cref="MathUtilities.Cos(Double)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Cos(this AngleDegree value)
         {
-            return MathUtilities.Cos((Double) value / DoubleRelations.DegreeInRadian);
+            return MathUtilities.Cos((Double) value / Relations.Double.DegreeInRadian);
         }
 
         /// <inheritdoc cref="MathUtilities.Cos(Double)"/>
@@ -1403,21 +1418,21 @@ namespace NetExtender.Utilities.Numerics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Cos(this AngleGradian value)
         {
-            return MathUtilities.Cos((Double) value / DoubleRelations.GradianInRadian);
+            return MathUtilities.Cos((Double) value / Relations.Double.GradianInRadian);
         }
 
         /// <inheritdoc cref="MathUtilities.Cos(Double)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Cos(this AngleRevolution value)
         {
-            return MathUtilities.Cos((Double) value * DoubleRadian.Full);
+            return MathUtilities.Cos((Double) value * Radian.Double.Full);
         }
 
         /// <inheritdoc cref="MathUtilities.Cosh(Double)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Cosh(this AngleDegree value)
         {
-            return MathUtilities.Cosh((Double) value / DoubleRelations.DegreeInRadian);
+            return MathUtilities.Cosh((Double) value / Relations.Double.DegreeInRadian);
         }
 
         /// <inheritdoc cref="MathUtilities.Cosh(Double)"/>
@@ -1431,21 +1446,21 @@ namespace NetExtender.Utilities.Numerics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Cosh(this AngleGradian value)
         {
-            return MathUtilities.Cosh((Double) value / DoubleRelations.GradianInRadian);
+            return MathUtilities.Cosh((Double) value / Relations.Double.GradianInRadian);
         }
 
         /// <inheritdoc cref="MathUtilities.Cosh(Double)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Cosh(this AngleRevolution value)
         {
-            return MathUtilities.Cosh((Double) value * DoubleRadian.Full);
+            return MathUtilities.Cosh((Double) value * Radian.Double.Full);
         }
 
         /// <inheritdoc cref="MathUtilities.Acos(Double)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Acos(this AngleDegree value)
         {
-            return MathUtilities.Acos((Double) value / DoubleRelations.DegreeInRadian);
+            return MathUtilities.Acos((Double) value / Relations.Double.DegreeInRadian);
         }
 
         /// <inheritdoc cref="MathUtilities.Acos(Double)"/>
@@ -1459,21 +1474,21 @@ namespace NetExtender.Utilities.Numerics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Acos(this AngleGradian value)
         {
-            return MathUtilities.Acos((Double) value / DoubleRelations.GradianInRadian);
+            return MathUtilities.Acos((Double) value / Relations.Double.GradianInRadian);
         }
 
         /// <inheritdoc cref="MathUtilities.Acos(Double)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Acos(this AngleRevolution value)
         {
-            return MathUtilities.Acos((Double) value * DoubleRadian.Full);
+            return MathUtilities.Acos((Double) value * Radian.Double.Full);
         }
 
         /// <inheritdoc cref="MathUtilities.Acosh(Double)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Acosh(this AngleDegree value)
         {
-            return MathUtilities.Acosh((Double) value / DoubleRelations.DegreeInRadian);
+            return MathUtilities.Acosh((Double) value / Relations.Double.DegreeInRadian);
         }
 
         /// <inheritdoc cref="MathUtilities.Acosh(Double)"/>
@@ -1487,21 +1502,21 @@ namespace NetExtender.Utilities.Numerics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Acosh(this AngleGradian value)
         {
-            return MathUtilities.Acosh((Double) value / DoubleRelations.GradianInRadian);
+            return MathUtilities.Acosh((Double) value / Relations.Double.GradianInRadian);
         }
 
         /// <inheritdoc cref="MathUtilities.Acosh(Double)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Acosh(this AngleRevolution value)
         {
-            return MathUtilities.Acosh((Double) value * DoubleRadian.Full);
+            return MathUtilities.Acosh((Double) value * Radian.Double.Full);
         }
 
         /// <inheritdoc cref="MathUtilities.Tan(Double)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Tan(this AngleDegree value)
         {
-            return MathUtilities.Tan((Double) value / DoubleRelations.DegreeInRadian);
+            return MathUtilities.Tan((Double) value / Relations.Double.DegreeInRadian);
         }
 
         /// <inheritdoc cref="MathUtilities.Tan(Double)"/>
@@ -1515,21 +1530,21 @@ namespace NetExtender.Utilities.Numerics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Tan(this AngleGradian value)
         {
-            return MathUtilities.Tan((Double) value / DoubleRelations.GradianInRadian);
+            return MathUtilities.Tan((Double) value / Relations.Double.GradianInRadian);
         }
 
         /// <inheritdoc cref="MathUtilities.Tan(Double)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Tan(this AngleRevolution value)
         {
-            return MathUtilities.Tan((Double) value * DoubleRadian.Full);
+            return MathUtilities.Tan((Double) value * Radian.Double.Full);
         }
 
         /// <inheritdoc cref="MathUtilities.Tanh(Double)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Tanh(this AngleDegree value)
         {
-            return MathUtilities.Tanh((Double) value / DoubleRelations.DegreeInRadian);
+            return MathUtilities.Tanh((Double) value / Relations.Double.DegreeInRadian);
         }
 
         /// <inheritdoc cref="MathUtilities.Tanh(Double)"/>
@@ -1543,21 +1558,21 @@ namespace NetExtender.Utilities.Numerics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Tanh(this AngleGradian value)
         {
-            return MathUtilities.Tanh((Double) value / DoubleRelations.GradianInRadian);
+            return MathUtilities.Tanh((Double) value / Relations.Double.GradianInRadian);
         }
 
         /// <inheritdoc cref="MathUtilities.Tanh(Double)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Tanh(this AngleRevolution value)
         {
-            return MathUtilities.Tanh((Double) value * DoubleRadian.Full);
+            return MathUtilities.Tanh((Double) value * Radian.Double.Full);
         }
 
         /// <inheritdoc cref="MathUtilities.Atan(Double)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Atan(this AngleDegree value)
         {
-            return MathUtilities.Atan((Double) value / DoubleRelations.DegreeInRadian);
+            return MathUtilities.Atan((Double) value / Relations.Double.DegreeInRadian);
         }
 
         /// <inheritdoc cref="MathUtilities.Atan(Double)"/>
@@ -1571,28 +1586,28 @@ namespace NetExtender.Utilities.Numerics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Atan(this AngleGradian value)
         {
-            return MathUtilities.Atan((Double) value / DoubleRelations.GradianInRadian);
+            return MathUtilities.Atan((Double) value / Relations.Double.GradianInRadian);
         }
 
         /// <inheritdoc cref="MathUtilities.Atan(Double)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Atan(this AngleRevolution value)
         {
-            return MathUtilities.Atan((Double) value * DoubleRadian.Full);
+            return MathUtilities.Atan((Double) value * Radian.Double.Full);
         }
 
         /// <inheritdoc cref="MathUtilities.Atan2(Double,Double)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Atan2(this AngleDegree value, Double point)
         {
-            return MathUtilities.Atan2((Double) value / DoubleRelations.DegreeInRadian, point);
+            return MathUtilities.Atan2((Double) value / Relations.Double.DegreeInRadian, point);
         }
 
         /// <inheritdoc cref="MathUtilities.Atan2(Double,Double)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Atan2(this AngleDegree value, AngleDegree angle)
         {
-            return MathUtilities.Atan2((Double) value / DoubleRelations.DegreeInRadian, (Double) angle / DoubleRelations.DegreeInRadian);
+            return MathUtilities.Atan2((Double) value / Relations.Double.DegreeInRadian, (Double) angle / Relations.Double.DegreeInRadian);
         }
 
         /// <inheritdoc cref="MathUtilities.Atan2(Double,Double)"/>
@@ -1613,35 +1628,35 @@ namespace NetExtender.Utilities.Numerics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Atan2(this AngleGradian value, Double point)
         {
-            return MathUtilities.Atan2((Double) value / DoubleRelations.GradianInRadian, point);
+            return MathUtilities.Atan2((Double) value / Relations.Double.GradianInRadian, point);
         }
 
         /// <inheritdoc cref="MathUtilities.Atan2(Double,Double)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Atan2(this AngleGradian value, AngleGradian angle)
         {
-            return MathUtilities.Atan2((Double) value / DoubleRelations.GradianInRadian, (Double) angle / DoubleRelations.GradianInRadian);
+            return MathUtilities.Atan2((Double) value / Relations.Double.GradianInRadian, (Double) angle / Relations.Double.GradianInRadian);
         }
 
         /// <inheritdoc cref="MathUtilities.Atan2(Double,Double)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Atan2(this AngleRevolution value, Double point)
         {
-            return MathUtilities.Atan2((Double) value * DoubleRadian.Full, point);
+            return MathUtilities.Atan2((Double) value * Radian.Double.Full, point);
         }
 
         /// <inheritdoc cref="MathUtilities.Atan2(Double,Double)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Atan2(this AngleRevolution value, AngleRevolution angle)
         {
-            return MathUtilities.Atan2((Double) value * DoubleRadian.Full, (Double) angle * DoubleRadian.Full);
+            return MathUtilities.Atan2((Double) value * Radian.Double.Full, (Double) angle * Radian.Double.Full);
         }
 
         /// <inheritdoc cref="MathUtilities.Atanh(Double)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Atanh(this AngleDegree value)
         {
-            return MathUtilities.Atanh((Double) value / DoubleRelations.DegreeInRadian);
+            return MathUtilities.Atanh((Double) value / Relations.Double.DegreeInRadian);
         }
 
         /// <inheritdoc cref="MathUtilities.Atanh(Double)"/>
@@ -1655,21 +1670,21 @@ namespace NetExtender.Utilities.Numerics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Atanh(this AngleGradian value)
         {
-            return MathUtilities.Atanh((Double) value / DoubleRelations.GradianInRadian);
+            return MathUtilities.Atanh((Double) value / Relations.Double.GradianInRadian);
         }
 
         /// <inheritdoc cref="MathUtilities.Atanh(Double)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Atanh(this AngleRevolution value)
         {
-            return MathUtilities.Atanh((Double) value * DoubleRadian.Full);
+            return MathUtilities.Atanh((Double) value * Radian.Double.Full);
         }
 
         /// <inheritdoc cref="MathUtilities.Cot(Double)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Cot(this AngleDegree value)
         {
-            return MathUtilities.Cot((Double) value / DoubleRelations.DegreeInRadian);
+            return MathUtilities.Cot((Double) value / Relations.Double.DegreeInRadian);
         }
 
         /// <inheritdoc cref="MathUtilities.Cot(Double)"/>
@@ -1683,21 +1698,21 @@ namespace NetExtender.Utilities.Numerics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Cot(this AngleGradian value)
         {
-            return MathUtilities.Cot((Double) value / DoubleRelations.GradianInRadian);
+            return MathUtilities.Cot((Double) value / Relations.Double.GradianInRadian);
         }
 
         /// <inheritdoc cref="MathUtilities.Cot(Double)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Cot(this AngleRevolution value)
         {
-            return MathUtilities.Cot((Double) value * DoubleRadian.Full);
+            return MathUtilities.Cot((Double) value * Radian.Double.Full);
         }
 
         /// <inheritdoc cref="MathUtilities.Coth(Double)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Coth(this AngleDegree value)
         {
-            return MathUtilities.Coth((Double) value / DoubleRelations.DegreeInRadian);
+            return MathUtilities.Coth((Double) value / Relations.Double.DegreeInRadian);
         }
 
         /// <inheritdoc cref="MathUtilities.Coth(Double)"/>
@@ -1711,21 +1726,21 @@ namespace NetExtender.Utilities.Numerics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Coth(this AngleGradian value)
         {
-            return MathUtilities.Coth((Double) value / DoubleRelations.GradianInRadian);
+            return MathUtilities.Coth((Double) value / Relations.Double.GradianInRadian);
         }
 
         /// <inheritdoc cref="MathUtilities.Coth(Double)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Coth(this AngleRevolution value)
         {
-            return MathUtilities.Coth((Double) value * DoubleRadian.Full);
+            return MathUtilities.Coth((Double) value * Radian.Double.Full);
         }
 
         /// <inheritdoc cref="MathUtilities.Acot(Double)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Acot(this AngleDegree value)
         {
-            return MathUtilities.Acot((Double) value / DoubleRelations.DegreeInRadian);
+            return MathUtilities.Acot((Double) value / Relations.Double.DegreeInRadian);
         }
 
         /// <inheritdoc cref="MathUtilities.Acot(Double)"/>
@@ -1739,28 +1754,28 @@ namespace NetExtender.Utilities.Numerics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Acot(this AngleGradian value)
         {
-            return MathUtilities.Acot((Double) value / DoubleRelations.GradianInRadian);
+            return MathUtilities.Acot((Double) value / Relations.Double.GradianInRadian);
         }
 
         /// <inheritdoc cref="MathUtilities.Acot(Double)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Acot(this AngleRevolution value)
         {
-            return MathUtilities.Acot((Double) value * DoubleRadian.Full);
+            return MathUtilities.Acot((Double) value * Radian.Double.Full);
         }
 
         /// <inheritdoc cref="MathUtilities.Acot2(Double,Double)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Acot2(this AngleDegree value, Double point)
         {
-            return MathUtilities.Acot2((Double) value / DoubleRelations.DegreeInRadian, point);
+            return MathUtilities.Acot2((Double) value / Relations.Double.DegreeInRadian, point);
         }
 
         /// <inheritdoc cref="MathUtilities.Acot2(Double,Double)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Acot2(this AngleDegree value, AngleDegree angle)
         {
-            return MathUtilities.Acot2((Double) value / DoubleRelations.DegreeInRadian, (Double) angle / DoubleRelations.DegreeInRadian);
+            return MathUtilities.Acot2((Double) value / Relations.Double.DegreeInRadian, (Double) angle / Relations.Double.DegreeInRadian);
         }
 
         /// <inheritdoc cref="MathUtilities.Acot2(Double,Double)"/>
@@ -1781,35 +1796,35 @@ namespace NetExtender.Utilities.Numerics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Acot2(this AngleGradian value, Double point)
         {
-            return MathUtilities.Acot2((Double) value / DoubleRelations.GradianInRadian, point);
+            return MathUtilities.Acot2((Double) value / Relations.Double.GradianInRadian, point);
         }
 
         /// <inheritdoc cref="MathUtilities.Acot2(Double,Double)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Acot2(this AngleGradian value, AngleGradian angle)
         {
-            return MathUtilities.Acot2((Double) value / DoubleRelations.GradianInRadian, (Double) angle / DoubleRelations.GradianInRadian);
+            return MathUtilities.Acot2((Double) value / Relations.Double.GradianInRadian, (Double) angle / Relations.Double.GradianInRadian);
         }
 
         /// <inheritdoc cref="MathUtilities.Acot2(Double,Double)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Acot2(this AngleRevolution value, Double point)
         {
-            return MathUtilities.Acot2((Double) value * DoubleRadian.Full, point);
+            return MathUtilities.Acot2((Double) value * Radian.Double.Full, point);
         }
 
         /// <inheritdoc cref="MathUtilities.Acot2(Double,Double)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Acot2(this AngleRevolution value, AngleRevolution angle)
         {
-            return MathUtilities.Acot2((Double) value * DoubleRadian.Full, (Double) angle * DoubleRadian.Full);
+            return MathUtilities.Acot2((Double) value * Radian.Double.Full, (Double) angle * Radian.Double.Full);
         }
 
         /// <inheritdoc cref="MathUtilities.Acoth(Double)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Acoth(this AngleDegree value)
         {
-            return MathUtilities.Acoth((Double) value / DoubleRelations.DegreeInRadian);
+            return MathUtilities.Acoth((Double) value / Relations.Double.DegreeInRadian);
         }
 
         /// <inheritdoc cref="MathUtilities.Acoth(Double)"/>
@@ -1823,21 +1838,21 @@ namespace NetExtender.Utilities.Numerics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Acoth(this AngleGradian value)
         {
-            return MathUtilities.Acoth((Double) value / DoubleRelations.GradianInRadian);
+            return MathUtilities.Acoth((Double) value / Relations.Double.GradianInRadian);
         }
 
         /// <inheritdoc cref="MathUtilities.Acoth(Double)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Acoth(this AngleRevolution value)
         {
-            return MathUtilities.Acoth((Double) value * DoubleRadian.Full);
+            return MathUtilities.Acoth((Double) value * Radian.Double.Full);
         }
 
         /// <inheritdoc cref="MathUtilities.Sec(Double)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Sec(this AngleDegree value)
         {
-            return MathUtilities.Sec((Double) value / DoubleRelations.DegreeInRadian);
+            return MathUtilities.Sec((Double) value / Relations.Double.DegreeInRadian);
         }
 
         /// <inheritdoc cref="MathUtilities.Sec(Double)"/>
@@ -1851,21 +1866,21 @@ namespace NetExtender.Utilities.Numerics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Sec(this AngleGradian value)
         {
-            return MathUtilities.Sec((Double) value / DoubleRelations.GradianInRadian);
+            return MathUtilities.Sec((Double) value / Relations.Double.GradianInRadian);
         }
 
         /// <inheritdoc cref="MathUtilities.Sec(Double)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Sec(this AngleRevolution value)
         {
-            return MathUtilities.Sec((Double) value * DoubleRadian.Full);
+            return MathUtilities.Sec((Double) value * Radian.Double.Full);
         }
 
         /// <inheritdoc cref="MathUtilities.Sech(Double)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Sech(this AngleDegree value)
         {
-            return MathUtilities.Sech((Double) value / DoubleRelations.DegreeInRadian);
+            return MathUtilities.Sech((Double) value / Relations.Double.DegreeInRadian);
         }
 
         /// <inheritdoc cref="MathUtilities.Sech(Double)"/>
@@ -1879,21 +1894,21 @@ namespace NetExtender.Utilities.Numerics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Sech(this AngleGradian value)
         {
-            return MathUtilities.Sech((Double) value / DoubleRelations.GradianInRadian);
+            return MathUtilities.Sech((Double) value / Relations.Double.GradianInRadian);
         }
 
         /// <inheritdoc cref="MathUtilities.Sech(Double)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Sech(this AngleRevolution value)
         {
-            return MathUtilities.Sech((Double) value * DoubleRadian.Full);
+            return MathUtilities.Sech((Double) value * Radian.Double.Full);
         }
 
         /// <inheritdoc cref="MathUtilities.Asec(Double)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Asec(this AngleDegree value)
         {
-            return MathUtilities.Asec((Double) value / DoubleRelations.DegreeInRadian);
+            return MathUtilities.Asec((Double) value / Relations.Double.DegreeInRadian);
         }
 
         /// <inheritdoc cref="MathUtilities.Asec(Double)"/>
@@ -1907,21 +1922,21 @@ namespace NetExtender.Utilities.Numerics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Asec(this AngleGradian value)
         {
-            return MathUtilities.Asec((Double) value / DoubleRelations.GradianInRadian);
+            return MathUtilities.Asec((Double) value / Relations.Double.GradianInRadian);
         }
 
         /// <inheritdoc cref="MathUtilities.Asec(Double)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Asec(this AngleRevolution value)
         {
-            return MathUtilities.Asec((Double) value * DoubleRadian.Full);
+            return MathUtilities.Asec((Double) value * Radian.Double.Full);
         }
 
         /// <inheritdoc cref="MathUtilities.Asech(Double)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Asech(this AngleDegree value)
         {
-            return MathUtilities.Asech((Double) value / DoubleRelations.DegreeInRadian);
+            return MathUtilities.Asech((Double) value / Relations.Double.DegreeInRadian);
         }
 
         /// <inheritdoc cref="MathUtilities.Asech(Double)"/>
@@ -1935,21 +1950,21 @@ namespace NetExtender.Utilities.Numerics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Asech(this AngleGradian value)
         {
-            return MathUtilities.Asech((Double) value / DoubleRelations.GradianInRadian);
+            return MathUtilities.Asech((Double) value / Relations.Double.GradianInRadian);
         }
 
         /// <inheritdoc cref="MathUtilities.Asech(Double)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Asech(this AngleRevolution value)
         {
-            return MathUtilities.Asech((Double) value * DoubleRadian.Full);
+            return MathUtilities.Asech((Double) value * Radian.Double.Full);
         }
 
         /// <inheritdoc cref="MathUtilities.Csc(Double)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Csc(this AngleDegree value)
         {
-            return MathUtilities.Csc((Double) value / DoubleRelations.DegreeInRadian);
+            return MathUtilities.Csc((Double) value / Relations.Double.DegreeInRadian);
         }
 
         /// <inheritdoc cref="MathUtilities.Csc(Double)"/>
@@ -1963,21 +1978,21 @@ namespace NetExtender.Utilities.Numerics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Csc(this AngleGradian value)
         {
-            return MathUtilities.Csc((Double) value / DoubleRelations.GradianInRadian);
+            return MathUtilities.Csc((Double) value / Relations.Double.GradianInRadian);
         }
 
         /// <inheritdoc cref="MathUtilities.Csc(Double)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Csc(this AngleRevolution value)
         {
-            return MathUtilities.Csc((Double) value * DoubleRadian.Full);
+            return MathUtilities.Csc((Double) value * Radian.Double.Full);
         }
 
         /// <inheritdoc cref="MathUtilities.Csch(Double)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Csch(this AngleDegree value)
         {
-            return MathUtilities.Csch((Double) value / DoubleRelations.DegreeInRadian);
+            return MathUtilities.Csch((Double) value / Relations.Double.DegreeInRadian);
         }
 
         /// <inheritdoc cref="MathUtilities.Csch(Double)"/>
@@ -1991,21 +2006,21 @@ namespace NetExtender.Utilities.Numerics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Csch(this AngleGradian value)
         {
-            return MathUtilities.Csch((Double) value / DoubleRelations.GradianInRadian);
+            return MathUtilities.Csch((Double) value / Relations.Double.GradianInRadian);
         }
 
         /// <inheritdoc cref="MathUtilities.Csch(Double)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Csch(this AngleRevolution value)
         {
-            return MathUtilities.Csch((Double) value * DoubleRadian.Full);
+            return MathUtilities.Csch((Double) value * Radian.Double.Full);
         }
 
         /// <inheritdoc cref="MathUtilities.Acsc(Double)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Acsc(this AngleDegree value)
         {
-            return MathUtilities.Acsc((Double) value / DoubleRelations.DegreeInRadian);
+            return MathUtilities.Acsc((Double) value / Relations.Double.DegreeInRadian);
         }
 
         /// <inheritdoc cref="MathUtilities.Acsc(Double)"/>
@@ -2019,21 +2034,21 @@ namespace NetExtender.Utilities.Numerics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Acsc(this AngleGradian value)
         {
-            return MathUtilities.Acsc((Double) value / DoubleRelations.GradianInRadian);
+            return MathUtilities.Acsc((Double) value / Relations.Double.GradianInRadian);
         }
 
         /// <inheritdoc cref="MathUtilities.Acsc(Double)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Acsc(this AngleRevolution value)
         {
-            return MathUtilities.Acsc((Double) value * DoubleRadian.Full);
+            return MathUtilities.Acsc((Double) value * Radian.Double.Full);
         }
 
         /// <inheritdoc cref="MathUtilities.Acsch(Double)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Acsch(this AngleDegree value)
         {
-            return MathUtilities.Acsch((Double) value / DoubleRelations.DegreeInRadian);
+            return MathUtilities.Acsch((Double) value / Relations.Double.DegreeInRadian);
         }
 
         /// <inheritdoc cref="MathUtilities.Acsch(Double)"/>
@@ -2047,14 +2062,14 @@ namespace NetExtender.Utilities.Numerics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Acsch(this AngleGradian value)
         {
-            return MathUtilities.Acsch((Double) value / DoubleRelations.GradianInRadian);
+            return MathUtilities.Acsch((Double) value / Relations.Double.GradianInRadian);
         }
 
         /// <inheritdoc cref="MathUtilities.Acsch(Double)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Acsch(this AngleRevolution value)
         {
-            return MathUtilities.Acsch((Double) value * DoubleRadian.Full);
+            return MathUtilities.Acsch((Double) value * Radian.Double.Full);
         }
 
         public static Double Trigonometry(this AngleDegree value, TrigonometryType type)

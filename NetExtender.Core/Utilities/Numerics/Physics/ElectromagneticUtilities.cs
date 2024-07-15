@@ -2,6 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Runtime.CompilerServices;
 using NetExtender.Types.Exceptions;
 
 namespace NetExtender.Utilities.Numerics.Physics
@@ -157,6 +158,18 @@ namespace NetExtender.Utilities.Numerics.Physics
             };
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Single Frequency(Single wavelength)
+        {
+            if (wavelength < Double.Epsilon)
+            {
+                throw new ArgumentOutOfRangeException(nameof(wavelength), wavelength, null);
+            }
+
+            return PhysicsUtilities.Constants.Single.C / wavelength;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Frequency(Double wavelength)
         {
             if (wavelength < Double.Epsilon)
@@ -164,9 +177,10 @@ namespace NetExtender.Utilities.Numerics.Physics
                 throw new ArgumentOutOfRangeException(nameof(wavelength), wavelength, null);
             }
 
-            return PhysicsUtilities.C / wavelength;
+            return PhysicsUtilities.Constants.Double.C / wavelength;
         }
-
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Decimal Frequency(Decimal wavelength)
         {
             if (wavelength <= 0)
@@ -174,9 +188,21 @@ namespace NetExtender.Utilities.Numerics.Physics
                 throw new ArgumentOutOfRangeException(nameof(wavelength), wavelength, null);
             }
 
-            return PhysicsUtilities.C / wavelength;
+            return PhysicsUtilities.Constants.Decimal.C / wavelength;
         }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Single Wavelength(Single frequency)
+        {
+            if (frequency < Double.Epsilon)
+            {
+                throw new ArgumentOutOfRangeException(nameof(frequency), frequency, null);
+            }
 
+            return PhysicsUtilities.Constants.Single.C / frequency;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Wavelength(Double frequency)
         {
             if (frequency < Double.Epsilon)
@@ -184,9 +210,10 @@ namespace NetExtender.Utilities.Numerics.Physics
                 throw new ArgumentOutOfRangeException(nameof(frequency), frequency, null);
             }
 
-            return PhysicsUtilities.C / frequency;
+            return PhysicsUtilities.Constants.Double.C / frequency;
         }
-
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Decimal Wavelength(Decimal frequency)
         {
             if (frequency <= 0)
@@ -194,19 +221,44 @@ namespace NetExtender.Utilities.Numerics.Physics
                 throw new ArgumentOutOfRangeException(nameof(frequency), frequency, null);
             }
 
-            return PhysicsUtilities.C / frequency;
+            return PhysicsUtilities.Constants.Decimal.C / frequency;
         }
-
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Single DoplerWavelength(Single wavelength, Single velocity)
+        {
+            return DoplerWavelength(wavelength, velocity, 0);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double DoplerWavelength(Double wavelength, Double velocity)
         {
             return DoplerWavelength(wavelength, velocity, 0);
         }
-
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Decimal DoplerWavelength(Decimal wavelength, Decimal velocity)
         {
             return DoplerWavelength(wavelength, velocity, 0);
         }
-
+        
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Single DoplerWavelength(Single wavelength, Single velocity, Single angle)
+        {
+            if (wavelength < Single.Epsilon)
+            {
+                throw new ArgumentOutOfRangeException(nameof(wavelength), wavelength, null);
+            }
+            
+            return velocity switch
+            {
+                < Single.Epsilon => wavelength,
+                >= PhysicsUtilities.Constants.Single.C => throw new ArgumentOutOfRangeException(nameof(velocity), velocity, $"Velocity can't be faster or equal than light speed ({PhysicsUtilities.Constants.Single.C})m/s."),
+                _ => Wavelength(DoplerFrequency(Frequency(wavelength), velocity, angle))
+            };
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static Double DoplerWavelength(Double wavelength, Double velocity, Double angle)
         {
             if (wavelength < Double.Epsilon)
@@ -217,11 +269,12 @@ namespace NetExtender.Utilities.Numerics.Physics
             return velocity switch
             {
                 < Double.Epsilon => wavelength,
-                >= PhysicsUtilities.C => throw new ArgumentOutOfRangeException(nameof(velocity), velocity, $"Velocity can't be faster or equal than light speed ({PhysicsUtilities.C})m/s."),
+                >= PhysicsUtilities.Constants.Double.C => throw new ArgumentOutOfRangeException(nameof(velocity), velocity, $"Velocity can't be faster or equal than light speed ({PhysicsUtilities.Constants.Double.C})m/s."),
                 _ => Wavelength(DoplerFrequency(Frequency(wavelength), velocity, angle))
             };
         }
-
+        
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static Decimal DoplerWavelength(Decimal wavelength, Decimal velocity, Decimal angle)
         {
             if (wavelength <= 0)
@@ -232,21 +285,46 @@ namespace NetExtender.Utilities.Numerics.Physics
             return velocity switch
             {
                 <= 0 => wavelength,
-                >= PhysicsUtilities.C => throw new ArgumentOutOfRangeException(nameof(velocity), velocity, $"Velocity can't be faster or equal than light speed ({PhysicsUtilities.C})m/s."),
+                >= PhysicsUtilities.Constants.Decimal.C => throw new ArgumentOutOfRangeException(nameof(velocity), velocity, $"Velocity can't be faster or equal than light speed ({PhysicsUtilities.Constants.Decimal.C})m/s."),
                 _ => Wavelength(DoplerFrequency(Frequency(wavelength), velocity, angle))
             };
         }
-
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Single DoplerFrequency(Single frequency, Single velocity)
+        {
+            return DoplerFrequency(frequency, velocity, 0);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double DoplerFrequency(Double frequency, Double velocity)
         {
             return DoplerFrequency(frequency, velocity, 0);
         }
-
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Decimal DoplerFrequency(Decimal frequency, Decimal velocity)
         {
             return DoplerFrequency(frequency, velocity, 0);
         }
+        
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Single DoplerFrequency(Single frequency, Single velocity, Single angle)
+        {
+            if (frequency < Single.Epsilon)
+            {
+                throw new ArgumentOutOfRangeException(nameof(frequency), frequency, null);
+            }
 
+            return velocity switch
+            {
+                < Single.Epsilon => frequency,
+                >= PhysicsUtilities.Constants.Single.C => throw new ArgumentOutOfRangeException(nameof(velocity), velocity, $"Velocity can't be faster or equal than light speed ({PhysicsUtilities.Constants.Single.C})m/s."),
+                _ => frequency * MathF.Sqrt(1 - velocity * velocity / PhysicsUtilities.Constants.Single.SquareC) / (1 - velocity / PhysicsUtilities.Constants.Single.C * MathF.Cos(angle))
+            };
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static Double DoplerFrequency(Double frequency, Double velocity, Double angle)
         {
             if (frequency < Double.Epsilon)
@@ -257,11 +335,12 @@ namespace NetExtender.Utilities.Numerics.Physics
             return velocity switch
             {
                 < Double.Epsilon => frequency,
-                >= PhysicsUtilities.C => throw new ArgumentOutOfRangeException(nameof(velocity), velocity, $"Velocity can't be faster or equal than light speed ({PhysicsUtilities.C})m/s."),
-                _ => frequency * Math.Sqrt(1 - velocity * velocity / PhysicsUtilities.SquareC) / (1 - velocity / PhysicsUtilities.C * Math.Cos(angle))
+                >= PhysicsUtilities.Constants.Double.C => throw new ArgumentOutOfRangeException(nameof(velocity), velocity, $"Velocity can't be faster or equal than light speed ({PhysicsUtilities.Constants.Double.C})m/s."),
+                _ => frequency * Math.Sqrt(1 - velocity * velocity / PhysicsUtilities.Constants.Double.SquareC) / (1 - velocity / PhysicsUtilities.Constants.Double.C * Math.Cos(angle))
             };
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static Decimal DoplerFrequency(Decimal frequency, Decimal velocity, Decimal angle)
         {
             if (frequency <= 0)
@@ -272,8 +351,8 @@ namespace NetExtender.Utilities.Numerics.Physics
             return velocity switch
             {
                 <= 0 => frequency,
-                >= PhysicsUtilities.C => throw new ArgumentOutOfRangeException(nameof(velocity), velocity, $"Velocity can't be faster or equal than light speed ({PhysicsUtilities.C})m/s."),
-                _ => frequency * (1 - velocity * velocity / PhysicsUtilities.SquareC).Sqrt() / (1 - velocity / PhysicsUtilities.C * angle.Cos())
+                >= PhysicsUtilities.Constants.Decimal.C => throw new ArgumentOutOfRangeException(nameof(velocity), velocity, $"Velocity can't be faster or equal than light speed ({PhysicsUtilities.Constants.Decimal.C})m/s."),
+                _ => frequency * (1 - velocity * velocity / PhysicsUtilities.Constants.Decimal.SquareC).Sqrt() / (1 - velocity / PhysicsUtilities.Constants.Decimal.C * angle.Cos())
             };
         }
     }

@@ -13,7 +13,7 @@ namespace NetExtender.Types.Numerics
         /// <summary>
         /// Represents the zero <see cref="AngleDegree"/> value (0 degrees).
         /// </summary>
-        public static AngleDegree Zero { get; } = new AngleDegree(AngleUtilities.DoubleDegree.Zero);
+        public static AngleDegree Zero { get; } = new AngleDegree(AngleUtilities.Degree.Double.Zero);
         
         /// <summary>
         /// Represents the golden <see cref="AngleDegree"/> value (~137.508 degrees).
@@ -23,22 +23,22 @@ namespace NetExtender.Types.Numerics
         /// <summary>
         /// Represents the quarter <see cref="AngleDegree"/> value (90 degrees).
         /// </summary>
-        public static AngleDegree Right { get; } = new AngleDegree(AngleUtilities.DoubleDegree.Quarter);
+        public static AngleDegree Right { get; } = new AngleDegree(AngleUtilities.Degree.Double.Quarter);
 
         /// <summary>
         /// Represents the straight <see cref="AngleDegree"/> value (180 degrees).
         /// </summary>
-        public static AngleDegree Straight { get; } = new AngleDegree(AngleUtilities.DoubleDegree.Straight);
+        public static AngleDegree Straight { get; } = new AngleDegree(AngleUtilities.Degree.Double.Straight);
 
         /// <summary>
         /// Represents the three quarter <see cref="AngleDegree"/> value (270 degrees).
         /// </summary>
-        public static AngleDegree ThreeQuarter { get; } = new AngleDegree(AngleUtilities.DoubleDegree.ThreeQuarter);
+        public static AngleDegree ThreeQuarter { get; } = new AngleDegree(AngleUtilities.Degree.Double.ThreeQuarter);
 
         /// <summary>
         /// Represents the full <see cref="AngleDegree"/> value (360 degrees).
         /// </summary>
-        public static AngleDegree Full { get; } = new AngleDegree(AngleUtilities.DoubleDegree.Full);
+        public static AngleDegree Full { get; } = new AngleDegree(AngleUtilities.Degree.Double.Full);
         
         /// <summary>
         /// Represents the smallest possible value of a <see cref="AngleDegree"/>.

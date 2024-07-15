@@ -172,6 +172,12 @@
         <Compile Update="Utilities\Types\EnumUtilities.Properties.cs">
           <DependentUpon>EnumUtilities.cs</DependentUpon>
         </Compile>
+        <Compile Update="Utilities\Core\ReflectionUtlities.Inherit.cs">
+          <DependentUpon>ReflectionUtilities.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Utilities\Core\ReflectionUtilities.New.cs">
+          <DependentUpon>ReflectionUtilities.cs</DependentUpon>
+        </Compile>
     </ItemGroup>
 
     <ItemGroup>

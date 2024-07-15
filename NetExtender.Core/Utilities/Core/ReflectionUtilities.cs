@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -15,11 +16,15 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
+using System.Threading;
 using System.Threading.Tasks;
 using NetExtender.Types.Anonymous;
 using NetExtender.Types.Attributes;
+using NetExtender.Types.Comparers;
 using NetExtender.Types.Exceptions;
+using NetExtender.Types.Monads;
 using NetExtender.Types.Reflection;
+using NetExtender.Utilities.Numerics;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Utilities.Core
@@ -146,32 +151,108 @@ namespace NetExtender.Utilities.Core
         All = Name | Attribute | Optional | DefaultValueEquals
     }
 
-    public static class ReflectionUtilities
+    public static partial class ReflectionUtilities
     {
+        private static ResettableLazy<InheritResult> LazyInherit { get; } = new ResettableLazy<InheritResult>(InheritResult.Create, LazyThreadSafetyMode.ExecutionAndPublication);
+        
+        public static ImmutableDictionary<Type, ImmutableHashSet<Type>> Inherit
+        {
+            get
+            {
+                return LazyInherit.Value.Type;
+            }
+        }
+        
+        public static ImmutableDictionary<Type, ImmutableDictionary<Assembly, ImmutableHashSet<Type>>> AssemblyInherit
+        {
+            get
+            {
+                return LazyInherit.Value.Assembly;
+            }
+        }
+        
         public static Type NullableAttribute { get; }
         public static Type NullableContextAttribute { get; }
-        
         private static HashSet<Type> VarArgTypes { get; }
         private static Predicate<Type> IsByRefLikePredicate { get; }
-        public static Boolean AssemblyLoadCallStaticContructor { get; set; }
+        public static Boolean AssemblyLoadCallStaticConstructor { get; set; }
 
         static ReflectionUtilities()
         {
-            AppDomain.CurrentDomain.AssemblyLoad += OnAssemblyLoad;
             VarArgTypes = new[] { Type.GetType("System.ArgIterator"), Type.GetType("System.RuntimeArgumentHandle"), Type.GetType("System.TypedReference") }.OfType<Type>().ToHashSet();
             IsByRefLikePredicate = typeof(Type).GetProperty("IsByRefLike")?.GetMethod?.CreateDelegate(typeof(Predicate<Type>)) as Predicate<Type> ?? (_ => false);
             NullableAttribute = Type.GetType("System.Runtime.CompilerServices.NullableAttribute") ?? throw new InvalidInitializationException();
             NullableContextAttribute = Type.GetType("System.Runtime.CompilerServices.NullableContextAttribute") ?? throw new InvalidInitializationException();
+            
+            HandleAssemblyInherit().ContinueWith(static _ => LazyInherit.Reset(InheritResult.Create));
+            
+            AppDomain.CurrentDomain.AssemblyLoad += OnAssemblyLoad;
         }
 
-        private static void OnAssemblyLoad(Object? sender, AssemblyLoadEventArgs args)
+        private static async void OnAssemblyLoad(Object? sender, AssemblyLoadEventArgs args)
         {
+            await HandleAssemblyInherit(args.LoadedAssembly).ContinueWith(static _ => LazyInherit.Reset(InheritResult.Create));
+            
             CallStaticInitializerAttributeInternal<StaticInitializerRequiredAttribute>(args.LoadedAssembly);
 
-            if (AssemblyLoadCallStaticContructor)
+            if (AssemblyLoadCallStaticConstructor)
             {
                 CallStaticInitializerAttribute(args.LoadedAssembly);
             }
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Func<TSource> New<TSource>()
+        {
+            return ExpressionStorage<TSource>.New;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Func<T1, T2, TSource> New<TSource, T1, T2>()
+        {
+            return ExpressionStorage<TSource, T1, T2>.New;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Func<T1, T2, T3, TSource> New<TSource, T1, T2, T3>()
+        {
+            return ExpressionStorage<TSource, T1, T2, T3>.New;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Func<T1, T2, T3, T4, TSource> New<TSource, T1, T2, T3, T4>()
+        {
+            return ExpressionStorage<TSource, T1, T2, T3, T4>.New;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Func<T1, T2, T3, T4, T5, TSource> New<TSource, T1, T2, T3, T4, T5>()
+        {
+            return ExpressionStorage<TSource, T1, T2, T3, T4, T5>.New;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Func<T1, T2, T3, T4, T5, T6, TSource> New<TSource, T1, T2, T3, T4, T5, T6>()
+        {
+            return ExpressionStorage<TSource, T1, T2, T3, T4, T5, T6>.New;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Func<T1, T2, T3, T4, T5, T6, T7, TSource> New<TSource, T1, T2, T3, T4, T5, T6, T7>()
+        {
+            return ExpressionStorage<TSource, T1, T2, T3, T4, T5, T6, T7>.New;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Func<T1, T2, T3, T4, T5, T6, T7, T8, TSource> New<TSource, T1, T2, T3, T4, T5, T6, T7, T8>()
+        {
+            return ExpressionStorage<TSource, T1, T2, T3, T4, T5, T6, T7, T8>.New;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, TSource> New<TSource, T1, T2, T3, T4, T5, T6, T7, T8, T9>()
+        {
+            return ExpressionStorage<TSource, T1, T2, T3, T4, T5, T6, T7, T8, T9>.New;
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1745,9 +1826,38 @@ namespace NetExtender.Utilities.Core
                 throw new ArgumentNullException(nameof(assemblies));
             }
 
-            return assemblies.SelectMany(assembly => assembly.GetTypes());
+            return assemblies.SelectMany(static assembly => assembly.GetTypes());
         }
-
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String Name(this Assembly assembly)
+        {
+            AssemblyName name = assembly.GetName();
+            return name.Name ?? name.FullName;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<String> Name(this IEnumerable<Assembly> assemblies)
+        {
+            if (assemblies is null)
+            {
+                throw new ArgumentNullException(nameof(assemblies));
+            }
+            
+            return assemblies.Select(Name);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<String> FullName(this IEnumerable<Assembly> assemblies)
+        {
+            if (assemblies is null)
+            {
+                throw new ArgumentNullException(nameof(assemblies));
+            }
+            
+            return assemblies.Select(static assembly => assembly.GetName().FullName);
+        }
+        
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<String?> GetNamespaces(this Assembly assembly)
         {
@@ -1756,7 +1866,55 @@ namespace NetExtender.Utilities.Core
                 throw new ArgumentNullException(nameof(assembly));
             }
 
-            return assembly.GetTypes().Select(type => type.Namespace);
+            return assembly.GetTypes().Select(static type => type.Namespace);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<Type> OrderBy(this IEnumerable<Type> source, TypeComparison comparison)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            TypeComparer comparer = comparison;
+            return source.OrderBy(comparer);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<Type> OrderByDescending(this IEnumerable<Type> source, TypeComparison comparison)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            TypeComparer comparer = comparison;
+            return source.OrderByDescending(comparer);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<Assembly> OrderBy(this IEnumerable<Assembly> source, AssemblyComparison comparison)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            AssemblyComparer comparer = comparison;
+            return source.OrderBy(comparer);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<Assembly> OrderByDescending(this IEnumerable<Assembly> source, AssemblyComparison comparison)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            AssemblyComparer comparer = comparison;
+            return source.OrderByDescending(comparer);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

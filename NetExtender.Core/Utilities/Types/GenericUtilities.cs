@@ -438,9 +438,9 @@ namespace NetExtender.Utilities.Types
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [return: NotNullIfNotNull("value")]
-        public static T? MemberwiseClone<T>(this T? value)
+        public static T MemberwiseClone<T>(this T value)
         {
-            return value is not null ? (T) MemberwiseCloneDelegate.Invoke(value) : default;
+            return value is not null ? (T) MemberwiseCloneDelegate.Invoke(value) : default!;
         }
 
         [return: NotNullIfNotNull("value")]

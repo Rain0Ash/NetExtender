@@ -10,6 +10,27 @@ namespace NetExtender.Utilities.Types
 {
     public static class MutexUtilities
     {
+        public static Boolean TryWaitOne(this Mutex mutex)
+        {
+            if (mutex is null)
+            {
+                throw new ArgumentNullException(nameof(mutex));
+            }
+            
+            try
+            {
+                return mutex.WaitOne();
+            }
+            catch (AbandonedMutexException)
+            {
+                return true;
+            }
+            catch (InvalidOperationException)
+            {
+                return false;
+            }
+        }
+        
         public static Boolean TryWaitOne(this Mutex mutex, Int32 timeout)
         {
             if (mutex is null)

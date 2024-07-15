@@ -169,11 +169,11 @@ namespace NetExtender.ImageSharp.Utilities
                         array[coefficient] += values[i] * Math.Cos((2.0 * i + 1.0) * coefficient * Math.PI / (2.0 * Size));
                     }
 
-                    array[coefficient] *= MathUtilities.DoubleConstants.Sqrt2 / 8;
+                    array[coefficient] *= MathUtilities.Constants.Double.Sqrt2 / 8;
 
                     if (coefficient == 0)
                     {
-                        array[coefficient] *= MathUtilities.DoubleConstants.InvertedSqrt2;
+                        array[coefficient] *= MathUtilities.Constants.Double.InvertedSqrt2;
                     }
                 }
 

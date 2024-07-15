@@ -1,10 +1,12 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using NetExtender.Types.Handlers.Chain.Interfaces;
+using NetExtender.Types.Monads;
+using NetExtender.Utilities.Types;
 
 namespace NetExtender.Initializer.Types.Handlers.Chain
 {
-    public class DynamicChainHandler<T> : ChainHandler<T>
+    public readonly struct DynamicChainHandler<T> : IChainHandler<T>, IEquatable<DynamicChainHandler<T>>, IEquatable<Func<T, T>>
     {
         [return: NotNullIfNotNull("value")]
         public static implicit operator DynamicChainHandler<T>?(Func<T, T>? value)
@@ -12,16 +14,47 @@ namespace NetExtender.Initializer.Types.Handlers.Chain
             return value is not null ? new DynamicChainHandler<T>(value) : null;
         }
         
-        protected Func<T, T> Handler { get; }
+        private static Func<T, T> Default { get; } = static value => value;
+        private Maybe<Func<T, T>> Handler { get; }
         
         public DynamicChainHandler(Func<T, T> handler)
         {
             Handler = handler ?? throw new ArgumentNullException(nameof(handler));
         }
         
-        public override T Handle(T value)
+        public T Handle(T value)
         {
-            return Handler.Invoke(value);
+            return Handler.Unwrap(Default).Invoke(value);
+        }
+        
+        public override Int32 GetHashCode()
+        {
+            return Handler.GetHashCode();
+        }
+        
+        public override Boolean Equals(Object? other)
+        {
+            return other switch
+            {
+                DynamicChainHandler<T> handler => Equals(handler),
+                Func<T, T> handler => Equals(handler),
+                _ => false
+            };
+        }
+        
+        public Boolean Equals(DynamicChainHandler<T> other)
+        {
+            return Handler.Equals(other.Handler);
+        }
+        
+        public Boolean Equals(Func<T, T>? other)
+        {
+            return Handler.Equals(other);
+        }
+        
+        public override String? ToString()
+        {
+            return Handler.ToString();
         }
     }
     

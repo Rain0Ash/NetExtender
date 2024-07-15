@@ -323,7 +323,7 @@ namespace NetExtender.Types.Collections
         {
             get
             {
-                return Math.Max(Math.Min(Size, Count - Index * Size), 0);
+                return Math.Abs((Int32) Math.Ceiling(Count / (Double) Size));
             }
         }
         
@@ -331,7 +331,7 @@ namespace NetExtender.Types.Collections
         {
             get
             {
-                return Math.Abs((Int32) Math.Ceiling(Count / (Double) Size));
+                return Math.Max(Math.Min(Size, Count - Index * Size), 0);
             }
         }
         
@@ -618,15 +618,16 @@ namespace NetExtender.Types.Collections
             {
                 get
                 {
-                    return Math.Max(Math.Min(Size, Count - Index * Size), 0);
+                    return Math.Abs((Int32) Math.Ceiling(Count / (Double) Size));
                 }
             }
             
+            //TODO: fix, неправильное количество на странице
             public sealed override Int32 Items
             {
                 get
                 {
-                    return Math.Abs((Int32) Math.Ceiling(Count / (Double) Size));
+                    return Math.Max(Math.Min(Size, Count - Index * Size), 0);
                 }
             }
             
@@ -764,7 +765,7 @@ namespace NetExtender.Types.Collections
             public Int32 IndexOf(T item)
             {
                 Int32 start = Index * Size;
-                for (Int32 i = start; i < start + Items; i++)
+                for (Int32 i = start; i < start + Items - 1; i++)
                 {
                     if (EqualityComparer<T>.Default.Equals(Internal[i], item))
                     {

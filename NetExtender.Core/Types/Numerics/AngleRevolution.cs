@@ -13,7 +13,7 @@ namespace NetExtender.Types.Numerics
         /// <summary>
         /// Represents the zero <see cref="AngleRevolution"/> value (0 degrees).
         /// </summary>
-        public static AngleRevolution Zero { get; } = new AngleRevolution(AngleUtilities.DoubleRevolution.Zero);
+        public static AngleRevolution Zero { get; } = new AngleRevolution(AngleUtilities.Revolution.Double.Zero);
         
         /// <summary>
         /// Represents the golden <see cref="AngleRevolution"/> value (~137.508 degrees).
@@ -23,22 +23,22 @@ namespace NetExtender.Types.Numerics
         /// <summary>
         /// Represents the quarter <see cref="AngleRevolution"/> value (90 degrees).
         /// </summary>
-        public static AngleRevolution Quarter { get; } = new AngleRevolution(AngleUtilities.DoubleRevolution.Quarter);
+        public static AngleRevolution Quarter { get; } = new AngleRevolution(AngleUtilities.Revolution.Double.Quarter);
 
         /// <summary>
         /// Represents the straight <see cref="AngleRevolution"/> value (180 degrees).
         /// </summary>
-        public static AngleRevolution Straight { get; } = new AngleRevolution(AngleUtilities.DoubleRevolution.Straight);
+        public static AngleRevolution Straight { get; } = new AngleRevolution(AngleUtilities.Revolution.Double.Straight);
         
         /// <summary>
         /// Represents the three quarter <see cref="AngleRevolution"/> value (270 degrees).
         /// </summary>
-        public static AngleRevolution ThreeQuarter { get; } = new AngleRevolution(AngleUtilities.DoubleRevolution.ThreeQuarter);
+        public static AngleRevolution ThreeQuarter { get; } = new AngleRevolution(AngleUtilities.Revolution.Double.ThreeQuarter);
 
         /// <summary>
         /// Represents the full <see cref="AngleRevolution"/> value (360 degrees).
         /// </summary>
-        public static AngleRevolution Full { get; } = new AngleRevolution(AngleUtilities.DoubleRevolution.Full);
+        public static AngleRevolution Full { get; } = new AngleRevolution(AngleUtilities.Revolution.Double.Full);
 
         /// <summary>
         /// Represents the smallest possible value of a <see cref="AngleRevolution"/>.

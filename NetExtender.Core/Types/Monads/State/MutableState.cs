@@ -10,13 +10,23 @@ using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Monads
 {
-    public class NotifyMutableState<T> : MutableState<T>
+    public class NotifyState<T> : MutableState<T>
     {
-        public new static NotifyMutableState<T?> New
+        public static implicit operator NotifyState<T>(T value)
+        {
+            return new NotifyState<T>(value);
+        }
+        
+        public static implicit operator NotifyState<T>(State<T> value)
+        {
+            return new NotifyState<T>(value);
+        }
+        
+        public new static NotifyState<T?> New
         {
             get
             {
-                return new NotifyMutableState<T?>(default(T));
+                return new NotifyState<T?>(default(T));
             }
         }
         
@@ -68,19 +78,19 @@ namespace NetExtender.Types.Monads
             }
         }
 
-        public NotifyMutableState(T value)
+        public NotifyState(T value)
             : base(value)
         {
         }
 
-        public NotifyMutableState(State<T> value)
+        public NotifyState(State<T> value)
             : base(value)
         {
         }
 
-        public override NotifyMutableState<T> Clone()
+        public override NotifyState<T> Clone()
         {
-            return new NotifyMutableState<T>(Internal);
+            return new NotifyState<T>(Internal);
         }
     }
     
@@ -340,14 +350,14 @@ namespace NetExtender.Types.Monads
             _internal = value;
         }
 
-        protected virtual void OnPropertyChanging([CallerMemberName] String? propertyName = null)
+        protected void OnPropertyChanging([CallerMemberName] String? property = null)
         {
-            PropertyChanging?.Invoke(this, new PropertyChanging(propertyName));
+            PropertyChanging?.Invoke(this, new PropertyChanging(property));
         }
 
-        protected virtual void OnPropertyChanged([CallerMemberName] String? propertyName = null)
+        protected void OnPropertyChanged([CallerMemberName] String? property = null)
         {
-            PropertyChanged?.Invoke(this, new PropertyChanged(propertyName));
+            PropertyChanged?.Invoke(this, new PropertyChanged(property));
         }
 
         public Boolean HasDifference()
