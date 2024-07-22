@@ -9,17 +9,24 @@ using NetExtender.Domains.AspNetCore.Service.Applications;
 using NetExtender.Domains.AspNetCore.Service.Builder;
 using NetExtender.Domains.AspNetCore.Service.View;
 using NetExtender.Domains.Builder.Interfaces;
-using NetExtender.Domains.Initializer;
+using NetExtender.Types.Middlewares;
 
-namespace NetExtender.Domains.AspNetCore.Service.Initializer
+namespace NetExtender.Domains.Initializer
 {
     public abstract class AspNetCoreWindowsServiceApplicationInitializer<T> : ApplicationInitializer<AspNetCoreWindowsServiceApplication, AspNetCoreWindowsServiceView<T>> where T : class, IHost, new()
     {
+        public abstract class Middleware<TBuilder> : NetExtender.Types.Middlewares.Middleware<TBuilder> where TBuilder : AspNetCoreWindowsServiceBuilder<T>
+        {
+        }
     }
     
     public abstract class AspNetCoreWindowsServiceApplicationInitializer<T, TBuilder> : ApplicationInitializer<AspNetCoreWindowsServiceApplication, AspNetCoreWindowsServiceView<T, TBuilder>> where T : class, IHost, new() where TBuilder : IApplicationBuilder<T>, new()
     {
         public abstract class Builder : AspNetCoreWindowsServiceBuilder<T>
+        {
+        }
+        
+        public abstract class Middleware : Middleware<TBuilder>
         {
         }
     }
@@ -29,15 +36,26 @@ namespace NetExtender.Domains.AspNetCore.Service.Initializer
         public abstract class Builder : AspNetCoreWindowsServiceBuilder<T, TBuilder>
         {
         }
+        
+        public abstract class Middleware : Middleware<TBuilder>
+        {
+        }
     }
     
     public abstract class AspNetCoreWindowsServiceWebApplicationInitializer<T> : ApplicationInitializer<AspNetCoreWindowsServiceWebApplication, AspNetCoreWindowsServiceWebView<T>> where T : class, IWebHost, new()
     {
+        public abstract class Middleware<TBuilder> : NetExtender.Types.Middlewares.Middleware<TBuilder> where TBuilder : AspNetCoreWindowsServiceWebBuilder<T>
+        {
+        }
     }
     
     public abstract class AspNetCoreWindowsServiceWebApplicationInitializer<T, TBuilder> : ApplicationInitializer<AspNetCoreWindowsServiceWebApplication, AspNetCoreWindowsServiceWebView<T, TBuilder>> where T : class, IWebHost, new() where TBuilder : IApplicationBuilder<T>, new()
     {
         public abstract class Builder : AspNetCoreWindowsServiceWebBuilder<T>
+        {
+        }
+        
+        public abstract class Middleware : Middleware<TBuilder>
         {
         }
     }
@@ -47,11 +65,19 @@ namespace NetExtender.Domains.AspNetCore.Service.Initializer
         public abstract class Builder : AspNetCoreWindowsServiceWebBuilder<T, TBuilder>
         {
         }
+        
+        public abstract class Middleware : Middleware<TBuilder>
+        {
+        }
     }
     
     public abstract class AspNetCoreWindowsServiceWebApplicationWrapperInitializer<TBuilder> : AspNetCoreWindowsServiceApplicationInitializer<WebApplication, WebApplicationBuilderWrapper, TBuilder> where TBuilder : IApplicationBuilder<WebApplication>, new()
     {
         public new abstract class Builder : AspNetCoreWindowsServiceWebApplicationBuilder
+        {
+        }
+        
+        public new abstract class Middleware : Middleware<TBuilder>
         {
         }
     }

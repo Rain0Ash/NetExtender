@@ -86,7 +86,7 @@ namespace NetExtender.Domains.WindowsPresentation.AspNetCore.Builder
 
     public abstract class WindowsPresentationAspNetCoreBuilder : ApplicationBuilder<WindowsPresentationAspNetCoreContext>
     {
-        public Boolean UseDefaultHostBuilder { get; init; } = true;
+        public virtual Boolean UseDefaultHostBuilder { get; init; } = true;
         
         protected abstract Window Window(ImmutableArray<String> arguments);
         
@@ -197,7 +197,7 @@ namespace NetExtender.Domains.WindowsPresentation.AspNetCore.Builder
                 throw new ArgumentNullException(nameof(builder));
             }
 
-            return builder.Build() is IWebHost application ? Host(application) : throw new InvalidOperationException();
+            return builder.Build() is { } application ? Host(application) : throw new InvalidOperationException();
         }
 
         protected virtual IWebHost Host(IWebHost application)

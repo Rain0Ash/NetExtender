@@ -4,34 +4,82 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using Microsoft.Extensions.DependencyInjection;
-using NetExtender.AspNetCore.Types.DependencyInjection.Interfaces;
+using NetExtender.DependencyInjection.Events;
+using NetExtender.DependencyInjection.Exceptions;
+using NetExtender.DependencyInjection.Interfaces;
 using NetExtender.Types.Collections;
 using NetExtender.Types.Collections.Interfaces;
 using NetExtender.Utilities.Types;
 
-namespace NetExtender.AspNetCore.Types.DependencyInjection
+namespace NetExtender.DependencyInjection
 {
     public class DynamicServiceProvider : IObservableServiceProvider, ISuppressObservableCollection<ServiceDescriptor>
     {
+        public event ServiceProviderChangedEventHandler? Changed;
         protected ISuppressObservableCollection<ServiceDescriptor> Collection { get; }
         
         public event NotifyCollectionChangedEventHandler? CollectionChanged;
         public event PropertyChangingEventHandler? PropertyChanging;
         public event PropertyChangedEventHandler? PropertyChanged;
         
-        private IServiceProvider? _provider;
+        private ServiceProvider? _provider;
         public IServiceProvider Provider
         {
             get
             {
                 lock (SyncRoot)
                 {
-                    return _provider ?? this.RaiseAndSetIfChanged(ref _provider, new ServiceProvider(Build().BuildServiceProvider(Options)))!;
+                    return _provider ?? this.RaiseAndSetIfChanged(ref _provider, new ServiceProvider(Build(Build())) { IsStable = IsStable } )!;
                 }
             }
         }
 
         public ServiceProviderOptions? Options { get; init; }
+        
+        private Boolean _stable;
+        public Boolean IsStable
+        {
+            get
+            {
+                lock (SyncRoot)
+                {
+                    return _provider?.IsStable ?? _stable;
+                }
+            }
+            set
+            {
+                lock (SyncRoot)
+                {
+                    if (_provider is null)
+                    {
+                        this.RaiseAndSetIfChanged(ref _stable, value);
+                        return;
+                    }
+                    
+                    _provider.IsStable = value;
+                    this.RaiseAndSetIfChanged(ref _stable, _provider.IsStable);
+                }
+            }
+        }
+        
+        private Boolean _final;
+        public Boolean IsFinal
+        {
+            get
+            {
+                lock (SyncRoot)
+                {
+                    return _final;
+                }
+            }
+            set
+            {
+                lock (SyncRoot)
+                {
+                    this.RaiseAndSetIfChanged(ref _final, value);
+                }
+            }
+        }
         
         public Boolean IsAllowSuppress
         {
@@ -79,7 +127,7 @@ namespace NetExtender.AspNetCore.Types.DependencyInjection
         {
             get
             {
-                return Collection.IsReadOnly;
+                return _final || Collection.IsReadOnly;
             }
         }
 
@@ -89,6 +137,8 @@ namespace NetExtender.AspNetCore.Types.DependencyInjection
             Collection.CollectionChanged += OnCollectionChanged;
             Collection.PropertyChanging += OnPropertyChanging;
             Collection.PropertyChanged += OnPropertyChanged;
+            
+            PropertyChanged += OnProviderChanged;
         }
         
         public DynamicServiceProvider(IEnumerable<ServiceDescriptor> services)
@@ -104,7 +154,11 @@ namespace NetExtender.AspNetCore.Types.DependencyInjection
         private void OnCollectionChanged(Object? sender, NotifyCollectionChangedEventArgs args)
         {
             CollectionChanged?.Invoke(this, args);
-            Reset();
+            
+            if (_provider is not null && !_final)
+            {
+                Reset();
+            }
         }
         
         private void OnPropertyChanging(Object? sender, PropertyChangingEventArgs args)
@@ -117,42 +171,75 @@ namespace NetExtender.AspNetCore.Types.DependencyInjection
             PropertyChanged?.Invoke(this, args);
         }
         
-        private ServiceCollection Build()
+        private void OnProviderChanged(Object? sender, PropertyChangedEventArgs args)
+        {
+            if (args.PropertyName == nameof(Provider))
+            {
+                Changed?.Invoke(this, new ServiceProviderEventArgs(() => Provider));
+            }
+        }
+        
+        protected virtual ServiceCollection Build()
         {
             ServiceCollection collection = new ServiceCollection();
             collection.AddRange(Collection);
             return collection;
         }
         
+        protected virtual IServiceProvider Build(ServiceCollection collection)
+        {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+            
+            return Options is not null ? collection.BuildServiceProvider(Options) : collection.BuildServiceProvider();
+        }
+        
         public IServiceProvider Rebuild()
         {
+            if (_provider is not null && _final)
+            {
+                throw new ServiceProviderFinalException();
+            }
+            
             lock (SyncRoot)
             {
-                if (_provider is ServiceProvider provider)
+                if (_provider is { } provider)
                 {
                     provider.Dispose();
                 }
 
-                return this.RaiseAndSetIfChanged(ref _provider, new ServiceProvider(Build().BuildServiceProvider(Options)), nameof(Provider))!;
+                return this.RaiseAndSetIfChanged(ref _provider, new ServiceProvider(Build(Build())), nameof(Provider))!;
             }
         }
 
         public void Reset()
         {
+            if (_provider is not null && _final)
+            {
+                throw new ServiceProviderFinalException();
+            }
+            
             lock (SyncRoot)
             {
-                if (_provider is ServiceProvider provider)
+                if (_provider is { } provider)
                 {
                     provider.Dispose();
                 }
 
-                this.RaiseAndSetIfChanged(ref _provider, (IServiceProvider?) null, nameof(Provider));
+                this.RaiseAndSetIfChanged(ref _provider, (ServiceProvider?) null, nameof(Provider));
             }
         }
         
-        public Object? GetService(Type serviceType)
+        public Object? GetService(Type service)
         {
-            return Provider.GetService(serviceType);
+            if (service is null)
+            {
+                throw new ArgumentNullException(nameof(service));
+            }
+            
+            return Provider.GetService(service);
         }
         
         public Boolean Contains(ServiceDescriptor item)
@@ -182,6 +269,11 @@ namespace NetExtender.AspNetCore.Types.DependencyInjection
                 throw new ArgumentNullException(nameof(item));
             }
             
+            if (_provider is not null && _final)
+            {
+                throw new ServiceProviderFinalException();
+            }
+            
             Collection.Add(item);
         }
         
@@ -192,11 +284,21 @@ namespace NetExtender.AspNetCore.Types.DependencyInjection
                 throw new ArgumentNullException(nameof(item));
             }
             
+            if (_provider is not null && _final)
+            {
+                throw new ServiceProviderFinalException();
+            }
+            
             Collection.Insert(index, item);
         }
         
         public void Move(Int32 oldIndex, Int32 newIndex)
         {
+            if (_provider is not null && _final)
+            {
+                throw new ServiceProviderFinalException();
+            }
+            
             Collection.Move(oldIndex, newIndex);
         }
         
@@ -207,16 +309,31 @@ namespace NetExtender.AspNetCore.Types.DependencyInjection
                 throw new ArgumentNullException(nameof(item));
             }
             
+            if (_provider is not null && _final)
+            {
+                throw new ServiceProviderFinalException();
+            }
+            
             return Collection.Remove(item);
         }
         
         public void RemoveAt(Int32 index)
         {
+            if (_provider is not null && _final)
+            {
+                throw new ServiceProviderFinalException();
+            }
+            
             Collection.RemoveAt(index);
         }
         
         public void Clear()
         {
+            if (_provider is not null && _final)
+            {
+                throw new ServiceProviderFinalException();
+            }
+            
             Collection.Clear();
         }
         
@@ -224,7 +341,7 @@ namespace NetExtender.AspNetCore.Types.DependencyInjection
         {
             if (array is not ServiceDescriptor[] services)
             {
-                throw new ArgumentException($"Array is not {nameof(ServiceDescriptor)} array", nameof(array));
+                throw new ArgumentException($"Array is not {nameof(ServiceDescriptor)} array.", nameof(array));
             }
             
             CopyTo(services, index);
@@ -250,6 +367,11 @@ namespace NetExtender.AspNetCore.Types.DependencyInjection
             return Collection.Suppress();
         }
         
+        void IChangeableServiceProvider.Final()
+        {
+            IsFinal = true;
+        }
+        
         public ServiceDescriptor this[Int32 index]
         {
             get
@@ -258,6 +380,11 @@ namespace NetExtender.AspNetCore.Types.DependencyInjection
             }
             set
             {
+                if (_provider is not null && _final)
+                {
+                    throw new ServiceProviderFinalException();
+                }
+                
                 Collection[index] = value;
             }
         }
@@ -265,6 +392,8 @@ namespace NetExtender.AspNetCore.Types.DependencyInjection
         protected sealed class ServiceProvider : IServiceProvider, IDisposable
         {
             public IServiceProvider Provider { get; }
+            public Boolean IsStable { get; set; }
+            
             private Boolean _disposed;
             
             public ServiceProvider(IServiceProvider provider)
@@ -274,7 +403,7 @@ namespace NetExtender.AspNetCore.Types.DependencyInjection
             
             public Object? GetService(Type serviceType)
             {
-                if (_disposed)
+                if (!IsStable && _disposed)
                 {
                     throw new ObjectDisposedException(nameof(ServiceProvider));
                 }

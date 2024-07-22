@@ -4,7 +4,7 @@
 using System;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace NetExtender.Utilities.AspNetCore.Types
+namespace NetExtender.Utilities.Types
 {
     public static partial class ServiceCollectionUtilities
     {

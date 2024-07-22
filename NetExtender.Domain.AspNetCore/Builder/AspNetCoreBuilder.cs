@@ -14,7 +14,7 @@ namespace NetExtender.Domains.AspNetCore.Builder
 {
     public class AspNetCoreBuilder : ApplicationBuilder<IHost>
     {
-        public Boolean UseDefaultHostBuilder { get; init; } = true;
+        public virtual Boolean UseDefaultHostBuilder { get; init; } = true;
         
         public override IHost Build(ImmutableArray<String> arguments)
         {
@@ -24,8 +24,14 @@ namespace NetExtender.Domains.AspNetCore.Builder
             {
                 builder.ConfigureDefaults(arguments.ToArray());
             }
+            
+            // ReSharper disable once VariableHidesOuterVariable
+            void Handler(IWebHostBuilder builder)
+            {
+                Build(builder);
+            }
 
-            return builder.ConfigureWebHostDefaults(Build).Build();
+            return builder.ConfigureWebHostDefaults(Handler).Build();
         }
 
         protected virtual void Build(IWebHostBuilder builder)
@@ -57,7 +63,7 @@ namespace NetExtender.Domains.AspNetCore.Builder
             
             return base.New<TType>(arguments);
         }
-        
+
         public override T Build(ImmutableArray<String> arguments)
         {
             return New(arguments);
@@ -101,7 +107,7 @@ namespace NetExtender.Domains.AspNetCore.Builder
                 throw new ArgumentNullException(nameof(builder));
             }
 
-            return builder.Build() is IWebHost application ? Build(application) : throw new InvalidOperationException();
+            return builder.Build() is { } application ? Build(application) : throw new InvalidOperationException();
         }
 
         protected virtual IWebHost Build(IWebHost application)

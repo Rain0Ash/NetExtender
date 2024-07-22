@@ -9,7 +9,7 @@ using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Monads
 {
-    public sealed class ResettableLazy<T> : ILazy<T>
+    public class ResettableLazy<T> : IResettableLazy<T>
     {
         [return: NotNullIfNotNull("lazy")]
         public static implicit operator Lazy<T>?(ResettableLazy<T>? lazy)
@@ -18,7 +18,6 @@ namespace NetExtender.Types.Monads
         }
 
         private Lazy<T> Internal { get; set; }
-
         private LazyThreadSafetyMode Mode { get; }
 
         public T Value
@@ -76,29 +75,42 @@ namespace NetExtender.Types.Monads
             Internal = new Lazy<T>(valueFactory, Mode);
         }
 
-        public ResettableLazy<T> Reset()
+        public virtual ResettableLazy<T> Reset()
         {
-            lock (Internal)
-            {
-                Internal = new Lazy<T>(Mode);
-            }
-
+            Internal = new Lazy<T>(Mode);
             return this;
         }
-
-        public ResettableLazy<T> Reset(Func<T> valueFactory)
+        
+        IResettableLazy<T> IResettableLazy<T>.Reset()
         {
-            if (valueFactory is null)
-            {
-                throw new ArgumentNullException(nameof(valueFactory));
-            }
+            return Reset();
+        }
 
-            lock (Internal)
-            {
-                Internal = new Lazy<T>(valueFactory, Mode);
-            }
-
+        public virtual ResettableLazy<T> Reset(T value)
+        {
+            Internal = new Lazy<T>(() => value, Mode);
             return this;
+        }
+        
+        IResettableLazy<T> IResettableLazy<T>.Reset(T value)
+        {
+            return Reset(value);
+        }
+
+        public virtual ResettableLazy<T> Reset(Func<T> factory)
+        {
+            if (factory is null)
+            {
+                throw new ArgumentNullException(nameof(factory));
+            }
+            
+            Internal = new Lazy<T>(factory, Mode);
+            return this;
+        }
+        
+        IResettableLazy<T> IResettableLazy<T>.Reset(Func<T> factory)
+        {
+            return Reset(factory);
         }
     }
 }

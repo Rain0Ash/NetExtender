@@ -11,7 +11,7 @@ namespace NetExtender.Types.Comparers
         FullNameOrdinalIgnoreCase
     }
     
-    public abstract class AssemblyComparer : IComparer<Assembly>
+    public abstract class AssemblyComparer : IComparer<Assembly?>
     {
         public static implicit operator AssemblyComparer(AssemblyComparison value)
         {

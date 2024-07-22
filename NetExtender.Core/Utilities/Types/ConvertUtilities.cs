@@ -34,7 +34,9 @@ namespace NetExtender.Utilities.Types
     }
 
     public delegate String? StringConverter(Object? value, EscapeType escape, IFormatProvider? provider);
+    public delegate String? StringConverter<in T>(T? value, EscapeType escape, IFormatProvider? provider);
     public delegate String? StringFormatConverter(Object? value, EscapeType escape, String? format, IFormatProvider? provider);
+    public delegate String? StringFormatConverter<in T>(T? value, EscapeType escape, String? format, IFormatProvider? provider);
 
     [SuppressMessage("ReSharper", "UnusedParameter.Global")]
     public static class ConvertUtilities
@@ -477,47 +479,111 @@ namespace NetExtender.Utilities.Types
 
         #region ToString
 
+        private readonly struct StringConverterInfo<T>
+        {
+            public static implicit operator StringConverterInfo(StringConverterInfo<T> value)
+            {
+                return new StringConverterInfo(Convert(value.Handler), Convert(value.Format));
+            }
+            
+            private StringConverter<T> Handler { get; }
+            private StringFormatConverter<T> Format { get; }
+
+            public StringConverterInfo(StringConverter<T> handler, StringFormatConverter<T> format)
+            {
+                Handler = handler ?? throw new ArgumentNullException(nameof(handler));
+                Format = format ?? throw new ArgumentNullException(nameof(format));
+            }
+            
+            [return: NotNullIfNotNull("converter")]
+            private static StringConverter? Convert(StringConverter<T>? converter)
+            {
+                return converter is not null ? (@object, escape, provider) => converter((T?) @object, escape, provider) : null;
+            }
+            
+            [return: NotNullIfNotNull("converter")]
+            private static StringFormatConverter? Convert(StringFormatConverter<T>? converter)
+            {
+                return converter is not null ? (@object, escape, format, provider) => converter((T?) @object, escape, format, provider) : null;
+            }
+
+            public String? Convert(T? value, EscapeType escape, IFormatProvider? provider)
+            {
+                return Handler(value, escape, provider);
+            }
+
+            public String? Convert(T? value, EscapeType escape, String? format, IFormatProvider? provider)
+            {
+                return Format(value, escape, format, provider);
+            }
+        }
+        
         private readonly struct StringConverterInfo
         {
             private StringConverter Handler { get; }
             private StringFormatConverter Format { get; }
-
+            
             public StringConverterInfo(StringConverter handler, StringFormatConverter format)
             {
                 Handler = handler ?? throw new ArgumentNullException(nameof(handler));
                 Format = format ?? throw new ArgumentNullException(nameof(format));
             }
-
+            
             public String? Convert(Object? value, EscapeType escape, IFormatProvider? provider)
             {
                 return Handler(value, escape, provider);
             }
-
+            
             public String? Convert(Object? value, EscapeType escape, String? format, IFormatProvider? provider)
             {
                 return Format(value, escape, format, provider);
             }
         }
-
+        
         private static ConcurrentDictionary<Type, StringConverterInfo> StringConverters { get; } = new ConcurrentDictionary<Type, StringConverterInfo>();
-
-        public static Boolean RegisterStringHandler<T>(StringConverter handler)
+        
+        public static Boolean RegisterStringHandler(Type type, StringConverter handler)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+            
+            if (handler is null)
+            {
+                throw new ArgumentNullException(nameof(handler));
+            }
+            
+            String? Format(Object? value, EscapeType escape, String? _, IFormatProvider? provider)
+            {
+                return handler.Invoke(value, escape, provider);
+            }
+            
+            return RegisterStringHandler(type, handler, Format);
+        }
+        
+        public static Boolean RegisterStringHandler<T>(StringConverter<T> handler)
         {
             if (handler is null)
             {
                 throw new ArgumentNullException(nameof(handler));
             }
 
-            String? Format(Object? value, EscapeType escape, String? _, IFormatProvider? provider)
+            String? Format(T? value, EscapeType escape, String? _, IFormatProvider? provider)
             {
                 return handler.Invoke(value, escape, provider);
             }
 
-            return RegisterStringHandler<T>(handler, Format);
+            return RegisterStringHandler(handler, Format);
         }
 
-        public static Boolean RegisterStringHandler<T>(StringConverter handler, StringFormatConverter format)
+        public static Boolean RegisterStringHandler(Type type, StringConverter handler, StringFormatConverter format)
         {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+            
             if (handler is null)
             {
                 throw new ArgumentNullException(nameof(handler));
@@ -529,6 +595,23 @@ namespace NetExtender.Utilities.Types
             }
 
             StringConverterInfo info = new StringConverterInfo(handler, format);
+            StringConverters.AddOrUpdate(type, info, (_, _) => info);
+            return true;
+        }
+
+        public static Boolean RegisterStringHandler<T>(StringConverter<T> handler, StringFormatConverter<T> format)
+        {
+            if (handler is null)
+            {
+                throw new ArgumentNullException(nameof(handler));
+            }
+
+            if (format is null)
+            {
+                throw new ArgumentNullException(nameof(format));
+            }
+
+            StringConverterInfo<T> info = new StringConverterInfo<T>(handler, format);
             StringConverters.AddOrUpdate(typeof(T), info, (_, _) => info);
             return true;
         }
@@ -920,7 +1003,7 @@ namespace NetExtender.Utilities.Types
                                     result = default;
                                     return false;
                                 case IMaybe maybe:
-                                    result = GetString(maybe.Value, escape, provider);
+                                    result = maybe.HasValue ? GetString(maybe.Value, escape, provider) : GetString(default(String), escape, provider);
                                     return true;
                                 default:
                                 {
@@ -947,7 +1030,7 @@ namespace NetExtender.Utilities.Types
                                     result = default;
                                     return false;
                                 case IMaybe maybe:
-                                    result = GetString(maybe.Value, escape, format, provider);
+                                    result = maybe.HasValue ? GetString(maybe.Value, escape, format, provider) : GetString(default(String), escape, format, provider);
                                     return true;
                                 default:
                                 {

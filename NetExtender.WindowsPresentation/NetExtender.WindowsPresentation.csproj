@@ -23,7 +23,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\NetExtender.Windows\NetExtender.Windows.csproj" />
+        <ProjectReference Include="..\NetExtender.Windows\NetExtender.Windows.csproj"/>
     </ItemGroup>
 
 </Project>

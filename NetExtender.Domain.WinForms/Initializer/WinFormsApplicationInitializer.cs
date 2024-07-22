@@ -5,14 +5,14 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows.Forms;
 using NetExtender.Domains.Builder.Interfaces;
-using NetExtender.Domains.Initializer;
 using NetExtender.Domains.WinForms.Applications;
 using NetExtender.Domains.WinForms.Builder;
 using NetExtender.Domains.WinForms.View;
 using NetExtender.Initializer;
 using NetExtender.Types.Exceptions;
+using NetExtender.Types.Middlewares;
 
-namespace NetExtender.Domains.WinForms.Initializer
+namespace NetExtender.Domains.Initializer
 {
     public abstract class WinFormsApplicationInitializer : ApplicationInitializer
     {
@@ -125,11 +125,18 @@ namespace NetExtender.Domains.WinForms.Initializer
     
     public abstract class WinFormsApplicationInitializer<T> : ApplicationInitializer<WinFormsApplication, WinFormsView<T>> where T : Form, new()
     {
+        public abstract class Middleware<TBuilder> : NetExtender.Types.Middlewares.Middleware<TBuilder> where TBuilder : WinFormsBuilder<T>
+        {
+        }
     }
     
     public abstract class WinFormsApplicationInitializer<T, TBuilder> : ApplicationInitializer<WinFormsApplication, WinFormsView<T, TBuilder>> where T : Form where TBuilder : IApplicationBuilder<T>, new()
     {
         public abstract class Builder : WinFormsBuilder<T>
+        {
+        }
+        
+        public abstract class Middleware : Middleware<TBuilder>
         {
         }
     }

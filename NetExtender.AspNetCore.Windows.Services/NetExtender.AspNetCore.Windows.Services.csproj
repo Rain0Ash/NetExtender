@@ -21,8 +21,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\NetExtender.AspNetCore\NetExtender.AspNetCore.csproj" />
-      <ProjectReference Include="..\NetExtender.Windows.Services\NetExtender.Windows.Services.csproj" />
+        <ProjectReference Include="..\NetExtender.AspNetCore\NetExtender.AspNetCore.csproj"/>
+        <ProjectReference Include="..\NetExtender.Windows.Services\NetExtender.Windows.Services.csproj"/>
     </ItemGroup>
 
 </Project>

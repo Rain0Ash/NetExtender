@@ -5,14 +5,14 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 using NetExtender.Domains.Builder.Interfaces;
-using NetExtender.Domains.Initializer;
 using NetExtender.Domains.WindowsPresentation.Applications;
 using NetExtender.Domains.WindowsPresentation.Builder;
 using NetExtender.Domains.WindowsPresentation.View;
 using NetExtender.Initializer;
 using NetExtender.Types.Exceptions;
+using NetExtender.Types.Middlewares;
 
-namespace NetExtender.Domains.WindowsPresentation.Initializer
+namespace NetExtender.Domains.Initializer
 {
     public abstract class WindowsPresentationApplicationInitializer : ApplicationInitializer
     {
@@ -125,6 +125,9 @@ namespace NetExtender.Domains.WindowsPresentation.Initializer
     
     public abstract class WindowsPresentationApplicationInitializer<T> : ApplicationInitializer<WindowsPresentationApplication, WindowsPresentationView<T>> where T : Window, new()
     {
+        public abstract class Middleware<TBuilder> : NetExtender.Types.Middlewares.Middleware<TBuilder> where TBuilder : WindowsPresentationBuilder<T>
+        {
+        }
     }
     
     public abstract class WindowsPresentationApplicationInitializer<T, TBuilder> : WindowsPresentationApplicationInitializer<T, TBuilder, Application> where T : Window where TBuilder : IApplicationBuilder<T>, new()
@@ -132,11 +135,19 @@ namespace NetExtender.Domains.WindowsPresentation.Initializer
         public new abstract class Builder : WindowsPresentationApplicationInitializer<T, TBuilder, Application>.Builder
         {
         }
+        
+        public new abstract class Middleware : Middleware<TBuilder>
+        {
+        }
     }
 
     public abstract class WindowsPresentationApplicationInitializer<T, TBuilder, TApplication> : ApplicationInitializer<WindowsPresentationApplication<TApplication>, WindowsPresentationView<T, TBuilder>> where T : Window where TBuilder : IApplicationBuilder<T>, new() where TApplication : Application, new()
     {
         public abstract class Builder : WindowsPresentationBuilder<T>
+        {
+        }
+        
+        public abstract class Middleware : Middleware<TBuilder>
         {
         }
     }

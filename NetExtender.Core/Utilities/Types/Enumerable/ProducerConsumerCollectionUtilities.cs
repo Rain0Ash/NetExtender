@@ -10,7 +10,7 @@ using NetExtender.Types.Observers;
 
 namespace NetExtender.Utilities.Types
 {
-    public static class ProducerConsumerCollectionUtilitities
+    public static class ProducerConsumerCollectionUtilities
     {
         public static IEnumerable<T> GetConsumingEnumerable<T>(this IProducerConsumerCollection<T> collection)
         {

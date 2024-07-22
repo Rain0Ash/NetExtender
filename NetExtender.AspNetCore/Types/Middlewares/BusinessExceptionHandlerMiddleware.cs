@@ -12,11 +12,11 @@ namespace NetExtender.AspNetCore.Types.Middlewares
     public class BusinessExceptionHandlerMiddleware : ExceptionHandlerMiddleware<BusinessException>
     {
         public BusinessExceptionHandlerMiddleware(RequestDelegate next)
-            : base(next, Internal)
+            : base(next, Handle)
         {
         }
 
-        private static Boolean Internal(BusinessException exception, out HttpStatusCode? code)
+        private static Boolean Handle(BusinessException exception, out HttpStatusCode? code)
         {
             code = exception.Status ?? HttpStatusCode.InternalServerError;
             return true;

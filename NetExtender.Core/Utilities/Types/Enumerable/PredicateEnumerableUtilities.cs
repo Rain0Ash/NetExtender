@@ -232,7 +232,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return source.Where(item => item is not null)!;
+            return source.Where(static item => item is not null)!;
         }
 
         public static IEnumerable<T?> WhereNotNull<T>(this IEnumerable<T?> source) where T : struct
@@ -242,7 +242,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return source.Where(item => item.HasValue);
+            return source.Where(static item => item.HasValue);
         }
 
         public static IEnumerable<T> WhereNotNull<T, TItem>(this IEnumerable<T?> source, Func<T, TItem> predicate)

@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -23,8 +22,8 @@ using NetExtender.Types.Attributes;
 using NetExtender.Types.Comparers;
 using NetExtender.Types.Exceptions;
 using NetExtender.Types.Monads;
+using NetExtender.Types.Monads.Interfaces;
 using NetExtender.Types.Reflection;
-using NetExtender.Utilities.Numerics;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Utilities.Core
@@ -151,23 +150,34 @@ namespace NetExtender.Utilities.Core
         All = Name | Attribute | Optional | DefaultValueEquals
     }
 
+    [SuppressMessage("ReSharper", "ParameterHidesMember")]
     public static partial class ReflectionUtilities
     {
-        private static ResettableLazy<InheritResult> LazyInherit { get; } = new ResettableLazy<InheritResult>(InheritResult.Create, LazyThreadSafetyMode.ExecutionAndPublication);
-        
-        public static ImmutableDictionary<Type, ImmutableHashSet<Type>> Inherit
+        private static readonly IResettableLazy<InheritEvaluator> inherit = new ResettableLazy<InheritEvaluator>(InheritEvaluator.Create, LazyThreadSafetyMode.ExecutionAndPublication);
+        public static Inherit.Result Inherit
         {
             get
             {
-                return LazyInherit.Value.Type;
+                return inherit.Value;
             }
         }
         
-        public static ImmutableDictionary<Type, ImmutableDictionary<Assembly, ImmutableHashSet<Type>>> AssemblyInherit
+        private static readonly ConcurrentHashSet<Task> scanningset = new ConcurrentHashSet<Task>();
+        private static readonly ConcurrentBag<Task> scanningbag = new ConcurrentBag<Task>();
+        public static Int32 Scanning
         {
             get
             {
-                return LazyInherit.Value.Assembly;
+                return scanningset.Count;
+            }
+        }
+        
+        private static volatile Int32 assemblies;
+        public static Int32 Assemblies
+        {
+            get
+            {
+                return assemblies;
             }
         }
         
@@ -184,27 +194,59 @@ namespace NetExtender.Utilities.Core
             NullableAttribute = Type.GetType("System.Runtime.CompilerServices.NullableAttribute") ?? throw new InvalidInitializationException();
             NullableContextAttribute = Type.GetType("System.Runtime.CompilerServices.NullableContextAttribute") ?? throw new InvalidInitializationException();
             
-            HandleAssemblyInherit().ContinueWith(static _ => LazyInherit.Reset(InheritResult.Create));
+            Scan().ContinueWith(static _ =>
+            {
+                if (scanningset.Count <= 0)
+                {
+                    inherit.Reset(InheritEvaluator.Create);
+                }
+            });
             
             AppDomain.CurrentDomain.AssemblyLoad += OnAssemblyLoad;
         }
 
         private static async void OnAssemblyLoad(Object? sender, AssemblyLoadEventArgs args)
         {
-            await HandleAssemblyInherit(args.LoadedAssembly).ContinueWith(static _ => LazyInherit.Reset(InheritResult.Create));
-            
-            CallStaticInitializerAttributeInternal<StaticInitializerRequiredAttribute>(args.LoadedAssembly);
-
-            if (AssemblyLoadCallStaticConstructor)
+            Task task = Task.Run(async () =>
             {
-                CallStaticInitializerAttribute(args.LoadedAssembly);
-            }
+                await Scan(args.LoadedAssembly);
+                
+                CallStaticInitializerAttribute<StaticInitializerRequiredAttribute>(args.LoadedAssembly);
+                
+                if (AssemblyLoadCallStaticConstructor)
+                {
+                    CallStaticInitializerAttribute(args.LoadedAssembly);
+                }
+            });
+            
+            scanningset.Add(task);
+            scanningbag.Add(task);
+            
+            _ = task.ContinueWith(static task =>
+            {
+                scanningset.Remove(task);
+                Interlocked.Increment(ref assemblies);
+            });
+            
+            await Task.WhenAll(scanningbag).ContinueWith(static () =>
+            {
+                if (scanningset.Count <= 0)
+                {
+                    inherit.Reset(InheritEvaluator.Create);
+                }
+            });
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Func<TSource> New<TSource>()
         {
             return ExpressionStorage<TSource>.New;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Func<T, TSource> New<TSource, T>()
+        {
+            return ExpressionStorage<TSource, T>.New;
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -253,6 +295,18 @@ namespace NetExtender.Utilities.Core
         public static Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, TSource> New<TSource, T1, T2, T3, T4, T5, T6, T7, T8, T9>()
         {
             return ExpressionStorage<TSource, T1, T2, T3, T4, T5, T6, T7, T8, T9>.New;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Func<TFrom, TTo>? Assign<TFrom, TTo>()
+        {
+            return AssignStorage<TFrom, TTo>.Assign;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Func<TFrom, TTo>? Assign<TFrom, TTo>(Boolean simple)
+        {
+            return simple ? AssignStorage<TFrom, TTo>.Simple : AssignStorage<TFrom, TTo>.Assign;
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1819,43 +1873,103 @@ namespace NetExtender.Utilities.Core
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IEnumerable<Type> GetTypes(this IEnumerable<Assembly> assemblies)
+        public static IEnumerable<Type> GetTypes(this IEnumerable<Assembly?> source)
         {
-            if (assemblies is null)
+            if (source is null)
             {
-                throw new ArgumentNullException(nameof(assemblies));
+                throw new ArgumentNullException(nameof(source));
             }
 
-            return assemblies.SelectMany(static assembly => assembly.GetTypes());
+            return source.WhereNotNull().SelectMany(static assembly => assembly.GetTypes());
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<Type> GetInterfaces(this AppDomain domain)
+        {
+            if (domain is null)
+            {
+                throw new ArgumentNullException(nameof(domain));
+            }
+            
+            return domain.GetAssemblies().GetInterfaces();
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<Type> GetInterfaces(this Assembly assembly)
+        {
+            if (assembly is null)
+            {
+                throw new ArgumentNullException(nameof(assembly));
+            }
+
+            return assembly.GetTypes().Where(static type => type.IsInterface);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<Type> GetInterfaces(this IEnumerable<Assembly?> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.WhereNotNull().SelectMany(static assembly => assembly.GetInterfaces());
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String Name(this Assembly assembly)
         {
+            if (assembly is null)
+            {
+                throw new ArgumentNullException(nameof(assembly));
+            }
+            
             AssemblyName name = assembly.GetName();
             return name.Name ?? name.FullName;
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IEnumerable<String> Name(this IEnumerable<Assembly> assemblies)
+        public static IEnumerable<String> Name(this IEnumerable<Assembly?> source)
         {
-            if (assemblies is null)
+            if (source is null)
             {
-                throw new ArgumentNullException(nameof(assemblies));
+                throw new ArgumentNullException(nameof(source));
             }
             
-            return assemblies.Select(Name);
+            return source.WhereNotNull().Select(Name);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IEnumerable<String> FullName(this IEnumerable<Assembly> assemblies)
+        public static IEnumerable<String> FullName(this IEnumerable<Assembly?> source)
         {
-            if (assemblies is null)
+            if (source is null)
             {
-                throw new ArgumentNullException(nameof(assemblies));
+                throw new ArgumentNullException(nameof(source));
             }
             
-            return assemblies.Select(static assembly => assembly.GetName().FullName);
+            return source.WhereNotNull().Select(static assembly => assembly.GetName().FullName);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<String> Name(this IEnumerable<Type?> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            return source.WhereNotNull().Select(static type => type.Name);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<String> FullName(this IEnumerable<Type?> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            return source.WhereNotNull().Select(static type => type.FullName ?? type.Name);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -2026,9 +2140,10 @@ namespace NetExtender.Utilities.Core
             return $"{Path.GetFileName(frame.GetFileName())}::{method.DeclaringType?.FullName ?? String.Empty}.{method.Name} - Line {frame.GetFileLineNumber()}";
         }
 
-        public static class Domain
+        [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
+        public static class Custom
         {
-            public static IEnumerable<Assembly> CustomAssemblies
+            public static IEnumerable<Assembly> Assemblies
             {
                 get
                 {
@@ -2043,11 +2158,11 @@ namespace NetExtender.Utilities.Core
                 }
             }
 
-            public static IEnumerable<Type> CustomTypes
+            public static IEnumerable<Type> Types
             {
                 get
                 {
-                    return CustomAssemblies.GetTypes();
+                    return Assemblies.GetTypes();
                 }
             }
         }
@@ -2097,23 +2212,28 @@ namespace NetExtender.Utilities.Core
             return source.ForEach(Call).MaterializeIfNot(lazy);
         }
 
-        private static Assembly CallStaticInitializerAttributeInternal<TAttribute>(this Assembly assembly) where TAttribute : StaticInitializerAttribute, new()
+        private static Assembly CallStaticInitializerAttribute<TAttribute>(this Assembly assembly) where TAttribute : StaticInitializerAttribute, new()
         {
             if (assembly is null)
             {
                 throw new ArgumentNullException(nameof(assembly));
             }
 
-            static IEnumerable<TAttribute> Handler(Type type)
+            static IEnumerable<StaticInitializerAttribute> Handler(Type type)
             {
                 if (type is null)
                 {
                     throw new ArgumentNullException(nameof(type));
                 }
+                
+                IEnumerable<StaticInitializerAttribute> attributes = GetCustomAttributes<TAttribute>(type);
+                
+                if (typeof(TAttribute) == typeof(StaticInitializerRequiredAttribute))
+                {
+                    attributes = GetCustomAttributes<StaticInitializerNetExtenderAttribute>(type).Concat(attributes);
+                }
 
-                IEnumerable<TAttribute> attributes = GetCustomAttributes<TAttribute>(type);
-
-                foreach (TAttribute attribute in attributes)
+                foreach (StaticInitializerAttribute attribute in attributes)
                 {
                     if (!attribute.Active || !attribute.Platform.IsOSPlatform())
                     {
@@ -2132,9 +2252,10 @@ namespace NetExtender.Utilities.Core
 
             IEnumerable<Type> types = assembly.GetTypes()
                 .SelectMany(Handler)
-                .OrderByDescending(item => item.Priority)
-                .ThenBy(item => item.Type?.FullName)
-                .Select(item => item.Type)
+                .OrderByDescending(static attribute => attribute is StaticInitializerNetExtenderAttribute)
+                .ThenByDescending(static attribute => attribute.Priority)
+                .ThenBy(static attribute => attribute.Type?.FullName)
+                .Select(static attribute => attribute.Type)
                 .WhereNotNull()
                 .Distinct();
 
@@ -2152,7 +2273,7 @@ namespace NetExtender.Utilities.Core
         /// <param name="assembly">The assembly of which to call the static constructor.</param>
         public static Assembly CallStaticInitializerAttribute(this Assembly assembly)
         {
-            return CallStaticInitializerAttributeInternal<StaticInitializerAttribute>(assembly);
+            return CallStaticInitializerAttribute<StaticInitializerAttribute>(assembly);
         }
 
         public static IEnumerable<Assembly> CallStaticInitializerAttribute(this IEnumerable<Assembly> assemblies)
@@ -2177,17 +2298,17 @@ namespace NetExtender.Utilities.Core
 
         public static IEnumerable<Assembly> CallStaticInitializerAttribute()
         {
-            return CallStaticInitializerAttribute(Domain.CustomAssemblies);
+            return CallStaticInitializerAttribute(Custom.Assemblies);
         }
 
         internal static IEnumerable<Assembly> CallStaticInitializerRequiredAttribute()
         {
             static void Call(Assembly assembly)
             {
-                CallStaticInitializerAttributeInternal<StaticInitializerRequiredAttribute>(assembly);
+                CallStaticInitializerAttribute<StaticInitializerRequiredAttribute>(assembly);
             }
 
-            return Domain.CustomAssemblies.ForEach(Call).Materialize();
+            return Custom.Assemblies.ForEach(Call).Materialize();
         }
 
         /// <summary>

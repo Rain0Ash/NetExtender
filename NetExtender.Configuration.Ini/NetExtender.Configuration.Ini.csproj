@@ -21,9 +21,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\NetExtender.Configuration.File\NetExtender.Configuration.File.csproj" />
-      <ProjectReference Include="..\NetExtender.Configuration\NetExtender.Configuration.csproj" />
-      <ProjectReference Include="..\NetExtender.Serialization.Ini\NetExtender.Serialization.Ini.csproj" />
+        <ProjectReference Include="..\NetExtender.Configuration.File\NetExtender.Configuration.File.csproj"/>
+        <ProjectReference Include="..\NetExtender.Configuration\NetExtender.Configuration.csproj"/>
+        <ProjectReference Include="..\NetExtender.Serialization.Ini\NetExtender.Serialization.Ini.csproj"/>
     </ItemGroup>
 
 </Project>

@@ -27,7 +27,7 @@ namespace NetExtender.Domains.Interfaces
         public String ApplicationName { get; }
         public String ApplicationIdentifier { get; }
         public CultureInfo Culture { get; set; }
-        public Boolean AlreadyStarted { get; }
+        public Boolean HasAnotherInstance { get; }
 
         public new IDomain Run();
         public new Task<IDomain> RunAsync();

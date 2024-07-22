@@ -9,7 +9,7 @@ using NetExtender.Interfaces.Notify;
 using NetExtender.Types.Monads.Interfaces;
 using NetExtender.Utilities.Types;
 
-namespace NetExtender.Initializer.Types.Monads.Debouce
+namespace NetExtender.Types.Monads.Debouce
 {
     public class NotifyDebounce<T> : MutableDebounce<T>
     {

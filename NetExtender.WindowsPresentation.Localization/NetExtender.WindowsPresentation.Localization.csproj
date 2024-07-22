@@ -22,13 +22,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\NetExtender.Configuration.Property\NetExtender.Configuration.Property.csproj" />
-      <ProjectReference Include="..\NetExtender.Configuration\NetExtender.Configuration.csproj" />
-      <ProjectReference Include="..\NetExtender.Core\NetExtender.Core.csproj" />
-      <ProjectReference Include="..\NetExtender.Localization.Flags\NetExtender.Localization.Flags.csproj" />
-      <ProjectReference Include="..\NetExtender.Localization.Property\NetExtender.Localization.Property.csproj" />
-      <ProjectReference Include="..\NetExtender.Localization\NetExtender.Localization.csproj" />
-      <ProjectReference Include="..\NetExtender.WindowsPresentation\NetExtender.WindowsPresentation.csproj" />
+        <ProjectReference Include="..\NetExtender.Configuration.Property\NetExtender.Configuration.Property.csproj"/>
+        <ProjectReference Include="..\NetExtender.Configuration\NetExtender.Configuration.csproj"/>
+        <ProjectReference Include="..\NetExtender.Core\NetExtender.Core.csproj"/>
+        <ProjectReference Include="..\NetExtender.Localization.Flags\NetExtender.Localization.Flags.csproj"/>
+        <ProjectReference Include="..\NetExtender.Localization.Property\NetExtender.Localization.Property.csproj"/>
+        <ProjectReference Include="..\NetExtender.Localization\NetExtender.Localization.csproj"/>
+        <ProjectReference Include="..\NetExtender.WindowsPresentation\NetExtender.WindowsPresentation.csproj"/>
     </ItemGroup>
 
 </Project>

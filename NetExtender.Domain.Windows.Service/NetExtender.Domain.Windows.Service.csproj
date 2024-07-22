@@ -21,8 +21,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\NetExtender.Domain\NetExtender.Domain.csproj" />
-      <ProjectReference Include="..\NetExtender.Windows.Services\NetExtender.Windows.Services.csproj" />
+        <ProjectReference Include="..\NetExtender.Domain\NetExtender.Domain.csproj"/>
+        <ProjectReference Include="..\NetExtender.Windows.Services\NetExtender.Windows.Services.csproj"/>
     </ItemGroup>
 
 </Project>

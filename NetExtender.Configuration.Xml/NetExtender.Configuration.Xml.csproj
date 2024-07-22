@@ -21,11 +21,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\NetExtender.Configuration.Json\NetExtender.Configuration.Json.csproj" />
+        <ProjectReference Include="..\NetExtender.Configuration.Json\NetExtender.Configuration.Json.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Configuration" />
+        <Folder Include="Configuration"/>
     </ItemGroup>
 
 </Project>

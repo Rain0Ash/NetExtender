@@ -1,26 +1,38 @@
 using System;
+using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
-using NetExtender.Types.Multithreading;
+using NetExtender.Types.Threading;
+using NetExtender.Utilities.Types;
 
 namespace NetExtender.Utilities.Core
 {
     public static partial class ReflectionUtilities
     {
-        private readonly struct InheritResult
+        [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
+        private readonly struct InheritEvaluator
         {
+            public static implicit operator Inherit.Result(InheritEvaluator value)
+            {
+                return new Inherit.Result(value.Type, value.Attribute);
+            }
+            
             private static MutexSlim Mutex { get; } = new MutexSlim();
             private static SemaphoreSlim Semaphore { get; } = new SemaphoreSlim(1, 1);
             
-            // ReSharper disable once MemberHidesStaticFromOuterClass
             private static ConcurrentDictionary<Type, ConcurrentHashSet<Type>> Inherit { get; } = new ConcurrentDictionary<Type, ConcurrentHashSet<Type>>();
-            public ImmutableDictionary<Type, ImmutableHashSet<Type>> Type { get; private init; }
-            public ImmutableDictionary<Type, ImmutableDictionary<Assembly, ImmutableHashSet<Type>>> Assembly { get; private init; }
+            private static ConcurrentDictionary<Attribute, ConcurrentHashSet<Type>> AttributeInherit { get; } = new ConcurrentDictionary<Attribute, ConcurrentHashSet<Type>>();
+            private static ConcurrentDictionary<Type, ConcurrentHashSet<Type>> AttributeTypeInherit { get; } = new ConcurrentDictionary<Type, ConcurrentHashSet<Type>>();
+            
+            private Inherit Type { get; }
+            private AttributeInherit Attribute { get; }
             
             public Boolean IsEmpty
             {
@@ -30,43 +42,20 @@ namespace NetExtender.Utilities.Core
                 }
             }
             
-            public static InheritResult Create()
+            public InheritEvaluator(Inherit type, AttributeInherit attribute)
             {
-                static ImmutableHashSet<Type> Set(KeyValuePair<Type, ConcurrentHashSet<Type>> pair)
-                {
-                    return pair.Value.ToImmutableHashSet();
-                }
-                
-                static ImmutableDictionary<Assembly, ImmutableHashSet<Type>> Assemblies(KeyValuePair<Type, ImmutableHashSet<Type>> pair)
-                {
-                    static ImmutableHashSet<Type> Set(KeyValuePair<Assembly, ConcurrentHashSet<Type>> pair)
-                    {
-                        return pair.Value.ToImmutableHashSet();
-                    }
-                    
-                    ConcurrentDictionary<Assembly, ConcurrentHashSet<Type>> assemblies = new ConcurrentDictionary<Assembly, ConcurrentHashSet<Type>>();
-                    
-                    foreach (Type type in pair.Value)
-                    {
-                        assemblies.GetOrAdd(type.Assembly, static _ => new ConcurrentHashSet<Type>()).Add(type);
-                    }
-                    
-                    return assemblies.ToImmutableDictionary(static pair => pair.Key, Set);
-                }
-                
+                Type = type ?? throw new ArgumentNullException(nameof(type));
+                Attribute = attribute ?? throw new ArgumentNullException(nameof(attribute));
+            }
+            
+            public static InheritEvaluator Create()
+            {
                 Semaphore.Wait();
                 
                 try
                 {
                     Mutex.Wait();
-                    
-                    ImmutableDictionary<Type, ImmutableHashSet<Type>> immutable = Inherit.ToImmutableDictionary(static pair => pair.Key, Set);
-                    
-                    return new InheritResult
-                    {
-                        Type = immutable,
-                        Assembly = immutable.ToImmutableDictionary(static pair => pair.Key, Assemblies)
-                    };
+                    return new InheritEvaluator(new Inherit(Inherit), new AttributeInherit(AttributeTypeInherit, AttributeInherit));
                 }
                 finally
                 {
@@ -75,104 +64,456 @@ namespace NetExtender.Utilities.Core
                 }
             }
             
-            [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-            public static async ValueTask Handle(IEnumerable<Type> types)
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            private static ValueTask ScanHandler(Type type, CancellationToken token)
             {
-                if (types is null)
+                return type.IsInterface ? InterfaceScanHandler(type, token) : TypeScanHandler(type, token);
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+            private static ValueTask<Exception?> AttributeScanHandler(Type type, CancellationToken token)
+            {
+                if (token.IsCancellationRequested)
                 {
-                    throw new ArgumentNullException(nameof(types));
+                    return ValueTask.FromResult<Exception?>(null);
                 }
                 
-                static ValueTask Handler(Type type, CancellationToken token)
+                static IEnumerable<(Type Type, Attribute Attribute)> Get(Type type)
                 {
-                    if (token.IsCancellationRequested)
+                    return type.GetCustomAttributes(true).OfType<Attribute>().Select(static attribute => (attribute.GetType(), attribute));
+                }
+                
+                try
+                {
+                    foreach ((Type Type, Attribute Attribute) attribute in Get(type))
                     {
-                        return ValueTask.CompletedTask;
+                        AttributeInherit.GetOrAdd(attribute.Attribute, static _ => new ConcurrentHashSet<Type>()).Add(type);
+                        AttributeTypeInherit.GetOrAdd(attribute.Type, static _ => new ConcurrentHashSet<Type>()).Add(type);
+
+                        if (attribute.Type.IsGenericType)
+                        {
+                            AttributeTypeInherit.GetOrAdd(attribute.Type.GetGenericTypeDefinition(), static _ => new ConcurrentHashSet<Type>()).Add(type);
+                        }
                     }
                     
-                    if (type.BaseType is not { } @base)
+                    return ValueTask.FromResult<Exception?>(null);
+                }
+                catch (Exception exception)
+                {
+                    return ValueTask.FromResult<Exception?>(exception);
+                }
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+            private static async ValueTask TypeScanHandler(Type type, CancellationToken token)
+            {
+                if (token.IsCancellationRequested || type.IsInterface)
+                {
+                    return;
+                }
+                
+                foreach (Type @interface in type.GetInterfaces())
+                {
+                    Inherit.GetOrAdd(@interface, static _ => new ConcurrentHashSet<Type>()).Add(type);
+                    
+                    if (@interface.IsGenericType)
                     {
-                        return ValueTask.CompletedTask;
+                        Inherit.GetOrAdd(@interface.GetGenericTypeDefinition(), static _ => new ConcurrentHashSet<Type>()).Add(type);
+                    }
+                }
+                
+                await AttributeScanHandler(type, token);
+                
+                if (type.BaseType is not { } @base)
+                {
+                    return;
+                }
+
+                Inherit.GetOrAdd(@base, static _ => new ConcurrentHashSet<Type>()).Add(type);
+                
+                if (@base.IsGenericType)
+                {
+                    Inherit.GetOrAdd(@base.GetGenericTypeDefinition(), static _ => new ConcurrentHashSet<Type>()).Add(type);
+                }
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+            private static async ValueTask InterfaceScanHandler(Type type, CancellationToken token)
+            {
+                if (token.IsCancellationRequested || !type.IsInterface)
+                {
+                    return;
+                }
+                
+                if (type.GetInterfaces() is not { Length: > 0 } interfaces)
+                {
+                    return;
+                }
+                
+                foreach (Type @interface in interfaces)
+                {
+                    Inherit.GetOrAdd(@interface, static _ => new ConcurrentHashSet<Type>()).Add(type);
+                    
+                    if (@interface.IsGenericType)
+                    {
+                        Inherit.GetOrAdd(@interface.GetGenericTypeDefinition(), static _ => new ConcurrentHashSet<Type>()).Add(type);
                     }
                     
-                    Inherit.GetOrAdd(@base, static _ => new ConcurrentHashSet<Type>()).Add(type);
-                    
-                    if (@base.IsGenericType)
-                    {
-                        Inherit.GetOrAdd(@base.GetGenericTypeDefinition(), static _ => new ConcurrentHashSet<Type>()).Add(type);
-                    }
-                    
-                    return ValueTask.CompletedTask;
+                    await AttributeScanHandler(@interface, token);
+                    await InterfaceScanHandler(@interface, token);
+                }
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+            // ReSharper disable once CognitiveComplexity
+            public static async ValueTask Scan(IEnumerable<Type> source)
+            {
+                if (source is null)
+                {
+                    throw new ArgumentNullException(nameof(source));
                 }
                 
                 await Mutex.WaitAsync();
                 
                 try
                 {
-                    await Parallel.ForEachAsync(types, Handler);
+                    await Parallel.ForEachAsync(source, ScanHandler).ConfigureAwait(false);
                 }
                 finally
                 {
-                    Mutex.Release();
+                    await Mutex.ReleaseAsync();
                 }
             }
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static Task<Boolean> HandleAssemblyInherit()
+        private static async Task<Boolean> Scan()
         {
-            return HandleAssemblyInherit(AppDomain.CurrentDomain);
+            return await Scan(AppDomain.CurrentDomain).ConfigureAwait(false);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static Task<Boolean> HandleAssemblyInherit(AppDomain domain)
+        private static async Task<Boolean> Scan(AppDomain domain)
         {
             if (domain is null)
             {
                 throw new ArgumentNullException(nameof(domain));
             }
             
-            return HandleAssemblyInherit(domain.GetTypes());
+            return await Scan(domain.GetTypes()).ConfigureAwait(false);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static Task<Boolean> HandleAssemblyInherit(Assembly assembly)
+        private static async Task<Boolean> Scan(Assembly assembly)
         {
             if (assembly is null)
             {
                 throw new ArgumentNullException(nameof(assembly));
             }
             
-            return HandleAssemblyInherit(assembly.GetTypes());
+            return await Scan(assembly.GetTypes()).ConfigureAwait(false);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static Task<Boolean> HandleAssemblyInherit(IEnumerable<Assembly> assemblies)
+        private static async Task<Boolean> Scan(IEnumerable<Assembly> source)
         {
-            if (assemblies is null)
+            if (source is null)
             {
-                throw new ArgumentNullException(nameof(assemblies));
+                throw new ArgumentNullException(nameof(source));
             }
             
-            return HandleAssemblyInherit(assemblies.GetTypes());
+            return await Scan(source.GetTypes()).ConfigureAwait(false);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static async Task<Boolean> HandleAssemblyInherit(IEnumerable<Type> types)
+        private static async Task<Boolean> Scan(IEnumerable<Type> source)
         {
-            if (types is null)
+            if (source is null)
             {
-                throw new ArgumentNullException(nameof(types));
+                throw new ArgumentNullException(nameof(source));
             }
             
             try
             {
-                await InheritResult.Handle(types);
+                await InheritEvaluator.Scan(source).ConfigureAwait(false);
                 return true;
             }
             catch (Exception)
             {
                 return false;
+            }
+        }
+    }
+    
+    public sealed class ReflectionInheritResult : IReadOnlySet<Type>
+    {
+        [return: NotNullIfNotNull("value")]
+        public static implicit operator ImmutableHashSet<Type>?(ReflectionInheritResult? value)
+        {
+            return value?.All;
+        }
+        
+        public static ReflectionInheritResult Empty { get; } = new ReflectionInheritResult(ReflectionInherit.Empty, ReflectionInherit.Empty, ReflectionInherit.Empty);
+        
+        public ReflectionInherit All { get; }
+        public ReflectionInherit Inherit { get; }
+        public ReflectionInherit Generic { get; }
+        
+        public ImmutableHashSet<Type> Types
+        {
+            get
+            {
+                return Inherit.Types;
+            }
+        }
+        
+        public ImmutableHashSet<Type> Interfaces
+        {
+            get
+            {
+                return Inherit.Interfaces;
+            }
+        }
+        
+        public Int32 Count
+        {
+            get
+            {
+                return All.Count;
+            }
+        }
+        
+        private ReflectionInheritResult(ReflectionInherit? all, ReflectionInherit? @internal, ReflectionInherit? generic)
+        {
+            Inherit = @internal ?? ReflectionInherit.Empty;
+            Generic = generic ?? ReflectionInherit.Empty;
+            
+            if (all is null)
+            {
+                ReflectionInherit.Builder builder = new ReflectionInherit.Builder();
+                
+                builder.Types.UnionWith(Inherit.Types);
+                builder.Types.UnionWith(Generic.Types);
+                
+                builder.Interfaces.UnionWith(Inherit.Interfaces);
+                builder.Interfaces.UnionWith(Generic.Interfaces);
+                
+                all = builder.ToImmutable();
+            }
+            
+            All = all;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        internal static ReflectionInheritResult Create(ConcurrentHashSet<Type> set)
+        {
+            if (set is null)
+            {
+                throw new ArgumentNullException(nameof(set));
+            }
+            
+            Builder builder = new Builder();
+            
+            foreach (Type type in set)
+            {
+                (type switch
+                {
+                    { IsInterface: true, IsGenericTypeDefinition: true } => builder.Generic.Interfaces,
+                    { IsInterface: true } => builder.Interfaces,
+                    { IsInterface: false, IsGenericTypeDefinition: true } => builder.Generic.Types,
+                    _ => builder.Types
+                }).Add(type);
+            }
+
+            return builder.ToImmutable();
+        }
+        
+        public Boolean Contains(Type item)
+        {
+            return All.Contains(item);
+        }
+        
+        public Boolean IsProperSubsetOf(IEnumerable<Type> other)
+        {
+            return All.IsProperSubsetOf(other);
+        }
+        
+        public Boolean IsProperSupersetOf(IEnumerable<Type> other)
+        {
+            return All.IsProperSupersetOf(other);
+        }
+        
+        public Boolean IsSubsetOf(IEnumerable<Type> other)
+        {
+            return All.IsSubsetOf(other);
+        }
+        
+        public Boolean IsSupersetOf(IEnumerable<Type> other)
+        {
+            return All.IsSupersetOf(other);
+        }
+        
+        public Boolean Overlaps(IEnumerable<Type> other)
+        {
+            return All.Overlaps(other);
+        }
+        
+        public Boolean SetEquals(IEnumerable<Type> other)
+        {
+            return All.SetEquals(other);
+        }
+        
+        public ImmutableHashSet<Type>.Enumerator GetEnumerator()
+        {
+            return All.GetEnumerator();
+        }
+        
+        IEnumerator<Type> IEnumerable<Type>.GetEnumerator()
+        {
+            return Inherit.Types.Concat(Generic.Types).Concat(Inherit.Interfaces).Concat(Generic.Interfaces).GetEnumerator();
+        }
+        
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+        
+        [SuppressMessage("ReSharper", "UnassignedGetOnlyAutoProperty")]
+        private struct Builder
+        {
+            private ReflectionInherit.Builder Internal;
+            public ReflectionInherit.Builder Generic;
+            
+            public ImmutableHashSet<Type>.Builder Types
+            {
+                get
+                {
+                    return Internal.Types;
+                }
+            }
+            
+            public ImmutableHashSet<Type>.Builder Interfaces
+            {
+                get
+                {
+                    return Internal.Interfaces;
+                }
+            }
+            
+            public ReflectionInheritResult ToImmutable()
+            {
+                return new ReflectionInheritResult(null, Internal.ToImmutable(), Generic.ToImmutable());
+            }
+        }
+    }
+    
+    public sealed class ReflectionInherit : IReadOnlySet<Type>
+    {
+        [return: NotNullIfNotNull("value")]
+        public static implicit operator ImmutableHashSet<Type>?(ReflectionInherit? value)
+        {
+            return value?.All;
+        }
+        
+        public static ReflectionInherit Empty { get; } = new ReflectionInherit();
+        
+        public ImmutableHashSet<Type> All { get; }
+        public ImmutableHashSet<Type> Types { get; }
+        public ImmutableHashSet<Type> Interfaces { get; }
+        
+        public Int32 Count
+        {
+            get
+            {
+                return Types.Count + Interfaces.Count;
+            }
+        }
+        
+        private ReflectionInherit()
+            : this(null, null)
+        {
+        }
+        
+        private ReflectionInherit(ImmutableHashSet<Type>? types, ImmutableHashSet<Type>? interfaces)
+        {
+            Types = types ?? ImmutableHashSet<Type>.Empty;
+            Interfaces = interfaces ?? ImmutableHashSet<Type>.Empty;
+            All = ImmutableHashSet<Type>.Empty.Union(Types).Union(Interfaces);
+        }
+        
+        public Boolean Contains(Type item)
+        {
+            return All.Contains(item);
+        }
+        
+        public Boolean IsProperSubsetOf(IEnumerable<Type> other)
+        {
+            return All.IsProperSubsetOf(other);
+        }
+        
+        public Boolean IsProperSupersetOf(IEnumerable<Type> other)
+        {
+            return All.IsProperSupersetOf(other);
+        }
+        
+        public Boolean IsSubsetOf(IEnumerable<Type> other)
+        {
+            return All.IsSubsetOf(other);
+        }
+        
+        public Boolean IsSupersetOf(IEnumerable<Type> other)
+        {
+            return All.IsSupersetOf(other);
+        }
+        
+        public Boolean Overlaps(IEnumerable<Type> other)
+        {
+            return All.Overlaps(other);
+        }
+        
+        public Boolean SetEquals(IEnumerable<Type> other)
+        {
+            return All.SetEquals(other);
+        }
+        
+        public ImmutableHashSet<Type>.Enumerator GetEnumerator()
+        {
+            return All.GetEnumerator();
+        }
+        
+        IEnumerator<Type> IEnumerable<Type>.GetEnumerator()
+        {
+            return Types.Concat(Interfaces).GetEnumerator();
+        }
+        
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+        
+        internal struct Builder
+        {
+            private ImmutableHashSet<Type>.Builder? _types;
+            public ImmutableHashSet<Type>.Builder Types
+            {
+                get
+                {
+                    return _types ??= ImmutableHashSet.CreateBuilder<Type>();
+                }
+            }
+            
+            private ImmutableHashSet<Type>.Builder? _interfaces;
+            public ImmutableHashSet<Type>.Builder Interfaces
+            {
+                get
+                {
+                    return _interfaces ??= ImmutableHashSet.CreateBuilder<Type>();
+                }
+            }
+            
+            public ReflectionInherit ToImmutable()
+            {
+                return new ReflectionInherit(_types?.ToImmutable(), _interfaces?.ToImmutable());
             }
         }
     }

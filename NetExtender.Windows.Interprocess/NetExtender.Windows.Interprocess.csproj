@@ -22,8 +22,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\NetExtender.Core\NetExtender.Core.csproj" />
-      <ProjectReference Include="..\NetExtender.Protobuf\NetExtender.Protobuf.csproj" />
+        <ProjectReference Include="..\NetExtender.Core\NetExtender.Core.csproj"/>
+        <ProjectReference Include="..\NetExtender.Protobuf\NetExtender.Protobuf.csproj"/>
     </ItemGroup>
 
 </Project>

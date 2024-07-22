@@ -10,6 +10,7 @@ using NetExtender.Domains.Applications;
 using NetExtender.Domains.Applications.Interfaces;
 using NetExtender.Types.Dispatchers;
 using NetExtender.Types.Dispatchers.Interfaces;
+using NetExtender.Utilities.Core;
 
 namespace NetExtender.Domains.WindowsPresentation.Applications
 {
@@ -85,11 +86,11 @@ namespace NetExtender.Domains.WindowsPresentation.Applications
             Application.Dispatcher.Invoke(() => Application.Shutdown(code));
         }
 
+        [ReflectionNaming]
         private void InitializeComponent()
         {
-            Application.GetType()
-                .GetMethod("InitializeComponent", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.InvokeMethod)?
-                .Invoke(Application, null);
+            const BindingFlags binding = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.InvokeMethod;
+            Application.GetType().GetMethod(nameof(InitializeComponent), binding)?.Invoke(Application, null);
         }
     }
 }

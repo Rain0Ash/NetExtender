@@ -21,12 +21,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Configuration" />
+        <Folder Include="Configuration"/>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\NetExtender.Configuration.File\NetExtender.Configuration.File.csproj" />
-      <ProjectReference Include="..\NetExtender.Configuration\NetExtender.Configuration.csproj" />
+        <ProjectReference Include="..\NetExtender.Configuration.File\NetExtender.Configuration.File.csproj"/>
+        <ProjectReference Include="..\NetExtender.Configuration\NetExtender.Configuration.csproj"/>
     </ItemGroup>
 
 </Project>

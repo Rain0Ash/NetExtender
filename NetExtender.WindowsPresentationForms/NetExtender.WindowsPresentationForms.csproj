@@ -23,8 +23,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\NetExtender.WinForms\NetExtender.WinForms.csproj" />
-      <ProjectReference Include="..\NetExtender.WindowsPresentation\NetExtender.WindowsPresentation.csproj" />
+        <ProjectReference Include="..\NetExtender.WinForms\NetExtender.WinForms.csproj"/>
+        <ProjectReference Include="..\NetExtender.WindowsPresentation\NetExtender.WindowsPresentation.csproj"/>
     </ItemGroup>
 
 </Project>

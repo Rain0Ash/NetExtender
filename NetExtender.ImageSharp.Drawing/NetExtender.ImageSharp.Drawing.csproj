@@ -21,12 +21,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\NetExtender.ImageSharp\NetExtender.ImageSharp.csproj" />
-      <ProjectReference Include="..\NetExtender.WinForms\NetExtender.WinForms.csproj" />
+        <ProjectReference Include="..\NetExtender.ImageSharp\NetExtender.ImageSharp.csproj"/>
+        <ProjectReference Include="..\NetExtender.WinForms\NetExtender.WinForms.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
+        <PackageReference Include="System.Drawing.Common" Version="6.0.0"/>
     </ItemGroup>
 
 </Project>

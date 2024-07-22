@@ -22,8 +22,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\NetExtender.Domain.AspNetCore\NetExtender.Domain.AspNetCore.csproj" />
-        <ProjectReference Include="..\NetExtender.Domain.WindowsPresentation\NetExtender.Domain.WindowsPresentation.csproj" />
+        <ProjectReference Include="..\NetExtender.Domain.AspNetCore\NetExtender.Domain.AspNetCore.csproj"/>
+        <ProjectReference Include="..\NetExtender.Domain.WindowsPresentation\NetExtender.Domain.WindowsPresentation.csproj"/>
     </ItemGroup>
 
 </Project>

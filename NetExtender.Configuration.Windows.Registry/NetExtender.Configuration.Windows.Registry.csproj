@@ -21,9 +21,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\NetExtender.Configuration\NetExtender.Configuration.csproj" />
-      <ProjectReference Include="..\NetExtender.Core\NetExtender.Core.csproj" />
-      <ProjectReference Include="..\NetExtender.Registry\NetExtender.Registry.csproj" />
+        <ProjectReference Include="..\NetExtender.Configuration\NetExtender.Configuration.csproj"/>
+        <ProjectReference Include="..\NetExtender.Core\NetExtender.Core.csproj"/>
+        <ProjectReference Include="..\NetExtender.Registry\NetExtender.Registry.csproj"/>
     </ItemGroup>
 
 </Project>

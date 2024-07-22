@@ -21,8 +21,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\NetExtender.Configuration\NetExtender.Configuration.csproj" />
-      <ProjectReference Include="..\NetExtender.Cryptography\NetExtender.Cryptography.csproj" />
+        <ProjectReference Include="..\NetExtender.Configuration\NetExtender.Configuration.csproj"/>
+        <ProjectReference Include="..\NetExtender.Cryptography\NetExtender.Cryptography.csproj"/>
     </ItemGroup>
 
 </Project>

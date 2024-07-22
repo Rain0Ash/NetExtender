@@ -21,11 +21,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\NetExtender.Configuration.Cryptography\NetExtender.Configuration.Cryptography.csproj" />
-        <ProjectReference Include="..\NetExtender.Configuration.Property\NetExtender.Configuration.Property.csproj" />
-        <ProjectReference Include="..\NetExtender.Cryptography\NetExtender.Cryptography.csproj" />
-        <ProjectReference Include="..\NetExtender.Configuration\NetExtender.Configuration.csproj" />
-        <ProjectReference Include="..\NetExtender.Core\NetExtender.Core.csproj" />
+        <ProjectReference Include="..\NetExtender.Configuration.Cryptography\NetExtender.Configuration.Cryptography.csproj"/>
+        <ProjectReference Include="..\NetExtender.Configuration.Property\NetExtender.Configuration.Property.csproj"/>
+        <ProjectReference Include="..\NetExtender.Cryptography\NetExtender.Cryptography.csproj"/>
+        <ProjectReference Include="..\NetExtender.Configuration\NetExtender.Configuration.csproj"/>
+        <ProjectReference Include="..\NetExtender.Core\NetExtender.Core.csproj"/>
     </ItemGroup>
 
 </Project>

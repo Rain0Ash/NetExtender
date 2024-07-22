@@ -15,16 +15,16 @@ namespace NetExtender.Initializer
         [ModuleInitializer]
         public static void Initialize()
         {
-            Assembly netextender = Assembly.GetExecutingAssembly();
+            Assembly NetExtender = Assembly.GetExecutingAssembly();
 
             if (!NetExtenderFrameworkInitializer.IsReady)
             {
-                throw new ModuleNotInitializedException(netextender.ManifestModule, $"You can't use {nameof(NetExtender)} in {NetExtenderFrameworkInitializer.InitializerMethod} method!");
+                throw new ModuleNotInitializedException(NetExtender.ManifestModule, $"You can't use {nameof(NetExtender)} in {NetExtenderFrameworkInitializer.InitializerMethod} method!");
             }
 
             if (NetExtenderFrameworkInitializer.IsInitialize)
             {
-                if (!NetExtenderFrameworkInitializer.LoadFramework(netextender, out Exception? exception))
+                if (!NetExtenderFrameworkInitializer.LoadFramework(NetExtender, out Exception? exception))
                 {
                     NetExtenderFrameworkInitializer.Successful = false;
                 }

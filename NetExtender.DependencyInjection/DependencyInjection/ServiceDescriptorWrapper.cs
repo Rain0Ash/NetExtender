@@ -4,9 +4,9 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.DependencyInjection;
-using NetExtender.AspNetCore.Types.DependencyInjection.Interfaces;
+using NetExtender.DependencyInjection.Interfaces;
 
-namespace NetExtender.AspNetCore.Types.DependencyInjection
+namespace NetExtender.DependencyInjection
 {
     public sealed class ServiceDescriptorWrapper : IServiceDependency
     {

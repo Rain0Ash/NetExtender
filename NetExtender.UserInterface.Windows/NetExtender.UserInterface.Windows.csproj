@@ -21,18 +21,18 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\NetExtender.UserInterface\NetExtender.UserInterface.csproj" />
-      <ProjectReference Include="..\NetExtender.Windows\NetExtender.Windows.csproj" />
+        <ProjectReference Include="..\NetExtender.UserInterface\NetExtender.UserInterface.csproj"/>
+        <ProjectReference Include="..\NetExtender.Windows\NetExtender.Windows.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-      <Compile Update="Utilities\IO\ConsoleAsyncInput.cs">
-        <DependentUpon>ConsoleAsyncInputUtilities.cs</DependentUpon>
-      </Compile>
+        <Compile Update="Utilities\IO\ConsoleAsyncInput.cs">
+            <DependentUpon>ConsoleAsyncInputUtilities.cs</DependentUpon>
+        </Compile>
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Types" />
+        <Folder Include="Types"/>
     </ItemGroup>
 
 </Project>

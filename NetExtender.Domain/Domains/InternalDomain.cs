@@ -174,7 +174,7 @@ namespace NetExtender.Domains
                 }
             }
 
-            public Boolean AlreadyStarted
+            public Boolean HasAnotherInstance
             {
                 get
                 {

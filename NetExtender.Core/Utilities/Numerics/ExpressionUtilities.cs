@@ -9,6 +9,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using AgileObjects.ReadableExpressions;
+using NetExtender.Utilities.Core;
 
 namespace NetExtender.Utilities.Numerics
 {
@@ -136,6 +137,25 @@ namespace NetExtender.Utilities.Numerics
         public static Func<T1, T2, TResult> CreateExpression<T1, T2, TResult>(this Func<Expression, Expression, BinaryExpression> function, Boolean casting)
         {
             return casting ? CreateExpression<T1, T2, TResult>(function) : CreateExpressionWithoutCasting<T1, T2, TResult>(function);
+        }
+        
+        public static Expression<Func<Object>> CreateNewExpression(Type type)
+        {
+            return CreateNewExpression<Object>(type);
+        }
+        
+        public static Expression<Func<TResult>> CreateNewExpression<TResult>(Type type)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+            
+            const BindingFlags binding = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+            ConstructorInfo? constructor = type.GetConstructor(binding, Type.EmptyTypes);
+            
+            NewExpression expression = constructor is not null ? Expression.New(constructor) : Expression.New(type);
+            return Expression.Lambda<Func<TResult>>(Expression.Convert(expression, typeof(TResult)));
         }
 
         public static Expression<Func<TSource>> CreateNewExpression<TSource>()
@@ -363,6 +383,67 @@ namespace NetExtender.Utilities.Numerics
             
             NewExpression expression = Expression.New(constructor, first, second, third, fourth, fifth, sixth, seventh, eighth, ninth);
             return Expression.Lambda<Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, TSource>>(expression, first, second, third, fourth, fifth, sixth, seventh, eighth, ninth);
+        }
+        
+        public static Expression<Func<TFrom, TTo>>? CreateAssignExpression<TFrom, TTo>()
+        {
+            //TODO:
+            static Expression? Assignability(Expression parameter, Type from, Type to)
+            {
+                if (to.IsAssignableFrom(parameter.Type))
+                {
+                    return Expression.Convert(parameter, to);
+                }
+                
+                if (!to.IsGenericType || !parameter.Type.IsGenericType)
+                {
+                    return null;
+                }
+                
+                if (to.GetGenericTypeDefinition() != parameter.Type.GetGenericTypeDefinition())
+                {
+                    return null;
+                }
+                
+                if (from.TryGetGenericArguments() is not { } fromargs || to.TryGetGenericArguments() is not { } toargs)
+                {
+                    return null;
+                }
+                
+                for (Int32 i = 0; i < fromargs.Length; i++)
+                {
+                    IndexExpression property = Expression.Property(parameter, "Item", Expression.Constant(i));
+                    Expression? assignability = Assignability(property, toargs[i], fromargs[i]);
+                    
+                    if (assignability is null)
+                    {
+                        return null;
+                    }
+                }
+                
+                return parameter;
+            }
+            
+            ParameterExpression value = Expression.Parameter(typeof(TFrom), nameof(value));
+            Expression? body = Assignability(value, typeof(TFrom), typeof(TTo));
+            return body is not null ? Expression.Lambda<Func<TFrom, TTo>>(body, value) : null;
+        }
+        
+        public static Expression<Func<TFrom, TTo>>? CreateAssignExpression<TFrom, TTo>(Boolean simple)
+        {
+            if (!simple)
+            {
+                return CreateAssignExpression<TFrom, TTo>();
+            }
+            
+            if (!typeof(TTo).IsAssignableFrom(typeof(TFrom)))
+            {
+                return null;
+            }
+            
+            ParameterExpression parameter = Expression.Parameter(typeof(TFrom), nameof(parameter));
+            Expression body = Expression.Convert(parameter, typeof(TTo));
+            return Expression.Lambda<Func<TFrom, TTo>>(body, parameter);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]

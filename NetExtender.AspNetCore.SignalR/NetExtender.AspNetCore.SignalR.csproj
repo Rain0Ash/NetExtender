@@ -21,7 +21,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\NetExtender.AspNetCore\NetExtender.AspNetCore.csproj" />
+        <ProjectReference Include="..\NetExtender.AspNetCore\NetExtender.AspNetCore.csproj"/>
     </ItemGroup>
 
 </Project>

@@ -21,11 +21,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="DynamicData" Version="8.4.1" />
+        <PackageReference Include="DynamicData" Version="8.4.1"/>
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\NetExtender.Core\NetExtender.Core.csproj" />
+        <ProjectReference Include="..\NetExtender.Core\NetExtender.Core.csproj"/>
     </ItemGroup>
 
 </Project>

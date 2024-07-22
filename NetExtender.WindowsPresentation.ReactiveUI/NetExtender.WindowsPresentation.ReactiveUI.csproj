@@ -23,18 +23,18 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="DynamicData" Version="8.4.1" />
-        <PackageReference Include="DynamicData.ReactiveUI" Version="6.11.0.2613" />
-        <PackageReference Include="ReactiveUI" Version="20.1.1" />
+        <PackageReference Include="DynamicData" Version="8.4.1"/>
+        <PackageReference Include="DynamicData.ReactiveUI" Version="6.11.0.2613"/>
+        <PackageReference Include="ReactiveUI" Version="20.1.1"/>
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\NetExtender.WindowsPresentation\NetExtender.WindowsPresentation.csproj" />
-        <ProjectReference Include="..\NetExtender.ReactiveUI\NetExtender.ReactiveUI.csproj" />
+        <ProjectReference Include="..\NetExtender.WindowsPresentation\NetExtender.WindowsPresentation.csproj"/>
+        <ProjectReference Include="..\NetExtender.ReactiveUI\NetExtender.ReactiveUI.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Utilities" />
+        <Folder Include="Utilities"/>
     </ItemGroup>
 
 </Project>

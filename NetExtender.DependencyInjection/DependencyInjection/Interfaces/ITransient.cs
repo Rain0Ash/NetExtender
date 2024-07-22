@@ -3,15 +3,19 @@
 
 using Microsoft.Extensions.DependencyInjection;
 
-namespace NetExtender.AspNetCore.Types.DependencyInjection.Interfaces
+namespace NetExtender.DependencyInjection.Interfaces
 {
-    public interface ISingleton : IServiceDependency
+    public interface ITransient<T> : IServiceDependency<T>, ITransient where T : class
+    {
+    }
+
+    public interface ITransient : IServiceDependency
     {
         public new ServiceLifetime Lifetime
         {
             get
             {
-                return ServiceLifetime.Singleton;
+                return ServiceLifetime.Transient;
             }
         }
     }

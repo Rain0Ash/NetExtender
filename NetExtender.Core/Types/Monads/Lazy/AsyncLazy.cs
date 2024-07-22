@@ -9,7 +9,7 @@ using NetExtender.Types.Monads.Interfaces;
 
 namespace NetExtender.Types.Monads
 {
-    public class AsyncLazyWrapper<T> : IAsyncLazy<T>
+    public class AsyncLazy<T> : IAsyncLazy<T>
     {
         private ILazy<Task<T>> Internal { get; }
 
@@ -37,37 +37,37 @@ namespace NetExtender.Types.Monads
             }
         }
 
-        public AsyncLazyWrapper(Lazy<Task<T>> lazy)
+        public AsyncLazy(Lazy<Task<T>> lazy)
             : this((ILazy<Task<T>>) new LazyWrapper<Task<T>>(lazy ?? throw new ArgumentNullException(nameof(lazy))))
         {
         }
 
-        public AsyncLazyWrapper(ILazy<Task<T>> lazy)
+        public AsyncLazy(ILazy<Task<T>> lazy)
         {
             Internal = lazy ?? throw new ArgumentNullException(nameof(lazy));
         }
 
-        public AsyncLazyWrapper(Func<Task<T>> valueFactory)
+        public AsyncLazy(Func<Task<T>> valueFactory)
         {
             Internal = new LazyWrapper<Task<T>>(valueFactory ?? throw new ArgumentNullException(nameof(valueFactory)));
         }
 
-        public AsyncLazyWrapper(Boolean isThreadSafe)
+        public AsyncLazy(Boolean isThreadSafe)
         {
             Internal = new LazyWrapper<Task<T>>(isThreadSafe);
         }
 
-        public AsyncLazyWrapper(LazyThreadSafetyMode mode)
+        public AsyncLazy(LazyThreadSafetyMode mode)
         {
             Internal = new LazyWrapper<Task<T>>(mode);
         }
 
-        public AsyncLazyWrapper(Func<Task<T>> valueFactory, Boolean isThreadSafe)
+        public AsyncLazy(Func<Task<T>> valueFactory, Boolean isThreadSafe)
         {
             Internal = new LazyWrapper<Task<T>>(valueFactory ?? throw new ArgumentNullException(nameof(valueFactory)), isThreadSafe);
         }
 
-        public AsyncLazyWrapper(Func<Task<T>> valueFactory, LazyThreadSafetyMode mode)
+        public AsyncLazy(Func<Task<T>> valueFactory, LazyThreadSafetyMode mode)
         {
             Internal = new LazyWrapper<Task<T>>(valueFactory ?? throw new ArgumentNullException(nameof(valueFactory)), mode);
         }

@@ -4,7 +4,7 @@ using NetExtender.Types.Handlers.Chain.Interfaces;
 using NetExtender.Types.Monads;
 using NetExtender.Utilities.Types;
 
-namespace NetExtender.Initializer.Types.Handlers.Chain
+namespace NetExtender.Types.Handlers.Chain
 {
     public readonly struct DynamicChainHandler<T> : IChainHandler<T>, IEquatable<DynamicChainHandler<T>>, IEquatable<Func<T, T>>
     {

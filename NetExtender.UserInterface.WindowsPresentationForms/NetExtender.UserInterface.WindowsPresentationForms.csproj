@@ -23,9 +23,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\NetExtender.UserInterface.WinForms\NetExtender.UserInterface.WinForms.csproj" />
-      <ProjectReference Include="..\NetExtender.UserInterface.WindowsPresentation\NetExtender.UserInterface.WindowsPresentation.csproj" />
-      <ProjectReference Include="..\NetExtender.WindowsPresentation.Drawing\NetExtender.WindowsPresentation.Drawing.csproj" />
+        <ProjectReference Include="..\NetExtender.UserInterface.WinForms\NetExtender.UserInterface.WinForms.csproj"/>
+        <ProjectReference Include="..\NetExtender.UserInterface.WindowsPresentation\NetExtender.UserInterface.WindowsPresentation.csproj"/>
+        <ProjectReference Include="..\NetExtender.WindowsPresentation.Drawing\NetExtender.WindowsPresentation.Drawing.csproj"/>
     </ItemGroup>
 
 </Project>

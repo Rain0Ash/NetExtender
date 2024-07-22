@@ -22,9 +22,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\NetExtender.UserInterface.Windows\NetExtender.UserInterface.Windows.csproj" />
-      <ProjectReference Include="..\NetExtender.Windows\NetExtender.Windows.csproj" />
-      <ProjectReference Include="..\NetExtender.WindowsPresentation\NetExtender.WindowsPresentation.csproj" />
+        <ProjectReference Include="..\NetExtender.UserInterface.Windows\NetExtender.UserInterface.Windows.csproj"/>
+        <ProjectReference Include="..\NetExtender.Windows\NetExtender.Windows.csproj"/>
+        <ProjectReference Include="..\NetExtender.WindowsPresentation\NetExtender.WindowsPresentation.csproj"/>
     </ItemGroup>
 
 </Project>

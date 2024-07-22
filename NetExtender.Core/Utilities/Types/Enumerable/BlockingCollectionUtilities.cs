@@ -110,6 +110,16 @@ namespace NetExtender.Utilities.Types
                 }
             }
         }
+        
+        public static void Clear<T>(this BlockingCollection<T> collection)
+        {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+            
+            while (collection.TryTake(out _)) { }
+        }
 
         public static IDisposable Subscribe<T>(this BlockingCollection<T> collection, IObservable<T> source)
         {

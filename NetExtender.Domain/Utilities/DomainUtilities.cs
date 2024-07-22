@@ -3,16 +3,19 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
+using NetExtender.Domains.Applications;
 using NetExtender.Domains.Applications.Interfaces;
 using NetExtender.Domains.Initializer.Interfaces;
 using NetExtender.Domains.Interfaces;
 using NetExtender.Domains.View.Interfaces;
 using NetExtender.Types.Exceptions;
 using NetExtender.Utilities.Core;
+using NetExtender.Utilities.Types;
 
 namespace NetExtender.Domains.Utilities
 {
@@ -58,8 +61,44 @@ namespace NetExtender.Domains.Utilities
             {
                 throw new ArgumentNullException(nameof(assembly));
             }
-
-            return assembly.GetTypeWithoutNamespace($"{source.ApplicationName}Application") ?? assembly.GetTypeWithoutNamespace($"{@namespace}Application") ?? assembly.GetTypeWithoutNamespace("Application");
+            
+            static Type? Find(Assembly assembly, IDomain source, String @namespace)
+            {
+                return assembly.GetTypeWithoutNamespace($"{source.ApplicationName}{nameof(Application)}")
+                       ?? assembly.GetTypeWithoutNamespace($"{@namespace}{nameof(Application)}")
+                       ?? assembly.GetTypeWithoutNamespace($"{nameof(Application)}");
+            }
+            
+            Inherit.Result inherit = ReflectionUtilities.Inherit;
+            if (inherit.Attribute[typeof(ApplicationInitializerAttribute)].Types is not { Count: > 0 } initializer)
+            {
+                return Find(assembly, source, @namespace);
+            }
+            
+            if (initializer.Count > 1)
+            {
+                throw new ScanAmbiguousException($"Ambiguous '{typeof(ApplicationInitializerAttribute)}' types: {initializer.GetString()}.");
+            }
+            
+            Type type = initializer.Single();
+            
+            if (type.IsInterface || type.IsAbstract || type.IsValueType)
+            {
+                throw new TypeNotSupportedException(type);
+            }
+            
+            if (!inherit[typeof(IApplication)].Contains(type))
+            {
+                throw new TypeNotSupportedException(type, $"Type '{type}' must implement '{nameof(IApplication)}'.");
+            }
+            
+            const BindingFlags binding = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.CreateInstance;
+            if (type.GetConstructor(binding, Type.EmptyTypes) is null)
+            {
+                throw new TypeNotSupportedException(type, $"Type '{type}' must have .ctor().");
+            }
+            
+            return type;
         }
         
         private static IApplication AutoInitializeInternal(IDomain source)
@@ -71,7 +110,7 @@ namespace NetExtender.Domains.Utilities
 
             String @namespace = ReflectionUtilities.GetEntryAssemblyNamespace(out Assembly assembly);
             Type type = assembly.AutoApplication(source, @namespace) ?? throw new InvalidOperationException($"Application type not found at '{assembly.FullName}'.");
-            return Activator.CreateInstance(type) as IApplication ?? throw new InvalidOperationException("Application instance can't be instantiated.");
+            return Activator.CreateInstance(type) as IApplication ?? throw new TypeNotSupportedException(type, "Application instance can't be instantiated.");
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

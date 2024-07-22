@@ -103,7 +103,7 @@ EndProject
 
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NetExtender.DependencyInjection", "NetExtender.DependencyInjection", "{11F1AABD-49ED-4A7A-9102-BE69FC3FDD10}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.DependencyInjection", "NetExtender.DependencyInjection\NetExtender.DependencyInjection.csproj", "{115276E6-UAB8-4E40-A700-9DB9861FFAD1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.DependencyInjection", "NetExtender.DependencyInjection\NetExtender.DependencyInjection.csproj", "{9E53DCE9-6269-47A8-9A9A-F022725C015C}"
 EndProject
 
 
@@ -426,10 +426,10 @@ Global
 
 
 
-                {115276E6-UAB8-4E40-A700-9DB9861FFAD1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-                {115276E6-UAB8-4E40-A700-9DB9861FFAD1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-                {115276E6-UAB8-4E40-A700-9DB9861FFAD1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-                {115276E6-UAB8-4E40-A700-9DB9861FFAD1}.Release|Any CPU.Build.0 = Release|Any CPU
+                {9E53DCE9-6269-47A8-9A9A-F022725C015C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+                {9E53DCE9-6269-47A8-9A9A-F022725C015C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+                {9E53DCE9-6269-47A8-9A9A-F022725C015C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+                {9E53DCE9-6269-47A8-9A9A-F022725C015C}.Release|Any CPU.Build.0 = Release|Any CPU
 
 
 
@@ -711,7 +711,7 @@ Global
                 {CE0CABC3-EC8A-4A18-A4EF-624F6DAF5A6A} = {57669121-7D0F-4429-96C8-563563F6F3D1}
                 {A7137A1F-4DB2-4E3B-BF7A-028927FE5D95} = {57669121-7D0F-4429-96C8-563563F6F3D1}
 
-                {115276E6-UAB8-4E40-A700-9DB9861FFAD1} = {11F1AABD-49ED-4A7A-9102-BE69FC3FDD10}
+                {9E53DCE9-6269-47A8-9A9A-F022725C015C} = {11F1AABD-49ED-4A7A-9102-BE69FC3FDD10}
                 
                 {565276E6-CCA8-4E40-A700-9DB9861F7AC8} = {57E5B92C-BB28-4EA3-B380-1CC3B8B2F71A}
                 {0F17D558-04C4-4238-9135-EA27F581C690} = {57E5B92C-BB28-4EA3-B380-1CC3B8B2F71A}

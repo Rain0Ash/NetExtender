@@ -5,6 +5,13 @@ using System;
 
 namespace NetExtender.Types.Monads.Interfaces
 {
+    public interface IResettableLazy<T> : ILazy<T>
+    {
+        public IResettableLazy<T> Reset();
+        public IResettableLazy<T> Reset(T value);
+        public IResettableLazy<T> Reset(Func<T> factory);
+    }
+    
     public interface ILazy<out T>
     {
         public T Value { get; }

@@ -12,7 +12,7 @@ namespace NetExtender.Types.Comparers
         FullNameOrdinalIgnoreCase
     }
     
-    public abstract class TypeComparer : IComparer<Type>
+    public abstract class TypeComparer : IComparer<Type?>
     {
         public static implicit operator TypeComparer(TypeComparison value)
         {

@@ -2330,7 +2330,7 @@ namespace NetExtender.Utilities.Types
                     return type.IsDefined(typeof(EnumSynchronizeAttribute), false);
                 }
                 
-                Enums = new ConcurrentDictionary<Type, EnumSynchronizationMember>(ReflectionUtilities.Domain.CustomTypes.Where(Predicate).Select(Member).WhereValueNotNull());
+                Enums = new ConcurrentDictionary<Type, EnumSynchronizationMember>(ReflectionUtilities.Custom.Types.Where(Predicate).Select(Member).WhereValueNotNull());
                 Array = Enums.OrderByDescending(pair => pair.Value.Order).ToImmutableArray();
             }
 

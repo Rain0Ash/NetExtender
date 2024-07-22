@@ -23,24 +23,24 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="AgileObjects.ReadableExpressions" Version="4.1.1" />
-        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.4" />
-        <PackageReference Include="Microsoft.Extensions.ObjectPool" Version="6.0.25" />
-        <PackageReference Include="Microsoft.Extensions.Primitives" Version="6.0.0" />
-        <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="3.0.1" />
-        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-        <PackageReference Include="System.Linq.Async" Version="6.0.1" />
-        <PackageReference Include="System.Reactive" Version="6.0.1" />
-        <PackageReference Include="System.Reactive.Core" Version="6.0.1" />
-        <PackageReference Include="System.Reactive.Interfaces" Version="6.0.1" />
-        <PackageReference Include="System.Reactive.Linq" Version="6.0.1" />
-        <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.5.4" />
+        <PackageReference Include="AgileObjects.ReadableExpressions" Version="4.1.3" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.4"/>
+        <PackageReference Include="Microsoft.Extensions.ObjectPool" Version="6.0.25"/>
+        <PackageReference Include="Microsoft.Extensions.Primitives" Version="6.0.0"/>
+        <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="3.0.1"/>
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.3"/>
+        <PackageReference Include="System.Linq.Async" Version="6.0.1"/>
+        <PackageReference Include="System.Reactive" Version="6.0.1"/>
+        <PackageReference Include="System.Reactive.Core" Version="6.0.1"/>
+        <PackageReference Include="System.Reactive.Interfaces" Version="6.0.1"/>
+        <PackageReference Include="System.Reactive.Linq" Version="6.0.1"/>
+        <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.5.4"/>
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="IO\Shortcut" />
-        <Folder Include="NewtonSoft\Network\Http\" />
-        <Folder Include="Types\Enums\Converters\" />
+        <Folder Include="IO\Shortcut"/>
+        <Folder Include="NewtonSoft\Network\Http\"/>
+        <Folder Include="Types\Enums\Converters\"/>
     </ItemGroup>
 
     <ItemGroup>
@@ -124,59 +124,68 @@
             <DependentUpon>GenericBinaryReaderUtilities.tt</DependentUpon>
         </Compile>
         <Compile Update="Utilities\Types\Enumerable\AsyncEnumerableUtilities.cs">
-          <DependentUpon>EnumerableUtilities.cs</DependentUpon>
+            <DependentUpon>EnumerableUtilities.cs</DependentUpon>
         </Compile>
         <Compile Update="Utilities\Types\Enumerable\GenericSpanUtilities.cs">
-          <AutoGen>True</AutoGen>
-          <DesignTime>True</DesignTime>
-          <DependentUpon>GenericSpanUtilities.tt</DependentUpon>
+            <AutoGen>True</AutoGen>
+            <DesignTime>True</DesignTime>
+            <DependentUpon>GenericSpanUtilities.tt</DependentUpon>
         </Compile>
         <Compile Update="Utilities\Types\Enumerable\ReferenceWeakStore.cs">
-          <DependentUpon>StoreUtilities.cs</DependentUpon>
+            <DependentUpon>StoreUtilities.cs</DependentUpon>
         </Compile>
         <Compile Update="Types\Region\Domain.cs">
-          <DependentUpon>CountryInfo.cs</DependentUpon>
+            <DependentUpon>CountryInfo.cs</DependentUpon>
         </Compile>
         <Compile Update="Types\Region\Currency.cs">
-          <DependentUpon>CountryInfo.cs</DependentUpon>
+            <DependentUpon>CountryInfo.cs</DependentUpon>
         </Compile>
         <Compile Update="Types\Region\Calling.cs">
-          <DependentUpon>CountryInfo.cs</DependentUpon>
+            <DependentUpon>CountryInfo.cs</DependentUpon>
         </Compile>
         <Compile Update="Types\Exceptions\GenericBusinessStatusException.cs">
-          <AutoGen>True</AutoGen>
-          <DesignTime>True</DesignTime>
-          <DependentUpon>GenericBusinessStatusException.tt</DependentUpon>
+            <AutoGen>True</AutoGen>
+            <DesignTime>True</DesignTime>
+            <DependentUpon>GenericBusinessStatusException.tt</DependentUpon>
         </Compile>
         <Compile Update="Utilities\Types\RectangleEnumerator.cs">
-          <DependentUpon>RectangleUtilities.cs</DependentUpon>
+            <DependentUpon>RectangleUtilities.cs</DependentUpon>
         </Compile>
         <Compile Update="Utilities\Types\RangeEnumerator.cs">
-          <DependentUpon>RangeUtilities.cs</DependentUpon>
+            <DependentUpon>RangeUtilities.cs</DependentUpon>
         </Compile>
         <Compile Update="Utilities\Types\RectangleFEnumerator.cs">
-          <DependentUpon>RectangleUtilities.cs</DependentUpon>
+            <DependentUpon>RectangleUtilities.cs</DependentUpon>
         </Compile>
         <Compile Update="Utilities\Types\SizeEnumerator.cs">
-          <DependentUpon>SizeUtilities.cs</DependentUpon>
+            <DependentUpon>SizeUtilities.cs</DependentUpon>
         </Compile>
         <Compile Update="Utilities\Types\SizeFEnumerator.cs">
-          <DependentUpon>SizeUtilities.cs</DependentUpon>
+            <DependentUpon>SizeUtilities.cs</DependentUpon>
         </Compile>
         <Compile Update="Types\Sizes\UnsafeSizeGenerics.cs">
-          <DependentUpon>UnsafeSizeGenerics.tt</DependentUpon>
+            <DependentUpon>UnsafeSizeGenerics.tt</DependentUpon>
         </Compile>
         <Compile Update="Utilities\Types\EnumUtilities.Cache.cs">
-          <DependentUpon>EnumUtilities.cs</DependentUpon>
+            <DependentUpon>EnumUtilities.cs</DependentUpon>
         </Compile>
         <Compile Update="Utilities\Types\EnumUtilities.Properties.cs">
-          <DependentUpon>EnumUtilities.cs</DependentUpon>
+            <DependentUpon>EnumUtilities.cs</DependentUpon>
         </Compile>
         <Compile Update="Utilities\Core\ReflectionUtlities.Inherit.cs">
-          <DependentUpon>ReflectionUtilities.cs</DependentUpon>
+            <DependentUpon>ReflectionUtilities.cs</DependentUpon>
         </Compile>
         <Compile Update="Utilities\Core\ReflectionUtilities.New.cs">
+            <DependentUpon>ReflectionUtilities.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Utilities\Types\MiddlewareUtilities.Reflection.cs">
+          <DependentUpon>MiddlewareUtilities.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Utilities\Core\ReflectionUtilities.Assign.cs">
           <DependentUpon>ReflectionUtilities.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Utilities\Core\ReflectionUtilities.Inherit.Result.cs">
+          <DependentUpon>ReflectionUtlities.Inherit.cs</DependentUpon>
         </Compile>
     </ItemGroup>
 
@@ -198,22 +207,22 @@
             <LastGenOutput>GenericBinaryReaderUtilities.cs</LastGenOutput>
         </None>
         <None Update="Utilities\Types\Enumerable\GenericSpanUtilities.tt">
-          <Generator>TextTemplatingFileGenerator</Generator>
-          <LastGenOutput>GenericSpanUtilities.cs</LastGenOutput>
+            <Generator>TextTemplatingFileGenerator</Generator>
+            <LastGenOutput>GenericSpanUtilities.cs</LastGenOutput>
         </None>
         <None Update="Types\Exceptions\GenericBusinessStatusException.tt">
-          <DependentUpon>BusinessException.cs</DependentUpon>
-          <Generator>TextTemplatingFileGenerator</Generator>
-          <LastGenOutput>GenericBusinessStatusException.cs</LastGenOutput>
+            <DependentUpon>BusinessException.cs</DependentUpon>
+            <Generator>TextTemplatingFileGenerator</Generator>
+            <LastGenOutput>GenericBusinessStatusException.cs</LastGenOutput>
         </None>
         <None Update="Types\Sizes\UnsafeSizeGenerics.tt">
-          <Generator>TextTemplatingFileGenerator</Generator>
-          <LastGenOutput>UnsafeSizeGenerics.cs</LastGenOutput>
+            <Generator>TextTemplatingFileGenerator</Generator>
+            <LastGenOutput>UnsafeSizeGenerics.cs</LastGenOutput>
         </None>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\NetExtender.Initializer\NetExtender.Initializer.csproj" />
+        <ProjectReference Include="..\NetExtender.Initializer\NetExtender.Initializer.csproj"/>
     </ItemGroup>
 
 </Project>

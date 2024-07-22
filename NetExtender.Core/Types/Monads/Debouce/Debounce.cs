@@ -4,7 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using NetExtender.Interfaces;
 using NetExtender.Types.Monads.Interfaces;
 
-namespace NetExtender.Initializer.Types.Monads.Debouce
+namespace NetExtender.Types.Monads.Debouce
 {
     public readonly struct Debounce<T> : IDebounce<T>, IDebounceEquatable<T, Debounce<T>>, IDebounceComparable<T, Debounce<T>>, ICloneable<Debounce<T>>
     {

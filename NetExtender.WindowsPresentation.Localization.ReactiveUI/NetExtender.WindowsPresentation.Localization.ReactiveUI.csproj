@@ -22,8 +22,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\NetExtender.WindowsPresentation.Localization\NetExtender.WindowsPresentation.Localization.csproj" />
-        <ProjectReference Include="..\NetExtender.WindowsPresentation.ReactiveUI\NetExtender.WindowsPresentation.ReactiveUI.csproj" />
+        <ProjectReference Include="..\NetExtender.WindowsPresentation.Localization\NetExtender.WindowsPresentation.Localization.csproj"/>
+        <ProjectReference Include="..\NetExtender.WindowsPresentation.ReactiveUI\NetExtender.WindowsPresentation.ReactiveUI.csproj"/>
     </ItemGroup>
 
 </Project>

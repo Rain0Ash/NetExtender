@@ -3,9 +3,13 @@
 
 using Microsoft.Extensions.DependencyInjection;
 
-namespace NetExtender.AspNetCore.Types.DependencyInjection.Interfaces
+namespace NetExtender.DependencyInjection.Interfaces
 {
-    public interface ITransient : IServiceDependency
+    public interface IScoped<T> : IServiceDependency<T>, IScoped where T : class
+    {
+    }
+    
+    public interface IScoped : IServiceDependency
     {
         public new ServiceLifetime Lifetime
         {

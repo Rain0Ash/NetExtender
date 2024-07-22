@@ -21,10 +21,10 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\NetExtender.Configuration.Property\NetExtender.Configuration.Property.csproj" />
-        <ProjectReference Include="..\NetExtender.Configuration\NetExtender.Configuration.csproj" />
-        <ProjectReference Include="..\NetExtender.Core\NetExtender.Core.csproj" />
-        <ProjectReference Include="..\NetExtender.Localization\NetExtender.Localization.csproj" />
+        <ProjectReference Include="..\NetExtender.Configuration.Property\NetExtender.Configuration.Property.csproj"/>
+        <ProjectReference Include="..\NetExtender.Configuration\NetExtender.Configuration.csproj"/>
+        <ProjectReference Include="..\NetExtender.Core\NetExtender.Core.csproj"/>
+        <ProjectReference Include="..\NetExtender.Localization\NetExtender.Localization.csproj"/>
     </ItemGroup>
 
 </Project>

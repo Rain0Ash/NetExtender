@@ -21,12 +21,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\NetExtender.Mapster\NetExtender.Mapster.csproj" />
-      <ProjectReference Include="..\NetExtender.EntityFrameworkCore\NetExtender.EntityFrameworkCore.csproj" />
+        <ProjectReference Include="..\NetExtender.Mapster\NetExtender.Mapster.csproj"/>
+        <ProjectReference Include="..\NetExtender.EntityFrameworkCore\NetExtender.EntityFrameworkCore.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Mapster.EFCore" Version="5.1.1" />
+        <PackageReference Include="Mapster.EFCore" Version="5.1.1"/>
     </ItemGroup>
 
 </Project>

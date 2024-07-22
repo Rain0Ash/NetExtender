@@ -21,11 +21,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\NetExtender.AspNetCore\NetExtender.AspNetCore.csproj" />
+        <ProjectReference Include="..\NetExtender.AspNetCore\NetExtender.AspNetCore.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="6.0.21" />
+        <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="6.0.21"/>
     </ItemGroup>
 
 </Project>

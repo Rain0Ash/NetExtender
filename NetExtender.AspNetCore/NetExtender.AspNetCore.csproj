@@ -21,17 +21,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\NetExtender.Core\NetExtender.Core.csproj" />
+        <ProjectReference Include="..\NetExtender.Core\NetExtender.Core.csproj"/>
+        <ProjectReference Include="..\NetExtender.DependencyInjection\NetExtender.DependencyInjection.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-      <Compile Update="Utilities\ServiceCollectionDependencyUtilities.cs">
-        <DependentUpon>ServiceCollectionUtilities.cs</DependentUpon>
-      </Compile>
-    </ItemGroup>
-
-    <ItemGroup>
-      <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.1.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.1.0"/>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0"/>
     </ItemGroup>
 
 </Project>

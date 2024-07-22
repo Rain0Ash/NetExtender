@@ -22,13 +22,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
+        <PackageReference Include="System.Drawing.Common" Version="6.0.0"/>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\NetExtender.Core\NetExtender.Core.csproj" />
-      <ProjectReference Include="..\NetExtender.WindowsPresentation\NetExtender.WindowsPresentation.csproj" />
-      <ProjectReference Include="..\NetExtender.Windows\NetExtender.Windows.csproj" />
+        <ProjectReference Include="..\NetExtender.Core\NetExtender.Core.csproj"/>
+        <ProjectReference Include="..\NetExtender.WindowsPresentation\NetExtender.WindowsPresentation.csproj"/>
+        <ProjectReference Include="..\NetExtender.Windows\NetExtender.Windows.csproj"/>
     </ItemGroup>
 
 </Project>

@@ -16,7 +16,7 @@ namespace NetExtender.Types.Attributes
         All = UInt64.MaxValue
     }
 
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, Inherited = false, AllowMultiple = true)]
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface, Inherited = false, AllowMultiple = true)]
     public class StaticInitializerAttribute : Attribute
     {
         public Type? Type { get; init; }
@@ -25,8 +25,13 @@ namespace NetExtender.Types.Attributes
         public StaticInitializerAttributePlatform Platform { get; init; } = StaticInitializerAttributePlatform.All;
     }
 
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, Inherited = false, AllowMultiple = true)]
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface, Inherited = false, AllowMultiple = true)]
     public sealed class StaticInitializerRequiredAttribute : StaticInitializerAttribute
+    {
+    }
+    
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface, Inherited = false, AllowMultiple = true)]
+    internal sealed class StaticInitializerNetExtenderAttribute : StaticInitializerAttribute
     {
     }
 }

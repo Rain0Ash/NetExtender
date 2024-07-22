@@ -3,15 +3,19 @@
 
 using Microsoft.Extensions.DependencyInjection;
 
-namespace NetExtender.AspNetCore.Types.DependencyInjection.Interfaces
+namespace NetExtender.DependencyInjection.Interfaces
 {
-    public interface IScoped : IServiceDependency
+    public interface ISingleton<T> : IServiceDependency<T>, ISingleton where T : class
+    {
+    }
+    
+    public interface ISingleton : IServiceDependency
     {
         public new ServiceLifetime Lifetime
         {
             get
             {
-                return ServiceLifetime.Scoped;
+                return ServiceLifetime.Singleton;
             }
         }
     }

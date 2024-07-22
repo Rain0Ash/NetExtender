@@ -22,16 +22,16 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\NetExtender.Core\NetExtender.Core.csproj" />
-        <ProjectReference Include="..\NetExtender.WindowsPresentation\NetExtender.WindowsPresentation.csproj" />
+        <ProjectReference Include="..\NetExtender.Core\NetExtender.Core.csproj"/>
+        <ProjectReference Include="..\NetExtender.WindowsPresentation\NetExtender.WindowsPresentation.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Utilities" />
+        <Folder Include="Utilities"/>
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="DynamicExpresso.Core" Version="2.12.0" />
+        <PackageReference Include="DynamicExpresso.Core" Version="2.12.0"/>
     </ItemGroup>
 
 </Project>

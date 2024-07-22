@@ -49,5 +49,27 @@ namespace NetExtender.Utilities.Types
 
             return new AwaitableDisposable<IDisposable>(Internal(value, cancellationToken));
         }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ValueTask<Int32> ReleaseAsync(this SemaphoreSlim value)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+            
+            return new ValueTask<Int32>(value.Release());
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ValueTask<Int32> ReleaseAsync(this SemaphoreSlim value, Int32 releaseCount)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+            
+            return new ValueTask<Int32>(value.Release(releaseCount));
+        }
     }
 }

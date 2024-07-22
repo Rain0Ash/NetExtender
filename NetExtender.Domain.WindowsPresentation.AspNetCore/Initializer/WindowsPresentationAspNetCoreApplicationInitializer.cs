@@ -7,14 +7,12 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using NetExtender.AspNetCore.Types.Wrappers;
 using NetExtender.Domains.Builder.Interfaces;
-using NetExtender.Domains.Initializer;
 using NetExtender.Domains.WindowsPresentation.AspNetCore.Applications;
 using NetExtender.Domains.WindowsPresentation.AspNetCore.Builder;
 using NetExtender.Domains.WindowsPresentation.AspNetCore.Context;
 using NetExtender.Domains.WindowsPresentation.AspNetCore.View;
-using NetExtender.Domains.WindowsPresentation.Initializer;
 
-namespace NetExtender.Domains.WindowsPresentation.AspNetCore.Initializer
+namespace NetExtender.Domains.Initializer
 {
     public abstract class WindowsPresentationAspNetCoreApplicationInitializer : WindowsPresentationApplicationInitializer
     {

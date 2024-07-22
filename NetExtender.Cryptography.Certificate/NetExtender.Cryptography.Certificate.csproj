@@ -22,12 +22,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\NetExtender.BouncyCastle\NetExtender.BouncyCastle.csproj" />
-      <ProjectReference Include="..\NetExtender.Cryptography\NetExtender.Cryptography.csproj" />
+        <ProjectReference Include="..\NetExtender.BouncyCastle\NetExtender.BouncyCastle.csproj"/>
+        <ProjectReference Include="..\NetExtender.Cryptography\NetExtender.Cryptography.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Types" />
+        <Folder Include="Types"/>
     </ItemGroup>
 
 </Project>

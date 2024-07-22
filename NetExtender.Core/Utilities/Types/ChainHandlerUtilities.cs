@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using NetExtender.Initializer.Types.Handlers.Chain;
+using NetExtender.Types.Handlers.Chain;
 using NetExtender.Types.Collections.Interfaces;
 using NetExtender.Types.Handlers.Chain.Interfaces;
 

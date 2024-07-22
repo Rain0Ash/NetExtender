@@ -21,13 +21,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Compile Update="Domains\InternalDomain.cs">
-        <DependentUpon>Domain.cs</DependentUpon>
-      </Compile>
+        <Compile Update="Domains\InternalDomain.cs">
+            <DependentUpon>Domain.cs</DependentUpon>
+        </Compile>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\NetExtender.Core\NetExtender.Core.csproj" />
+        <ProjectReference Include="..\NetExtender.Core\NetExtender.Core.csproj"/>
     </ItemGroup>
 
 </Project>
