@@ -22,7 +22,7 @@ namespace NetExtender.Utilities.Numerics
     public static partial class RandomUtilities
     {
         [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
-        private static class GeneratorCache
+        private static class GeneratorStorage
         {
             [ThreadStatic]
             private static IRandom? generator;
@@ -43,11 +43,11 @@ namespace NetExtender.Utilities.Numerics
         {
             get
             {
-                return GeneratorCache.Generator;
+                return GeneratorStorage.Generator;
             }
             private set
             {
-                GeneratorCache.Generator = value;
+                GeneratorStorage.Generator = value;
             }
         }
 

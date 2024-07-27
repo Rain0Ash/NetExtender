@@ -8,12 +8,15 @@ using NetExtender.Types.Monads.Interfaces;
 
 namespace NetExtender.Domains.Builder.Interfaces
 {
-    public interface IApplicationBuilder<out T> : IScannable where T : class
+    public interface IApplicationBuilder<out T> : IApplicationBuilder
     {
-        public IMiddlewareManager? Manager { get; }
-        
         public T Build();
         public T Build(String[] arguments);
         public T Build(ImmutableArray<String> arguments);
+    }
+    
+    public interface IApplicationBuilder : IScannable
+    {
+        public IMiddlewareManager? Manager { get; }
     }
 }

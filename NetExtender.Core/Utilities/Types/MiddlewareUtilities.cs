@@ -1,5 +1,4 @@
 using System;
-using System.Threading;
 using NetExtender.Types.Middlewares;
 using NetExtender.Types.Middlewares.Interfaces;
 using NetExtender.Types.Monads;

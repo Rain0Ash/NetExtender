@@ -27,7 +27,7 @@ namespace NetExtender.Utilities.Network
         }
         
         [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
-        private static class ClientCache
+        private static class ClientStorage
         {
             private static HttpClient? client;
             public static HttpClient Client
@@ -48,11 +48,11 @@ namespace NetExtender.Utilities.Network
         {
             get
             {
-                return ClientCache.Client;
+                return ClientStorage.Client;
             }
             private set
             {
-                ClientCache.Client = value;
+                ClientStorage.Client = value;
             }
         }
 

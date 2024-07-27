@@ -35,7 +35,7 @@ namespace NetExtender.Types.Network.Formatters
             }
         }
 
-        protected ConcurrentDictionary<Type, Object?> SerializerCache { get; } = new ConcurrentDictionary<Type, Object?>();
+        protected ConcurrentDictionary<Type, Object?> SerializerStorage { get; } = new ConcurrentDictionary<Type, Object?>();
 
         protected XmlDictionaryReaderQuotas Quotas { get; } = new XmlDictionaryReaderQuotas
         {
@@ -134,13 +134,13 @@ namespace NetExtender.Types.Network.Formatters
         {
             try
             {
-                if (SerializerCache.TryGetValue(type, out Object? serializer))
+                if (SerializerStorage.TryGetValue(type, out Object? serializer))
                 {
                     return serializer;
                 }
 
                 serializer = CreateDefaultSerializer(type, @throw);
-                SerializerCache.TryAdd(type, serializer);
+                SerializerStorage.TryAdd(type, serializer);
                 return serializer;
             }
             catch (Exception)
@@ -195,7 +195,7 @@ namespace NetExtender.Types.Network.Formatters
                 throw new ArgumentNullException(nameof(serializer));
             }
 
-            SerializerCache.AddOrUpdate(type, serializer, (_, _) => serializer);
+            SerializerStorage.AddOrUpdate(type, serializer, (_, _) => serializer);
         }
 
         public void SetSerializer<T>(XmlObjectSerializer serializer)
@@ -215,7 +215,7 @@ namespace NetExtender.Types.Network.Formatters
                 throw new ArgumentNullException(nameof(serializer));
             }
 
-            SerializerCache.AddOrUpdate(type, serializer, (_, _) => serializer);
+            SerializerStorage.AddOrUpdate(type, serializer, (_, _) => serializer);
         }
 
         public void SetSerializer<T>(XmlSerializer serializer)
@@ -230,7 +230,7 @@ namespace NetExtender.Types.Network.Formatters
                 throw new ArgumentNullException(nameof(type));
             }
 
-            return SerializerCache.TryRemove(type, out _);
+            return SerializerStorage.TryRemove(type, out _);
         }
         
         protected internal virtual XmlReader CreateXmlReader(Stream stream, HttpContent content)

@@ -10,10 +10,6 @@ namespace NetExtender.DependencyInjection.Comparers
         public static IEqualityComparer<ServiceDescriptor> Implementation { get; } = new ImplementationServiceDescriptorEqualityComparer();
         public static IEqualityComparer<ServiceDescriptor> Service { get; } = new ServiceTypeServiceDescriptorEqualityComparer();
         
-        protected ServiceDescriptorEqualityComparer()
-        {
-        }
-        
         public abstract Int32 GetHashCode(ServiceDescriptor value);
         public abstract Boolean Equals(ServiceDescriptor? x, ServiceDescriptor? y);
         

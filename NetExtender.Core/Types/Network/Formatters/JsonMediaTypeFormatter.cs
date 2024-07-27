@@ -335,7 +335,7 @@ namespace NetExtender.Types.Network.Formatters
             }
         }
 
-        protected ConcurrentDictionary<Type, DataContractJsonSerializer?> SerializerCache { get; } = new ConcurrentDictionary<Type, DataContractJsonSerializer?>();
+        protected ConcurrentDictionary<Type, DataContractJsonSerializer?> SerializerStorage { get; } = new ConcurrentDictionary<Type, DataContractJsonSerializer?>();
         
         protected RequestHeaderMapping? RequestHeaderMapping { get; }
         
@@ -394,7 +394,7 @@ namespace NetExtender.Types.Network.Formatters
         
         public override Boolean CanReadType(Type? type)
         {
-            return type is not null && (UseJsonSerializer ? SerializerCache.GetOrAdd(type, value => CreateDataContractSerializer(value, false)) is not null : base.CanReadType(type));
+            return type is not null && (UseJsonSerializer ? SerializerStorage.GetOrAdd(type, value => CreateDataContractSerializer(value, false)) is not null : base.CanReadType(type));
         }
 
         public override Boolean CanWriteType(Type? type)
@@ -409,7 +409,7 @@ namespace NetExtender.Types.Network.Formatters
                 return base.CanWriteType(type);
             }
 
-            return TryGetDelegatingType(typeof(IQueryable<>), ref type) && type is not null && SerializerCache.GetOrAdd(type, value => CreateDataContractSerializer(value, false)) is not null;
+            return TryGetDelegatingType(typeof(IQueryable<>), ref type) && type is not null && SerializerStorage.GetOrAdd(type, value => CreateDataContractSerializer(value, false)) is not null;
         }
 
         public override Boolean TryCreateJsonReader(Type type, Stream stream, Encoding encoding, [MaybeNullWhen(false)] out JsonReader result)
@@ -583,7 +583,7 @@ namespace NetExtender.Types.Network.Formatters
                 throw new ArgumentNullException(nameof(type));
             }
 
-            return SerializerCache.GetOrAdd(type, value => CreateDataContractSerializer(value, true)) ?? throw new InvalidOperationException($"The '{nameof(DataContractJsonSerializer)}' serializer cannot serialize the type '{type}'.");
+            return SerializerStorage.GetOrAdd(type, value => CreateDataContractSerializer(value, true)) ?? throw new InvalidOperationException($"The '{nameof(DataContractJsonSerializer)}' serializer cannot serialize the type '{type}'.");
         }
 
         protected virtual DataContractJsonSerializer? CreateDataContractSerializer(Type type, Boolean @throw)

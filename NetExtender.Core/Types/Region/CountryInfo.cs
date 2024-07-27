@@ -80,7 +80,7 @@ namespace NetExtender.Types.Region
         {
             get
             {
-                return EnumUtilities.GetValuesWithoutDefault<CountryIdentifier>().Select(CountryInfoCache.Parse).ToArray();
+                return EnumUtilities.GetValuesWithoutDefault<CountryIdentifier>().Select(CountryInfoStorage.Parse).ToArray();
             }
         }
 
@@ -140,49 +140,49 @@ namespace NetExtender.Types.Region
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static CountryInfo Parse(CountryIdentifier identifier)
         {
-            return CountryInfoCache.Parse(identifier);
+            return CountryInfoStorage.Parse(identifier);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static CountryInfo Parse(UInt16 code)
         {
-            return CountryInfoCache.Parse(code);
+            return CountryInfoStorage.Parse(code);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static CountryInfo Parse(Int32 code)
         {
-            return CountryInfoCache.Parse(code);
+            return CountryInfoStorage.Parse(code);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static CountryInfo Parse(String name)
         {
-            return CountryInfoCache.Parse(name);
+            return CountryInfoStorage.Parse(name);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryParse(CountryIdentifier identifier, [MaybeNullWhen(false)] out CountryInfo result)
         {
-            return CountryInfoCache.TryParse(identifier, out result);
+            return CountryInfoStorage.TryParse(identifier, out result);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryParse(UInt16 code, [MaybeNullWhen(false)] out CountryInfo result)
         {
-            return CountryInfoCache.TryParse(code, out result);
+            return CountryInfoStorage.TryParse(code, out result);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryParse(Int32 code, [MaybeNullWhen(false)] out CountryInfo result)
         {
-            return CountryInfoCache.TryParse(code, out result);
+            return CountryInfoStorage.TryParse(code, out result);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryParse(String name, [MaybeNullWhen(false)] out CountryInfo result)
         {
-            return CountryInfoCache.TryParse(name, out result);
+            return CountryInfoStorage.TryParse(name, out result);
         }
 
         public override Int32 GetHashCode()
@@ -209,16 +209,16 @@ namespace NetExtender.Types.Region
     public partial class CountryInfo
     {
         [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
-        private static class CountryInfoCache
+        private static class CountryInfoStorage
         {
-            private static ImmutableDictionary<CountryIdentifier, CountryInfo> IdentifierCache { get; }
-            private static ImmutableDictionary<Int32, CountryInfo> CodeCache { get; }
-            private static ImmutableDictionary<String, CountryInfo> NameCache { get; }
-            private static ImmutableDictionary<String, CountryInfo> OfficialNameCache { get; }
-            private static ImmutableDictionary<String, CountryInfo> NativeNameCache { get; }
-            private static ImmutableDictionary<String, CountryInfo> Iso2Cache { get; }
+            private static ImmutableDictionary<CountryIdentifier, CountryInfo> IdentifierStorage { get; }
+            private static ImmutableDictionary<Int32, CountryInfo> CodeStorage { get; }
+            private static ImmutableDictionary<String, CountryInfo> NameStorage { get; }
+            private static ImmutableDictionary<String, CountryInfo> OfficialNameStorage { get; }
+            private static ImmutableDictionary<String, CountryInfo> NativeNameStorage { get; }
+            private static ImmutableDictionary<String, CountryInfo> Iso2Storage { get; }
 
-            static CountryInfoCache()
+            static CountryInfoStorage()
             {
                 Action<CountryInfo, ImmutableHashSet<CountryInfo>>? setter = typeof(CountryInfo).GetProperty(nameof(Border))?.CreateSetExpression<CountryInfo, ImmutableHashSet<CountryInfo>>().Compile();
 
@@ -228,7 +228,7 @@ namespace NetExtender.Types.Region
                 }
                 
                 ImmutableDictionary<CountryIdentifier, CountryInfoData> cache = EnumUtilities.GetValuesWithoutDefault<CountryIdentifier>().ToImmutableDictionary(identifier => identifier, Create);
-                IdentifierCache = cache.ToImmutableDictionary(pair => pair.Key, pair => pair.Value.ToInfo());
+                IdentifierStorage = cache.ToImmutableDictionary(pair => pair.Key, pair => pair.Value.ToInfo());
                 
                 static CountryInfo Hack(CountryInfo info, CountryInfoData data, Action<CountryInfo, ImmutableHashSet<CountryInfo>> setter)
                 {
@@ -247,12 +247,12 @@ namespace NetExtender.Types.Region
                     return info;
                 }
 
-                IdentifierCache = IdentifierCache.ToImmutableDictionary(pair => pair.Key, pair => Hack(pair.Value, cache[pair.Key], setter));
-                CodeCache = IdentifierCache.Values.ToImmutableDictionary(country => country.Code, country => country);
-                NameCache = IdentifierCache.Values.ToImmutableDictionary(country => country.Name, country => country, StringComparer.OrdinalIgnoreCase);
-                OfficialNameCache = IdentifierCache.Values.ToImmutableDictionary(country => country.OfficialName, country => country, StringComparer.OrdinalIgnoreCase);
-                NativeNameCache = IdentifierCache.Values.ToImmutableDictionary(country => country.NativeName, country => country, StringComparer.OrdinalIgnoreCase);
-                Iso2Cache = IdentifierCache.Values.ToImmutableDictionary(country => country.TwoLetterISOCountryName, country => country, StringComparer.OrdinalIgnoreCase);
+                IdentifierStorage = IdentifierStorage.ToImmutableDictionary(pair => pair.Key, pair => Hack(pair.Value, cache[pair.Key], setter));
+                CodeStorage = IdentifierStorage.Values.ToImmutableDictionary(country => country.Code, country => country);
+                NameStorage = IdentifierStorage.Values.ToImmutableDictionary(country => country.Name, country => country, StringComparer.OrdinalIgnoreCase);
+                OfficialNameStorage = IdentifierStorage.Values.ToImmutableDictionary(country => country.OfficialName, country => country, StringComparer.OrdinalIgnoreCase);
+                NativeNameStorage = IdentifierStorage.Values.ToImmutableDictionary(country => country.NativeName, country => country, StringComparer.OrdinalIgnoreCase);
+                Iso2Storage = IdentifierStorage.Values.ToImmutableDictionary(country => country.TwoLetterISOCountryName, country => country, StringComparer.OrdinalIgnoreCase);
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -283,7 +283,7 @@ namespace NetExtender.Types.Region
             {
                 if (identifier != CountryIdentifier.Default)
                 {
-                    return IdentifierCache.TryGetValue(identifier, out result);
+                    return IdentifierStorage.TryGetValue(identifier, out result);
                 }
 
                 CountryInfo? country = RegionInfo.CurrentRegion;
@@ -302,13 +302,13 @@ namespace NetExtender.Types.Region
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static Boolean TryParse(UInt16 code, [MaybeNullWhen(false)] out CountryInfo result)
             {
-                return CodeCache.TryGetValue(code, out result);
+                return CodeStorage.TryGetValue(code, out result);
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static Boolean TryParse(Int32 code, [MaybeNullWhen(false)] out CountryInfo result)
             {
-                return CodeCache.TryGetValue(code, out result);
+                return CodeStorage.TryGetValue(code, out result);
             }
 
             public static Boolean TryParse(String name, [MaybeNullWhen(false)] out CountryInfo result)
@@ -318,7 +318,7 @@ namespace NetExtender.Types.Region
                     throw new ArgumentNullException(nameof(name));
                 }
 
-                return Iso2Cache.TryGetValue(name, out result) || NameCache.TryGetValue(name, out result) || OfficialNameCache.TryGetValue(name, out result) || NativeNameCache.TryGetValue(name, out result);
+                return Iso2Storage.TryGetValue(name, out result) || NameStorage.TryGetValue(name, out result) || OfficialNameStorage.TryGetValue(name, out result) || NativeNameStorage.TryGetValue(name, out result);
             }
 
             private record CountryInfoData

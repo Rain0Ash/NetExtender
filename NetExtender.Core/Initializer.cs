@@ -9,7 +9,7 @@ using NetExtender.Utilities.Core;
 
 namespace NetExtender.Initializer
 {
-    internal static class Initializer
+    internal static class NetExtenderInitializer
     {
 #pragma warning disable CA2255
         [ModuleInitializer]

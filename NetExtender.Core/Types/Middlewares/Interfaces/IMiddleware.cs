@@ -6,6 +6,26 @@ using System.Threading.Tasks;
 
 namespace NetExtender.Types.Middlewares.Interfaces
 {
+    public interface IMiddlewareAsyncConverter<in T, TArgument>
+    {
+        public ValueTask<TArgument> ConvertAsync(T argument)
+        {
+            return ConvertAsync(null, argument);
+        }
+
+        public ValueTask<TArgument> ConvertAsync(Object? sender, T argument);
+    }
+    
+    public interface IMiddlewareConverter<in T, out TArgument>
+    {
+        public TArgument Convert(T argument)
+        {
+            return Convert(null, argument);
+        }
+
+        public TArgument Convert(Object? sender, T argument);
+    }
+
     public interface IAsyncMiddleware<in T> : IAsyncMiddleware
     {
         public Task InvokeAsync(T argument);
@@ -32,7 +52,10 @@ namespace NetExtender.Types.Middlewares.Interfaces
             }
         }
         
-        public IAsyncMiddleware<T>? AsyncInvoker<T>();
+        public Task<Boolean> InvokeAsync<TArgument>(TArgument argument);
+        public Task<Boolean> InvokeAsync<TArgument>(Object? sender, TArgument argument);
+        public ValueTask<Boolean> InvokeValueAsync<TArgument>(TArgument argument);
+        public ValueTask<Boolean> InvokeValueAsync<TArgument>(Object? sender, TArgument argument);
     }
     
     public interface IMiddleware<in T> : IMiddleware
@@ -51,11 +74,14 @@ namespace NetExtender.Types.Middlewares.Interfaces
             }
         }
         
-        public IMiddleware<T>? Invoker<T>();
+        public Boolean Invoke<TArgument>(TArgument argument);
+        public Boolean Invoke<TArgument>(Object? sender, TArgument argument);
     }
     
     public interface IMiddlewareInfo
     {
+        public MiddlewareExecutionContext Context { get; }
+        
         public Boolean IsAsync
         {
             get
@@ -68,7 +94,5 @@ namespace NetExtender.Types.Middlewares.Interfaces
                 };
             }
         }
-        
-        public MiddlewareExecutionContext Context { get; }
     }
 }

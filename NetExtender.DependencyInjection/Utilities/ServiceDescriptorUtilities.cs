@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.DependencyInjection;
 using NetExtender.Types.Attributes;
 
@@ -12,9 +13,9 @@ namespace NetExtender.Utilities.Types
             ConvertUtilities.RegisterStringHandler<ServiceDescriptor>(GetString);
         }
         
+        [SuppressMessage("ReSharper", "InvokeAsExtensionMethod")]
         private static String? GetString(ServiceDescriptor? value, EscapeType escape, IFormatProvider? provider)
         {
-            // ReSharper disable once InvokeAsExtensionMethod
             return value is not null ? $"{value.Lifetime}({value.ServiceType}:[{value.ImplementationType}])" : ConvertUtilities.GetString((Object?) null, escape, provider);
         }
     }

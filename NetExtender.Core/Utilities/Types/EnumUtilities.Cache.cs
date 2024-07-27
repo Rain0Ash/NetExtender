@@ -36,59 +36,59 @@ namespace NetExtender.Utilities.Types
             
             try
             {
-                if (!CacheValues<T>.Register(members))
+                if (!ValuesStorage<T>.Register(members))
                 {
-                    throw new Exception(nameof(CacheValues<T>));
+                    throw new Exception(nameof(ValuesStorage<T>));
                 }
 
-                if (!CacheValuesWithoutDefault<T>.Register())
+                if (!ValuesWithoutDefaultStorage<T>.Register())
                 {
-                    throw new Exception(nameof(CacheValuesWithoutDefault<T>));
+                    throw new Exception(nameof(ValuesWithoutDefaultStorage<T>));
                 }
 
-                if (!CacheNames<T>.Register(members))
+                if (!NamesStorage<T>.Register(members))
                 {
-                    throw new Exception(nameof(CacheNames<T>));
+                    throw new Exception(nameof(NamesStorage<T>));
                 }
 
-                if (!CacheNamesWithoutDefault<T>.Register())
+                if (!NamesWithoutDefaultStorage<T>.Register())
                 {
-                    throw new Exception(nameof(CacheNamesWithoutDefault<T>));
+                    throw new Exception(nameof(NamesWithoutDefaultStorage<T>));
                 }
 
-                if (!CacheDescription<T>.Register(members))
+                if (!DescriptionStorage<T>.Register(members))
                 {
-                    throw new Exception(nameof(CacheDescription<T>));
+                    throw new Exception(nameof(DescriptionStorage<T>));
                 }
 
-                if (!CacheDescriptionToEnum<T>.Register(members))
+                if (!DescriptionToEnumStorage<T>.Register(members))
                 {
-                    throw new Exception(nameof(CacheDescriptionToEnum<T>));
+                    throw new Exception(nameof(DescriptionToEnumStorage<T>));
                 }
 
-                if (!CacheMembers<T>.Register())
+                if (!MembersStorage<T>.Register())
                 {
-                    throw new Exception(nameof(CacheMembers<T>));
+                    throw new Exception(nameof(MembersStorage<T>));
                 }
 
-                if (!CacheMembersWithoutDefault<T>.Register())
+                if (!MembersWithoutDefaultStorage<T>.Register())
                 {
-                    throw new Exception(nameof(CacheMembersWithoutDefault<T>));
+                    throw new Exception(nameof(MembersWithoutDefaultStorage<T>));
                 }
 
-                if (!CacheMembersByName<T>.Register())
+                if (!MembersByNameStorage<T>.Register())
                 {
-                    throw new Exception(nameof(CacheMembersByName<T>));
+                    throw new Exception(nameof(MembersByNameStorage<T>));
                 }
 
-                if (!CacheUnderlyingOperation<T>.Register())
+                if (!UnderlyingOperationStorage<T>.Register())
                 {
-                    throw new Exception(nameof(CacheUnderlyingOperation<T>));
+                    throw new Exception(nameof(UnderlyingOperationStorage<T>));
                 }
 
-                if (!CacheEnum<T>.Register(members))
+                if (!EnumStorage<T>.Register(members))
                 {
-                    throw new Exception(nameof(CacheEnum<T>));
+                    throw new Exception(nameof(EnumStorage<T>));
                 }
 
                 if (!Synchronization.Register(members))
@@ -135,59 +135,59 @@ namespace NetExtender.Utilities.Types
             
             try
             {
-                if (!CacheValues<T>.Register(members))
+                if (!ValuesStorage<T>.Register(members))
                 {
-                    throw new Exception(nameof(CacheValues<T>));
+                    throw new Exception(nameof(ValuesStorage<T>));
                 }
 
-                if (!CacheValuesWithoutDefault<T>.Register())
+                if (!ValuesWithoutDefaultStorage<T>.Register())
                 {
-                    throw new Exception(nameof(CacheValuesWithoutDefault<T>));
+                    throw new Exception(nameof(ValuesWithoutDefaultStorage<T>));
                 }
 
-                if (!CacheNames<T>.Register(members))
+                if (!NamesStorage<T>.Register(members))
                 {
-                    throw new Exception(nameof(CacheNames<T>));
+                    throw new Exception(nameof(NamesStorage<T>));
                 }
 
-                if (!CacheNamesWithoutDefault<T>.Register())
+                if (!NamesWithoutDefaultStorage<T>.Register())
                 {
-                    throw new Exception(nameof(CacheNamesWithoutDefault<T>));
+                    throw new Exception(nameof(NamesWithoutDefaultStorage<T>));
                 }
 
-                if (!CacheDescription<T>.Register(members))
+                if (!DescriptionStorage<T>.Register(members))
                 {
-                    throw new Exception(nameof(CacheDescription<T>));
+                    throw new Exception(nameof(DescriptionStorage<T>));
                 }
 
-                if (!CacheDescriptionToEnum<T>.Register(members))
+                if (!DescriptionToEnumStorage<T>.Register(members))
                 {
-                    throw new Exception(nameof(CacheDescriptionToEnum<T>));
+                    throw new Exception(nameof(DescriptionToEnumStorage<T>));
                 }
 
-                if (!CacheMembers<T>.Register())
+                if (!MembersStorage<T>.Register())
                 {
-                    throw new Exception(nameof(CacheMembers<T>));
+                    throw new Exception(nameof(MembersStorage<T>));
                 }
 
-                if (!CacheMembersWithoutDefault<T>.Register())
+                if (!MembersWithoutDefaultStorage<T>.Register())
                 {
-                    throw new Exception(nameof(CacheMembersWithoutDefault<T>));
+                    throw new Exception(nameof(MembersWithoutDefaultStorage<T>));
                 }
 
-                if (!CacheMembersByName<T>.Register())
+                if (!MembersByNameStorage<T>.Register())
                 {
-                    throw new Exception(nameof(CacheMembersByName<T>));
+                    throw new Exception(nameof(MembersByNameStorage<T>));
                 }
 
-                if (!CacheUnderlyingOperation<T>.Register())
+                if (!UnderlyingOperationStorage<T>.Register())
                 {
-                    throw new Exception(nameof(CacheUnderlyingOperation<T>));
+                    throw new Exception(nameof(UnderlyingOperationStorage<T>));
                 }
 
-                if (!CacheEnum<T>.Register(members))
+                if (!EnumStorage<T>.Register(members))
                 {
-                    throw new Exception(nameof(CacheEnum<T>));
+                    throw new Exception(nameof(EnumStorage<T>));
                 }
 
                 if (!Synchronization.Register(members))
@@ -232,17 +232,17 @@ namespace NetExtender.Utilities.Types
             {
                 return new[]
                 {
-                    CacheValues<T>.Transaction(),
-                    CacheValuesWithoutDefault<T>.Transaction(),
-                    CacheNames<T>.Transaction(),
-                    CacheNamesWithoutDefault<T>.Transaction(),
-                    CacheDescription<T>.Transaction(),
-                    CacheDescriptionToEnum<T>.Transaction(),
-                    CacheMembers<T>.Transaction(),
-                    CacheMembersWithoutDefault<T>.Transaction(),
-                    CacheMembersByName<T>.Transaction(),
-                    CacheUnderlyingOperation<T>.Transaction(),
-                    CacheEnum<T>.Transaction(),
+                    ValuesStorage<T>.Transaction(),
+                    ValuesWithoutDefaultStorage<T>.Transaction(),
+                    NamesStorage<T>.Transaction(),
+                    NamesWithoutDefaultStorage<T>.Transaction(),
+                    DescriptionStorage<T>.Transaction(),
+                    DescriptionToEnumStorage<T>.Transaction(),
+                    MembersStorage<T>.Transaction(),
+                    MembersWithoutDefaultStorage<T>.Transaction(),
+                    MembersByNameStorage<T>.Transaction(),
+                    UnderlyingOperationStorage<T>.Transaction(),
+                    EnumStorage<T>.Transaction(),
                     Synchronization.Transaction<T>()
                 }.ToImmutableArray();
             }
@@ -295,17 +295,17 @@ namespace NetExtender.Utilities.Types
             {
                 return new[]
                 {
-                    CacheValues<T>.Transaction(),
-                    CacheValuesWithoutDefault<T>.Transaction(),
-                    CacheNames<T>.Transaction(),
-                    CacheNamesWithoutDefault<T>.Transaction(),
-                    CacheDescription<T>.Transaction(),
-                    CacheDescriptionToEnum<T>.Transaction(),
-                    CacheMembers<T>.Transaction(),
-                    CacheMembersWithoutDefault<T>.Transaction(),
-                    CacheMembersByName<T>.Transaction(),
-                    CacheUnderlyingOperation<T>.Transaction(),
-                    CacheEnum<T>.Transaction<TEnum>(),
+                    ValuesStorage<T>.Transaction(),
+                    ValuesWithoutDefaultStorage<T>.Transaction(),
+                    NamesStorage<T>.Transaction(),
+                    NamesWithoutDefaultStorage<T>.Transaction(),
+                    DescriptionStorage<T>.Transaction(),
+                    DescriptionToEnumStorage<T>.Transaction(),
+                    MembersStorage<T>.Transaction(),
+                    MembersWithoutDefaultStorage<T>.Transaction(),
+                    MembersByNameStorage<T>.Transaction(),
+                    UnderlyingOperationStorage<T>.Transaction(),
+                    EnumStorage<T>.Transaction<TEnum>(),
                     Synchronization.Transaction<T, TEnum>(),
                 }.ToImmutableArray();
             }
@@ -388,33 +388,33 @@ namespace NetExtender.Utilities.Types
         
         public static void Reset<T>() where T : unmanaged, Enum
         {
-            CacheValues<T>.Reset();
-            CacheValuesWithoutDefault<T>.Reset();
-            CacheNames<T>.Reset();
-            CacheNamesWithoutDefault<T>.Reset();
-            CacheDescription<T>.Reset();
-            CacheDescriptionToEnum<T>.Reset();
-            CacheMembers<T>.Reset();
-            CacheMembersWithoutDefault<T>.Reset();
-            CacheMembersByName<T>.Reset();
-            CacheUnderlyingOperation<T>.Reset();
-            CacheEnum<T>.Reset();
+            ValuesStorage<T>.Reset();
+            ValuesWithoutDefaultStorage<T>.Reset();
+            NamesStorage<T>.Reset();
+            NamesWithoutDefaultStorage<T>.Reset();
+            DescriptionStorage<T>.Reset();
+            DescriptionToEnumStorage<T>.Reset();
+            MembersStorage<T>.Reset();
+            MembersWithoutDefaultStorage<T>.Reset();
+            MembersByNameStorage<T>.Reset();
+            UnderlyingOperationStorage<T>.Reset();
+            EnumStorage<T>.Reset();
             Synchronization.Reset(typeof(T));
         }
 
         public static void Reset<T, TEnum>() where T : unmanaged, Enum where TEnum : Enum<T, TEnum>, new()
         {
-            CacheValues<T>.Reset();
-            CacheValuesWithoutDefault<T>.Reset();
-            CacheNames<T>.Reset();
-            CacheNamesWithoutDefault<T>.Reset();
-            CacheDescription<T>.Reset();
-            CacheDescriptionToEnum<T>.Reset();
-            CacheMembers<T>.Reset();
-            CacheMembersWithoutDefault<T>.Reset();
-            CacheMembersByName<T>.Reset();
-            CacheUnderlyingOperation<T>.Reset();
-            CacheEnum<T>.Reset<TEnum>();
+            ValuesStorage<T>.Reset();
+            ValuesWithoutDefaultStorage<T>.Reset();
+            NamesStorage<T>.Reset();
+            NamesWithoutDefaultStorage<T>.Reset();
+            DescriptionStorage<T>.Reset();
+            DescriptionToEnumStorage<T>.Reset();
+            MembersStorage<T>.Reset();
+            MembersWithoutDefaultStorage<T>.Reset();
+            MembersByNameStorage<T>.Reset();
+            UnderlyingOperationStorage<T>.Reset();
+            EnumStorage<T>.Reset<TEnum>();
             Synchronization.Reset(typeof(T));
             Synchronization.Reset(typeof(TEnum));
         }
@@ -431,7 +431,7 @@ namespace NetExtender.Utilities.Types
             }
         }
 
-        private static class CacheValues<T> where T : unmanaged, Enum
+        private static class ValuesStorage<T> where T : unmanaged, Enum
         {
             public static ImmutableArray<T> Values { get; private set; }
             public static ImmutableDictionary<T, Int32> Set { get; private set; } = null!;
@@ -448,7 +448,7 @@ namespace NetExtender.Utilities.Types
                 }
             }
 
-            static CacheValues()
+            static ValuesStorage()
             {
                 Initialize();
             }
@@ -547,27 +547,27 @@ namespace NetExtender.Utilities.Types
 
                 protected internal override void Read()
                 {
-                    Values = CacheValues<T>.Values;
-                    Set = CacheValues<T>.Set;
-                    Decimal = CacheValues<T>.Decimal;
-                    Minimum = CacheValues<T>.Minimum;
-                    Maximum = CacheValues<T>.Maximum;
-                    Flags = CacheValues<T>.Flags;
+                    Values = ValuesStorage<T>.Values;
+                    Set = ValuesStorage<T>.Set;
+                    Decimal = ValuesStorage<T>.Decimal;
+                    Minimum = ValuesStorage<T>.Minimum;
+                    Maximum = ValuesStorage<T>.Maximum;
+                    Flags = ValuesStorage<T>.Flags;
                 }
 
                 protected internal override void Write()
                 {
-                    CacheValues<T>.Values = Values;
-                    CacheValues<T>.Set = Set;
-                    CacheValues<T>.Decimal = Decimal;
-                    CacheValues<T>.Minimum = Minimum;
-                    CacheValues<T>.Maximum = Maximum;
-                    CacheValues<T>.Flags = Flags;
+                    ValuesStorage<T>.Values = Values;
+                    ValuesStorage<T>.Set = Set;
+                    ValuesStorage<T>.Decimal = Decimal;
+                    ValuesStorage<T>.Minimum = Minimum;
+                    ValuesStorage<T>.Maximum = Maximum;
+                    ValuesStorage<T>.Flags = Flags;
                 }
             }
         }
 
-        private static class CacheValuesWithoutDefault<T> where T : unmanaged, Enum
+        private static class ValuesWithoutDefaultStorage<T> where T : unmanaged, Enum
         {
             public static ImmutableArray<T> Values { get; private set; }
             public static ImmutableDictionary<T, Int32> Set { get; private set; } = null!;
@@ -583,7 +583,7 @@ namespace NetExtender.Utilities.Types
                 }
             }
 
-            static CacheValuesWithoutDefault()
+            static ValuesWithoutDefaultStorage()
             {
                 Initialize();
             }
@@ -595,7 +595,7 @@ namespace NetExtender.Utilities.Types
 
             private static void Initialize(IEnumerable<T>? source)
             {
-                ImmutableArray<T> values = source?.ToImmutableArray() ?? CacheValues<T>.Values.Where(GenericUtilities.IsNotDefault).ToImmutableArray();
+                ImmutableArray<T> values = source?.ToImmutableArray() ?? ValuesStorage<T>.Values.Where(GenericUtilities.IsNotDefault).ToImmutableArray();
                 
                 Int32 i = 0;
                 ImmutableDictionary<T, Int32> set = values.ToImmutableDictionary(value => value, _ => i++);
@@ -669,25 +669,25 @@ namespace NetExtender.Utilities.Types
 
                 protected internal override void Read()
                 {
-                    Values = CacheValuesWithoutDefault<T>.Values;
-                    Set = CacheValuesWithoutDefault<T>.Set;
-                    Decimal = CacheValuesWithoutDefault<T>.Decimal;
-                    Minimum = CacheValuesWithoutDefault<T>.Minimum;
-                    Maximum = CacheValuesWithoutDefault<T>.Maximum;
+                    Values = ValuesWithoutDefaultStorage<T>.Values;
+                    Set = ValuesWithoutDefaultStorage<T>.Set;
+                    Decimal = ValuesWithoutDefaultStorage<T>.Decimal;
+                    Minimum = ValuesWithoutDefaultStorage<T>.Minimum;
+                    Maximum = ValuesWithoutDefaultStorage<T>.Maximum;
                 }
 
                 protected internal override void Write()
                 {
-                    CacheValuesWithoutDefault<T>.Values = Values;
-                    CacheValuesWithoutDefault<T>.Set = Set;
-                    CacheValuesWithoutDefault<T>.Decimal = Decimal;
-                    CacheValuesWithoutDefault<T>.Minimum = Minimum;
-                    CacheValuesWithoutDefault<T>.Maximum = Maximum;
+                    ValuesWithoutDefaultStorage<T>.Values = Values;
+                    ValuesWithoutDefaultStorage<T>.Set = Set;
+                    ValuesWithoutDefaultStorage<T>.Decimal = Decimal;
+                    ValuesWithoutDefaultStorage<T>.Minimum = Minimum;
+                    ValuesWithoutDefaultStorage<T>.Maximum = Maximum;
                 }
             }
         }
 
-        private static class CacheNames<T> where T : unmanaged, Enum
+        private static class NamesStorage<T> where T : unmanaged, Enum
         {
             public static ReadOnlyCollection<String> Names { get; private set; } = null!;
             public static ImmutableHashSet<String> Set { get; private set; } = null!;
@@ -700,7 +700,7 @@ namespace NetExtender.Utilities.Types
                 }
             }
 
-            static CacheNames()
+            static NamesStorage()
             {
                 Initialize();
             }
@@ -772,19 +772,19 @@ namespace NetExtender.Utilities.Types
 
                 protected internal override void Read()
                 {
-                    Names = CacheNames<T>.Names;
-                    Set = CacheNames<T>.Set;
+                    Names = NamesStorage<T>.Names;
+                    Set = NamesStorage<T>.Set;
                 }
 
                 protected internal override void Write()
                 {
-                    CacheNames<T>.Names = Names;
-                    CacheNames<T>.Set = Set;
+                    NamesStorage<T>.Names = Names;
+                    NamesStorage<T>.Set = Set;
                 }
             }
         }
 
-        private static class CacheNamesWithoutDefault<T> where T : unmanaged, Enum
+        private static class NamesWithoutDefaultStorage<T> where T : unmanaged, Enum
         {
             public static ReadOnlyCollection<String> Names { get; private set; } = null!;
             public static ImmutableHashSet<String> Set { get; private set; } = null!;
@@ -797,7 +797,7 @@ namespace NetExtender.Utilities.Types
                 }
             }
 
-            static CacheNamesWithoutDefault()
+            static NamesWithoutDefaultStorage()
             {
                 Initialize();
             }
@@ -809,7 +809,7 @@ namespace NetExtender.Utilities.Types
 
             private static void Initialize(IEnumerable<String>? source)
             {
-                source ??= CacheNames<T>.Names.Where(GenericUtilities.IsNotDefault);
+                source ??= NamesStorage<T>.Names.Where(GenericUtilities.IsNotDefault);
                 Names = source.ToReadOnlyArray();
                 Set = Names.ToImmutableHashSet();
             }
@@ -850,23 +850,23 @@ namespace NetExtender.Utilities.Types
 
                 protected internal override void Read()
                 {
-                    Names = CacheNamesWithoutDefault<T>.Names;
-                    Set = CacheNamesWithoutDefault<T>.Set;
+                    Names = NamesWithoutDefaultStorage<T>.Names;
+                    Set = NamesWithoutDefaultStorage<T>.Set;
                 }
 
                 protected internal override void Write()
                 {
-                    CacheNamesWithoutDefault<T>.Names = Names;
-                    CacheNamesWithoutDefault<T>.Set = Set;
+                    NamesWithoutDefaultStorage<T>.Names = Names;
+                    NamesWithoutDefaultStorage<T>.Set = Set;
                 }
             }
         }
 
-        private static class CacheDescription<T> where T : unmanaged, Enum
+        private static class DescriptionStorage<T> where T : unmanaged, Enum
         {
             public static ImmutableDictionary<T, String> Values { get; private set; } = null!;
 
-            static CacheDescription()
+            static DescriptionStorage()
             {
                 Initialize();
             }
@@ -878,7 +878,7 @@ namespace NetExtender.Utilities.Types
 
             private static void Initialize(IEnumerable<T>? source)
             {
-                source ??= CacheValues<T>.Values;
+                source ??= ValuesStorage<T>.Values;
                 Values = source.Select(Convert).WhereValueNotNull().ToImmutableDictionary();
             }
 
@@ -904,7 +904,7 @@ namespace NetExtender.Utilities.Types
 
                 private static void Initialize(IEnumerable<T>? source)
                 {
-                    source ??= CacheValues<T>.Values;
+                    source ??= ValuesStorage<T>.Values;
                     Values = source.Select(Convert).WhereValueNotNull().ToImmutableDictionary();
                 }
 
@@ -1139,19 +1139,19 @@ namespace NetExtender.Utilities.Types
 
                 protected internal override void Read()
                 {
-                    Values = CacheDescription<T>.Values;
+                    Values = DescriptionStorage<T>.Values;
                     Description.Read();
                 }
 
                 protected internal override void Write()
                 {
-                    CacheDescription<T>.Values = Values;
+                    DescriptionStorage<T>.Values = Values;
                     Description.Write();
                 }
             }
         }
         
-        private static class CacheDescriptionToEnum<T> where T : unmanaged, Enum
+        private static class DescriptionToEnumStorage<T> where T : unmanaged, Enum
         {
             public static ImmutableDictionary<String, T> Values { get; private set; } = null!;
 
@@ -1162,13 +1162,13 @@ namespace NetExtender.Utilities.Types
 
             private static void Initialize(IEnumerable<T>? source)
             {
-                source ??= CacheValues<T>.Values;
+                source ??= ValuesStorage<T>.Values;
                 Dictionary<String, T> values = new Dictionary<String, T>(32);
 
                 foreach (T value in source)
                 {
                     String name = value.ToString();
-                    if (!CacheDescription<T>.TryGetValue(value, out String? description))
+                    if (!DescriptionStorage<T>.TryGetValue(value, out String? description))
                     {
                         values[name] = value;
                         continue;
@@ -1209,13 +1209,13 @@ namespace NetExtender.Utilities.Types
 
                 private static void Initialize(IEnumerable<T>? source)
                 {
-                    source ??= CacheValues<T>.Values;
+                    source ??= ValuesStorage<T>.Values;
                     Dictionary<(LocalizationIdentifier, String), T> values = new Dictionary<(LocalizationIdentifier, String), T>(32);
 
                     foreach (T value in source)
                     {
                         String name = value.ToString();
-                        if (!CacheDescription<T>.TryGetValue(value, out ImmutableDictionary<LocalizationIdentifier, String>? result))
+                        if (!DescriptionStorage<T>.TryGetValue(value, out ImmutableDictionary<LocalizationIdentifier, String>? result))
                         {
                             values[(LocalizationIdentifier.Invariant, name)] = value;
                             continue;
@@ -1455,23 +1455,23 @@ namespace NetExtender.Utilities.Types
 
                 protected internal override void Read()
                 {
-                    Values = CacheDescriptionToEnum<T>.Values;
+                    Values = DescriptionToEnumStorage<T>.Values;
                     Description.Read();
                 }
 
                 protected internal override void Write()
                 {
-                    CacheDescriptionToEnum<T>.Values = Values;
+                    DescriptionToEnumStorage<T>.Values = Values;
                     Description.Write();
                 }
             }
         }
 
-        private static class CacheMembers<T> where T : unmanaged, Enum
+        private static class MembersStorage<T> where T : unmanaged, Enum
         {
             public static ImmutableArray<EnumMember<T>> Members { get; private set; }
 
-            static CacheMembers()
+            static MembersStorage()
             {
                 Initialize();
             }
@@ -1483,7 +1483,7 @@ namespace NetExtender.Utilities.Types
 
             private static void Initialize(IEnumerable<String>? source)
             {
-                source ??= CacheNames<T>.Names;
+                source ??= NamesStorage<T>.Names;
                 Members = source.Select(value => new EnumMember<T>(value)).ToImmutableArray();
             }
 
@@ -1517,21 +1517,21 @@ namespace NetExtender.Utilities.Types
 
                 protected internal override void Read()
                 {
-                    Members = CacheMembers<T>.Members;
+                    Members = MembersStorage<T>.Members;
                 }
 
                 protected internal override void Write()
                 {
-                    CacheMembers<T>.Members = Members;
+                    MembersStorage<T>.Members = Members;
                 }
             }
         }
 
-        private static class CacheMembersWithoutDefault<T> where T : unmanaged, Enum
+        private static class MembersWithoutDefaultStorage<T> where T : unmanaged, Enum
         {
             public static ImmutableArray<EnumMember<T>> Members { get; private set; }
 
-            static CacheMembersWithoutDefault()
+            static MembersWithoutDefaultStorage()
             {
                 Initialize();
             }
@@ -1545,7 +1545,7 @@ namespace NetExtender.Utilities.Types
             {
                 if (source is null)
                 {
-                    Initialize(CacheMembers<T>.Members);
+                    Initialize(MembersStorage<T>.Members);
                     return;
                 }
                 
@@ -1587,12 +1587,12 @@ namespace NetExtender.Utilities.Types
 
                 protected internal override void Read()
                 {
-                    Members = CacheMembersWithoutDefault<T>.Members;
+                    Members = MembersWithoutDefaultStorage<T>.Members;
                 }
 
                 protected internal override void Write()
                 {
-                    CacheMembersWithoutDefault<T>.Members = Members;
+                    MembersWithoutDefaultStorage<T>.Members = Members;
                 }
             }
         }
@@ -1602,11 +1602,11 @@ namespace NetExtender.Utilities.Types
         /// </summary>
         /// <typeparam name="T">Enum Type</typeparam>
         /// <typeparam name="TAttribute">Attribute Type</typeparam>
-        internal static class CacheAttributes<T, TAttribute> where T : unmanaged, Enum where TAttribute : Attribute
+        internal static class AttributesStorage<T, TAttribute> where T : unmanaged, Enum where TAttribute : Attribute
         {
             public static ImmutableDictionary<T, ImmutableArray<TAttribute>> Cache { get; }
 
-            static CacheAttributes()
+            static AttributesStorage()
             {
                 Cache = GetValues<T>().ToImmutableDictionary(key => key, value => value.ToMember().FieldInfo!
                     .GetCustomAttributes(typeof(TAttribute), true).OfType<TAttribute>().ToImmutableArray());
@@ -1628,12 +1628,12 @@ namespace NetExtender.Utilities.Types
             }
         }
 
-        private static class CacheMembersByName<T> where T : unmanaged, Enum
+        private static class MembersByNameStorage<T> where T : unmanaged, Enum
         {
             public static ImmutableDictionary<String, EnumMember<T>> MembersByName { get; private set; } = null!;
             public static ImmutableDictionary<String, EnumMember<T>> MembersByNameInsensitive { get; private set; } = null!;
 
-            static CacheMembersByName()
+            static MembersByNameStorage()
             {
                 Initialize();
             }
@@ -1645,8 +1645,8 @@ namespace NetExtender.Utilities.Types
                     return member.Name;
                 }
 
-                MembersByName = CacheMembers<T>.Members.ToImmutableDictionary(Selector);
-                MembersByNameInsensitive = CacheMembers<T>.Members.DistinctBy(Selector, StringComparer.OrdinalIgnoreCase).ToImmutableDictionary(Selector, StringComparer.OrdinalIgnoreCase);
+                MembersByName = MembersStorage<T>.Members.ToImmutableDictionary(Selector);
+                MembersByNameInsensitive = MembersStorage<T>.Members.DistinctBy(Selector, StringComparer.OrdinalIgnoreCase).ToImmutableDictionary(Selector, StringComparer.OrdinalIgnoreCase);
             }
 
             internal static ITransaction Transaction()
@@ -1680,24 +1680,24 @@ namespace NetExtender.Utilities.Types
 
                 protected internal override void Read()
                 {
-                    MembersByName = CacheMembersByName<T>.MembersByName;
-                    MembersByNameInsensitive = CacheMembersByName<T>.MembersByNameInsensitive;
+                    MembersByName = MembersByNameStorage<T>.MembersByName;
+                    MembersByNameInsensitive = MembersByNameStorage<T>.MembersByNameInsensitive;
                 }
 
                 protected internal override void Write()
                 {
-                    CacheMembersByName<T>.MembersByName = MembersByName;
-                    CacheMembersByName<T>.MembersByNameInsensitive = MembersByNameInsensitive;
+                    MembersByNameStorage<T>.MembersByName = MembersByName;
+                    MembersByNameStorage<T>.MembersByNameInsensitive = MembersByNameInsensitive;
                 }
             }
         }
 
-        private static class CacheUnderlyingOperation<T> where T : unmanaged, Enum
+        private static class UnderlyingOperationStorage<T> where T : unmanaged, Enum
         {
             public static Type Underlying { get; }
             public static IUnderlyingEnumOperation<T> Operation { get; private set; } = null!;
 
-            static CacheUnderlyingOperation()
+            static UnderlyingOperationStorage()
             {
                 Underlying = CacheType<T>.Underlying;
                 Initialize();
@@ -1708,7 +1708,7 @@ namespace NetExtender.Utilities.Types
             {
                 T minimum = Minimum<T>();
                 T maximum = Maximum<T>();
-                EnumMember<T>[] distinct = CacheMembers<T>.Members.OrderBy(member => member.Value).Distinct(new EnumMember<T>.ValueComparer()).ToArray();
+                EnumMember<T>[] distinct = MembersStorage<T>.Members.OrderBy(member => member.Value).Distinct(new EnumMember<T>.ValueComparer()).ToArray();
 
                 TypeCode type = Type.GetTypeCode(CacheType<T>.Type);
                 Operation = type switch
@@ -1755,25 +1755,25 @@ namespace NetExtender.Utilities.Types
 
                 protected internal override void Read()
                 {
-                    Operation = CacheUnderlyingOperation<T>.Operation;
+                    Operation = UnderlyingOperationStorage<T>.Operation;
                 }
 
                 protected internal override void Write()
                 {
-                    CacheUnderlyingOperation<T>.Operation = Operation;
+                    UnderlyingOperationStorage<T>.Operation = Operation;
                 }
             }
         }
 
         [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
-        internal static class CacheEnum<T> where T : unmanaged, Enum
+        internal static class EnumStorage<T> where T : unmanaged, Enum
         {
             public static ImmutableSortedSet<Enum<T>> Values { get; private set; } = null!;
             public static ImmutableDictionary<T, Enum<T>> Enums { get; private set; } = null!;
             public static ImmutableDictionary<T, ImmutableDictionary<LocalizationIdentifier, Enum<T>>> Identifiers { get; private set; } = null!;
             public static ImmutableDictionary<LocalizationIdentifier, ImmutableSortedSet<Enum<T>>> Grouping { get; private set; } = null!;
 
-            static CacheEnum()
+            static EnumStorage()
             {
                 Initialize();
             }
@@ -1785,7 +1785,7 @@ namespace NetExtender.Utilities.Types
 
             private static void Initialize(IEnumerable<T>? source)
             {
-                source ??= CacheValues<T>.Values;
+                source ??= ValuesStorage<T>.Values;
                 Initialize(source.Select(value => Enum<T>.Create(value)));
             }
 
@@ -1799,7 +1799,7 @@ namespace NetExtender.Utilities.Types
                 
                 ImmutableSortedSet<Enum<T>> values = source.ToImmutableSortedSet();
                 ImmutableDictionary<T, Enum<T>> enums = values.ToImmutableDictionary(value => value.Id, value => value);
-                ImmutableDictionary<T, ImmutableDictionary<LocalizationIdentifier, Enum<T>>> identifiers = values.ToImmutableDictionary(value => value.Id, value => CacheDescriptionToEnum<T>.Get()
+                ImmutableDictionary<T, ImmutableDictionary<LocalizationIdentifier, Enum<T>>> identifiers = values.ToImmutableDictionary(value => value.Id, value => DescriptionToEnumStorage<T>.Get()
                     .ToImmutableDictionary(identifier => identifier, identifier => Enum<T>.Create(value, identifier)));
                 ImmutableDictionary<LocalizationIdentifier, ImmutableSortedSet<Enum<T>>> grouping = identifiers.SelectMany(pair => pair.Value).GroupBy(pair => pair.Key, pair => pair.Value)
                     .ToImmutableDictionary(group => group.Key, group => group.Select(x => x).ToImmutableSortedSet());
@@ -1829,7 +1829,7 @@ namespace NetExtender.Utilities.Types
 
                 private static void Initialize(IEnumerable<T>? source)
                 {
-                    source ??= CacheValues<T>.Values;
+                    source ??= ValuesStorage<T>.Values;
                     Initialize(source.Select(value => Enum<T>.Create<TEnum>(value)));
                 }
 
@@ -1843,7 +1843,7 @@ namespace NetExtender.Utilities.Types
                     
                     ImmutableSortedSet<TEnum> values = source.ToImmutableSortedSet();
                     ImmutableDictionary<T, TEnum> enums = values.ToImmutableDictionary(value => value.Id, value => value);
-                    ImmutableDictionary<T, ImmutableDictionary<LocalizationIdentifier, TEnum>> identifiers = values.ToImmutableDictionary(value => value.Id, value => CacheDescriptionToEnum<T>.Get()
+                    ImmutableDictionary<T, ImmutableDictionary<LocalizationIdentifier, TEnum>> identifiers = values.ToImmutableDictionary(value => value.Id, value => DescriptionToEnumStorage<T>.Get()
                         .ToImmutableDictionary(identifier => identifier, identifier => Enum<T>.Create<TEnum>(value, identifier)));
                     ImmutableDictionary<LocalizationIdentifier, ImmutableSortedSet<TEnum>> grouping = identifiers.SelectMany(pair => pair.Value).GroupBy(pair => pair.Key, pair => pair.Value)
                         .ToImmutableDictionary(group => group.Key, group => group.Select(x => x).ToImmutableSortedSet());
@@ -1886,13 +1886,13 @@ namespace NetExtender.Utilities.Types
                         throw new ArgumentNullException(nameof(value));
                     }
 
-                    return CacheDescriptionToEnum<T>.TryGetValue(value, out T result) && Contains(result);
+                    return DescriptionToEnumStorage<T>.TryGetValue(value, out T result) && Contains(result);
                 }
 
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 public static Boolean Contains(LocalizationIdentifier identifier, String value)
                 {
-                    return CacheDescriptionToEnum<T>.TryGetValue(identifier, value, out T result) && Contains(result);
+                    return DescriptionToEnumStorage<T>.TryGetValue(identifier, value, out T result) && Contains(result);
                 }
 
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1943,7 +1943,7 @@ namespace NetExtender.Utilities.Types
                         throw new ArgumentNullException(nameof(value));
                     }
                     
-                    if (CacheDescriptionToEnum<T>.TryGetValue(value, out T @enum))
+                    if (DescriptionToEnumStorage<T>.TryGetValue(value, out T @enum))
                     {
                         return TryParse(@enum, out result);
                     }
@@ -1960,7 +1960,7 @@ namespace NetExtender.Utilities.Types
                         throw new ArgumentNullException(nameof(value));
                     }
                     
-                    if (CacheDescriptionToEnum<T>.TryGetValue(identifier, value, out T @enum))
+                    if (DescriptionToEnumStorage<T>.TryGetValue(identifier, value, out T @enum))
                     {
                         return TryParse(@enum, out result);
                     }
@@ -2062,7 +2062,7 @@ namespace NetExtender.Utilities.Types
                     throw new ArgumentNullException(nameof(value));
                 }
 
-                return CacheDescriptionToEnum<T>.TryGetValue(value, out T result) && Contains(result);
+                return DescriptionToEnumStorage<T>.TryGetValue(value, out T result) && Contains(result);
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -2073,7 +2073,7 @@ namespace NetExtender.Utilities.Types
                     throw new ArgumentNullException(nameof(value));
                 }
 
-                return CacheDescriptionToEnum<T>.TryGetValue(identifier, value, out T result) && Contains(result);
+                return DescriptionToEnumStorage<T>.TryGetValue(identifier, value, out T result) && Contains(result);
             }
             
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -2160,7 +2160,7 @@ namespace NetExtender.Utilities.Types
                     throw new ArgumentNullException(nameof(value));
                 }
 
-                if (CacheDescriptionToEnum<T>.TryGetValue(value, out T @enum))
+                if (DescriptionToEnumStorage<T>.TryGetValue(value, out T @enum))
                 {
                     return TryParse(@enum, out result);
                 }
@@ -2177,7 +2177,7 @@ namespace NetExtender.Utilities.Types
                     throw new ArgumentNullException(nameof(value));
                 }
                     
-                if (CacheDescriptionToEnum<T>.TryGetValue(identifier, value, out T @enum))
+                if (DescriptionToEnumStorage<T>.TryGetValue(identifier, value, out T @enum))
                 {
                     return TryParse(@enum, out result);
                 }
@@ -2275,18 +2275,18 @@ namespace NetExtender.Utilities.Types
 
                 protected internal override void Read()
                 {
-                    Values = CacheEnum<T>.Values;
-                    Enums = CacheEnum<T>.Enums;
-                    Identifiers = CacheEnum<T>.Identifiers;
-                    Grouping = CacheEnum<T>.Grouping;
+                    Values = EnumStorage<T>.Values;
+                    Enums = EnumStorage<T>.Enums;
+                    Identifiers = EnumStorage<T>.Identifiers;
+                    Grouping = EnumStorage<T>.Grouping;
                 }
 
                 protected internal override void Write()
                 {
-                    CacheEnum<T>.Values = Values;
-                    CacheEnum<T>.Enums = Enums;
-                    CacheEnum<T>.Identifiers = Identifiers;
-                    CacheEnum<T>.Grouping = Grouping;
+                    EnumStorage<T>.Values = Values;
+                    EnumStorage<T>.Enums = Enums;
+                    EnumStorage<T>.Identifiers = Identifiers;
+                    EnumStorage<T>.Grouping = Grouping;
                 }
             }
 
@@ -2356,7 +2356,7 @@ namespace NetExtender.Utilities.Types
                     return new KeyValuePair<Type, EnumSynchronizationMember?>(type, null);
                 }
 
-                MethodInfo? getter = typeof(CacheEnum<>).GetNestedType(nameof(Type)+"`1", BindingFlags.Static | BindingFlags.NonPublic)?
+                MethodInfo? getter = typeof(EnumStorage<>).GetNestedType(nameof(Type)+"`1", BindingFlags.Static | BindingFlags.NonPublic)?
                     .MakeGenericType(generic).GetMethod(nameof(Get), BindingFlags.Static | BindingFlags.Public, Type.EmptyTypes);
 
                 if (getter?.Invoke(null, null) is not IEnumerable enumerable)

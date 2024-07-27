@@ -91,7 +91,7 @@ namespace NetExtender.Utilities.Types
         private record ReactiveObjectHandler
         {
             private delegate TDestination RaiseAndSetIfChangedHandler<in TSource, TDestination>(TSource source, ref TDestination field, TDestination value, String? property) where TSource : class;
-            private static ConcurrentDictionary<(Type Source, Type Destination), ReactiveObjectHandler?> Cache { get; } = new ConcurrentDictionary<(Type, Type), ReactiveObjectHandler?>();
+            private static ConcurrentDictionary<(Type Source, Type Destination), ReactiveObjectHandler?> Storage { get; } = new ConcurrentDictionary<(Type, Type), ReactiveObjectHandler?>();
 
             public Type Source { get; }
             public Type Destination { get; }
@@ -157,7 +157,7 @@ namespace NetExtender.Utilities.Types
                     throw new ArgumentNullException(nameof(source));
                 }
 
-                if (Cache.GetOrAdd((source.GetType(), !typeof(TDestination).IsValueType && field is not null ? field.GetType() : typeof(TDestination)), Create) is { } handler)
+                if (Storage.GetOrAdd((source.GetType(), !typeof(TDestination).IsValueType && field is not null ? field.GetType() : typeof(TDestination)), Create) is { } handler)
                 {
                     return handler.Invoke(source, ref field, value, property, out result);
                 }
@@ -174,7 +174,7 @@ namespace NetExtender.Utilities.Types
                     throw new ArgumentNullException(nameof(source));
                 }
 
-                if (Cache.GetOrAdd((source.GetType(), !typeof(TDestination).IsValueType && field is not null ? field.GetType() : typeof(TDestination)), Create) is { } handler)
+                if (Storage.GetOrAdd((source.GetType(), !typeof(TDestination).IsValueType && field is not null ? field.GetType() : typeof(TDestination)), Create) is { } handler)
                 {
                     return handler.Invoke(source, ref field, factory(source), property, out result);
                 }
@@ -191,7 +191,7 @@ namespace NetExtender.Utilities.Types
                     throw new ArgumentNullException(nameof(source));
                 }
 
-                if (Cache.GetOrAdd((source.GetType(), !typeof(TDestination).IsValueType && field is not null ? field.GetType() : typeof(TDestination)), Create) is { } handler)
+                if (Storage.GetOrAdd((source.GetType(), !typeof(TDestination).IsValueType && field is not null ? field.GetType() : typeof(TDestination)), Create) is { } handler)
                 {
                     return handler.Invoke(source, ref field, factory(source, field), property, out result);
                 }
@@ -230,7 +230,7 @@ namespace NetExtender.Utilities.Types
         
         private record PropertyEventHandler
         {
-            private static ConcurrentDictionary<Type, PropertyEventHandler?> Cache { get; } = new ConcurrentDictionary<Type, PropertyEventHandler?>();
+            private static ConcurrentDictionary<Type, PropertyEventHandler?> Storage { get; } = new ConcurrentDictionary<Type, PropertyEventHandler?>();
 
             private Type Type { get; }
             private Action<Object?, String?>? Changing { get; }
@@ -267,7 +267,7 @@ namespace NetExtender.Utilities.Types
                     throw new ArgumentNullException(nameof(type));
                 }
 
-                return Cache.GetOrAdd(type, Create);
+                return Storage.GetOrAdd(type, Create);
             }
 
             public static PropertyEventHandler? Get<TSource>(TSource? source) where TSource : class

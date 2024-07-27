@@ -434,24 +434,24 @@ namespace NetExtender.Utilities.Types
             {
                 CollectionType.None => true,
                 CollectionType.Generic => type.IsGenericType,
-                CollectionType.Enumerable => TypeCache.IsEnumerable(type),
-                CollectionType.GenericEnumerable => TypeCache.IsGenericEnumerable(type),
-                CollectionType.Collection => TypeCache.IsCollection(type),
-                CollectionType.GenericCollection => TypeCache.IsGenericCollection(type),
-                CollectionType.Array => TypeCache.IsArray(type),
-                CollectionType.GenericArray => TypeCache.IsGenericArray(type),
-                CollectionType.List => TypeCache.IsList(type),
-                CollectionType.GenericList => TypeCache.IsGenericList(type),
-                CollectionType.Set => TypeCache.IsSet(type),
-                CollectionType.GenericSet => TypeCache.IsGenericSet(type),
-                CollectionType.Dictionary => TypeCache.IsDictionary(type),
-                CollectionType.GenericDictionary => TypeCache.IsGenericDictionary(type),
-                CollectionType.Map => TypeCache.IsMap(type),
-                CollectionType.GenericMap => TypeCache.IsGenericMap(type),
-                CollectionType.Stack => TypeCache.IsStack(type),
-                CollectionType.GenericStack => TypeCache.IsGenericStack(type),
-                CollectionType.Queue => TypeCache.IsQueue(type),
-                CollectionType.GenericQueue => TypeCache.IsGenericQueue(type),
+                CollectionType.Enumerable => TypeStorage.IsEnumerable(type),
+                CollectionType.GenericEnumerable => TypeStorage.IsGenericEnumerable(type),
+                CollectionType.Collection => TypeStorage.IsCollection(type),
+                CollectionType.GenericCollection => TypeStorage.IsGenericCollection(type),
+                CollectionType.Array => TypeStorage.IsArray(type),
+                CollectionType.GenericArray => TypeStorage.IsGenericArray(type),
+                CollectionType.List => TypeStorage.IsList(type),
+                CollectionType.GenericList => TypeStorage.IsGenericList(type),
+                CollectionType.Set => TypeStorage.IsSet(type),
+                CollectionType.GenericSet => TypeStorage.IsGenericSet(type),
+                CollectionType.Dictionary => TypeStorage.IsDictionary(type),
+                CollectionType.GenericDictionary => TypeStorage.IsGenericDictionary(type),
+                CollectionType.Map => TypeStorage.IsMap(type),
+                CollectionType.GenericMap => TypeStorage.IsGenericMap(type),
+                CollectionType.Stack => TypeStorage.IsStack(type),
+                CollectionType.GenericStack => TypeStorage.IsGenericStack(type),
+                CollectionType.Queue => TypeStorage.IsQueue(type),
+                CollectionType.GenericQueue => TypeStorage.IsGenericQueue(type),
                 _ => throw new EnumUndefinedOrNotSupportedException<CollectionType>(collection, nameof(collection), null)
             };
 
@@ -483,65 +483,65 @@ namespace NetExtender.Utilities.Types
 
             CollectionType collection = CollectionType.None;
 
-            if (TypeCache.IsGenericArray(type))
+            if (TypeStorage.IsGenericArray(type))
             {
                 collection |= CollectionType.GenericArray;
             }
-            else if (TypeCache.IsArray(type))
+            else if (TypeStorage.IsArray(type))
             {
                 collection |= CollectionType.Array;
             }
 
-            if (TypeCache.IsGenericList(type))
+            if (TypeStorage.IsGenericList(type))
             {
                 collection |= CollectionType.GenericList;
             }
-            else if (TypeCache.IsList(type))
+            else if (TypeStorage.IsList(type))
             {
                 collection |= CollectionType.List;
             }
 
-            if (TypeCache.IsGenericSet(type))
+            if (TypeStorage.IsGenericSet(type))
             {
                 collection |= CollectionType.GenericSet;
             }
-            else if (TypeCache.IsSet(type))
+            else if (TypeStorage.IsSet(type))
             {
                 collection |= CollectionType.Set;
             }
 
-            if (TypeCache.IsGenericDictionary(type))
+            if (TypeStorage.IsGenericDictionary(type))
             {
                 collection |= CollectionType.GenericDictionary;
             }
-            else if (TypeCache.IsDictionary(type))
+            else if (TypeStorage.IsDictionary(type))
             {
                 collection |= CollectionType.Dictionary;
             }
 
-            if (TypeCache.IsGenericMap(type))
+            if (TypeStorage.IsGenericMap(type))
             {
                 collection |= CollectionType.GenericMap;
             }
-            else if (TypeCache.IsMap(type))
+            else if (TypeStorage.IsMap(type))
             {
                 collection |= CollectionType.Map;
             }
 
-            if (TypeCache.IsGenericStack(type))
+            if (TypeStorage.IsGenericStack(type))
             {
                 collection |= CollectionType.GenericStack;
             }
-            else if (TypeCache.IsStack(type))
+            else if (TypeStorage.IsStack(type))
             {
                 collection |= CollectionType.Stack;
             }
 
-            if (TypeCache.IsGenericQueue(type))
+            if (TypeStorage.IsGenericQueue(type))
             {
                 collection |= CollectionType.GenericQueue;
             }
-            else if (TypeCache.IsQueue(type))
+            else if (TypeStorage.IsQueue(type))
             {
                 collection |= CollectionType.Queue;
             }
@@ -551,11 +551,11 @@ namespace NetExtender.Utilities.Types
                 return collection;
             }
 
-            if (TypeCache.IsGenericCollection(type))
+            if (TypeStorage.IsGenericCollection(type))
             {
                 collection |= CollectionType.GenericCollection;
             }
-            else if (TypeCache.IsCollection(type))
+            else if (TypeStorage.IsCollection(type))
             {
                 collection |= CollectionType.Collection;
             }
@@ -565,11 +565,11 @@ namespace NetExtender.Utilities.Types
                 return collection;
             }
 
-            if (TypeCache.IsGenericEnumerable(type))
+            if (TypeStorage.IsGenericEnumerable(type))
             {
                 collection |= CollectionType.GenericEnumerable;
             }
-            else if (TypeCache.IsEnumerable(type))
+            else if (TypeStorage.IsEnumerable(type))
             {
                 collection |= CollectionType.Enumerable;
             }
@@ -577,7 +577,7 @@ namespace NetExtender.Utilities.Types
             return collection;
         }
 
-        internal static class TypeCache
+        internal static class TypeStorage
         {
             private readonly struct Status
             {
@@ -593,14 +593,14 @@ namespace NetExtender.Utilities.Types
                 }
             }
 
-            private static ConcurrentDictionary<Type, Status> EnumerableCache { get; } = new ConcurrentDictionary<Type, Status>();
-            private static ConcurrentDictionary<Type, Status> CollectionCache { get; } = new ConcurrentDictionary<Type, Status>();
-            private static ConcurrentDictionary<Type, Status> ListCache { get; } = new ConcurrentDictionary<Type, Status>();
-            private static ConcurrentDictionary<Type, Status> SetCache { get; } = new ConcurrentDictionary<Type, Status>();
-            private static ConcurrentDictionary<Type, Status> DictionaryCache { get; } = new ConcurrentDictionary<Type, Status>();
-            private static ConcurrentDictionary<Type, Status> MapCache { get; } = new ConcurrentDictionary<Type, Status>();
-            private static ConcurrentDictionary<Type, Status> StackCache { get; } = new ConcurrentDictionary<Type, Status>();
-            private static ConcurrentDictionary<Type, Status> QueueCache { get; } = new ConcurrentDictionary<Type, Status>();
+            private static ConcurrentDictionary<Type, Status> EnumerableStorage { get; } = new ConcurrentDictionary<Type, Status>();
+            private static ConcurrentDictionary<Type, Status> CollectionStorage { get; } = new ConcurrentDictionary<Type, Status>();
+            private static ConcurrentDictionary<Type, Status> ListStorage { get; } = new ConcurrentDictionary<Type, Status>();
+            private static ConcurrentDictionary<Type, Status> SetStorage { get; } = new ConcurrentDictionary<Type, Status>();
+            private static ConcurrentDictionary<Type, Status> DictionaryStorage { get; } = new ConcurrentDictionary<Type, Status>();
+            private static ConcurrentDictionary<Type, Status> MapStorage { get; } = new ConcurrentDictionary<Type, Status>();
+            private static ConcurrentDictionary<Type, Status> StackStorage { get; } = new ConcurrentDictionary<Type, Status>();
+            private static ConcurrentDictionary<Type, Status> QueueStorage { get; } = new ConcurrentDictionary<Type, Status>();
 
             public static IImmutableSet<Type> EnumerableTypes { get; } = ImmutableHashSet.Create(typeof(IEnumerable));
             public static IImmutableSet<Type> GenericEnumerableTypes { get; } = ImmutableHashSet.Create(typeof(IEnumerable<>));
@@ -739,122 +739,122 @@ namespace NetExtender.Utilities.Types
 
             public static Boolean IsEnumerable(Type? type)
             {
-                return type is not null && Is(type, EnumerableCache, CreateEnumerable);
+                return type is not null && Is(type, EnumerableStorage, CreateEnumerable);
             }
 
             public static Boolean IsNonGenericEnumerable(Type? type)
             {
-                return type is not null && IsNonGeneric(type, EnumerableCache, CreateEnumerable);
+                return type is not null && IsNonGeneric(type, EnumerableStorage, CreateEnumerable);
             }
 
             public static Boolean IsGenericEnumerable(Type? type)
             {
-                return type is not null && IsGeneric(type, EnumerableCache, CreateEnumerable);
+                return type is not null && IsGeneric(type, EnumerableStorage, CreateEnumerable);
             }
 
             public static Boolean IsCollection(Type? type)
             {
-                return type is not null && Is(type, CollectionCache, CreateCollection);
+                return type is not null && Is(type, CollectionStorage, CreateCollection);
             }
 
             public static Boolean IsNonGenericCollection(Type? type)
             {
-                return type is not null && IsNonGeneric(type, CollectionCache, CreateCollection);
+                return type is not null && IsNonGeneric(type, CollectionStorage, CreateCollection);
             }
 
             public static Boolean IsGenericCollection(Type? type)
             {
-                return type is not null && IsGeneric(type, CollectionCache, CreateCollection);
+                return type is not null && IsGeneric(type, CollectionStorage, CreateCollection);
             }
 
             public static Boolean IsList(Type? type)
             {
-                return type is not null && Is(type, ListCache, CreateList);
+                return type is not null && Is(type, ListStorage, CreateList);
             }
 
             public static Boolean IsNonGenericList(Type? type)
             {
-                return type is not null && IsNonGeneric(type, ListCache, CreateList);
+                return type is not null && IsNonGeneric(type, ListStorage, CreateList);
             }
 
             public static Boolean IsGenericList(Type? type)
             {
-                return type is not null && IsGeneric(type, ListCache, CreateList);
+                return type is not null && IsGeneric(type, ListStorage, CreateList);
             }
 
             public static Boolean IsSet(Type? type)
             {
-                return type is not null && Is(type, SetCache, CreateSet);
+                return type is not null && Is(type, SetStorage, CreateSet);
             }
 
             public static Boolean IsNonGenericSet(Type? type)
             {
-                return type is not null && IsNonGeneric(type, SetCache, CreateSet);
+                return type is not null && IsNonGeneric(type, SetStorage, CreateSet);
             }
 
             public static Boolean IsGenericSet(Type? type)
             {
-                return type is not null && IsGeneric(type, SetCache, CreateSet);
+                return type is not null && IsGeneric(type, SetStorage, CreateSet);
             }
 
             public static Boolean IsDictionary(Type? type)
             {
-                return type is not null && Is(type, DictionaryCache, CreateDictionary);
+                return type is not null && Is(type, DictionaryStorage, CreateDictionary);
             }
 
             public static Boolean IsNonGenericDictionary(Type? type)
             {
-                return type is not null && IsNonGeneric(type, DictionaryCache, CreateDictionary);
+                return type is not null && IsNonGeneric(type, DictionaryStorage, CreateDictionary);
             }
 
             public static Boolean IsGenericDictionary(Type? type)
             {
-                return type is not null && IsGeneric(type, DictionaryCache, CreateDictionary);
+                return type is not null && IsGeneric(type, DictionaryStorage, CreateDictionary);
             }
 
             public static Boolean IsMap(Type? type)
             {
-                return type is not null && Is(type, MapCache, CreateMap);
+                return type is not null && Is(type, MapStorage, CreateMap);
             }
 
             public static Boolean IsNonGenericMap(Type? type)
             {
-                return type is not null && IsNonGeneric(type, MapCache, CreateMap);
+                return type is not null && IsNonGeneric(type, MapStorage, CreateMap);
             }
 
             public static Boolean IsGenericMap(Type? type)
             {
-                return type is not null && IsGeneric(type, MapCache, CreateMap);
+                return type is not null && IsGeneric(type, MapStorage, CreateMap);
             }
 
             public static Boolean IsStack(Type? type)
             {
-                return type is not null && Is(type, StackCache, CreateStack);
+                return type is not null && Is(type, StackStorage, CreateStack);
             }
 
             public static Boolean IsNonGenericStack(Type? type)
             {
-                return type is not null && IsNonGeneric(type, StackCache, CreateStack);
+                return type is not null && IsNonGeneric(type, StackStorage, CreateStack);
             }
 
             public static Boolean IsGenericStack(Type? type)
             {
-                return type is not null && IsGeneric(type, StackCache, CreateStack);
+                return type is not null && IsGeneric(type, StackStorage, CreateStack);
             }
 
             public static Boolean IsQueue(Type? type)
             {
-                return type is not null && Is(type, QueueCache, CreateQueue);
+                return type is not null && Is(type, QueueStorage, CreateQueue);
             }
 
             public static Boolean IsNonGenericQueue(Type? type)
             {
-                return type is not null && IsNonGeneric(type, QueueCache, CreateQueue);
+                return type is not null && IsNonGeneric(type, QueueStorage, CreateQueue);
             }
 
             public static Boolean IsGenericQueue(Type? type)
             {
-                return type is not null && IsGeneric(type, QueueCache, CreateQueue);
+                return type is not null && IsGeneric(type, QueueStorage, CreateQueue);
             }
         }
     }

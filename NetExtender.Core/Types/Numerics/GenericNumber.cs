@@ -130,11 +130,11 @@ namespace NetExtender.Types.Numerics
         }
 
         [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
-        private static class GenericCache
+        private static class GenericStorage
         {
             private static ConcurrentDictionary<Type, Func<ValueType, IGenericNumber>> Constructors { get; }
 
-            static GenericCache()
+            static GenericStorage()
             {
                 Constructors = new ConcurrentDictionary<Type, Func<ValueType, IGenericNumber>>();
             }
@@ -193,7 +193,7 @@ namespace NetExtender.Types.Numerics
                 throw new ArgumentNullException(nameof(value));
             }
 
-            Value = GenericCache.Create(value);
+            Value = GenericStorage.Create(value);
         }
 
         public TypeCode GetTypeCode()

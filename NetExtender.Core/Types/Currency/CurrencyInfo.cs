@@ -32,7 +32,7 @@ namespace NetExtender.Types.Currency
 
         public static implicit operator CurrencyInfo(CurrencyIdentifier identifier)
         {
-            return CurrencyInfoCache.Get(identifier);
+            return CurrencyInfoStorage.Get(identifier);
         }
 
         public static implicit operator CurrencyInfo?(CountryIdentifier identifier)
@@ -78,7 +78,7 @@ namespace NetExtender.Types.Currency
         {
             get
             {
-                return EnumUtilities.GetValuesWithoutDefault<CurrencyIdentifier>().Select(CurrencyInfoCache.Get).ToArray();
+                return EnumUtilities.GetValuesWithoutDefault<CurrencyIdentifier>().Select(CurrencyInfoStorage.Get).ToArray();
             }
         }
 
@@ -143,9 +143,9 @@ namespace NetExtender.Types.Currency
 
     public partial class CurrencyInfo
     {
-        private static class CurrencyInfoCache
+        private static class CurrencyInfoStorage
         {
-            private static ConcurrentDictionary<CurrencyIdentifier, CurrencyInfo> Cache { get; } = new ConcurrentDictionary<CurrencyIdentifier, CurrencyInfo>();
+            private static ConcurrentDictionary<CurrencyIdentifier, CurrencyInfo> Storage { get; } = new ConcurrentDictionary<CurrencyIdentifier, CurrencyInfo>();
 
             public static CurrencyInfo Get(CurrencyIdentifier identifier)
             {
@@ -154,7 +154,7 @@ namespace NetExtender.Types.Currency
                     identifier = CurrencyIdentifier.Usd;
                 }
 
-                return Cache.GetOrAdd(identifier, Create);
+                return Storage.GetOrAdd(identifier, Create);
             }
 
             private static CurrencyInfo Create(CurrencyIdentifier identifier)

@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using NetExtender.Types.Middlewares.Exceptions;
 using NetExtender.Types.Middlewares.Interfaces;
 
 namespace NetExtender.Types.Middlewares
@@ -124,7 +125,7 @@ namespace NetExtender.Types.Middlewares
         }
     }
     
-    public abstract class AsyncMiddleware<T> : Middleware, IAsyncMiddleware<T>
+    public abstract class AsyncMiddleware<T> : Middleware, IAsyncMiddleware<T>, IMiddlewareConverter<T, T>, IMiddlewareAsyncConverter<T, T>
     {
         [return: NotNullIfNotNull("value")]
         public static implicit operator AsyncMiddleware<T>?(MiddlewareDelegateAsync<T>? value)
@@ -161,6 +162,50 @@ namespace NetExtender.Types.Middlewares
         
         public abstract Task InvokeAsync(Object? sender, T argument);
         
+        public async Task<Boolean> InvokeAsync<TArgument>(TArgument argument)
+        {
+            try
+            {
+                switch (this)
+                {
+                    case IAsyncMiddleware<TArgument> middleware:
+                        await middleware.InvokeAsync(argument);
+                        return true;
+                    case IMiddlewareConverter<TArgument, T> converter:
+                        await InvokeAsync(converter.Convert(argument));
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+            catch (MiddlewareConvertNoInvokeException)
+            {
+                return true;
+            }
+        }
+        
+        public async Task<Boolean> InvokeAsync<TArgument>(Object? sender, TArgument argument)
+        {
+            try
+            {
+                switch (this)
+                {
+                    case IAsyncMiddleware<TArgument> middleware:
+                        await middleware.InvokeAsync(sender, argument);
+                        return true;
+                    case IMiddlewareConverter<TArgument, T> converter:
+                        await InvokeAsync(sender, converter.Convert(sender, argument));
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+            catch (MiddlewareConvertNoInvokeException)
+            {
+                return true;
+            }
+        }
+        
         public virtual async ValueTask InvokeValueAsync(T argument)
         {
             await InvokeAsync(argument);
@@ -171,9 +216,61 @@ namespace NetExtender.Types.Middlewares
             await InvokeAsync(sender, argument);
         }
         
-        public override IAsyncMiddleware<TArgument>? AsyncInvoker<TArgument>()
+        public async ValueTask<Boolean> InvokeValueAsync<TArgument>(TArgument argument)
         {
-            throw new NotImplementedException();
+            try
+            {
+                switch (this)
+                {
+                    case IAsyncMiddleware<TArgument> middleware:
+                        await middleware.InvokeValueAsync(argument);
+                        return true;
+                    case IMiddlewareConverter<TArgument, T> converter:
+                        await InvokeValueAsync(converter.Convert(argument));
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+            catch (MiddlewareConvertNoInvokeException)
+            {
+                return true;
+            }
+        }
+        
+        public async ValueTask<Boolean> InvokeValueAsync<TArgument>(Object? sender, TArgument argument)
+        {
+            try
+            {
+                switch (this)
+                {
+                    case IAsyncMiddleware<TArgument> middleware:
+                        await middleware.InvokeValueAsync(sender, argument);
+                        return true;
+                    case IMiddlewareAsyncConverter<TArgument, T> converter:
+                        await InvokeValueAsync(sender, await converter.ConvertAsync(sender, argument));
+                        return true;
+                    case IMiddlewareConverter<TArgument, T> converter:
+                        await InvokeValueAsync(sender, converter.Convert(sender, argument));
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+            catch (MiddlewareConvertNoInvokeException)
+            {
+                return true;
+            }
+        }
+        
+        T IMiddlewareConverter<T, T>.Convert(Object? sender, T argument)
+        {
+            return argument;
+        }
+        
+        ValueTask<T> IMiddlewareAsyncConverter<T, T>.ConvertAsync(Object? sender, T argument)
+        {
+            return ValueTask.FromResult(argument);
         }
         
         internal sealed class AsyncHandler : AsyncMiddleware<T>
@@ -242,7 +339,7 @@ namespace NetExtender.Types.Middlewares
         }
     }
     
-    public abstract class Middleware<T> : Middleware, IMiddleware<T>
+    public abstract class Middleware<T> : Middleware, IMiddleware<T>, IMiddlewareConverter<T, T>
     {
         [return: NotNullIfNotNull("value")]
         public static implicit operator Middleware<T>?(MiddlewareDelegate<T>? value)
@@ -271,9 +368,39 @@ namespace NetExtender.Types.Middlewares
         
         public abstract void Invoke(Object? sender, T argument);
         
-        public override IMiddleware<TArgument>? Invoker<TArgument>()
+        public Boolean Invoke<TArgument>(TArgument argument)
         {
-            throw new NotImplementedException();
+            switch (this)
+            {
+                case IMiddleware<TArgument> middleware:
+                    middleware.Invoke(argument);
+                    return true;
+                case IMiddlewareConverter<TArgument, T> converter:
+                    Invoke(converter.Convert(argument));
+                    return true;
+                default:
+                    return false;
+            }
+        }
+        
+        public Boolean Invoke<TArgument>(Object? sender, TArgument argument)
+        {
+            switch (this)
+            {
+                case IMiddleware<TArgument> middleware:
+                    middleware.Invoke(sender, argument);
+                    return true;
+                case IMiddlewareConverter<TArgument, T> converter:
+                    Invoke(sender, converter.Convert(sender, argument));
+                    return true;
+                default:
+                    return false;
+            }
+        }
+        
+        T IMiddlewareConverter<T, T>.Convert(Object? sender, T argument)
+        {
+            return argument;
         }
         
         internal sealed class Handler : Middleware<T>
@@ -344,22 +471,7 @@ namespace NetExtender.Types.Middlewares
     
     public abstract class Middleware : IMiddlewareInfo
     {
-        protected static class InvokerHandler<T, TArgument>
-        {
-            
-        }
-        
         public MiddlewareExecutionContext Context { get; init; }
-        
-        public virtual IMiddleware<T>? Invoker<T>()
-        {
-            return null;
-        }
-        
-        public virtual IAsyncMiddleware<T>? AsyncInvoker<T>()
-        {
-            return null;
-        }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IMiddleware<T> Create<T>(MiddlewareDelegate<T> @delegate)

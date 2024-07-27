@@ -8,11 +8,12 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using NetExtender.AspNetCore.Types.Wrappers;
+using NetExtender.Domains.AspNetCore.Builder.Interfaces;
 using NetExtender.Domains.Builder;
 
 namespace NetExtender.Domains.AspNetCore.Builder
 {
-    public class AspNetCoreBuilder : ApplicationBuilder<IHost>
+    public class AspNetCoreBuilder : ApplicationBuilder<IHost>, IAspNetCoreBuilder<IHost>
     {
         public virtual Boolean UseDefaultHostBuilder { get; init; } = true;
         
@@ -29,6 +30,7 @@ namespace NetExtender.Domains.AspNetCore.Builder
             void Handler(IWebHostBuilder builder)
             {
                 Build(builder);
+                Manager?.Invoke(this, builder);
             }
 
             return builder.ConfigureWebHostDefaults(Handler).Build();
@@ -39,7 +41,7 @@ namespace NetExtender.Domains.AspNetCore.Builder
         }
     }
     
-    public class AspNetCoreBuilder<T> : ApplicationBuilder<T> where T : class, IHost
+    public class AspNetCoreBuilder<T> : ApplicationBuilder<T>, IAspNetCoreBuilder<T> where T : class, IHost
     {
         protected override TType New<TType>(ImmutableArray<String> arguments)
         {
@@ -89,11 +91,12 @@ namespace NetExtender.Domains.AspNetCore.Builder
                 throw new ArgumentNullException(nameof(builder));
             }
 
+            Manager?.Invoke(this, builder);
             return builder.Build() is T application ? Build(application) : throw new InvalidOperationException();
         }
     }
     
-    public class AspNetCoreWebBuilder : ApplicationBuilder<IWebHost>
+    public class AspNetCoreWebBuilder : ApplicationBuilder<IWebHost>, IAspNetCoreBuilder<IWebHost>
     {
         public override IWebHost Build(ImmutableArray<String> arguments)
         {
@@ -106,7 +109,8 @@ namespace NetExtender.Domains.AspNetCore.Builder
             {
                 throw new ArgumentNullException(nameof(builder));
             }
-
+            
+            Manager?.Invoke(this, builder);
             return builder.Build() is { } application ? Build(application) : throw new InvalidOperationException();
         }
 
@@ -115,8 +119,8 @@ namespace NetExtender.Domains.AspNetCore.Builder
             return application ?? throw new ArgumentNullException(nameof(application));
         }
     }
-    
-    public class AspNetCoreWebBuilder<T> : ApplicationBuilder<T> where T : class, IWebHost
+
+    public class AspNetCoreWebBuilder<T> : ApplicationBuilder<T>, IAspNetCoreBuilder<T> where T : class, IWebHost
     {
         protected override TType New<TType>(ImmutableArray<String> arguments)
         {
@@ -165,7 +169,8 @@ namespace NetExtender.Domains.AspNetCore.Builder
             {
                 throw new ArgumentNullException(nameof(builder));
             }
-
+            
+            Manager?.Invoke(this, builder);
             return builder.Build() is T application ? Build(application) : throw new InvalidOperationException();
         }
     }

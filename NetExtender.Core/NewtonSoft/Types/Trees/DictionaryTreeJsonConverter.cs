@@ -181,7 +181,7 @@ namespace NetExtender.NewtonSoft.Types.Trees
 
     public abstract class DictionaryTreeJsonConverter : JsonConverter
     {
-        private static ConcurrentDictionary<Type, Boolean> Cache { get; } = new ConcurrentDictionary<Type, Boolean>();
+        private static ConcurrentDictionary<Type, Boolean> Storage { get; } = new ConcurrentDictionary<Type, Boolean>();
 
         private static Boolean IsConvertible(Type type)
         {
@@ -207,7 +207,7 @@ namespace NetExtender.NewtonSoft.Types.Trees
 
         public sealed override Boolean CanConvert(Type? type)
         {
-            return type is not null && Cache.GetOrAdd(type, IsConvertible);
+            return type is not null && Storage.GetOrAdd(type, IsConvertible);
         }
     }
 }

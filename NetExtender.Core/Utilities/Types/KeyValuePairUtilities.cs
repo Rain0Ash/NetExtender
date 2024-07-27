@@ -19,9 +19,9 @@ namespace NetExtender.Utilities.Types
     {
         public static Type KeyValuePairType { get; } = typeof(KeyValuePair<,>);
         
-        private static class KeyValuePairCache
+        private static class KeyValuePairStorage
         {
-            private static ConcurrentDictionary<Type, KeyValuePairAccessor> Cache { get; } = new ConcurrentDictionary<Type, KeyValuePairAccessor>();
+            private static ConcurrentDictionary<Type, KeyValuePairAccessor> Storage { get; } = new ConcurrentDictionary<Type, KeyValuePairAccessor>();
 
             // ReSharper disable once MemberHidesStaticFromOuterClass
             public static Boolean TryGetAccessor(Type type, [MaybeNullWhen(false)] out KeyValuePairAccessor result)
@@ -33,7 +33,7 @@ namespace NetExtender.Utilities.Types
 
                 try
                 {
-                    result = Cache.GetOrAdd(type, CreateAccessor);
+                    result = Storage.GetOrAdd(type, CreateAccessor);
                     return true;
                 }
                 catch (Exception)
@@ -68,7 +68,7 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryGetAccessor(Type type, [MaybeNullWhen(false)] out KeyValuePairAccessor result)
         {
-            return KeyValuePairCache.TryGetAccessor(type, out result);
+            return KeyValuePairStorage.TryGetAccessor(type, out result);
         }
 
         public static Boolean TryGet(Object? @object, out Object? key, out Object? value)

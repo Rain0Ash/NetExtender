@@ -479,7 +479,7 @@ namespace NetExtender.Utilities.Types
             return source.Select(Normalize).Distinct();
         }
 
-        private static class RegionInfoCache
+        private static class RegionInfoStorage
         {
             private static ConcurrentDictionary<LocalizationIdentifier, RegionInfo> Store { get; } = new ConcurrentDictionary<LocalizationIdentifier, RegionInfo>();
 
@@ -494,7 +494,7 @@ namespace NetExtender.Utilities.Types
         {
             try
             {
-                return RegionInfoCache.GetOrAdd(identifier);
+                return RegionInfoStorage.GetOrAdd(identifier);
             }
             catch (Exception)
             {
@@ -507,7 +507,7 @@ namespace NetExtender.Utilities.Types
         {
             try
             {
-                return RegionInfoCache.GetOrAdd(identifier);
+                return RegionInfoStorage.GetOrAdd(identifier);
             }
             catch (Exception)
             {
@@ -520,7 +520,7 @@ namespace NetExtender.Utilities.Types
         {
             try
             {
-                return RegionInfoCache.GetOrAdd(identifier);
+                return RegionInfoStorage.GetOrAdd(identifier);
             }
             catch (Exception)
             {
@@ -533,7 +533,7 @@ namespace NetExtender.Utilities.Types
         {
             try
             {
-                return RegionInfoCache.GetOrAdd(identifier);
+                return RegionInfoStorage.GetOrAdd(identifier);
             }
             catch (Exception)
             {
@@ -551,7 +551,7 @@ namespace NetExtender.Utilities.Types
 
             try
             {
-                return RegionInfoCache.GetOrAdd(info);
+                return RegionInfoStorage.GetOrAdd(info);
             }
             catch (Exception)
             {

@@ -13,6 +13,7 @@ using NetExtender.Domains.Applications.Interfaces;
 using NetExtender.Domains.Initializer.Interfaces;
 using NetExtender.Domains.View.Interfaces;
 using NetExtender.Initializer;
+using NetExtender.Types.Attributes;
 using NetExtender.Types.Tasks;
 using NetExtender.Types.Dispatchers.Interfaces;
 using NetExtender.Utilities.Application;
@@ -20,6 +21,7 @@ using NetExtender.Utilities.Threading;
 
 namespace NetExtender.Domains.Initializer
 {
+    [NetExtenderCritical, NetExtenderException]
     public abstract class ApplicationInitializer : NetExtender.Initializer.Initializer
     {
         private static ApplicationInitializer? instance;
@@ -39,24 +41,48 @@ namespace NetExtender.Domains.Initializer
                 instance = value;
             }
         }
-
+        
+        private static Type? _type;
+        public static Type Type
+        {
+            get
+            {
+                return _type ??= Instance.GetType();
+            }
+        }
+        
+        [NetExtenderException]
         static ApplicationInitializer()
         {
-            Assembly? assembly = Assembly.GetEntryAssembly();
-
-            if (assembly is null)
+            if (Assembly.GetEntryAssembly() is not { } assembly)
             {
                 throw new EntryPointNotFoundException();
             }
-
-            Type[] derived = assembly.GetTypes().Where(type => type.IsSubclassOf(typeof(ApplicationInitializer))).ToArray();
-
-            Instance = derived.Length switch
+            
+            static ApplicationInitializer Initialize(Type initializer)
             {
-                0 => throw new EntryPointNotFoundException(),
-                1 => (ApplicationInitializer?) Activator.CreateInstance(derived[0]),
-                _ => throw new AmbiguousMatchException()
-            } ?? throw new InvalidOperationException();
+                if (initializer is null)
+                {
+                    throw new ArgumentNullException(nameof(initializer));
+                }
+                
+                try
+                {
+                    return (ApplicationInitializer?) Activator.CreateInstance(Seal(initializer)) ?? throw new InvalidOperationException();
+                }
+                catch (Exception)
+                {
+                    return (ApplicationInitializer?) Activator.CreateInstance(initializer) ?? throw new InvalidOperationException();
+                }
+            }
+            
+            Instance = assembly.GetTypes().Where(type => type.IsSubclassOf(typeof(ApplicationInitializer))).ToArray() switch
+            {
+                { Length: 0 } => throw new EntryPointNotFoundException($"Application initializer for assembly '{assembly}' not found."),
+                { Length: 1 } initializer => Initialize(initializer[0]),
+                { } result => throw new AmbiguousMatchException($"Multiple application initializer was found: {String.Join(", ", (IEnumerable<Type>) result)}."),
+                _ => throw new InvalidOperationException()
+            };
         }
 
         protected ApplicationInitializer()

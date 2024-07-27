@@ -20,22 +20,22 @@ namespace NetExtender.Utilities.Types
     public static class TaskUtilities
     {
         /// <summary>
-        /// Cached true task
+        /// True task
         /// </summary>
         public static Task<Boolean> True { get; } = Task.FromResult(true);
 
         /// <summary>
-        /// Cached false task
+        /// False task
         /// </summary>
         public static Task<Boolean> False { get; } = Task.FromResult(false);
 
         /// <summary>
-        /// Cached zero task
+        /// Zero task
         /// </summary>
         public static Task<Int32> Zero { get; } = Task.FromResult(0);
 
         /// <summary>
-        /// Cached one task
+        /// One task
         /// </summary>
         public static Task<Int32> One { get; } = Task.FromResult(1);
 

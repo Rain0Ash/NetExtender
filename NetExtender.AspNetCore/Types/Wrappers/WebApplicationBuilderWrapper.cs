@@ -56,22 +56,22 @@ namespace NetExtender.AspNetCore.Types.Wrappers
             return Builder.Build();
         }
 
-        public IHostBuilder ConfigureAppConfiguration(Action<HostBuilderContext, IConfigurationBuilder> configureDelegate)
+        public IHostBuilder ConfigureAppConfiguration(Action<HostBuilderContext, IConfigurationBuilder> configure)
         {
             return this;
         }
 
-        public IHostBuilder ConfigureContainer<TContainerBuilder>(Action<HostBuilderContext, TContainerBuilder> configureDelegate)
+        public IHostBuilder ConfigureContainer<TContainerBuilder>(Action<HostBuilderContext, TContainerBuilder> configure)
         {
             return this;
         }
 
-        public IHostBuilder ConfigureHostConfiguration(Action<IConfigurationBuilder> configureDelegate)
+        public IHostBuilder ConfigureHostConfiguration(Action<IConfigurationBuilder> configure)
         {
             return this;
         }
 
-        public IHostBuilder ConfigureServices(Action<HostBuilderContext, IServiceCollection> configureDelegate)
+        public IHostBuilder ConfigureServices(Action<HostBuilderContext, IServiceCollection> configure)
         {
             return this;
         }

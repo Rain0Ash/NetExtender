@@ -20,7 +20,7 @@ namespace NetExtender.Utilities.Types
     {
         public class Properties
         {
-            private static ConcurrentDictionary<Type, Properties> Cache { get; } = new ConcurrentDictionary<Type, Properties>();
+            private static ConcurrentDictionary<Type, Properties> Storage { get; } = new ConcurrentDictionary<Type, Properties>();
 
             public Type Type { get; }
             public Type Underlying { get; }
@@ -73,7 +73,7 @@ namespace NetExtender.Utilities.Types
                     throw new ArgumentNullException(nameof(type));
                 }
 
-                return Cache.ContainsKey(type);
+                return Storage.ContainsKey(type);
             }
 
             public static Properties Factory(Type type)
@@ -83,7 +83,7 @@ namespace NetExtender.Utilities.Types
                     throw new ArgumentNullException(nameof(type));
                 }
 
-                return Cache.GetOrAdd(type, static type => new Properties(type));
+                return Storage.GetOrAdd(type, static type => new Properties(type));
             }
 
             public static Boolean TryFactory(Type type, [MaybeNullWhen(false)] out Properties result)

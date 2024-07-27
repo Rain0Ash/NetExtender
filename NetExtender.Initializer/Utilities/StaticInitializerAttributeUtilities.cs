@@ -8,7 +8,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using NetExtender.Types.Attributes;
 
-namespace NetExtender.Utilities
+namespace NetExtender.Utilities.Types
 {
     public static class StaticInitializerAttributeUtilities
     {

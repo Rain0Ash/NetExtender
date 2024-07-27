@@ -23,7 +23,7 @@ namespace NetExtender.Domains.Builder
             }
         }
 
-        public Boolean IsScan
+        public virtual Boolean IsScan
         {
             get
             {

@@ -134,6 +134,11 @@ namespace NetExtender.Types.Middlewares
                                 middleware.Invoke(argument);
                                 break;
                             }
+                            case IMiddleware middleware:
+                            {
+                                middleware.Invoke(argument);
+                                break;
+                            }
                         }
                         
                         result.Add(new InvokeResult(execution, info));
@@ -155,6 +160,11 @@ namespace NetExtender.Types.Middlewares
                         switch (info)
                         {
                             case IMiddleware<T> middleware:
+                            {
+                                middleware.Invoke(sender, argument);
+                                break;
+                            }
+                            case IMiddleware middleware:
                             {
                                 middleware.Invoke(sender, argument);
                                 break;
@@ -193,6 +203,11 @@ namespace NetExtender.Types.Middlewares
                                 middleware.Invoke(argument);
                                 break;
                             }
+                            case IMiddleware middleware:
+                            {
+                                middleware.Invoke(argument);
+                                break;
+                            }
                         }
                         
                         result.Add(new InvokeResult(execution, info));
@@ -212,6 +227,11 @@ namespace NetExtender.Types.Middlewares
                         switch (info)
                         {
                             case IMiddleware<T> middleware:
+                            {
+                                middleware.Invoke(sender, argument);
+                                break;
+                            }
+                            case IMiddleware middleware:
                             {
                                 middleware.Invoke(sender, argument);
                                 break;
@@ -243,12 +263,32 @@ namespace NetExtender.Types.Middlewares
                     {
                         switch (info)
                         {
-                            case IAsyncMiddleware<T> middleware:
+                            case IAsyncMiddleware<T> { IsValue: true } middleware:
                             {
-                                await middleware.InvokeAsync(argument).ConfigureAwait(false);
+                                await middleware.InvokeValueAsync(argument);
+                                break;
+                            }
+                            case IAsyncMiddleware<T> { IsValue: false } middleware:
+                            {
+                                await middleware.InvokeAsync(argument);
+                                break;
+                            }
+                            case IAsyncMiddleware { IsValue: true } middleware:
+                            {
+                                await middleware.InvokeValueAsync(argument);
+                                break;
+                            }
+                            case IAsyncMiddleware { IsValue: false } middleware:
+                            {
+                                await middleware.InvokeAsync(argument);
                                 break;
                             }
                             case IMiddleware<T> middleware:
+                            {
+                                middleware.Invoke(argument);
+                                break;
+                            }
+                            case IMiddleware middleware:
                             {
                                 middleware.Invoke(argument);
                                 break;
@@ -273,12 +313,32 @@ namespace NetExtender.Types.Middlewares
                     {
                         switch (info)
                         {
-                            case IAsyncMiddleware<T> middleware:
+                            case IAsyncMiddleware<T> { IsValue: true } middleware:
                             {
-                                await middleware.InvokeAsync(sender, argument).ConfigureAwait(false);
+                                await middleware.InvokeValueAsync(sender, argument);
+                                break;
+                            }
+                            case IAsyncMiddleware<T> { IsValue: false } middleware:
+                            {
+                                await middleware.InvokeAsync(sender, argument);
+                                break;
+                            }
+                            case IAsyncMiddleware { IsValue: true } middleware:
+                            {
+                                await middleware.InvokeValueAsync(sender, argument);
+                                break;
+                            }
+                            case IAsyncMiddleware { IsValue: false } middleware:
+                            {
+                                await middleware.InvokeAsync(sender, argument);
                                 break;
                             }
                             case IMiddleware<T> middleware:
+                            {
+                                middleware.Invoke(sender, argument);
+                                break;
+                            }
+                            case IMiddleware middleware:
                             {
                                 middleware.Invoke(sender, argument);
                                 break;
@@ -312,12 +372,32 @@ namespace NetExtender.Types.Middlewares
                     {
                         switch (info)
                         {
-                            case IAsyncMiddleware<T> middleware:
+                            case IAsyncMiddleware<T> { IsValue: true } middleware:
+                            {
+                                await middleware.InvokeValueAsync(argument);
+                                break;
+                            }
+                            case IAsyncMiddleware<T> { IsValue: false } middleware:
+                            {
+                                await middleware.InvokeAsync(argument);
+                                break;
+                            }
+                            case IAsyncMiddleware { IsValue: true } middleware:
+                            {
+                                await middleware.InvokeValueAsync(argument);
+                                break;
+                            }
+                            case IAsyncMiddleware { IsValue: false } middleware:
                             {
                                 await middleware.InvokeAsync(argument);
                                 break;
                             }
                             case IMiddleware<T> middleware:
+                            {
+                                middleware.Invoke(argument);
+                                break;
+                            }
+                            case IMiddleware middleware:
                             {
                                 middleware.Invoke(argument);
                                 break;
@@ -340,12 +420,32 @@ namespace NetExtender.Types.Middlewares
                     {
                         switch (info)
                         {
-                            case IAsyncMiddleware<T> middleware:
+                            case IAsyncMiddleware<T> { IsValue: true } middleware:
+                            {
+                                await middleware.InvokeValueAsync(sender, argument);
+                                break;
+                            }
+                            case IAsyncMiddleware<T> { IsValue: false } middleware:
+                            {
+                                await middleware.InvokeAsync(sender, argument);
+                                break;
+                            }
+                            case IAsyncMiddleware { IsValue: true } middleware:
+                            {
+                                await middleware.InvokeValueAsync(sender, argument);
+                                break;
+                            }
+                            case IAsyncMiddleware { IsValue: false } middleware:
                             {
                                 await middleware.InvokeAsync(sender, argument);
                                 break;
                             }
                             case IMiddleware<T> middleware:
+                            {
+                                middleware.Invoke(sender, argument);
+                                break;
+                            }
+                            case IMiddleware middleware:
                             {
                                 middleware.Invoke(sender, argument);
                                 break;

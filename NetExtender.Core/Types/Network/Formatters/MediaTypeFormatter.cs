@@ -25,7 +25,7 @@ namespace NetExtender.Types.Network.Formatters
     public abstract class MediaTypeFormatter
     {
         private protected static readonly Encoding Utf8Encoding = new UTF8Encoding(false, true);
-        private static ConcurrentDictionary<Type, Type> DelegatingEnumerableCache { get; } = new ConcurrentDictionary<Type, Type>();
+        private static ConcurrentDictionary<Type, Type> DelegatingEnumerableStorage { get; } = new ConcurrentDictionary<Type, Type>();
         protected static ConcurrentDictionary<Type, ConstructorInfo?> DelegatingEnumerableConstructorCache { get; } = new ConcurrentDictionary<Type, ConstructorInfo?>();
 
         private Int32 _maximumHttpCollectionKeys = Int32.MaxValue;
@@ -247,7 +247,7 @@ namespace NetExtender.Types.Network.Formatters
                 throw new ArgumentNullException(nameof(generic));
             }
 
-            return DelegatingEnumerableCache.GetOrAdd(type, _ =>
+            return DelegatingEnumerableStorage.GetOrAdd(type, _ =>
             {
                 Type argument = generic.GetGenericArguments()[0];
                 Type key = typeof(EnumerableWrapper<>).MakeGenericType(argument);

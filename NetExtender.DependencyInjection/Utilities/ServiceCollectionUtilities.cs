@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NetExtender.DependencyInjection.Interfaces;
@@ -56,7 +55,13 @@ namespace NetExtender.Utilities.Types
             return false;
         }
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void InjectTo(this IServiceCollection source)
+        {
+            InjectTo(source, ServiceAmbiguousHandler.New);
+        }
+        
+        public static void InjectTo(this IServiceCollection source, ServiceAmbiguousHandler handler)
         {
             if (source is null)
             {
@@ -64,29 +69,35 @@ namespace NetExtender.Utilities.Types
             }
             
             ServiceProviderUtilities.ICustomServiceProvider provider = (ServiceProviderUtilities.ICustomServiceProvider) ServiceProviderUtilities.Provider;
-            InjectTo(source, provider.Services);
+            InjectTo(source, provider.Services, handler);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void InjectFrom(this IServiceCollection destination)
         {
+            InjectFrom(destination, ServiceAmbiguousHandler.New);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void InjectFrom(this IServiceCollection destination, ServiceAmbiguousHandler handler)
+        {
             if (destination is null)
             {
                 throw new ArgumentNullException(nameof(destination));
             }
-            
+
             ServiceProviderUtilities.ICustomServiceProvider provider = (ServiceProviderUtilities.ICustomServiceProvider) ServiceProviderUtilities.Provider;
-            InjectFrom(destination, provider.Services);
+            InjectFrom(destination, provider.Services, handler);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IServiceCollection InjectTo(this IServiceCollection source, IServiceCollection destination)
         {
-            return InjectTo(source, destination, static _ => null);
+            return InjectTo(source, destination, ServiceAmbiguousHandler.New);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-        public static IServiceCollection InjectTo(this IServiceCollection source, IServiceCollection destination, ServiceDescriptorConflictHandler? handler)
+        public static IServiceCollection InjectTo(this IServiceCollection source, IServiceCollection destination, ServiceAmbiguousHandler handler)
         {
             if (source is null)
             {
@@ -105,11 +116,11 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IServiceCollection InjectFrom(this IServiceCollection destination, IServiceCollection source)
         {
-            return InjectFrom(destination, source, static _ => null);
+            return InjectFrom(destination, source, ServiceAmbiguousHandler.New);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-        public static IServiceCollection InjectFrom(this IServiceCollection destination, IServiceCollection source, ServiceDescriptorConflictHandler? handler)
+        public static IServiceCollection InjectFrom(this IServiceCollection destination, IServiceCollection source, ServiceAmbiguousHandler handler)
         {
             if (destination is null)
             {

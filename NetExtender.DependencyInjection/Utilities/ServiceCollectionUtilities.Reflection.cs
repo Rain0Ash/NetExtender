@@ -2,6 +2,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -17,7 +18,66 @@ using NetExtender.Utilities.Core;
 
 namespace NetExtender.Utilities.Types
 {
-    public delegate ServiceDescriptor? ServiceDescriptorConflictHandler(ReadOnlySpan<ServiceDescriptorHandler> services);
+    public delegate ServiceDescriptor? ServiceAmbiguousDelegate(ReadOnlySpan<ServiceDescriptorHandler> services);
+    
+    public enum ServiceAmbiguousHandlerType
+    {
+        Ignore,
+        Throw,
+        New,
+        Custom
+    }
+    
+    public readonly struct ServiceAmbiguousHandler
+    {
+        public static implicit operator ServiceAmbiguousHandler(ServiceAmbiguousHandlerType value)
+        {
+            // ReSharper disable once SwitchExpressionHandlesSomeKnownEnumValuesWithExceptionInDefault
+            return value switch
+            {
+                ServiceAmbiguousHandlerType.Ignore => Ignore,
+                ServiceAmbiguousHandlerType.Throw => Throw,
+                ServiceAmbiguousHandlerType.New => New,
+                _ => throw new EnumUndefinedOrNotSupportedException<ServiceAmbiguousHandlerType>(value, nameof(value), null)
+            };
+        }
+        
+        public static implicit operator ServiceAmbiguousHandler(ServiceAmbiguousDelegate? value)
+        {
+            return new ServiceAmbiguousHandler(value);
+        }
+        
+        public static ServiceAmbiguousHandler Ignore { get; } = new ServiceAmbiguousHandler(null);
+        public static ServiceAmbiguousHandler Throw { get; } = new ServiceAmbiguousHandler(static _ => null) { Type = ServiceAmbiguousHandlerType.Throw };
+        public static ServiceAmbiguousHandler New { get; } = new ServiceAmbiguousHandler(static _ => null) { Type = ServiceAmbiguousHandlerType.New };
+        
+        private ServiceAmbiguousDelegate? Handler { get; }
+        public ServiceAmbiguousHandlerType Type { get; private init; }
+        
+        public Boolean IsEmpty
+        {
+            get
+            {
+                return Handler is null;
+            }
+        }
+        
+        private ServiceAmbiguousHandler(ServiceAmbiguousDelegate? handler)
+        {
+            Handler = handler;
+            Type = Handler is null ? ServiceAmbiguousHandlerType.Ignore : ServiceAmbiguousHandlerType.Custom;
+        }
+        
+        public ServiceDescriptor? Invoke(ReadOnlySpan<ServiceDescriptorHandler> services)
+        {
+            if (Handler is null)
+            {
+                throw new InvalidOperationException(nameof(IsEmpty));
+            }
+            
+            return Handler.Invoke(services);
+        }
+    }
     
     public readonly struct ServiceDescriptorHandler : IEquatable<ServiceDescriptorHandler.Affiliation>, IEquatable<ServiceDescriptor>, IEquatable<ServiceDescriptorHandler>
     {
@@ -109,14 +169,17 @@ namespace NetExtender.Utilities.Types
     
     public partial class ServiceCollectionUtilities
     {
-        private static ServiceDescriptorConflictHandler? Handler { get; set; } = static _ => null;
+        public static ServiceAmbiguousHandler Handler { get; set; } = ServiceAmbiguousHandler.Throw;
         
+        [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
         private readonly struct Options
         {
             public ImmutableHashSet<Type> Source { get; init; }
             public ImmutableHashSet<Type> Interfaces { get; init; }
+            public ImmutableHashSet<Type> Except { get; init; }
             public Inherit.Result Inherit { get; init; }
             public ReflectionInheritResult ServiceDependency { get; init; }
+            public ServiceAmbiguousHandler Handler { get; init; }
         }
         
         private readonly struct Split
@@ -159,6 +222,23 @@ namespace NetExtender.Utilities.Types
             }
             
             [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+            private static ImmutableHashSet<Type>? Handle(Type @interface, Options options, ImmutableHashSet<Type> interfaces)
+            {
+                if (!options.Inherit.TryGetValue(@interface, out ReflectionInheritResult? result))
+                {
+                    return null;
+                }
+
+                if (result.Interfaces.Count > 0 && interfaces.Intersect(result.Interfaces) is { Count: > 0 } services)
+                {
+                    return services;
+                }
+
+                interfaces = interfaces.Except(interfaces.SelectMany(static @interface => @interface.GetInterfaces()));
+                return interfaces.Count > 0 ? interfaces : null;
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveOptimization)]
             private static ServiceLifetime? VerifyLifetime(ImmutableHashSet<Type> interfaces)
             {
                 if (interfaces is null)
@@ -166,12 +246,12 @@ namespace NetExtender.Utilities.Types
                     throw new ArgumentNullException(nameof(interfaces));
                 }
                 
-                if (interfaces.Intersect(IServiceDependency.Services.Keys).SingleOrDefault() is not { } type)
+                if (interfaces.Intersect(IServiceDependency.Services.Keys) is not { Count: 1 } intersect)
                 {
                     return null;
                 }
                 
-                return IServiceDependency.Services.TryGetValue(type, out ServiceLifetime lifetime) ? lifetime : null;
+                return IServiceDependency.Services.TryGetValue(intersect.Single(), out ServiceLifetime lifetime) ? lifetime : null;
             }
             
             public void Populate(ICollection<Type> collection)
@@ -205,17 +285,6 @@ namespace NetExtender.Utilities.Types
                 {
                     collection.Add(service);
                 }
-            }
-            
-            [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-            private static ImmutableHashSet<Type>? Handle(Type @interface, Options options, ImmutableHashSet<Type> interfaces)
-            {
-                if (!options.Inherit.TryGetValue(@interface, out ReflectionInheritResult? result))
-                {
-                    return null;
-                }
-                
-                return interfaces.Intersect(result.Interfaces) is { Count: > 0 } services ? services : null;
             }
         }
         
@@ -264,6 +333,7 @@ namespace NetExtender.Utilities.Types
             return descriptors.Values.ToImmutableList();
         }
         
+        // ReSharper disable once CognitiveComplexity
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         private static IServiceCollection Scan(this IServiceCollection collection, Options options)
         {
@@ -273,7 +343,7 @@ namespace NetExtender.Utilities.Types
             }
             
             ConcurrentHashSet<ServiceDescriptor> services = new ConcurrentHashSet<ServiceDescriptor>(ServiceDescriptorEqualityComparer.Implementation);
-            
+
             if (options.Inherit.TryGetValue(typeof(IServiceDependency), out ReflectionInheritResult? dependency))
             {
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -281,7 +351,7 @@ namespace NetExtender.Utilities.Types
                 {
                     type.CallStaticConstructor();
                 }
-                
+
                 Parallel.ForEach(dependency.Inherit.Interfaces, CallStaticConstructor);
             }
 
@@ -289,22 +359,31 @@ namespace NetExtender.Utilities.Types
             [MethodImpl(MethodImplOptions.AggressiveOptimization)]
             void Handler(Type type)
             {
-                ImmutableHashSet<Type> interfaces = options.Interfaces.Intersect(type.GetInterfaces());
-                Split split = new Split(type, options, interfaces);
+                ImmutableHashSet<Type> interfaces = type.GetInterfaces().Where(@interface => options.Interfaces.Contains(@interface.TryGetGenericTypeDefinition())).ToImmutableHashSet();
                 
-                foreach (Type @interface in split.Transient)
+                if (interfaces.Count > 0)
                 {
-                    services.AddRange(Create(@interface, type, ServiceLifetime.Transient, options));
-                }
-                
-                foreach (Type @interface in split.Scoped)
-                {
-                    services.AddRange(Create(@interface, type, ServiceLifetime.Scoped, options));
-                }
-
-                foreach (Type @interface in split.Singleton)
-                {
-                    services.AddRange(Create(@interface, type, ServiceLifetime.Singleton, options));
+                    Split split = new Split(type, options, interfaces);
+                    
+                    foreach (Type @interface in split.Transient)
+                    {
+                        services.AddRange(Create(@interface, type, ServiceLifetime.Transient, options));
+                    }
+                    
+                    foreach (Type @interface in split.Scoped)
+                    {
+                        services.AddRange(Create(@interface, type, ServiceLifetime.Scoped, options));
+                    }
+                    
+                    foreach (Type @interface in split.Singleton)
+                    {
+                        services.AddRange(Create(@interface, type, ServiceLifetime.Singleton, options));
+                    }
+                    
+                    if (split.Lifetime is { } lifetime)
+                    {
+                        services.Add(new ServiceDescriptor(type, type, lifetime));
+                    }
                 }
                 
                 foreach (ServiceDependencyAttribute attribute in ReflectionUtilities.GetCustomAttributes<ServiceDependencyAttribute>(type))
@@ -312,30 +391,18 @@ namespace NetExtender.Utilities.Types
                     if (attribute.Interface is { } @interface)
                     {
                         services.AddRange(Create(@interface, type, attribute.Lifetime, options));
-                        continue;
                     }
-                    
+
                     services.Add(new ServiceDescriptor(type, type, attribute.Lifetime));
-                }
-                
-                if (split.Lifetime is { } lifetime)
-                {
-                    services.Add(new ServiceDescriptor(type, type, lifetime));
                 }
             }
             
             Parallel.ForEach(options.Source, Handler);
-            return Verify(collection, services);
-        }
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static IServiceCollection Verify(IServiceCollection collection, ConcurrentHashSet<ServiceDescriptor> set)
-        {
-            return Verify(collection, set, Handler);
+            return Verify(collection, services, options);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-        private static IServiceCollection Verify(IServiceCollection collection, ConcurrentHashSet<ServiceDescriptor> set, ServiceDescriptorConflictHandler? handler)
+        private static IServiceCollection VerifyIgnore(IServiceCollection collection, ConcurrentHashSet<ServiceDescriptor> set)
         {
             if (collection is null)
             {
@@ -349,67 +416,234 @@ namespace NetExtender.Utilities.Types
             
             lock (collection)
             {
-                ConcurrentDictionary<Type, List<ServiceDescriptorHandler>> counter = new ConcurrentDictionary<Type, List<ServiceDescriptorHandler>>();
-                
-                foreach (ServiceDescriptor descriptor in collection)
-                {
-                    counter.GetOrAdd(descriptor.ServiceType, static _ => new List<ServiceDescriptorHandler>()).Add(new ServiceDescriptorHandler(descriptor, ServiceDescriptorHandler.Affiliation.Source));
-                }
-                
-                foreach (ServiceDescriptor descriptor in set)
-                {
-                    counter.GetOrAdd(descriptor.ServiceType, static _ => new List<ServiceDescriptorHandler>()).Add(new ServiceDescriptorHandler(descriptor, ServiceDescriptorHandler.Affiliation.Destination));
-                }
-                
-                if (handler is null)
+                lock (set)
                 {
                     return collection.Add(set);
                 }
-                
-                static Exception Exception(KeyValuePair<Type, List<ServiceDescriptorHandler>> pair)
+            }
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        // ReSharper disable once CognitiveComplexity
+        private static IServiceCollection VerifyNew(IServiceCollection collection, ConcurrentHashSet<ServiceDescriptor> set, ServiceAmbiguousHandler handler)
+        {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+            
+            if (set is null)
+            {
+                throw new ArgumentNullException(nameof(set));
+            }
+            
+            ConcurrentDictionary<Type, List<ServiceDescriptorHandler>> counter = new ConcurrentDictionary<Type, List<ServiceDescriptorHandler>>();
+            
+            lock (collection)
+            {
+                lock (set)
                 {
-                    TypeComparer comparer = TypeComparer.NameOrdinalIgnoreCase;
-                    IEnumerable<ServiceDescriptor> source = pair.Value.Unwrap();
-                    String? message = source.OrderBy(static descriptor => descriptor.ImplementationType, comparer).ThenByDescending(static descriptor => descriptor.Lifetime).GetString();
-                    return new ScanAmbiguousException(message);
-                }
-                
-                void Handler(KeyValuePair<Type, List<ServiceDescriptorHandler>> pair)
-                {
-                    List<ServiceDescriptorHandler> container = pair.Value;
-                    ServiceDescriptor? descriptor = handler(container.AsReadOnlySpan());
-                    
-                    if (descriptor is null)
+                    foreach (ServiceDescriptor descriptor in set)
                     {
-                        return;
+                        ServiceDescriptorHandler item = new ServiceDescriptorHandler(descriptor, ServiceDescriptorHandler.Affiliation.Destination);
+                        List<ServiceDescriptorHandler> handlers = counter.GetOrAdd(descriptor.ServiceType, static _ => new List<ServiceDescriptorHandler>());
+                        
+                        if (!handlers.Contains(item))
+                        {
+                            handlers.Add(item);
+                        }
                     }
                     
-                    container.Remove(descriptor);
-                    collection.RemoveAll(container.Unwrap());
-                    set.RemoveAll(container.Unwrap());
+                    foreach (ServiceDescriptor descriptor in collection)
+                    {
+                        if (!counter.TryGetValue(descriptor.ServiceType, out List<ServiceDescriptorHandler>? handlers))
+                        {
+                            continue;
+                        }
+                        
+                        handlers.Add(new ServiceDescriptorHandler(descriptor, ServiceDescriptorHandler.Affiliation.Source));
+                    }
                     
-                    container.Clear();
-                    container.Add(new ServiceDescriptorHandler(descriptor, ServiceDescriptorHandler.Affiliation.Handle));
+                    [SuppressMessage("ReSharper", "ForCanBeConvertedToForeach")]
+                    [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+                    static void Sort(List<ServiceDescriptorHandler> handlers)
+                    {
+                        ServiceDescriptorHandler[] array = new ServiceDescriptorHandler[handlers.Count];
+                        
+                        Int32 i = 0;
+                        for (Int32 j = 0; j < handlers.Count; j++)
+                        {
+                            if (handlers[j] is { Source: ServiceDescriptorHandler.Affiliation.Source } handler)
+                            {
+                                array[i++] = handler;
+                            }
+                        }
+                        
+                        for (Int32 j = 0; j < handlers.Count; j++)
+                        {
+                            if (handlers[j] is { Source: ServiceDescriptorHandler.Affiliation.Destination } handler)
+                            {
+                                array[i++] = handler;
+                            }
+                        }
+                        
+                        handlers.Clear();
+                        handlers.AddRange(array);
+                    }
+                    
+                    Parallel.ForEach(counter.Values, Sort);
+                    
+                    static Exception Exception(KeyValuePair<Type, List<ServiceDescriptorHandler>> pair)
+                    {
+                        TypeComparer comparer = TypeComparer.NameOrdinalIgnoreCase;
+                        IEnumerable<ServiceDescriptor> source = pair.Value.Unwrap();
+                        String? message = source.OrderBy(static descriptor => descriptor.ImplementationType, comparer).ThenByDescending(static descriptor => descriptor.Lifetime).GetString();
+                        return new ScanAmbiguousException(message);
+                    }
+                    
+                    void Handler(KeyValuePair<Type, List<ServiceDescriptorHandler>> pair)
+                    {
+                        List<ServiceDescriptorHandler> container = pair.Value;
+                        ServiceDescriptor? descriptor = handler.Invoke(container.AsReadOnlySpan());
+                        
+                        if (descriptor is null)
+                        {
+                            return;
+                        }
+                        
+                        container.Remove(descriptor);
+                        collection.RemoveAll(container.Unwrap());
+                        set.RemoveAll(container.Unwrap());
+                        
+                        container.Clear();
+                        container.Add(new ServiceDescriptorHandler(descriptor, ServiceDescriptorHandler.Affiliation.Handle));
+                    }
+                    
+                    Parallel.ForEach(counter.NotUnique(static pair => pair.Value.Count), Handler);
+                    
+                    const String message = "Ambiguous registration for service type:";
+                    Exception[] exceptions = counter.NotUnique(static pair => pair.Value.Count).OrderBy(static pair => pair.Key, TypeComparer.NameOrdinalIgnoreCase).Select(Exception).ToArray();
+                    
+                    return exceptions.Length switch
+                    {
+                        0 => collection.Add(set),
+                        1 => throw new ScanAmbiguousException(message + ' ' + exceptions[0].Message),
+                        _ => throw new ScanAmbiguousException(message, new AggregateException(exceptions))
+                    };
                 }
-                
-                Parallel.ForEach(counter.NotUnique(static pair => pair.Value.Count), Handler);
-                
-                const String message = "Ambiguous registration for service type:";
-                Exception[] exceptions = counter.NotUnique(static pair => pair.Value.Count).OrderBy(static pair => pair.Key, TypeComparer.NameOrdinalIgnoreCase).Select(Exception).ToArray();
-                
-                return exceptions.Length switch
+            }
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        private static IServiceCollection VerifyThrow(IServiceCollection collection, ConcurrentHashSet<ServiceDescriptor> set, ServiceAmbiguousHandler handler)
+        {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+            
+            if (set is null)
+            {
+                throw new ArgumentNullException(nameof(set));
+            }
+            
+            ConcurrentDictionary<Type, List<ServiceDescriptorHandler>> counter = new ConcurrentDictionary<Type, List<ServiceDescriptorHandler>>();
+            
+            lock (collection)
+            {
+                lock (set)
                 {
-                    0 => collection.Add(set),
-                    1 => throw new ScanAmbiguousException(message + ' ' + exceptions[0].Message),
-                    _ => throw new ScanAmbiguousException(message, new AggregateException(exceptions))
-                };
+                    foreach (ServiceDescriptor descriptor in collection)
+                    {
+                        ServiceDescriptorHandler item = new ServiceDescriptorHandler(descriptor, ServiceDescriptorHandler.Affiliation.Source);
+                        counter.GetOrAdd(descriptor.ServiceType, static _ => new List<ServiceDescriptorHandler>()).Add(item);
+                    }
+                    
+                    foreach (ServiceDescriptor descriptor in set)
+                    {
+                        ServiceDescriptorHandler item = new ServiceDescriptorHandler(descriptor, ServiceDescriptorHandler.Affiliation.Destination);
+                        List<ServiceDescriptorHandler> handlers = counter.GetOrAdd(descriptor.ServiceType, static _ => new List<ServiceDescriptorHandler>());
+                        
+                        if (!handlers.Contains(item))
+                        {
+                            handlers.Add(item);
+                        }
+                    }
+                    
+                    static Exception Exception(KeyValuePair<Type, List<ServiceDescriptorHandler>> pair)
+                    {
+                        TypeComparer comparer = TypeComparer.NameOrdinalIgnoreCase;
+                        IEnumerable<ServiceDescriptor> source = pair.Value.Unwrap();
+                        String? message = source.OrderBy(static descriptor => descriptor.ImplementationType, comparer).ThenByDescending(static descriptor => descriptor.Lifetime).GetString();
+                        return new ScanAmbiguousException(message);
+                    }
+                    
+                    void Handler(KeyValuePair<Type, List<ServiceDescriptorHandler>> pair)
+                    {
+                        List<ServiceDescriptorHandler> container = pair.Value;
+                        ServiceDescriptor? descriptor = handler.Invoke(container.AsReadOnlySpan());
+                        
+                        if (descriptor is null)
+                        {
+                            return;
+                        }
+                        
+                        container.Remove(descriptor);
+                        collection.RemoveAll(container.Unwrap());
+                        set.RemoveAll(container.Unwrap());
+                        
+                        container.Clear();
+                        container.Add(new ServiceDescriptorHandler(descriptor, ServiceDescriptorHandler.Affiliation.Handle));
+                    }
+                    
+                    Parallel.ForEach(counter.NotUnique(static pair => pair.Value.Count), Handler);
+                    
+                    const String message = "Ambiguous registration for service type:";
+                    Exception[] exceptions = counter.NotUnique(static pair => pair.Value.Count).OrderBy(static pair => pair.Key, TypeComparer.NameOrdinalIgnoreCase).Select(Exception).ToArray();
+                    
+                    return exceptions.Length switch
+                    {
+                        0 => collection.Add(set),
+                        1 => throw new ScanAmbiguousException(message + ' ' + exceptions[0].Message),
+                        _ => throw new ScanAmbiguousException(message, new AggregateException(exceptions))
+                    };
+                }
             }
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void SetConflictHandler(ServiceDescriptorConflictHandler? handler)
+        private static IServiceCollection Verify(IServiceCollection collection, ConcurrentHashSet<ServiceDescriptor> set)
         {
-            Handler = handler;
+            return Verify(collection, set, Handler);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static IServiceCollection Verify(IServiceCollection collection, ConcurrentHashSet<ServiceDescriptor> set, Options options)
+        {
+            return Verify(collection, set, options.Handler);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static IServiceCollection Verify(IServiceCollection collection, ConcurrentHashSet<ServiceDescriptor> set, ServiceAmbiguousHandler handler)
+        {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+            
+            if (set is null)
+            {
+                throw new ArgumentNullException(nameof(set));
+            }
+            
+            return handler.Type switch
+            {
+                ServiceAmbiguousHandlerType.Ignore => VerifyIgnore(collection, set),
+                ServiceAmbiguousHandlerType.Throw => VerifyThrow(collection, set, handler),
+                ServiceAmbiguousHandlerType.New => VerifyNew(collection, set, handler),
+                ServiceAmbiguousHandlerType.Custom => VerifyThrow(collection, set, handler),
+                _ => throw new EnumUndefinedOrNotSupportedException<ServiceAmbiguousHandlerType>(handler.Type, nameof(ServiceAmbiguousHandlerType), null)
+            };
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -423,7 +657,13 @@ namespace NetExtender.Utilities.Types
             return source.Select(static descriptor => descriptor.Service);
         }
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IServiceCollection Scan(this IServiceCollection collection)
+        {
+            return Scan(collection, Handler);
+        }
+        
+        public static IServiceCollection Scan(this IServiceCollection collection, ServiceAmbiguousHandler handler)
         {
             if (collection is null)
             {
@@ -436,18 +676,30 @@ namespace NetExtender.Utilities.Types
                 throw new InvalidOperationException();
             }
             
+            ImmutableHashSet<Type> attributes = inherit.Type[typeof(ServiceDependencyAttribute)].Types.Add(typeof(ServiceDependencyAttribute));
+            ImmutableHashSet<Type> set = result.Inherit.Types.Union(attributes.SelectMany(attribute => inherit.Attribute[attribute].Types));
+            ImmutableHashSet<Type> except = inherit.Type[typeof(IUnscanServiceDependency)].Add(typeof(IUnscanServiceDependency));
+            
             Options options = new Options
             {
-                Source = result.Inherit.Types,
-                Interfaces = result.Inherit.Interfaces,
+                Source = set.Except(except),
+                Interfaces = result.Interfaces.Union(result.Generic.Interfaces).Except(except),
                 Inherit = inherit,
-                ServiceDependency = result
+                Except = except,
+                ServiceDependency = result,
+                Handler = handler
             };
             
             return Scan(collection, options);
         }
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IServiceCollection Scan(this IServiceCollection collection, IEnumerable<Type?> source)
+        {
+            return Scan(collection, source, Handler);
+        }
+        
+        public static IServiceCollection Scan(this IServiceCollection collection, IEnumerable<Type?> source, ServiceAmbiguousHandler handler)
         {
             if (collection is null)
             {
@@ -465,12 +717,18 @@ namespace NetExtender.Utilities.Types
                 throw new InvalidOperationException();
             }
             
+            ImmutableHashSet<Type> attributes = inherit.Type[typeof(ServiceDependencyAttribute)].Types.Add(typeof(ServiceDependencyAttribute));
+            ImmutableHashSet<Type> set = result.Inherit.Types.Union(attributes.SelectMany(attribute => inherit.Attribute[attribute].Types));
+            ImmutableHashSet<Type> except = inherit.Type[typeof(IUnscanServiceDependency)].Add(typeof(IUnscanServiceDependency));
+            
             Options options = new Options
             {
-                Source = result.Inherit.Types.Intersect(source!),
-                Interfaces = result.Inherit.Interfaces,
+                Source = set.Except(except).Intersect(source!),
+                Interfaces = result.Interfaces.Union(result.Generic.Interfaces).Except(except),
                 Inherit = inherit,
-                ServiceDependency = result
+                Except = except,
+                ServiceDependency = result,
+                Handler = handler
             };
             
             return Scan(collection, options);
@@ -478,6 +736,12 @@ namespace NetExtender.Utilities.Types
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IServiceCollection Scan(this IServiceCollection collection, Assembly assembly)
+        {
+            return Scan(collection, assembly, Handler);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IServiceCollection Scan(this IServiceCollection collection, Assembly assembly, ServiceAmbiguousHandler handler)
         {
             if (collection is null)
             {
@@ -489,11 +753,17 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(assembly));
             }
             
-            return Scan(collection, assembly.GetTypes());
+            return Scan(collection, assembly.GetTypes(), handler);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IServiceCollection Scan(this IServiceCollection collection, IEnumerable<Assembly?> assemblies)
+        {
+            return Scan(collection, assemblies, Handler);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IServiceCollection Scan(this IServiceCollection collection, IEnumerable<Assembly?> assemblies, ServiceAmbiguousHandler handler)
         {
             if (collection is null)
             {
@@ -505,7 +775,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(assemblies));
             }
             
-            return Scan(collection, assemblies.GetTypes());
+            return Scan(collection, assemblies.GetTypes(), handler);
         }
     }
 }

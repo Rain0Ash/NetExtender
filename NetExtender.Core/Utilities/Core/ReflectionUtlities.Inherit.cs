@@ -245,7 +245,7 @@ namespace NetExtender.Utilities.Core
         }
     }
     
-    public sealed class ReflectionInheritResult : IReadOnlySet<Type>
+    public sealed class ReflectionInheritResult : IImmutableSet<Type>
     {
         [return: NotNullIfNotNull("value")]
         public static implicit operator ImmutableHashSet<Type>?(ReflectionInheritResult? value)
@@ -333,6 +333,11 @@ namespace NetExtender.Utilities.Core
             return All.Contains(item);
         }
         
+        public Boolean TryGetValue(Type equalValue, out Type actualValue)
+        {
+            return All.TryGetValue(equalValue, out actualValue);
+        }
+        
         public Boolean IsProperSubsetOf(IEnumerable<Type> other)
         {
             return All.IsProperSubsetOf(other);
@@ -361,6 +366,76 @@ namespace NetExtender.Utilities.Core
         public Boolean SetEquals(IEnumerable<Type> other)
         {
             return All.SetEquals(other);
+        }
+        
+        public ImmutableHashSet<Type> Add(Type value)
+        {
+            return All.Add(value);
+        }
+        
+        IImmutableSet<Type> IImmutableSet<Type>.Add(Type value)
+        {
+            return All.Add(value);
+        }
+        
+        public ImmutableHashSet<Type> Union(IEnumerable<Type> other)
+        {
+            return All.Union(other);
+        }
+        
+        IImmutableSet<Type> IImmutableSet<Type>.Union(IEnumerable<Type> other)
+        {
+            return All.Union(other);
+        }
+        
+        public ImmutableHashSet<Type> Intersect(IEnumerable<Type> other)
+        {
+            return All.Intersect(other);
+        }
+        
+        IImmutableSet<Type> IImmutableSet<Type>.Intersect(IEnumerable<Type> other)
+        {
+            return All.Intersect(other);
+        }
+        
+        public ImmutableHashSet<Type> Except(IEnumerable<Type> other)
+        {
+            return All.Except(other);
+        }
+        
+        IImmutableSet<Type> IImmutableSet<Type>.Except(IEnumerable<Type> other)
+        {
+            return All.Except(other);
+        }
+        
+        public ImmutableHashSet<Type> SymmetricExcept(IEnumerable<Type> other)
+        {
+            return All.SymmetricExcept(other);
+        }
+        
+        IImmutableSet<Type> IImmutableSet<Type>.SymmetricExcept(IEnumerable<Type> other)
+        {
+            return All.SymmetricExcept(other);
+        }
+        
+        public ImmutableHashSet<Type> Remove(Type value)
+        {
+            return All.Remove(value);
+        }
+        
+        IImmutableSet<Type> IImmutableSet<Type>.Remove(Type value)
+        {
+            return All.Remove(value);
+        }
+        
+        public ImmutableHashSet<Type> Clear()
+        {
+            return All.Clear();
+        }
+        
+        IImmutableSet<Type> IImmutableSet<Type>.Clear()
+        {
+            return All.Clear();
         }
         
         public ImmutableHashSet<Type>.Enumerator GetEnumerator()
@@ -407,7 +482,7 @@ namespace NetExtender.Utilities.Core
         }
     }
     
-    public sealed class ReflectionInherit : IReadOnlySet<Type>
+    public sealed class ReflectionInherit : IImmutableSet<Type>
     {
         [return: NotNullIfNotNull("value")]
         public static implicit operator ImmutableHashSet<Type>?(ReflectionInherit? value)
@@ -446,6 +521,11 @@ namespace NetExtender.Utilities.Core
             return All.Contains(item);
         }
         
+        public Boolean TryGetValue(Type equalValue, out Type actualValue)
+        {
+            return All.TryGetValue(equalValue, out actualValue);
+        }
+        
         public Boolean IsProperSubsetOf(IEnumerable<Type> other)
         {
             return All.IsProperSubsetOf(other);
@@ -474,6 +554,76 @@ namespace NetExtender.Utilities.Core
         public Boolean SetEquals(IEnumerable<Type> other)
         {
             return All.SetEquals(other);
+        }
+        
+        public ImmutableHashSet<Type> Add(Type value)
+        {
+            return All.Add(value);
+        }
+        
+        IImmutableSet<Type> IImmutableSet<Type>.Add(Type value)
+        {
+            return All.Add(value);
+        }
+        
+        public ImmutableHashSet<Type> Union(IEnumerable<Type> other)
+        {
+            return All.Union(other);
+        }
+        
+        IImmutableSet<Type> IImmutableSet<Type>.Union(IEnumerable<Type> other)
+        {
+            return All.Union(other);
+        }
+        
+        public ImmutableHashSet<Type> Intersect(IEnumerable<Type> other)
+        {
+            return All.Intersect(other);
+        }
+        
+        IImmutableSet<Type> IImmutableSet<Type>.Intersect(IEnumerable<Type> other)
+        {
+            return All.Intersect(other);
+        }
+        
+        public ImmutableHashSet<Type> Except(IEnumerable<Type> other)
+        {
+            return All.Except(other);
+        }
+        
+        IImmutableSet<Type> IImmutableSet<Type>.Except(IEnumerable<Type> other)
+        {
+            return All.Except(other);
+        }
+        
+        public ImmutableHashSet<Type> SymmetricExcept(IEnumerable<Type> other)
+        {
+            return All.SymmetricExcept(other);
+        }
+        
+        IImmutableSet<Type> IImmutableSet<Type>.SymmetricExcept(IEnumerable<Type> other)
+        {
+            return All.SymmetricExcept(other);
+        }
+        
+        public ImmutableHashSet<Type> Remove(Type value)
+        {
+            return All.Remove(value);
+        }
+        
+        IImmutableSet<Type> IImmutableSet<Type>.Remove(Type value)
+        {
+            return All.Remove(value);
+        }
+        
+        public ImmutableHashSet<Type> Clear()
+        {
+            return All.Clear();
+        }
+        
+        IImmutableSet<Type> IImmutableSet<Type>.Clear()
+        {
+            return All.Clear();
         }
         
         public ImmutableHashSet<Type>.Enumerator GetEnumerator()

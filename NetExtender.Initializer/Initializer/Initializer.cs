@@ -10,7 +10,7 @@ using NetExtender.Types.Exceptions;
 
 namespace NetExtender.Initializer
 {
-    public abstract class Initializer
+    public abstract partial class Initializer
     {
         private static Task Stop
         {
@@ -149,6 +149,12 @@ namespace NetExtender.Initializer
 
             AppDomain.CurrentDomain.ProcessExit += ExitShutdown;
             AppDomain.CurrentDomain.UnhandledException += UnhandledException;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        protected static Type Seal(Type type)
+        {
+            return ReflectionUtilities.Seal(type);
         }
 
         protected virtual void Action(Object? sender, Exception? exception, InitializerUnhandledExceptionState action)

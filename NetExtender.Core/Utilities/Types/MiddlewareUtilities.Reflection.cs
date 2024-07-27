@@ -210,9 +210,14 @@ namespace NetExtender.Utilities.Types
                 
                 try
                 {
-                    if (type is not { IsAbstract: true, IsSealed: true })
+                    if (!type.IsAbstract)
                     {
                         bag.Add(ScanType(type, options));
+                        return;
+                    }
+                    
+                    if (type is not { IsAbstract: true, IsSealed: true })
+                    {
                         return;
                     }
                     

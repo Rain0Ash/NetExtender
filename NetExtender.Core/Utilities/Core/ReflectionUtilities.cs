@@ -18,6 +18,8 @@ using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
 using NetExtender.Types.Anonymous;
+using NetExtender.Types.Assemblies;
+using NetExtender.Types.Assemblies.Interfaces;
 using NetExtender.Types.Attributes;
 using NetExtender.Types.Comparers;
 using NetExtender.Types.Exceptions;
@@ -637,6 +639,30 @@ namespace NetExtender.Utilities.Core
                 _ => interfaces.WhereNotNull().Any(new HashSet<Type>(type.ImplementedInterfaces).Contains)
             };
         }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [SuppressMessage("Usage", "CA2200")]
+        public static Boolean HasAbstract(this Type type)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+            
+            try
+            {
+                return Initializer.Initializer.ReflectionUtilities.HasAbstract(type);
+            }
+            catch (Initializer.Initializer.ReflectionUtilities.TypeSealException exception)
+            {
+                throw new TypeNotSupportedException(exception.Type, exception.Message);
+            }
+            catch (Exception exception)
+            {
+                // ReSharper disable once PossibleIntendedRethrow
+                throw exception;
+            }
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Type TryGetGenericTypeDefinition(this Type type)
@@ -819,9 +845,9 @@ namespace NetExtender.Utilities.Core
             return type is not null && type.Namespace is null;
         }
 
-        private static class AnonymousTypeCache
+        private static class AnonymousTypeStorage
         {
-            private static ConcurrentDictionary<Type, AnonymousTypeProperties> Cache { get; } = new ConcurrentDictionary<Type, AnonymousTypeProperties>();
+            private static ConcurrentDictionary<Type, AnonymousTypeProperties> Storage { get; } = new ConcurrentDictionary<Type, AnonymousTypeProperties>();
 
             public static AnonymousTypeProperties? Get(Type type)
             {
@@ -837,7 +863,7 @@ namespace NetExtender.Utilities.Core
 
                 try
                 {
-                    return Cache.GetOrAdd(type, AnonymousTypeProperties.Create);
+                    return Storage.GetOrAdd(type, AnonymousTypeProperties.Create);
                 }
                 catch (Exception)
                 {
@@ -845,15 +871,17 @@ namespace NetExtender.Utilities.Core
                 }
             }
         }
-
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static AnonymousTypeProperties? GetAnonymousProperties(this Object? value)
         {
             return value is not null ? GetAnonymousProperties(value.GetType()) : null;
         }
-
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static AnonymousTypeProperties? GetAnonymousProperties(this Type type)
         {
-            return AnonymousTypeCache.Get(type);
+            return AnonymousTypeStorage.Get(type);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -876,6 +904,39 @@ namespace NetExtender.Utilities.Core
             }
 
             return info.IsDefined(typeof(T), inherit);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsAbstract(this MemberInfo info)
+        {
+            if (info is null)
+            {
+                throw new ArgumentNullException(nameof(info));
+            }
+            
+            return Initializer.Initializer.ReflectionUtilities.IsAbstract(info);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsAbstract(this PropertyInfo info)
+        {
+            if (info is null)
+            {
+                throw new ArgumentNullException(nameof(info));
+            }
+            
+            return Initializer.Initializer.ReflectionUtilities.IsAbstract(info);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsAbstract(this EventInfo info)
+        {
+            if (info is null)
+            {
+                throw new ArgumentNullException(nameof(info));
+            }
+            
+            return Initializer.Initializer.ReflectionUtilities.IsAbstract(info);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -2106,6 +2167,47 @@ namespace NetExtender.Utilities.Core
             }
 
             return IsSystemAssembly(assembly.FullName);
+        }
+        
+        [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
+        private static class SealStorage
+        {
+            private static IDynamicAssemblyUnsafeStore Assembly { get; } = new DynamicAssemblyStore($"{nameof(ReflectionUtilities)}<Seal>", AssemblyBuilderAccess.Run);
+            
+            [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+            [SuppressMessage("Usage", "CA2200")]
+            public static Type Seal(Type type)
+            {
+                if (type is null)
+                {
+                    throw new ArgumentNullException(nameof(type));
+                }
+                
+                try
+                {
+                    return Initializer.Initializer.ReflectionUtilities.Seal(type, Assembly, Assembly.Store);
+                }
+                catch (Initializer.Initializer.ReflectionUtilities.TypeSealException exception)
+                {
+                    throw new TypeNotSupportedException(exception.Type, exception.Message);
+                }
+                catch (Exception exception)
+                {
+                    // ReSharper disable once PossibleIntendedRethrow
+                    throw exception;
+                }
+            }
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Type Seal(this Type type)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+            
+            return SealStorage.Seal(type);
         }
 
         /// <inheritdoc cref="GetStackInfo(Int32)"/>
@@ -4311,18 +4413,18 @@ namespace NetExtender.Utilities.Core
             return type.IsDefined(typeof(CompilerGeneratedAttribute));
         }
 
-        private static class SizeCache<T> where T : struct
+        private static class SizeStorage<T> where T : struct
         {
             // ReSharper disable once StaticMemberInGenericType
             public static Int32 Size { get; }
 
-            static SizeCache()
+            static SizeStorage()
             {
                 Size = GetSize(typeof(T));
             }
         }
 
-        private static class SizeCache
+        private static class SizeStorage
         {
             private static ConcurrentDictionary<Type, Int32> Cache { get; } = new ConcurrentDictionary<Type, Int32>();
 
@@ -4370,7 +4472,7 @@ namespace NetExtender.Utilities.Core
                 throw new ArgumentNullException(nameof(array));
             }
 
-            return SizeCache<T>.Size * array.Length;
+            return SizeStorage<T>.Size * array.Length;
         }
 
         public static Boolean GetSize<T>(this T[] array, out Int64 size) where T : struct
@@ -4382,7 +4484,7 @@ namespace NetExtender.Utilities.Core
 
             try
             {
-                size = SizeCache<T>.Size * array.LongLength;
+                size = SizeStorage<T>.Size * array.LongLength;
                 return true;
             }
             catch (OverflowException)
@@ -4401,7 +4503,7 @@ namespace NetExtender.Utilities.Core
 
             try
             {
-                size = SizeCache<T>.Size * (BigInteger) array.LongLength;
+                size = SizeStorage<T>.Size * (BigInteger) array.LongLength;
                 return true;
             }
             catch (OverflowException)
@@ -4414,7 +4516,7 @@ namespace NetExtender.Utilities.Core
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Int32 GetSize<T>() where T : struct
         {
-            return SizeCache<T>.Size;
+            return SizeStorage<T>.Size;
         }
 
         public static Int32 GetSize(this Type type)
@@ -4429,10 +4531,10 @@ namespace NetExtender.Utilities.Core
                 throw new ArgumentException(@"Is not value type", nameof(type));
             }
 
-            return SizeCache.GetTypeSize(type);
+            return SizeStorage.GetTypeSize(type);
         }
 
-        private static class GenericDefaultCache
+        private static class GenericDefaultStorage
         {
             private static ConcurrentDictionary<Type, ValueType> Values { get; } = new ConcurrentDictionary<Type, ValueType>();
 
@@ -4501,7 +4603,7 @@ namespace NetExtender.Utilities.Core
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Object? Default(Type type)
         {
-            return GenericDefaultCache.Default(type);
+            return GenericDefaultStorage.Default(type);
         }
 
         /// <summary>

@@ -12,6 +12,10 @@ using NetExtender.Utilities.Core;
 
 namespace NetExtender.DependencyInjection.Interfaces
 {
+    internal interface IUnscanServiceDependency : IServiceDependency
+    {
+    }
+    
     public interface IServiceDependency<T> : IServiceDependency where T : class
     {
         static IServiceDependency()

@@ -8,7 +8,7 @@ using NetExtender.DependencyInjection.Interfaces;
 
 namespace NetExtender.DependencyInjection
 {
-    public sealed class ServiceDescriptorWrapper : IServiceDependency
+    public sealed class ServiceDescriptorWrapper : IUnscanServiceDependency
     {
         [return: NotNullIfNotNull("wrapper")]
         public static implicit operator ServiceDescriptor?(ServiceDescriptorWrapper? wrapper)

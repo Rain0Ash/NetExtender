@@ -606,7 +606,7 @@ namespace NetExtender.Utilities.Types
             }
         }
 
-        private static class ColorMatrixCache
+        private static class ColorMatrixStorage
         {
             private static Single[][] Matrix { get; } =
             {
@@ -646,7 +646,7 @@ namespace NetExtender.Utilities.Types
             Bitmap bitmap = new Bitmap(Math.Max(first.Width, second.Width), Math.Max(first.Height, second.Height));
 
             using ImageAttributes attributes = new ImageAttributes();
-            attributes.SetColorMatrix(ColorMatrixCache.CreateAlphaBlending(opacity), ColorMatrixFlag.Default, ColorAdjustType.Bitmap);
+            attributes.SetColorMatrix(ColorMatrixStorage.CreateAlphaBlending(opacity), ColorMatrixFlag.Default, ColorAdjustType.Bitmap);
 
             using Graphics graphics = Graphics.FromImage(bitmap);
             graphics.DrawImage(first, 0, 0, first.Width, first.Height);

@@ -45,12 +45,12 @@ namespace NetExtender.Utilities.Types
     public static class StringUtilities
     {
         /// <summary>
-        /// Cached null string task
+        /// Null string task
         /// </summary>
         public static Task<String?> Null { get; } = Task.FromResult<String?>(null);
         
         /// <summary>
-        /// Cached null string task
+        /// Null string task
         /// </summary>
         public static ValueTask<String?> ValueNull
         {
@@ -61,7 +61,7 @@ namespace NetExtender.Utilities.Types
         }
 
         /// <summary>
-        /// Cached empty string task
+        /// Empty string task
         /// </summary>
         public static Task<String> Empty { get; } = Task.FromResult(String.Empty);
 

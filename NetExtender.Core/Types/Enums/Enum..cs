@@ -34,7 +34,7 @@ namespace NetExtender.Types.Enums
             [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
             get
             {
-                return EnumUtilities.CacheEnum<T>.IsIntern((TEnum) this);
+                return EnumUtilities.EnumStorage<T>.IsIntern((TEnum) this);
             }
         }
         
@@ -356,7 +356,7 @@ namespace NetExtender.Types.Enums
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
-                return EnumUtilities.CacheEnum<T>.IsIntern(this);
+                return EnumUtilities.EnumStorage<T>.IsIntern(this);
             }
         }
 
@@ -530,73 +530,73 @@ namespace NetExtender.Types.Enums
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableSortedSet<Enum<T>> Get()
         {
-            return EnumUtilities.CacheEnum<T>.Get();
+            return EnumUtilities.EnumStorage<T>.Get();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableSortedSet<Enum<T>>? Get(LocalizationIdentifier identifier)
         {
-            return EnumUtilities.CacheEnum<T>.Get(identifier);
+            return EnumUtilities.EnumStorage<T>.Get(identifier);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableSortedSet<TEnum> Get<TEnum>() where TEnum : Enum<T, TEnum>, new()
         {
-            return EnumUtilities.CacheEnum<T>.Get<TEnum>();
+            return EnumUtilities.EnumStorage<T>.Get<TEnum>();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableSortedSet<TEnum>? Get<TEnum>(LocalizationIdentifier identifier) where TEnum : Enum<T, TEnum>, new()
         {
-            return EnumUtilities.CacheEnum<T>.Get<TEnum>(identifier);
+            return EnumUtilities.EnumStorage<T>.Get<TEnum>(identifier);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryParse(T value, [MaybeNullWhen(false)] out Enum<T> result)
         {
-            return EnumUtilities.CacheEnum<T>.TryParse(value, out result);
+            return EnumUtilities.EnumStorage<T>.TryParse(value, out result);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryParse(LocalizationIdentifier identifier, T value, [MaybeNullWhen(false)] out Enum<T> result)
         {
-            return EnumUtilities.CacheEnum<T>.TryParse(identifier, value, out result);
+            return EnumUtilities.EnumStorage<T>.TryParse(identifier, value, out result);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryParse(String value, [MaybeNullWhen(false)] out Enum<T> result)
         {
-            return EnumUtilities.CacheEnum<T>.TryParse(value, out result);
+            return EnumUtilities.EnumStorage<T>.TryParse(value, out result);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryParse(LocalizationIdentifier identifier, String value, [MaybeNullWhen(false)] out Enum<T> result)
         {
-            return EnumUtilities.CacheEnum<T>.TryParse(identifier, value, out result);
+            return EnumUtilities.EnumStorage<T>.TryParse(identifier, value, out result);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryParse<TEnum>(T value, [MaybeNullWhen(false)] out TEnum result) where TEnum : Enum<T, TEnum>, new()
         {
-            return EnumUtilities.CacheEnum<T>.TryParse(value, out result);
+            return EnumUtilities.EnumStorage<T>.TryParse(value, out result);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryParse<TEnum>(LocalizationIdentifier identifier, T value, [MaybeNullWhen(false)] out TEnum result) where TEnum : Enum<T, TEnum>, new()
         {
-            return EnumUtilities.CacheEnum<T>.TryParse(identifier, value, out result);
+            return EnumUtilities.EnumStorage<T>.TryParse(identifier, value, out result);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryParse<TEnum>(String value, [MaybeNullWhen(false)] out TEnum result) where TEnum : Enum<T, TEnum>, new()
         {
-            return EnumUtilities.CacheEnum<T>.TryParse(value, out result);
+            return EnumUtilities.EnumStorage<T>.TryParse(value, out result);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryParse<TEnum>(LocalizationIdentifier identifier, String value, [MaybeNullWhen(false)] out TEnum result) where TEnum : Enum<T, TEnum>, new()
         {
-            return EnumUtilities.CacheEnum<T>.TryParse(identifier, value, out result);
+            return EnumUtilities.EnumStorage<T>.TryParse(identifier, value, out result);
         }
         
         public virtual Int32 CompareTo(Object? obj)
