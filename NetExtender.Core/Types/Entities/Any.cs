@@ -2,7 +2,7 @@ using System;
 
 namespace NetExtender.Types.Entities
 {
-    public record Any
+    public sealed record Any
     {
         public enum Value : Byte
         {

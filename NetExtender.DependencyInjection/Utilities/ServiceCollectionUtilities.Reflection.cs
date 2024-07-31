@@ -13,13 +13,14 @@ using NetExtender.DependencyInjection.Attributes;
 using NetExtender.DependencyInjection.Comparers;
 using NetExtender.DependencyInjection.Interfaces;
 using NetExtender.Types.Comparers;
+using NetExtender.Types.Entities;
 using NetExtender.Types.Exceptions;
 using NetExtender.Utilities.Core;
 
 namespace NetExtender.Utilities.Types
 {
     public delegate ServiceDescriptor? ServiceAmbiguousDelegate(ReadOnlySpan<ServiceDescriptorHandler> services);
-    
+
     public enum ServiceAmbiguousHandlerType
     {
         Ignore,
@@ -288,6 +289,7 @@ namespace NetExtender.Utilities.Types
             }
         }
         
+        // ReSharper disable once CognitiveComplexity
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         private static IReadOnlyCollection<ServiceDescriptor> Create(Type @interface, Type type, ServiceLifetime lifetime, Options options)
         {
@@ -299,6 +301,11 @@ namespace NetExtender.Utilities.Types
             if (type is null)
             {
                 throw new ArgumentNullException(nameof(type));
+            }
+            
+            if (type.IsAbstract)
+            {
+                return ImmutableArray<ServiceDescriptor>.Empty;
             }
             
             if (!@interface.IsInterface)
@@ -357,8 +364,13 @@ namespace NetExtender.Utilities.Types
 
             // ReSharper disable once VariableHidesOuterVariable
             [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-            void Handler(Type type)
+            void Handler(Type? type)
             {
+                if (type is null || type.IsAbstract)
+                {
+                    return;
+                }
+                
                 ImmutableHashSet<Type> interfaces = type.GetInterfaces().Where(@interface => options.Interfaces.Contains(@interface.TryGetGenericTypeDefinition())).ToImmutableHashSet();
                 
                 if (interfaces.Count > 0)
@@ -660,10 +672,22 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IServiceCollection Scan(this IServiceCollection collection)
         {
-            return Scan(collection, Handler);
+            return Scan<Any>(collection, Handler);
         }
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IServiceCollection Scan(this IServiceCollection collection, ServiceAmbiguousHandler handler)
+        {
+            return Scan<Any>(collection, handler);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IServiceCollection Scan<T>(this IServiceCollection collection) where T : class
+        {
+            return Scan<T>(collection, Handler);
+        }
+
+        public static IServiceCollection Scan<T>(this IServiceCollection collection, ServiceAmbiguousHandler handler) where T : class
         {
             if (collection is null)
             {
@@ -679,6 +703,27 @@ namespace NetExtender.Utilities.Types
             ImmutableHashSet<Type> attributes = inherit.Type[typeof(ServiceDependencyAttribute)].Types.Add(typeof(ServiceDependencyAttribute));
             ImmutableHashSet<Type> set = result.Inherit.Types.Union(attributes.SelectMany(attribute => inherit.Attribute[attribute].Types));
             ImmutableHashSet<Type> except = inherit.Type[typeof(IUnscanServiceDependency)].Add(typeof(IUnscanServiceDependency));
+
+            if (typeof(T) == typeof(Any))
+            {
+                except = except.Union(inherit.Type[typeof(ISpecialServiceDependency)].Add(typeof(ISpecialServiceDependency)));
+            }
+            else if (inherit[typeof(Attribute)].Contains(typeof(T)))
+            {
+                set = set.Intersect(inherit.Attribute[typeof(T)]);
+            }
+            else if (typeof(T).IsInterface)
+            {
+                set = set.Intersect(inherit[typeof(T)].Add(typeof(T)));
+            }
+            else if (typeof(T).IsAbstract)
+            {
+                throw new TypeNotSupportedException<T>($"Type '{typeof(T)}' cannot be abstract.");
+            }
+            else
+            {
+                set = set.Intersect(inherit[typeof(T)].Add(typeof(T)));
+            }
             
             Options options = new Options
             {

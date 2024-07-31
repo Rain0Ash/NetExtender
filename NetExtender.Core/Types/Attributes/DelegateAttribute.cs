@@ -8,7 +8,7 @@ using NetExtender.Utilities.Types;
 
 namespace NetExtender.Utilities.Core
 {
-    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Method, AllowMultiple = true)]
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Method | AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = true)]
     public abstract class DelegateAttribute : Attribute
     {
         public Type? Type { get; }
@@ -19,6 +19,13 @@ namespace NetExtender.Utilities.Core
         {
             Name = name;
             Type = type;
+        }
+
+        protected DelegateAttribute(String? name, Type? type, Int32 order)
+        {
+            Name = name;
+            Type = type;
+            Order = order;
         }
     }
     

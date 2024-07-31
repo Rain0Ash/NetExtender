@@ -23,7 +23,9 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\NetExtender.Core\NetExtender.Core.csproj"/>
         <ProjectReference Include="..\NetExtender.Windows\NetExtender.Windows.csproj"/>
+        <ProjectReference Include="..\NetExtender.DependencyInjection\NetExtender.DependencyInjection.csproj"/>
     </ItemGroup>
 
 </Project>

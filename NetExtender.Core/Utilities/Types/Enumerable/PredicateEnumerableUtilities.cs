@@ -649,7 +649,7 @@ namespace NetExtender.Utilities.Types
             }
         }
 
-        public static IEnumerable<Int32> IndexWhere<T>(this IEnumerable<T> source, Func<Int32, T, Boolean> predicate)
+        public static IEnumerable<Int32> IndexWhere<T>(this IEnumerable<T> source, Func<T, Int32, Boolean> predicate)
         {
             if (source is null)
             {
@@ -664,7 +664,7 @@ namespace NetExtender.Utilities.Types
             Int32 index = 0;
             foreach (T item in source)
             {
-                if (predicate(index, item))
+                if (predicate(item, index))
                 {
                     yield return index;
                 }
@@ -673,7 +673,7 @@ namespace NetExtender.Utilities.Types
             }
         }
 
-        public static IEnumerable<(Int32 index, T item)> IndexItemWhere<T>(this IEnumerable<T> source, Func<T, Boolean> predicate)
+        public static IEnumerable<(T Item, Int32 Index)> IndexItemWhere<T>(this IEnumerable<T> source, Func<T, Boolean> predicate)
         {
             if (source is null)
             {
@@ -690,14 +690,14 @@ namespace NetExtender.Utilities.Types
             {
                 if (predicate(item))
                 {
-                    yield return (index, item);
+                    yield return (item, index);
                 }
 
                 ++index;
             }
         }
 
-        public static IEnumerable<(Int32 index, T item)> IndexItemWhere<T>(this IEnumerable<T> source, Func<Int32, T, Boolean> predicate)
+        public static IEnumerable<(T Item, Int32 Index)> IndexItemWhere<T>(this IEnumerable<T> source, Func<T, Int32, Boolean> predicate)
         {
             if (source is null)
             {
@@ -712,9 +712,9 @@ namespace NetExtender.Utilities.Types
             Int32 index = 0;
             foreach (T item in source)
             {
-                if (predicate(index, item))
+                if (predicate(item, index))
                 {
-                    yield return (index, item);
+                    yield return (item, index);
                 }
 
                 ++index;

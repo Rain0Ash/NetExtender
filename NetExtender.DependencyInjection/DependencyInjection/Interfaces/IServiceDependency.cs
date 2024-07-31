@@ -12,10 +12,6 @@ using NetExtender.Utilities.Core;
 
 namespace NetExtender.DependencyInjection.Interfaces
 {
-    internal interface IUnscanServiceDependency : IServiceDependency
-    {
-    }
-    
     public interface IServiceDependency<T> : IServiceDependency where T : class
     {
         static IServiceDependency()
@@ -26,7 +22,7 @@ namespace NetExtender.DependencyInjection.Interfaces
             }
         }
     }
-
+    
     public interface IServiceDependency
     {
         public static ImmutableDictionary<Type, ServiceLifetime> Services { get; } = new Dictionary<Type, ServiceLifetime>

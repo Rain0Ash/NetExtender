@@ -26,9 +26,14 @@ namespace NetExtender.Utilities.Core
         {
         }
 
+        protected ComparisonAttribute(String? name, Type? type, Int32 order)
+            : base(name, type, order)
+        {
+        }
+
         protected virtual TComparer? Create<TComparer>() where TComparer : class
         {
-            return ComparerType is null ? null : (TComparer?) Activator.CreateInstance(ComparerType);
+            return ComparerType is not null ? (TComparer?) Activator.CreateInstance(ComparerType) : null;
         }
     }
 

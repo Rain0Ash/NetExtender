@@ -18,12 +18,12 @@ namespace NetExtender.WindowsPresentation.Types.Commands
             CanExecuteHandler = validator;
         }
 
-        public override Boolean CanExecute(T? parameter)
+        public sealed override Boolean CanExecute(T? parameter)
         {
             return CanExecuteHandler?.Invoke(parameter) is not false;
         }
 
-        public override void Execute(T? parameter)
+        public sealed override void Execute(T? parameter)
         {
             ExecuteHandler.Invoke(parameter);
         }

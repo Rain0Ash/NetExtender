@@ -598,6 +598,48 @@ namespace NetExtender.Utilities.Types
 
             return Array.FindAll(array, match.Invoke);
         }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T[] NotNull<T>(this T?[] array) where T : class
+        {
+            if (array is null)
+            {
+                throw new ArgumentNullException(nameof(array));
+            }
+            
+            return Array.FindAll(array, static item => item is not null)!;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T[] NotDefault<T>(this T?[] array)
+        {
+            if (array is null)
+            {
+                throw new ArgumentNullException(nameof(array));
+            }
+            
+            // ReSharper disable once InvokeAsExtensionMethod
+            return Array.FindAll(array, static item => GenericUtilities.IsNotDefault(item))!;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static T[] NotDefault<T>(this T?[] array) where T : struct
+        {
+            if (array is null)
+            {
+                throw new ArgumentNullException(nameof(array));
+            }
+            
+            T?[] all = Array.FindAll(array, static item => item.HasValue);
+            T[] result = new T[all.Length];
+            
+            for (Int32 i = 0; i < all.Length; i++)
+            {
+                result[i] = all[i]!.Value;
+            }
+            
+            return result;
+        }
 
         /// <inheritdoc cref="Array.FindIndex{T}(T[],Predicate{T})"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

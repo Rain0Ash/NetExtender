@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -8,20 +7,34 @@ using System.Runtime.CompilerServices;
 namespace NetExtender.Utilities.Core
 {
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = true)]
-    public class EquatableAttribute : ComparisonAttribute
+    public class EquatableAttribute : EquatableComparisonAttribute
     {
         public EquatableAttribute()
-            : this(null, null)
+        {
+        }
+        
+        public EquatableAttribute(Int32 order)
+            : base(order)
         {
         }
 
         public EquatableAttribute(String? name)
-            : this(name, null)
+            : base(name)
+        {
+        }
+
+        public EquatableAttribute(String? name, Int32 order)
+            : base(name, order)
         {
         }
 
         public EquatableAttribute(Type? type)
-            : this(null, type)
+            : base(type)
+        {
+        }
+
+        public EquatableAttribute(Type? type, Int32 order)
+            : base(type, order)
         {
         }
 
@@ -30,19 +43,9 @@ namespace NetExtender.Utilities.Core
         {
         }
 
-        public virtual Boolean Equals<T>(T? x, T? y)
+        public EquatableAttribute(String? name, Type? type, Int32 order)
+            : base(name, type, order)
         {
-            return typeof(T) == typeof(String) ? Equals(Unsafe.As<T?, String?>(ref x), Unsafe.As<T?, String?>(ref y)) : EqualityComparer<T>.Default.Equals(x, y);
-        }
-
-        public Boolean Equals(String? x, String? y)
-        {
-            return Equals(x, y, Comparison);
-        }
-
-        public virtual Boolean Equals(String? x, String? y, StringComparison comparison)
-        {
-            return String.Equals(x, y, comparison);
         }
     }
 
@@ -64,11 +67,10 @@ namespace NetExtender.Utilities.Core
         {
             ParameterExpression x = Expression.Parameter(typeof(T), nameof(x));
             ParameterExpression y = Expression.Parameter(typeof(T), nameof(y));
-
+            ImmutableArray<Member<TAttribute>> members = Members<TAttribute>(name);
+            
             const BindingFlags binding = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
             
-            ImmutableArray<Member<TAttribute>> members = Members<TAttribute>(name);
-
             var methods = new
             {
                 String = typeof(TAttribute).GetMethod(nameof(EquatableAttribute.Equals), binding, new[] { typeof(String), typeof(String) }),

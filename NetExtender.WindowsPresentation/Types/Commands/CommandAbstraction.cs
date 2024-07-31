@@ -5,7 +5,7 @@ namespace NetExtender.WindowsPresentation.Types.Commands
 {
     public abstract class CommandAbstraction<T> : CommandAbstraction, ICommand<T>
     {
-        public sealed override Boolean CanExecute(Object? parameter)
+        public override Boolean CanExecute(Object? parameter)
         {
             return parameter switch
             {
@@ -20,7 +20,7 @@ namespace NetExtender.WindowsPresentation.Types.Commands
             return true;
         }
 
-        public sealed override void Execute(Object? parameter)
+        public override void Execute(Object? parameter)
         {
             switch (parameter)
             {

@@ -17,7 +17,7 @@ namespace NetExtender.WindowsPresentation.ReactiveUI.Types.Models
     public abstract class ReactiveViewModel : ReactiveObject
     {
     }
-    
+
     public abstract class ReactiveViewModelSingleton<T> : ReactiveViewModel where T : ReactiveViewModel, new()
     {
         private static ISingleton<T> Internal { get; } = new Singleton<T>();

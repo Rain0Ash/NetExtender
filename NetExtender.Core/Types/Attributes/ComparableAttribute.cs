@@ -16,9 +16,19 @@ namespace NetExtender.Utilities.Core
             : this(null, null)
         {
         }
+        
+        public ComparableAttribute(Int32 order)
+            : this(null, null, order)
+        {
+        }
 
         public ComparableAttribute(String? name)
             : this(name, null)
+        {
+        }
+
+        public ComparableAttribute(String? name, Int32 order)
+            : this(name, null, order)
         {
         }
 
@@ -27,8 +37,18 @@ namespace NetExtender.Utilities.Core
         {
         }
 
+        public ComparableAttribute(Type? type, Int32 order)
+            : this(null, type, order)
+        {
+        }
+
         public ComparableAttribute(String? name, Type? type)
             : base(name, type)
+        {
+        }
+
+        public ComparableAttribute(String? name, Type? type, Int32 order)
+            : base(name, type, order)
         {
         }
 
@@ -79,11 +99,10 @@ namespace NetExtender.Utilities.Core
         {
             ParameterExpression x = Expression.Parameter(typeof(T), nameof(x));
             ParameterExpression y = Expression.Parameter(typeof(T), nameof(y));
-
-            const BindingFlags binding = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
-
             ImmutableArray<Member<TAttribute>> members = Members<TAttribute>(name);
-
+            
+            const BindingFlags binding = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+            
             var methods = new
             {
                 String = typeof(ComparableAttribute).GetMethod(nameof(ComparableAttribute.Compare), binding, new[] { typeof(String), typeof(String) }),
