@@ -371,6 +371,51 @@ namespace NetExtender.Utilities.Types
             }
         }
 
+        public static void SeamlessReplace<T>(this IList<T> collection, IEnumerable<T> source)
+        {
+            SeamlessReplace(collection, source, 0);
+        }
+
+        public static void SeamlessReplace<T>(this IList<T> collection, IEnumerable<T> source, Int32 start)
+        {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (start < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(start), start, null);
+            }
+
+            using IEnumerator<T> enumerator = source.GetEnumerator();
+
+            Int32 i = start;
+            while (enumerator.MoveNext())
+            {
+                if (collection.Count < i)
+                {
+                    collection[i++] = enumerator.Current;
+                    continue;
+                }
+
+                collection.Add(enumerator.Current);
+                i++;
+            }
+            
+            start = i;
+            i = collection.Count;
+            while (collection.Count > start)
+            {
+                collection.RemoveAt(--i);
+            }
+        }
+
         internal static Int32 BinarySearch<T>(IEnumerable<T> collection, T value)
         {
             if (collection is null)
