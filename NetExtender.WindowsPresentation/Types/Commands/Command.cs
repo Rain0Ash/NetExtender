@@ -3,8 +3,13 @@ using System.Windows.Input;
 
 namespace NetExtender.WindowsPresentation.Types.Commands
 {
-    public abstract class CommandAbstraction<T> : CommandAbstraction, ICommand<T>
+    public abstract class Command<T> : Command, ICommand<T>
     {
+        public virtual Boolean CanExecute(T? parameter)
+        {
+            return true;
+        }
+
         public override Boolean CanExecute(Object? parameter)
         {
             return parameter switch
@@ -15,10 +20,7 @@ namespace NetExtender.WindowsPresentation.Types.Commands
             };
         }
 
-        public virtual Boolean CanExecute(T? parameter)
-        {
-            return true;
-        }
+        public abstract void Execute(T? parameter);
 
         public override void Execute(Object? parameter)
         {
@@ -34,11 +36,9 @@ namespace NetExtender.WindowsPresentation.Types.Commands
                     throw new ArgumentException($"Argument is not of type '{typeof(T).Name}' for {GetType().Name}.", nameof(parameter));
             }
         }
-
-        public abstract void Execute(T? parameter);
     }
 
-    public abstract class CommandAbstraction : ICommand
+    public abstract class Command : ICommand
     {
         public virtual event EventHandler? CanExecuteChanged
         {

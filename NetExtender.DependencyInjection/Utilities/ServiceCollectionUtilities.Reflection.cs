@@ -458,7 +458,7 @@ namespace NetExtender.Utilities.Types
                     foreach (ServiceDescriptor descriptor in set)
                     {
                         ServiceDescriptorHandler item = new ServiceDescriptorHandler(descriptor, ServiceDescriptorHandler.Affiliation.Destination);
-                        List<ServiceDescriptorHandler> handlers = counter.GetOrAdd(descriptor.ServiceType, static _ => new List<ServiceDescriptorHandler>());
+                        List<ServiceDescriptorHandler> handlers = counter.GetOrAdd(descriptor.ServiceType, static _ => new List<ServiceDescriptorHandler>(4));
                         
                         if (!handlers.Contains(item))
                         {

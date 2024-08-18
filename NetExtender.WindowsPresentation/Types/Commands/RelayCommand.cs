@@ -2,20 +2,14 @@ using System;
 
 namespace NetExtender.WindowsPresentation.Types.Commands
 {
-    public class RelayCommand<T> : CommandAbstraction<T>
+    public class RelayCommand<T> : Command<T>
     {
-        protected Action<T?> ExecuteHandler { get; }
-        protected Func<T?, Boolean>? CanExecuteHandler { get; }
+        public Action<T?> ExecuteHandler { get; }
+        public Predicate<T?>? CanExecuteHandler { get; init; }
 
         public RelayCommand(Action<T?> execute)
-            : this(execute, null)
-        {
-        }
-
-        public RelayCommand(Action<T?> execute, Func<T?, Boolean>? validator)
         {
             ExecuteHandler = execute ?? throw new ArgumentNullException(nameof(execute));
-            CanExecuteHandler = validator;
         }
 
         public sealed override Boolean CanExecute(T? parameter)

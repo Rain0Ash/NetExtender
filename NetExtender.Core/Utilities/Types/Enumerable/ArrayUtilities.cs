@@ -14,6 +14,17 @@ namespace NetExtender.Utilities.Types
 {
     public static partial class ArrayUtilities
     {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static TResult[] As<T, TResult>(this T[] array) where T : class where TResult : class
+        {
+            if (array is null)
+            {
+                throw new ArgumentNullException(nameof(array));
+            }
+
+            return Unsafe.As<T[], TResult[]>(ref array);
+        }
+        
         /// <summary>
         /// Adds the provided item to the end of the array.
         /// </summary>

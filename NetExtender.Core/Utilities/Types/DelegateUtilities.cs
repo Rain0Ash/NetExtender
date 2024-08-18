@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
@@ -57,6 +58,19 @@ namespace NetExtender.Utilities.Types
             }
 
             return As<Func<T, T, Int32>>(comparison);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        [SuppressMessage("ReSharper", "ConvertTypeCheckToNullCheck")]
+        public static TDelegate[] GetInvocationList<TDelegate>(this MulticastDelegate @delegate) where TDelegate : Delegate
+        {
+            if (@delegate is null)
+            {
+                throw new ArgumentNullException(nameof(@delegate));
+            }
+
+            Delegate[] invocation = @delegate.GetInvocationList();
+            return Array.FindAll(invocation.As<Delegate, TDelegate>(), static @delegate => @delegate is TDelegate);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -156,9 +170,7 @@ namespace NetExtender.Utilities.Types
         }
 
         private static ConcurrentDictionary<FieldInfo, DynamicMethod> GetMethods { get; } = new ConcurrentDictionary<FieldInfo, DynamicMethod>();
-
         private static ConcurrentDictionary<FieldInfo, DynamicMethod> SetMethods { get; } = new ConcurrentDictionary<FieldInfo, DynamicMethod>();
-
         private static ConcurrentDictionary<ConstructorInfo, DynamicMethod> CreateMethods { get; } = new ConcurrentDictionary<ConstructorInfo, DynamicMethod>();
 
         public static TDelegate CreateGetDelegate<TDelegate>(this FieldInfo field) where TDelegate : Delegate

@@ -5,6 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using NetExtender.Types.Dictionaries;
 using NetExtender.Types.Monads;
@@ -84,20 +85,32 @@ namespace NetExtender.Types.Sets
         {
         }
 
+        [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
         public OrderedSet(IEnumerable<T> collection, IEqualityComparer<NullMaybe<T>>? comparer)
         {
             if (collection is null)
             {
                 throw new ArgumentNullException(nameof(collection));
             }
-
-            Node = new NullableDictionary<T, LinkedListNode<T>>(comparer);
+            
+            Node = new NullableDictionary<T, LinkedListNode<T>>(collection.CountIfMaterialized() ?? 16, comparer);
             Linked = new LinkedList<T>();
 
             foreach (T item in collection)
             {
                 Add(item);
             }
+        }
+
+        public OrderedSet(Int32 capacity, IEqualityComparer<T>? comparer)
+            : this(capacity, comparer?.ToNullMaybeEqualityComparer())
+        {
+        }
+
+        public OrderedSet(Int32 capacity, IEqualityComparer<NullMaybe<T>>? comparer)
+        {
+            Node = new NullableDictionary<T, LinkedListNode<T>>(capacity, comparer);
+            Linked = new LinkedList<T>();
         }
 
         public Boolean Contains(T item)
