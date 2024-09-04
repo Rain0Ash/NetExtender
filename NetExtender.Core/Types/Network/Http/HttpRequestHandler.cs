@@ -1,14 +1,14 @@
 using System;
-using System.Collections.Concurrent;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.Net;
 using System.Net.Http;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 using NetExtender.Types.Exceptions;
 using NetExtender.Types.Exceptions.Handlers;
 using NetExtender.Types.Monads;
+using NetExtender.Types.Network.Exceptions;
+using NetExtender.Types.Network.Formatters.Exceptions;
 using NetExtender.Utilities.Network;
 using Newtonsoft.Json;
 
@@ -25,11 +25,61 @@ namespace NetExtender.Types.Network
             {
                 throw new ArgumentNullException(nameof(request));
             }
-
+            
             try
             {
                 result = request.Invoke();
                 return true;
+            }
+            catch (HttpMessageParsingException parsing)
+            {
+                ExceptionHandlerAction action = Handle(parsing);
+                start:
+                switch (action)
+                {
+                    case ExceptionHandlerAction.Successful:
+                    case ExceptionHandlerAction.Ignore:
+                        result = default;
+                        return false;
+                    case ExceptionHandlerAction.Default:
+                        action = Handle((Exception) parsing) switch
+                        {
+                            ExceptionHandlerAction.Default => ExceptionHandlerAction.Ignore,
+                            var value => value
+                        };
+                        
+                        goto start;
+                    case ExceptionHandlerAction.Throw:
+                    case ExceptionHandlerAction.Rethrow:
+                        throw;
+                    default:
+                        throw new EnumUndefinedOrNotSupportedThrowableException<ExceptionHandlerAction>(action, nameof(action), null);
+                }
+            }
+            catch (MediaTypeNotSupportedException media)
+            {
+                ExceptionHandlerAction action = Handle(media);
+                start:
+                switch (action)
+                {
+                    case ExceptionHandlerAction.Successful:
+                    case ExceptionHandlerAction.Ignore:
+                        result = default;
+                        return false;
+                    case ExceptionHandlerAction.Default:
+                        action = Handle((Exception) media) switch
+                        {
+                            ExceptionHandlerAction.Default => ExceptionHandlerAction.Ignore,
+                            var value => value
+                        };
+                        
+                        goto start;
+                    case ExceptionHandlerAction.Throw:
+                    case ExceptionHandlerAction.Rethrow:
+                        throw;
+                    default:
+                        throw new EnumUndefinedOrNotSupportedThrowableException<ExceptionHandlerAction>(action, nameof(action), null);
+                }
             }
             catch (HttpRequestException exception) when (exception.IsSocketException(out SocketException? socket))
             {
@@ -274,6 +324,16 @@ namespace NetExtender.Types.Network
             return exception is null ? ExceptionHandlerAction.Ignore : ExceptionHandlerAction.Default;
         }
 
+        protected virtual ExceptionHandlerAction Handle(HttpMessageParsingException? exception)
+        {
+            return exception is null ? ExceptionHandlerAction.Ignore : ExceptionHandlerAction.Default;
+        }
+
+        protected virtual ExceptionHandlerAction Handle(MediaTypeNotSupportedException? exception)
+        {
+            return exception is null ? ExceptionHandlerAction.Ignore : ExceptionHandlerAction.Default;
+        }
+
         protected virtual ExceptionHandlerAction Handle(HttpRequestException? exception)
         {
             return exception is null ? ExceptionHandlerAction.Ignore : ExceptionHandlerAction.Default;
@@ -282,166 +342,6 @@ namespace NetExtender.Types.Network
         protected virtual ExceptionHandlerAction Handle(JsonException? exception)
         {
             return exception is null ? ExceptionHandlerAction.Ignore : ExceptionHandlerAction.Default;
-        }
-    }
-    
-    public class DynamicHttpRequestHandler : HttpRequestHandler
-    {
-        //TODO:
-        protected ConcurrentDictionary<HttpStatusCode, HttpExceptionHandler?> Handlers { get; } = new ConcurrentDictionary<HttpStatusCode, HttpExceptionHandler?>();
-        
-        public Func<SocketException, ExceptionHandlerAction>? SocketHandler { get; set; }
-        public Func<IOException, ExceptionHandlerAction>? IOHandler { get; set; }
-        
-        public Func<HttpRequestException, ExceptionHandlerAction>? BadRequestHandler { get; set; }
-        public Func<HttpRequestException, ExceptionHandlerAction>? ForbiddenHandler { get; set; }
-        public Func<HttpRequestException, ExceptionHandlerAction>? NotFoundHandler { get; set; }
-        public Func<HttpRequestException, ExceptionHandlerAction>? InternalServerErrorHandler { get; set; }
-        public Func<HttpRequestException, ExceptionHandlerAction>? BadGatewayHandler { get; set; }
-        public Func<HttpRequestException, ExceptionHandlerAction>? ServiceUnavailableHandler { get; set; }
-        
-        public Func<HttpRequestException, ExceptionHandlerAction>? ClientErrorHandler { get; set; }
-        public Func<HttpRequestException, ExceptionHandlerAction>? ServerErrorHandler { get; set; }
-        public Func<HttpRequestException, ExceptionHandlerAction>? HttpHandler { get; set; }
-        public Func<JsonException, ExceptionHandlerAction>? JsonHandler { get; set; }
-        public Func<Exception, ExceptionHandlerAction>? DefaultHandler { get; set; }
-        public Action? FinallyHandler { get; set; }
-        
-        protected override ExceptionHandlerAction Handle(SocketException? exception)
-        {
-            return exception switch
-            {
-                null => ExceptionHandlerAction.Ignore,
-                _ when SocketHandler is not null => SocketHandler(exception),
-                _ => ExceptionHandlerAction.Default
-            };
-        }
-
-        protected override ExceptionHandlerAction Handle(IOException? exception)
-        {
-            return exception switch
-            {
-                null => ExceptionHandlerAction.Ignore,
-                _ when IOHandler is not null => IOHandler(exception),
-                _ => ExceptionHandlerAction.Default
-            };
-        }
-
-        // ReSharper disable once CognitiveComplexity
-        protected override ExceptionHandlerAction Handle(HttpRequestException? exception)
-        {
-            switch (exception)
-            {
-                case null:
-                    return ExceptionHandlerAction.Ignore;
-                case var _ when exception.StatusCode == HttpStatusCode.BadRequest && BadRequestHandler is not null:
-                {
-                    ExceptionHandlerAction result = BadRequestHandler(exception);
-                    if (result == ExceptionHandlerAction.Default)
-                    {
-                        goto ClientError;
-                    }
-
-                    return result;
-                }
-                case var _ when exception.StatusCode == HttpStatusCode.Forbidden && ForbiddenHandler is not null:
-                {
-                    ExceptionHandlerAction result = ForbiddenHandler(exception);
-                    if (result == ExceptionHandlerAction.Default)
-                    {
-                        goto ClientError;
-                    }
-
-                    return result;
-                }
-                case var _ when exception.StatusCode == HttpStatusCode.NotFound && NotFoundHandler is not null:
-                {
-                    ExceptionHandlerAction result = NotFoundHandler(exception);
-                    if (result == ExceptionHandlerAction.Default)
-                    {
-                        goto ClientError;
-                    }
-
-                    return result;
-                }
-                case var _ when exception.StatusCode.IsClientError(): ClientError:
-                {
-                    ExceptionHandlerAction result = ClientErrorHandler?.Invoke(exception) ?? ExceptionHandlerAction.Default;
-                    if (result == ExceptionHandlerAction.Default)
-                    {
-                        goto Default;
-                    }
-
-                    return result;
-                }
-                case var _ when exception.StatusCode == HttpStatusCode.InternalServerError && InternalServerErrorHandler is not null:
-                {
-                    ExceptionHandlerAction result = InternalServerErrorHandler(exception);
-                    if (result == ExceptionHandlerAction.Default)
-                    {
-                        goto ServerError;
-                    }
-
-                    return result;
-                }
-                case var _ when exception.StatusCode == HttpStatusCode.BadGateway && BadGatewayHandler is not null:
-                {
-                    ExceptionHandlerAction result = BadGatewayHandler(exception);
-                    if (result == ExceptionHandlerAction.Default)
-                    {
-                        goto ServerError;
-                    }
-
-                    return result;
-                }
-                case var _ when exception.StatusCode == HttpStatusCode.ServiceUnavailable && ServiceUnavailableHandler is not null:
-                {
-                    ExceptionHandlerAction result = ServiceUnavailableHandler(exception);
-                    if (result == ExceptionHandlerAction.Default)
-                    {
-                        goto ServerError;
-                    }
-
-                    return result;
-                }
-                case var _ when exception.StatusCode.IsServerError(): ServerError:
-                {
-                    ExceptionHandlerAction result = ServerErrorHandler?.Invoke(exception) ?? ExceptionHandlerAction.Default;
-                    if (result == ExceptionHandlerAction.Default)
-                    {
-                        goto Default;
-                    }
-
-                    return result;
-                }
-                default: Default:
-                    return HttpHandler?.Invoke(exception) ?? ExceptionHandlerAction.Default;
-            }
-        }
-
-        protected override ExceptionHandlerAction Handle(JsonException? exception)
-        {
-            return exception switch
-            {
-                null => ExceptionHandlerAction.Ignore,
-                _ when JsonHandler is not null => JsonHandler(exception),
-                _ => ExceptionHandlerAction.Default
-            };
-        }
-
-        protected override ExceptionHandlerAction Handle(Exception? exception)
-        {
-            return exception switch
-            {
-                null => ExceptionHandlerAction.Ignore,
-                _ when DefaultHandler is not null => DefaultHandler(exception),
-                _ => ExceptionHandlerAction.Rethrow
-            };
-        }
-
-        protected override void Finally()
-        {
-            FinallyHandler?.Invoke();
         }
     }
 }

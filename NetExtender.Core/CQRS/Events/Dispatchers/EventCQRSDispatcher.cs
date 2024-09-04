@@ -1,11 +1,11 @@
 ﻿// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 using NetExtender.CQRS.Dispatchers;
 using NetExtender.CQRS.Events.Dispatchers.Interfaces;
+using NetExtender.Initializer.CQRS.Exceptions;
 
 namespace NetExtender.CQRS.Events.Dispatchers
 {
@@ -23,7 +23,7 @@ namespace NetExtender.CQRS.Events.Dispatchers
 
         public override Task<TResult> DispatchAsync<TEntity, TResult>(TEntity entity, CancellationToken token)
         {
-            throw new NotSupportedException();
+            throw new DispatchNotSupportedException<TEntity>(GetType());
         }
     }
 }

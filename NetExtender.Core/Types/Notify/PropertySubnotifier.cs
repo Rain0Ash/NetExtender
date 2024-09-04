@@ -46,7 +46,7 @@ namespace NetExtender.Types.Notify
                 throw new ArgumentNullException(nameof(property));
             }
 
-            return Store.TryGetValue(when, out LinkedList<String>? collection) && collection.Contains(property);
+            return Storage.TryGetValue(when, out LinkedList<String>? collection) && collection.Contains(property);
         }
 
         public Boolean Contains<TProperty>(Expression<Func<T, TProperty>> when, Expression<Func<T, Object?>> property)
@@ -102,10 +102,10 @@ namespace NetExtender.Types.Notify
                     continue;
                 }
 
-                if (!Store.TryGetValue(when, out LinkedList<String>? collection))
+                if (!Storage.TryGetValue(when, out LinkedList<String>? collection))
                 {
                     collection = new LinkedList<String>();
-                    Store.Add(when, collection);
+                    Storage.Add(when, collection);
                 }
 
                 collection.AddLast(property);
@@ -148,7 +148,7 @@ namespace NetExtender.Types.Notify
                 return this;
             }
 
-            if (!Store.TryGetValue(when, out LinkedList<String>? collection))
+            if (!Storage.TryGetValue(when, out LinkedList<String>? collection))
             {
                 return this;
             }
@@ -186,7 +186,7 @@ namespace NetExtender.Types.Notify
 
     public abstract class PropertySubnotifier
     {
-        protected Dictionary<String, LinkedList<String>> Store { get; } = new Dictionary<String, LinkedList<String>>(4);
+        protected Dictionary<String, LinkedList<String>> Storage { get; } = new Dictionary<String, LinkedList<String>>(4);
 
         private Action<Object?, PropertyChangingEventArgs>? Changing { get; }
         private Action<Object?, PropertyChangedEventArgs>? Changed { get; }
@@ -222,7 +222,7 @@ namespace NetExtender.Types.Notify
                 return;
             }
 
-            if (!Store.TryGetValue(name, out LinkedList<String>? collection))
+            if (!Storage.TryGetValue(name, out LinkedList<String>? collection))
             {
                 return;
             }
@@ -242,7 +242,7 @@ namespace NetExtender.Types.Notify
                 return;
             }
 
-            if (!Store.TryGetValue(name, out LinkedList<String>? collection))
+            if (!Storage.TryGetValue(name, out LinkedList<String>? collection))
             {
                 return;
             }

@@ -8,7 +8,7 @@ namespace NetExtender.Utilities.Types
     {
         public static class Changing
         {
-            private static ConcurrentDictionary<String, PropertyChangingEventArgs> Store { get; } = new ConcurrentDictionary<String, PropertyChangingEventArgs>();
+            private static ConcurrentDictionary<String, PropertyChangingEventArgs> Storage { get; } = new ConcurrentDictionary<String, PropertyChangingEventArgs>();
 
             public static PropertyChangingEventArgs Null { get; } = new PropertyChangingEventArgs(null);
             public static PropertyChangingEventArgs Count { get; }
@@ -83,13 +83,13 @@ namespace NetExtender.Utilities.Types
                     return new PropertyChangingEventArgs(property);
                 }
 
-                return property is not null ? Store.GetOrAdd(property, Factory) : Null;
+                return property is not null ? Storage.GetOrAdd(property, Factory) : Null;
             }
         }
 
         public static class Changed
         {
-            private static ConcurrentDictionary<String, PropertyChangedEventArgs> Store { get; } = new ConcurrentDictionary<String, PropertyChangedEventArgs>();
+            private static ConcurrentDictionary<String, PropertyChangedEventArgs> Storage { get; } = new ConcurrentDictionary<String, PropertyChangedEventArgs>();
 
             public static PropertyChangedEventArgs Null { get; } = new PropertyChangedEventArgs(null);
             public static PropertyChangedEventArgs Count { get; }
@@ -164,7 +164,7 @@ namespace NetExtender.Utilities.Types
                     return new PropertyChangedEventArgs(property);
                 }
 
-                return property is not null ? Store.GetOrAdd(property, Factory) : Null;
+                return property is not null ? Storage.GetOrAdd(property, Factory) : Null;
             }
         }
     }

@@ -11,6 +11,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using NetExtender.Types.Dictionaries;
 using NetExtender.Types.Immutable.Dictionaries;
+using NetExtender.Types.Monads;
 using NetExtender.Utilities.Numerics;
 
 namespace NetExtender.Utilities.Types
@@ -85,6 +86,310 @@ namespace NetExtender.Utilities.Types
             }
 
             return source.ToKeyValuePairs().ToDictionary(comparer);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static NullableDictionary<TKey, TSource> ToNullableDictionary<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector)
+        {
+            return ToNullableDictionary(source, keySelector, (IEqualityComparer<NullMaybe<TKey>>?) null);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static NullableDictionary<TKey, TSource> ToNullableDictionary<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, IEqualityComparer<TKey>? comparer)
+        {
+            return ToNullableDictionary(source, keySelector, comparer?.ToNullMaybeEqualityComparer());
+        }
+        
+        public static NullableDictionary<TKey, TSource> ToNullableDictionary<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, IEqualityComparer<NullMaybe<TKey>>? comparer)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (keySelector is null)
+            {
+                throw new ArgumentNullException(nameof(keySelector));
+            }
+            
+            if (source.TryGetNonEnumeratedCount(out Int32 capacity) && capacity <= 0)
+            {
+                return new NullableDictionary<TKey, TSource>(comparer);
+            }
+            
+            if (source is ICollection<TSource> collection)
+            {
+                switch (collection)
+                {
+                    case TSource[] array:
+                        return ToNullableDictionary(array, keySelector, comparer);
+                    case List<TSource> list:
+                        return ToNullableDictionary(list, keySelector, comparer);
+                }
+            }
+
+            NullableDictionary<TKey, TSource> dictionary = new NullableDictionary<TKey, TSource>(capacity, comparer);
+
+            foreach (TSource item in source)
+            {
+                dictionary.Add(keySelector(item), item);
+            }
+
+            return dictionary;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static NullableDictionary<TKey, TSource> ToNullableDictionary<TSource, TKey>(TSource[] source, Func<TSource, TKey> keySelector, IEqualityComparer<NullMaybe<TKey>>? comparer)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (keySelector is null)
+            {
+                throw new ArgumentNullException(nameof(keySelector));
+            }
+            
+            NullableDictionary<TKey, TSource> dictionary = new NullableDictionary<TKey, TSource>(source.Length, comparer);
+            
+            // ReSharper disable once ForCanBeConvertedToForeach
+            for (Int32 index = 0; index < source.Length; ++index)
+            {
+                dictionary.Add(keySelector(source[index]), source[index]);
+            }
+            
+            return dictionary;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static NullableDictionary<TKey, TSource> ToNullableDictionary<TSource, TKey>(List<TSource> source, Func<TSource, TKey> keySelector, IEqualityComparer<NullMaybe<TKey>>? comparer)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (keySelector is null)
+            {
+                throw new ArgumentNullException(nameof(keySelector));
+            }
+
+            NullableDictionary<TKey, TSource> dictionary = new NullableDictionary<TKey, TSource>(source.Count, comparer);
+
+            foreach (TSource item in source)
+            {
+                dictionary.Add(keySelector(item), item);
+            }
+
+            return dictionary;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static NullableDictionary<TKey, TElement> ToNullableDictionary<TSource, TKey, TElement>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector)
+        {
+            return ToNullableDictionary(source, keySelector, elementSelector, (IEqualityComparer<NullMaybe<TKey>>?) null);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static NullableDictionary<TKey, TElement> ToNullableDictionary<TSource, TKey, TElement>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector, IEqualityComparer<TKey>? comparer)
+        {
+            return ToNullableDictionary(source, keySelector, elementSelector, comparer?.ToNullMaybeEqualityComparer());
+        }
+        
+        public static NullableDictionary<TKey, TElement> ToNullableDictionary<TSource, TKey, TElement>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector, IEqualityComparer<NullMaybe<TKey>>? comparer)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (keySelector is null)
+            {
+                throw new ArgumentNullException(nameof(keySelector));
+            }
+            
+            if (elementSelector is null)
+            {
+                throw new ArgumentNullException(nameof(elementSelector));
+            }
+            
+            if (source.TryGetNonEnumeratedCount(out Int32 capacity) && capacity <= 0)
+            {
+                return new NullableDictionary<TKey, TElement>(comparer);
+            }
+            
+            if (source is ICollection<TSource> sources)
+            {
+                switch (sources)
+                {
+                    case TSource[] array:
+                        return ToNullableDictionary(array, keySelector, elementSelector, comparer);
+                    case List<TSource> list:
+                        return ToNullableDictionary(list, keySelector, elementSelector, comparer);
+                }
+            }
+            
+            NullableDictionary<TKey, TElement> dictionary = new NullableDictionary<TKey, TElement>(capacity, comparer);
+            
+            foreach (TSource item in source)
+            {
+                dictionary.Add(keySelector(item), elementSelector(item));
+            }
+
+            return dictionary;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static NullableDictionary<TKey, TElement> ToNullableDictionary<TSource, TKey, TElement>(TSource[] source, Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector, IEqualityComparer<NullMaybe<TKey>>? comparer)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (keySelector is null)
+            {
+                throw new ArgumentNullException(nameof(keySelector));
+            }
+            
+            if (elementSelector is null)
+            {
+                throw new ArgumentNullException(nameof(elementSelector));
+            }
+            
+            NullableDictionary<TKey, TElement> dictionary = new NullableDictionary<TKey, TElement>(source.Length, comparer);
+            
+            // ReSharper disable once ForCanBeConvertedToForeach
+            for (Int32 index = 0; index < source.Length; ++index)
+            {
+                dictionary.Add(keySelector(source[index]), elementSelector(source[index]));
+            }
+            
+            return dictionary;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static NullableDictionary<TKey, TElement> ToNullableDictionary<TSource, TKey, TElement>(List<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector, IEqualityComparer<NullMaybe<TKey>>? comparer)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (keySelector is null)
+            {
+                throw new ArgumentNullException(nameof(keySelector));
+            }
+            
+            if (elementSelector is null)
+            {
+                throw new ArgumentNullException(nameof(elementSelector));
+            }
+            
+            NullableDictionary<TKey, TElement> dictionary = new NullableDictionary<TKey, TElement>(source.Count, comparer);
+            
+            foreach (TSource item in source)
+            {
+                dictionary.Add(keySelector(item), elementSelector(item));
+            }
+            
+            return dictionary;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static NullableDictionary<TKey, TValue> ToNullableDictionary<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (!source.TryGetNonEnumeratedCount(out Int32 capacity))
+            {
+                return new NullableDictionary<TKey, TValue>(source.Select(static pair => new KeyValuePair<NullMaybe<TKey>, TValue>(pair.Key, pair.Value)));
+            }
+            
+            NullableDictionary<TKey, TValue> result = new NullableDictionary<TKey, TValue>(capacity);
+            
+            if (capacity <= 0)
+            {
+                return result;
+            }
+            
+            foreach (KeyValuePair<TKey, TValue> item in source)
+            {
+                result.Add(item.Key, item.Value);
+            }
+            
+            return result;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static NullableDictionary<TKey, TValue> ToNullableDictionary<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source, IEqualityComparer<TKey>? comparer)
+        {
+            return ToNullableDictionary(source, comparer?.ToNullMaybeEqualityComparer());
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static NullableDictionary<TKey, TValue> ToNullableDictionary<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source, IEqualityComparer<NullMaybe<TKey>>? comparer)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (!source.TryGetNonEnumeratedCount(out Int32 capacity))
+            {
+                return new NullableDictionary<TKey, TValue>(source.Select(static pair => new KeyValuePair<NullMaybe<TKey>, TValue>(pair.Key, pair.Value)), comparer);
+            }
+            
+            NullableDictionary<TKey, TValue> result = new NullableDictionary<TKey, TValue>(capacity, comparer);
+            
+            if (capacity <= 0)
+            {
+                return result;
+            }
+            
+            foreach (KeyValuePair<TKey, TValue> item in source)
+            {
+                result.Add(item.Key, item.Value);
+            }
+            
+            return result;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static NullableDictionary<TKey, TValue> ToNullableDictionary<TKey, TValue>(this IEnumerable<(TKey, TValue)> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.ToKeyValuePairs().ToNullableDictionary();
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static NullableDictionary<TKey, TValue> ToNullableDictionary<TKey, TValue>(this IEnumerable<(TKey, TValue)> source, IEqualityComparer<TKey>? comparer)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.ToKeyValuePairs().ToNullableDictionary(comparer);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static NullableDictionary<TKey, TValue> ToNullableDictionary<TKey, TValue>(this IEnumerable<(TKey, TValue)> source, IEqualityComparer<NullMaybe<TKey>>? comparer)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.ToKeyValuePairs().ToNullableDictionary(comparer);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -217,8 +522,7 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static SortedDictionary<TKey, TSource> ToSortedDictionary<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector,
-            IEqualityComparer<TKey>? equality, IComparer<TKey>? comparer) where TKey : notnull
+        public static SortedDictionary<TKey, TSource> ToSortedDictionary<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, IEqualityComparer<TKey>? equality, IComparer<TKey>? comparer) where TKey : notnull
         {
             if (source is null)
             {
@@ -234,8 +538,7 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static SortedDictionary<TKey, TElement> ToSortedDictionary<TSource, TKey, TElement>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector,
-            Func<TSource, TElement> elementSelector) where TKey : notnull
+        public static SortedDictionary<TKey, TElement> ToSortedDictionary<TSource, TKey, TElement>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector) where TKey : notnull
         {
             if (source is null)
             {
@@ -256,8 +559,7 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static SortedDictionary<TKey, TElement> ToSortedDictionary<TSource, TKey, TElement>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector,
-            Func<TSource, TElement> elementSelector, IEqualityComparer<TKey>? equality) where TKey : notnull
+        public static SortedDictionary<TKey, TElement> ToSortedDictionary<TSource, TKey, TElement>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector, IEqualityComparer<TKey>? equality) where TKey : notnull
         {
             if (source is null)
             {
@@ -278,8 +580,7 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static SortedDictionary<TKey, TElement> ToSortedDictionary<TSource, TKey, TElement>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector,
-            Func<TSource, TElement> elementSelector, IComparer<TKey>? comparer) where TKey : notnull
+        public static SortedDictionary<TKey, TElement> ToSortedDictionary<TSource, TKey, TElement>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector, IComparer<TKey>? comparer) where TKey : notnull
         {
             if (source is null)
             {
@@ -300,8 +601,7 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static SortedDictionary<TKey, TElement> ToSortedDictionary<TSource, TKey, TElement>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector,
-            Func<TSource, TElement> elementSelector, IEqualityComparer<TKey>? equality, IComparer<TKey>? comparer) where TKey : notnull
+        public static SortedDictionary<TKey, TElement> ToSortedDictionary<TSource, TKey, TElement>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector, IEqualityComparer<TKey>? equality, IComparer<TKey>? comparer) where TKey : notnull
         {
             if (source is null)
             {

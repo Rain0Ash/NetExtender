@@ -57,6 +57,11 @@ namespace NetExtender.Types.Dictionaries
         {
         }
 
+        public NullableSortedDictionary(IComparer<TKey>? comparer)
+            : this(comparer?.ToNullMaybeComparer())
+        {
+        }
+
         public NullableSortedDictionary(IComparer<NullMaybe<TKey>>? comparer)
             : base(comparer)
         {
@@ -64,6 +69,11 @@ namespace NetExtender.Types.Dictionaries
 
         public NullableSortedDictionary(IDictionary<NullMaybe<TKey>, TValue> dictionary)
             : base(dictionary)
+        {
+        }
+
+        public NullableSortedDictionary(IDictionary<NullMaybe<TKey>, TValue> dictionary, IComparer<TKey>? comparer)
+            : this(dictionary, comparer?.ToNullMaybeComparer())
         {
         }
 

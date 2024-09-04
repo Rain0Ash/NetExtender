@@ -11,37 +11,37 @@ namespace NetExtender.Localization.Utilities
     {
         public static Boolean Initialize<T>(Func<LocalizationIdentifier, T?>? converter) where T : class
         {
-            return ImageStore<T>.Initialize(converter);
+            return ImageStorage<T>.Initialize(converter);
         }
 
         public static T? GetFlagImage<T>(this CultureInfo info) where T : class
         {
-            return ImageStore<T>.GetFlagImage(info);
+            return ImageStorage<T>.GetFlagImage(info);
         }
 
         public static T? GetFlagImage<T>(this CultureIdentifier identifier) where T : class
         {
-            return ImageStore<T>.GetFlagImage(identifier);
+            return ImageStorage<T>.GetFlagImage(identifier);
         }
 
         public static T? GetFlagImage<T>(this LocalizationIdentifier identifier) where T : class
         {
-            return ImageStore<T>.GetFlagImage(identifier);
+            return ImageStorage<T>.GetFlagImage(identifier);
         }
 
         public static LocalizationIdentifier SetFlagImage<T>(this CultureInfo info, T? image) where T : class
         {
-            return ImageStore<T>.SetFlagImage(info, image);
+            return ImageStorage<T>.SetFlagImage(info, image);
         }
 
         public static LocalizationIdentifier SetFlagImage<T>(this CultureIdentifier identifier, T? image) where T : class
         {
-            return ImageStore<T>.SetFlagImage(identifier, image);
+            return ImageStorage<T>.SetFlagImage(identifier, image);
         }
 
         public static LocalizationIdentifier SetFlagImage<T>(this LocalizationIdentifier identifier, T? image) where T : class
         {
-            return ImageStore<T>.SetFlagImage(identifier, image);
+            return ImageStorage<T>.SetFlagImage(identifier, image);
         }
     }
 }

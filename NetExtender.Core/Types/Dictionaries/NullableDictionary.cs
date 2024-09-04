@@ -14,23 +14,15 @@ namespace NetExtender.Types.Dictionaries
     [Serializable]
     public class NullableDictionary<TKey, TValue> : Dictionary<NullMaybe<TKey>, TValue>, IDictionary<TKey, TValue>, IReadOnlyDictionary<TKey, TValue>
     {
-        Boolean ICollection<KeyValuePair<TKey, TValue>>.IsReadOnly
-        {
-            get
-            {
-                return ((ICollection<KeyValuePair<NullMaybe<TKey>, TValue>>) this).IsReadOnly;
-            }
-        }
-
         private ICollection<TKey>? _keys { get; set; }
         public new ICollection<TKey> Keys
         {
             get
             {
-                return _keys ??= new SelectorCollectionWrapper<NullMaybe<TKey>, TKey>(base.Keys, nullable => nullable);
+                return _keys ??= new SelectorCollectionWrapper<NullMaybe<TKey>, TKey>(base.Keys, static nullable => nullable);
             }
         }
-
+        
         public new ICollection<TValue> Values
         {
             get
@@ -38,7 +30,7 @@ namespace NetExtender.Types.Dictionaries
                 return base.Values;
             }
         }
-
+        
         IEnumerable<TKey> IReadOnlyDictionary<TKey, TValue>.Keys
         {
             get
@@ -46,7 +38,7 @@ namespace NetExtender.Types.Dictionaries
                 return Keys;
             }
         }
-
+        
         IEnumerable<TValue> IReadOnlyDictionary<TKey, TValue>.Values
         {
             get
@@ -54,13 +46,26 @@ namespace NetExtender.Types.Dictionaries
                 return Values;
             }
         }
-
+        
+        Boolean ICollection<KeyValuePair<TKey, TValue>>.IsReadOnly
+        {
+            get
+            {
+                return ((ICollection<KeyValuePair<NullMaybe<TKey>, TValue>>) this).IsReadOnly;
+            }
+        }
+        
         public NullableDictionary()
         {
         }
-
+        
         public NullableDictionary(IDictionary<NullMaybe<TKey>, TValue> dictionary)
             : base(dictionary)
+        {
+        }
+
+        public NullableDictionary(IDictionary<NullMaybe<TKey>, TValue> dictionary, IEqualityComparer<TKey>? comparer)
+            : this(dictionary, comparer?.ToNullMaybeEqualityComparer())
         {
         }
 
@@ -71,6 +76,11 @@ namespace NetExtender.Types.Dictionaries
 
         public NullableDictionary(IEnumerable<KeyValuePair<NullMaybe<TKey>, TValue>> collection)
             : base(collection)
+        {
+        }
+
+        public NullableDictionary(IEnumerable<KeyValuePair<NullMaybe<TKey>, TValue>> collection, IEqualityComparer<TKey>? comparer)
+            : this(collection, comparer?.ToNullMaybeEqualityComparer())
         {
         }
 
@@ -86,6 +96,11 @@ namespace NetExtender.Types.Dictionaries
 
         public NullableDictionary(Int32 capacity)
             : base(capacity)
+        {
+        }
+
+        public NullableDictionary(Int32 capacity, IEqualityComparer<TKey>? comparer)
+            : this(capacity, comparer?.ToNullMaybeEqualityComparer())
         {
         }
 
@@ -133,7 +148,8 @@ namespace NetExtender.Types.Dictionaries
         {
             return base.Remove(key);
         }
-
+        
+        //TODO: починить все
         public void CopyTo(KeyValuePair<TKey, TValue>[] array, Int32 arrayIndex)
         {
             CollectionUtilities.CopyTo(this, array, arrayIndex);

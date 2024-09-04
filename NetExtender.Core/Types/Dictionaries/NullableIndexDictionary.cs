@@ -64,6 +64,11 @@ namespace NetExtender.Types.Dictionaries
         {
         }
 
+        public NullableIndexDictionary(IDictionary<NullMaybe<TKey>, TValue> dictionary, IEqualityComparer<TKey>? comparer)
+            : this(dictionary, comparer?.ToNullMaybeEqualityComparer())
+        {
+        }
+
         public NullableIndexDictionary(IDictionary<NullMaybe<TKey>, TValue> dictionary, IEqualityComparer<NullMaybe<TKey>>? comparer)
             : base(dictionary, comparer)
         {
@@ -74,8 +79,18 @@ namespace NetExtender.Types.Dictionaries
         {
         }
 
+        public NullableIndexDictionary(IEnumerable<KeyValuePair<NullMaybe<TKey>, TValue>> collection, IEqualityComparer<TKey>? comparer)
+            : this(collection, comparer?.ToNullMaybeEqualityComparer())
+        {
+        }
+
         public NullableIndexDictionary(IEnumerable<KeyValuePair<NullMaybe<TKey>, TValue>> collection, IEqualityComparer<NullMaybe<TKey>>? comparer)
             : base(collection, comparer)
+        {
+        }
+
+        public NullableIndexDictionary(IEqualityComparer<TKey>? comparer)
+            : this(comparer?.ToNullMaybeEqualityComparer())
         {
         }
 
@@ -86,6 +101,11 @@ namespace NetExtender.Types.Dictionaries
 
         public NullableIndexDictionary(Int32 capacity)
             : base(capacity)
+        {
+        }
+
+        public NullableIndexDictionary(Int32 capacity, IEqualityComparer<TKey>? comparer)
+            : this(capacity, comparer?.ToNullMaybeEqualityComparer())
         {
         }
 

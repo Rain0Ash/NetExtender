@@ -26,10 +26,10 @@ namespace NetExtender.EntityFrameworkCore.Entities.Logging
         public TransactionLogContext(DbContext context)
         {
             Context = context ?? throw new ArgumentNullException(nameof(context));
-            StoreChangedEntries();
+            StorageChangedEntries();
         }
 
-        private void StoreChangedEntries()
+        private void StorageChangedEntries()
         {
             foreach (EntityEntry entry in Context.ChangeTracker.Entries().Where(EntityEntryUtilities.IsChange))
             {

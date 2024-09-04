@@ -16,6 +16,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using NetExtender.Types.Collections;
+using NetExtender.Types.Network.Formatters.Exceptions;
 using NetExtender.Types.Network.Formatters.Interfaces;
 using NetExtender.Utilities.Core;
 using NetExtender.Utilities.Types;
@@ -142,7 +143,7 @@ namespace NetExtender.Types.Network.Formatters
                 throw new ArgumentNullException(nameof(content));
             }
             
-            throw new NotSupportedException($"The media type formatter of type '{GetType()}' does not support reading because it does not implement the {nameof(ReadFromStreamAsync)} method.");
+            throw new MediaTypeFormatterOperationNotSupportedException($"The media type formatter of type '{GetType()}' does not support reading because it does not implement the {nameof(ReadFromStreamAsync)} method.");
         }
 
         public Task WriteToStreamAsync(Type type, Object? value, Stream stream, HttpContent content, TransportContext? context)
@@ -152,7 +153,22 @@ namespace NetExtender.Types.Network.Formatters
 
         public virtual Task WriteToStreamAsync(Type type, Object? value, Stream stream, HttpContent content, TransportContext? context, CancellationToken token)
         {
-            throw new NotSupportedException($"The media type formatter of type '{GetType()}' does not support writing because it does not implement the {nameof(WriteToStreamAsync)} method.");
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+            
+            if (stream is null)
+            {
+                throw new ArgumentNullException(nameof(stream));
+            }
+            
+            if (content is null)
+            {
+                throw new ArgumentNullException(nameof(content));
+            }
+            
+            throw new MediaTypeFormatterOperationNotSupportedException($"The media type formatter of type '{GetType()}' does not support writing because it does not implement the {nameof(WriteToStreamAsync)} method.");
         }
 
         public virtual Encoding SelectCharacterEncoding(HttpContentHeaders headers)
@@ -181,7 +197,7 @@ namespace NetExtender.Types.Network.Formatters
                 encoding = SupportedEncodingInternal[0];
             }
 
-            return encoding ?? throw new InvalidOperationException($"No encoding found for media type formatter '{GetType()}'. There must be at least one supported encoding registered in order for the media type formatter to read or write content.");
+            return encoding ?? throw new MediaTypeFormatterEncodingNotFoundException($"No encoding found for media type formatter '{GetType()}'. There must be at least one supported encoding registered in order for the media type formatter to read or write content.");
         }
 
         // ReSharper disable once CognitiveComplexity

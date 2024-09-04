@@ -2172,7 +2172,7 @@ namespace NetExtender.Utilities.Core
         [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
         private static class SealStorage
         {
-            private static IDynamicAssemblyUnsafeStore Assembly { get; } = new DynamicAssemblyStore($"{nameof(ReflectionUtilities)}<Seal>", AssemblyBuilderAccess.Run);
+            private static IDynamicAssemblyUnsafeStorage Assembly { get; } = new DynamicAssemblyStorage($"{nameof(ReflectionUtilities)}<Seal>", AssemblyBuilderAccess.Run);
             
             [MethodImpl(MethodImplOptions.AggressiveOptimization)]
             [SuppressMessage("Usage", "CA2200")]
@@ -2185,7 +2185,7 @@ namespace NetExtender.Utilities.Core
                 
                 try
                 {
-                    return Initializer.Initializer.ReflectionUtilities.Seal(type, Assembly, Assembly.Store);
+                    return Initializer.Initializer.ReflectionUtilities.Seal(type, Assembly, Assembly.Storage);
                 }
                 catch (Initializer.Initializer.ReflectionUtilities.TypeSealException exception)
                 {

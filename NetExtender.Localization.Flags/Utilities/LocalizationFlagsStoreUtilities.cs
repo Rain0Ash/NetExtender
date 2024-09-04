@@ -10,9 +10,9 @@ namespace NetExtender.Localization.Utilities
 {
     public static partial class LocalizationFlagsUtilities
     {
-        private static class ImageStore<T> where T : class
+        private static class ImageStorage<T> where T : class
         {
-            private static Dictionary<LocalizationIdentifier, T> Store { get; } = new Dictionary<LocalizationIdentifier, T>(EnumUtilities.Count<CultureIdentifier>());
+            private static Dictionary<LocalizationIdentifier, T> Storage { get; } = new Dictionary<LocalizationIdentifier, T>(EnumUtilities.Count<CultureIdentifier>());
             private static Func<LocalizationIdentifier, T?>? Converter { get; set; }
 
             public static Boolean Initialize(Func<LocalizationIdentifier, T?>? converter)
@@ -35,9 +35,9 @@ namespace NetExtender.Localization.Utilities
 
             public static T? GetFlagImage(LocalizationIdentifier info)
             {
-                lock (Store)
+                lock (Storage)
                 {
-                    if (Store.TryGetValue(info, out T? image))
+                    if (Storage.TryGetValue(info, out T? image))
                     {
                         return image;
                     }
@@ -48,22 +48,22 @@ namespace NetExtender.Localization.Utilities
                         return null;
                     }
 
-                    Store.Add(info, image);
+                    Storage.Add(info, image);
                     return image;
                 }
             }
 
             public static LocalizationIdentifier SetFlagImage(LocalizationIdentifier info, T? image)
             {
-                lock (Store)
+                lock (Storage)
                 {
                     if (image is null)
                     {
-                        Store.Remove(info);
+                        Storage.Remove(info);
                         return info;
                     }
 
-                    Store[info] = image;
+                    Storage[info] = image;
                     return info;
                 }
             }

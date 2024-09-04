@@ -7,15 +7,15 @@ using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 using NetExtender.Types.Notify;
-using NetExtender.Types.Stores;
-using NetExtender.Types.Stores.Interfaces;
+using NetExtender.Types.Storages;
+using NetExtender.Types.Storages.Interfaces;
 using ReactiveUI;
 
 namespace NetExtender.ReactiveUI.Utilities
 {
     public static class ReactiveObjectUtilities
     {
-        private static IStore<IReactiveObject, PropertySubnotifier> Store { get; } = new WeakStore<IReactiveObject, PropertySubnotifier>();
+        private static IStorage<IReactiveObject, PropertySubnotifier> Storage { get; } = new WeakStorage<IReactiveObject, PropertySubnotifier>();
 
         public static PropertySubnotifier<T> Register<T>(this T value) where T : class, IReactiveObject
         {
@@ -34,7 +34,7 @@ namespace NetExtender.ReactiveUI.Utilities
                 value.RaisePropertyChanged(args.PropertyName);
             }
 
-            return Store.GetOrAdd(value, () => new PropertySubnotifier<T>(value, Changing, Changed)) as PropertySubnotifier<T> ?? throw new InvalidOperationException();
+            return Storage.GetOrAdd(value, () => new PropertySubnotifier<T>(value, Changing, Changed)) as PropertySubnotifier<T> ?? throw new InvalidOperationException();
         }
 
         public static PropertySubnotifier<T> Register<T>(this T value, String when, params String?[]? properties) where T : class, IReactiveObject
@@ -74,7 +74,7 @@ namespace NetExtender.ReactiveUI.Utilities
                 throw new ArgumentNullException(nameof(value));
             }
 
-            if (!Store.TryGetValue(value, out PropertySubnotifier? result))
+            if (!Storage.TryGetValue(value, out PropertySubnotifier? result))
             {
                 subnotifier = default;
                 return false;

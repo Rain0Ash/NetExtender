@@ -16,7 +16,7 @@ namespace NetExtender.WindowsPresentation.ReactiveUI.Types.Models
         protected SettingsReactiveViewModel(SettingsLocalizationSynchronizedBehavior settings)
             : base(settings)
         {
-            Window = WindowStoreUtilities<TWindow>.Require();
+            Window = WindowStorageUtilities<TWindow>.Require();
         }
     }
 

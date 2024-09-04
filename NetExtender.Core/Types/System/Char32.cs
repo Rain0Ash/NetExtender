@@ -539,34 +539,34 @@ namespace System
             return Value.CompareTo(unchecked((UInt32) other.Value));
         }
 #endif
-
+        
+        public override Int32 GetHashCode()
+        {
+            return Value.GetHashCode();
+        }
+        
+        public override Boolean Equals(Object? other)
+        {
+            return base.Equals(other);
+        }
+        
         public Boolean Equals(Char other)
         {
             return Value == other;
         }
-
+        
+        public Boolean Equals(Char32 other)
+        {
+            return Value == other.Value;
+        }
+        
 #if NETCOREAPP3_1_OR_GREATER
         public Boolean Equals(Rune other)
         {
             return Value == unchecked((UInt32) other.Value);
         }
 #endif
-
-        public Boolean Equals(Char32 other)
-        {
-            return Value == other.Value;
-        }
-
-        public override Boolean Equals(Object? other)
-        {
-            return base.Equals(other);
-        }
-
-        public override Int32 GetHashCode()
-        {
-            return Value.GetHashCode();
-        }
-
+        
         public override String ToString()
         {
             return Value <= Char.MaxValue ? ((Char) Value).ToString() : Char.ConvertFromUtf32(unchecked((Int32) Value));

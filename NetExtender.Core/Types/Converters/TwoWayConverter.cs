@@ -4,8 +4,8 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using NetExtender.Types.Converters.Interfaces;
-using NetExtender.Types.Stores;
-using NetExtender.Types.Stores.Interfaces;
+using NetExtender.Types.Storages;
+using NetExtender.Types.Storages.Interfaces;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Converters
@@ -130,7 +130,7 @@ namespace NetExtender.Types.Converters
 
     public abstract class TwoWayConverter<TInput, TOutput> : ITwoWayConverter<TInput, TOutput>
     {
-        private static IStore<ITwoWayConverter<TInput, TOutput>, ITwoWayConverter<TOutput, TInput>> Store { get; } = new WeakStore<ITwoWayConverter<TInput, TOutput>, ITwoWayConverter<TOutput, TInput>>();
+        private static IStorage<ITwoWayConverter<TInput, TOutput>, ITwoWayConverter<TOutput, TInput>> Storage { get; } = new WeakStorage<ITwoWayConverter<TInput, TOutput>, ITwoWayConverter<TOutput, TInput>>();
         public static TwoWayConverter<TInput, TOutput> Default { get; } = new TwoWayConverterWrapper<TInput, TOutput>(ConvertUtilities.TryConvert, ConvertUtilities.TryConvert);
 
         public static TwoWayConverter<TInput, TOutput> Create(TryConverter<TInput, TOutput> converter)
@@ -215,7 +215,7 @@ namespace NetExtender.Types.Converters
         
         public ITwoWayConverter<TOutput, TInput> Reverse()
         {
-            return Store.GetOrAdd(this, static converter => new ReverseConverter(converter));
+            return Storage.GetOrAdd(this, static converter => new ReverseConverter(converter));
         }
 
         public abstract TOutput Convert(TInput input);

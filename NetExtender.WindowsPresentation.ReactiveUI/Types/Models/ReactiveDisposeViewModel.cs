@@ -11,7 +11,7 @@ namespace NetExtender.WindowsPresentation.ReactiveUI.Types.Models
 {
     public abstract class ReactiveViewModel<T, TWindow> : ReactiveDisposeViewModel<T> where T : ReactiveDisposeViewModel<T> where TWindow : Window
     {
-        public TWindow Window { get; } = WindowStoreUtilities<TWindow>.Require();
+        public TWindow Window { get; } = WindowStorageUtilities<TWindow>.Require();
     }
     
     public abstract class ReactiveDisposeViewModel : ReactiveDisposeObject

@@ -63,7 +63,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.Types.Sounds
         private static class EnumHandler<T> where T : unmanaged, Enum
         {
             private delegate ValueTask PlayDelegate(Object instance, T value);
-            private static ConcurrentDictionary<Type, PlayDelegate?> Store { get; } = new ConcurrentDictionary<Type, PlayDelegate?>();
+            private static ConcurrentDictionary<Type, PlayDelegate?> Storage { get; } = new ConcurrentDictionary<Type, PlayDelegate?>();
 
             private static PlayDelegate? Register(Type type)
             {
@@ -94,7 +94,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.Types.Sounds
                     throw new ArgumentNullException(nameof(container));
                 }
 
-                if (Store.GetOrAdd(container.GetType(), Register) is { } @delegate)
+                if (Storage.GetOrAdd(container.GetType(), Register) is { } @delegate)
                 {
                     return @delegate.Invoke(container, value);
                 }

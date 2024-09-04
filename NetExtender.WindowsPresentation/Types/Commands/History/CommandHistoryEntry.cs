@@ -1,26 +1,19 @@
 using System;
 using System.Collections.Generic;
 using System.Windows.Input;
+using NetExtender.Utilities.Types;
 using NetExtender.WindowsPresentation.Types.Commands.History.Interfaces;
 
 namespace NetExtender.WindowsPresentation.Types.Commands.History
 {
-    public class CommandHistoryEntry<T>: ICommandHistoryEntry, IEquatable<ICommand>, IEquatable<T>, IEquatable<CommandHistoryEntry<T>>
+    public class CommandHistoryEntry<T>: CommandHistoryEntry, IEquatable<T>, IEquatable<CommandHistoryEntry<T>>
     {
         private protected readonly ICommand<T> _command;
-        public virtual ICommand<T> Command
+        public override ICommand<T> Command
         {
             get
             {
                 return _command;
-            }
-        }
-
-        ICommand ICommandHistoryEntry.Command
-        {
-            get
-            {
-                return Command;
             }
         }
 
@@ -33,9 +26,7 @@ namespace NetExtender.WindowsPresentation.Types.Commands.History
             }
         }
 
-        public CommandHistoryEntryState State { get; protected set; }
-
-        public virtual Boolean CanExecute
+        public override Boolean CanExecute
         {
             get
             {
@@ -43,7 +34,7 @@ namespace NetExtender.WindowsPresentation.Types.Commands.History
             }
         }
 
-        public virtual Boolean CanRevert
+        public override Boolean CanRevert
         {
             get
             {
@@ -51,13 +42,14 @@ namespace NetExtender.WindowsPresentation.Types.Commands.History
             }
         }
 
-        public CommandHistoryEntry(ICommand<T> command, T parameter)
+        public CommandHistoryEntry(ICommand<T> command, T parameter, CommandHistoryEntryOptions options)
+            : base(options)
         {
             _command = command ?? throw new ArgumentNullException(nameof(command));
             _parameter = parameter;
         }
         
-        public virtual Boolean Execute()
+        public override Boolean Execute()
         {
             if (!CanExecute)
             {
@@ -69,7 +61,7 @@ namespace NetExtender.WindowsPresentation.Types.Commands.History
             return true;
         }
 
-        public virtual Boolean Revert()
+        public override Boolean Revert()
         {
             if (!CanRevert || Command is not IRevertCommand<T> command)
             {
@@ -85,27 +77,7 @@ namespace NetExtender.WindowsPresentation.Types.Commands.History
         {
             return HashCode.Combine(Command, Parameter);
         }
-
-        public virtual Boolean Equals(T? other)
-        {
-            return EqualityComparer<T>.Default.Equals(Parameter, other);
-        }
-
-        public Boolean Equals(ICommand? other)
-        {
-            return Command.Equals(other);
-        }
-
-        public virtual Boolean Equals(CommandHistoryEntry<T>? other)
-        {
-            return other is not null && Command.Equals(other.Command) && Equals(other.Parameter);
-        }
-
-        public virtual Boolean Equals(ICommandHistoryEntry? other)
-        {
-            return other is CommandHistoryEntry<T> entry && Equals(entry) || Equals(other?.Command);
-        }
-
+        
         public override Boolean Equals(Object? other)
         {
             return other switch
@@ -116,5 +88,67 @@ namespace NetExtender.WindowsPresentation.Types.Commands.History
                 _ => false
             };
         }
+        
+        public virtual Boolean Equals(T? other)
+        {
+            return EqualityComparer<T>.Default.Equals(Parameter, other);
+        }
+        
+        public override Boolean Equals(ICommand? other)
+        {
+            return Command.Equals(other);
+        }
+
+        public override Boolean Equals(CommandHistoryEntry? other)
+        {
+            return Equals(other as CommandHistoryEntry<T>);
+        }
+        
+        public virtual Boolean Equals(CommandHistoryEntry<T>? other)
+        {
+            return other is not null && Command.Equals(other.Command) && Equals(other.Parameter);
+        }
+        
+        public override Boolean Equals(ICommandHistoryEntry? other)
+        {
+            return other is CommandHistoryEntry<T> entry && Equals(entry) || Equals(other?.Command);
+        }
+
+        public override String ToString()
+        {
+            return $"Command: {Command}, Parameter: {Parameter.GetString()}";
+        }
+    }
+
+    public abstract class CommandHistoryEntry : ICommandHistoryEntry, IEquatable<ICommand>, IEquatable<CommandHistoryEntry>
+    {
+        public abstract ICommand Command { get; }
+        
+        ICommand ICommandHistoryEntry.Command
+        {
+            get
+            {
+                return Command;
+            }
+        }
+
+        public CommandHistoryEntryState State { get; protected set; }
+        public CommandHistoryEntryOptions Options { get; }
+        public abstract Boolean CanExecute { get; }
+        public abstract Boolean CanRevert { get; }
+        
+        protected CommandHistoryEntry(CommandHistoryEntryOptions options)
+        {
+            Options = options;
+        }
+        
+        public abstract Boolean Execute();
+        public abstract Boolean Revert();
+        public abstract override Int32 GetHashCode();
+        public abstract override Boolean Equals(Object? obj);
+        public abstract Boolean Equals(ICommand? other);
+        public abstract Boolean Equals(CommandHistoryEntry? other);
+        public abstract Boolean Equals(ICommandHistoryEntry? other);
+        public abstract override String ToString();
     }
 }

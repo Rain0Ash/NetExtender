@@ -15,7 +15,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using NetExtender.Types.Network;
+using NetExtender.Types.Network.Exceptions;
 using NetExtender.Types.Network.Formatters;
+using NetExtender.Types.Network.Formatters.Exceptions;
 using NetExtender.Types.Network.Formatters.Interfaces;
 using NetExtender.Utilities.Core;
 using NetExtender.Utilities.Network.Formatters;
@@ -402,14 +404,14 @@ namespace NetExtender.Utilities.Network
                 throw new ArgumentNullException(nameof(formatters));
             }
 
-            if (content is IMediaTypeContent<T> media && media.Value is not null)
+            if (content is IMediaTypeContent<T> { Value: { } media })
             {
-                return Task.FromResult<T?>(media.Value);
+                return Task.FromResult<T?>(media);
             }
             
-            MediaTypeHeaderValue mediatype = content.Headers.ContentType ?? MediaTypeFormatterUtilities.ApplicationOctetStreamMediaType;
+            MediaTypeHeaderValue header = content.Headers.ContentType ?? MediaTypeFormatterUtilities.ApplicationOctetStreamMediaType;
             
-            MediaTypeFormatter? reader = (formatters as MediaTypeFormatterCollection ?? new MediaTypeFormatterCollection(formatters)).FindReader(type, mediatype);
+            MediaTypeFormatter? reader = (formatters as MediaTypeFormatterCollection ?? new MediaTypeFormatterCollection(formatters)).FindReader(type, header);
             if (reader is not null)
             {
                 return ReadAsAsyncCore<T>(content, type, reader, logger, token);
@@ -420,7 +422,7 @@ namespace NetExtender.Utilities.Network
                 return Task.FromResult((T?) ReflectionUtilities.Default(type));
             }
 
-            throw new NotSupportedException($"No {nameof(MediaTypeFormatter)} is available to read an object of type '{type}' from content with media type '{mediatype.MediaType}'.");
+            throw new MediaTypeNotSupportedException($"No {nameof(MediaTypeFormatter)} is available to read an object of type '{type}' from content with media type '{header.MediaType}'.");
         }
 
         private static async Task<T?> ReadAsAsyncCore<T>(HttpContent content, Type type, MediaTypeFormatter formatter, ILogger? logger, CancellationToken token)
@@ -622,11 +624,11 @@ namespace NetExtender.Utilities.Network
             {
                 try
                 {
-                    ready = await stream.ReadAsync(buffer, 0, buffer.Length, token);
+                    ready = await stream.ReadAsync(buffer, token);
                 }
                 catch (Exception exception)
                 {
-                    throw new IOException("Error reading HTTP message.", exception);
+                    throw new HttpMessageReadingException(null, exception);
                 }
                 
                 HttpParserState state;
@@ -646,11 +648,11 @@ namespace NetExtender.Utilities.Network
                     case HttpParserState.Done:
                         return CreateHttpRequestMessage(scheme, request, stream, ready - consumed);
                     default:
-                        throw new InvalidOperationException($"Error parsing HTTP message header byte {consumed} of message {buffer}.");
+                        throw new HttpMessageHeaderParsingException($"Error parsing HTTP message header byte {consumed} of message {buffer}.");
                 }
             } while (ready > 0);
             
-            throw new IOException("Unexpected end of HTTP message stream. HTTP message is not complete.");
+            throw new HttpMessageUnexpectedEndException("Unexpected end of HTTP message stream. HTTP message is not complete.");
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -723,11 +725,11 @@ namespace NetExtender.Utilities.Network
             {
                 try
                 {
-                    ready = await stream.ReadAsync(buffer, 0, buffer.Length, token);
+                    ready = await stream.ReadAsync(buffer, token);
                 }
                 catch (Exception exception)
                 {
-                    throw new IOException("Error reading HTTP message.", exception);
+                    throw new HttpMessageReadingException(null, exception);
                 }
                 
                 HttpParserState state;
@@ -747,11 +749,11 @@ namespace NetExtender.Utilities.Network
                     case HttpParserState.Done:
                         return CreateHttpResponseMessage(response, stream, ready - consumed);
                     default:
-                        throw new InvalidOperationException($"Error parsing HTTP message header byte {consumed} of message {buffer}.");
+                        throw new HttpMessageHeaderParsingException($"Error parsing HTTP message header byte {consumed} of message {buffer}.");
                 }
             } while (ready != 0);
             
-            throw new IOException("Unexpected end of HTTP message stream. HTTP message is not complete.");
+            throw new HttpMessageUnexpectedEndException("Unexpected end of HTTP message stream. HTTP message is not complete.");
         }
 
         [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
@@ -769,12 +771,12 @@ namespace NetExtender.Utilities.Network
 
             if (!request.HttpHeaders.TryGetValues("Host", out IEnumerable<String>? values))
             {
-                throw new InvalidOperationException("An invalid number of 'Host' header fields were present in the HTTP Request. It must contain exactly one 'Host' header field but found 0.");
+                throw new HttpMessageHeaderParsingException("An invalid number of 'Host' header fields were present in the HTTP Request. It must contain exactly one 'Host' header field but found 0.");
             }
 
             if (values.ElementAtOrDefault(0) is not { } element)
             {
-                throw new InvalidOperationException($"An invalid number of 'Host' header fields were present in the HTTP Request. It must contain exactly one 'Host' header field but found {(values.CountIfMaterialized()?.ToString() ?? "multiple")}.");
+                throw new HttpMessageHeaderParsingException($"An invalid number of 'Host' header fields were present in the HTTP Request. It must contain exactly one 'Host' header field but found {values.CountIfMaterialized()?.ToString() ?? "multiple"}.");
             }
 
             return new Uri(String.Format(CultureInfo.InvariantCulture, "{0}://{1}{2}", scheme, element, request.RequestUri));
@@ -822,7 +824,7 @@ namespace NetExtender.Utilities.Network
 
             if (!stream.CanSeek)
             {
-                throw new InvalidOperationException($"The 'ContentReadStream' must be seekable in order to create an '{nameof(HttpResponseMessage)}' instance containing an entity body.");
+                throw new HttpMessageParsingException($"The 'ContentReadStream' must be seekable in order to create an '{nameof(HttpResponseMessage)}' instance containing an entity body.");
             }
 
             stream.Seek(-rewind, SeekOrigin.Current);
@@ -959,7 +961,7 @@ namespace NetExtender.Utilities.Network
             }
             catch (Exception exception)
             {
-                throw new IOException("Error reading MIME multipart body part.", exception);
+                throw new HttpMessageMimeMultipartReadingException("Error reading MIME multipart body part.", exception);
             }
 
             using MimeMultipartBodyPartParser parser = new MimeMultipartBodyPartParser(content, stream);
@@ -982,11 +984,11 @@ namespace NetExtender.Utilities.Network
                 Int32 read;
                 try
                 {
-                    read = await context.Stream.ReadAsync(context.Data, 0, context.Data.Length, token);
+                    read = await context.Stream.ReadAsync(context.Data.AsMemory(0, context.Data.Length), token);
                 }
                 catch (Exception exception)
                 {
-                    throw new IOException("Error reading MIME multipart body part.", exception);
+                    throw new HttpMessageMimeMultipartReadingException("Error reading MIME multipart body part.", exception);
                 }
 
                 using IEnumerator<MimeBodyPart> enumerator = context.Parser.ParseBuffer(context.Data, read).GetEnumerator();
@@ -1007,7 +1009,7 @@ namespace NetExtender.Utilities.Network
                         catch (Exception exception)
                         {
                             part.Dispose();
-                            throw new IOException("Error writing MIME multipart body part to output stream.", exception);
+                            throw new HttpMessageMimeMultipartReadingException("Error writing MIME multipart body part to output stream.", exception);
                         }
                     }
 

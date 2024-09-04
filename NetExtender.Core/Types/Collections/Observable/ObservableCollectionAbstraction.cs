@@ -69,7 +69,7 @@ namespace NetExtender.Types.Collections
             PropertyChanged?.Invoke(this, args);
         }
 
-        protected virtual State Store()
+        protected virtual State Factory()
         {
             return new State(this);
         }
@@ -90,7 +90,7 @@ namespace NetExtender.Types.Collections
                 return false;
             }
 
-            State state = Store();
+            State state = Factory();
             state.Invoke();
             state.PropertyChanging(nameof(Count));
             
@@ -123,7 +123,7 @@ namespace NetExtender.Types.Collections
                 return false;
             }
 
-            State state = Store();
+            State state = Factory();
             state.Invoke();
             state.PropertyChanging(nameof(Count));
             
@@ -150,7 +150,7 @@ namespace NetExtender.Types.Collections
                 return;
             }
 
-            State state = Store();
+            State state = Factory();
             state.Invoke();
             state.PropertyChanging(nameof(Count));
             

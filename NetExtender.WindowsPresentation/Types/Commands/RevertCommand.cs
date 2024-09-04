@@ -5,20 +5,22 @@ namespace NetExtender.WindowsPresentation.Types.Commands
 {
     public abstract class RevertCommand<T> : Command<T>, IRevertCommand<T>
     {
-        private protected ICommand<T>? _revertor;
-        public virtual ICommand<T> Revertor
+        public new static Command Empty { get; } = new None();
+        
+        private protected ICommand<T>? _reverter;
+        public virtual ICommand<T> Reverter
         {
             get
             {
-                return _revertor ??= new RelayCommand<T>(Revert) { CanExecuteHandler = CanRevert };
+                return _reverter ??= new RelayCommand<T>(Revert) { CanExecuteHandler = CanRevert };
             }
         }
 
-        ICommand IRevertCommand.Revertor
+        ICommand IRevertCommand.Reverter
         {
             get
             {
-                return Revertor;
+                return Reverter;
             }
         }
 
@@ -53,16 +55,29 @@ namespace NetExtender.WindowsPresentation.Types.Commands
                     throw new ArgumentException($"Argument is not of type '{typeof(T).Name}' for {GetType().Name}.", nameof(parameter));
             }
         }
+        
+        private sealed class None : RevertCommand<T>
+        {
+            public override void Execute(T? parameter)
+            {
+            }
+            
+            public override void Revert(T? parameter)
+            {
+            }
+        }
     }
 
     public abstract class RevertCommand : Command, IRevertCommand
     {
-        private protected ICommand? _revertor;
-        public virtual ICommand Revertor
+        public new static Command Empty { get; } = new None();
+        
+        private protected ICommand? _reverter;
+        public virtual ICommand Reverter
         {
             get
             {
-                return _revertor ??= new RelayCommand<Object>(Revert) { CanExecuteHandler = CanRevert };
+                return _reverter ??= new RelayCommand<Object>(Revert) { CanExecuteHandler = CanRevert };
             }
         }
         
@@ -72,5 +87,16 @@ namespace NetExtender.WindowsPresentation.Types.Commands
         }
 
         public abstract void Revert(Object? parameter);
+        
+        private sealed class None : RevertCommand
+        {
+            public override void Execute(Object? parameter)
+            {
+            }
+            
+            public override void Revert(Object? parameter)
+            {
+            }
+        }
     }
 }

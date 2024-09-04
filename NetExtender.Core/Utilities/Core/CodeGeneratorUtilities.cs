@@ -568,7 +568,7 @@ namespace NetExtender.Utilities.Core
             public static class StringBuilder
             {
                 public static ConstructorInfo Constructor { get; }
-                private static ImmutableDictionary<Type, MethodInfo> Store { get; }
+                private static ImmutableDictionary<Type, MethodInfo> Storage { get; }
 
                 public static MethodInfo String
                 {
@@ -592,7 +592,7 @@ namespace NetExtender.Utilities.Core
                 static StringBuilder()
                 {
                     Constructor = typeof(System.Text.StringBuilder).GetConstructor(Type.EmptyTypes) ?? throw new InvalidOperationException(nameof(Constructor));
-                    Store = new[]
+                    Storage = new[]
                     {
                         typeof(Boolean), typeof(Char),
                         typeof(SByte), typeof(Byte),
@@ -629,7 +629,7 @@ namespace NetExtender.Utilities.Core
                         throw new ArgumentNullException(nameof(type));
                     }
 
-                    if (Store.TryGetValue(type, out MethodInfo? method))
+                    if (Storage.TryGetValue(type, out MethodInfo? method))
                     {
                         result = method;
                         return true;

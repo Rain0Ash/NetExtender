@@ -5,6 +5,8 @@ namespace NetExtender.WindowsPresentation.Types.Commands
 {
     public abstract class Command<T> : Command, ICommand<T>
     {
+        public new static Command<T> Empty { get; } = new None();
+        
         public virtual Boolean CanExecute(T? parameter)
         {
             return true;
@@ -36,10 +38,19 @@ namespace NetExtender.WindowsPresentation.Types.Commands
                     throw new ArgumentException($"Argument is not of type '{typeof(T).Name}' for {GetType().Name}.", nameof(parameter));
             }
         }
+        
+        private sealed class None : Command<T>
+        {
+            public override void Execute(T? parameter)
+            {
+            }
+        }
     }
 
     public abstract class Command : ICommand
     {
+        public static Command Empty { get; } = new None();
+        
         public virtual event EventHandler? CanExecuteChanged
         {
             add
@@ -58,5 +69,12 @@ namespace NetExtender.WindowsPresentation.Types.Commands
         }
 
         public abstract void Execute(Object? parameter);
+        
+        private sealed class None : Command
+        {
+            public override void Execute(Object? parameter)
+            {
+            }
+        }
     }
 }

@@ -8,6 +8,8 @@ namespace NetExtender.WindowsPresentation.Types.Commands
 {
     public abstract class MultiCommand<T> : Command<T>, IMultiCommand<T>
     {
+        public new static Command Empty { get; } = new None();
+        
         public virtual Boolean CanExecute(IEnumerable<T?>? parameter)
         {
             return parameter?.All(CanExecute) is not false;
@@ -69,10 +71,23 @@ namespace NetExtender.WindowsPresentation.Types.Commands
                     return;
             }
         }
+        
+        private sealed class None : MultiCommand<T>
+        {
+            public override void Execute(T? parameter)
+            {
+            }
+            
+            public override void Execute(IEnumerable<T?>? parameter)
+            {
+            }
+        }
     }
     
     public abstract class MultiCommand : Command, IMultiCommand
     {
+        public new static Command Empty { get; } = new None();
+        
         public virtual Boolean CanExecute(IEnumerable? parameter)
         {
             return parameter?.Cast<Object?>().All(CanExecute) is not false;
@@ -88,6 +103,17 @@ namespace NetExtender.WindowsPresentation.Types.Commands
             foreach (Object? value in parameter)
             {
                 Execute(value);
+            }
+        }
+        
+        private sealed class None : MultiCommand
+        {
+            public override void Execute(Object? parameter)
+            {
+            }
+            
+            public override void Execute(IEnumerable? parameter)
+            {
             }
         }
     }

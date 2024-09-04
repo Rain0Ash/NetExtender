@@ -13,15 +13,15 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
 
         protected RegisterWindow()
         {
-            WindowStoreUtilities.Lock();
-            Id = WindowStoreUtilities.Register(this);
+            WindowStorageUtilities.Lock();
+            Id = WindowStorageUtilities.Register(this);
             Initialized += OnInitialized;
         }
 
         private void OnInitialized(Object? sender, EventArgs args)
         {
             Initialized -= OnInitialized;
-            WindowStoreUtilities.Unlock();
+            WindowStorageUtilities.Unlock();
         }
 
         public new virtual Boolean Activate()

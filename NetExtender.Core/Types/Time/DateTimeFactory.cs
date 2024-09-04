@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using NetExtender.Types.Exceptions;
 using NetExtender.Types.Sizes.Interfaces;
 
@@ -114,6 +115,7 @@ namespace NetExtender.Types.Times
             }
         }
         
+        [StructLayout(LayoutKind.Sequential)]
         private readonly unsafe struct Unsafe : IUnsafeSize
         {
             public static Unsafe Now { get; } = new Unsafe(DateTimeKind.Local, &GetNow, &GetOffsetNow);

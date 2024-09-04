@@ -132,7 +132,7 @@
             <DependentUpon>GenericSpanUtilities.tt</DependentUpon>
         </Compile>
         <Compile Update="Utilities\Types\Enumerable\ReferenceWeakStore.cs">
-            <DependentUpon>StoreUtilities.cs</DependentUpon>
+            <DependentUpon>StorageUtilities.cs</DependentUpon>
         </Compile>
         <Compile Update="Types\Region\Domain.cs">
             <DependentUpon>CountryInfo.cs</DependentUpon>
@@ -186,6 +186,9 @@
         </Compile>
         <Compile Update="Utilities\Core\ReflectionUtilities.Inherit.Result.cs">
           <DependentUpon>ReflectionUtlities.Inherit.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Utilities\Types\Enumerable\LinkedListNodeUtilities.cs">
+          <DependentUpon>LinkedListUtilities.cs</DependentUpon>
         </Compile>
     </ItemGroup>
 

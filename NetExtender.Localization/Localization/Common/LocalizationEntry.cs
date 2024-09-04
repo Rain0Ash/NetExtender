@@ -138,22 +138,22 @@ namespace NetExtender.Localization.Common
             compare = StringComparer.Ordinal.Compare(Key, other.Key);
             return compare == 0 ? Identifier.CompareTo(other.Identifier) : compare;
         }
-
-        public Boolean Equals(LocalizationEntry other)
-        {
-            return Identifier == other.Identifier && Key == other.Key && Sections.SequenceEqual(other.Sections);
-        }
-
-        public override Boolean Equals(Object? other)
-        {
-            return other is LocalizationEntry entry && Equals(entry);
-        }
-
+        
         public override Int32 GetHashCode()
         {
             return HashCode.Combine(Identifier, Key, Sections);
         }
-
+        
+        public override Boolean Equals(Object? other)
+        {
+            return other is LocalizationEntry entry && Equals(entry);
+        }
+        
+        public Boolean Equals(LocalizationEntry other)
+        {
+            return Identifier == other.Identifier && Key == other.Key && Sections.SequenceEqual(other.Sections);
+        }
+        
         public override String ToString()
         {
             return this.JsonSerializeObject();
@@ -235,22 +235,22 @@ namespace NetExtender.Localization.Common
 
             return StringComparer.Ordinal.Compare(Key, other.Key);
         }
-
-        public Boolean Equals(LocalizationMultiEntry other)
-        {
-            return Key == other.Key && Sections.SequenceEqual(other.Sections);
-        }
-
-        public override Boolean Equals(Object? other)
-        {
-            return other is LocalizationEntry entry && Equals(entry);
-        }
-
+        
         public override Int32 GetHashCode()
         {
             return HashCode.Combine(Key, Sections);
         }
-
+        
+        public override Boolean Equals(Object? other)
+        {
+            return other is LocalizationEntry entry && Equals(entry);
+        }
+        
+        public Boolean Equals(LocalizationMultiEntry other)
+        {
+            return Key == other.Key && Sections.SequenceEqual(other.Sections);
+        }
+        
         public override String ToString()
         {
             return this.JsonSerializeObject();

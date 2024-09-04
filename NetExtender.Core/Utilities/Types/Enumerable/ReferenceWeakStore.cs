@@ -3,55 +3,55 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using NetExtender.Types.Stores;
-using NetExtender.Types.Stores.Interfaces;
+using NetExtender.Types.Storages;
+using NetExtender.Types.Storages.Interfaces;
 
 namespace NetExtender.Utilities.Types
 {
-    public static partial class StoreUtilities
+    public static partial class StorageUtilities
     {
         public static class Instance<TKey, TValue> where TKey : class
         {
-            private static IStore<TKey, TValue> Store { get; } = new WeakStoreGeneric<TKey, TValue>();
+            private static IStorage<TKey, TValue> Storage { get; } = new WeakStorageGeneric<TKey, TValue>();
 
             public static Boolean Contains(TKey key)
             {
-                return Store.Contains(key);
+                return Storage.Contains(key);
             }
 
             public static Boolean TryGetValue(TKey key, [MaybeNullWhen(false)] out TValue value)
             {
-                return Store.TryGetValue(key, out value);
+                return Storage.TryGetValue(key, out value);
             }
 
             public static void Add(TKey key, TValue value)
             {
-                Store.Add(key, value);
+                Storage.Add(key, value);
             }
 
             public static void Update(TKey key, TValue value)
             {
-                Store.AddOrUpdate(key, value);
+                Storage.AddOrUpdate(key, value);
             }
 
             public static TValue Register(TKey key, TValue value)
             {
-                return Store.GetOrAdd(key, value);
+                return Storage.GetOrAdd(key, value);
             }
 
             public static TValue Register(TKey key, Func<TValue> factory)
             {
-                return Store.GetOrAdd(key, factory);
+                return Storage.GetOrAdd(key, factory);
             }
 
             public static TValue Register(TKey key, Func<TKey, TValue> factory)
             {
-                return Store.GetOrAdd(key, factory);
+                return Storage.GetOrAdd(key, factory);
             }
 
             public static Boolean Remove(TKey key)
             {
-                return Store.Remove(key);
+                return Storage.Remove(key);
             }
         }
     }

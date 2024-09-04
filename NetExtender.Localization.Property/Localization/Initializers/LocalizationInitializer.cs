@@ -17,7 +17,7 @@ namespace NetExtender.Localization.Property.Localization.Initializers
     public abstract class LocalizationAutoInitializer : LocalizationInitializerAbstraction
     {
         public sealed override event PropertyChangedEventHandler? PropertyChanged;
-        protected IndexDictionary<ILocalizationPropertyInfo, PropertyInfo> Store { get; } = new IndexDictionary<ILocalizationPropertyInfo, PropertyInfo>();
+        protected IndexDictionary<ILocalizationPropertyInfo, PropertyInfo> Storage { get; } = new IndexDictionary<ILocalizationPropertyInfo, PropertyInfo>();
         
         protected LocalizationAutoInitializer()
         {
@@ -28,7 +28,7 @@ namespace NetExtender.Localization.Property.Localization.Initializers
                     continue;
                 }
 
-                if (!Store.TryAdd(info, property))
+                if (!Storage.TryAdd(info, property))
                 {
                     continue;
                 }
@@ -54,7 +54,7 @@ namespace NetExtender.Localization.Property.Localization.Initializers
                 return;
             }
 
-            if (sender is not ILocalizationPropertyInfo info || !Store.TryGetValue(info, out PropertyInfo? property))
+            if (sender is not ILocalizationPropertyInfo info || !Storage.TryGetValue(info, out PropertyInfo? property))
             {
                 return;
             }
@@ -66,7 +66,7 @@ namespace NetExtender.Localization.Property.Localization.Initializers
     public abstract class LocalizationInitializer : LocalizationInitializerAbstraction
     {
         public sealed override event PropertyChangedEventHandler? PropertyChanged;
-        protected IndexDictionary<ILocalizationPropertyInfo, String> Store { get; } = new IndexDictionary<ILocalizationPropertyInfo, String>();
+        protected IndexDictionary<ILocalizationPropertyInfo, String> Storage { get; } = new IndexDictionary<ILocalizationPropertyInfo, String>();
 
         protected internal void Subscribe(ILocalizationPropertyInfo value)
         {
@@ -90,7 +90,7 @@ namespace NetExtender.Localization.Property.Localization.Initializers
                 throw new ArgumentNullException(nameof(name));
             }
 
-            Store.Add(value, name);
+            Storage.Add(value, name);
             value.PropertyChanged += OnPropertyChanged;
         }
         
@@ -101,7 +101,7 @@ namespace NetExtender.Localization.Property.Localization.Initializers
                 return;
             }
 
-            if (sender is not ILocalizationPropertyInfo info || !Store.TryGetValue(info, out String? name))
+            if (sender is not ILocalizationPropertyInfo info || !Storage.TryGetValue(info, out String? name))
             {
                 return;
             }

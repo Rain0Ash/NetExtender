@@ -130,17 +130,7 @@ namespace NetExtender.Domains
             Patch = patch;
             BuildTime = time;
         }
-
-        public Boolean Equals(ApplicationVersion other)
-        {
-            return Major == other.Major && Minor == other.Minor && Patch == other.Patch && BuildTime.Equals(other.BuildTime);
-        }
-
-        public override Boolean Equals(Object? other)
-        {
-            return other is ApplicationVersion version && Equals(version);
-        }
-
+        
         public Int32 CompareTo(ApplicationVersion other)
         {
             Int32 major = Major.CompareTo(other.Major);
@@ -148,27 +138,37 @@ namespace NetExtender.Domains
             {
                 return major;
             }
-
+            
             Int32 minor = Minor.CompareTo(other.Minor);
             if (minor != 0)
             {
                 return minor;
             }
-
+            
             Int32 patch = Patch.CompareTo(other.Patch);
             if (patch != 0)
             {
                 return patch;
             }
-
+            
             return BuildTime?.CompareTo(other.BuildTime) ?? -1;
         }
-
+        
         public override Int32 GetHashCode()
         {
             return HashCode.Combine(Major, Minor, Patch, BuildTime);
         }
-
+        
+        public override Boolean Equals(Object? other)
+        {
+            return other is ApplicationVersion version && Equals(version);
+        }
+        
+        public Boolean Equals(ApplicationVersion other)
+        {
+            return Major == other.Major && Minor == other.Minor && Patch == other.Patch && BuildTime.Equals(other.BuildTime);
+        }
+        
         public override String ToString()
         {
             return $"{Version}{(BuildTime is not null ? $" {Convert.ToString(BuildTime, CultureInfo.InvariantCulture)}" : String.Empty)}";

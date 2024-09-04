@@ -8,11 +8,13 @@ namespace NetExtender.WindowsPresentation.Types.Commands
 {
     public abstract class RevertMultiCommand<T> : RevertCommand<T>, IRevertMultiCommand<T>
     {
-        public override IMultiCommand<T> Revertor
+        public new static Command Empty { get; } = new None();
+
+        public override IMultiCommand<T> Reverter
         {
             get
             {
-                return _revertor as IMultiCommand<T> ?? (IMultiCommand<T>) (_revertor = new RelayMultiCommand<T>(Revert, Revert)
+                return _reverter as IMultiCommand<T> ?? (IMultiCommand<T>) (_reverter = new RelayMultiCommand<T>(Revert, Revert)
                 {
                     CanExecuteHandler = CanRevert,
                     CanExecuteMultiHandler = CanRevert
@@ -20,19 +22,11 @@ namespace NetExtender.WindowsPresentation.Types.Commands
             }
         }
 
-        ICommand<IEnumerable<T?>> IRevertCommand<IEnumerable<T?>>.Revertor
+        ICommand<IEnumerable<T?>> IRevertCommand<IEnumerable<T?>>.Reverter
         {
             get
             {
-                return Revertor;
-            }
-        }
-
-        ICommand<IEnumerable> IRevertCommand<IEnumerable>.Revertor
-        {
-            get
-            {
-                return Revertor;
+                return Reverter;
             }
         }
 
@@ -133,7 +127,7 @@ namespace NetExtender.WindowsPresentation.Types.Commands
             }
         }
 
-        public void Revert(IEnumerable? parameter)
+        public virtual void Revert(IEnumerable? parameter)
         {
             Revert(parameter?.OfType<T>());
         }
@@ -159,26 +153,39 @@ namespace NetExtender.WindowsPresentation.Types.Commands
                     return;
             }
         }
+        
+        private sealed class None : RevertMultiCommand<T>
+        {
+            public override void Execute(T? parameter)
+            {
+            }
+            
+            public override void Execute(IEnumerable<T?>? parameter)
+            {
+            }
+            
+            public override void Revert(T? parameter)
+            {
+            }
+            
+            public override void Revert(IEnumerable<T?>? parameter)
+            {
+            }
+        }
     }
 
     public abstract class RevertMultiCommand : RevertCommand, IRevertMultiCommand
     {
-        public override IMultiCommand Revertor
+        public new static Command Empty { get; } = new None();
+
+        public override IMultiCommand Reverter
         {
             get
             {
-                return _revertor as IMultiCommand ?? (IMultiCommand) (_revertor = new RelayMultiCommand<Object>(Revert)
+                return _reverter as IMultiCommand ?? (IMultiCommand) (_reverter = new RelayMultiCommand<Object>(Revert)
                 {
                     CanExecuteHandler = CanRevert
                 });
-            }
-        }
-
-        ICommand<IEnumerable> IRevertCommand<IEnumerable>.Revertor
-        {
-            get
-            {
-                return Revertor;
             }
         }
 
@@ -200,12 +207,12 @@ namespace NetExtender.WindowsPresentation.Types.Commands
             }
         }
         
-        public Boolean CanRevert(IEnumerable? parameter)
+        public virtual Boolean CanRevert(IEnumerable? parameter)
         {
             return parameter?.Cast<Object?>().All(CanRevert) is not false;
         }
 
-        public void Revert(IEnumerable? parameter)
+        public virtual void Revert(IEnumerable? parameter)
         {
             if (parameter is null)
             {
@@ -215,6 +222,25 @@ namespace NetExtender.WindowsPresentation.Types.Commands
             foreach (Object? value in parameter)
             {
                 Revert(value);
+            }
+        }
+        
+        private sealed class None : RevertMultiCommand
+        {
+            public override void Execute(Object? parameter)
+            {
+            }
+            
+            public override void Execute(IEnumerable? parameter)
+            {
+            }
+            
+            public override void Revert(Object? parameter)
+            {
+            }
+            
+            public override void Revert(IEnumerable? parameter)
+            {
             }
         }
     }

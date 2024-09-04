@@ -26,7 +26,7 @@ namespace NetExtender.WindowsPresentation.ReactiveUI.Types.Models
         protected SettingsReactiveViewModelAbstraction(SettingsLocalizationSynchronizedBehavior settings)
             : base(settings)
         {
-            Window = WindowStoreUtilities<TWindow>.Require();
+            Window = WindowStorageUtilities<TWindow>.Require();
         }
     }
     

@@ -78,7 +78,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.Types.ComboBoxes
             }
         }
         
-        private static ConcurrentDictionary<Type, Methods> Store { get; } = new ConcurrentDictionary<Type, Methods>();
+        private static ConcurrentDictionary<Type, Methods> Storage { get; } = new ConcurrentDictionary<Type, Methods>();
         
         private readonly Type _type = typeof(Enum<Any.Value>);
         public Type Type
@@ -94,7 +94,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.Types.ComboBoxes
                     throw new ArgumentNullException(nameof(value));
                 }
 
-                if (!Store.TryGetOrAdd(value, static type => new Methods(type), out _))
+                if (!Storage.TryGetOrAdd(value, static type => new Methods(type), out _))
                 {
                     throw new ArgumentException($"Type '{value}' is not supported.", nameof(value));
                 }
@@ -117,7 +117,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.Types.ComboBoxes
 
         public virtual void SetItemsSource()
         {
-            if (!Store.TryGetValue(Type, out Methods? methods))
+            if (!Storage.TryGetValue(Type, out Methods? methods))
             {
                 return;
             }

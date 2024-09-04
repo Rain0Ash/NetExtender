@@ -14,7 +14,7 @@ namespace NetExtender.Initializer
         internal static class ReflectionUtilities
         {
             private static IDynamicAssembly Assembly { get; } = new DynamicInitializerAssembly($"{nameof(Initializer)}<Seal>", AssemblyBuilderAccess.Run);
-            private static ConcurrentDictionary<Type, Type> Store { get; } = new ConcurrentDictionary<Type, Type>();
+            private static ConcurrentDictionary<Type, Type> Storage { get; } = new ConcurrentDictionary<Type, Type>();
 
             internal class TypeSealException : NotSupportedException
             {
@@ -88,12 +88,12 @@ namespace NetExtender.Initializer
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             internal static Type Seal(Type type)
             {
-                return Seal(type, Assembly, Store);
+                return Seal(type, Assembly, Storage);
             }
             
             // ReSharper disable once CognitiveComplexity
             [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-            internal static Type Seal(Type type, IDynamicAssembly assembly, ConcurrentDictionary<Type, Type>? store)
+            internal static Type Seal(Type type, IDynamicAssembly assembly, ConcurrentDictionary<Type, Type>? storage)
             {
                 if (type is null)
                 {
@@ -202,7 +202,7 @@ namespace NetExtender.Initializer
                     return builder.CreateType() ?? throw new TypeSealException(type, "Unknown seal exception.");
                 }
                 
-                return store is not null ? store.GetOrAdd(type, Create, assembly) : Create(type, assembly);
+                return storage is not null ? storage.GetOrAdd(type, Create, assembly) : Create(type, assembly);
             }
         }
     }

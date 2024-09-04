@@ -282,7 +282,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Compile Update="Utilities\LocalizationFlagsStoreUtilities.cs">
+        <Compile Update="Utilities\LocalizationFlagsStorageUtilities.cs">
             <DependentUpon>CultureFlagsUtilities.cs</DependentUpon>
         </Compile>
     </ItemGroup>

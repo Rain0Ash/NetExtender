@@ -18,6 +18,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using Microsoft.Extensions.Logging;
 using NetExtender.NewtonSoft.Types.Network.Formatters;
+using NetExtender.Types.Network.Formatters.Exceptions;
 using NetExtender.Types.Streams;
 using NetExtender.Utilities.Core;
 using NetExtender.Utilities.Network.Formatters;
@@ -564,7 +565,7 @@ namespace NetExtender.Types.Network.Formatters
 
             if (UseJsonSerializer && Indent)
             {
-                throw new NotSupportedException($"Indentation is not supported by '{typeof(DataContractJsonSerializer)}'.");
+                throw new MediaTypeFormatterOperationNotSupportedException($"Indentation is not supported by '{typeof(DataContractJsonSerializer)}'.");
             }
 
             return base.WriteToStreamAsync(type, value, stream, content, context, token);
@@ -583,7 +584,8 @@ namespace NetExtender.Types.Network.Formatters
                 throw new ArgumentNullException(nameof(type));
             }
 
-            return SerializerStorage.GetOrAdd(type, value => CreateDataContractSerializer(value, true)) ?? throw new InvalidOperationException($"The '{nameof(DataContractJsonSerializer)}' serializer cannot serialize the type '{type}'.");
+            DataContractJsonSerializer? serializer = SerializerStorage.GetOrAdd(type, static (value, factory) => factory(value, true), CreateDataContractSerializer);
+            return serializer ?? throw new InvalidOperationException($"The '{nameof(DataContractJsonSerializer)}' serializer cannot serialize the type '{type}'.");
         }
 
         protected virtual DataContractJsonSerializer? CreateDataContractSerializer(Type type, Boolean @throw)

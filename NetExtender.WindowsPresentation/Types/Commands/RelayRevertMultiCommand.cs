@@ -15,11 +15,11 @@ namespace NetExtender.WindowsPresentation.Types.Commands
         public Action<IEnumerable<T?>?> RevertMultiHandler { get; }
         public Predicate<IEnumerable<T?>?>? CanRevertMultiHandler { get; init; }
 
-        public override IMultiCommand<T> Revertor
+        public override IMultiCommand<T> Reverter
         {
             get
             {
-                return _revertor as IMultiCommand<T> ?? (IMultiCommand<T>) (_revertor = new RelayMultiCommand<T>(Revert, Revert)
+                return _reverter as IMultiCommand<T> ?? (IMultiCommand<T>) (_reverter = new RelayMultiCommand<T>(Revert, Revert)
                 {
                     CanExecuteHandler = CanRevert,
                     CanExecuteMultiHandler = CanRevert
@@ -27,27 +27,19 @@ namespace NetExtender.WindowsPresentation.Types.Commands
             }
         }
 
-        ICommand<IEnumerable<T?>> IRevertCommand<IEnumerable<T?>>.Revertor
+        ICommand<IEnumerable<T?>> IRevertCommand<IEnumerable<T?>>.Reverter
         {
             get
             {
-                return Revertor;
+                return Reverter;
             }
         }
 
-        IMultiCommand<T> IRevertMultiCommand<T>.Revertor
+        IMultiCommand<T> IRevertMultiCommand<T>.Reverter
         {
             get
             {
-                return Revertor;
-            }
-        }
-
-        ICommand<IEnumerable> IRevertCommand<IEnumerable>.Revertor
-        {
-            get
-            {
-                return Revertor;
+                return Reverter;
             }
         }
 

@@ -70,22 +70,22 @@ namespace NetExtender.Types.Trees
             value = Value;
             section = Section;
         }
-
-        public Boolean Equals(FlattenDictionaryTreeEntry<TKey, TValue> other)
-        {
-            return Equals(Key, other.Key) && Equals(Value, other.Value) && Section == other.Section && Separator == other.Separator;
-        }
-
-        public override Boolean Equals(Object? other)
-        {
-            return other is FlattenDictionaryTreeEntry<TKey, TValue> entry && Equals(entry);
-        }
-
+        
         public override Int32 GetHashCode()
         {
             return HashCode.Combine(Key, Value, Section);
         }
-
+        
+        public override Boolean Equals(Object? other)
+        {
+            return other is FlattenDictionaryTreeEntry<TKey, TValue> entry && Equals(entry);
+        }
+        
+        public Boolean Equals(FlattenDictionaryTreeEntry<TKey, TValue> other)
+        {
+            return Equals(Key, other.Key) && Equals(Value, other.Value) && Section == other.Section && Separator == other.Separator;
+        }
+        
         public override String ToString()
         {
             return this.JsonSerializeObject();

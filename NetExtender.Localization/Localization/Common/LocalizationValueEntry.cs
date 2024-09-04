@@ -171,17 +171,12 @@ namespace NetExtender.Localization.Common
 
             return compare == 0 ? Identifier.CompareTo(other.Identifier) : compare;
         }
-
-        public Boolean Equals(LocalizationEntry other)
+        
+        public override Int32 GetHashCode()
         {
-            return Identifier == other.Identifier && Key == other.Key && Sections.SequenceEqual(other.Sections);
+            return HashCode.Combine(Identifier, Key, Value, Sections);
         }
-
-        public Boolean Equals(LocalizationValueEntry other)
-        {
-            return Identifier == other.Identifier && Key == other.Key && Value == other.Value && Sections.SequenceEqual(other.Sections);
-        }
-
+        
         public override Boolean Equals(Object? other)
         {
             return other switch
@@ -191,12 +186,17 @@ namespace NetExtender.Localization.Common
                 _ => false
             };
         }
-
-        public override Int32 GetHashCode()
+        
+        public Boolean Equals(LocalizationEntry other)
         {
-            return HashCode.Combine(Identifier, Key, Value, Sections);
+            return Identifier == other.Identifier && Key == other.Key && Sections.SequenceEqual(other.Sections);
         }
-
+        
+        public Boolean Equals(LocalizationValueEntry other)
+        {
+            return Identifier == other.Identifier && Key == other.Key && Value == other.Value && Sections.SequenceEqual(other.Sections);
+        }
+        
         public override String ToString()
         {
             return Value ?? String.Empty;
@@ -333,17 +333,7 @@ namespace NetExtender.Localization.Common
 
             return String.Compare(Key, other.Key, StringComparison.Ordinal);
         }
-
-        public Boolean Equals(LocalizationMultiEntry other)
-        {
-            return Key == other.Key && Sections.SequenceEqual(other.Sections);
-        }
-
-        public Boolean Equals(LocalizationMultiValueEntry other)
-        {
-            return Key == other.Key && Sections.SequenceEqual(other.Sections);
-        }
-
+        
         public IEnumerator<LocalizationValueEntry> GetEnumerator()
         {
             foreach ((LocalizationIdentifier identifier, String? value) in Value)
@@ -351,12 +341,17 @@ namespace NetExtender.Localization.Common
                 yield return new LocalizationValueEntry(Key, identifier, value, Sections);
             }
         }
-
+        
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
         }
-
+        
+        public override Int32 GetHashCode()
+        {
+            return HashCode.Combine(Key, Sections);
+        }
+        
         public override Boolean Equals(Object? other)
         {
             return other switch
@@ -366,12 +361,17 @@ namespace NetExtender.Localization.Common
                 _ => false
             };
         }
-
-        public override Int32 GetHashCode()
+        
+        public Boolean Equals(LocalizationMultiEntry other)
         {
-            return HashCode.Combine(Key, Sections);
+            return Key == other.Key && Sections.SequenceEqual(other.Sections);
         }
-
+        
+        public Boolean Equals(LocalizationMultiValueEntry other)
+        {
+            return Key == other.Key && Sections.SequenceEqual(other.Sections);
+        }
+        
         public override String ToString()
         {
             return Value.ToString();

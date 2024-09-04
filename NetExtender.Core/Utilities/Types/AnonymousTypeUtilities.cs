@@ -13,8 +13,8 @@ using NetExtender.Types.Anonymous.Interfaces;
 using NetExtender.Types.Dictionaries;
 using NetExtender.Types.Reflection;
 using NetExtender.Types.Reflection.Interfaces;
-using NetExtender.Types.Stores;
-using NetExtender.Types.Stores.Interfaces;
+using NetExtender.Types.Storages;
+using NetExtender.Types.Storages.Interfaces;
 using NetExtender.Utilities.Core;
 
 namespace NetExtender.Utilities.Types
@@ -471,7 +471,7 @@ namespace NetExtender.Utilities.Types
             return result.FillAnonymousObject(value);
         }
 
-        private static IStore<Type, IndexDictionary<String, IReflectionProperty>> Store { get; } = new WeakStore<Type, IndexDictionary<String, IReflectionProperty>>();
+        private static IStorage<Type, IndexDictionary<String, IReflectionProperty>> Storage { get; } = new WeakStorage<Type, IndexDictionary<String, IReflectionProperty>>();
 
         private static IndexDictionary<String, IReflectionProperty> Find(Type type)
         {
@@ -527,7 +527,7 @@ namespace NetExtender.Utilities.Types
                 return store;
             }
 
-            return Store.GetOrAdd(type, Internal);
+            return Storage.GetOrAdd(type, Internal);
         }
 
         public static void Register(Type type, IndexDictionary<String, IReflectionProperty> store)
@@ -542,7 +542,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(store));
             }
 
-            Store.AddOrUpdate(type, store);
+            Storage.AddOrUpdate(type, store);
         }
 
         // ReSharper disable once ReturnTypeCanBeEnumerable.Global
@@ -554,7 +554,7 @@ namespace NetExtender.Utilities.Types
             }
 
             Type type = value.GetType();
-            IndexDictionary<String, IReflectionProperty> properties = Store.GetOrAdd(type, Find);
+            IndexDictionary<String, IReflectionProperty> properties = Storage.GetOrAdd(type, Find);
 
             lock (properties)
             {
@@ -588,7 +588,7 @@ namespace NetExtender.Utilities.Types
             }
 
             Type type = value.GetType();
-            IndexDictionary<String, IReflectionProperty> properties = Store.GetOrAdd(type, Find);
+            IndexDictionary<String, IReflectionProperty> properties = Storage.GetOrAdd(type, Find);
 
             try
             {
@@ -613,7 +613,7 @@ namespace NetExtender.Utilities.Types
             }
 
             Type type = value.GetType();
-            IndexDictionary<String, IReflectionProperty> properties = Store.GetOrAdd(type, Find);
+            IndexDictionary<String, IReflectionProperty> properties = Storage.GetOrAdd(type, Find);
             return properties.TryGetValue(name, out IReflectionProperty? member) ? member : throw new MissingMemberException(type.FullName, name);
         }
 
@@ -624,7 +624,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(type));
             }
 
-            return Store.GetOrAdd(type.GetType(), Find).Count;
+            return Storage.GetOrAdd(type.GetType(), Find).Count;
         }
 
         public static Type Type(IAnonymousObject anonymous, Int32 index)

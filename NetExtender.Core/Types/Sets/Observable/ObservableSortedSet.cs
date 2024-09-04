@@ -102,7 +102,7 @@ namespace NetExtender.Types.Sets
         {
         }
 
-        protected override State Store()
+        protected override State Factory()
         {
             return new State(this);
         }
@@ -185,7 +185,7 @@ namespace NetExtender.Types.Sets
                 return 0;
             }
 
-            State state = Store();
+            State state = Factory();
             state.Invoke(false);
             state.Next = set;
             state.OldItems = @internal.Where(item => !set.Contains(item)).ToList();

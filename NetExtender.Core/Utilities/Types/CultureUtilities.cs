@@ -53,11 +53,11 @@ namespace NetExtender.Utilities.Types
 
         private static class CultureInfoCache
         {
-            private static ConcurrentDictionary<LocalizationIdentifier, CultureInfo> Store { get; } = new ConcurrentDictionary<LocalizationIdentifier, CultureInfo>();
+            private static ConcurrentDictionary<LocalizationIdentifier, CultureInfo> Storage { get; } = new ConcurrentDictionary<LocalizationIdentifier, CultureInfo>();
 
             public static CultureInfo GetOrAdd(LocalizationIdentifier identifier)
             {
-                return Store.GetOrAdd(identifier, localization => CultureInfo.GetCultureInfo(localization));
+                return Storage.GetOrAdd(identifier, localization => CultureInfo.GetCultureInfo(localization));
             }
         }
 
@@ -481,11 +481,11 @@ namespace NetExtender.Utilities.Types
 
         private static class RegionInfoStorage
         {
-            private static ConcurrentDictionary<LocalizationIdentifier, RegionInfo> Store { get; } = new ConcurrentDictionary<LocalizationIdentifier, RegionInfo>();
+            private static ConcurrentDictionary<LocalizationIdentifier, RegionInfo> Storage { get; } = new ConcurrentDictionary<LocalizationIdentifier, RegionInfo>();
 
             public static RegionInfo GetOrAdd(LocalizationIdentifier identifier)
             {
-                return Store.GetOrAdd(identifier, localization => new RegionInfo(localization));
+                return Storage.GetOrAdd(identifier, localization => new RegionInfo(localization));
             }
         }
 

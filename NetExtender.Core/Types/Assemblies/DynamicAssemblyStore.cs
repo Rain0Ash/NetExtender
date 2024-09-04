@@ -6,28 +6,28 @@ using NetExtender.Types.Assemblies.Interfaces;
 
 namespace NetExtender.Types.Assemblies
 {
-    public class DynamicAssemblyStore : DynamicAssembly, IDynamicAssemblyUnsafeStore
+    public class DynamicAssemblyStorage : DynamicAssembly, IDynamicAssemblyUnsafeStorage
     {
-        protected ConcurrentDictionary<Type, Type> Store { get; } = new ConcurrentDictionary<Type, Type>();
+        protected ConcurrentDictionary<Type, Type> Storage { get; } = new ConcurrentDictionary<Type, Type>();
         
-        ConcurrentDictionary<Type, Type> IDynamicAssemblyUnsafeStore.Store
+        ConcurrentDictionary<Type, Type> IDynamicAssemblyUnsafeStorage.Storage
         {
             get
             {
-                return Store;
+                return Storage;
             }
         }
         
-        public DynamicAssemblyStore()
+        public DynamicAssemblyStorage()
         {
         }
         
-        public DynamicAssemblyStore(AssemblyBuilderAccess access)
+        public DynamicAssemblyStorage(AssemblyBuilderAccess access)
             : base(access)
         {
         }
         
-        public DynamicAssemblyStore(String name, AssemblyBuilderAccess access)
+        public DynamicAssemblyStorage(String name, AssemblyBuilderAccess access)
             : base(name, access)
         {
         }
@@ -39,7 +39,7 @@ namespace NetExtender.Types.Assemblies
                 throw new ArgumentNullException(nameof(type));
             }
             
-            return Store.ContainsKey(type);
+            return Storage.ContainsKey(type);
         }
         
         public Boolean TryGetValue(Type type, [MaybeNullWhen(false)] out Type result)
@@ -49,7 +49,7 @@ namespace NetExtender.Types.Assemblies
                 throw new ArgumentNullException(nameof(type));
             }
             
-            return Store.TryGetValue(type, out result);
+            return Storage.TryGetValue(type, out result);
         }
         
         public Type GetOrAdd(Type type, Func<Type, Type> factory)
@@ -64,7 +64,7 @@ namespace NetExtender.Types.Assemblies
                 throw new ArgumentNullException(nameof(factory));
             }
             
-            return Store.GetOrAdd(type, factory);
+            return Storage.GetOrAdd(type, factory);
         }
         
         public Type GetOrAdd(Type type, Func<Type, IDynamicAssembly, Type> factory)
@@ -79,7 +79,7 @@ namespace NetExtender.Types.Assemblies
                 throw new ArgumentNullException(nameof(factory));
             }
             
-            return Store.GetOrAdd(type, factory, this);
+            return Storage.GetOrAdd(type, factory, this);
         }
         
         public Boolean Remove(Type type)
@@ -94,7 +94,7 @@ namespace NetExtender.Types.Assemblies
                 throw new ArgumentNullException(nameof(type));
             }
             
-            return Store.TryRemove(type, out result);
+            return Storage.TryRemove(type, out result);
         }
     }
 }

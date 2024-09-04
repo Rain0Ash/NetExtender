@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 
 namespace System.Windows.Input
@@ -7,7 +6,7 @@ namespace System.Windows.Input
     {
     }
 
-    public interface IMultiCommand : ICommand<IEnumerable>
+    public interface IMultiCommand : ICommand
     {
     }
 }

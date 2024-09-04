@@ -30,7 +30,7 @@ namespace NetExtender.WindowsPresentation.Types.Converters
 
     public abstract class WindowMultiConverter<TWindow> : WindowMultiConverter where TWindow : Window
     {
-        public TWindow Window { get; } = WindowStoreUtilities<TWindow>.Require();
+        public TWindow Window { get; } = WindowStorageUtilities<TWindow>.Require();
     }
 
     public abstract class WindowMultiConverter : MultiValueConverter

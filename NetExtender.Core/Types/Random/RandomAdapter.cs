@@ -67,17 +67,17 @@ namespace NetExtender.Types.Random
         {
             return Random.NextDouble();
         }
-
-        public override Boolean Equals(Object? other)
-        {
-            return ReferenceEquals(this, other) || Random.Equals(other);
-        }
-
+        
         public override Int32 GetHashCode()
         {
             return Random.GetHashCode();
         }
-
+        
+        public override Boolean Equals(Object? other)
+        {
+            return ReferenceEquals(this, other) || Random.Equals(other);
+        }
+        
         public override String? ToString()
         {
             return Random.ToString();

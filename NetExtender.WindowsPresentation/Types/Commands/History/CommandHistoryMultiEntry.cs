@@ -1,23 +1,25 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Linq;
 using System.Windows.Input;
+using NetExtender.Utilities.Types;
 using NetExtender.WindowsPresentation.Types.Commands.History.Interfaces;
 
 namespace NetExtender.WindowsPresentation.Types.Commands.History
 {
-    public class CommandHistoryMultiEntry<T> : ICommandHistoryEntry, IEquatable<ICommand>, IEquatable<T>, IEquatable<CommandHistoryMultiEntry<T>>
+    public class CommandHistoryMultiEntry<T> : CommandHistoryEntry, ICommandHistoryMultiEntry<T>, IEquatable<IEnumerable<T>>, IEquatable<CommandHistoryMultiEntry<T>>
     {
         private protected readonly IMultiCommand<T> _command;
-        public virtual IMultiCommand<T> Command
+        public override IMultiCommand<T> Command
         {
             get
             {
                 return _command;
             }
         }
-
-        ICommand ICommandHistoryEntry.Command
+        
+        IMultiCommand ICommandHistoryMultiEntry.Command
         {
             get
             {
@@ -33,10 +35,8 @@ namespace NetExtender.WindowsPresentation.Types.Commands.History
                 return _parameter;
             }
         }
-
-        public CommandHistoryEntryState State { get; protected set; }
-
-        public virtual Boolean CanExecute
+        
+        public override Boolean CanExecute
         {
             get
             {
@@ -44,7 +44,7 @@ namespace NetExtender.WindowsPresentation.Types.Commands.History
             }
         }
 
-        public virtual Boolean CanRevert
+        public override Boolean CanRevert
         {
             get
             {
@@ -52,13 +52,14 @@ namespace NetExtender.WindowsPresentation.Types.Commands.History
             }
         }
 
-        public CommandHistoryEntry(IMultiCommand<T> command, IEnumerable<T>? parameter)
+        public CommandHistoryMultiEntry(IMultiCommand<T> command, IEnumerable<T>? parameter, CommandHistoryEntryOptions options)
+            : base(options)
         {
             _command = command ?? throw new ArgumentNullException(nameof(command));
-            _parameter = parameter?.ToImmutableList();
+            _parameter = parameter?.AsImmutableList();
         }
         
-        public virtual Boolean Execute()
+        public override Boolean Execute()
         {
             if (!CanExecute)
             {
@@ -70,7 +71,7 @@ namespace NetExtender.WindowsPresentation.Types.Commands.History
             return true;
         }
 
-        public virtual Boolean Revert()
+        public override Boolean Revert()
         {
             if (!CanRevert || Command is not IRevertCommand<T> command)
             {
@@ -86,36 +87,46 @@ namespace NetExtender.WindowsPresentation.Types.Commands.History
         {
             return HashCode.Combine(Command, Parameter);
         }
-
-        public virtual Boolean Equals(T? other)
-        {
-            return EqualityComparer<T>.Default.Equals(Parameter, other);
-        }
-
-        public Boolean Equals(ICommand? other)
-        {
-            return Command.Equals(other);
-        }
-
-        public virtual Boolean Equals(CommandHistoryEntry<T>? other)
-        {
-            return other is not null && Command.Equals(other.Command) && Equals(other.Parameter);
-        }
-
-        public virtual Boolean Equals(ICommandHistoryEntry? other)
-        {
-            return other is CommandHistoryEntry<T> entry && Equals(entry) || Equals(other?.Command);
-        }
-
+        
         public override Boolean Equals(Object? other)
         {
             return other switch
             {
-                CommandHistoryEntry<T> entry => Equals(entry),
+                CommandHistoryMultiEntry<T> entry => Equals(entry),
                 ICommandHistoryEntry entry => Equals(entry),
                 ICommand command => Equals(command),
                 _ => false
             };
+        }
+        
+        public virtual Boolean Equals(IEnumerable<T>? other)
+        {
+            return Parameter is not null ? other is not null && Parameter.SequenceEqual(other) : other is null;
+        }
+        
+        public override Boolean Equals(ICommand? other)
+        {
+            return Command.Equals(other);
+        }
+        
+        public override Boolean Equals(CommandHistoryEntry? other)
+        {
+            return Equals(other as CommandHistoryMultiEntry<T>);
+        }
+        
+        public virtual Boolean Equals(CommandHistoryMultiEntry<T>? other)
+        {
+            return other is not null && Command.Equals(other.Command) && Equals(other.Parameter);
+        }
+        
+        public override Boolean Equals(ICommandHistoryEntry? other)
+        {
+            return other is CommandHistoryEntry<T> entry && Equals(entry) || Equals(other?.Command);
+        }
+
+        public override String ToString()
+        {
+            return $"Command: {Command}, Parameter: {Parameter.GetString()}";
         }
     }
 }

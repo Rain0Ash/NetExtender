@@ -14,7 +14,7 @@ namespace NetExtender.Types.Sets
         {
         }
 
-        protected override State Store()
+        protected override State Factory()
         {
             return new State(this);
         }
@@ -42,7 +42,7 @@ namespace NetExtender.Types.Sets
                 return false;
             }
 
-            State state = Store();
+            State state = Factory();
             state.Invoke();
             state.PropertyChanging(nameof(Count));
             
@@ -107,7 +107,7 @@ namespace NetExtender.Types.Sets
                 return;
             }
 
-            State state = Store();
+            State state = Factory();
             state.Invoke(false);
             state.Next = set;
             state.NewItems = set.Where(item => !@internal.Contains(item)).ToList();
@@ -135,7 +135,7 @@ namespace NetExtender.Types.Sets
                 return;
             }
 
-            State state = Store();
+            State state = Factory();
             state.Invoke(false);
             state.Next = set;
             state.OldItems = @internal.Where(item => !set.Contains(item)).ToList();
@@ -163,7 +163,7 @@ namespace NetExtender.Types.Sets
                 return;
             }
 
-            State state = Store();
+            State state = Factory();
             state.Invoke(false);
             state.Next = set;
             state.OldItems = @internal.Where(item => !set.Contains(item)).ToList();
@@ -186,7 +186,7 @@ namespace NetExtender.Types.Sets
             TSet set = CloneInternal();
             set.SymmetricExceptWith(other);
 
-            State state = Store();
+            State state = Factory();
             state.Invoke(false);
             state.Next = set;
             state.NewItems = set.Where(item => !@internal.Contains(item)).ToList();
