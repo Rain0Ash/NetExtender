@@ -4,10 +4,11 @@
 using System.Windows.Controls;
 using NetExtender.Localization.Property.Localization.Initializers;
 using NetExtender.Utilities.Core;
+using NetExtender.WindowsPresentation.Types.Bindings;
 
 namespace NetExtender.UserInterface.WindowsPresentation.Localization.Types.Controls
 {
-    [ReflectionNaming]
+    [ReflectionNaming(typeof(LocalizationBinding))]
     public abstract class LocalizationUserControl : UserControl
     {
         public abstract LocalizationInitializerAbstraction Localization { get; }

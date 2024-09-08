@@ -5,11 +5,11 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace NetExtender.DependencyInjection.Interfaces
 {
-    public interface IScoped<T> : IServiceDependency<T>, IScoped where T : class
+    public interface IScoped<T> : IDependencyService<T>, IScoped where T : class
     {
     }
     
-    public interface IScoped : IServiceDependency
+    public interface IScoped : IDependencyService
     {
         public new ServiceLifetime Lifetime
         {

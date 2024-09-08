@@ -12,9 +12,9 @@ using NetExtender.Utilities.Core;
 
 namespace NetExtender.DependencyInjection.Interfaces
 {
-    public interface IServiceDependency<T> : IServiceDependency where T : class
+    public interface IDependencyService<T> : IDependencyService where T : class
     {
-        static IServiceDependency()
+        static IDependencyService()
         {
             if (!typeof(T).IsInterface)
             {
@@ -23,7 +23,7 @@ namespace NetExtender.DependencyInjection.Interfaces
         }
     }
     
-    public interface IServiceDependency
+    public interface IDependencyService
     {
         public static ImmutableDictionary<Type, ServiceLifetime> Services { get; } = new Dictionary<Type, ServiceLifetime>
         {
@@ -37,7 +37,7 @@ namespace NetExtender.DependencyInjection.Interfaces
             get
             {
                 Type type = GetType();
-                ImmutableHashSet<Type> interfaces = ReflectionUtilities.Inherit[typeof(IServiceDependency)].Interfaces.Intersect(type.GetInterfaces()).Intersect(Services.Keys);
+                ImmutableHashSet<Type> interfaces = ReflectionUtilities.Inherit[typeof(IDependencyService)].Interfaces.Intersect(type.GetInterfaces()).Intersect(Services.Keys);
                 
                 return interfaces.Count switch
                 {

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using NetExtender.Types.Nodes.Interfaces;
+using NetExtender.Types.Reflection;
 using NetExtender.Utilities.Core;
 using NetExtender.Utilities.Types;
 
@@ -560,161 +561,50 @@ namespace NetExtender.Types.Nodes
     
     public abstract class LinkedContainer
     {
-        [ReflectionNaming]
+        [ReflectionSystemResource(typeof(LinkedList<>))]
         [SuppressMessage("ReSharper", "IdentifierTypo")]
         protected static class SR
         {
-            static SR()
-            {
-                Type SR = SRUtilities.SRType(typeof(LinkedList<>).Assembly);
-                SRUtilities.TryGet(SR, nameof(Arg_NonZeroLowerBound), out lowerbound);
-                SRUtilities.TryGet(SR, nameof(ArgumentOutOfRange_NeedNonNegNum), out neednonnegnum);
-                SRUtilities.TryGet(SR, nameof(ArgumentOutOfRange_BiggerThanCollection), out biggerthancollection);
-                SRUtilities.TryGet(SR, nameof(Arg_RankMultiDimNotSupported), out rankmultidim);
-                SRUtilities.TryGet(SR, nameof(Argument_InvalidArrayType), out invalidarraytype);
-                SRUtilities.TryGet(SR, nameof(Arg_InsufficientSpace), out insufficientspace);
-                SRUtilities.TryGet(SR, nameof(LinkedListEmpty), out listempty);
-                SRUtilities.TryGet(SR, nameof(LinkedListNodeIsAttached), out nodeattached);
-                SRUtilities.TryGet(SR, nameof(ExternalLinkedListNode), out externalnode);
-                SRUtilities.TryGet(SR, nameof(Serialization_MissingValues), out missingvalues);
-                SRUtilities.TryGet(SR, nameof(InvalidOperation_EnumOpCantHappen), out enumopcanthappen);
-                SRUtilities.TryGet(SR, nameof(InvalidOperation_EnumFailedVersion), out enumfailedversion);
-            }
-
-            private static readonly Func<String>? lowerbound;
+            private static Type SRType { get; } = SRUtilities.SRType(typeof(LinkedList<>).Assembly);
             
-            [ReflectionNaming]
-            public static String Arg_NonZeroLowerBound
-            {
-                get
-                {
-                    return lowerbound is { } getter ? getter.Invoke() : nameof(Arg_NonZeroLowerBound);
-                }
-            }
+            [ReflectionSystemResource(typeof(LinkedList<>))]
+            public static SRInfo Arg_NonZeroLowerBound { get; } = new SRInfo(SRType);
             
-            private static readonly Func<String>? neednonnegnum;
+            [ReflectionSystemResource(typeof(LinkedList<>))]
+            public static SRInfo ArgumentOutOfRange_NeedNonNegNum { get; } = new SRInfo(SRType);
             
-            [ReflectionNaming]
-            public static String ArgumentOutOfRange_NeedNonNegNum
-            {
-                get
-                {
-                    return neednonnegnum is { } getter ? getter.Invoke() : nameof(ArgumentOutOfRange_NeedNonNegNum);
-                }
-            }
+            [ReflectionSystemResource(typeof(LinkedList<>))]
+            public static SRInfo ArgumentOutOfRange_BiggerThanCollection { get; } = new SRInfo(SRType);
             
-            private static readonly Func<String>? biggerthancollection;
+            [ReflectionSystemResource(typeof(LinkedList<>))]
+            public static SRInfo Arg_RankMultiDimNotSupported { get; } = new SRInfo(SRType);
             
-            [ReflectionNaming]
-            public static String ArgumentOutOfRange_BiggerThanCollection
-            {
-                get
-                {
-                    return biggerthancollection is { } getter ? getter.Invoke() : nameof(ArgumentOutOfRange_BiggerThanCollection);
-                }
-            }
+            [ReflectionSystemResource(typeof(LinkedList<>))]
+            public static SRInfo Argument_InvalidArrayType { get; } = new SRInfo(SRType);
             
-            private static readonly Func<String>? rankmultidim;
+            [ReflectionSystemResource(typeof(LinkedList<>))]
+            public static SRInfo Arg_InsufficientSpace { get; } = new SRInfo(SRType);
             
-            [ReflectionNaming]
-            public static String Arg_RankMultiDimNotSupported
-            {
-                get
-                {
-                    return rankmultidim is { } getter ? getter.Invoke() : nameof(Arg_RankMultiDimNotSupported);
-                }
-            }
+            [ReflectionSystemResource(typeof(LinkedList<>))]
+            public static SRInfo LinkedListEmpty { get; } = new SRInfo(SRType);
             
-            private static readonly Func<String>? invalidarraytype;
+            [ReflectionSystemResource(typeof(LinkedList<>))]
+            public static SRInfo LinkedListNodeIsAttached { get; } = new SRInfo(SRType);
             
-            [ReflectionNaming]
-            public static String Argument_InvalidArrayType
-            {
-                get
-                {
-                    return invalidarraytype is { } getter ? getter.Invoke() : nameof(Argument_InvalidArrayType);
-                }
-            }
+            [ReflectionSystemResource(typeof(LinkedList<>))]
+            public static SRInfo ExternalLinkedListNode { get; } = new SRInfo(SRType);
             
-            private static readonly Func<String>? insufficientspace;
+            [ReflectionSystemResource(typeof(LinkedList<>))]
+            public static SRInfo Serialization_MissingValues { get; } = new SRInfo(SRType);
             
-            [ReflectionNaming]
-            public static String Arg_InsufficientSpace
-            {
-                get
-                {
-                    return insufficientspace is { } getter ? getter.Invoke() : nameof(Arg_InsufficientSpace);
-                }
-            }
+            [ReflectionSystemResource(typeof(LinkedList<>))]
+            public static SRInfo InvalidOperation_EnumOpCantHappen { get; } = new SRInfo(SRType);
             
-            private static readonly Func<String>? listempty;
-            
-            [ReflectionNaming]
-            public static String LinkedListEmpty
-            {
-                get
-                {
-                    return listempty is { } getter ? getter.Invoke() : nameof(LinkedListEmpty);
-                }
-            }
-            
-            private static readonly Func<String>? nodeattached;
-            
-            [ReflectionNaming]
-            public static String LinkedListNodeIsAttached
-            {
-                get
-                {
-                    return nodeattached is { } getter ? getter.Invoke() : nameof(LinkedListNodeIsAttached);
-                }
-            }
-            
-            private static readonly Func<String>? externalnode;
-            
-            [ReflectionNaming]
-            public static String ExternalLinkedListNode
-            {
-                get
-                {
-                    return externalnode is { } getter ? getter.Invoke() : nameof(ExternalLinkedListNode);
-                }
-            }
-            
-            private static readonly Func<String>? missingvalues;
-            
-            [ReflectionNaming]
-            public static String Serialization_MissingValues
-            {
-                get
-                {
-                    return missingvalues is { } getter ? getter.Invoke() : nameof(Serialization_MissingValues);
-                }
-            }
-            
-            private static readonly Func<String>? enumopcanthappen;
-            
-            [ReflectionNaming]
-            public static String InvalidOperation_EnumOpCantHappen
-            {
-                get
-                {
-                    return enumopcanthappen is { } getter ? getter.Invoke() : nameof(InvalidOperation_EnumOpCantHappen);
-                }
-            }
-            
-            private static readonly Func<String>? enumfailedversion;
-            
-            [ReflectionNaming]
-            public static String InvalidOperation_EnumFailedVersion
-            {
-                get
-                {
-                    return enumfailedversion is { } getter ? getter.Invoke() : nameof(InvalidOperation_EnumFailedVersion);
-                }
-            }
+            [ReflectionSystemResource(typeof(LinkedList<>))]
+            public static SRInfo InvalidOperation_EnumFailedVersion { get; } = new SRInfo(SRType);
         }
         
-        [ReflectionNaming]
+        [ReflectionNaming(typeof(LinkedList<>))]
         protected static class Data
         {
         }

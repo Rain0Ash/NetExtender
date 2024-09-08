@@ -12,8 +12,8 @@
         <Version>0.8.9</Version>
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>../SignTool/Private/NetExtender.snk</AssemblyOriginatorKeyFile>
-        <Title>NetExtender.WindowsPresentation</Title>
-        <Description>Windows Presentation Foundation module of NetExtender Framework</Description>
+        <Title>NetExtender.WindowsPresentation.ReactiveUI</Title>
+        <Description>ReactiveUI Dependency Injection compability module for Windows Presentation Foundation module of NetExtender Framework</Description>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <RepositoryUrl>https://github.com/Rain0Ash/NetExtender</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
@@ -23,8 +23,15 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\NetExtender.Core\NetExtender.Core.csproj"/>
-        <ProjectReference Include="..\NetExtender.Windows\NetExtender.Windows.csproj"/>
+        <PackageReference Include="DynamicData" Version="9.0.4" />
+        <PackageReference Include="DynamicData.ReactiveUI" Version="6.11.0.2613"/>
+        <PackageReference Include="ReactiveUI" Version="20.1.1"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\NetExtender.DependencyInjection\NetExtender.DependencyInjection.csproj"/>
+        <ProjectReference Include="..\NetExtender.WindowsPresentation.ReactiveUI\NetExtender.WindowsPresentation.ReactiveUI.csproj" />
+        <ProjectReference Include="..\NetExtender.WindowsPresentation\NetExtender.WindowsPresentation.csproj" />
     </ItemGroup>
 
 </Project>

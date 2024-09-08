@@ -99,19 +99,19 @@ namespace NetExtender.WindowsPresentation.Utilities
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Window Require(UInt64 seed)
         {
-            return Get(seed) ?? throw new InvalidOperationException("Window not in concurrent store");
+            return Get(seed) ?? throw new InvalidOperationException("Window is not in concurrent store");
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TWindow Require<TWindow>() where TWindow : Window
         {
-            return Get<TWindow>() ?? throw new InvalidOperationException($"Window of type {typeof(TWindow)} not in concurrent store");
+            return Get<TWindow>() ?? throw new InvalidOperationException($"Window of type {typeof(TWindow)} is not in concurrent store");
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TWindow Require<TWindow>(UInt64 seed) where TWindow : Window
         {
-            return Get<TWindow>(seed) ?? throw new InvalidOperationException($"Window of type {typeof(TWindow)} not in concurrent store");
+            return Get<TWindow>(seed) ?? throw new InvalidOperationException($"Window of type {typeof(TWindow)} is not in concurrent store");
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -122,7 +122,7 @@ namespace NetExtender.WindowsPresentation.Utilities
             {
                 null => null,
                 TWindow result => result,
-                _ => throw new InvalidOperationException($"Concurrent window is not of type {typeof(TWindow)}")
+                _ => throw new InvalidOperationException($"Concurrent storage window '{window.Name}' is not of type {typeof(TWindow)}")
             };
         }
 

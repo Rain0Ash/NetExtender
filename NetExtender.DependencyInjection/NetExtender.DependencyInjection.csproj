@@ -11,7 +11,7 @@
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>../SignTool/Private/NetExtender.snk</AssemblyOriginatorKeyFile>
         <Title>NetExtender.DependencyInjection</Title>
-        <Description>DependencyInjection module of NetExtender Framework</Description>
+        <Description>Dependency Injection module of NetExtender Framework</Description>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <RepositoryUrl>https://github.com/Rain0Ash/NetExtender</RepositoryUrl>
         <RepositoryType>git</RepositoryType>

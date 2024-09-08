@@ -5,11 +5,11 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace NetExtender.DependencyInjection.Interfaces
 {
-    public interface ITransient<T> : IServiceDependency<T>, ITransient where T : class
+    public interface ITransient<T> : IDependencyService<T>, ITransient where T : class
     {
     }
 
-    public interface ITransient : IServiceDependency
+    public interface ITransient : IDependencyService
     {
         public new ServiceLifetime Lifetime
         {

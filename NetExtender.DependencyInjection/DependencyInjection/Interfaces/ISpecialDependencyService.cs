@@ -3,11 +3,11 @@
 
 namespace NetExtender.DependencyInjection.Interfaces
 {
-    internal interface IUnscanServiceDependency : IServiceDependency
+    internal interface IUnscanDependencyService : IDependencyService
     {
     }
     
-    public interface ISpecialServiceDependency<T> : ISpecialServiceDependency, IServiceDependency<T> where T : class
+    public interface ISpecialDependencyService<T> : ISpecialServiceDependency, IDependencyService<T> where T : class
     {
     }
     

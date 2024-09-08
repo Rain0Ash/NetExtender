@@ -86,11 +86,11 @@ namespace NetExtender.Domains.WindowsPresentation.Applications
             Application.Dispatcher.Invoke(() => Application.Shutdown(code));
         }
 
-        [ReflectionNaming]
+        [ReflectionSignature(typeof(System.Windows.Application))]
         private void InitializeComponent()
         {
             const BindingFlags binding = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.InvokeMethod;
-            Application.GetType().GetMethod(nameof(InitializeComponent), binding)?.Invoke(Application, null);
+            Application.GetType().GetMethod(nameof(InitializeComponent), binding, Type.EmptyTypes)?.Invoke(Application, null);
         }
     }
 }

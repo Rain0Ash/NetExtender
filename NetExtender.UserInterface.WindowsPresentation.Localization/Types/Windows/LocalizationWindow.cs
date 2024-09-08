@@ -3,10 +3,11 @@
 
 using NetExtender.Localization.Property.Localization.Initializers;
 using NetExtender.Utilities.Core;
+using NetExtender.WindowsPresentation.Types.Bindings;
 
 namespace NetExtender.UserInterface.WindowsPresentation.Windows
 {
-    [ReflectionNaming]
+    [ReflectionNaming(typeof(LocalizationBinding))]
     public abstract class LocalizationWindow : CenterWindow
     {
         public abstract LocalizationInitializerAbstraction Localization { get; }

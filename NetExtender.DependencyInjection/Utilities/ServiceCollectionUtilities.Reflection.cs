@@ -247,12 +247,12 @@ namespace NetExtender.Utilities.Types
                     throw new ArgumentNullException(nameof(interfaces));
                 }
                 
-                if (interfaces.Intersect(IServiceDependency.Services.Keys) is not { Count: 1 } intersect)
+                if (interfaces.Intersect(IDependencyService.Services.Keys) is not { Count: 1 } intersect)
                 {
                     return null;
                 }
                 
-                return IServiceDependency.Services.TryGetValue(intersect.Single(), out ServiceLifetime lifetime) ? lifetime : null;
+                return IDependencyService.Services.TryGetValue(intersect.Single(), out ServiceLifetime lifetime) ? lifetime : null;
             }
             
             public void Populate(ICollection<Type> collection)
@@ -321,7 +321,7 @@ namespace NetExtender.Utilities.Types
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             static Boolean IsServiceDependency(Type @interface)
             {
-                return @interface.IsGenericType && @interface.GetGenericTypeDefinition() == typeof(IServiceDependency<>);
+                return @interface.IsGenericType && @interface.GetGenericTypeDefinition() == typeof(IDependencyService<>);
             }
             
             Dictionary<Type, ServiceDescriptor> descriptors = new Dictionary<Type, ServiceDescriptor>();
@@ -351,7 +351,7 @@ namespace NetExtender.Utilities.Types
             
             ConcurrentHashSet<ServiceDescriptor> services = new ConcurrentHashSet<ServiceDescriptor>(ServiceDescriptorEqualityComparer.Implementation);
 
-            if (options.Inherit.TryGetValue(typeof(IServiceDependency), out ReflectionInheritResult? dependency))
+            if (options.Inherit.TryGetValue(typeof(IDependencyService), out ReflectionInheritResult? dependency))
             {
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 static void CallStaticConstructor(Type type)
@@ -695,14 +695,14 @@ namespace NetExtender.Utilities.Types
             }
             
             Inherit.Result inherit = ReflectionUtilities.Inherit;
-            if (!inherit.TryGetValue(typeof(IServiceDependency), out ReflectionInheritResult? result))
+            if (!inherit.TryGetValue(typeof(IDependencyService), out ReflectionInheritResult? result))
             {
                 throw new InvalidOperationException();
             }
             
             ImmutableHashSet<Type> attributes = inherit.Type[typeof(ServiceDependencyAttribute)].Types.Add(typeof(ServiceDependencyAttribute));
             ImmutableHashSet<Type> set = result.Inherit.Types.Union(attributes.SelectMany(attribute => inherit.Attribute[attribute].Types));
-            ImmutableHashSet<Type> except = inherit.Type[typeof(IUnscanServiceDependency)].Add(typeof(IUnscanServiceDependency));
+            ImmutableHashSet<Type> except = inherit.Type[typeof(IUnscanDependencyService)].Add(typeof(IUnscanDependencyService));
 
             if (typeof(T) == typeof(Any))
             {
@@ -757,14 +757,14 @@ namespace NetExtender.Utilities.Types
             }
 
             Inherit.Result inherit = ReflectionUtilities.Inherit;
-            if (!inherit.TryGetValue(typeof(IServiceDependency), out ReflectionInheritResult? result))
+            if (!inherit.TryGetValue(typeof(IDependencyService), out ReflectionInheritResult? result))
             {
                 throw new InvalidOperationException();
             }
             
             ImmutableHashSet<Type> attributes = inherit.Type[typeof(ServiceDependencyAttribute)].Types.Add(typeof(ServiceDependencyAttribute));
             ImmutableHashSet<Type> set = result.Inherit.Types.Union(attributes.SelectMany(attribute => inherit.Attribute[attribute].Types));
-            ImmutableHashSet<Type> except = inherit.Type[typeof(IUnscanServiceDependency)].Add(typeof(IUnscanServiceDependency));
+            ImmutableHashSet<Type> except = inherit.Type[typeof(IUnscanDependencyService)].Add(typeof(IUnscanDependencyService));
             
             Options options = new Options
             {

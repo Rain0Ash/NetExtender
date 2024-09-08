@@ -8,10 +8,10 @@ using NetExtender.DependencyInjection.Interfaces;
 
 namespace NetExtender.DependencyInjection
 {
-    public sealed class ServiceDescriptorWrapper : IUnscanServiceDependency
+    public sealed class DependencyServiceDescriptorWrapper : IUnscanDependencyService
     {
         [return: NotNullIfNotNull("wrapper")]
-        public static implicit operator ServiceDescriptor?(ServiceDescriptorWrapper? wrapper)
+        public static implicit operator ServiceDescriptor?(DependencyServiceDescriptorWrapper? wrapper)
         {
             return wrapper?.Service;
         }
@@ -58,7 +58,7 @@ namespace NetExtender.DependencyInjection
             }
         }
 
-        public ServiceDescriptorWrapper(ServiceDescriptor service)
+        public DependencyServiceDescriptorWrapper(ServiceDescriptor service)
         {
             Service = service ?? throw new ArgumentNullException(nameof(service));
         }

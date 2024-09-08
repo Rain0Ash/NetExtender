@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 using System.Reflection;
 using NetExtender.Types.Exceptions;
+using NetExtender.Utilities.Core;
 
 namespace NetExtender.Utilities.Types
 {
@@ -11,6 +12,16 @@ namespace NetExtender.Utilities.Types
     {
         private static ConcurrentDictionary<Assembly, Type> SR { get; } = new ConcurrentDictionary<Assembly, Type>();
         private static ConcurrentDictionary<PropertyInfo, Func<String>> SRExpression { get; } = new ConcurrentDictionary<PropertyInfo, Func<String>>();
+        
+        public static Type SRType(ReflectionSystemResourceAttribute attribute)
+        {
+            if (attribute is null)
+            {
+                throw new ArgumentNullException(nameof(attribute));
+            }
+            
+            return SRType(attribute.Assembly);
+        }
         
         public static Type SRType(Assembly assembly)
         {

@@ -5,11 +5,11 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace NetExtender.DependencyInjection.Interfaces
 {
-    public interface ISingleton<T> : IServiceDependency<T>, ISingleton where T : class
+    public interface ISingleton<T> : IDependencyService<T>, ISingleton where T : class
     {
     }
     
-    public interface ISingleton : IServiceDependency
+    public interface ISingleton : IDependencyService
     {
         public new ServiceLifetime Lifetime
         {

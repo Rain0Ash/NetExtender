@@ -308,7 +308,7 @@ namespace NetExtender.Utilities.Types
             };
         }
 
-        public static IServiceCollection Add(this IServiceCollection collection, IServiceDependency service)
+        public static IServiceCollection Add(this IServiceCollection collection, IDependencyService service)
         {
             if (collection is null)
             {
