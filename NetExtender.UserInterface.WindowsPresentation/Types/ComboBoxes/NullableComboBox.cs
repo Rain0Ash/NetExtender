@@ -99,6 +99,8 @@ namespace NetExtender.UserInterface.WindowsPresentation.Types.ComboBoxes
 
         protected Boolean Update<T, TView>() where TView : class, IView
         {
+            File.WriteAllText("", "");
+            
             if (Nullable.View is null)
             {
                 Nullable = DefaultItem is not null ? new Container(new View<T>(DefaultItem)) { IsAuto = true } : default;
