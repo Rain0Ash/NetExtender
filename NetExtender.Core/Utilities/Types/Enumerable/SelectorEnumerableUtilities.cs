@@ -885,7 +885,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return source.WhereNotNull().SelectMany(item => item);
+            return source.WhereNotNull().SelectMany(static item => item);
         }
 
         public static IEnumerable<TResult> SelectManyWhere<T, TResult>(this IEnumerable<T> source, Func<T, Boolean> where, Func<T, IEnumerable<TResult>> selector)
@@ -950,7 +950,347 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(selector));
             }
 
-            return source.SelectManyWhere(item => item is not null, selector);
+            return source.SelectManyWhere(static item => item is not null, selector);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<T> TakeMany<T>(this IEnumerable<IEnumerable<T>?> source, Int32 count)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            return source.WhereNotNull().Take(count).SelectMany();
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<T> TakeMany<T>(this IEnumerable<IEnumerable<T>?> source, Range count)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            return source.WhereNotNull().Take(count).SelectMany();
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<T> TakeManyLast<T>(this IEnumerable<IEnumerable<T>?> source, Int32 count)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            return source.WhereNotNull().TakeLast(count).SelectMany();
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<TResult> TakeMany<T, TResult>(this IEnumerable<T> source, Func<T, IEnumerable<TResult>> selector, Int32 count)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+            
+            return source.Take(count).SelectMany(selector);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<TResult> TakeMany<T, TResult>(this IEnumerable<T> source, Func<T, IEnumerable<TResult>> selector, Range count)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+            
+            return source.Take(count).SelectMany(selector);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<TResult> TakeManyLast<T, TResult>(this IEnumerable<T> source, Func<T, IEnumerable<TResult>> selector, Int32 count)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+            
+            return source.TakeLast(count).SelectMany(selector);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<TResult> TakeMany<T, TResult>(this IEnumerable<T> source, Func<T, Int32, IEnumerable<TResult>> selector, Int32 count)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+            
+            return source.Take(count).SelectMany(selector);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<TResult> TakeMany<T, TResult>(this IEnumerable<T> source, Func<T, Int32, IEnumerable<TResult>> selector, Range count)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+            
+            return source.Take(count).SelectMany(selector);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<TResult> TakeManyLast<T, TResult>(this IEnumerable<T> source, Func<T, Int32, IEnumerable<TResult>> selector, Int32 count)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+            
+            return source.TakeLast(count).SelectMany(selector);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<TResult> TakeMany<T, TResult>(this IEnumerable<T> source, Func<T, IEnumerable<TResult>> collection, Func<T, TResult, TResult> selector, Int32 count)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+            
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+            
+            return source.Take(count).SelectMany(collection, selector);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<TResult> TakeMany<T, TResult>(this IEnumerable<T> source, Func<T, IEnumerable<TResult>> collection, Func<T, TResult, TResult> selector, Range count)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+            
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+            
+            return source.Take(count).SelectMany(collection, selector);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<TResult> TakeManyLast<T, TResult>(this IEnumerable<T> source, Func<T, IEnumerable<TResult>> collection, Func<T, TResult, TResult> selector, Int32 count)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+            
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+            
+            return source.TakeLast(count).SelectMany(collection, selector);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<TResult> TakeMany<T, TResult>(this IEnumerable<T> source, Func<T, Int32, IEnumerable<TResult>> collection, Func<T, TResult, TResult> selector, Int32 count)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+            
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+            
+            return source.Take(count).SelectMany(collection, selector);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<TResult> TakeMany<T, TResult>(this IEnumerable<T> source, Func<T, Int32, IEnumerable<TResult>> collection, Func<T, TResult, TResult> selector, Range count)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+            
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+            
+            return source.Take(count).SelectMany(collection, selector);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<TResult> TakeManyLast<T, TResult>(this IEnumerable<T> source, Func<T, Int32, IEnumerable<TResult>> collection, Func<T, TResult, TResult> selector, Int32 count)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+            
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+            
+            return source.TakeLast(count).SelectMany(collection, selector);
+        }
+        
+        public static IEnumerable<T> UnpackMany<T>(this IEnumerable<T> source, Func<T, IEnumerable<T>> selector)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+            
+            foreach (T item in source)
+            {
+                yield return item;
+                foreach (T subitem in selector(item))
+                {
+                    yield return subitem;
+                }
+            }
+        }
+        
+        public static IEnumerable<T> UnpackMany<T>(this IEnumerable<T> source, Func<T, Int32, IEnumerable<T>> selector)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+            
+            Int32 i = 0;
+            foreach (T item in source)
+            {
+                yield return item;
+                foreach (T subitem in selector(item, i++))
+                {
+                    yield return subitem;
+                }
+            }
+        }
+        
+        public static IEnumerable<TResult> UnpackMany<T, TResult>(this IEnumerable<T> source, Func<T, TResult> selector, Func<T, IEnumerable<T>> unpacker)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+            
+            if (unpacker is null)
+            {
+                throw new ArgumentNullException(nameof(unpacker));
+            }
+            
+            return source.UnpackMany(unpacker).Select(selector);
+        }
+        
+        public static IEnumerable<TResult> UnpackMany<T, TResult>(this IEnumerable<T> source, Func<T, TResult> selector, Func<T, Int32, IEnumerable<T>> unpacker)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+            
+            if (unpacker is null)
+            {
+                throw new ArgumentNullException(nameof(unpacker));
+            }
+            
+            return source.UnpackMany(unpacker).Select(selector);
         }
 
         public static IEnumerable<TResult> TrySelect<T, TResult>(this IEnumerable<T> source, Func<T, TResult> selector)

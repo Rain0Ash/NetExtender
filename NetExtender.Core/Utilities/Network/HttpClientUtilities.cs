@@ -17,6 +17,8 @@ using System.Text.Json.Serialization.Metadata;
 using System.Threading;
 using System.Threading.Tasks;
 using NetExtender.Types.Network.Formatters;
+using NetExtender.Types.Storages;
+using NetExtender.Types.Storages.Interfaces;
 using NetExtender.Types.Streams;
 using NetExtender.Utilities.IO;
 using NetExtender.Utilities.Types;
@@ -25,6 +27,9 @@ namespace NetExtender.Utilities.Network
 {
     public static class HttpClientUtilities
     {
+        private static IStorage<HttpClient, JsonMediaTypeFormatter> JsonFormatters { get; } = new WeakStorage<HttpClient, JsonMediaTypeFormatter>();
+        private static IStorage<HttpClient, XmlMediaTypeFormatter> XmlFormatters { get; } = new WeakStorage<HttpClient, XmlMediaTypeFormatter>();
+        
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static HttpClient Create()
         {
@@ -127,6 +132,30 @@ namespace NetExtender.Utilities.Network
 
             HttpClient client = new HttpClient(handler, dispose);
             return DisposeAndThrowOnInvalidAddUserAgent(client, agent);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static HttpClient Register(this HttpClient client, JsonMediaTypeFormatter formatter)
+        {
+            if (client is null)
+            {
+                throw new ArgumentNullException(nameof(client));
+            }
+            
+            JsonFormatters[client] = formatter ?? throw new ArgumentNullException(nameof(formatter));
+            return client;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static HttpClient Register(this HttpClient client, XmlMediaTypeFormatter formatter)
+        {
+            if (client is null)
+            {
+                throw new ArgumentNullException(nameof(client));
+            }
+            
+            XmlFormatters[client] = formatter ?? throw new ArgumentNullException(nameof(formatter));
+            return client;
         }
 
         public static HttpMessageHandler Pipeline(this HttpMessageHandler handler, IEnumerable<DelegatingHandler?>? handlers)
@@ -310,7 +339,12 @@ namespace NetExtender.Utilities.Network
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<HttpResponseMessage> PostAsJsonAsync<T>(this HttpClient client, String requestUri, T value, JsonMediaTypeFormatter? formatter, CancellationToken token)
         {
-            return PostAsync(client, requestUri, value, formatter ?? new JsonMediaTypeFormatter(), token);
+            if (client is null)
+            {
+                throw new ArgumentNullException(nameof(client));
+            }
+            
+            return PostAsync(client, requestUri, value, formatter ?? JsonFormatters.GetOrAdd(client, static () => new JsonMediaTypeFormatter()), token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -334,7 +368,12 @@ namespace NetExtender.Utilities.Network
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<HttpResponseMessage> PostAsJsonAsync<T>(this HttpClient client, Uri requestUri, T value, JsonMediaTypeFormatter? formatter, CancellationToken token)
         {
-            return PostAsync(client, requestUri, value, formatter ?? new JsonMediaTypeFormatter(), token);
+            if (client is null)
+            {
+                throw new ArgumentNullException(nameof(client));
+            }
+            
+            return PostAsync(client, requestUri, value, formatter ?? JsonFormatters.GetOrAdd(client, static () => new JsonMediaTypeFormatter()), token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -358,7 +397,12 @@ namespace NetExtender.Utilities.Network
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<HttpResponseMessage> PostAsXmlAsync<T>(this HttpClient client, String requestUri, T value, XmlMediaTypeFormatter? formatter, CancellationToken token)
         {
-            return PostAsync(client, requestUri, value, formatter ?? new XmlMediaTypeFormatter(), token);
+            if (client is null)
+            {
+                throw new ArgumentNullException(nameof(client));
+            }
+            
+            return PostAsync(client, requestUri, value, formatter ?? XmlFormatters.GetOrAdd(client, static () => new XmlMediaTypeFormatter()), token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -382,7 +426,12 @@ namespace NetExtender.Utilities.Network
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<HttpResponseMessage> PostAsXmlAsync<T>(this HttpClient client, Uri requestUri, T value, XmlMediaTypeFormatter? formatter, CancellationToken token)
         {
-            return PostAsync(client, requestUri, value, formatter ?? new XmlMediaTypeFormatter(), token);
+            if (client is null)
+            {
+                throw new ArgumentNullException(nameof(client));
+            }
+            
+            return PostAsync(client, requestUri, value, formatter ?? XmlFormatters.GetOrAdd(client, static () => new XmlMediaTypeFormatter()), token);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -508,7 +557,7 @@ namespace NetExtender.Utilities.Network
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<HttpResponseMessage> PutAsJsonAsync<T>(this HttpClient client, String requestUri, T value, JsonMediaTypeFormatter? formatter, CancellationToken token)
         {
-            return PutAsync(client, requestUri, value, formatter ?? new JsonMediaTypeFormatter(), token);
+            return PutAsync(client, requestUri, value, formatter ?? JsonFormatters.GetOrAdd(client, static () => new JsonMediaTypeFormatter()), token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -532,7 +581,7 @@ namespace NetExtender.Utilities.Network
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<HttpResponseMessage> PutAsJsonAsync<T>(this HttpClient client, Uri requestUri, T value, JsonMediaTypeFormatter? formatter, CancellationToken token)
         {
-            return PutAsync(client, requestUri, value, formatter ?? new JsonMediaTypeFormatter(), token);
+            return PutAsync(client, requestUri, value, formatter ?? JsonFormatters.GetOrAdd(client, static () => new JsonMediaTypeFormatter()), token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -556,7 +605,7 @@ namespace NetExtender.Utilities.Network
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<HttpResponseMessage> PutAsXmlAsync<T>(this HttpClient client, String requestUri, T value, XmlMediaTypeFormatter? formatter, CancellationToken token)
         {
-            return PutAsync(client, requestUri, value, formatter ?? new XmlMediaTypeFormatter(), token);
+            return PutAsync(client, requestUri, value, formatter ?? XmlFormatters.GetOrAdd(client, static () => new XmlMediaTypeFormatter()), token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -580,7 +629,7 @@ namespace NetExtender.Utilities.Network
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<HttpResponseMessage> PutAsXmlAsync<T>(this HttpClient client, Uri requestUri, T value, XmlMediaTypeFormatter? formatter, CancellationToken token)
         {
-            return PutAsync(client, requestUri, value, formatter ?? new XmlMediaTypeFormatter(), token);
+            return PutAsync(client, requestUri, value, formatter ?? XmlFormatters.GetOrAdd(client, static () => new XmlMediaTypeFormatter()), token);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -706,7 +755,7 @@ namespace NetExtender.Utilities.Network
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<HttpResponseMessage> PatchAsJsonAsync<T>(this HttpClient client, String requestUri, T value, JsonMediaTypeFormatter? formatter, CancellationToken token)
         {
-            return PatchAsync(client, requestUri, value, formatter ?? new JsonMediaTypeFormatter(), token);
+            return PatchAsync(client, requestUri, value, formatter ?? JsonFormatters.GetOrAdd(client, static () => new JsonMediaTypeFormatter()), token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -730,7 +779,7 @@ namespace NetExtender.Utilities.Network
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<HttpResponseMessage> PatchAsJsonAsync<T>(this HttpClient client, Uri requestUri, T value, JsonMediaTypeFormatter? formatter, CancellationToken token)
         {
-            return PatchAsync(client, requestUri, value, formatter ?? new JsonMediaTypeFormatter(), token);
+            return PatchAsync(client, requestUri, value, formatter ?? JsonFormatters.GetOrAdd(client, static () => new JsonMediaTypeFormatter()), token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -754,7 +803,7 @@ namespace NetExtender.Utilities.Network
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<HttpResponseMessage> PatchAsXmlAsync<T>(this HttpClient client, String requestUri, T value, XmlMediaTypeFormatter? formatter, CancellationToken token)
         {
-            return PatchAsync(client, requestUri, value, formatter ?? new XmlMediaTypeFormatter(), token);
+            return PatchAsync(client, requestUri, value, formatter ?? XmlFormatters.GetOrAdd(client, static () => new XmlMediaTypeFormatter()), token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -778,7 +827,7 @@ namespace NetExtender.Utilities.Network
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<HttpResponseMessage> PatchAsXmlAsync<T>(this HttpClient client, Uri requestUri, T value, XmlMediaTypeFormatter? formatter, CancellationToken token)
         {
-            return PatchAsync(client, requestUri, value, formatter ?? new XmlMediaTypeFormatter(), token);
+            return PatchAsync(client, requestUri, value, formatter ?? XmlFormatters.GetOrAdd(client, static () => new XmlMediaTypeFormatter()), token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

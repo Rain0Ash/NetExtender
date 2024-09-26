@@ -9,7 +9,7 @@ using NetExtender.WindowsPresentation.Localization.Types.Collections;
 using NetExtender.WindowsPresentation.Localization.Types.Flags;
 using NetExtender.WindowsPresentation.Localization.Utilities;
 
-namespace NetExtender.WindowsPresentation.ReactiveUI.Types.Models
+namespace NetExtender.WindowsPresentation.ReactiveUI
 {
     public class SettingsReactiveViewModelInitializer
     {

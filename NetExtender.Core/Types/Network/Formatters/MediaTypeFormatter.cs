@@ -18,44 +18,87 @@ using Microsoft.Extensions.Logging;
 using NetExtender.Types.Collections;
 using NetExtender.Types.Network.Formatters.Exceptions;
 using NetExtender.Types.Network.Formatters.Interfaces;
+using NetExtender.Types.Sets;
 using NetExtender.Utilities.Core;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Network.Formatters
 {
-    public abstract class MediaTypeFormatter
+    public abstract class MediaTypeFormatter : IMediaTypeFormatter
     {
-        private protected static readonly Encoding Utf8Encoding = new UTF8Encoding(false, true);
+        protected static Encoding UTF8Encoding { get; } = new UTF8Encoding(false, true);
         private static ConcurrentDictionary<Type, Type> DelegatingEnumerableStorage { get; } = new ConcurrentDictionary<Type, Type>();
         protected static ConcurrentDictionary<Type, ConstructorInfo?> DelegatingEnumerableConstructorCache { get; } = new ConcurrentDictionary<Type, ConstructorInfo?>();
 
-        private Int32 _maximumHttpCollectionKeys = Int32.MaxValue;
+        private Int32 _maximum = Int32.MaxValue;
         public Int32 MaximumHttpCollectionKeys
         {
             get
             {
-                return _maximumHttpCollectionKeys;
+                return _maximum;
             }
             set
             {
-                if (value <= 0)
-                {
-                    throw new ArgumentOutOfRangeException(nameof(value), value, null);
-                }
-
-                _maximumHttpCollectionKeys = value;
+                _maximum = value > 0 ? value : throw new ArgumentOutOfRangeException(nameof(value), value, null);
             }
         }
 
-        protected internal List<MediaTypeHeaderValue> SupportedMediaTypeInternal { get; }
-        public Collection<MediaTypeHeaderValue> SupportedMediaType { get; }
-        protected internal List<Encoding> SupportedEncodingInternal { get; }
-        public Collection<Encoding> SupportedEncoding { get; }
-        protected internal List<MediaTypeMapping> MediaTypeFormatterMappingInternal { get; }
-        public Collection<MediaTypeMapping> MediaTypeFormatterMapping { get; }
-
+        protected internal OrderedSet<MediaTypeHeader> SupportedMediaType { get; }
+        
+        ICollection<MediaTypeHeader> IMediaTypeFormatter.SupportedMediaType
+        {
+            get
+            {
+                return SupportedMediaType;
+            }
+        }
+        
+        IReadOnlyCollection<MediaTypeHeader> IReadOnlyMediaTypeFormatter.SupportedMediaType
+        {
+            get
+            {
+                return SupportedMediaType;
+            }
+        }
+        
+        protected internal OrderedSet<Encoding> SupportedEncoding { get; }
+        
+        ICollection<Encoding> IMediaTypeFormatter.SupportedEncoding
+        {
+            get
+            {
+                return SupportedEncoding;
+            }
+        }
+        
+        IReadOnlyCollection<Encoding> IReadOnlyMediaTypeFormatter.SupportedEncoding
+        {
+            get
+            {
+                return SupportedEncoding;
+            }
+        }
+        
+        protected internal OrderedSet<MediaTypeMapping> MediaTypeFormatterMapping { get; }
+        
+        ICollection<MediaTypeMapping> IMediaTypeFormatter.MediaTypeFormatterMapping
+        {
+            get
+            {
+                return MediaTypeFormatterMapping;
+            }
+        }
+        
+        IReadOnlyCollection<MediaTypeMapping> IReadOnlyMediaTypeFormatter.MediaTypeFormatterMapping
+        {
+            get
+            {
+                return MediaTypeFormatterMapping;
+            }
+        }
+        
         public IFormatterMemberSelector? Selector { get; set; }
-
+        
         internal virtual Boolean CanWriteAnyTypes
         {
             get
@@ -65,7 +108,7 @@ namespace NetExtender.Types.Network.Formatters
         }
         
         public abstract Int32 MaxDepth { get; set; }
-
+        
         protected MediaTypeFormatter()
             : this(null)
         {
@@ -73,13 +116,30 @@ namespace NetExtender.Types.Network.Formatters
 
         protected MediaTypeFormatter(MediaTypeFormatter? formatter)
         {
-            SupportedMediaTypeInternal = formatter?.SupportedMediaTypeInternal ?? new List<MediaTypeHeaderValue>();
-            SupportedMediaType = formatter?.SupportedMediaType ?? new MediaTypeHeaderValueCollection(SupportedMediaTypeInternal);
-            SupportedEncodingInternal = formatter?.SupportedEncodingInternal ?? new List<Encoding>();
-            SupportedEncoding = formatter?.SupportedEncoding ?? new Collection<Encoding>(SupportedEncodingInternal);
-            MediaTypeFormatterMappingInternal = formatter?.MediaTypeFormatterMappingInternal ?? new List<MediaTypeMapping>();
-            MediaTypeFormatterMapping = formatter?.MediaTypeFormatterMapping ?? new Collection<MediaTypeMapping>(MediaTypeFormatterMappingInternal);
+            SupportedMediaType = formatter?.SupportedMediaType ?? new OrderedSet<MediaTypeHeader>();
+            SupportedEncoding = formatter?.SupportedEncoding ?? new OrderedSet<Encoding>();
+            MediaTypeFormatterMapping = formatter?.MediaTypeFormatterMapping ?? new OrderedSet<MediaTypeMapping>();
             Selector = formatter?.Selector;
+        }
+        
+        public Boolean Contains(MediaTypeHeader header)
+        {
+            return SupportedMediaType.Contains(header);
+        }
+        
+        public Boolean Contains(MediaTypeHeader header, Encoding encoding)
+        {
+            return Contains(header) && Contains(encoding);
+        }
+        
+        public Boolean Contains(Encoding encoding)
+        {
+            return SupportedEncoding.Contains(encoding);
+        }
+        
+        public Boolean Contains(MediaTypeMapping mapping)
+        {
+            return MediaTypeFormatterMapping.Contains(mapping);
         }
         
         public abstract Boolean CanReadType(Type type);
@@ -184,7 +244,7 @@ namespace NetExtender.Types.Network.Formatters
                 String? charset = headers.ContentType.CharSet;
                 if (!String.IsNullOrWhiteSpace(charset))
                 {
-                    foreach (Encoding item in SupportedEncodingInternal.Where(item => charset.Equals(item.WebName, StringComparison.OrdinalIgnoreCase)))
+                    foreach (Encoding item in SupportedEncoding.Where(item => charset.Equals(item.WebName, StringComparison.OrdinalIgnoreCase)))
                     {
                         encoding = item;
                         break;
@@ -192,16 +252,16 @@ namespace NetExtender.Types.Network.Formatters
                 }
             }
             
-            if (encoding is null && SupportedEncodingInternal.Count > 0)
+            if (encoding is null && SupportedEncoding.Count > 0)
             {
-                encoding = SupportedEncodingInternal[0];
+                encoding = SupportedEncoding.First;
             }
 
             return encoding ?? throw new MediaTypeFormatterEncodingNotFoundException($"No encoding found for media type formatter '{GetType()}'. There must be at least one supported encoding registered in order for the media type formatter to read or write content.");
         }
 
         // ReSharper disable once CognitiveComplexity
-        public virtual void SetDefaultContentHeaders(Type type, HttpContentHeaders headers, MediaTypeHeaderValue? media)
+        public virtual Boolean SetDefaultContentHeaders(Type type, HttpContentHeaders headers, MediaTypeHeaderValue? media)
         {
             if (type is null)
             {
@@ -220,13 +280,13 @@ namespace NetExtender.Types.Network.Formatters
 
             if (headers.ContentType is null)
             {
-                MediaTypeHeaderValue? value = null;
-                if (SupportedMediaTypeInternal.Count > 0)
+                MediaTypeHeader value = default;
+                if (SupportedMediaType.Count > 0)
                 {
-                    value = SupportedMediaTypeInternal[0];
+                    value = SupportedMediaType.First;
                 }
 
-                if (value is not null)
+                if (!value.IsEmpty)
                 {
                     headers.ContentType = value.Clone();
                 }
@@ -234,21 +294,22 @@ namespace NetExtender.Types.Network.Formatters
             
             if (headers.ContentType is not { CharSet: null })
             {
-                return;
+                return false;
             }
 
             Encoding? encoding = null;
-            if (SupportedEncodingInternal.Count > 0)
+            if (SupportedEncoding.Count > 0)
             {
-                encoding = SupportedEncodingInternal[0];
+                encoding = SupportedEncoding.First;
             }
 
             if (encoding is null)
             {
-                return;
+                return false;
             }
 
             headers.ContentType.CharSet = encoding.WebName;
+            return true;
         }
 
         private static Type GetOrAddDelegatingType(Type type, Type generic)
@@ -263,14 +324,14 @@ namespace NetExtender.Types.Network.Formatters
                 throw new ArgumentNullException(nameof(generic));
             }
 
-            return DelegatingEnumerableStorage.GetOrAdd(type, _ =>
+            return DelegatingEnumerableStorage.GetOrAdd(type, static (_, generic) =>
             {
                 Type argument = generic.GetGenericArguments()[0];
                 Type key = typeof(EnumerableWrapper<>).MakeGenericType(argument);
                 ConstructorInfo? constructor = key.GetConstructor(new[] { typeof(IEnumerable<>).MakeGenericType(argument) });
                 DelegatingEnumerableConstructorCache.TryAdd(key, constructor);
                 return key;
-            });
+            }, generic);
         }
 
         private protected static void WritePreamble(Stream stream, Encoding encoding)
@@ -294,38 +355,38 @@ namespace NetExtender.Types.Network.Formatters
             stream.Write(preamble, 0, preamble.Length);
         }
 
-        internal class MediaTypeHeaderValueCollection : Collection<MediaTypeHeaderValue>
+        internal class MediaTypeHeaderValueCollection : Collection<MediaTypeHeader>
         {
             private static Type MediaType { get; } = typeof(MediaTypeHeaderValue);
 
-            internal MediaTypeHeaderValueCollection(IList<MediaTypeHeaderValue> list)
+            internal MediaTypeHeaderValueCollection(IList<MediaTypeHeader> list)
                 : base(list)
             {
             }
 
-            protected override void InsertItem(Int32 index, MediaTypeHeaderValue item)
+            protected override void InsertItem(Int32 index, MediaTypeHeader item)
             {
                 ValidateMediaType(item);
                 base.InsertItem(index, item);
             }
 
-            protected override void SetItem(Int32 index, MediaTypeHeaderValue item)
+            protected override void SetItem(Int32 index, MediaTypeHeader item)
             {
                 ValidateMediaType(item);
                 base.SetItem(index, item);
             }
 
-            private static void ValidateMediaType(MediaTypeHeaderValue item)
+            private static void ValidateMediaType(MediaTypeHeader item)
             {
-                if (item is null)
+                if (item.Value is not { } header)
                 {
                     throw new ArgumentNullException(nameof(item));
                 }
 
-                FormatterMediaTypeHeaderValue value = new FormatterMediaTypeHeaderValue(item);
+                FormatterMediaTypeHeaderValue value = new FormatterMediaTypeHeaderValue(header);
                 if (value.IsAllMediaRange || value.IsSubtypeMediaRange)
                 {
-                    throw new ArgumentException($"The '{MediaType.Name}' of '{item.MediaType}' cannot be used as a supported media type because it is a media range.", nameof(item));
+                    throw new ArgumentException($"The '{MediaType.Name}' of '{header.MediaType}' cannot be used as a supported media type because it is a media range.", nameof(item));
                 }
             }
         }

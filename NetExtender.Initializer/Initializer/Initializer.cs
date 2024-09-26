@@ -2,6 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -12,6 +13,8 @@ namespace NetExtender.Initializer
 {
     public abstract partial class Initializer
     {
+        public static ImmutableArray<String>? Arguments { get; internal set; }
+        
         private static Task Stop
         {
             get

@@ -9,6 +9,7 @@ using NetExtender.ReactiveUI.Types.Anonymous;
 using NetExtender.ReactiveUI.Types.Anonymous.Interfaces;
 using NetExtender.ReactiveUI.Utilities;
 using NetExtender.Types.Anonymous;
+using NetExtender.Utilities.Core;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.ReactiveUI.Anonymous.Core
@@ -79,7 +80,7 @@ namespace NetExtender.ReactiveUI.Anonymous.Core
             ConstructorInfo[] constructors = type.GetConstructors();
             ConstructorInfo constructor = constructors.Length switch
             {
-                0 => throw new MissingMethodException(type.Name, ".ctor"),
+                0 => throw new MissingMethodException(type.Name, ReflectionUtilities.Constructor),
                 1 => constructors[0],
                 2 => constructors[1],
                 _ => throw new AmbiguousMatchException(type.Name)

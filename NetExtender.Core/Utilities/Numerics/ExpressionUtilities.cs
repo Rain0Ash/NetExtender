@@ -180,7 +180,7 @@ namespace NetExtender.Utilities.Numerics
 
             if (constructor is null)
             {
-                throw new MissingMemberException(typeof(TSource).Name, ".ctor");
+                throw new MissingMemberException(typeof(TSource).Name, ReflectionUtilities.Constructor);
             }
 
             ParameterExpression argument = Expression.Parameter(typeof(T), nameof(argument));
@@ -200,7 +200,7 @@ namespace NetExtender.Utilities.Numerics
 
             if (constructor is null)
             {
-                throw new MissingMemberException(typeof(TSource).Name, ".ctor");
+                throw new MissingMemberException(typeof(TSource).Name, ReflectionUtilities.Constructor);
             }
 
             ParameterExpression first = Expression.Parameter(typeof(T1), nameof(first));
@@ -221,7 +221,7 @@ namespace NetExtender.Utilities.Numerics
 
             if (constructor is null)
             {
-                throw new MissingMemberException(typeof(TSource).Name, ".ctor");
+                throw new MissingMemberException(typeof(TSource).Name, ReflectionUtilities.Constructor);
             }
 
             ParameterExpression first = Expression.Parameter(typeof(T1), nameof(first));
@@ -243,7 +243,7 @@ namespace NetExtender.Utilities.Numerics
 
             if (constructor is null)
             {
-                throw new MissingMemberException(typeof(TSource).Name, ".ctor");
+                throw new MissingMemberException(typeof(TSource).Name, ReflectionUtilities.Constructor);
             }
 
             ParameterExpression first = Expression.Parameter(typeof(T1), nameof(first));
@@ -266,7 +266,7 @@ namespace NetExtender.Utilities.Numerics
 
             if (constructor is null)
             {
-                throw new MissingMemberException(typeof(TSource).Name, ".ctor");
+                throw new MissingMemberException(typeof(TSource).Name, ReflectionUtilities.Constructor);
             }
 
             ParameterExpression first = Expression.Parameter(typeof(T1), nameof(first));
@@ -290,7 +290,7 @@ namespace NetExtender.Utilities.Numerics
 
             if (constructor is null)
             {
-                throw new MissingMemberException(typeof(TSource).Name, ".ctor");
+                throw new MissingMemberException(typeof(TSource).Name, ReflectionUtilities.Constructor);
             }
 
             ParameterExpression first = Expression.Parameter(typeof(T1), nameof(first));
@@ -315,7 +315,7 @@ namespace NetExtender.Utilities.Numerics
 
             if (constructor is null)
             {
-                throw new MissingMemberException(typeof(TSource).Name, ".ctor");
+                throw new MissingMemberException(typeof(TSource).Name, ReflectionUtilities.Constructor);
             }
 
             ParameterExpression first = Expression.Parameter(typeof(T1), nameof(first));
@@ -341,7 +341,7 @@ namespace NetExtender.Utilities.Numerics
 
             if (constructor is null)
             {
-                throw new MissingMemberException(typeof(TSource).Name, ".ctor");
+                throw new MissingMemberException(typeof(TSource).Name, ReflectionUtilities.Constructor);
             }
 
             ParameterExpression first = Expression.Parameter(typeof(T1), nameof(first));
@@ -368,7 +368,7 @@ namespace NetExtender.Utilities.Numerics
 
             if (constructor is null)
             {
-                throw new MissingMemberException(typeof(TSource).Name, ".ctor");
+                throw new MissingMemberException(typeof(TSource).Name, ReflectionUtilities.Constructor);
             }
 
             ParameterExpression first = Expression.Parameter(typeof(T1), nameof(first));

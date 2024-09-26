@@ -411,8 +411,9 @@ namespace NetExtender.Utilities.Network
             
             MediaTypeHeaderValue header = content.Headers.ContentType ?? MediaTypeFormatterUtilities.ApplicationOctetStreamMediaType;
             
-            MediaTypeFormatter? reader = (formatters as MediaTypeFormatterCollection ?? new MediaTypeFormatterCollection(formatters)).FindReader(type, header);
-            if (reader is not null)
+            // ReSharper disable once LocalVariableHidesMember
+            MediaTypeFormatterCollection collection = formatters as MediaTypeFormatterCollection ?? new MediaTypeFormatterCollection(formatters);
+            if (collection.FindReader(type, header) is { } reader)
             {
                 return ReadAsAsyncCore<T>(content, type, reader, logger, token);
             }
@@ -422,7 +423,7 @@ namespace NetExtender.Utilities.Network
                 return Task.FromResult((T?) ReflectionUtilities.Default(type));
             }
 
-            throw new MediaTypeNotSupportedException($"No {nameof(MediaTypeFormatter)} is available to read an object of type '{type}' from content with media type '{header.MediaType}'.");
+            throw new MediaTypeNotSupportedException(type, header, $"No {nameof(MediaTypeFormatter)} is available to read an object of type '{type}' from content with media type '{header.MediaType?.ToLowerInvariant() ?? "null"}'.") { Formatters = collection };
         }
 
         private static async Task<T?> ReadAsAsyncCore<T>(HttpContent content, Type type, MediaTypeFormatter formatter, ILogger? logger, CancellationToken token)

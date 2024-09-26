@@ -76,7 +76,7 @@ namespace NetExtender.Types.Network
             return exception switch
             {
                 null => ExceptionHandlerAction.Ignore,
-                _ when SocketHandler is not null => SocketHandler(exception),
+                _ when SocketHandler is { } handler => handler(exception),
                 _ => ExceptionHandlerAction.Default
             };
         }
@@ -86,7 +86,7 @@ namespace NetExtender.Types.Network
             return exception switch
             {
                 null => ExceptionHandlerAction.Ignore,
-                _ when IOHandler is not null => IOHandler(exception),
+                _ when IOHandler is { } handler => handler(exception),
                 _ => ExceptionHandlerAction.Default
             };
         }
@@ -96,7 +96,7 @@ namespace NetExtender.Types.Network
             return exception switch
             {
                 null => ExceptionHandlerAction.Ignore,
-                _ when ParsingHandler is not null => ParsingHandler(exception),
+                _ when ParsingHandler is { } handler => handler(exception),
                 _ => ExceptionHandlerAction.Default
             };
         }
@@ -106,7 +106,7 @@ namespace NetExtender.Types.Network
             return exception switch
             {
                 null => ExceptionHandlerAction.Ignore,
-                _ when MediaTypeHandler is not null => MediaTypeHandler(exception),
+                _ when MediaTypeHandler is { } handler => handler(exception),
                 _ => ExceptionHandlerAction.Default
             };
         }
@@ -172,7 +172,7 @@ namespace NetExtender.Types.Network
             return exception switch
             {
                 null => ExceptionHandlerAction.Ignore,
-                _ when JsonHandler is not null => JsonHandler(exception),
+                _ when JsonHandler is { } handler => handler(exception),
                 _ => ExceptionHandlerAction.Default
             };
         }
@@ -182,7 +182,7 @@ namespace NetExtender.Types.Network
             return exception switch
             {
                 null => ExceptionHandlerAction.Ignore,
-                _ when DefaultHandler is not null => DefaultHandler(exception),
+                _ when DefaultHandler is { } handler => handler(exception),
                 _ => ExceptionHandlerAction.Rethrow
             };
         }

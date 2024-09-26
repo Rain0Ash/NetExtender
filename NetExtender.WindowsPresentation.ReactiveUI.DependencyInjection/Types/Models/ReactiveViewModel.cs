@@ -2,8 +2,6 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System.Windows;
-using NetExtender.WindowsPresentation.ReactiveUI.Interfaces;
-using NetExtender.WindowsPresentation.ReactiveUI.Types.Models;
 using NetExtender.WindowsPresentation.Utilities;
 
 namespace NetExtender.WindowsPresentation.ReactiveUI

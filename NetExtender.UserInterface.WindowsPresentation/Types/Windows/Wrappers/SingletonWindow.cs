@@ -6,7 +6,11 @@ using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 using NetExtender.Types.Exceptions;
 using NetExtender.Types.Times;
+using NetExtender.UserInterface.Utilities;
 using NetExtender.Utilities.Types;
+using NetExtender.WindowsPresentation.Types;
+using NetExtender.WindowsPresentation.Types.Interfaces;
+using NetExtender.WindowsPresentation.Utilities.Types;
 
 namespace NetExtender.UserInterface.WindowsPresentation.Windows
 {
@@ -59,21 +63,36 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
             Factory = factory ?? throw new ArgumentNullException(nameof(factory));
         }
 
+        public SingletonWindow(IWindowServiceProvider provider)
+        {
+            if (provider is null)
+            {
+                throw new ArgumentNullException(nameof(provider));
+            }
+            
+            Factory = provider.Require<T>;
+        }
+
         private static T Create()
         {
-            return (T) Activator.CreateInstance(typeof(T), true)!;
+            return Activator.CreateInstance(typeof(T), true) as T ?? throw new InvalidOperationException();
         }
-
+        
         public static SingletonWindow<T> Initialize(Boolean exit)
         {
-            return Initialize(null, exit);
+            return Initialize((Func<T>?) null, exit);
         }
-
+        
+        public static Boolean Initialize(Boolean exit, out SingletonWindow<T> result)
+        {
+            return Initialize((Func<T>?) null, exit, out result);
+        }
+        
         public static SingletonWindow<T> Initialize(Func<T>? factory)
         {
             return Initialize(factory, false);
         }
-
+        
         public static SingletonWindow<T> Initialize(Func<T>? factory, Boolean exit)
         {
             lock (SyncRoot)
@@ -84,6 +103,74 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
                 }
 
                 return _singleton = new SingletonWindow<T>(factory ?? Create) { IsExitOnFocusLost = exit };
+            }
+        }
+        
+        public static Boolean Initialize(Func<T>? factory, out SingletonWindow<T> result)
+        {
+            return Initialize(factory, false, out result);
+        }
+        
+        public static Boolean Initialize(Func<T>? factory, Boolean exit, out SingletonWindow<T> result)
+        {
+            lock (SyncRoot)
+            {
+                if (_singleton is not null)
+                {
+                    result = _singleton;
+                    return false;
+                }
+
+                result = _singleton = new SingletonWindow<T>(factory ?? Create) { IsExitOnFocusLost = exit };
+                return true;
+            }
+        }
+
+        public static SingletonWindow<T> Initialize(IWindowServiceProvider provider)
+        {
+            return Initialize(provider, false);
+        }
+
+        public static SingletonWindow<T> Initialize(IWindowServiceProvider provider, Boolean exit)
+        {
+            if (provider is null)
+            {
+                throw new ArgumentNullException(nameof(provider));
+            }
+            
+            lock (SyncRoot)
+            {
+                if (_singleton is not null)
+                {
+                    throw new AlreadyInitializedException("Singleton window is already initialized");
+                }
+
+                return _singleton = new SingletonWindow<T>(provider) { IsExitOnFocusLost = exit };
+            }
+        }
+        
+        public static Boolean Initialize(IWindowServiceProvider provider, out SingletonWindow<T> result)
+        {
+            return Initialize(provider, false, out result);
+        }
+        
+        public static Boolean Initialize(IWindowServiceProvider provider, Boolean exit, out SingletonWindow<T> result)
+        {
+            if (provider is null)
+            {
+                throw new ArgumentNullException(nameof(provider));
+            }
+            
+            lock (SyncRoot)
+            {
+                if (_singleton is not null)
+                {
+                    result = _singleton;
+                    return false;
+                }
+                
+                result = _singleton = new SingletonWindow<T>(provider) { IsExitOnFocusLost = exit };
+                return true;
             }
         }
         
@@ -137,7 +224,35 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
                 return null;
             }
         }
-
+        
+        public InterfaceDialogResult ShowDialogResult()
+        {
+            lock (SyncRoot)
+            {
+                if (_window is null)
+                {
+                    T window = Window;
+                    
+                    if (window is FixedWindow @fixed)
+                    {
+                        return @fixed.ShowDialog();
+                    }
+                    
+                    return InterfaceDialogResultUtilities.ToInterfaceDialogResult(window.ShowDialog());
+                }
+                
+                if (Watcher.UpdateNow(TimeDelay, TimeWatcherComparison.GreaterOrEqualAbsolute) && (Window.WindowState == WindowState.Minimized || !Window.IsActive))
+                {
+                    Window.WindowState = WindowState.Normal;
+                    Window.Activate();
+                    return InterfaceDialogResult.Cancel;
+                }
+                
+                Window.Close();
+                return InterfaceDialogResult.None;
+            }
+        }
+        
         public Boolean? Hide()
         {
             lock (SyncRoot)
@@ -217,9 +332,31 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
             return SingletonWindow<TWindow>.Singleton.Activate() is not null;
         }
         
+        public static Boolean Activate<TWindow>(IWindowServiceProvider provider) where TWindow : Window
+        {
+            if (provider is null)
+            {
+                throw new ArgumentNullException(nameof(provider));
+            }
+            
+            SingletonWindow<TWindow>.Initialize(provider, out SingletonWindow<TWindow> window);
+            return window.Activate() is not null;
+        }
+        
         public static Boolean Show<TWindow>() where TWindow : Window
         {
             return SingletonWindow<TWindow>.Singleton.Show() is not null;
+        }
+        
+        public static Boolean Show<TWindow>(IWindowServiceProvider provider) where TWindow : Window
+        {
+            if (provider is null)
+            {
+                throw new ArgumentNullException(nameof(provider));
+            }
+            
+            SingletonWindow<TWindow>.Initialize(provider, out SingletonWindow<TWindow> window);
+            return window.Show() is not null;
         }
         
         public static Boolean ShowDialog<TWindow>() where TWindow : Window
@@ -227,14 +364,63 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
             return SingletonWindow<TWindow>.Singleton.ShowDialog() is not null;
         }
         
+        public static Boolean ShowDialog<TWindow>(IWindowServiceProvider provider) where TWindow : Window
+        {
+            if (provider is null)
+            {
+                throw new ArgumentNullException(nameof(provider));
+            }
+            
+            SingletonWindow<TWindow>.Initialize(provider, out SingletonWindow<TWindow> window);
+            return window.ShowDialog() is not null;
+        }
+        
+        public static InterfaceDialogResult ShowDialogResult<TWindow>() where TWindow : Window
+        {
+            return SingletonWindow<TWindow>.Singleton.ShowDialogResult();
+        }
+        
+        public static InterfaceDialogResult ShowDialogResult<TWindow>(IWindowServiceProvider provider) where TWindow : Window
+        {
+            if (provider is null)
+            {
+                throw new ArgumentNullException(nameof(provider));
+            }
+            
+            SingletonWindow<TWindow>.Initialize(provider, out SingletonWindow<TWindow> window);
+            return window.ShowDialogResult();
+        }
+        
         public static Boolean Hide<TWindow>() where TWindow : Window
         {
             return SingletonWindow<TWindow>.Singleton.Hide() is not false;
         }
         
+        public static Boolean Hide<TWindow>(IWindowServiceProvider provider) where TWindow : Window
+        {
+            if (provider is null)
+            {
+                throw new ArgumentNullException(nameof(provider));
+            }
+            
+            SingletonWindow<TWindow>.Initialize(provider, out SingletonWindow<TWindow> window);
+            return window.Hide() is not false;
+        }
+        
         public static Boolean Close<TWindow>() where TWindow : Window
         {
             return SingletonWindow<TWindow>.Singleton.Close();
+        }
+        
+        public static Boolean Close<TWindow>(IWindowServiceProvider provider) where TWindow : Window
+        {
+            if (provider is null)
+            {
+                throw new ArgumentNullException(nameof(provider));
+            }
+            
+            SingletonWindow<TWindow>.Initialize(provider, out SingletonWindow<TWindow> window);
+            return window.Close();
         }
     }
 }

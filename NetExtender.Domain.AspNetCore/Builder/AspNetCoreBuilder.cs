@@ -45,25 +45,37 @@ namespace NetExtender.Domains.AspNetCore.Builder
     {
         protected override TType New<TType>(ImmutableArray<String> arguments)
         {
-            if (typeof(TType) == typeof(WebApplication))
+            try
             {
-                WebApplication builder = WebApplication.Create(arguments.ToArray());
-                return builder as TType ?? throw new InvalidOperationException();
+                Arguments = arguments;
+                
+                if (typeof(TType) == typeof(WebApplication))
+                {
+                    WebApplication builder = WebApplication.Create(Arguments?.ToArray() ?? Array.Empty<String>());
+                    return builder as TType ?? throw new InvalidOperationException();
+                }
+                
+                if (typeof(TType) == typeof(WebApplicationBuilder))
+                {
+                    WebApplicationBuilder builder = WebApplication.CreateBuilder(Arguments?.ToArray() ?? Array.Empty<String>());
+                    return builder as TType ?? throw new InvalidOperationException();
+                }
+                
+                if (typeof(TType) == typeof(WebApplicationBuilderWrapper))
+                {
+                    WebApplicationBuilderWrapper builder = new WebApplicationBuilderWrapper(Arguments?.ToArray() ?? Array.Empty<String>());
+                    return builder as TType ?? throw new InvalidOperationException();
+                }
+                
+                return base.New<TType>(Arguments ?? ImmutableArray<String>.Empty);
             }
-
-            if (typeof(TType) == typeof(WebApplicationBuilder))
+            finally
             {
-                WebApplicationBuilder builder = WebApplication.CreateBuilder(arguments.ToArray());
-                return builder as TType ?? throw new InvalidOperationException();
+                if (Confidential)
+                {
+                    Arguments = null;
+                }
             }
-
-            if (typeof(TType) == typeof(WebApplicationBuilderWrapper))
-            {
-                WebApplicationBuilderWrapper builder = new WebApplicationBuilderWrapper(arguments.ToArray());
-                return builder as TType ?? throw new InvalidOperationException();
-            }
-            
-            return base.New<TType>(arguments);
         }
 
         public override T Build(ImmutableArray<String> arguments)
@@ -124,25 +136,37 @@ namespace NetExtender.Domains.AspNetCore.Builder
     {
         protected override TType New<TType>(ImmutableArray<String> arguments)
         {
-            if (typeof(TType) == typeof(WebApplication))
+            try
             {
-                WebApplication builder = WebApplication.Create(arguments.ToArray());
-                return builder as TType ?? throw new InvalidOperationException();
+                Arguments = arguments;
+                
+                if (typeof(TType) == typeof(WebApplication))
+                {
+                    WebApplication builder = WebApplication.Create(Arguments?.ToArray() ?? Array.Empty<String>());
+                    return builder as TType ?? throw new InvalidOperationException();
+                }
+                
+                if (typeof(TType) == typeof(WebApplicationBuilder))
+                {
+                    WebApplicationBuilder builder = WebApplication.CreateBuilder(Arguments?.ToArray() ?? Array.Empty<String>());
+                    return builder as TType ?? throw new InvalidOperationException();
+                }
+                
+                if (typeof(TType) == typeof(WebApplicationBuilderWrapper))
+                {
+                    WebApplicationBuilderWrapper builder = new WebApplicationBuilderWrapper(Arguments?.ToArray() ?? Array.Empty<String>());
+                    return builder as TType ?? throw new InvalidOperationException();
+                }
+                
+                return base.New<TType>(Arguments ?? ImmutableArray<String>.Empty);
             }
-
-            if (typeof(TType) == typeof(WebApplicationBuilder))
+            finally
             {
-                WebApplicationBuilder builder = WebApplication.CreateBuilder(arguments.ToArray());
-                return builder as TType ?? throw new InvalidOperationException();
+                if (Confidential)
+                {
+                    Arguments = null;
+                }
             }
-
-            if (typeof(TType) == typeof(WebApplicationBuilderWrapper))
-            {
-                WebApplicationBuilderWrapper builder = new WebApplicationBuilderWrapper(arguments.ToArray());
-                return builder as TType ?? throw new InvalidOperationException();
-            }
-            
-            return base.New<TType>(arguments);
         }
         
         public override T Build(ImmutableArray<String> arguments)

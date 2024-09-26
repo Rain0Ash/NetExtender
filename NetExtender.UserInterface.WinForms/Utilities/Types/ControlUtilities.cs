@@ -23,9 +23,9 @@ namespace NetExtender.Utilities.UserInterface.Types
     public static class ControlUtilities
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void SetEnabled(Object? @object, Boolean enabled)
+        public static Control? SetEnabled(Object? @object, Boolean enabled)
         {
-            SetEnabled(@object as Control, enabled);
+            return SetEnabled(@object as Control, enabled);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -41,9 +41,9 @@ namespace NetExtender.Utilities.UserInterface.Types
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Enable(Object? @object)
+        public static Control? Enable(Object? @object)
         {
-            Enable(@object as Control);
+            return Enable(@object as Control);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -54,9 +54,9 @@ namespace NetExtender.Utilities.UserInterface.Types
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Disable(Object? @object)
+        public static Control? Disable(Object? @object)
         {
-            Disable(@object as Control);
+            return Disable(@object as Control);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -67,9 +67,9 @@ namespace NetExtender.Utilities.UserInterface.Types
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void SetVisible(Object? @object, Boolean visible)
+        public static Control? SetVisible(Object? @object, Boolean visible)
         {
-            SetVisible(@object as Control, visible);
+            return SetVisible(@object as Control, visible);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -85,9 +85,9 @@ namespace NetExtender.Utilities.UserInterface.Types
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Visible(Object? @object)
+        public static Control? Visible(Object? @object)
         {
-            Visible(@object as Control);
+            return Visible(@object as Control);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -98,9 +98,9 @@ namespace NetExtender.Utilities.UserInterface.Types
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Invisible(Object? @object)
+        public static Control? Invisible(Object? @object)
         {
-            Invisible(@object as Control);
+            return Invisible(@object as Control);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

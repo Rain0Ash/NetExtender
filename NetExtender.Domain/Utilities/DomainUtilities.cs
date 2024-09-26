@@ -95,7 +95,7 @@ namespace NetExtender.Domains.Utilities
             const BindingFlags binding = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.CreateInstance;
             if (type.GetConstructor(binding, Type.EmptyTypes) is null)
             {
-                throw new TypeNotSupportedException(type, $"Type '{type}' must have .ctor().");
+                throw new TypeNotSupportedException(type, $"Type '{type}' must have {ReflectionUtilities.Constructor}().");
             }
             
             return type;

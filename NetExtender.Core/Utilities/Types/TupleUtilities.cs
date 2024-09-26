@@ -24,13 +24,13 @@ namespace NetExtender.Utilities.Types
         {
             typeof(Tuple<>), typeof(Tuple<,>), typeof(Tuple<,,>), typeof(Tuple<,,,>),
             typeof(Tuple<,,,,>), typeof(Tuple<,,,,,>), typeof(Tuple<,,,,,,>), typeof(Tuple<,,,,,,,>)
-        }.ToImmutableDictionary(type => type, ReflectionUtilities.GetGenericArgumentsCount);
+        }.ToImmutableDictionary(static type => type, ReflectionUtilities.GetGenericArgumentsCount);
 
         public static IImmutableDictionary<Type, Int32> ValueTupleType { get; } = new HashSet<Type>
         {
             typeof(ValueTuple<>), typeof(ValueTuple<,>), typeof(ValueTuple<,,>), typeof(ValueTuple<,,,>),
             typeof(ValueTuple<,,,,>), typeof(ValueTuple<,,,,,>), typeof(ValueTuple<,,,,,,>), typeof(ValueTuple<,,,,,,,>)
-        }.ToImmutableDictionary(type => type, ReflectionUtilities.GetGenericArgumentsCount);
+        }.ToImmutableDictionary(static type => type, ReflectionUtilities.GetGenericArgumentsCount);
         
         private static class TupleCache
         {

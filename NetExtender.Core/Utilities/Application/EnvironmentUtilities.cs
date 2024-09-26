@@ -309,6 +309,7 @@ namespace NetExtender.Utilities.Application
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [SuppressMessage("ReSharper", "GenericEnumeratorNotDisposed")]
         public static EnvironmentValueEntry[]? GetExistsValuesEnvironmentVariables(EnvironmentVariableTarget target)
         {
             try

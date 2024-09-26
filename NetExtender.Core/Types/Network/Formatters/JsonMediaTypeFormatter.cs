@@ -495,8 +495,8 @@ namespace NetExtender.Types.Network.Formatters
                 return base.ReadFromStream(type, stream, encoding, logger);
             }
 
-            stream = String.Equals(encoding.WebName, Utf8Encoding.WebName, StringComparison.OrdinalIgnoreCase) ? new UnclosableStreamWrapper(stream) : new TranscodingStream(stream, encoding, Utf8Encoding, true);
-            using XmlDictionaryReader reader = JsonReaderWriterFactory.CreateJsonReader(stream, Utf8Encoding, Quotas, null);
+            stream = String.Equals(encoding.WebName, UTF8Encoding.WebName, StringComparison.OrdinalIgnoreCase) ? new UnclosableStreamWrapper(stream) : new TranscodingStream(stream, encoding, UTF8Encoding, true);
+            using XmlDictionaryReader reader = JsonReaderWriterFactory.CreateJsonReader(stream, UTF8Encoding, Quotas, null);
             return GetDataContractSerializer(type).ReadObject(reader);
         }
 
@@ -536,13 +536,13 @@ namespace NetExtender.Types.Network.Formatters
 
             WritePreamble(stream, encoding);
 
-            if (String.Equals(encoding.WebName, Utf8Encoding.WebName, StringComparison.OrdinalIgnoreCase))
+            if (String.Equals(encoding.WebName, UTF8Encoding.WebName, StringComparison.OrdinalIgnoreCase))
             {
                 WriteObject(stream, delegating, value);
                 return;
             }
 
-            using TranscodingStream transcoding = new TranscodingStream(stream, encoding, Utf8Encoding, true);
+            using TranscodingStream transcoding = new TranscodingStream(stream, encoding, UTF8Encoding, true);
             WriteObject(transcoding, delegating, value);
         }
 
@@ -573,7 +573,7 @@ namespace NetExtender.Types.Network.Formatters
 
         private void WriteObject(Stream stream, Type type, Object? value)
         {
-            using XmlWriter writer = JsonReaderWriterFactory.CreateJsonWriter(stream, Utf8Encoding, false);
+            using XmlWriter writer = JsonReaderWriterFactory.CreateJsonWriter(stream, UTF8Encoding, false);
             GetDataContractSerializer(type).WriteObject(writer, value);
         }
 

@@ -21,7 +21,6 @@ namespace NetExtender.Types.Dispatchers
         }
 
         private Dispatcher Dispatcher { get; }
-
         public event DispatcherShutdownStateEventHandler? Shutdown;
 
         public DispatcherWrapper(Dispatcher dispatcher)

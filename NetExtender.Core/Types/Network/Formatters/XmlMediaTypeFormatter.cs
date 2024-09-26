@@ -246,8 +246,8 @@ namespace NetExtender.Types.Network.Formatters
             }
 
             Encoding encoding = SelectCharacterEncoding(content.Headers);
-            stream = String.Equals(encoding.WebName, Utf8Encoding.WebName, StringComparison.OrdinalIgnoreCase) ? new UnclosableStreamWrapper(stream) : new TranscodingStream(stream, encoding, Utf8Encoding, true);
-            return XmlDictionaryReader.CreateTextReader(stream, Utf8Encoding, Quotas, null);
+            stream = String.Equals(encoding.WebName, UTF8Encoding.WebName, StringComparison.OrdinalIgnoreCase) ? new UnclosableStreamWrapper(stream) : new TranscodingStream(stream, encoding, UTF8Encoding, true);
+            return XmlDictionaryReader.CreateTextReader(stream, UTF8Encoding, Quotas, null);
         }
 
         protected internal virtual XmlWriter CreateXmlWriter(Stream stream, HttpContent content)
@@ -264,9 +264,9 @@ namespace NetExtender.Types.Network.Formatters
 
             Encoding encoding = SelectCharacterEncoding(content.Headers);
             WritePreamble(stream, encoding);
-            Stream output = String.Equals(encoding.WebName, Utf8Encoding.WebName, StringComparison.OrdinalIgnoreCase) ? stream : new TranscodingStream(stream, encoding, Utf8Encoding, true);
+            Stream output = String.Equals(encoding.WebName, UTF8Encoding.WebName, StringComparison.OrdinalIgnoreCase) ? stream : new TranscodingStream(stream, encoding, UTF8Encoding, true);
             XmlWriterSettings settings = Settings.Clone();
-            settings.Encoding = Utf8Encoding;
+            settings.Encoding = UTF8Encoding;
             settings.CloseOutput = stream != output;
             return XmlWriter.Create(output, settings);
         }

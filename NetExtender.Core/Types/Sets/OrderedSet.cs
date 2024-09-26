@@ -14,7 +14,7 @@ using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Sets
 {
-    public class OrderedSet<T> : ISet, ISet<T>
+    public class OrderedSet<T> : ISet, ISet<T>, IReadOnlySet<T>
     {
         private NullableDictionary<T, LinkedListNode<T>> Node { get; }
         private LinkedList<T> Linked { get; }
@@ -32,6 +32,22 @@ namespace NetExtender.Types.Sets
             get
             {
                 return Node.Count;
+            }
+        }
+        
+        public T First
+        {
+            get
+            {
+                return Linked.First is { } node ? node.ValueRef : throw new InvalidOperationException();
+            }
+        }
+        
+        public T Last
+        {
+            get
+            {
+                return Linked.Last is { } node ? node.ValueRef : throw new InvalidOperationException();
             }
         }
 
@@ -350,14 +366,12 @@ namespace NetExtender.Types.Sets
 
         public Boolean Remove(T item)
         {
-            if (!Node.TryGetValue(item, out LinkedListNode<T>? node))
+            if (!Node.Remove(item, out LinkedListNode<T>? node))
             {
                 return false;
             }
-
-            Node.Remove(item);
+            
             Linked.Remove(node);
-
             return true;
         }
 
@@ -397,8 +411,13 @@ namespace NetExtender.Types.Sets
 
             Linked.CopyTo(array, arrayIndex);
         }
-
-        public IEnumerator<T> GetEnumerator()
+        
+        public LinkedList<T>.Enumerator GetEnumerator()
+        {
+            return Linked.GetEnumerator();
+        }
+        
+        IEnumerator<T> IEnumerable<T>.GetEnumerator()
         {
             return Linked.GetEnumerator();
         }

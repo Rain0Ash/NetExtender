@@ -4,10 +4,11 @@
 using System.Windows;
 using NetExtender.Types.Singletons;
 using NetExtender.Types.Singletons.Interfaces;
+using NetExtender.WindowsPresentation.Types;
 using NetExtender.WindowsPresentation.Utilities;
 using ReactiveUI;
 
-namespace NetExtender.WindowsPresentation.ReactiveUI.Types.Models
+namespace NetExtender.WindowsPresentation.ReactiveUI
 {
     public abstract class ReactiveViewModel<TWindow> : ReactiveViewModel where TWindow : Window
     {
@@ -16,6 +17,13 @@ namespace NetExtender.WindowsPresentation.ReactiveUI.Types.Models
     
     public abstract class ReactiveViewModel : ReactiveObject
     {
+        protected static WindowsPresentationServiceProvider Provider
+        {
+            get
+            {
+                return WindowsPresentationServiceProvider.Instance;
+            }
+        }
     }
 
     public abstract class ReactiveViewModelSingleton<T> : ReactiveViewModel where T : ReactiveViewModel, new()

@@ -44,18 +44,18 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IQueryable<T> WhereNotNull<T>(this IQueryable<T> source)
+        public static IQueryable<T> WhereNotNull<T>(this IQueryable<T?> source)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return source.Where(item => item != null);
+            return source.Where(item => item != null)!;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IQueryable<T> WhereNotNull<T>(this IQueryable<T> source, Expression<Func<T, Boolean>> predicate)
+        public static IQueryable<T> WhereNotNull<T>(this IQueryable<T?> source, Expression<Func<T, Boolean>> predicate)
         {
             if (source is null)
             {
@@ -71,7 +71,7 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IQueryable<T> WhereNotNull<T>(this IQueryable<T> source, Expression<Func<T, Int32, Boolean>> predicate)
+        public static IQueryable<T> WhereNotNull<T>(this IQueryable<T?> source, Expression<Func<T, Int32, Boolean>> predicate)
         {
             if (source is null)
             {

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Windows;
 using NetExtender.Types.Entities;
 using NetExtender.Types.Enums;
@@ -109,7 +110,16 @@ namespace NetExtender.UserInterface.WindowsPresentation.Types.ComboBoxes
             HorizontalContentAlignment = HorizontalAlignment.Center;
             VerticalContentAlignment = VerticalAlignment.Center;
         }
-
+        
+        public EnumComboBox(Type type)
+        {
+            Type = type ?? throw new ArgumentNullException(nameof(type));
+            
+            Initialized += OnInitialized;
+            HorizontalContentAlignment = HorizontalAlignment.Center;
+            VerticalContentAlignment = VerticalAlignment.Center;
+        }
+        
         protected virtual void OnInitialized(Object? sender, EventArgs args)
         {
             SetItemsSource();
@@ -149,10 +159,27 @@ namespace NetExtender.UserInterface.WindowsPresentation.Types.ComboBoxes
                 base.Type = value;
             }
         }
-        
+
         public EnumComboBox()
+            : base(typeof(Enum<T>))
         {
-            base.Type = typeof(Enum<T>);
+        }
+        
+        protected EnumComboBox(Type type)
+            : base(type)
+        {
+        }
+        
+#pragma warning disable CS0693 // Type parameter has the same name as the type parameter from outer type
+        protected override View<TEnum> Convert<TEnum>(TEnum value)
+        {
+            return value is T @enum ? Unsafe.As<View<TEnum>>(Convert(@enum)) : base.Convert(value);
+        }
+#pragma warning restore CS0693 // Type parameter has the same name as the type parameter from outer type
+        
+        protected virtual View<T> Convert(T value)
+        {
+            return value;
         }
 
         public override void SetItemsSource()
@@ -189,8 +216,25 @@ namespace NetExtender.UserInterface.WindowsPresentation.Types.ComboBoxes
     public class EnumComboBox<T, TEnum> : EnumComboBox<T> where T : unmanaged, Enum where TEnum : Enum<T, TEnum>, new()
     {
         public EnumComboBox()
+            : base(typeof(TEnum))
         {
-            Type = typeof(TEnum);
+        }
+        
+        protected EnumComboBox(Type type)
+            : base(type)
+        {
+        }
+        
+#pragma warning disable CS0693 // Type parameter has the same name as the type parameter from outer type
+        protected override View<T> Convert<T>(T value)
+        {
+            return value is TEnum @enum ? Unsafe.As<View<T>>(Convert(@enum)) : base.Convert(value);
+        }
+#pragma warning restore CS0693 // Type parameter has the same name as the type parameter from outer type
+        
+        protected virtual View<TEnum> Convert(TEnum value)
+        {
+            return value;
         }
         
         public override void SetItemsSource()

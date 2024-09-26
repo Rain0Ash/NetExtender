@@ -1,10 +1,13 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
+using NetExtender.Types.Exceptions;
 
 namespace NetExtender.Utilities.UserInterface.Types
 {
@@ -17,9 +20,9 @@ namespace NetExtender.Utilities.UserInterface.Types
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void SetIsEnabled(Object? @object, Boolean enabled)
+        public static Control? SetIsEnabled(Object? @object, Boolean enabled)
         {
-            SetIsEnabled(@object as Control, enabled);
+            return SetIsEnabled(@object as Control, enabled);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -35,6 +38,54 @@ namespace NetExtender.Utilities.UserInterface.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IDisposable SetIsEnabled(Boolean enabled, Object? @object)
+        {
+            IsEnabledTransaction transaction = new IsEnabledTransaction(@object as Control);
+            foreach ((Control control, _) in transaction)
+            {
+                SetIsEnabled(control, enabled);
+            }
+
+            return transaction;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IDisposable SetIsEnabled(Boolean enabled, Object? first, Object? second)
+        {
+            IsEnabledTransaction transaction = new IsEnabledTransaction(first as Control, second as Control);
+            foreach ((Control control, _) in transaction)
+            {
+                SetIsEnabled(control, enabled);
+            }
+
+            return transaction;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IDisposable SetIsEnabled(Boolean enabled, Object? first, Object? second, Object? third)
+        {
+            IsEnabledTransaction transaction = new IsEnabledTransaction(first as Control, second as Control, third as Control);
+            foreach ((Control control, _) in transaction)
+            {
+                SetIsEnabled(control, enabled);
+            }
+
+            return transaction;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IDisposable SetIsEnabled(Boolean enabled, Object? first, Object? second, Object? third, Object? fourth)
+        {
+            IsEnabledTransaction transaction = new IsEnabledTransaction(first as Control, second as Control, third as Control, fourth as Control);
+            foreach ((Control control, _) in transaction)
+            {
+                SetIsEnabled(control, enabled);
+            }
+
+            return transaction;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [return: NotNullIfNotNull("objects")]
         public static IDisposable? SetIsEnabled(Boolean enabled, params Object?[]? objects)
         {
@@ -43,19 +94,13 @@ namespace NetExtender.Utilities.UserInterface.Types
                 return null;
             }
 
-            IDisposable transaction = new IsEnabledTransaction(objects);
-            foreach (Object? @object in objects)
+            IsEnabledTransaction transaction = new IsEnabledTransaction(objects);
+            foreach ((Control control, _) in transaction)
             {
-                SetIsEnabled(@object, enabled);
+                SetIsEnabled(control, enabled);
             }
 
             return transaction;
-        }
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Enable(Object? @object)
-        {
-            Enable(@object as Control);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -64,7 +109,31 @@ namespace NetExtender.Utilities.UserInterface.Types
         {
             return SetIsEnabled(control, true);
         }
-
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IDisposable Enable(Object? @object)
+        {
+            return SetIsEnabled(true, @object);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IDisposable Enable(Object? first, Object? second)
+        {
+            return SetIsEnabled(true, first, second);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IDisposable Enable(Object? first, Object? second, Object? third)
+        {
+            return SetIsEnabled(true, first, second, third);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IDisposable Enable(Object? first, Object? second, Object? third, Object? fourth)
+        {
+            return SetIsEnabled(true, first, second, third, fourth);
+        }
+        
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [return: NotNullIfNotNull("objects")]
         public static IDisposable? Enable(params Object?[]? objects)
@@ -73,18 +142,36 @@ namespace NetExtender.Utilities.UserInterface.Types
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Disable(Object? @object)
-        {
-            Disable(@object as Control);
-        }
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [return: NotNullIfNotNull("control")]
         public static T? Disable<T>(this T? control) where T : Control
         {
             return SetIsEnabled(control, false);
         }
-
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IDisposable Disable(Object? @object)
+        {
+            return SetIsEnabled(false, @object);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IDisposable Disable(Object? first, Object? second)
+        {
+            return SetIsEnabled(false, first, second);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IDisposable Disable(Object? first, Object? second, Object? third)
+        {
+            return SetIsEnabled(false, first, second, third);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IDisposable Disable(Object? first, Object? second, Object? third, Object? fourth)
+        {
+            return SetIsEnabled(false, first, second, third, fourth);
+        }
+        
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [return: NotNullIfNotNull("objects")]
         public static IDisposable? Disable(params Object?[]? objects)
@@ -93,9 +180,9 @@ namespace NetExtender.Utilities.UserInterface.Types
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void SetVisibility(Object? @object, Visibility visibility)
+        public static Control? SetVisibility(Object? @object, Visibility visibility)
         {
-            SetVisibility(@object as Control, visibility);
+            return SetVisibility(@object as Control, visibility);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -109,6 +196,54 @@ namespace NetExtender.Utilities.UserInterface.Types
             
             return control;
         }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IDisposable SetVisibility(Visibility visibility, Object? @object)
+        {
+            VisibilityTransaction transaction = new VisibilityTransaction(@object as Control);
+            foreach ((Control control, _) in transaction)
+            {
+                SetVisibility(control, visibility);
+            }
+            
+            return transaction;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IDisposable SetVisibility(Visibility visibility, Object? first, Object? second)
+        {
+            VisibilityTransaction transaction = new VisibilityTransaction(first as Control, second as Control);
+            foreach ((Control control, _) in transaction)
+            {
+                SetVisibility(control, visibility);
+            }
+            
+            return transaction;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IDisposable SetVisibility(Visibility visibility, Object? first, Object? second, Object? third)
+        {
+            VisibilityTransaction transaction = new VisibilityTransaction(first as Control, second as Control, third as Control);
+            foreach ((Control control, _) in transaction)
+            {
+                SetVisibility(control, visibility);
+            }
+            
+            return transaction;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IDisposable SetVisibility(Visibility visibility, Object? first, Object? second, Object? third, Object? fourth)
+        {
+            VisibilityTransaction transaction = new VisibilityTransaction(first as Control, second as Control, third as Control, fourth as Control);
+            foreach ((Control control, _) in transaction)
+            {
+                SetVisibility(control, visibility);
+            }
+
+            return transaction;
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [return: NotNullIfNotNull("objects")]
@@ -119,19 +254,13 @@ namespace NetExtender.Utilities.UserInterface.Types
                 return null;
             }
 
-            IDisposable transaction = new VisibilityTransaction(objects);
-            foreach (Object? @object in objects)
+            VisibilityTransaction transaction = new VisibilityTransaction(objects);
+            foreach ((Control control, _) in transaction)
             {
-                SetVisibility(@object, visibility);
+                SetVisibility(control, visibility);
             }
 
             return transaction;
-        }
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Visible(Object? @object)
-        {
-            Visible(@object as Control);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -139,6 +268,30 @@ namespace NetExtender.Utilities.UserInterface.Types
         public static T? Visible<T>(this T? control) where T : Control
         {
             return SetVisibility(control, Visibility.Visible);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IDisposable Visible(Object? @object)
+        {
+            return SetVisibility(Visibility.Visible, @object);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IDisposable Visible(Object? first, Object? second)
+        {
+            return SetVisibility(Visibility.Visible, first, second);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IDisposable Visible(Object? first, Object? second, Object? third)
+        {
+            return SetVisibility(Visibility.Visible, first, second, third);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IDisposable Visible(Object? first, Object? second, Object? third, Object? fourth)
+        {
+            return SetVisibility(Visibility.Visible, first, second, third, fourth);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -149,18 +302,36 @@ namespace NetExtender.Utilities.UserInterface.Types
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Hidden(Object? @object)
-        {
-            Hidden(@object as Control);
-        }
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [return: NotNullIfNotNull("control")]
         public static T? Hidden<T>(this T? control) where T : Control
         {
             return SetVisibility(control, Visibility.Hidden);
         }
-
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IDisposable Hidden(Object? @object)
+        {
+            return SetVisibility(Visibility.Hidden, @object);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IDisposable Hidden(Object? first, Object? second)
+        {
+            return SetVisibility(Visibility.Hidden, first, second);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IDisposable Hidden(Object? first, Object? second, Object? third)
+        {
+            return SetVisibility(Visibility.Hidden, first, second, third);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IDisposable Hidden(Object? first, Object? second, Object? third, Object? fourth)
+        {
+            return SetVisibility(Visibility.Hidden, first, second, third, fourth);
+        }
+        
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [return: NotNullIfNotNull("objects")]
         public static IDisposable? Hidden(params Object?[]? objects)
@@ -169,28 +340,89 @@ namespace NetExtender.Utilities.UserInterface.Types
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Collapsed(Object? @object)
-        {
-            Collapsed(@object as Control);
-        }
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [return: NotNullIfNotNull("control")]
         public static T? Collapsed<T>(this T? control) where T : Control
         {
             return SetVisibility(control, Visibility.Collapsed);
         }
-
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IDisposable Collapsed(Object? @object)
+        {
+            return SetVisibility(Visibility.Collapsed, @object);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IDisposable Collapsed(Object? first, Object? second)
+        {
+            return SetVisibility(Visibility.Collapsed, first, second);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IDisposable Collapsed(Object? first, Object? second, Object? third)
+        {
+            return SetVisibility(Visibility.Collapsed, first, second, third);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IDisposable Collapsed(Object? first, Object? second, Object? third, Object? fourth)
+        {
+            return SetVisibility(Visibility.Collapsed, first, second, third, fourth);
+        }
+        
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [return: NotNullIfNotNull("objects")]
         public static IDisposable? Collapsed(params Object?[]? objects)
         {
             return SetVisibility(Visibility.Collapsed, objects);
         }
-
-        private sealed class IsEnabledTransaction : IDisposable
+        
+        private abstract class Transaction<T> : IDisposable, IReadOnlyList<T>
         {
-            private Dictionary<Control, Boolean> Container { get; }
+            public abstract Int32 Count { get; }
+            
+            public abstract IEnumerator<T> GetEnumerator();
+            
+            IEnumerator IEnumerable.GetEnumerator()
+            {
+                return GetEnumerator();
+            }
+            
+            public abstract void Dispose();
+            public abstract T this[Int32 index] { get; }
+        }
+
+        private sealed class IsEnabledTransaction : Transaction<KeyValuePair<Control, Boolean>>
+        {
+            private Transaction<KeyValuePair<Control, Boolean>> Container { get; }
+            
+            public override Int32 Count
+            {
+                get
+                {
+                    return Container.Count;
+                }
+            }
+            
+            public IsEnabledTransaction(Control? control)
+            {
+                Container = new Transaction(control);
+            }
+            
+            public IsEnabledTransaction(Control? first, Control? second)
+            {
+                Container = new Transaction(first, second);
+            }
+            
+            public IsEnabledTransaction(Control? first, Control? second, Control? third)
+            {
+                Container = new Transaction(first, second, third);
+            }
+            
+            public IsEnabledTransaction(Control? first, Control? second, Control? third, Control? fourth)
+            {
+                Container = new Transaction(first, second, third, fourth);
+            }
 
             public IsEnabledTransaction(IEnumerable<Object?> source)
             {
@@ -199,21 +431,229 @@ namespace NetExtender.Utilities.UserInterface.Types
                     throw new ArgumentNullException(nameof(source));
                 }
 
-                Container = source.OfType<Control>().Distinct().ToDictionary(control => control, control => control.IsEnabled);
+                Container = new ArrayTransaction(source);
+            }
+            
+            public override IEnumerator<KeyValuePair<Control, Boolean>> GetEnumerator()
+            {
+                return Container.GetEnumerator();
+            }
+            
+            public override void Dispose()
+            {
+                Container.Dispose();
+            }
+            
+            public override KeyValuePair<Control, Boolean> this[Int32 index]
+            {
+                get
+                {
+                    return Container[index];
+                }
             }
 
-            public void Dispose()
+            // ReSharper disable once MemberHidesStaticFromOuterClass
+            private sealed class Transaction : Transaction<KeyValuePair<Control, Boolean>>
             {
-                foreach ((Control control, Boolean value) in Container)
+                private readonly KeyValuePair<Control, Boolean>? First;
+                private readonly KeyValuePair<Control, Boolean>? Second;
+                private readonly KeyValuePair<Control, Boolean>? Third;
+                private readonly KeyValuePair<Control, Boolean>? Fourth;
+                
+                public override Int32 Count
                 {
-                    SetIsEnabled(control, value);
+                    get
+                    {
+                        Int32 i = 0;
+                        
+                        if (First is not null)
+                        {
+                            ++i;
+                        }
+                        
+                        if (Second is not null)
+                        {
+                            ++i;
+                        }
+                        
+                        if (Third is not null)
+                        {
+                            ++i;
+                        }
+                        
+                        if (Fourth is not null)
+                        {
+                            ++i;
+                        }
+                        
+                        return i;
+                    }
+                }
+                
+                public Transaction(Control? first = null, Control? second = null, Control? third = null, Control? fourth = null)
+                {
+                    First = Create(first);
+                    Second = Create(second);
+                    Third = Create(third);
+                    Fourth = Create(fourth);
+                }
+                
+                private static KeyValuePair<Control, Boolean>? Create(Control? control)
+                {
+                    return control is not null ? new KeyValuePair<Control, Boolean>(control, control.IsEnabled) : default;
+                }
+                
+                private static void Dispose(KeyValuePair<Control, Boolean>? pair)
+                {
+                    if (pair is { Key: { } key, Value: var value})
+                    {
+                        SetIsEnabled(key, value);
+                    }
+                }
+                
+                public override IEnumerator<KeyValuePair<Control, Boolean>> GetEnumerator()
+                {
+                    if (First is not null)
+                    {
+                        yield return First.Value;
+                    }
+                    
+                    if (Second is not null)
+                    {
+                        yield return Second.Value;
+                    }
+                    
+                    if (Third is not null)
+                    {
+                        yield return Third.Value;
+                    }
+                    
+                    if (Fourth is not null)
+                    {
+                        yield return Fourth.Value;
+                    }
+                }
+                
+                public override void Dispose()
+                {
+                    Dispose(Fourth);
+                    Dispose(Third);
+                    Dispose(Second);
+                    Dispose(First);
+                }
+                
+                public override KeyValuePair<Control, Boolean> this[Int32 index]
+                {
+                    get
+                    {
+                        if (index < 0 || index >= Count)
+                        {
+                            throw new ArgumentOutOfRangeException(nameof(index), index, null);
+                        }
+                        
+                        Int32 i = -1;
+                        if (First is not null && ++i == index)
+                        {
+                            return First.Value;
+                        }
+                        
+                        if (Second is not null && ++i == index)
+                        {
+                            return Second.Value;
+                        }
+                        
+                        if (Third is not null && ++i == index)
+                        {
+                            return Third.Value;
+                        }
+                        
+                        if (Fourth is not null && ++i == index)
+                        {
+                            return Fourth.Value;
+                        }
+                        
+                        throw new NeverOperationException();
+                    }
+                }
+            }
+            
+            private sealed class ArrayTransaction : Transaction<KeyValuePair<Control, Boolean>>
+            {
+                private ImmutableArray<KeyValuePair<Control, Boolean>> Container { get; }
+                
+                public override Int32 Count
+                {
+                    get
+                    {
+                        return Container.Length;
+                    }
+                }
+                
+                public ArrayTransaction(IEnumerable<Object?> source)
+                {
+                    if (source is null)
+                    {
+                        throw new ArgumentNullException(nameof(source));
+                    }
+                    
+                    Container = source.OfType<Control>().Distinct().Select(static control => new KeyValuePair<Control, Boolean>(control, control.IsEnabled)).ToImmutableArray();
+                }
+                
+                public override IEnumerator<KeyValuePair<Control, Boolean>> GetEnumerator()
+                {
+                    return ((IEnumerable<KeyValuePair<Control, Boolean>>) Container).GetEnumerator();
+                }
+                
+                public override void Dispose()
+                {
+                    for (Int32 index = Container.Length - 1; index >= 0; index--)
+                    {
+                        (Control control, Boolean value) = Container[index];
+                        SetIsEnabled(control, value);
+                    }
+                }
+                
+                public override KeyValuePair<Control, Boolean> this[Int32 index]
+                {
+                    get
+                    {
+                        return Container[index];
+                    }
                 }
             }
         }
-
-        private sealed class VisibilityTransaction : IDisposable
+        
+        private sealed class VisibilityTransaction : Transaction<KeyValuePair<Control, Visibility>>
         {
-            private Dictionary<Control, Visibility> Container { get; }
+            private Transaction<KeyValuePair<Control, Visibility>> Container { get; }
+            
+            public override Int32 Count
+            {
+                get
+                {
+                    return Container.Count;
+                }
+            }
+            
+            public VisibilityTransaction(Control? control)
+            {
+                Container = new Transaction(control);
+            }
+            
+            public VisibilityTransaction(Control? first, Control? second)
+            {
+                Container = new Transaction(first, second);
+            }
+            
+            public VisibilityTransaction(Control? first, Control? second, Control? third)
+            {
+                Container = new Transaction(first, second, third);
+            }
+            
+            public VisibilityTransaction(Control? first, Control? second, Control? third, Control? fourth)
+            {
+                Container = new Transaction(first, second, third, fourth);
+            }
 
             public VisibilityTransaction(IEnumerable<Object?> source)
             {
@@ -222,14 +662,194 @@ namespace NetExtender.Utilities.UserInterface.Types
                     throw new ArgumentNullException(nameof(source));
                 }
 
-                Container = source.OfType<Control>().Distinct().ToDictionary(control => control, control => control.Visibility);
+                Container = new ArrayTransaction(source);
+            }
+            
+            public override IEnumerator<KeyValuePair<Control, Visibility>> GetEnumerator()
+            {
+                return Container.GetEnumerator();
+            }
+            
+            public override void Dispose()
+            {
+                Container.Dispose();
+            }
+            
+            public override KeyValuePair<Control, Visibility> this[Int32 index]
+            {
+                get
+                {
+                    return Container[index];
+                }
             }
 
-            public void Dispose()
+            // ReSharper disable once MemberHidesStaticFromOuterClass
+            private sealed class Transaction : Transaction<KeyValuePair<Control, Visibility>>
             {
-                foreach ((Control control, Visibility value) in Container)
+                private readonly KeyValuePair<Control, Visibility>? First;
+                private readonly KeyValuePair<Control, Visibility>? Second;
+                private readonly KeyValuePair<Control, Visibility>? Third;
+                private readonly KeyValuePair<Control, Visibility>? Fourth;
+                
+                public override Int32 Count
                 {
-                    SetVisibility(control, value);
+                    get
+                    {
+                        Int32 i = 0;
+                        
+                        if (First is not null)
+                        {
+                            ++i;
+                        }
+                        
+                        if (Second is not null)
+                        {
+                            ++i;
+                        }
+                        
+                        if (Third is not null)
+                        {
+                            ++i;
+                        }
+                        
+                        if (Fourth is not null)
+                        {
+                            ++i;
+                        }
+                        
+                        return i;
+                    }
+                }
+                
+                public Transaction(Control? first = null, Control? second = null, Control? third = null, Control? fourth = null)
+                {
+                    First = Create(first);
+                    Second = Create(second);
+                    Third = Create(third);
+                    Fourth = Create(fourth);
+                }
+                
+                private static KeyValuePair<Control, Visibility>? Create(Control? control)
+                {
+                    return control is not null ? new KeyValuePair<Control, Visibility>(control, control.Visibility) : default;
+                }
+                
+                private static void Dispose(KeyValuePair<Control, Visibility>? pair)
+                {
+                    if (pair is { Key: { } key, Value: var value})
+                    {
+                        SetVisibility(key, value);
+                    }
+                }
+                
+                public override IEnumerator<KeyValuePair<Control, Visibility>> GetEnumerator()
+                {
+                    if (First is not null)
+                    {
+                        yield return First.Value;
+                    }
+                    
+                    if (Second is not null)
+                    {
+                        yield return Second.Value;
+                    }
+                    
+                    if (Third is not null)
+                    {
+                        yield return Third.Value;
+                    }
+                    
+                    if (Fourth is not null)
+                    {
+                        yield return Fourth.Value;
+                    }
+                }
+                
+                public override void Dispose()
+                {
+                    Dispose(Fourth);
+                    Dispose(Third);
+                    Dispose(Second);
+                    Dispose(First);
+                }
+                
+                public override KeyValuePair<Control, Visibility> this[Int32 index]
+                {
+                    get
+                    {
+                        if (index < 0 || index >= Count)
+                        {
+                            throw new ArgumentOutOfRangeException(nameof(index), index, null);
+                        }
+                        
+                        Int32 i = -1;
+                        if (First is not null && ++i == index)
+                        {
+                            return First.Value;
+                        }
+                        
+                        if (Second is not null && ++i == index)
+                        {
+                            return Second.Value;
+                        }
+                        
+                        if (Third is not null && ++i == index)
+                        {
+                            return Third.Value;
+                        }
+                        
+                        if (Fourth is not null && ++i == index)
+                        {
+                            return Fourth.Value;
+                        }
+                        
+                        throw new NeverOperationException();
+                    }
+                }
+            }
+            
+            private sealed class ArrayTransaction : Transaction<KeyValuePair<Control, Visibility>>
+            {
+                private ImmutableArray<KeyValuePair<Control, Visibility>> Container { get; }
+                
+                public override Int32 Count
+                {
+                    get
+                    {
+                        return Container.Length;
+                    }
+                }
+                
+                public ArrayTransaction(IEnumerable<Object?> source)
+                {
+                    if (source is null)
+                    {
+                        throw new ArgumentNullException(nameof(source));
+                    }
+                    
+                    Container = source.OfType<Control>().Distinct().Select(static control => new KeyValuePair<Control, Visibility>(control, control.Visibility)).ToImmutableArray();
+                }
+                
+                public override IEnumerator<KeyValuePair<Control, Visibility>> GetEnumerator()
+                {
+                    return ((IEnumerable<KeyValuePair<Control, Visibility>>) Container).GetEnumerator();
+                }
+                
+                public override void Dispose()
+                {
+                    for (Int32 index = Container.Length - 1; index >= 0; index--)
+                    {
+                        (Control control, Visibility value) = Container[index];
+                        SetVisibility(control, value);
+                    }
+                }
+                
+                public override KeyValuePair<Control, Visibility> this[Int32 index]
+                {
+                    get
+                    {
+                        return Container[index];
+                    }
                 }
             }
         }

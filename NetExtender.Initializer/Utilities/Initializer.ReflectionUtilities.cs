@@ -1,5 +1,5 @@
 using System;
-using System.Collections.Concurrent;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -13,8 +13,36 @@ namespace NetExtender.Initializer
     {
         internal static class ReflectionUtilities
         {
+            internal const String Constructor = ".ctor";
+            
+            internal static Type Any
+            {
+                get
+                {
+                    return typeof(Object);
+                }
+            }
+            
             private static IDynamicAssembly Assembly { get; } = new DynamicInitializerAssembly($"{nameof(Initializer)}<Seal>", AssemblyBuilderAccess.Run);
-            private static ConcurrentDictionary<Type, Type> Storage { get; } = new ConcurrentDictionary<Type, Type>();
+            
+            [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
+            internal static class Object
+            {
+                public static ConstructorInfo Constructor { get; }
+                public new static MethodInfo GetHashCode { get; }
+                public new static MethodInfo Equals { get; }
+                public new static MethodInfo ToString { get; }
+                
+                static Object()
+                {
+                    const BindingFlags binding = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+                    Type type = typeof(System.Object);
+                    Constructor = type.GetConstructor(binding | BindingFlags.CreateInstance, Type.EmptyTypes) ?? throw new MissingMethodException(type.FullName, ReflectionUtilities.Constructor);
+                    GetHashCode = type.GetMethod(nameof(GetHashCode), binding, Type.EmptyTypes) ?? throw new MissingMethodException(type.FullName, nameof(GetHashCode));
+                    Equals = type.GetMethod(nameof(Equals), binding, new []{ type }) ?? throw new MissingMethodException(type.FullName, nameof(Equals));
+                    ToString = type.GetMethod(nameof(ToString), binding, Type.EmptyTypes) ?? throw new MissingMethodException(type.FullName, nameof(ToString));
+                }
+            }
 
             internal class TypeSealException : NotSupportedException
             {
@@ -88,12 +116,12 @@ namespace NetExtender.Initializer
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             internal static Type Seal(Type type)
             {
-                return Seal(type, Assembly, Storage);
+                return Seal(type, Assembly);
             }
             
             // ReSharper disable once CognitiveComplexity
             [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-            internal static Type Seal(Type type, IDynamicAssembly assembly, ConcurrentDictionary<Type, Type>? storage)
+            internal static Type Seal(Type type, IDynamicAssembly assembly)
             {
                 if (type is null)
                 {
@@ -131,78 +159,110 @@ namespace NetExtender.Initializer
                     String @namespace = !String.IsNullOrWhiteSpace(type.Namespace) ? type.Namespace + "." : String.Empty;
                     TypeBuilder builder = assembly.Module.DefineType($"{@namespace}Seal(<{type.Name}>)", attributes, type);
                     
-                    const BindingFlags binding = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
-                    ConstructorInfo[] constructors = type.GetConstructors(binding);
-                    
-                    switch (constructors.Length)
-                    {
-                        case <= 0:
-                        {
-                            ConstructorBuilder constructor = builder.DefineConstructor(MethodAttributes.Public, CallingConventions.Standard, Type.EmptyTypes);
-                            ILGenerator generator = constructor.GetILGenerator();
-                            
-                            generator.Emit(OpCodes.Ldarg_0);
-                            generator.Emit(OpCodes.Call, typeof(Object).GetConstructor(Type.EmptyTypes)!);
-                            generator.Emit(OpCodes.Ret);
-                            break;
-                        }
-                        case 1 when constructors[0] is { IsFamily: true } info && info.GetParameters().Length <= 0:
-                        {
-                            ConstructorBuilder constructor = builder.DefineConstructor(MethodAttributes.Public, CallingConventions.Standard, Type.EmptyTypes);
-                            ILGenerator generator = constructor.GetILGenerator();
-                            
-                            generator.Emit(OpCodes.Ldarg_0);
-                            generator.Emit(OpCodes.Call, info);
-                            generator.Emit(OpCodes.Ret);
-                            break;
-                        }
-                        default:
-                        {
-                            foreach (ConstructorInfo info in constructors)
-                            {
-                                Type[] parameters = info.GetParameters().Select(static info => info.ParameterType).ToArray();
-                                ConstructorBuilder constructor = builder.DefineConstructor(info.Attributes, info.CallingConvention, parameters);
-                                
-                                ILGenerator generator = constructor.GetILGenerator();
-                                
-                                generator.Emit(OpCodes.Ldarg_0);
-                                
-                                for (Int32 i = 1; i <= parameters.Length; i++)
-                                {
-                                    generator.Emit(OpCodes.Ldarg, i);
-                                }
-                                
-                                generator.Emit(OpCodes.Call, info);
-                                generator.Emit(OpCodes.Ret);
-                            }
-                            
-                            break;
-                        }
-                    }
-                    
-                    static void ToString(Type type, TypeBuilder builder)
-                    {
-                        const BindingFlags binding = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
-                        if (type.GetMethod(nameof(ToString), binding, null, Type.EmptyTypes, null) is not { } @string || @string.DeclaringType != typeof(Object))
-                        {
-                            return;
-                        }
-                        
-                        MethodBuilder @override = builder.DefineMethod(nameof(ToString), MethodAttributes.Public | MethodAttributes.Virtual, typeof(String), Type.EmptyTypes);
-                        ILGenerator generator = @override.GetILGenerator();
-                        
-                        generator.Emit(OpCodes.Ldarg_0);
-                        generator.Emit(OpCodes.Call, typeof(Object).GetMethod(nameof(ToString), Type.EmptyTypes)!);
-                        generator.Emit(OpCodes.Ret);
-                        
-                        builder.DefineMethodOverride(@override, @string);
-                    }
-                    
-                    ToString(type, builder);
+                    InheritConstructor(builder, type);
+                    OverrideToString(builder, type);
                     return builder.CreateType() ?? throw new TypeSealException(type, "Unknown seal exception.");
                 }
+
+                return Create(type, assembly);
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+            internal static void InheritConstructor(TypeBuilder builder, Type type)
+            {
+                if (type is null)
+                {
+                    throw new ArgumentNullException(nameof(type));
+                }
                 
-                return storage is not null ? storage.GetOrAdd(type, Create, assembly) : Create(type, assembly);
+                if (builder is null)
+                {
+                    throw new ArgumentNullException(nameof(builder));
+                }
+                
+                const BindingFlags binding = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.CreateInstance;
+                ConstructorInfo[] constructors = type.GetConstructors(binding);
+                
+                switch (constructors.Length)
+                {
+                    case 0:
+                    {
+                        ConstructorBuilder constructor = builder.DefineConstructor(MethodAttributes.Public, CallingConventions.Standard, Type.EmptyTypes);
+                        ILGenerator generator = constructor.GetILGenerator();
+                        
+                        generator.Emit(OpCodes.Ldarg_0);
+                        generator.Emit(OpCodes.Call, Object.Constructor);
+                        generator.Emit(OpCodes.Ret);
+                        return;
+                    }
+                    case 1 when constructors[0] is { IsFamily: true } info && info.GetParameters().Length <= 0:
+                    {
+                        ConstructorBuilder constructor = builder.DefineConstructor(MethodAttributes.Public, CallingConventions.Standard, Type.EmptyTypes);
+                        ILGenerator generator = constructor.GetILGenerator();
+                        
+                        generator.Emit(OpCodes.Ldarg_0);
+                        generator.Emit(OpCodes.Call, info);
+                        generator.Emit(OpCodes.Ret);
+                        return;
+                    }
+                    default:
+                    {
+                        foreach (ConstructorInfo info in constructors)
+                        {
+                            Type[] parameters = info.GetParameters().Select(static info => info.ParameterType).ToArray();
+                            ConstructorBuilder constructor = builder.DefineConstructor(info.Attributes, info.CallingConvention, parameters);
+                            
+                            ILGenerator generator = constructor.GetILGenerator();
+                            
+                            generator.Emit(OpCodes.Ldarg_0);
+                            
+                            for (Int32 i = 1; i <= parameters.Length; i++)
+                            {
+                                generator.Emit(OpCodes.Ldarg, i);
+                            }
+                            
+                            generator.Emit(OpCodes.Call, info);
+                            generator.Emit(OpCodes.Ret);
+                        }
+                        
+                        return;
+                    }
+                }
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            private static void OverrideToString(TypeBuilder builder, Type type)
+            {
+                OverrideToString(builder, type, typeof(System.Object));
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+            internal static void OverrideToString(TypeBuilder builder, Type type, Type? @class)
+            {
+                if (builder is null)
+                {
+                    throw new ArgumentNullException(nameof(builder));
+                }
+
+                if (type is null)
+                {
+                    throw new ArgumentNullException(nameof(type));
+                }
+                
+                const BindingFlags binding = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+                if (type.GetMethod(nameof(ToString), binding, null, Type.EmptyTypes, null) is not { } @string || @class != Any && @string.DeclaringType != @class)
+                {
+                    throw new MissingMethodException(type.FullName, nameof(ToString));
+                }
+
+                MethodBuilder @override = builder.DefineMethod(nameof(ToString), MethodAttributes.Public | MethodAttributes.Virtual, typeof(String), Type.EmptyTypes);
+                ILGenerator generator = @override.GetILGenerator();
+                
+                generator.Emit(OpCodes.Ldarg_0);
+                generator.Emit(OpCodes.Call, Object.ToString);
+                generator.Emit(OpCodes.Ret);
+                
+                builder.DefineMethodOverride(@override, @string);
             }
         }
     }

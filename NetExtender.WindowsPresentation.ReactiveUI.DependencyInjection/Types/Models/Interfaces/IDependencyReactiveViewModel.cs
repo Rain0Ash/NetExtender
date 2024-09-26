@@ -1,6 +1,6 @@
 using NetExtender.DependencyInjection.Interfaces;
 
-namespace NetExtender.WindowsPresentation.ReactiveUI.Interfaces
+namespace NetExtender.WindowsPresentation.ReactiveUI
 {
     public interface ITransientReactiveViewModel : IDependencyReactiveViewModel, ITransient
     {
@@ -14,7 +14,7 @@ namespace NetExtender.WindowsPresentation.ReactiveUI.Interfaces
     {
     }
     
-    public interface IDependencyReactiveViewModel : IDependencyService, IDependencyViewModel
+    public interface IDependencyReactiveViewModel : IDependencyViewModel, IDependencyService
     {
     }
 }

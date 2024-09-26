@@ -4,9 +4,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 using System.Reflection;
 using NetExtender.Types.Exceptions;
-using NetExtender.Utilities.Core;
 
-namespace NetExtender.Utilities.Types
+namespace NetExtender.Utilities.Core
 {
     internal static class SRUtilities
     {
