@@ -4,17 +4,21 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Net.Http.Headers;
+using System.Runtime.CompilerServices;
+using System.Text;
 using System.Xml;
 using System.Xml.Linq;
+using NetExtender.Types.Network.Formatters.Interfaces;
 using NetExtender.Utilities.Network.Formatters;
 using NetExtender.Utilities.Types;
 using Newtonsoft.Json.Linq;
 
 namespace NetExtender.Types.Network.Formatters
 {
-    public class MediaTypeFormatterCollection : Collection<MediaTypeFormatter>
+    [SuppressMessage("ReSharper", "CognitiveComplexity")]
+    public class MediaTypeFormatterCollection : Collection<MediaTypeFormatter>, IMediaTypeFormatterCollection, IReadOnlyMediaTypeFormatterCollection
     {
         private MediaTypeFormatter[]? _formatters;
         internal MediaTypeFormatter[] WritingFormatters
@@ -99,35 +103,270 @@ namespace NetExtender.Types.Network.Formatters
                    typeof(Type).IsAssignableFrom(type) ||
                    type == typeof(Byte[]);
         }
-
-        public MediaTypeFormatter? FindReader(Type type, MediaTypeHeaderValue media)
+        
+        [SuppressMessage("ReSharper", "ForCanBeConvertedToForeach")]
+        public Boolean Contains(MediaTypeHeader media)
+        {
+            if (media.IsEmpty)
+            {
+                return false;
+            }
+            
+            for (Int32 i = 0; i < Items.Count; i++)
+            {
+                if (Items[i] is { } formatter && formatter.Contains(media))
+                {
+                    return true;
+                }
+            }
+            
+            return false;
+        }
+        
+        [SuppressMessage("ReSharper", "ForCanBeConvertedToForeach")]
+        public Boolean Contains(MediaTypeHeader media, Encoding encoding)
+        {
+            if (encoding is null)
+            {
+                throw new ArgumentNullException(nameof(encoding));
+            }
+            
+            if (media.IsEmpty)
+            {
+                return false;
+            }
+            
+            for (Int32 i = 0; i < Items.Count; i++)
+            {
+                if (Items[i] is { } formatter && formatter.Contains(media, encoding))
+                {
+                    return true;
+                }
+            }
+            
+            return false;
+        }
+        
+        public MediaTypeFormatter? FindReader(Type type)
         {
             if (type is null)
             {
                 throw new ArgumentNullException(nameof(type));
             }
-
-            if (media is null)
+            
+            return FindReaders(type).FirstOrDefault();
+        }
+        
+        IMediaTypeFormatter? IMediaTypeFormatterCollection.FindReader(Type type)
+        {
+            return FindReader(type);
+        }
+        
+        IReadOnlyMediaTypeFormatter? IReadOnlyMediaTypeFormatterCollection.FindReader(Type type)
+        {
+            return FindReader(type);
+        }
+        
+        public MediaTypeFormatter? FindReader(Type type, MediaTypeHeader media)
+        {
+            if (type is null)
             {
-                throw new ArgumentNullException(nameof(media));
+                throw new ArgumentNullException(nameof(type));
             }
-
-            return Items.WhereNotNull(reader => reader.CanReadType(type)).FirstOrDefault(reader => reader.SupportedMediaType.WhereNotNull().Any(value => value.IsSubsetOf(media)));
+            
+            return FindReaders(type, media).FirstOrDefault();
         }
 
-        public MediaTypeFormatter? FindWriter(Type type, MediaTypeHeaderValue media)
+        IMediaTypeFormatter? IMediaTypeFormatterCollection.FindReader(Type type, MediaTypeHeader media)
+        {
+            return FindReader(type, media);
+        }
+        
+        IReadOnlyMediaTypeFormatter? IReadOnlyMediaTypeFormatterCollection.FindReader(Type type, MediaTypeHeader media)
+        {
+            return FindReader(type, media);
+        }
+        
+        [SuppressMessage("ReSharper", "ForCanBeConvertedToForeach")]
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public IEnumerable<MediaTypeFormatter> FindReaders(Type type)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+            
+            for (Int32 i = 0; i < Items.Count; i++)
+            {
+                if (Items[i] is not { } reader || !reader.CanReadType(type))
+                {
+                    continue;
+                }
+                
+                yield return reader;
+            }
+        }
+        
+        IEnumerable<IMediaTypeFormatter> IMediaTypeFormatterCollection.FindReaders(Type type)
+        {
+            return FindReaders(type);
+        }
+        
+        IEnumerable<IReadOnlyMediaTypeFormatter> IReadOnlyMediaTypeFormatterCollection.FindReaders(Type type)
+        {
+            return FindReaders(type);
+        }
+        
+        [SuppressMessage("ReSharper", "ForCanBeConvertedToForeach")]
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public IEnumerable<MediaTypeFormatter> FindReaders(Type type, MediaTypeHeader media)
         {
             if (type is null)
             {
                 throw new ArgumentNullException(nameof(type));
             }
 
-            if (media is null)
+            if (media.IsEmpty)
             {
-                throw new ArgumentNullException(nameof(media));
+                yield break;
             }
+            
+            for (Int32 i = 0; i < Items.Count; i++)
+            {
+                if (Items[i] is not { } reader || !reader.CanReadType(type))
+                {
+                    continue;
+                }
 
-            return Items.WhereNotNull(writer => writer.CanWriteType(type)).FirstOrDefault(writer => writer.SupportedMediaType.WhereNotNull().Any(value => value.IsSubsetOf(media)));
+                foreach (MediaTypeHeader header in reader.SupportedMediaType)
+                {
+                    if (header is { Value: { } value } && value.IsSubsetOf(media.Value))
+                    {
+                        yield return reader;
+                    }
+                }
+            }
+        }
+
+        IEnumerable<IMediaTypeFormatter> IMediaTypeFormatterCollection.FindReaders(Type type, MediaTypeHeader media)
+        {
+            return FindReaders(type, media);
+        }
+        
+        IEnumerable<IReadOnlyMediaTypeFormatter> IReadOnlyMediaTypeFormatterCollection.FindReaders(Type type, MediaTypeHeader media)
+        {
+            return FindReaders(type, media);
+        }
+        
+        public MediaTypeFormatter? FindWriter(Type type)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+            
+            return FindWriters(type).FirstOrDefault();
+        }
+        
+        IMediaTypeFormatter? IMediaTypeFormatterCollection.FindWriter(Type type)
+        {
+            return FindWriter(type);
+        }
+        
+        IReadOnlyMediaTypeFormatter? IReadOnlyMediaTypeFormatterCollection.FindWriter(Type type)
+        {
+            return FindWriter(type);
+        }
+        
+        public MediaTypeFormatter? FindWriter(Type type, MediaTypeHeader media)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+            
+            return FindWriters(type, media).FirstOrDefault();
+        }
+        
+        IMediaTypeFormatter? IMediaTypeFormatterCollection.FindWriter(Type type, MediaTypeHeader media)
+        {
+            return FindWriter(type, media);
+        }
+        
+        IReadOnlyMediaTypeFormatter? IReadOnlyMediaTypeFormatterCollection.FindWriter(Type type, MediaTypeHeader media)
+        {
+            return FindWriter(type, media);
+        }
+        
+        [SuppressMessage("ReSharper", "ForCanBeConvertedToForeach")]
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public IEnumerable<MediaTypeFormatter> FindWriters(Type type)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+            
+            for (Int32 i = 0; i < Items.Count; i++)
+            {
+                if (Items[i] is not { } writer || !writer.CanWriteType(type))
+                {
+                    continue;
+                }
+                
+                yield return writer;
+            }
+        }
+        
+        IEnumerable<IMediaTypeFormatter> IMediaTypeFormatterCollection.FindWriters(Type type)
+        {
+            return FindWriters(type);
+        }
+        
+        IEnumerable<IReadOnlyMediaTypeFormatter> IReadOnlyMediaTypeFormatterCollection.FindWriters(Type type)
+        {
+            return FindWriters(type);
+        }
+        
+        [SuppressMessage("ReSharper", "ForCanBeConvertedToForeach")]
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public IEnumerable<MediaTypeFormatter> FindWriters(Type type, MediaTypeHeader media)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+            
+            if (media.IsEmpty)
+            {
+                yield break;
+            }
+            
+            for (Int32 i = 0; i < Items.Count; i++)
+            {
+                if (Items[i] is not { } writer || !writer.CanWriteType(type))
+                {
+                    continue;
+                }
+                
+                foreach (MediaTypeHeader header in writer.SupportedMediaType.Select(static header => header.Value))
+                {
+                    if (header is { Value: { } value } && value.IsSubsetOf(media.Value))
+                    {
+                        yield return writer;
+                    }
+                }
+            }
+        }
+        
+        IEnumerable<IMediaTypeFormatter> IMediaTypeFormatterCollection.FindWriters(Type type, MediaTypeHeader media)
+        {
+            return FindWriters(type, media);
+        }
+        
+        IEnumerable<IReadOnlyMediaTypeFormatter> IReadOnlyMediaTypeFormatterCollection.FindWriters(Type type, MediaTypeHeader media)
+        {
+            return FindWriters(type, media);
         }
 
         protected override void SetItem(Int32 index, MediaTypeFormatter item)
@@ -183,6 +422,16 @@ namespace NetExtender.Types.Network.Formatters
         {
             base.ClearItems();
             Changed?.Invoke(this, EventArgs.Empty);
+        }
+        
+        IEnumerator<IMediaTypeFormatter> IEnumerable<IMediaTypeFormatter>.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
+        IEnumerator<IReadOnlyMediaTypeFormatter> IEnumerable<IReadOnlyMediaTypeFormatter>.GetEnumerator()
+        {
+            return GetEnumerator();
         }
     }
 }

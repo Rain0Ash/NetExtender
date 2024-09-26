@@ -1,6 +1,8 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 using System.Windows;
+using NetExtender.Types.Strings.Interfaces;
 
 namespace NetExtender.Utilities.UserInterface
 {
@@ -11,394 +13,1762 @@ namespace NetExtender.Utilities.UserInterface
         {
             public static class None
             {
-                public static MessageBoxResult Show(String text, String caption)
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(String? caption, String? text)
                 {
-                    return Show(text, caption, MessageBoxImage.None);
+                    return Show(caption, text, MessageBoxImage.None);
                 }
 
-                public static MessageBoxResult Show(String text, String caption, MessageBoxImage image)
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(String? caption, String? text, MessageBoxImage image)
                 {
                     return MessageBox.Show(text, caption, MessageBoxButton.OK, image, MessageBoxResult.None);
                 }
 
-                public static MessageBoxResult Show(String text, String caption, MessageBoxImage image, MessageBoxOptions options)
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(String? caption, String? text, MessageBoxImage image, MessageBoxOptions options)
                 {
                     return MessageBox.Show(text, caption, MessageBoxButton.OK, image, MessageBoxResult.None, options);
                 }
 
-                public static MessageBoxResult Show(Window window, String text, String caption)
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, String? caption, String? text)
                 {
-                    return Show(window, text, caption, MessageBoxImage.None);
+                    return Show(window, caption, text, MessageBoxImage.None);
                 }
 
-                public static MessageBoxResult Show(Window window, String text, String caption, MessageBoxImage image)
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, String? caption, String? text, MessageBoxImage image)
                 {
                     return MessageBox.Show(window, text, caption, MessageBoxButton.OK, image, MessageBoxResult.None);
                 }
 
-                public static MessageBoxResult Show(Window window, String text, String caption, MessageBoxImage image, MessageBoxOptions options)
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, String? caption, String? text, MessageBoxImage image, MessageBoxOptions options)
                 {
                     return MessageBox.Show(window, text, caption, MessageBoxButton.OK, image, MessageBoxResult.None, options);
                 }
-            }
 
-            public static MessageBoxResult Show(String text, String caption)
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(String? caption, IString? text)
+                {
+                    return Show(caption, text?.ToString());
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(String? caption, IString? text, MessageBoxImage image)
+                {
+                    return Show(caption, text?.ToString(), image);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(String? caption, IString? text, MessageBoxImage image, MessageBoxOptions options)
+                {
+                    return Show(caption, text?.ToString(), image, options);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, String? caption, IString? text)
+                {
+                    return Show(window, caption, text?.ToString());
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, String? caption, IString? text, MessageBoxImage image)
+                {
+                    return Show(window, caption, text?.ToString(), image);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, String? caption, IString? text, MessageBoxImage image, MessageBoxOptions options)
+                {
+                    return Show(window, caption, text?.ToString(), image, options);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(IString? caption, String? text)
+                {
+                    return Show(caption?.ToString(), text);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(IString? caption, String? text, MessageBoxImage image)
+                {
+                    return Show(caption?.ToString(), text, image);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(IString? caption, String? text, MessageBoxImage image, MessageBoxOptions options)
+                {
+                    return Show(caption?.ToString(), text, image, options);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, IString? caption, String? text)
+                {
+                    return Show(window, caption?.ToString(), text);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, IString? caption, String? text, MessageBoxImage image)
+                {
+                    return Show(window, caption?.ToString(), text, image);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, IString? caption, String? text, MessageBoxImage image, MessageBoxOptions options)
+                {
+                    return Show(window, caption?.ToString(), text, image, options);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(IString? caption, IString? text)
+                {
+                    return Show(caption?.ToString(), text?.ToString());
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(IString? caption, IString? text, MessageBoxImage image)
+                {
+                    return Show(caption?.ToString(), text?.ToString(), image);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(IString? caption, IString? text, MessageBoxImage image, MessageBoxOptions options)
+                {
+                    return Show(caption?.ToString(), text?.ToString(), image, options);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, IString? caption, IString? text)
+                {
+                    return Show(window, caption?.ToString(), text?.ToString());
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, IString? caption, IString? text, MessageBoxImage image)
+                {
+                    return Show(window, caption?.ToString(), text?.ToString(), image);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, IString? caption, IString? text, MessageBoxImage image, MessageBoxOptions options)
+                {
+                    return Show(window, caption?.ToString(), text?.ToString(), image, options);
+                }
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(String? caption, String? text)
             {
-                return Show(text, caption, MessageBoxImage.None);
+                return Show(caption, text, MessageBoxImage.None);
             }
-
-            public static MessageBoxResult Show(String text, String caption, MessageBoxImage image)
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(String? caption, String? text, MessageBoxImage image)
             {
                 return MessageBox.Show(text, caption, MessageBoxButton.OK, image, MessageBoxResult.OK);
             }
-
-            public static MessageBoxResult Show(String text, String caption, MessageBoxImage image, MessageBoxOptions options)
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(String? caption, String? text, MessageBoxImage image, MessageBoxOptions options)
             {
                 return MessageBox.Show(text, caption, MessageBoxButton.OK, image, MessageBoxResult.OK, options);
             }
-
-            public static MessageBoxResult Show(Window window, String text, String caption)
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(Window window, String? caption, String? text)
             {
-                return Show(window, text, caption, MessageBoxImage.None);
+                return Show(window, caption, text, MessageBoxImage.None);
             }
-
-            public static MessageBoxResult Show(Window window, String text, String caption, MessageBoxImage image)
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(Window window, String? caption, String? text, MessageBoxImage image)
             {
                 return MessageBox.Show(window, text, caption, MessageBoxButton.OK, image, MessageBoxResult.OK);
             }
-
-            public static MessageBoxResult Show(Window window, String text, String caption, MessageBoxImage image, MessageBoxOptions options)
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(Window window, String? caption, String? text, MessageBoxImage image, MessageBoxOptions options)
             {
                 return MessageBox.Show(window, text, caption, MessageBoxButton.OK, image, MessageBoxResult.OK, options);
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(String? caption, IString? text)
+            {
+                return Show(caption, text?.ToString());
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(String? caption, IString? text, MessageBoxImage image)
+            {
+                return Show(caption, text?.ToString(), image);
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(String? caption, IString? text, MessageBoxImage image, MessageBoxOptions options)
+            {
+                return Show(caption, text?.ToString(), image, options);
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(Window window, String? caption, IString? text)
+            {
+                return Show(window, caption, text?.ToString());
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(Window window, String? caption, IString? text, MessageBoxImage image)
+            {
+                return Show(window, caption, text?.ToString(), image);
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(Window window, String? caption, IString? text, MessageBoxImage image, MessageBoxOptions options)
+            {
+                return Show(window, caption, text?.ToString(), image, options);
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(IString? caption, String? text)
+            {
+                return Show(caption?.ToString(), text);
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(IString? caption, String? text, MessageBoxImage image)
+            {
+                return Show(caption?.ToString(), text, image);
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(IString? caption, String? text, MessageBoxImage image, MessageBoxOptions options)
+            {
+                return Show(caption?.ToString(), text, image, options);
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(Window window, IString? caption, String? text)
+            {
+                return Show(window, caption?.ToString(), text);
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(Window window, IString? caption, String? text, MessageBoxImage image)
+            {
+                return Show(window, caption?.ToString(), text, image);
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(Window window, IString? caption, String? text, MessageBoxImage image, MessageBoxOptions options)
+            {
+                return Show(window, caption?.ToString(), text, image, options);
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(IString? caption, IString? text)
+            {
+                return Show(caption?.ToString(), text?.ToString());
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(IString? caption, IString? text, MessageBoxImage image)
+            {
+                return Show(caption?.ToString(), text?.ToString(), image);
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(IString? caption, IString? text, MessageBoxImage image, MessageBoxOptions options)
+            {
+                return Show(caption?.ToString(), text?.ToString(), image, options);
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(Window window, IString? caption, IString? text)
+            {
+                return Show(window, caption?.ToString(), text?.ToString());
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(Window window, IString? caption, IString? text, MessageBoxImage image)
+            {
+                return Show(window, caption?.ToString(), text?.ToString(), image);
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(Window window, IString? caption, IString? text, MessageBoxImage image, MessageBoxOptions options)
+            {
+                return Show(window, caption?.ToString(), text?.ToString(), image, options);
             }
         }
 
         public static class YesNo
         {
-            public static MessageBoxResult Show(String text, String caption)
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(String? caption, String? text)
             {
-                return Show(text, caption, MessageBoxImage.None);
+                return Show(caption, text, MessageBoxImage.None);
             }
-
-            public static MessageBoxResult Show(String text, String caption, MessageBoxImage image)
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(String? caption, String? text, MessageBoxImage image)
             {
                 return MessageBox.Show(text, caption, MessageBoxButton.YesNo, image, MessageBoxResult.None);
             }
-
-            public static MessageBoxResult Show(String text, String caption, MessageBoxImage image, MessageBoxOptions options)
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(String? caption, String? text, MessageBoxImage image, MessageBoxOptions options)
             {
                 return MessageBox.Show(text, caption, MessageBoxButton.YesNo, image, MessageBoxResult.None, options);
             }
-
-            public static MessageBoxResult Show(Window window, String text, String caption)
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(Window window, String? caption, String? text)
             {
-                return Show(window, text, caption, MessageBoxImage.None);
+                return Show(window, caption, text, MessageBoxImage.None);
             }
-
-            public static MessageBoxResult Show(Window window, String text, String caption, MessageBoxImage image)
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(Window window, String? caption, String? text, MessageBoxImage image)
             {
                 return MessageBox.Show(window, text, caption, MessageBoxButton.YesNo, image, MessageBoxResult.None);
             }
-
-            public static MessageBoxResult Show(Window window, String text, String caption, MessageBoxImage image, MessageBoxOptions options)
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(Window window, String? caption, String? text, MessageBoxImage image, MessageBoxOptions options)
             {
                 return MessageBox.Show(window, text, caption, MessageBoxButton.YesNo, image, MessageBoxResult.None, options);
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(String? caption, IString? text)
+            {
+                return Show(caption, text?.ToString());
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(String? caption, IString? text, MessageBoxImage image)
+            {
+                return Show(caption, text?.ToString(), image);
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(String? caption, IString? text, MessageBoxImage image, MessageBoxOptions options)
+            {
+                return Show(caption, text?.ToString(), image, options);
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(Window window, String? caption, IString? text)
+            {
+                return Show(window, caption, text?.ToString());
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(Window window, String? caption, IString? text, MessageBoxImage image)
+            {
+                return Show(window, caption, text?.ToString(), image);
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(Window window, String? caption, IString? text, MessageBoxImage image, MessageBoxOptions options)
+            {
+                return Show(window, caption, text?.ToString(), image, options);
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(IString? caption, String? text)
+            {
+                return Show(caption?.ToString(), text);
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(IString? caption, String? text, MessageBoxImage image)
+            {
+                return Show(caption?.ToString(), text, image);
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(IString? caption, String? text, MessageBoxImage image, MessageBoxOptions options)
+            {
+                return Show(caption?.ToString(), text, image, options);
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(Window window, IString? caption, String? text)
+            {
+                return Show(window, caption?.ToString(), text);
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(Window window, IString? caption, String? text, MessageBoxImage image)
+            {
+                return Show(window, caption?.ToString(), text, image);
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(Window window, IString? caption, String? text, MessageBoxImage image, MessageBoxOptions options)
+            {
+                return Show(window, caption?.ToString(), text, image, options);
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(IString? caption, IString? text)
+            {
+                return Show(caption?.ToString(), text?.ToString());
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(IString? caption, IString? text, MessageBoxImage image)
+            {
+                return Show(caption?.ToString(), text?.ToString(), image);
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(IString? caption, IString? text, MessageBoxImage image, MessageBoxOptions options)
+            {
+                return Show(caption?.ToString(), text?.ToString(), image, options);
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(Window window, IString? caption, IString? text)
+            {
+                return Show(window, caption?.ToString(), text?.ToString());
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(Window window, IString? caption, IString? text, MessageBoxImage image)
+            {
+                return Show(window, caption?.ToString(), text?.ToString(), image);
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(Window window, IString? caption, IString? text, MessageBoxImage image, MessageBoxOptions options)
+            {
+                return Show(window, caption?.ToString(), text?.ToString(), image, options);
             }
             
             public static class Yes
             {
-                public static MessageBoxResult Show(String text, String caption)
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(String? caption, String? text)
                 {
-                    return Show(text, caption, MessageBoxImage.None);
+                    return Show(caption, text, MessageBoxImage.None);
                 }
 
-                public static MessageBoxResult Show(String text, String caption, MessageBoxImage image)
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(String? caption, String? text, MessageBoxImage image)
                 {
                     return MessageBox.Show(text, caption, MessageBoxButton.YesNo, image, MessageBoxResult.Yes);
                 }
 
-                public static MessageBoxResult Show(String text, String caption, MessageBoxImage image, MessageBoxOptions options)
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(String? caption, String? text, MessageBoxImage image, MessageBoxOptions options)
                 {
                     return MessageBox.Show(text, caption, MessageBoxButton.YesNo, image, MessageBoxResult.Yes, options);
                 }
 
-                public static MessageBoxResult Show(Window window, String text, String caption)
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, String? caption, String? text)
                 {
-                    return Show(window, text, caption, MessageBoxImage.None);
+                    return Show(window, caption, text, MessageBoxImage.None);
                 }
 
-                public static MessageBoxResult Show(Window window, String text, String caption, MessageBoxImage image)
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, String? caption, String? text, MessageBoxImage image)
                 {
                     return MessageBox.Show(window, text, caption, MessageBoxButton.YesNo, image, MessageBoxResult.Yes);
                 }
 
-                public static MessageBoxResult Show(Window window, String text, String caption, MessageBoxImage image, MessageBoxOptions options)
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, String? caption, String? text, MessageBoxImage image, MessageBoxOptions options)
                 {
                     return MessageBox.Show(window, text, caption, MessageBoxButton.YesNo, image, MessageBoxResult.Yes, options);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(String? caption, IString? text)
+                {
+                    return Show(caption, text?.ToString());
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(String? caption, IString? text, MessageBoxImage image)
+                {
+                    return Show(caption, text?.ToString(), image);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(String? caption, IString? text, MessageBoxImage image, MessageBoxOptions options)
+                {
+                    return Show(caption, text?.ToString(), image, options);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, String? caption, IString? text)
+                {
+                    return Show(window, caption, text?.ToString());
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, String? caption, IString? text, MessageBoxImage image)
+                {
+                    return Show(window, caption, text?.ToString(), image);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, String? caption, IString? text, MessageBoxImage image, MessageBoxOptions options)
+                {
+                    return Show(window, caption, text?.ToString(), image, options);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(IString? caption, String? text)
+                {
+                    return Show(caption?.ToString(), text);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(IString? caption, String? text, MessageBoxImage image)
+                {
+                    return Show(caption?.ToString(), text, image);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(IString? caption, String? text, MessageBoxImage image, MessageBoxOptions options)
+                {
+                    return Show(caption?.ToString(), text, image, options);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, IString? caption, String? text)
+                {
+                    return Show(window, caption?.ToString(), text);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, IString? caption, String? text, MessageBoxImage image)
+                {
+                    return Show(window, caption?.ToString(), text, image);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, IString? caption, String? text, MessageBoxImage image, MessageBoxOptions options)
+                {
+                    return Show(window, caption?.ToString(), text, image, options);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(IString? caption, IString? text)
+                {
+                    return Show(caption?.ToString(), text?.ToString());
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(IString? caption, IString? text, MessageBoxImage image)
+                {
+                    return Show(caption?.ToString(), text?.ToString(), image);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(IString? caption, IString? text, MessageBoxImage image, MessageBoxOptions options)
+                {
+                    return Show(caption?.ToString(), text?.ToString(), image, options);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, IString? caption, IString? text)
+                {
+                    return Show(window, caption?.ToString(), text?.ToString());
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, IString? caption, IString? text, MessageBoxImage image)
+                {
+                    return Show(window, caption?.ToString(), text?.ToString(), image);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, IString? caption, IString? text, MessageBoxImage image, MessageBoxOptions options)
+                {
+                    return Show(window, caption?.ToString(), text?.ToString(), image, options);
                 }
             }
 
             public static class No
             {
-                public static MessageBoxResult Show(String text, String caption)
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(String? caption, String? text)
                 {
-                    return Show(text, caption, MessageBoxImage.None);
+                    return Show(caption, text, MessageBoxImage.None);
                 }
 
-                public static MessageBoxResult Show(String text, String caption, MessageBoxImage image)
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(String? caption, String? text, MessageBoxImage image)
                 {
                     return MessageBox.Show(text, caption, MessageBoxButton.YesNo, image, MessageBoxResult.No);
                 }
 
-                public static MessageBoxResult Show(String text, String caption, MessageBoxImage image, MessageBoxOptions options)
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(String? caption, String? text, MessageBoxImage image, MessageBoxOptions options)
                 {
                     return MessageBox.Show(text, caption, MessageBoxButton.YesNo, image, MessageBoxResult.No, options);
                 }
 
-                public static MessageBoxResult Show(Window window, String text, String caption)
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, String? caption, String? text)
                 {
-                    return Show(window, text, caption, MessageBoxImage.None);
+                    return Show(window, caption, text, MessageBoxImage.None);
                 }
 
-                public static MessageBoxResult Show(Window window, String text, String caption, MessageBoxImage image)
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, String? caption, String? text, MessageBoxImage image)
                 {
                     return MessageBox.Show(window, text, caption, MessageBoxButton.YesNo, image, MessageBoxResult.No);
                 }
 
-                public static MessageBoxResult Show(Window window, String text, String caption, MessageBoxImage image, MessageBoxOptions options)
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, String? caption, String? text, MessageBoxImage image, MessageBoxOptions options)
                 {
                     return MessageBox.Show(window, text, caption, MessageBoxButton.YesNo, image, MessageBoxResult.No, options);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(String? caption, IString? text)
+                {
+                    return Show(caption, text?.ToString());
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(String? caption, IString? text, MessageBoxImage image)
+                {
+                    return Show(caption, text?.ToString(), image);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(String? caption, IString? text, MessageBoxImage image, MessageBoxOptions options)
+                {
+                    return Show(caption, text?.ToString(), image, options);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, String? caption, IString? text)
+                {
+                    return Show(window, caption, text?.ToString());
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, String? caption, IString? text, MessageBoxImage image)
+                {
+                    return Show(window, caption, text?.ToString(), image);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, String? caption, IString? text, MessageBoxImage image, MessageBoxOptions options)
+                {
+                    return Show(window, caption, text?.ToString(), image, options);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(IString? caption, String? text)
+                {
+                    return Show(caption?.ToString(), text);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(IString? caption, String? text, MessageBoxImage image)
+                {
+                    return Show(caption?.ToString(), text, image);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(IString? caption, String? text, MessageBoxImage image, MessageBoxOptions options)
+                {
+                    return Show(caption?.ToString(), text, image, options);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, IString? caption, String? text)
+                {
+                    return Show(window, caption?.ToString(), text);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, IString? caption, String? text, MessageBoxImage image)
+                {
+                    return Show(window, caption?.ToString(), text, image);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, IString? caption, String? text, MessageBoxImage image, MessageBoxOptions options)
+                {
+                    return Show(window, caption?.ToString(), text, image, options);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(IString? caption, IString? text)
+                {
+                    return Show(caption?.ToString(), text?.ToString());
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(IString? caption, IString? text, MessageBoxImage image)
+                {
+                    return Show(caption?.ToString(), text?.ToString(), image);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(IString? caption, IString? text, MessageBoxImage image, MessageBoxOptions options)
+                {
+                    return Show(caption?.ToString(), text?.ToString(), image, options);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, IString? caption, IString? text)
+                {
+                    return Show(window, caption?.ToString(), text?.ToString());
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, IString? caption, IString? text, MessageBoxImage image)
+                {
+                    return Show(window, caption?.ToString(), text?.ToString(), image);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, IString? caption, IString? text, MessageBoxImage image, MessageBoxOptions options)
+                {
+                    return Show(window, caption?.ToString(), text?.ToString(), image, options);
                 }
             }
         }
         
         public static class OKCancel
         {
-            public static MessageBoxResult Show(String text, String caption)
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(String? caption, String? text)
             {
-                return Show(text, caption, MessageBoxImage.None);
+                return Show(caption, text, MessageBoxImage.None);
             }
-
-            public static MessageBoxResult Show(String text, String caption, MessageBoxImage image)
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(String? caption, String? text, MessageBoxImage image)
             {
                 return MessageBox.Show(text, caption, MessageBoxButton.OKCancel, image, MessageBoxResult.None);
             }
-
-            public static MessageBoxResult Show(String text, String caption, MessageBoxImage image, MessageBoxOptions options)
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(String? caption, String? text, MessageBoxImage image, MessageBoxOptions options)
             {
                 return MessageBox.Show(text, caption, MessageBoxButton.OKCancel, image, MessageBoxResult.None, options);
             }
-
-            public static MessageBoxResult Show(Window window, String text, String caption)
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(Window window, String? caption, String? text)
             {
-                return Show(window, text, caption, MessageBoxImage.None);
+                return Show(window, caption, text, MessageBoxImage.None);
             }
-
-            public static MessageBoxResult Show(Window window, String text, String caption, MessageBoxImage image)
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(Window window, String? caption, String? text, MessageBoxImage image)
             {
                 return MessageBox.Show(window, text, caption, MessageBoxButton.OKCancel, image, MessageBoxResult.None);
             }
-
-            public static MessageBoxResult Show(Window window, String text, String caption, MessageBoxImage image, MessageBoxOptions options)
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(Window window, String? caption, String? text, MessageBoxImage image, MessageBoxOptions options)
             {
                 return MessageBox.Show(window, text, caption, MessageBoxButton.OKCancel, image, MessageBoxResult.None, options);
             }
             
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(String? caption, IString? text)
+            {
+                return Show(caption, text?.ToString());
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(String? caption, IString? text, MessageBoxImage image)
+            {
+                return Show(caption, text?.ToString(), image);
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(String? caption, IString? text, MessageBoxImage image, MessageBoxOptions options)
+            {
+                return Show(caption, text?.ToString(), image, options);
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(Window window, String? caption, IString? text)
+            {
+                return Show(window, caption, text?.ToString());
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(Window window, String? caption, IString? text, MessageBoxImage image)
+            {
+                return Show(window, caption, text?.ToString(), image);
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(Window window, String? caption, IString? text, MessageBoxImage image, MessageBoxOptions options)
+            {
+                return Show(window, caption, text?.ToString(), image, options);
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(IString? caption, String? text)
+            {
+                return Show(caption?.ToString(), text);
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(IString? caption, String? text, MessageBoxImage image)
+            {
+                return Show(caption?.ToString(), text, image);
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(IString? caption, String? text, MessageBoxImage image, MessageBoxOptions options)
+            {
+                return Show(caption?.ToString(), text, image, options);
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(Window window, IString? caption, String? text)
+            {
+                return Show(window, caption?.ToString(), text);
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(Window window, IString? caption, String? text, MessageBoxImage image)
+            {
+                return Show(window, caption?.ToString(), text, image);
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(Window window, IString? caption, String? text, MessageBoxImage image, MessageBoxOptions options)
+            {
+                return Show(window, caption?.ToString(), text, image, options);
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(IString? caption, IString? text)
+            {
+                return Show(caption?.ToString(), text?.ToString());
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(IString? caption, IString? text, MessageBoxImage image)
+            {
+                return Show(caption?.ToString(), text?.ToString(), image);
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(IString? caption, IString? text, MessageBoxImage image, MessageBoxOptions options)
+            {
+                return Show(caption?.ToString(), text?.ToString(), image, options);
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(Window window, IString? caption, IString? text)
+            {
+                return Show(window, caption?.ToString(), text?.ToString());
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(Window window, IString? caption, IString? text, MessageBoxImage image)
+            {
+                return Show(window, caption?.ToString(), text?.ToString(), image);
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(Window window, IString? caption, IString? text, MessageBoxImage image, MessageBoxOptions options)
+            {
+                return Show(window, caption?.ToString(), text?.ToString(), image, options);
+            }
+            
             public static class OK
             {
-                public static MessageBoxResult Show(String text, String caption)
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(String? caption, String? text)
                 {
-                    return Show(text, caption, MessageBoxImage.None);
+                    return Show(caption, text, MessageBoxImage.None);
                 }
 
-                public static MessageBoxResult Show(String text, String caption, MessageBoxImage image)
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(String? caption, String? text, MessageBoxImage image)
                 {
                     return MessageBox.Show(text, caption, MessageBoxButton.OKCancel, image, MessageBoxResult.OK);
                 }
 
-                public static MessageBoxResult Show(String text, String caption, MessageBoxImage image, MessageBoxOptions options)
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(String? caption, String? text, MessageBoxImage image, MessageBoxOptions options)
                 {
                     return MessageBox.Show(text, caption, MessageBoxButton.OKCancel, image, MessageBoxResult.OK, options);
                 }
 
-                public static MessageBoxResult Show(Window window, String text, String caption)
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, String? caption, String? text)
                 {
-                    return Show(window, text, caption, MessageBoxImage.None);
+                    return Show(window, caption, text, MessageBoxImage.None);
                 }
 
-                public static MessageBoxResult Show(Window window, String text, String caption, MessageBoxImage image)
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, String? caption, String? text, MessageBoxImage image)
                 {
                     return MessageBox.Show(window, text, caption, MessageBoxButton.OKCancel, image, MessageBoxResult.OK);
                 }
 
-                public static MessageBoxResult Show(Window window, String text, String caption, MessageBoxImage image, MessageBoxOptions options)
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, String? caption, String? text, MessageBoxImage image, MessageBoxOptions options)
                 {
                     return MessageBox.Show(window, text, caption, MessageBoxButton.OKCancel, image, MessageBoxResult.OK, options);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(String? caption, IString? text)
+                {
+                    return Show(caption, text?.ToString());
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(String? caption, IString? text, MessageBoxImage image)
+                {
+                    return Show(caption, text?.ToString(), image);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(String? caption, IString? text, MessageBoxImage image, MessageBoxOptions options)
+                {
+                    return Show(caption, text?.ToString(), image, options);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, String? caption, IString? text)
+                {
+                    return Show(window, caption, text?.ToString());
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, String? caption, IString? text, MessageBoxImage image)
+                {
+                    return Show(window, caption, text?.ToString(), image);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, String? caption, IString? text, MessageBoxImage image, MessageBoxOptions options)
+                {
+                    return Show(window, caption, text?.ToString(), image, options);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(IString? caption, String? text)
+                {
+                    return Show(caption?.ToString(), text);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(IString? caption, String? text, MessageBoxImage image)
+                {
+                    return Show(caption?.ToString(), text, image);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(IString? caption, String? text, MessageBoxImage image, MessageBoxOptions options)
+                {
+                    return Show(caption?.ToString(), text, image, options);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, IString? caption, String? text)
+                {
+                    return Show(window, caption?.ToString(), text);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, IString? caption, String? text, MessageBoxImage image)
+                {
+                    return Show(window, caption?.ToString(), text, image);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, IString? caption, String? text, MessageBoxImage image, MessageBoxOptions options)
+                {
+                    return Show(window, caption?.ToString(), text, image, options);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(IString? caption, IString? text)
+                {
+                    return Show(caption?.ToString(), text?.ToString());
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(IString? caption, IString? text, MessageBoxImage image)
+                {
+                    return Show(caption?.ToString(), text?.ToString(), image);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(IString? caption, IString? text, MessageBoxImage image, MessageBoxOptions options)
+                {
+                    return Show(caption?.ToString(), text?.ToString(), image, options);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, IString? caption, IString? text)
+                {
+                    return Show(window, caption?.ToString(), text?.ToString());
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, IString? caption, IString? text, MessageBoxImage image)
+                {
+                    return Show(window, caption?.ToString(), text?.ToString(), image);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, IString? caption, IString? text, MessageBoxImage image, MessageBoxOptions options)
+                {
+                    return Show(window, caption?.ToString(), text?.ToString(), image, options);
                 }
             }
 
             public static class Cancel
             {
-                public static MessageBoxResult Show(String text, String caption)
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(String? caption, String? text)
                 {
-                    return Show(text, caption, MessageBoxImage.None);
+                    return Show(caption, text, MessageBoxImage.None);
                 }
 
-                public static MessageBoxResult Show(String text, String caption, MessageBoxImage image)
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(String? caption, String? text, MessageBoxImage image)
                 {
                     return MessageBox.Show(text, caption, MessageBoxButton.OKCancel, image, MessageBoxResult.Cancel);
                 }
 
-                public static MessageBoxResult Show(String text, String caption, MessageBoxImage image, MessageBoxOptions options)
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(String? caption, String? text, MessageBoxImage image, MessageBoxOptions options)
                 {
                     return MessageBox.Show(text, caption, MessageBoxButton.OKCancel, image, MessageBoxResult.Cancel, options);
                 }
 
-                public static MessageBoxResult Show(Window window, String text, String caption)
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, String? caption, String? text)
                 {
-                    return Show(window, text, caption, MessageBoxImage.None);
+                    return Show(window, caption, text, MessageBoxImage.None);
                 }
 
-                public static MessageBoxResult Show(Window window, String text, String caption, MessageBoxImage image)
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, String? caption, String? text, MessageBoxImage image)
                 {
                     return MessageBox.Show(window, text, caption, MessageBoxButton.OKCancel, image, MessageBoxResult.Cancel);
                 }
 
-                public static MessageBoxResult Show(Window window, String text, String caption, MessageBoxImage image, MessageBoxOptions options)
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, String? caption, String? text, MessageBoxImage image, MessageBoxOptions options)
                 {
                     return MessageBox.Show(window, text, caption, MessageBoxButton.OKCancel, image, MessageBoxResult.Cancel, options);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(String? caption, IString? text)
+                {
+                    return Show(caption, text?.ToString());
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(String? caption, IString? text, MessageBoxImage image)
+                {
+                    return Show(caption, text?.ToString(), image);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(String? caption, IString? text, MessageBoxImage image, MessageBoxOptions options)
+                {
+                    return Show(caption, text?.ToString(), image, options);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, String? caption, IString? text)
+                {
+                    return Show(window, caption, text?.ToString());
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, String? caption, IString? text, MessageBoxImage image)
+                {
+                    return Show(window, caption, text?.ToString(), image);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, String? caption, IString? text, MessageBoxImage image, MessageBoxOptions options)
+                {
+                    return Show(window, caption, text?.ToString(), image, options);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(IString? caption, String? text)
+                {
+                    return Show(caption?.ToString(), text);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(IString? caption, String? text, MessageBoxImage image)
+                {
+                    return Show(caption?.ToString(), text, image);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(IString? caption, String? text, MessageBoxImage image, MessageBoxOptions options)
+                {
+                    return Show(caption?.ToString(), text, image, options);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, IString? caption, String? text)
+                {
+                    return Show(window, caption?.ToString(), text);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, IString? caption, String? text, MessageBoxImage image)
+                {
+                    return Show(window, caption?.ToString(), text, image);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, IString? caption, String? text, MessageBoxImage image, MessageBoxOptions options)
+                {
+                    return Show(window, caption?.ToString(), text, image, options);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(IString? caption, IString? text)
+                {
+                    return Show(caption?.ToString(), text?.ToString());
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(IString? caption, IString? text, MessageBoxImage image)
+                {
+                    return Show(caption?.ToString(), text?.ToString(), image);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(IString? caption, IString? text, MessageBoxImage image, MessageBoxOptions options)
+                {
+                    return Show(caption?.ToString(), text?.ToString(), image, options);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, IString? caption, IString? text)
+                {
+                    return Show(window, caption?.ToString(), text?.ToString());
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, IString? caption, IString? text, MessageBoxImage image)
+                {
+                    return Show(window, caption?.ToString(), text?.ToString(), image);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, IString? caption, IString? text, MessageBoxImage image, MessageBoxOptions options)
+                {
+                    return Show(window, caption?.ToString(), text?.ToString(), image, options);
                 }
             }
         }
         
         public static class YesNoCancel
         {
-            public static MessageBoxResult Show(String text, String caption)
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(String? caption, String? text)
             {
-                return Show(text, caption, MessageBoxImage.None);
+                return Show(caption, text, MessageBoxImage.None);
             }
-
-            public static MessageBoxResult Show(String text, String caption, MessageBoxImage image)
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(String? caption, String? text, MessageBoxImage image)
             {
                 return MessageBox.Show(text, caption, MessageBoxButton.YesNoCancel, image, MessageBoxResult.None);
             }
-
-            public static MessageBoxResult Show(String text, String caption, MessageBoxImage image, MessageBoxOptions options)
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(String? caption, String? text, MessageBoxImage image, MessageBoxOptions options)
             {
                 return MessageBox.Show(text, caption, MessageBoxButton.YesNoCancel, image, MessageBoxResult.None, options);
             }
-
-            public static MessageBoxResult Show(Window window, String text, String caption)
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(Window window, String? caption, String? text)
             {
-                return Show(window, text, caption, MessageBoxImage.None);
+                return Show(window, caption, text, MessageBoxImage.None);
             }
-
-            public static MessageBoxResult Show(Window window, String text, String caption, MessageBoxImage image)
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(Window window, String? caption, String? text, MessageBoxImage image)
             {
                 return MessageBox.Show(window, text, caption, MessageBoxButton.YesNoCancel, image, MessageBoxResult.None);
             }
-
-            public static MessageBoxResult Show(Window window, String text, String caption, MessageBoxImage image, MessageBoxOptions options)
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(Window window, String? caption, String? text, MessageBoxImage image, MessageBoxOptions options)
             {
                 return MessageBox.Show(window, text, caption, MessageBoxButton.YesNoCancel, image, MessageBoxResult.None, options);
             }
             
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(String? caption, IString? text)
+            {
+                return Show(caption, text?.ToString());
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(String? caption, IString? text, MessageBoxImage image)
+            {
+                return Show(caption, text?.ToString(), image);
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(String? caption, IString? text, MessageBoxImage image, MessageBoxOptions options)
+            {
+                return Show(caption, text?.ToString(), image, options);
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(Window window, String? caption, IString? text)
+            {
+                return Show(window, caption, text?.ToString());
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(Window window, String? caption, IString? text, MessageBoxImage image)
+            {
+                return Show(window, caption, text?.ToString(), image);
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(Window window, String? caption, IString? text, MessageBoxImage image, MessageBoxOptions options)
+            {
+                return Show(window, caption, text?.ToString(), image, options);
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(IString? caption, String? text)
+            {
+                return Show(caption?.ToString(), text);
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(IString? caption, String? text, MessageBoxImage image)
+            {
+                return Show(caption?.ToString(), text, image);
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(IString? caption, String? text, MessageBoxImage image, MessageBoxOptions options)
+            {
+                return Show(caption?.ToString(), text, image, options);
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(Window window, IString? caption, String? text)
+            {
+                return Show(window, caption?.ToString(), text);
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(Window window, IString? caption, String? text, MessageBoxImage image)
+            {
+                return Show(window, caption?.ToString(), text, image);
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(Window window, IString? caption, String? text, MessageBoxImage image, MessageBoxOptions options)
+            {
+                return Show(window, caption?.ToString(), text, image, options);
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(IString? caption, IString? text)
+            {
+                return Show(caption?.ToString(), text?.ToString());
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(IString? caption, IString? text, MessageBoxImage image)
+            {
+                return Show(caption?.ToString(), text?.ToString(), image);
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(IString? caption, IString? text, MessageBoxImage image, MessageBoxOptions options)
+            {
+                return Show(caption?.ToString(), text?.ToString(), image, options);
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(Window window, IString? caption, IString? text)
+            {
+                return Show(window, caption?.ToString(), text?.ToString());
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(Window window, IString? caption, IString? text, MessageBoxImage image)
+            {
+                return Show(window, caption?.ToString(), text?.ToString(), image);
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static MessageBoxResult Show(Window window, IString? caption, IString? text, MessageBoxImage image, MessageBoxOptions options)
+            {
+                return Show(window, caption?.ToString(), text?.ToString(), image, options);
+            }
+            
             public static class Yes
             {
-                public static MessageBoxResult Show(String text, String caption)
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(String? caption, String? text)
                 {
-                    return Show(text, caption, MessageBoxImage.None);
+                    return Show(caption, text, MessageBoxImage.None);
                 }
 
-                public static MessageBoxResult Show(String text, String caption, MessageBoxImage image)
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(String? caption, String? text, MessageBoxImage image)
                 {
                     return MessageBox.Show(text, caption, MessageBoxButton.YesNoCancel, image, MessageBoxResult.Yes);
                 }
 
-                public static MessageBoxResult Show(String text, String caption, MessageBoxImage image, MessageBoxOptions options)
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(String? caption, String? text, MessageBoxImage image, MessageBoxOptions options)
                 {
                     return MessageBox.Show(text, caption, MessageBoxButton.YesNoCancel, image, MessageBoxResult.Yes, options);
                 }
 
-                public static MessageBoxResult Show(Window window, String text, String caption)
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, String? caption, String? text)
                 {
-                    return Show(window, text, caption, MessageBoxImage.None);
+                    return Show(window, caption, text, MessageBoxImage.None);
                 }
 
-                public static MessageBoxResult Show(Window window, String text, String caption, MessageBoxImage image)
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, String? caption, String? text, MessageBoxImage image)
                 {
                     return MessageBox.Show(window, text, caption, MessageBoxButton.YesNoCancel, image, MessageBoxResult.Yes);
                 }
 
-                public static MessageBoxResult Show(Window window, String text, String caption, MessageBoxImage image, MessageBoxOptions options)
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, String? caption, String? text, MessageBoxImage image, MessageBoxOptions options)
                 {
                     return MessageBox.Show(window, text, caption, MessageBoxButton.YesNoCancel, image, MessageBoxResult.Yes, options);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(String? caption, IString? text)
+                {
+                    return Show(caption, text?.ToString());
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(String? caption, IString? text, MessageBoxImage image)
+                {
+                    return Show(caption, text?.ToString(), image);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(String? caption, IString? text, MessageBoxImage image, MessageBoxOptions options)
+                {
+                    return Show(caption, text?.ToString(), image, options);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, String? caption, IString? text)
+                {
+                    return Show(window, caption, text?.ToString());
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, String? caption, IString? text, MessageBoxImage image)
+                {
+                    return Show(window, caption, text?.ToString(), image);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, String? caption, IString? text, MessageBoxImage image, MessageBoxOptions options)
+                {
+                    return Show(window, caption, text?.ToString(), image, options);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(IString? caption, String? text)
+                {
+                    return Show(caption?.ToString(), text);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(IString? caption, String? text, MessageBoxImage image)
+                {
+                    return Show(caption?.ToString(), text, image);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(IString? caption, String? text, MessageBoxImage image, MessageBoxOptions options)
+                {
+                    return Show(caption?.ToString(), text, image, options);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, IString? caption, String? text)
+                {
+                    return Show(window, caption?.ToString(), text);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, IString? caption, String? text, MessageBoxImage image)
+                {
+                    return Show(window, caption?.ToString(), text, image);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, IString? caption, String? text, MessageBoxImage image, MessageBoxOptions options)
+                {
+                    return Show(window, caption?.ToString(), text, image, options);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(IString? caption, IString? text)
+                {
+                    return Show(caption?.ToString(), text?.ToString());
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(IString? caption, IString? text, MessageBoxImage image)
+                {
+                    return Show(caption?.ToString(), text?.ToString(), image);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(IString? caption, IString? text, MessageBoxImage image, MessageBoxOptions options)
+                {
+                    return Show(caption?.ToString(), text?.ToString(), image, options);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, IString? caption, IString? text)
+                {
+                    return Show(window, caption?.ToString(), text?.ToString());
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, IString? caption, IString? text, MessageBoxImage image)
+                {
+                    return Show(window, caption?.ToString(), text?.ToString(), image);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, IString? caption, IString? text, MessageBoxImage image, MessageBoxOptions options)
+                {
+                    return Show(window, caption?.ToString(), text?.ToString(), image, options);
                 }
             }
 
             public static class No
             {
-                public static MessageBoxResult Show(String text, String caption)
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(String? caption, String? text)
                 {
-                    return Show(text, caption, MessageBoxImage.None);
+                    return Show(caption, text, MessageBoxImage.None);
                 }
 
-                public static MessageBoxResult Show(String text, String caption, MessageBoxImage image)
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(String? caption, String? text, MessageBoxImage image)
                 {
                     return MessageBox.Show(text, caption, MessageBoxButton.YesNoCancel, image, MessageBoxResult.No);
                 }
 
-                public static MessageBoxResult Show(String text, String caption, MessageBoxImage image, MessageBoxOptions options)
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(String? caption, String? text, MessageBoxImage image, MessageBoxOptions options)
                 {
                     return MessageBox.Show(text, caption, MessageBoxButton.YesNoCancel, image, MessageBoxResult.No, options);
                 }
 
-                public static MessageBoxResult Show(Window window, String text, String caption)
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, String? caption, String? text)
                 {
-                    return Show(window, text, caption, MessageBoxImage.None);
+                    return Show(window, caption, text, MessageBoxImage.None);
                 }
 
-                public static MessageBoxResult Show(Window window, String text, String caption, MessageBoxImage image)
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, String? caption, String? text, MessageBoxImage image)
                 {
                     return MessageBox.Show(window, text, caption, MessageBoxButton.YesNoCancel, image, MessageBoxResult.No);
                 }
 
-                public static MessageBoxResult Show(Window window, String text, String caption, MessageBoxImage image, MessageBoxOptions options)
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, String? caption, String? text, MessageBoxImage image, MessageBoxOptions options)
                 {
                     return MessageBox.Show(window, text, caption, MessageBoxButton.YesNoCancel, image, MessageBoxResult.No, options);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(String? caption, IString? text)
+                {
+                    return Show(caption, text?.ToString());
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(String? caption, IString? text, MessageBoxImage image)
+                {
+                    return Show(caption, text?.ToString(), image);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(String? caption, IString? text, MessageBoxImage image, MessageBoxOptions options)
+                {
+                    return Show(caption, text?.ToString(), image, options);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, String? caption, IString? text)
+                {
+                    return Show(window, caption, text?.ToString());
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, String? caption, IString? text, MessageBoxImage image)
+                {
+                    return Show(window, caption, text?.ToString(), image);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, String? caption, IString? text, MessageBoxImage image, MessageBoxOptions options)
+                {
+                    return Show(window, caption, text?.ToString(), image, options);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(IString? caption, String? text)
+                {
+                    return Show(caption?.ToString(), text);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(IString? caption, String? text, MessageBoxImage image)
+                {
+                    return Show(caption?.ToString(), text, image);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(IString? caption, String? text, MessageBoxImage image, MessageBoxOptions options)
+                {
+                    return Show(caption?.ToString(), text, image, options);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, IString? caption, String? text)
+                {
+                    return Show(window, caption?.ToString(), text);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, IString? caption, String? text, MessageBoxImage image)
+                {
+                    return Show(window, caption?.ToString(), text, image);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, IString? caption, String? text, MessageBoxImage image, MessageBoxOptions options)
+                {
+                    return Show(window, caption?.ToString(), text, image, options);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(IString? caption, IString? text)
+                {
+                    return Show(caption?.ToString(), text?.ToString());
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(IString? caption, IString? text, MessageBoxImage image)
+                {
+                    return Show(caption?.ToString(), text?.ToString(), image);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(IString? caption, IString? text, MessageBoxImage image, MessageBoxOptions options)
+                {
+                    return Show(caption?.ToString(), text?.ToString(), image, options);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, IString? caption, IString? text)
+                {
+                    return Show(window, caption?.ToString(), text?.ToString());
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, IString? caption, IString? text, MessageBoxImage image)
+                {
+                    return Show(window, caption?.ToString(), text?.ToString(), image);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, IString? caption, IString? text, MessageBoxImage image, MessageBoxOptions options)
+                {
+                    return Show(window, caption?.ToString(), text?.ToString(), image, options);
                 }
             }
 
             public static class Cancel
             {
-                public static MessageBoxResult Show(String text, String caption)
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(String? caption, String? text)
                 {
-                    return Show(text, caption, MessageBoxImage.None);
+                    return Show(caption, text, MessageBoxImage.None);
                 }
 
-                public static MessageBoxResult Show(String text, String caption, MessageBoxImage image)
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(String? caption, String? text, MessageBoxImage image)
                 {
                     return MessageBox.Show(text, caption, MessageBoxButton.YesNoCancel, image, MessageBoxResult.Cancel);
                 }
 
-                public static MessageBoxResult Show(String text, String caption, MessageBoxImage image, MessageBoxOptions options)
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(String? caption, String? text, MessageBoxImage image, MessageBoxOptions options)
                 {
                     return MessageBox.Show(text, caption, MessageBoxButton.YesNoCancel, image, MessageBoxResult.Cancel, options);
                 }
 
-                public static MessageBoxResult Show(Window window, String text, String caption)
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, String? caption, String? text)
                 {
-                    return Show(window, text, caption, MessageBoxImage.None);
+                    return Show(window, caption, text, MessageBoxImage.None);
                 }
 
-                public static MessageBoxResult Show(Window window, String text, String caption, MessageBoxImage image)
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, String? caption, String? text, MessageBoxImage image)
                 {
                     return MessageBox.Show(window, text, caption, MessageBoxButton.YesNoCancel, image, MessageBoxResult.Cancel);
                 }
 
-                public static MessageBoxResult Show(Window window, String text, String caption, MessageBoxImage image, MessageBoxOptions options)
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, String? caption, String? text, MessageBoxImage image, MessageBoxOptions options)
                 {
                     return MessageBox.Show(window, text, caption, MessageBoxButton.YesNoCancel, image, MessageBoxResult.Cancel, options);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(String? caption, IString? text)
+                {
+                    return Show(caption, text?.ToString());
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(String? caption, IString? text, MessageBoxImage image)
+                {
+                    return Show(caption, text?.ToString(), image);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(String? caption, IString? text, MessageBoxImage image, MessageBoxOptions options)
+                {
+                    return Show(caption, text?.ToString(), image, options);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, String? caption, IString? text)
+                {
+                    return Show(window, caption, text?.ToString());
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, String? caption, IString? text, MessageBoxImage image)
+                {
+                    return Show(window, caption, text?.ToString(), image);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, String? caption, IString? text, MessageBoxImage image, MessageBoxOptions options)
+                {
+                    return Show(window, caption, text?.ToString(), image, options);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(IString? caption, String? text)
+                {
+                    return Show(caption?.ToString(), text);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(IString? caption, String? text, MessageBoxImage image)
+                {
+                    return Show(caption?.ToString(), text, image);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(IString? caption, String? text, MessageBoxImage image, MessageBoxOptions options)
+                {
+                    return Show(caption?.ToString(), text, image, options);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, IString? caption, String? text)
+                {
+                    return Show(window, caption?.ToString(), text);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, IString? caption, String? text, MessageBoxImage image)
+                {
+                    return Show(window, caption?.ToString(), text, image);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, IString? caption, String? text, MessageBoxImage image, MessageBoxOptions options)
+                {
+                    return Show(window, caption?.ToString(), text, image, options);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(IString? caption, IString? text)
+                {
+                    return Show(caption?.ToString(), text?.ToString());
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(IString? caption, IString? text, MessageBoxImage image)
+                {
+                    return Show(caption?.ToString(), text?.ToString(), image);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(IString? caption, IString? text, MessageBoxImage image, MessageBoxOptions options)
+                {
+                    return Show(caption?.ToString(), text?.ToString(), image, options);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, IString? caption, IString? text)
+                {
+                    return Show(window, caption?.ToString(), text?.ToString());
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, IString? caption, IString? text, MessageBoxImage image)
+                {
+                    return Show(window, caption?.ToString(), text?.ToString(), image);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                public static MessageBoxResult Show(Window window, IString? caption, IString? text, MessageBoxImage image, MessageBoxOptions options)
+                {
+                    return Show(window, caption?.ToString(), text?.ToString(), image, options);
                 }
             }
         }

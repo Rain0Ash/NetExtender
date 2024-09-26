@@ -8,106 +8,57 @@ using NetExtender.Utilities.Core;
 
 namespace NetExtender.WindowsPresentation.Utilities.Types
 {
+    [SuppressMessage("ReSharper", "ParameterOnlyUsedForPreconditionCheck.Global")]
+    [SuppressMessage("ReSharper", "UnusedParameter.Global")]
     public static class DependencyViewModelUtilities
     {
         static DependencyViewModelUtilities()
         {
-            ReactiveViewModelUtilities.Initialize();
+            ReactiveViewModelServiceProviderUtilities.Initialize();
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T? Get<T>() where T : IDependencyViewModel
+        internal static IServiceProvider GetProvider()
         {
-            return ReactiveViewModelUtilities.Get<T>();
-        }
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean Get<T>([MaybeNullWhen(false)] out T result) where T : IDependencyViewModel
-        {
-            result = Get<T>();
-            return result is not null;
-        }
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T Get<T>(Func<T> alternate) where T : IDependencyViewModel
-        {
-            if (alternate is null)
-            {
-                throw new ArgumentNullException(nameof(alternate));
-            }
-            
-            return Get<T>() ?? alternate();
-        }
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T Get<T, TAlternate>() where T : IDependencyViewModel where TAlternate : T, new()
-        {
-            return Get<T>() ?? new TAlternate();
-        }
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T Require<T>() where T : IDependencyViewModel
-        {
-            return Get<T>() ?? throw new InvalidOperationException($"Dependency model '{typeof(T)}' not found.");
+            return ReactiveViewModelServiceProviderUtilities.Provider();
         }
         
         [ReflectionNaming]
         [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
-        private static class ReactiveViewModelUtilities
+        private static class ReactiveViewModelServiceProviderUtilities
         {
-            private static MethodInfo? DIGetMethod { get; }
+            private const String ReactiveUI = nameof(ReactiveUI);
             
-            static ReactiveViewModelUtilities()
+            [ReflectionNaming]
+            public static Func<IServiceProvider> Provider { get; }
+            
+            static ReactiveViewModelServiceProviderUtilities()
             {
-                if (Initialize(out MethodInfo? method))
+                if (!Initialize(out MethodInfo? provider))
                 {
-                    DIGetMethod = method;
+                    throw new NotSupportedReflectionException($"Not supported. Please, check dependency '{nameof(NetExtender)}.{nameof(WindowsPresentation)}.{nameof(ReactiveUI)}.{nameof(DependencyInjection)}'.");
                 }
+                
+                Provider = provider.CreateDelegate<Func<IServiceProvider>>();
             }
             
             public static void Initialize()
             {
             }
             
-            private static Boolean Initialize([MaybeNullWhen(false)] out MethodInfo method)
+            private static Boolean Initialize([MaybeNullWhen(false)] out MethodInfo provider)
             {
                 try
                 {
-                    Assembly? assembly = Type.GetType(nameof(ReactiveViewModelUtilities))?.Assembly;
-                    Type? type = assembly?.GetType(nameof(ReactiveViewModelUtilities));
-                    
+                    Type? type = Type.GetType($"{nameof(NetExtender)}.{nameof(WindowsPresentation)}.{nameof(Utilities)}.{nameof(Types)}.{nameof(ReactiveViewModelServiceProviderUtilities)}, {nameof(NetExtender)}.{nameof(WindowsPresentation)}.{nameof(ReactiveUI)}.{nameof(DependencyInjection)}");
                     const BindingFlags binding = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
-                    method = type?.GetMethod(nameof(Get), binding, Type.EmptyTypes);
-                    return method is not null;
+                    provider = type?.GetProperty(nameof(Provider), binding)?.GetMethod;
+                    return provider is not null;
                 }
                 catch (Exception)
                 {
-                    method = default;
+                    provider = default;
                     return false;
-                }
-            }
-            
-            [ReflectionSignature]
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static T? Get<T>() where T : IDependencyViewModel
-            {
-                return Storage<T>.Get();
-            }
-            
-            private static class Storage<T> where T : IDependencyViewModel
-            {
-                private static Func<T?> Getter { get; }
-                
-                static Storage()
-                {
-                    Func<T?>? getter = DIGetMethod?.MakeGenericMethod(typeof(T)).CreateDelegate<Func<T?>>();
-                    Getter = getter ?? throw new NotSupportedReflectionException();
-                }
-                
-                [MethodImpl(MethodImplOptions.AggressiveInlining)]
-                public static T? Get()
-                {
-                    return Getter.Invoke();
                 }
             }
         }

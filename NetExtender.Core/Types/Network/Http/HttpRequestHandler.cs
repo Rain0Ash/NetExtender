@@ -193,6 +193,54 @@ namespace NetExtender.Types.Network
             {
                 return await request.Invoke().ConfigureAwait(false);
             }
+            catch (HttpMessageParsingException parsing)
+            {
+                ExceptionHandlerAction action = Handle(parsing);
+                start:
+                switch (action)
+                {
+                    case ExceptionHandlerAction.Successful:
+                    case ExceptionHandlerAction.Ignore:
+                        return default;
+                    case ExceptionHandlerAction.Default:
+                        action = Handle((Exception) parsing) switch
+                        {
+                            ExceptionHandlerAction.Default => ExceptionHandlerAction.Ignore,
+                            var value => value
+                        };
+                        
+                        goto start;
+                    case ExceptionHandlerAction.Throw:
+                    case ExceptionHandlerAction.Rethrow:
+                        throw;
+                    default:
+                        throw new EnumUndefinedOrNotSupportedThrowableException<ExceptionHandlerAction>(action, nameof(action), null);
+                }
+            }
+            catch (MediaTypeNotSupportedException media)
+            {
+                ExceptionHandlerAction action = Handle(media);
+                start:
+                switch (action)
+                {
+                    case ExceptionHandlerAction.Successful:
+                    case ExceptionHandlerAction.Ignore:
+                        return default;
+                    case ExceptionHandlerAction.Default:
+                        action = Handle((Exception) media) switch
+                        {
+                            ExceptionHandlerAction.Default => ExceptionHandlerAction.Ignore,
+                            var value => value
+                        };
+                        
+                        goto start;
+                    case ExceptionHandlerAction.Throw:
+                    case ExceptionHandlerAction.Rethrow:
+                        throw;
+                    default:
+                        throw new EnumUndefinedOrNotSupportedThrowableException<ExceptionHandlerAction>(action, nameof(action), null);
+                }
+            }
             catch (HttpRequestException exception) when (exception.IsSocketException(out SocketException? socket))
             {
                 ExceptionHandlerAction action = Handle(socket);

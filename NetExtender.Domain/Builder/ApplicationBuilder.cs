@@ -22,7 +22,27 @@ namespace NetExtender.Domains.Builder
                 return _manager ??= New(out MiddlewareManagerOptions? options) ? Scan(options.Create()) : null;
             }
         }
-
+        
+        protected ImmutableArray<String>? Arguments
+        {
+            get
+            {
+                return NetExtender.Initializer.Initializer.Arguments;
+            }
+            set
+            {
+                NetExtender.Initializer.Initializer.Arguments = value;
+            }
+        }
+        
+        protected virtual Boolean Confidential
+        {
+            get
+            {
+                return false;
+            }
+        }
+        
         public virtual Boolean IsScan
         {
             get
@@ -40,12 +60,20 @@ namespace NetExtender.Domains.Builder
         {
             try
             {
+                Arguments = arguments;
                 TType? instance = Activator.CreateInstance(typeof(TType), BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic) as TType;
                 return instance ?? throw new InvalidOperationException($"Can't create instance of {typeof(TType)} for builder");
             }
             catch (Exception exception)
             {
                 throw new InvalidOperationException($"Can't create instance of {typeof(TType)} for builder", exception);
+            }
+            finally
+            {
+                if (Confidential)
+                {
+                    Arguments = null;
+                }
             }
         }
         

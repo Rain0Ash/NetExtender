@@ -266,64 +266,64 @@ namespace NetExtender.Types.Enums
             return value?.ToString();
         }
 
-        public static Boolean operator ==(Enum<T> first, Enum<T> second)
+        public static Boolean operator ==(Enum<T>? first, Enum<T>? second)
         {
-            return Equals(first, second);
+            return ReferenceEquals(first, second) || first is not null && first.Equals(second);
         }
 
-        public static Boolean operator !=(Enum<T> first, Enum<T> second)
+        public static Boolean operator !=(Enum<T>? first, Enum<T>? second)
         {
-            return !Equals(first, second);
+            return !(first == second);
         }
 
-        public static Boolean operator <(Enum<T> first, Enum<T> second)
+        public static Boolean operator <(Enum<T>? first, Enum<T>? second)
         {
-            return first.CompareTo(second) < 0;
+            return !ReferenceEquals(first, second) && first is not null && first.CompareTo(second) < 0;
         }
 
-        public static Boolean operator >(Enum<T> first, Enum<T> second)
+        public static Boolean operator >(Enum<T>? first, Enum<T>? second)
         {
-            return first.CompareTo(second) > 0;
+            return !ReferenceEquals(first, second) && first is not null && first.CompareTo(second) > 0;
         }
 
-        public static Boolean operator <=(Enum<T> first, Enum<T> second)
+        public static Boolean operator <=(Enum<T>? first, Enum<T>? second)
         {
-            return first.CompareTo(second) <= 0;
+            return ReferenceEquals(first, second) || first is not null && first.CompareTo(second) <= 0;
         }
 
-        public static Boolean operator >=(Enum<T> first, Enum<T> second)
+        public static Boolean operator >=(Enum<T>? first, Enum<T>? second)
         {
-            return first.CompareTo(second) >= 0;
+            return ReferenceEquals(first, second) || first is not null && first.CompareTo(second) >= 0;
         }
 
-        public static Boolean operator ==(Enum<T> first, T second)
+        public static Boolean operator ==(Enum<T>? first, T second)
         {
-            return first.Equals(second);
+            return first is not null && first.Equals(second);
         }
 
-        public static Boolean operator !=(Enum<T> first, T second)
+        public static Boolean operator !=(Enum<T>? first, T second)
         {
-            return !first.Equals(second);
+            return !(first == second);
         }
 
-        public static Boolean operator <(Enum<T> first, T second)
+        public static Boolean operator <(Enum<T>? first, T second)
         {
-            return first.CompareTo(second) < 0;
+            return first is null || first.CompareTo(second) < 0;
         }
 
-        public static Boolean operator >(Enum<T> first, T second)
+        public static Boolean operator >(Enum<T>? first, T second)
         {
-            return first.CompareTo(second) > 0;
+            return first is not null && first.CompareTo(second) > 0;
         }
 
-        public static Boolean operator <=(Enum<T> first, T second)
+        public static Boolean operator <=(Enum<T>? first, T second)
         {
-            return first.CompareTo(second) <= 0;
+            return first is null || first.CompareTo(second) <= 0;
         }
 
-        public static Boolean operator >=(Enum<T> first, T second)
+        public static Boolean operator >=(Enum<T>? first, T second)
         {
-            return first.CompareTo(second) >= 0;
+            return first is not null && first.CompareTo(second) >= 0;
         }
 
         [JsonIgnore]

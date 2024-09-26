@@ -11,6 +11,8 @@ using NetExtender.Domains.Applications.Interfaces;
 using NetExtender.Types.Dispatchers;
 using NetExtender.Types.Dispatchers.Interfaces;
 using NetExtender.Utilities.Core;
+using NetExtender.WindowsPresentation.Types;
+using NetExtender.WindowsPresentation.Types.Applications.Interfaces;
 
 namespace NetExtender.Domains.WindowsPresentation.Applications
 {
@@ -27,12 +29,20 @@ namespace NetExtender.Domains.WindowsPresentation.Applications
         }
     }
 
-    public class WindowsPresentationApplication : Application<Window>
+    public class WindowsPresentationApplication : Application<Window>, IDependencyApplication
     {
         public System.Windows.Application Application { get; }
+        
+        public WindowsPresentationServiceProvider Provider
+        {
+            get
+            {
+                return WindowsPresentationServiceProvider.Internal;
+            }
+        }
 
-        public override IDispatcher Dispatcher { get; } = new DispatcherWrapper(System.Windows.Application.Current.Dispatcher);
-
+        public override IDispatcher Dispatcher { get; }
+        
         public override ApplicationShutdownMode ShutdownMode
         {
             get
@@ -48,12 +58,24 @@ namespace NetExtender.Domains.WindowsPresentation.Applications
 
                 try
                 {
-                    Application.ShutdownMode = (ShutdownMode) value;
+                    Dispatcher.Invoke(() => Application.ShutdownMode = (ShutdownMode) value);
                 }
                 catch(InvalidOperationException)
                 {
                     //ignore
                 }
+            }
+        }
+        
+        ShutdownMode IDependencyApplication.ShutdownMode
+        {
+            get
+            {
+                return Dispatcher.Invoke(() => Application.ShutdownMode);
+            }
+            set
+            {
+                Dispatcher.Invoke(() => Application.ShutdownMode = value);
             }
         }
 
@@ -65,6 +87,7 @@ namespace NetExtender.Domains.WindowsPresentation.Applications
         public WindowsPresentationApplication(System.Windows.Application application)
         {
             Application = application ?? throw new ArgumentNullException(nameof(application));
+            Dispatcher = new DispatcherWrapper(Application.Dispatcher);
         }
 
         public override Task<IApplication> RunAsync(Window? window, CancellationToken token)

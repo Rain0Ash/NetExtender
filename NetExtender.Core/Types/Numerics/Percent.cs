@@ -3,8 +3,7 @@ using System.Runtime.CompilerServices;
 
 namespace NetExtender.Types.Numerics
 {
-    //TODO:
-    public readonly struct Percent /*: IEquatable<Percent>, IComparable<Percent>, IConvertible, IFormattable*/
+    public readonly struct Percent : IEquatable<Percent>, IComparable<Percent>, IConvertible, IFormattable
     {
         public static implicit operator Percent(SByte value)
         {
@@ -69,13 +68,43 @@ namespace NetExtender.Types.Numerics
         
         public static implicit operator Double(Percent value)
         {
-            return value.Value * 100;
+            return value.Value;
         }
         
         public static implicit operator Decimal(Percent value)
         {
             Double result = value;
             return (Decimal) result;
+        }
+        
+        public static Boolean operator ==(Percent first, Percent second)
+        {
+            return Math.Abs(first.Value - second.Value) < Double.Epsilon;
+        }
+        
+        public static Boolean operator !=(Percent first, Percent second)
+        {
+            return !(first == second);
+        }
+        
+        public static Boolean operator <(Percent first, Percent second)
+        {
+            return first.Value < second.Value;
+        }
+        
+        public static Boolean operator >(Percent first, Percent second)
+        {
+            return first.Value > second.Value;
+        }
+        
+        public static Boolean operator <=(Percent first, Percent second)
+        {
+            return first.Value <= second.Value;
+        }
+        
+        public static Boolean operator >=(Percent first, Percent second)
+        {
+            return first.Value >= second.Value;
         }
         
         public static Percent operator +(Percent first, Percent second)
@@ -86,46 +115,6 @@ namespace NetExtender.Types.Numerics
         public static Percent operator -(Percent first, Percent second)
         {
             return Unchecked(first.Value + second.Value);
-        }
-        
-        public static Percent operator *(Percent first, SByte second)
-        {
-            return Unchecked(first.Value * second);
-        }
-        
-        public static Percent operator *(SByte first, Percent second)
-        {
-            return Unchecked(first * second.Value);
-        }
-        
-        public static Percent operator *(Percent first, Byte second)
-        {
-            return Unchecked(first.Value * second);
-        }
-        
-        public static Percent operator *(Byte first, Percent second)
-        {
-            return Unchecked(first * second.Value);
-        }
-        
-        public static Percent operator *(Percent first, Int16 second)
-        {
-            return Unchecked(first.Value * second);
-        }
-        
-        public static Percent operator *(Int16 first, Percent second)
-        {
-            return Unchecked(first * second.Value);
-        }
-        
-        public static Percent operator *(Percent first, UInt16 second)
-        {
-            return Unchecked(first.Value * second);
-        }
-        
-        public static Percent operator *(UInt16 first, Percent second)
-        {
-            return Unchecked(first * second.Value);
         }
         
         public static Percent operator *(Percent first, Percent second)
@@ -204,6 +193,91 @@ namespace NetExtender.Types.Numerics
             return FromReal(value / 1000);
         }
         
+        TypeCode IConvertible.GetTypeCode()
+        {
+            return Value.GetTypeCode();
+        }
+        
+        Object IConvertible.ToType(Type conversionType, IFormatProvider? provider)
+        {
+            return ((IConvertible) Value).ToType(conversionType, provider);
+        }
+        
+        Boolean IConvertible.ToBoolean(IFormatProvider? provider)
+        {
+            return ((IConvertible) Value).ToBoolean(provider);
+        }
+        
+        Char IConvertible.ToChar(IFormatProvider? provider)
+        {
+            return ((IConvertible) Value).ToChar(provider);
+        }
+        
+        SByte IConvertible.ToSByte(IFormatProvider? provider)
+        {
+            return ((IConvertible) Value).ToSByte(provider);
+        }
+        
+        Byte IConvertible.ToByte(IFormatProvider? provider)
+        {
+            return ((IConvertible) Value).ToByte(provider);
+        }
+        
+        Int16 IConvertible.ToInt16(IFormatProvider? provider)
+        {
+            return ((IConvertible) Value).ToInt16(provider);
+        }
+        
+        UInt16 IConvertible.ToUInt16(IFormatProvider? provider)
+        {
+            return ((IConvertible) Value).ToUInt16(provider);
+        }
+        
+        Int32 IConvertible.ToInt32(IFormatProvider? provider)
+        {
+            return ((IConvertible) Value).ToInt32(provider);
+        }
+        
+        UInt32 IConvertible.ToUInt32(IFormatProvider? provider)
+        {
+            return ((IConvertible) Value).ToUInt32(provider);
+        }
+        
+        Int64 IConvertible.ToInt64(IFormatProvider? provider)
+        {
+            return ((IConvertible) Value).ToInt64(provider);
+        }
+        
+        UInt64 IConvertible.ToUInt64(IFormatProvider? provider)
+        {
+            return ((IConvertible) Value).ToUInt64(provider);
+        }
+        
+        Single IConvertible.ToSingle(IFormatProvider? provider)
+        {
+            return ((IConvertible) Value).ToSingle(provider);
+        }
+        
+        Double IConvertible.ToDouble(IFormatProvider? provider)
+        {
+            return ((IConvertible) Value).ToDouble(provider);
+        }
+        
+        Decimal IConvertible.ToDecimal(IFormatProvider? provider)
+        {
+            return ((IConvertible) Value).ToDecimal(provider);
+        }
+        
+        DateTime IConvertible.ToDateTime(IFormatProvider? provider)
+        {
+            return ((IConvertible) Value).ToDateTime(provider);
+        }
+        
+        public Int32 CompareTo(Percent other)
+        {
+            return Value.CompareTo(other.Value);
+        }
+        
         public override Int32 GetHashCode()
         {
             return Value.GetHashCode();
@@ -211,12 +285,31 @@ namespace NetExtender.Types.Numerics
         
         public override Boolean Equals(Object? other)
         {
-            return Value.Equals(other);
+            return other switch
+            {
+                Percent percent => Equals(percent),
+                _ => Value.Equals(other)
+            };
+        }
+        
+        public Boolean Equals(Percent other)
+        {
+            return this == other;
         }
         
         public override String ToString()
         {
             return $"{Value * 100}%";
+        }
+        
+        public String ToString(String? format, IFormatProvider? provider)
+        {
+            return $"{(Value * 100).ToString(format, provider)}%";
+        }
+        
+        public String ToString(IFormatProvider? provider)
+        {
+            return Value.ToString(provider);
         }
     }
 }

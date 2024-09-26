@@ -2,6 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
@@ -32,7 +33,15 @@ namespace NetExtender.Utilities.Application
                 BuildDateTime = GetBuildDateTimeInternal(Path);
             }
         }
-
+        
+        public static ImmutableArray<String> Arguments
+        {
+            get
+            {
+                return Initializer.Initializer.Arguments ?? Environment.GetCommandLineArgs().ToImmutableArray();
+            }
+        }
+        
         public static String? FriendlyName { get; }
         public static String? Path { get; }
 

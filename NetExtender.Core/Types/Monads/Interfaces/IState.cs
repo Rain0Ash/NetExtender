@@ -1,9 +1,14 @@
 using System;
 using System.Collections.Generic;
 using NetExtender.Interfaces;
+using NetExtender.Interfaces.Notify;
 
 namespace NetExtender.Types.Monads.Interfaces
 {
+    public interface INotifyState<T> : IState<T>, INotifyState
+    {
+    }
+    
     public interface IState<T> : IState, IStateEquatable<T, T>, IStateEquatable<T, IState<T>>, IStateComparable<T, T>, IStateComparable<T, IState<T>>, ICloneable<IState<T>>
     {
         public T Value { get; }
@@ -29,6 +34,10 @@ namespace NetExtender.Types.Monads.Interfaces
         public new IState<T> Clone();
         public Boolean Equals(Object? other, IEqualityComparer<T>? comparer);
         public Boolean Equals(Object? other, StateEquality equality, IEqualityComparer<T>? comparer);
+    }
+    
+    public interface INotifyState : IState, INotifyProperty
+    {
     }
     
     public interface IState : ICloneable, ICloneable<IState>

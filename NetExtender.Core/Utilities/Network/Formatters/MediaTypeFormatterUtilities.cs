@@ -2,11 +2,16 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Net.Http.Headers;
+using System.Runtime.CompilerServices;
 using NetExtender.Types.Exceptions;
 using NetExtender.Types.Network.Formatters;
+using NetExtender.Types.Network.Formatters.Exceptions;
+using NetExtender.Types.Network.Formatters.Interfaces;
 
 namespace NetExtender.Utilities.Network.Formatters
 {
@@ -32,7 +37,7 @@ namespace NetExtender.Utilities.Network.Formatters
     public static class MediaTypeFormatterUtilities
     {
         [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
-        public static class Utf8
+        public static class UTF8
         {
             public static MediaTypeHeaderValue ApplicationOctetStreamMediaType
             {
@@ -183,14 +188,14 @@ namespace NetExtender.Utilities.Network.Formatters
         {
             return !utf8 ? Create(type) : type switch
             {
-                MediaTypeHeaderValueType.Text => Utf8.TextPlainMediaType,
-                MediaTypeHeaderValueType.TextJson => Utf8.TextJsonMediaType,
-                MediaTypeHeaderValueType.TextXml => Utf8.TextXmlMediaType,
-                MediaTypeHeaderValueType.Json => Utf8.ApplicationJsonMediaType,
-                MediaTypeHeaderValueType.Xml => Utf8.ApplicationXmlMediaType,
-                MediaTypeHeaderValueType.Bson => Utf8.ApplicationBsonMediaType,
-                MediaTypeHeaderValueType.OctetStream => Utf8.ApplicationOctetStreamMediaType,
-                MediaTypeHeaderValueType.FormUrlEncoded => Utf8.ApplicationFormUrlEncodedMediaType,
+                MediaTypeHeaderValueType.Text => UTF8.TextPlainMediaType,
+                MediaTypeHeaderValueType.TextJson => UTF8.TextJsonMediaType,
+                MediaTypeHeaderValueType.TextXml => UTF8.TextXmlMediaType,
+                MediaTypeHeaderValueType.Json => UTF8.ApplicationJsonMediaType,
+                MediaTypeHeaderValueType.Xml => UTF8.ApplicationXmlMediaType,
+                MediaTypeHeaderValueType.Bson => UTF8.ApplicationBsonMediaType,
+                MediaTypeHeaderValueType.OctetStream => UTF8.ApplicationOctetStreamMediaType,
+                MediaTypeHeaderValueType.FormUrlEncoded => UTF8.ApplicationFormUrlEncodedMediaType,
                 _ => throw new EnumUndefinedOrNotSupportedException<MediaTypeHeaderValueType>(type, nameof(type), null)
             };
         }
@@ -306,11 +311,13 @@ namespace NetExtender.Utilities.Network.Formatters
             formatter.MediaTypeFormatterMapping.Add(mapping);
         }
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsSubsetOf(this MediaTypeHeaderValue source, MediaTypeHeaderValue destination)
         {
             return IsSubsetOf(source, destination, out _);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static Boolean IsSubsetOf(this MediaTypeHeaderValue source, MediaTypeHeaderValue? destination, out MediaTypeHeaderValueRange result)
         {
             if (destination is null)
@@ -336,6 +343,196 @@ namespace NetExtender.Utilities.Network.Formatters
             }
 
             return source.Parameters.Select(item => Enumerable.Contains(destination.Parameters, item)).All(flag => flag);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableSortedSet<MediaTypeHeader> MediaType(this IReadOnlyMediaTypeFormatter source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.SupportedMediaType.ToImmutableSortedSet();
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableSortedSet<MediaTypeHeader> MediaType(this IEnumerable<IReadOnlyMediaTypeFormatter> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            return source.SelectMany(static formatter => formatter.SupportedMediaType).ToImmutableSortedSet();
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String? Lower(this MediaTypeHeader source)
+        {
+            return source.ToString()?.ToLowerInvariant();
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String Lower(this MediaTypeHeaderValue source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.ToString().ToLowerInvariant();
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String? Upper(this MediaTypeHeader source)
+        {
+            return source.ToString()?.ToUpperInvariant();
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String Upper(this MediaTypeHeaderValue source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.ToString().ToUpperInvariant();
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String? LowerCharSet(this MediaTypeHeader source)
+        {
+            return source.CharSet?.ToLowerInvariant();
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String? LowerCharSet(this MediaTypeHeaderValue source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.CharSet?.ToLowerInvariant();
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String? UpperCharSet(this MediaTypeHeader source)
+        {
+            return source.CharSet?.ToUpperInvariant();
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String? UpperCharSet(this MediaTypeHeaderValue source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.CharSet?.ToUpperInvariant();
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String? LowerMediaType(this MediaTypeHeader source)
+        {
+            return source.MediaType?.ToLowerInvariant();
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String? LowerMediaType(this MediaTypeHeaderValue source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.MediaType?.ToLowerInvariant();
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String? UpperMediaType(this MediaTypeHeader source)
+        {
+            return source.MediaType?.ToUpperInvariant();
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String? UpperMediaType(this MediaTypeHeaderValue source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.MediaType?.ToUpperInvariant();
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String? Lower(this MediaTypeNotSupportedException exception)
+        {
+            if (exception is null)
+            {
+                throw new ArgumentNullException(nameof(exception));
+            }
+
+            return exception.MediaType is { } media ? Lower(media) : null;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String? Upper(this MediaTypeNotSupportedException exception)
+        {
+            if (exception is null)
+            {
+                throw new ArgumentNullException(nameof(exception));
+            }
+            
+            return exception.MediaType is { } media ? Upper(media) : null;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String? LowerCharSet(this MediaTypeNotSupportedException exception)
+        {
+            if (exception is null)
+            {
+                throw new ArgumentNullException(nameof(exception));
+            }
+            
+            return exception.MediaType is { } media ? LowerCharSet(media) : null;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String? UpperCharSet(this MediaTypeNotSupportedException exception)
+        {
+            if (exception is null)
+            {
+                throw new ArgumentNullException(nameof(exception));
+            }
+            
+            return exception.MediaType is { } media ? UpperCharSet(media) : null;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String? LowerMediaType(this MediaTypeNotSupportedException exception)
+        {
+            if (exception is null)
+            {
+                throw new ArgumentNullException(nameof(exception));
+            }
+            
+            return exception.MediaType is { } media ? LowerMediaType(media) : null;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String? UpperMediaType(this MediaTypeNotSupportedException exception)
+        {
+            if (exception is null)
+            {
+                throw new ArgumentNullException(nameof(exception));
+            }
+            
+            return exception.MediaType is { } media ? UpperMediaType(media) : null;
         }
     }
 }

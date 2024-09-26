@@ -121,6 +121,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.Domain.Windows.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.Domain.WindowsPresentation", "NetExtender.Domain.WindowsPresentation\NetExtender.Domain.WindowsPresentation.csproj", "{265EEED3-7DFD-4CEF-9E88-8F3BEC4F0994}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.Domain.WindowsPresentation.DependencyInjection", "NetExtender.Domain.WindowsPresentation.DependencyInjection\NetExtender.Domain.WindowsPresentation.DependencyInjection.csproj", "{4D266932-8A8D-462D-ADAF-614FF7881614}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.Domain.WindowsPresentation.AspNetCore", "NetExtender.Domain.WindowsPresentation.AspNetCore\NetExtender.Domain.WindowsPresentation.AspNetCore.csproj", "{6DD44487-5020-48DF-8A41-33E0813A65AA}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.Domain.WinForms", "NetExtender.Domain.WinForms\NetExtender.Domain.WinForms.csproj", "{7E0E72A6-A871-474B-83E0-377B5276766C}"
@@ -460,6 +462,11 @@ Global
                 {265EEED3-7DFD-4CEF-9E88-8F3BEC4F0994}.Release|Any CPU.ActiveCfg = Release|Any CPU
                 {265EEED3-7DFD-4CEF-9E88-8F3BEC4F0994}.Release|Any CPU.Build.0 = Release|Any CPU
 
+                {4D266932-8A8D-462D-ADAF-614FF7881614}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+                {4D266932-8A8D-462D-ADAF-614FF7881614}.Debug|Any CPU.Build.0 = Debug|Any CPU
+                {4D266932-8A8D-462D-ADAF-614FF7881614}.Release|Any CPU.ActiveCfg = Release|Any CPU
+                {4D266932-8A8D-462D-ADAF-614FF7881614}.Release|Any CPU.Build.0 = Release|Any CPU
+
                 {6DD44487-5020-48DF-8A41-33E0813A65AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
                 {6DD44487-5020-48DF-8A41-33E0813A65AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
                 {6DD44487-5020-48DF-8A41-33E0813A65AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -725,6 +732,7 @@ Global
                 {D6A48FD6-BFEF-4618-BF09-A05C3B86D8E0} = {57E5B92C-BB28-4EA3-B380-1CC3B8B2F71A}
                 {F03DD29F-3866-41B8-A478-7F7C506A2D0F} = {57E5B92C-BB28-4EA3-B380-1CC3B8B2F71A}
                 {265EEED3-7DFD-4CEF-9E88-8F3BEC4F0994} = {57E5B92C-BB28-4EA3-B380-1CC3B8B2F71A}
+                {4D266932-8A8D-462D-ADAF-614FF7881614} = {57E5B92C-BB28-4EA3-B380-1CC3B8B2F71A}
                 {6DD44487-5020-48DF-8A41-33E0813A65AA} = {57E5B92C-BB28-4EA3-B380-1CC3B8B2F71A}
                 {7E0E72A6-A871-474B-83E0-377B5276766C} = {57E5B92C-BB28-4EA3-B380-1CC3B8B2F71A}
                 {2105F181-7E83-41D7-9C1B-3C8F662ADE0F} = {57E5B92C-BB28-4EA3-B380-1CC3B8B2F71A}

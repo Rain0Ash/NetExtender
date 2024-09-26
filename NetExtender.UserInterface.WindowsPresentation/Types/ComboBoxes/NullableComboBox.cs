@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -39,7 +40,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.Types.ComboBoxes
         {
             return value!;
         }
-        
+
         public Maybe<T> Get<T>()
         {
             return GetSelectedItem<T>();
@@ -96,8 +97,10 @@ namespace NetExtender.UserInterface.WindowsPresentation.Types.ComboBoxes
             return Update<T, View<T>>();
         }
 
-        protected Boolean Update<T, TView>() where TView : class
+        protected Boolean Update<T, TView>() where TView : class, IView
         {
+            File.WriteAllText("", "");
+            
             if (Nullable.View is null)
             {
                 Nullable = DefaultItem is not null ? new Container(new View<T>(DefaultItem)) { IsAuto = true } : default;
@@ -154,7 +157,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.Types.ComboBoxes
                 SetItemsSource(source);
                 return;
             }
-            
+
             SetItemsSource(nullable, source.Select(Convert));
         }
         

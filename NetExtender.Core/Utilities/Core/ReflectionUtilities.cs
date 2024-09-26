@@ -17,6 +17,7 @@ using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
+using HarmonyLib;
 using NetExtender.Types.Anonymous;
 using NetExtender.Types.Assemblies;
 using NetExtender.Types.Assemblies.Interfaces;
@@ -26,6 +27,7 @@ using NetExtender.Types.Exceptions;
 using NetExtender.Types.Monads;
 using NetExtender.Types.Monads.Interfaces;
 using NetExtender.Types.Reflection;
+using NetExtender.Utilities.Numerics;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Utilities.Core
@@ -65,7 +67,9 @@ namespace NetExtender.Utilities.Core
         NotEquals,
         NameNotEquals,
         TypeNotEquals,
+        AccessNotEquals,
         AttributeNotEquals,
+        CallingConventionNotEquals,
         SignatureNotEquals,
         ReturnTypeNotEquals,
         AccessorNotEquals,
@@ -104,7 +108,8 @@ namespace NetExtender.Utilities.Core
         None = 0,
         Name = 1,
         Access = 2,
-        Attribute = 8 | Access,
+        Attribute = 4 | Access,
+        Accessor = 8 | Access,
         Strict = Name | Access,
         NotStrict = Name,
         All = Name | Attribute
@@ -128,8 +133,9 @@ namespace NetExtender.Utilities.Core
     {
         None = 0,
         Name = 1,
-        Multicast = 2,
-        Attribute = 4 | Multicast,
+        Access = 2,
+        Multicast = 4,
+        Attribute = 8 | Access | Multicast,
         Strict = Name | Attribute,
         NotStrict = Name | Multicast,
         All = Name | Attribute
@@ -155,6 +161,8 @@ namespace NetExtender.Utilities.Core
     [SuppressMessage("ReSharper", "ParameterHidesMember")]
     public static partial class ReflectionUtilities
     {
+        public const String Constructor = Initializer.Initializer.ReflectionUtilities.Constructor;
+        
         private static readonly IResettableLazy<InheritEvaluator> inherit = new ResettableLazy<InheritEvaluator>(InheritEvaluator.Create, LazyThreadSafetyMode.ExecutionAndPublication);
         public static Inherit.Result Inherit
         {
@@ -174,8 +182,8 @@ namespace NetExtender.Utilities.Core
             }
         }
         
-        private static volatile Int32 assemblies;
-        public static Int32 Assemblies
+        private static readonly ConcurrentHashSet<Assembly> assemblies = new ConcurrentHashSet<Assembly>();
+        public static IReadOnlyCollection<Assembly> Assemblies
         {
             get
             {
@@ -203,33 +211,37 @@ namespace NetExtender.Utilities.Core
                     inherit.Reset(InheritEvaluator.Create);
                 }
             });
-            
+
             AppDomain.CurrentDomain.AssemblyLoad += OnAssemblyLoad;
         }
 
         private static async void OnAssemblyLoad(Object? sender, AssemblyLoadEventArgs args)
         {
-            Task task = Task.Run(async () =>
+            Task<Assembly> task = Task.Run(async () =>
             {
-                await Scan(args.LoadedAssembly);
+                Assembly assembly = args.LoadedAssembly;
+                await Scan(assembly).ConfigureAwait(false);
                 
-                CallStaticInitializerAttribute<StaticInitializerRequiredAttribute>(args.LoadedAssembly);
+                CallStaticInitializerAttribute<StaticInitializerRequiredAttribute>(assembly);
                 
                 if (AssemblyLoadCallStaticConstructor)
                 {
-                    CallStaticInitializerAttribute(args.LoadedAssembly);
+                    CallStaticInitializerAttribute(assembly);
                 }
+                
+                return assembly;
             });
             
             scanningset.Add(task);
             scanningbag.Add(task);
-            
-            _ = task.ContinueWith(static task =>
+
+            _ = await task.ContinueWith(async static task =>
             {
+                Assembly assembly = await task;
                 scanningset.Remove(task);
-                Interlocked.Increment(ref assemblies);
+                assemblies.Add(assembly);
             });
-            
+
             await Task.WhenAll(scanningbag).ContinueWith(static () =>
             {
                 if (scanningset.Count <= 0)
@@ -779,14 +791,14 @@ namespace NetExtender.Utilities.Core
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean IsOverridable(this MethodInfo method)
+        public static Boolean IsOverridable(this MethodBase method)
         {
             if (method is null)
             {
                 throw new ArgumentNullException(nameof(method));
             }
 
-            return method.IsAbstract || method.IsInheritable() && method.IsVirtual && !method.IsFinal;
+            return method.IsAbstract || method.IsInheritable() && method is {IsVirtual: true, IsFinal: false};
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1038,6 +1050,24 @@ namespace NetExtender.Utilities.Core
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [return: NotNullIfNotNull("parameters")]
+        public static Type[]? Types(this ParameterInfo[]? parameters)
+        {
+            return parameters?.ConvertAll(static parameter => parameter.ParameterType);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Type[] GetParameterTypes(this MethodBase method)
+        {
+            if (method is null)
+            {
+                throw new ArgumentNullException(nameof(method));
+            }
+
+            return method.GetParameters().Types();
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Type GetMemberType(this MemberInfo info)
         {
             if (info is null)
@@ -1052,7 +1082,181 @@ namespace NetExtender.Utilities.Core
                 _ => throw new ArgumentException($"Member {info.GetType().Name} is not {nameof(FieldInfo)} or {nameof(PropertyInfo)}")
             };
         }
-
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static MethodInfo? GetMethod(this Type type, String name, ParameterInfo[] parameters)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+            
+            if (name is null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+            
+            if (parameters is null)
+            {
+                throw new ArgumentNullException(nameof(parameters));
+            }
+            
+            return type.GetMethod(name, parameters.Types());
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static MethodInfo? GetMethod(this Type type, String name, ParameterInfo[] parameters, ParameterModifier[]? modifiers)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+            
+            if (name is null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+            
+            if (parameters is null)
+            {
+                throw new ArgumentNullException(nameof(parameters));
+            }
+            
+            return type.GetMethod(name, parameters.Types(), modifiers);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static MethodInfo? GetMethod(this Type type, String name, BindingFlags bindingAttr, ParameterInfo[] parameters)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+            
+            if (name is null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+            
+            if (parameters is null)
+            {
+                throw new ArgumentNullException(nameof(parameters));
+            }
+            
+            return type.GetMethod(name, bindingAttr, parameters.Types());
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static MethodInfo? GetMethod(this Type type, String name, BindingFlags bindingAttr, Type[] parameters, ParameterModifier[]? modifiers)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+            
+            if (name is null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+            
+            if (parameters is null)
+            {
+                throw new ArgumentNullException(nameof(parameters));
+            }
+            
+            return type.GetMethod(name, bindingAttr, null, parameters, modifiers);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static MethodInfo? GetMethod(this Type type, String name, BindingFlags bindingAttr, ParameterInfo[] parameters, ParameterModifier[]? modifiers)
+        {
+            return GetMethod(type, name, bindingAttr, null, parameters, modifiers);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static MethodInfo? GetMethod(this Type type, String name, BindingFlags bindingAttr, Binder? binder, ParameterInfo[] parameters, ParameterModifier[]? modifiers)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+            
+            if (name is null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+            
+            if (parameters is null)
+            {
+                throw new ArgumentNullException(nameof(parameters));
+            }
+            
+            return type.GetMethod(name, bindingAttr, binder, parameters.Types(), modifiers);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static MethodInfo? GetMethod(this Type type, String name, BindingFlags bindingAttr, Binder? binder, CallingConventions callConvention, ParameterInfo[] parameters, ParameterModifier[]? modifiers)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+            
+            if (name is null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+            
+            if (parameters is null)
+            {
+                throw new ArgumentNullException(nameof(parameters));
+            }
+            
+            return type.GetMethod(name, bindingAttr, binder, callConvention, parameters.Types(), modifiers);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static MethodInfo? GetMethod(this Type type, String name, Int32 genericParameterCount, ParameterInfo[] parameters)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+            
+            if (name is null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+            
+            if (parameters is null)
+            {
+                throw new ArgumentNullException(nameof(parameters));
+            }
+            
+            return type.GetMethod(name, genericParameterCount, parameters.Types());
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static MethodInfo? GetMethod(this Type type, String name, Int32 genericParameterCount, ParameterInfo[] parameters, ParameterModifier[]? modifiers)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+            
+            if (name is null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+            
+            if (parameters is null)
+            {
+                throw new ArgumentNullException(nameof(parameters));
+            }
+            
+            return type.GetMethod(name, genericParameterCount, parameters.Types(), modifiers);
+        }
+        
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static MethodInfo? GetMethod(this Type type, String name, Int32 genericParameterCount, BindingFlags bindingAttr, Type[] types)
         {
@@ -1072,6 +1276,69 @@ namespace NetExtender.Utilities.Core
             }
 
             return type.GetMethod(name, genericParameterCount, bindingAttr, null, types, null);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static MethodInfo? GetMethod(this Type type, String name, Int32 genericParameterCount, BindingFlags bindingAttr, ParameterInfo[] parameters)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            if (name is null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
+            if (parameters is null)
+            {
+                throw new ArgumentNullException(nameof(parameters));
+            }
+
+            return GetMethod(type, name, genericParameterCount, bindingAttr, parameters.Types());
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static MethodInfo? GetMethod(this Type type, String name, Int32 genericParameterCount, BindingFlags bindingAttr, Type[] types, ParameterModifier[]? modifiers)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            if (name is null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
+            if (types is null)
+            {
+                throw new ArgumentNullException(nameof(types));
+            }
+
+            return type.GetMethod(name, genericParameterCount, bindingAttr, null, types, modifiers);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static MethodInfo? GetMethod(this Type type, String name, Int32 genericParameterCount, BindingFlags bindingAttr, ParameterInfo[] parameters, ParameterModifier[]? modifiers)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            if (name is null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
+            if (parameters is null)
+            {
+                throw new ArgumentNullException(nameof(parameters));
+            }
+
+            return GetMethod(type, name, genericParameterCount, bindingAttr, parameters.Types(), modifiers);
         }
 
         private static IEnumerable<MethodInfo> Filter(this MethodInfo[] methods, String name, Type[] generics, Type[] types)
@@ -1135,6 +1402,31 @@ namespace NetExtender.Utilities.Core
             };
         }
         
+        public static MethodInfo? GetMethod(this Type type, String name, Type[] generics, ParameterInfo[] parameters)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            if (name is null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
+            if (generics is null)
+            {
+                throw new ArgumentNullException(nameof(generics));
+            }
+
+            if (parameters is null)
+            {
+                throw new ArgumentNullException(nameof(parameters));
+            }
+            
+            return GetMethod(type, name, generics, parameters.Types());
+        }
+        
         public static MethodInfo? GetMethod(this Type type, String name, BindingFlags bindingAttr, Type[] generics, Type[] types)
         {
             if (type is null)
@@ -1165,6 +1457,31 @@ namespace NetExtender.Utilities.Core
                 1 => array[0],
                 _ => throw new AmbiguousMatchException()
             };
+        }
+        
+        public static MethodInfo? GetMethod(this Type type, String name, BindingFlags bindingAttr, Type[] generics, ParameterInfo[] parameters)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+            
+            if (name is null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+            
+            if (generics is null)
+            {
+                throw new ArgumentNullException(nameof(generics));
+            }
+            
+            if (parameters is null)
+            {
+                throw new ArgumentNullException(nameof(parameters));
+            }
+            
+            return GetMethod(type, name, bindingAttr, generics, parameters.Types());
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -2185,7 +2502,7 @@ namespace NetExtender.Utilities.Core
                 
                 try
                 {
-                    return Initializer.Initializer.ReflectionUtilities.Seal(type, Assembly, Assembly.Storage);
+                    return Assembly.Storage.GetOrAdd(type, Initializer.Initializer.ReflectionUtilities.Seal(type, Assembly));
                 }
                 catch (Initializer.Initializer.ReflectionUtilities.TypeSealException exception)
                 {
@@ -3113,6 +3430,28 @@ namespace NetExtender.Utilities.Core
             return result;
         }
 
+        private static MethodDifferenceStrictMode ToMethodDifferenceStrictMode(this EventDifferenceStrictMode strict)
+        {
+            MethodDifferenceStrictMode result = MethodDifferenceStrictMode.None;
+
+            if (strict.HasFlag(EventDifferenceStrictMode.Name))
+            {
+                result |= MethodDifferenceStrictMode.Name;
+            }
+
+            if (strict.HasFlag(EventDifferenceStrictMode.Access))
+            {
+                result |= MethodDifferenceStrictMode.Access;
+            }
+
+            if (strict.HasFlag(EventDifferenceStrictMode.Attribute))
+            {
+                result |= MethodDifferenceStrictMode.Access;
+            }
+
+            return result;
+        }
+
         public static Boolean Equality(this MethodBody source, MethodBody other)
         {
             if (source is null)
@@ -3193,10 +3532,10 @@ namespace NetExtender.Utilities.Core
             {
                 return new ReflectionDifferenceItem<ConstructorInfo>(source, other, ReflectionEqualityType.NameNotEquals);
             }
-
+            
             if (strict.HasFlag(ConstructorDifferenceStrictMode.CallingConvention) && source.CallingConvention != other.CallingConvention)
             {
-                return new ReflectionDifferenceItem<ConstructorInfo>(source, other, ReflectionEqualityType.AttributeNotEquals);
+                return new ReflectionDifferenceItem<ConstructorInfo>(source, other, ReflectionEqualityType.CallingConventionNotEquals);
             }
 
             if (strict.HasFlag(ConstructorDifferenceStrictMode.Attribute) && source.Attributes != other.Attributes)
@@ -3206,7 +3545,7 @@ namespace NetExtender.Utilities.Core
 
             if (strict.HasFlag(ConstructorDifferenceStrictMode.Access) && source.Attributes.Access() != other.Attributes.Access())
             {
-                return new ReflectionDifferenceItem<ConstructorInfo>(source, other, ReflectionEqualityType.SignatureNotEquals);
+                return new ReflectionDifferenceItem<ConstructorInfo>(source, other, ReflectionEqualityType.AccessNotEquals);
             }
 
             ParameterInfo[] parameters1 = source.GetParameters();
@@ -3296,7 +3635,7 @@ namespace NetExtender.Utilities.Core
 
             if (strict.HasFlag(FieldDifferenceStrictMode.Access) && source.Attributes.Access() != other.Attributes.Access())
             {
-                return new ReflectionDifferenceItem<FieldInfo>(source, other, ReflectionEqualityType.SignatureNotEquals);
+                return new ReflectionDifferenceItem<FieldInfo>(source, other, ReflectionEqualityType.AccessNotEquals);
             }
 
             if (strict.HasFlag(FieldDifferenceStrictMode.InitOnly) && source.IsInitOnly != other.IsInitOnly)
@@ -3365,9 +3704,9 @@ namespace NetExtender.Utilities.Core
                 return new ReflectionDifferenceItem<PropertyInfo>(source, other, ReflectionEqualityType.SignatureNotEquals);
             }
 
-            if (source.CanRead != other.CanRead || source.CanWrite != other.CanWrite)
+            if (strict.HasFlag(PropertyDifferenceStrictMode.Accessor) && (source.CanRead != other.CanRead || source.CanWrite != other.CanWrite))
             {
-                return new ReflectionDifferenceItem<PropertyInfo>(source, other, ReflectionEqualityType.SignatureNotEquals);
+                return new ReflectionDifferenceItem<PropertyInfo>(source, other, ReflectionEqualityType.AccessorNotEquals);
             }
 
             if (strict.HasFlag(PropertyDifferenceStrictMode.Attribute) && source.Attributes != other.Attributes)
@@ -3380,21 +3719,16 @@ namespace NetExtender.Utilities.Core
                 return new ReflectionDifferenceItem<PropertyInfo>(source, other, ReflectionEqualityType.Equals);
             }
 
-            MethodInfo? firstget = source.GetMethod;
-            MethodInfo? secondget = other.GetMethod;
             MethodDifferenceStrictMode difference = strict.ToMethodDifferenceStrictMode();
 
-            if (firstget is not null && secondget is not null && !Equality(firstget, secondget, difference))
+            if (source.GetMethod is { } fget && other.GetMethod is { } sget && !Equality(fget, sget, difference))
             {
-                return new ReflectionDifferenceItem<PropertyInfo>(source, other, ReflectionEqualityType.SignatureNotEquals);
+                return new ReflectionDifferenceItem<PropertyInfo>(source, other, ReflectionEqualityType.AccessorNotEquals);
             }
 
-            MethodInfo? firstset = source.SetMethod;
-            MethodInfo? secondset = other.SetMethod;
-
-            if (firstset is not null && secondset is not null && !Equality(firstset, secondset, difference))
+            if (source.SetMethod is { } fset && other.SetMethod is { } sset && !Equality(fset, sset, difference))
             {
-                return new ReflectionDifferenceItem<PropertyInfo>(source, other, ReflectionEqualityType.SignatureNotEquals);
+                return new ReflectionDifferenceItem<PropertyInfo>(source, other, ReflectionEqualityType.AccessorNotEquals);
             }
 
             return new ReflectionDifferenceItem<PropertyInfo>(source, other, ReflectionEqualityType.Equals);
@@ -3455,12 +3789,12 @@ namespace NetExtender.Utilities.Core
 
             if (source.ReturnType != other.ReturnType)
             {
-                return new ReflectionDifferenceItem<MethodInfo>(source, other, ReflectionEqualityType.SignatureNotEquals);
+                return new ReflectionDifferenceItem<MethodInfo>(source, other, ReflectionEqualityType.ReturnTypeNotEquals);
             }
 
             if (strict.HasFlag(MethodDifferenceStrictMode.CallingConvention) && source.CallingConvention != other.CallingConvention)
             {
-                return new ReflectionDifferenceItem<MethodInfo>(source, other, ReflectionEqualityType.AttributeNotEquals);
+                return new ReflectionDifferenceItem<MethodInfo>(source, other, ReflectionEqualityType.CallingConventionNotEquals);
             }
 
             if (strict.HasFlag(MethodDifferenceStrictMode.Attribute) && source.Attributes != other.Attributes)
@@ -3470,7 +3804,7 @@ namespace NetExtender.Utilities.Core
 
             if (strict.HasFlag(MethodDifferenceStrictMode.Access) && source.Attributes.Access() != other.Attributes.Access())
             {
-                return new ReflectionDifferenceItem<MethodInfo>(source, other, ReflectionEqualityType.SignatureNotEquals);
+                return new ReflectionDifferenceItem<MethodInfo>(source, other, ReflectionEqualityType.AccessNotEquals);
             }
 
             ParameterInfo[] first = source.GetParameters();
@@ -3486,7 +3820,7 @@ namespace NetExtender.Utilities.Core
                 return Difference(value.First, value.Second);
             }
 
-            Boolean equals = first.Zip(second).Select(Check).All(difference => difference.Equality == ReflectionEqualityType.Equals);
+            Boolean equals = first.Zip(second).Select(Check).All(static difference => difference.Equality == ReflectionEqualityType.Equals);
             return new ReflectionDifferenceItem<MethodInfo>(source, other, equals ? ReflectionEqualityType.Equals : ReflectionEqualityType.SignatureNotEquals);
         }
 
@@ -3519,7 +3853,8 @@ namespace NetExtender.Utilities.Core
         {
             return Difference(source, other, strict ? EventDifferenceStrictMode.Strict : EventDifferenceStrictMode.NotStrict);
         }
-
+        
+        // ReSharper disable once CognitiveComplexity
         public static ReflectionDifferenceItem<EventInfo> Difference(this EventInfo source, EventInfo other, EventDifferenceStrictMode strict)
         {
             if (source is null)
@@ -3554,7 +3889,19 @@ namespace NetExtender.Utilities.Core
 
             if (strict.HasFlag(EventDifferenceStrictMode.Multicast) && source.IsMulticast != other.IsMulticast)
             {
-                return new ReflectionDifferenceItem<EventInfo>(source, other, ReflectionEqualityType.AttributeNotEquals);
+                return new ReflectionDifferenceItem<EventInfo>(source, other, ReflectionEqualityType.SignatureNotEquals);
+            }
+            
+            MethodDifferenceStrictMode difference = strict.ToMethodDifferenceStrictMode();
+            
+            if (source.AddMethod is { } fadd && other.AddMethod is { } sadd && !Equality(fadd, sadd, difference))
+            {
+                return new ReflectionDifferenceItem<EventInfo>(source, other, ReflectionEqualityType.AccessorNotEquals);
+            }
+            
+            if (source.RemoveMethod is { } fremove && other.RemoveMethod is { } sremove && !Equality(fremove, sremove, difference))
+            {
+                return new ReflectionDifferenceItem<EventInfo>(source, other, ReflectionEqualityType.AccessorNotEquals);
             }
 
             return new ReflectionDifferenceItem<EventInfo>(source, other, ReflectionEqualityType.Equals);
@@ -3630,17 +3977,17 @@ namespace NetExtender.Utilities.Core
 
             if (strict.HasFlag(ParameterDifferenceStrictMode.In) && source.IsIn != other.IsIn)
             {
-                return new ReflectionDifferenceItem<ParameterInfo>(source, other, ReflectionEqualityType.AttributeNotEquals);
+                return new ReflectionDifferenceItem<ParameterInfo>(source, other, ReflectionEqualityType.SignatureNotEquals);
             }
 
             if (strict.HasFlag(ParameterDifferenceStrictMode.Out) && source.IsOut != other.IsOut)
             {
-                return new ReflectionDifferenceItem<ParameterInfo>(source, other, ReflectionEqualityType.AttributeNotEquals);
+                return new ReflectionDifferenceItem<ParameterInfo>(source, other, ReflectionEqualityType.SignatureNotEquals);
             }
 
             if (strict.HasFlag(ParameterDifferenceStrictMode.Retval) && source.IsRetval != other.IsRetval)
             {
-                return new ReflectionDifferenceItem<ParameterInfo>(source, other, ReflectionEqualityType.AttributeNotEquals);
+                return new ReflectionDifferenceItem<ParameterInfo>(source, other, ReflectionEqualityType.SignatureNotEquals);
             }
 
             if (strict.HasFlag(ParameterDifferenceStrictMode.Optional) && source.IsOptional != other.IsOptional)
@@ -3720,6 +4067,198 @@ namespace NetExtender.Utilities.Core
                     throw new NotSupportedException($"Member type '{source.GetType()}' is not supported.");
                 }
             }
+        }
+        
+        public static MethodInfo[] SignatureEqualityMethodAnalyzer(this Type type, Type other)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+            
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+            
+            const BindingFlags binding = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy | BindingFlags.CreateInstance;
+            MethodInfo[] available = type.GetMethods(binding);
+            List<MethodInfo> result = new List<MethodInfo>(available.Length);
+            //TODO:
+            return result.ToArray();
+        }
+        
+        public static Boolean HasImplementation(this MethodInfo method)
+        {
+            return HasImplementation(method, out Boolean? _);
+        }
+        
+        public static Boolean HasImplementation(this MethodInfo method, out Boolean @virtual)
+        {
+            Boolean result = HasImplementation(method, out Boolean? state);
+            @virtual = state is true;
+            return result;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Boolean HasImplementation(this MethodInfo method, out Boolean? @virtual)
+        {
+            if (method is null)
+            {
+                throw new ArgumentNullException(nameof(method));
+            }
+            
+            if (method.IsAbstract)
+            {
+                @virtual = true;
+                return false;
+            }
+            
+            @virtual = method switch
+            {
+                { IsVirtual: true } => true,
+                { IsStatic: true } => null,
+                _ => false
+            };
+            
+            if (method.GetMethodBody() is not { } body)
+            {
+                return false;
+            }
+            
+            if (body.GetILAsByteArray() is not { } array)
+            {
+                return false;
+            }
+            
+            ReadOnlySpan<OpByte> code = array.AsSpan().As<Byte, OpByte>();
+
+            Int32 nop = 0;
+            while (code[nop] == OpCodes.Nop)
+            {
+                nop++;
+            }
+            
+            return nop < code.Length && HasImplementation(method, code.Slice(nop));
+        }
+        
+        // ReSharper disable once CognitiveComplexity
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        private static Boolean HasImplementation(this MethodInfo method, ReadOnlySpan<OpByte> code)
+        {
+            if (method is null)
+            {
+                throw new ArgumentNullException(nameof(method));
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            static Boolean IsThrow(ReadOnlySpan<OpByte> code, Int32 i)
+            {
+                return code.Length <= i + 6 && code[i++] == OpCodes.Newobj && code[i + sizeof(Int32)] == OpCodes.Throw;
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            static Boolean IsNull(ReadOnlySpan<OpByte> code, Int32 i)
+            {
+                return code.Length <= i + 6 && code[i++] == OpCodes.Ldnull && code[i++] == OpCodes.Stloc_0 && code[i++] == OpCodes.Br_S && code[++i] == OpCodes.Ldloc_0 && code[++i] == OpCodes.Ret;
+            }
+            
+            // ReSharper disable once LocalFunctionHidesMethod
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            static Boolean IsVoid(ReadOnlySpan<OpByte> code, Int32 i)
+            {
+                return i + 1 == code.Length && code[i] == OpCodes.Ret;
+            }
+            
+            // ReSharper disable once LocalFunctionHidesMethod
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            static Boolean IsDefault(ReadOnlySpan<OpByte> code, Int32 i)
+            {
+                return Read<Int32>(code, ref i) != 0 && code[i++] == OpCodes.Ldloc_0 && code[i++] == OpCodes.Stloc_1 && code[i++] == OpCodes.Br_S && code[++i] == OpCodes.Ldloc_1 && code[++i] == OpCodes.Ret;
+            }
+            
+            // ReSharper disable once LocalFunctionHidesMethod
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            static Boolean IsField(ReadOnlySpan<OpByte> code, Int32 i)
+            {
+                return Read<Int32>(code, ref i) != 0 && code[i++] == OpCodes.Stloc_0 && code[i++] == OpCodes.Br_S && code[++i] == OpCodes.Ldloc_0 && code[++i] == OpCodes.Ret;
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            static Boolean IsInt32(ReadOnlySpan<OpByte> code, Int32 i)
+            {
+                return code[i++] == OpCodes.Stloc_0 && code[i++] == OpCodes.Br_S && code[++i] == OpCodes.Ldloc_0 && code[++i] == OpCodes.Ret;
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            static Boolean IsInt64(ReadOnlySpan<OpByte> code, Int32 i)
+            {
+                return code[i++] == OpCodes.Conv_I8 && code[i++] == OpCodes.Stloc_0 && code[i++] == OpCodes.Br_S && code[++i] == OpCodes.Ldloc_0 && code[++i] == OpCodes.Ret;
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            static unsafe T Read<T>(ReadOnlySpan<OpByte> code, ref Int32 start) where T : unmanaged
+            {
+                T value = code.Slice(start, sizeof(T)).As<OpByte, Byte>().Read<T>();
+                start += sizeof(T);
+                return value;
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            static T ReadNext<T>(ReadOnlySpan<OpByte> code, ref Int32 start) where T : unmanaged
+            {
+                ++start;
+                return Read<T>(code, ref start);
+            }
+            
+            Int32 i = 0;
+            if (IsThrow(code, i))
+            {
+                return false;
+            }
+            
+            if (!method.ReturnType.IsValueType && IsNull(code, i))
+            {
+                return false;
+            }
+            
+            if (method.ReturnType.IsVoid())
+            {
+                return !IsVoid(code, i);
+            }
+            
+            if (!method.ReturnType.IsValueType)
+            {
+                return true;
+            }
+            
+            i = 0;
+            if ((code[i++] == OpCodes.Ldc_I4_0 || code[i = 0] == OpCodes.Ldc_I4 && ReadNext<Int32>(code, ref i) == 0) && (IsInt32(code, i) || IsInt64(code, i)))
+            {
+                return false;
+            }
+            
+            if (code[i = 0] == OpCodes.Ldc_R4 && ReadNext<Single>(code, ref i) == 0 && code[i++] == OpCodes.Stloc_0 && code[i++] == OpCodes.Br_S && code[++i] == OpCodes.Ldloc_0 && code[++i] == OpCodes.Ret)
+            {
+                return false;
+            }
+            
+            if (code[i = 0] == OpCodes.Ldc_R8 && ReadNext<Double>(code, ref i) == 0 && code[i++] == OpCodes.Stloc_0 && code[i++] == OpCodes.Br_S && code[++i] == OpCodes.Ldloc_0 && code[++i] == OpCodes.Ret)
+            {
+                return false;
+            }
+            
+            if (code[i = 0] == OpCodes.Ldloca_S && code[i += 2] == unchecked((UInt16) OpCodes.Initobj.Value).High() && code[++i] == OpCodes.Initobj.Value.Low())
+            {
+                return !IsDefault(code, ++i);
+            }
+            
+            if (code[i = 0] == OpCodes.Ldsfld)
+            {
+                return !IsField(code, ++i);
+            }
+            
+            return true;
         }
 
         /// <summary>

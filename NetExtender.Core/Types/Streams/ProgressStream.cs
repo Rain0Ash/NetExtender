@@ -18,14 +18,14 @@ namespace NetExtender.Types.Streams
 
     public readonly struct ProgressStreamInfo : IEquatable<ProgressStreamInfo>
     {
-        public static Boolean operator ==(ProgressStreamInfo left, ProgressStreamInfo right)
+        public static Boolean operator ==(ProgressStreamInfo first, ProgressStreamInfo second)
         {
-            return left.Equals(right);
+            return first.Equals(second);
         }
 
-        public static Boolean operator !=(ProgressStreamInfo left, ProgressStreamInfo right)
+        public static Boolean operator !=(ProgressStreamInfo first, ProgressStreamInfo second)
         {
-            return !(left == right);
+            return !(first == second);
         }
 
         public ProgressStreamInfoType Type { get; }

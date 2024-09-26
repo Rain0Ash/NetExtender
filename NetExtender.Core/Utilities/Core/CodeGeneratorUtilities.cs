@@ -5,15 +5,153 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
+using NetExtender.Types.Exceptions;
+using NetExtender.Types.Immutable.Dictionaries;
 
 namespace NetExtender.Utilities.Core
 {
+    public enum OpCodeCategory
+    {
+        Unknown,
+        Calling,
+        LoadingLocalByAddress,
+        LoadingLocalNormal,
+        StoringLocal,
+        LoadingArgumentByAddress,
+        LoadingArgumentNormal,
+        StoringArgument,
+        Branching,
+        ConstantLoading
+    }
+    
     public static class CodeGeneratorUtilities
     {
+        private static ImmutableDictionary<OpCode, OpCodeCategory> OpCodeCategoryStorage { get; } = new Dictionary<OpCode, OpCodeCategory>
+        {
+            // Calling
+            [OpCodes.Call] = OpCodeCategory.Calling,
+            [OpCodes.Callvirt] = OpCodeCategory.Calling,
+
+            // LoadingLocalByAddress
+            [OpCodes.Ldloca_S] = OpCodeCategory.LoadingLocalByAddress,
+            [OpCodes.Ldloca] = OpCodeCategory.LoadingLocalByAddress,
+
+            // LoadingLocalNormal
+            [OpCodes.Ldloc_0] = OpCodeCategory.LoadingLocalNormal,
+            [OpCodes.Ldloc_1] = OpCodeCategory.LoadingLocalNormal,
+            [OpCodes.Ldloc_2] = OpCodeCategory.LoadingLocalNormal,
+            [OpCodes.Ldloc_3] = OpCodeCategory.LoadingLocalNormal,
+            [OpCodes.Ldloc_S] = OpCodeCategory.LoadingLocalNormal,
+            [OpCodes.Ldloc] = OpCodeCategory.LoadingLocalNormal,
+
+            // StoringLocal
+            [OpCodes.Stloc_0] = OpCodeCategory.StoringLocal,
+            [OpCodes.Stloc_1] = OpCodeCategory.StoringLocal,
+            [OpCodes.Stloc_2] = OpCodeCategory.StoringLocal,
+            [OpCodes.Stloc_3] = OpCodeCategory.StoringLocal,
+            [OpCodes.Stloc_S] = OpCodeCategory.StoringLocal,
+            [OpCodes.Stloc] = OpCodeCategory.StoringLocal,
+
+            // LoadingArgumentByAddress
+            [OpCodes.Ldarga_S] = OpCodeCategory.LoadingArgumentByAddress,
+            [OpCodes.Ldarga] = OpCodeCategory.LoadingArgumentByAddress,
+
+            // LoadingArgumentNormal
+            [OpCodes.Ldarg_0] = OpCodeCategory.LoadingArgumentNormal,
+            [OpCodes.Ldarg_1] = OpCodeCategory.LoadingArgumentNormal,
+            [OpCodes.Ldarg_2] = OpCodeCategory.LoadingArgumentNormal,
+            [OpCodes.Ldarg_3] = OpCodeCategory.LoadingArgumentNormal,
+            [OpCodes.Ldarg_S] = OpCodeCategory.LoadingArgumentNormal,
+            [OpCodes.Ldarg] = OpCodeCategory.LoadingArgumentNormal,
+
+            // StoringArgument
+            [OpCodes.Starg_S] = OpCodeCategory.StoringArgument,
+            [OpCodes.Starg] = OpCodeCategory.StoringArgument,
+
+            // Branching
+            [OpCodes.Br_S] = OpCodeCategory.Branching,
+            [OpCodes.Brfalse_S] = OpCodeCategory.Branching,
+            [OpCodes.Brtrue_S] = OpCodeCategory.Branching,
+            [OpCodes.Beq_S] = OpCodeCategory.Branching,
+            [OpCodes.Bge_S] = OpCodeCategory.Branching,
+            [OpCodes.Bgt_S] = OpCodeCategory.Branching,
+            [OpCodes.Ble_S] = OpCodeCategory.Branching,
+            [OpCodes.Blt_S] = OpCodeCategory.Branching,
+            [OpCodes.Bne_Un_S] = OpCodeCategory.Branching,
+            [OpCodes.Bge_Un_S] = OpCodeCategory.Branching,
+            [OpCodes.Bgt_Un_S] = OpCodeCategory.Branching,
+            [OpCodes.Ble_Un_S] = OpCodeCategory.Branching,
+            [OpCodes.Blt_Un_S] = OpCodeCategory.Branching,
+            [OpCodes.Br] = OpCodeCategory.Branching,
+            [OpCodes.Brfalse] = OpCodeCategory.Branching,
+            [OpCodes.Brtrue] = OpCodeCategory.Branching,
+            [OpCodes.Beq] = OpCodeCategory.Branching,
+            [OpCodes.Bge] = OpCodeCategory.Branching,
+            [OpCodes.Bgt] = OpCodeCategory.Branching,
+            [OpCodes.Ble] = OpCodeCategory.Branching,
+            [OpCodes.Blt] = OpCodeCategory.Branching,
+            [OpCodes.Bne_Un] = OpCodeCategory.Branching,
+            [OpCodes.Bge_Un] = OpCodeCategory.Branching,
+            [OpCodes.Bgt_Un] = OpCodeCategory.Branching,
+            [OpCodes.Ble_Un] = OpCodeCategory.Branching,
+            [OpCodes.Blt_Un] = OpCodeCategory.Branching,
+
+            // ConstantLoading
+            [OpCodes.Ldc_I4_M1] = OpCodeCategory.ConstantLoading,
+            [OpCodes.Ldc_I4_0] = OpCodeCategory.ConstantLoading,
+            [OpCodes.Ldc_I4_1] = OpCodeCategory.ConstantLoading,
+            [OpCodes.Ldc_I4_2] = OpCodeCategory.ConstantLoading,
+            [OpCodes.Ldc_I4_3] = OpCodeCategory.ConstantLoading,
+            [OpCodes.Ldc_I4_4] = OpCodeCategory.ConstantLoading,
+            [OpCodes.Ldc_I4_5] = OpCodeCategory.ConstantLoading,
+            [OpCodes.Ldc_I4_6] = OpCodeCategory.ConstantLoading,
+            [OpCodes.Ldc_I4_7] = OpCodeCategory.ConstantLoading,
+            [OpCodes.Ldc_I4_8] = OpCodeCategory.ConstantLoading,
+            [OpCodes.Ldc_I4] = OpCodeCategory.ConstantLoading,
+            [OpCodes.Ldc_I4_S] = OpCodeCategory.ConstantLoading,
+            [OpCodes.Ldc_I8] = OpCodeCategory.ConstantLoading,
+            [OpCodes.Ldc_R4] = OpCodeCategory.ConstantLoading,
+            [OpCodes.Ldc_R8] = OpCodeCategory.ConstantLoading
+        }.ToImmutableDictionary();
+        
+        private static ImmutableMultiDictionary<OpCodeCategory, OpCode> CategoryOpCodeStorage { get; } = ImmutableMultiDictionary<OpCodeCategory, OpCode>.Empty.AddRange(Initialize(OpCodeCategoryStorage));
+        
+        private static IEnumerable<KeyValuePair<OpCodeCategory, ImmutableHashSet<OpCode>>> Initialize(ImmutableDictionary<OpCode, OpCodeCategory> storage)
+        {
+            if (storage is null)
+            {
+                throw new ArgumentNullException(nameof(storage));
+            }
+
+            static KeyValuePair<OpCodeCategory, ImmutableHashSet<OpCode>> Selector(IGrouping<OpCodeCategory, KeyValuePair<OpCode, OpCodeCategory>> group)
+            {
+                return new KeyValuePair<OpCodeCategory, ImmutableHashSet<OpCode>>(group.Key, group.Select(pair => pair.Key).ToImmutableHashSet());
+            }
+            
+            return storage.GroupBy(static pair => pair.Value).Select(Selector);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static OpCodeCategory Category(this OpCode code)
+        {
+            return OpCodeCategoryStorage.TryGetValue(code, out OpCodeCategory category) ? category : OpCodeCategory.Unknown;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableHashSet<OpCode> Get(this OpCodeCategory category)
+        {
+            return category switch
+            {
+                OpCodeCategory.Unknown => ImmutableHashSet<OpCode>.Empty,
+                _ => CategoryOpCodeStorage.TryGetValue(category, out ImmutableHashSet<OpCode>? result) ? result : throw new EnumUndefinedOrNotSupportedException<OpCodeCategory>(category, nameof(category), null)
+            };
+        }
+        
         public static void EmitInstance(this ILGenerator generator, Type type)
         {
             if (generator is null)
@@ -28,6 +166,30 @@ namespace NetExtender.Utilities.Core
 
             generator.Emit(OpCodes.Ldarg_0);
             generator.EmitUnbox(type);
+        }
+        
+        public static void EmitDefault(this ILGenerator generator, Type type)
+        {
+            if (generator is null)
+            {
+                throw new ArgumentNullException(nameof(generator));
+            }
+            
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+            
+            if (!type.IsValueType)
+            {
+                generator.Emit(OpCodes.Ldnull);
+                return;
+            }
+            
+            LocalBuilder local = generator.DeclareLocal(type);
+            generator.Emit(OpCodes.Ldloca, local);
+            generator.Emit(OpCodes.Initobj, type);
+            generator.Emit(OpCodes.Ldloc, local);
         }
 
         public static void EmitLdarg(this ILGenerator generator, Int32 position)
@@ -167,7 +329,8 @@ namespace NetExtender.Utilities.Core
                 generator.Emit(OpCodes.Castclass, type);
             }
         }
-
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Return(this ILGenerator generator)
         {
             if (generator is null)
@@ -177,12 +340,14 @@ namespace NetExtender.Utilities.Core
 
             generator.Emit(OpCodes.Ret);
         }
-
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ConstructorBuilder DefineConstructor(this TypeBuilder builder)
         {
             return DefineConstructor(builder, MethodAttributes.Public | MethodAttributes.HideBySig);
         }
-
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ConstructorBuilder DefineConstructor(this TypeBuilder builder, MethodAttributes attributes)
         {
             if (builder is null)
@@ -192,27 +357,32 @@ namespace NetExtender.Utilities.Core
 
             return builder.DefineDefaultConstructor(attributes);
         }
-
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ConstructorBuilder DefineConstructor(this TypeBuilder builder, KeyValuePair<String, FieldBuilder>[] parameters)
         {
             return DefineConstructor(builder, (Type?) null, parameters);
         }
-
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ConstructorBuilder DefineConstructor(this TypeBuilder builder, Type? parent, KeyValuePair<String, FieldBuilder>[] parameters)
         {
             return DefineConstructor(builder, parent, parameters, MethodAttributes.Public | MethodAttributes.HideBySig);
         }
-
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ConstructorBuilder DefineConstructor(this TypeBuilder builder, ConstructorInfo parent, KeyValuePair<String, FieldBuilder>[] parameters)
         {
             return DefineConstructor(builder, parent, parameters, MethodAttributes.Public | MethodAttributes.HideBySig);
         }
-
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ConstructorBuilder DefineConstructor(this TypeBuilder builder, KeyValuePair<String, FieldBuilder>[] parameters, MethodAttributes attributes)
         {
             return DefineConstructor(builder, (Type?) null, parameters, attributes);
         }
-
+        
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static ConstructorBuilder DefineConstructor(this TypeBuilder builder, Type? parent, KeyValuePair<String, FieldBuilder>[] parameters, MethodAttributes attributes)
         {
             if (builder is null)
@@ -224,14 +394,15 @@ namespace NetExtender.Utilities.Core
 
             if (parent is null || parent == typeof(Object))
             {
-                return DefineConstructor(builder, Generator.Object.Constructor, parameters, attributes);
+                return DefineConstructor(builder, Initializer.Initializer.ReflectionUtilities.Object.Constructor, parameters, attributes);
             }
 
             const BindingFlags binding = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
-            ConstructorInfo constructor = parent.GetConstructor(binding, Type.EmptyTypes) ?? throw new MissingMethodException(parent.FullName, "Constructor");
+            ConstructorInfo constructor = parent.GetConstructor(binding, Type.EmptyTypes) ?? throw new MissingMethodException(parent.FullName, ReflectionUtilities.Constructor);
             return DefineConstructor(builder, constructor, parameters, attributes);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static ConstructorBuilder DefineConstructor(this TypeBuilder builder, ConstructorInfo parent, KeyValuePair<String, FieldBuilder>[] parameters, MethodAttributes attributes)
         {
             if (builder is null)
@@ -249,12 +420,12 @@ namespace NetExtender.Utilities.Core
                 return DefineConstructor(builder, attributes);
             }
 
-            Type[] types = parameters.Select(field => field.Value.FieldType).ToArray();
+            Type[] types = parameters.Select(static field => field.Value.FieldType).ToArray();
             ConstructorBuilder constructor = builder.DefineConstructor(attributes, CallingConventions.HasThis, types);
 
             ILGenerator generator = constructor.GetILGenerator();
             generator.Emit(OpCodes.Ldarg_0);
-            generator.Emit(OpCodes.Call, Generator.Object.Constructor);
+            generator.Emit(OpCodes.Call, parent);
 
             for (Int32 i = 0; i < parameters.Length; i++)
             {
@@ -272,7 +443,32 @@ namespace NetExtender.Utilities.Core
 
             return constructor;
         }
-
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [SuppressMessage("Usage", "CA2200")]
+        [SuppressMessage("ReSharper", "PossibleIntendedRethrow")]
+        public static void InheritConstructor(this TypeBuilder builder, Type type)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+            
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+            
+            try
+            {
+                Initializer.Initializer.ReflectionUtilities.InheritConstructor(builder, type);
+            }
+            catch (Exception exception)
+            {
+                throw exception;
+            }
+        }
+        
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static ILGenerator DefineGetMethod(this ILGenerator generator, FieldBuilder field)
         {
@@ -437,6 +633,37 @@ namespace NetExtender.Utilities.Core
             property.SetSetMethod(accessor);
             return accessor;
         }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void OverrideToString(this TypeBuilder builder, Type type)
+        {
+            OverrideToString(builder, type, Initializer.Initializer.ReflectionUtilities.Any);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [SuppressMessage("Usage", "CA2200")]
+        [SuppressMessage("ReSharper", "PossibleIntendedRethrow")]
+        public static void OverrideToString(this TypeBuilder builder, Type type, Type? @class)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+            
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            try
+            {
+                Initializer.Initializer.ReflectionUtilities.OverrideToString(builder, type, @class);
+            }
+            catch (Exception exception)
+            {
+                throw exception;
+            }
+        }
 
         public static class Generator
         {
@@ -450,43 +677,24 @@ namespace NetExtender.Utilities.Core
                 private static CustomAttributeBuilder GetCompilerGeneratedAttribute()
                 {
                     Type type = typeof(CompilerGeneratedAttribute);
-                    ConstructorInfo constructor = type.GetConstructor(Type.EmptyTypes) ?? throw new MissingMethodException(type.FullName, "Constructor");
-                    return new CustomAttributeBuilder(constructor, Array.Empty<System.Object>());
+                    ConstructorInfo constructor = type.GetConstructor(Type.EmptyTypes) ?? throw new MissingMethodException(type.FullName, ReflectionUtilities.Constructor);
+                    return new CustomAttributeBuilder(constructor, Array.Empty<Object>());
                 }
 
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 private static CustomAttributeBuilder GetDebuggerBrowsableAttribute()
                 {
                     Type type = typeof(DebuggerBrowsableAttribute);
-                    ConstructorInfo constructor = type.GetConstructor(new[] { typeof(DebuggerBrowsableState) }) ?? throw new MissingMethodException(type.FullName, "Constructor");
-                    return new CustomAttributeBuilder(constructor, new System.Object[] { DebuggerBrowsableState.Never });
+                    ConstructorInfo constructor = type.GetConstructor(new[] { typeof(DebuggerBrowsableState) }) ?? throw new MissingMethodException(type.FullName, ReflectionUtilities.Constructor);
+                    return new CustomAttributeBuilder(constructor, new Object[] { DebuggerBrowsableState.Never });
                 }
 
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 private static CustomAttributeBuilder GetDebuggerHiddenAttribute()
                 {
                     Type type = typeof(DebuggerHiddenAttribute);
-                    ConstructorInfo constructor = type.GetConstructor(Type.EmptyTypes) ?? throw new MissingMethodException(type.FullName, "Constructor");
-                    return new CustomAttributeBuilder(constructor, Array.Empty<System.Object>());
-                }
-            }
-
-            public static class Object
-            {
-                public static ConstructorInfo Constructor { get; }
-                public static MethodInfo GetHashCodeMethod { get; }
-                public static MethodInfo EqualsMethod { get; }
-                public static MethodInfo ToStringMethod { get; }
-
-                static Object()
-                {
-                    const BindingFlags binding = BindingFlags.Instance | BindingFlags.Public;
-
-                    Type type = typeof(System.Object);
-                    Constructor = type.GetConstructor(Type.EmptyTypes) ?? throw new MissingMethodException(nameof(Constructor));
-                    GetHashCodeMethod = type.GetMethod(nameof(GetHashCode), binding, Type.EmptyTypes) ?? throw new MissingMethodException(type.FullName, nameof(GetHashCode));
-                    EqualsMethod = type.GetMethod(nameof(Equals), binding, new []{ type }) ?? throw new MissingMethodException(type.FullName, nameof(Equals));
-                    ToStringMethod = type.GetMethod(nameof(ToString), binding, Type.EmptyTypes) ?? throw new MissingMethodException(type.FullName, nameof(ToString));
+                    ConstructorInfo constructor = type.GetConstructor(Type.EmptyTypes) ?? throw new MissingMethodException(type.FullName, ReflectionUtilities.Constructor);
+                    return new CustomAttributeBuilder(constructor, Array.Empty<Object>());
                 }
             }
 
@@ -601,7 +809,7 @@ namespace NetExtender.Utilities.Core
                         typeof(Int64), typeof(UInt64),
                         typeof(Single), typeof(Double), typeof(Decimal),
                         typeof(String), typeof(System.Text.StringBuilder), typeof(Char[]),
-                        typeof(System.Object)
+                        typeof(Object)
                     }.ToImmutableDictionary(type => type, Find);
                 }
 
@@ -635,7 +843,7 @@ namespace NetExtender.Utilities.Core
                         return true;
                     }
 
-                    if (!Take(typeof(System.Object), out method))
+                    if (!Take(typeof(Object), out method))
                     {
                         throw new InvalidOperationException();
                     }

@@ -401,14 +401,14 @@ namespace NetExtender.DependencyInjection
                 Provider = provider ?? throw new ArgumentNullException(nameof(provider));
             }
             
-            public Object? GetService(Type serviceType)
+            public Object? GetService(Type service)
             {
                 if (!IsStable && _disposed)
                 {
                     throw new ObjectDisposedException(nameof(ServiceProvider));
                 }
                 
-                return Provider.GetService(serviceType);
+                return Provider.GetService(service);
             }
             
             public override Int32 GetHashCode()

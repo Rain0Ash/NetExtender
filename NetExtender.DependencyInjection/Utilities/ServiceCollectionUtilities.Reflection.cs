@@ -339,7 +339,7 @@ namespace NetExtender.Utilities.Types
             descriptors.TryAdd(@interface, new ServiceDescriptor(@interface, type, lifetime));
             return descriptors.Values.ToImmutableList();
         }
-        
+
         // ReSharper disable once CognitiveComplexity
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         private static IServiceCollection Scan(this IServiceCollection collection, Options options)

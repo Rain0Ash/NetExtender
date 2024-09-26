@@ -327,7 +327,7 @@ namespace NetExtender.Types.Anonymous
             generator.Emit(OpCodes.Callvirt, CodeGeneratorUtilities.Generator.StringBuilder.String);
             generator.Emit(OpCodes.Pop);
             generator.Emit(OpCodes.Ldloc_0);
-            generator.Emit(OpCodes.Callvirt, CodeGeneratorUtilities.Generator.Object.ToStringMethod);
+            generator.Emit(OpCodes.Callvirt, Initializer.Initializer.ReflectionUtilities.Object.ToString);
             generator.Emit(OpCodes.Ret);
 
             return method;
@@ -353,7 +353,7 @@ namespace NetExtender.Types.Anonymous
             lock (Assembly)
             {
                 String typename = GenerateTypeName(properties);
-                if (Assembly.GetType(typename, false, false) is Type type)
+                if (Assembly.GetType(typename, false, false) is { } type)
                 {
                     return type;
                 }
@@ -385,7 +385,7 @@ namespace NetExtender.Types.Anonymous
             ConstructorInfo[] constructors = type.GetConstructors();
             ConstructorInfo constructor = constructors.Length switch
             {
-                0 => throw new MissingMethodException(type.Name, ".ctor"),
+                0 => throw new MissingMethodException(type.Name, ReflectionUtilities.Constructor),
                 1 => constructors[0],
                 2 => constructors[1],
                 _ => throw new AmbiguousMatchException(type.Name)

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
-using NetExtender.Interfaces.Notify;
 using NetExtender.Interfaces;
 using NetExtender.Types.Monads.Interfaces;
 using NetExtender.Utilities.Types;
@@ -94,7 +93,7 @@ namespace NetExtender.Types.Monads
         }
     }
     
-    public class MutableState<T> : IState<T>, IStateEquatable<T, State<T>>, IStateEquatable<T, MutableState<T>>, IStateComparable<T, State<T>>, IStateComparable<T, MutableState<T>>, ICloneable<State<T>>, ICloneable<MutableState<T>>, INotifyProperty
+    public class MutableState<T> : INotifyState<T>, IStateEquatable<T, State<T>>, IStateEquatable<T, MutableState<T>>, IStateComparable<T, State<T>>, IStateComparable<T, MutableState<T>>, ICloneable<State<T>>, ICloneable<MutableState<T>>
     {
         [return: NotNullIfNotNull("value")]
         public static implicit operator T?(MutableState<T>? value)

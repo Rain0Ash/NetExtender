@@ -7,7 +7,7 @@ using NetExtender.Types.Singletons;
 using NetExtender.Types.Singletons.Interfaces;
 using NetExtender.WindowsPresentation.Utilities;
 
-namespace NetExtender.WindowsPresentation.ReactiveUI.Types.Models
+namespace NetExtender.WindowsPresentation.ReactiveUI
 {
     public abstract class ReactiveViewModel<T, TWindow> : ReactiveDisposeViewModel<T> where T : ReactiveDisposeViewModel<T> where TWindow : Window
     {

@@ -2,7 +2,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using NetExtender.Utilities.Types;
+using NetExtender.Utilities.Core;
 
 namespace NetExtender.Types.Reflection
 {

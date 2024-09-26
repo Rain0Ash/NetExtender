@@ -35,6 +35,9 @@
         <Compile Update="Utilities\ServiceCollectionUtilities.Reflection.cs">
             <DependentUpon>ServiceCollectionUtilities.cs</DependentUpon>
         </Compile>
+        <Compile Update="Utilities\DependencyInjection.Patch.cs">
+          <DependentUpon>DependencyInjectionPatch.cs</DependentUpon>
+        </Compile>
     </ItemGroup>
 
 </Project>

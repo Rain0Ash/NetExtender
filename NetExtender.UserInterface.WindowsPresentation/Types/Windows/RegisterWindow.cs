@@ -7,7 +7,7 @@ using NetExtender.WindowsPresentation.Utilities;
 
 namespace NetExtender.UserInterface.WindowsPresentation.Windows
 {
-    public class RegisterWindow : DependencyViewModelWindow
+    public class RegisterWindow : DependencyWindow
     {
         public UInt64 Id { get; }
 

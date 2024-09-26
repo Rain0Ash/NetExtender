@@ -17,7 +17,7 @@ using NetExtender.WindowsPresentation.Localization.Types.Flags;
 using NetExtender.WindowsPresentation.Utilities;
 using ReactiveUI;
 
-namespace NetExtender.WindowsPresentation.ReactiveUI.Types.Models
+namespace NetExtender.WindowsPresentation.ReactiveUI
 {
     public abstract class SettingsReactiveViewModelAbstraction<TWindow, T> : SettingsReactiveViewModelAbstraction<T> where TWindow : Window where T : SettingsReactiveViewModelInitializer, new()
     {
