@@ -2,16 +2,46 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.Runtime.CompilerServices;
 using System.Windows;
+using NetExtender.Types.Exceptions;
 using NetExtender.UserInterface;
 using NetExtender.Workstation.Interfaces;
 
 namespace NetExtender.Utilities.UserInterface
 {
+    public enum InputDirection : Byte
+    {
+        Horizontal,
+        Vertical
+    }
+    
     public static class WindowsPresentationUserInterfaceUtilities
     {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String ToSymbol(this ListSortDirection value)
+        {
+            return value switch
+            {
+                ListSortDirection.Ascending => "▲",
+                ListSortDirection.Descending => "▼",
+                _ => throw new EnumUndefinedOrNotSupportedException<ListSortDirection>(value, nameof(value), null)
+            };
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String ToInverseSymbol(this ListSortDirection value)
+        {
+            return value switch
+            {
+                ListSortDirection.Ascending => "▼",
+                ListSortDirection.Descending => "▲",
+                _ => throw new EnumUndefinedOrNotSupportedException<ListSortDirection>(value, nameof(value), null)
+            };
+        }
+        
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean? GetWindowSystemMenu(this Window window)
         {

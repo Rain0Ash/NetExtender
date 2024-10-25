@@ -158,7 +158,7 @@ namespace NetExtender.NewtonSoft.Types.Enums
                         return properties.Others.Length <= 0 && properties.TryParse.Id(id, out result) ? result : Populate(properties.Create.Id(id));
                     }
 
-                    throw new JsonException($"Unsupported value '{title}' for enum type '{type}' for {GetType()}.");
+                    throw new JsonException($"Unsupported value '{title}' for enum type '{type}' for '{GetType()}'.");
                 }
                 default:
                 {
@@ -188,7 +188,7 @@ namespace NetExtender.NewtonSoft.Types.Enums
             Type type = value.GetType();
             if (!EnumUtilities.Properties.TryFactory(type, out EnumUtilities.Properties? properties))
             {
-                throw new JsonException($"Unsupported type '{type}' for {GetType()}.");
+                throw new JsonException($"Unsupported type '{type}' for '{GetType()}'.");
             }
 
             NamingStrategy? strategy = serializer.GetNamingStrategy();

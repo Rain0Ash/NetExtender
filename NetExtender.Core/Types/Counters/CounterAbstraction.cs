@@ -8,7 +8,7 @@ using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Counters
 {
-    public abstract class CounterAbstraction<T, TCount> : CounterAbstraction<TCount>, ICounter<T, TCount>, IReadOnlyCounter<T, TCount> where T : notnull where TCount : unmanaged, IConvertible
+    public abstract class CounterAbstraction<T, TCount> : CounterAbstraction<TCount>, ICounter<T, TCount>, IReadOnlyCounter<T, TCount> where TCount : unmanaged, IConvertible
     {
         protected abstract IDictionary<T, TCount> Internal { get; }
 
@@ -293,7 +293,7 @@ namespace NetExtender.Types.Counters
                 return Internal.Remove(item);
             }
 
-            result = Substract(result, count);
+            result = Subtract(result, count);
             Internal[item] = result;
             return true;
         }
@@ -523,9 +523,9 @@ namespace NetExtender.Types.Counters
             return MathUnsafe.Add(left, right);
         }
 
-        protected virtual TCount Substract(TCount left, TCount right)
+        protected virtual TCount Subtract(TCount left, TCount right)
         {
-            return MathUnsafe.Substract(left, right);
+            return MathUnsafe.Subtract(left, right);
         }
     }
 }

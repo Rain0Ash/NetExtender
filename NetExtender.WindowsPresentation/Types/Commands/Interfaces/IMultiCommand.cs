@@ -6,7 +6,7 @@ namespace System.Windows.Input
     {
     }
 
-    public interface IMultiCommand : ICommand
+    public interface IMultiCommand : ISenderCommand
     {
     }
 }

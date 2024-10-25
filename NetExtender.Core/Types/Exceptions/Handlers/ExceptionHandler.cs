@@ -15,6 +15,10 @@ namespace NetExtender.Types.Exceptions.Handlers
         Rethrow
     }
     
+    public delegate ExceptionHandlerAction ExceptionHandlerDelegate(Exception? exception);
+    public delegate ExceptionHandlerAction ArgumentExceptionHandlerDelegate(Object? argument, Exception? exception);
+    public delegate ExceptionHandlerAction ArgumentExceptionHandlerDelegate<in T>(T? argument, Exception? exception);
+
     public abstract class ExceptionHandler
     {
         public Boolean Invoke(Action action)

@@ -15,18 +15,18 @@ namespace NetExtender.Types.Exceptions
         {
         }
 
-        public ArgumentEmptyStringException(String? message, Exception? innerException)
-            : base(message, innerException)
+        public ArgumentEmptyStringException(String? message, Exception? exception)
+            : base(message, exception)
         {
         }
 
-        public ArgumentEmptyStringException(String? message, String? paramName)
-            : base(message, paramName)
+        public ArgumentEmptyStringException(String? message, String? parameter)
+            : base(message, parameter)
         {
         }
 
-        public ArgumentEmptyStringException(String? message, String? paramName, Exception? innerException)
-            : base(message, paramName, innerException)
+        public ArgumentEmptyStringException(String? message, String? parameter, Exception? exception)
+            : base(message, parameter, exception)
         {
         }
 

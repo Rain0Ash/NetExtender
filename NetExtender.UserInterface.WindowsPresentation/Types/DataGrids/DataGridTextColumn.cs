@@ -4,7 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 
-namespace NetExtender.UserInterface.WindowsPresentation.Types.DataGrids
+namespace NetExtender.UserInterface.WindowsPresentation
 {
     public class DataGridTextColumn : System.Windows.Controls.DataGridTextColumn
     {
@@ -13,10 +13,12 @@ namespace NetExtender.UserInterface.WindowsPresentation.Types.DataGrids
         [Bindable(true)]
         public new String Header
         {
+            [System.Diagnostics.DebuggerStepThrough]
             get
             {
                 return (String) GetValue(HeaderProperty);
             }
+            [System.Diagnostics.DebuggerStepThrough]
             set
             {
                 SetValue(HeaderProperty, value);

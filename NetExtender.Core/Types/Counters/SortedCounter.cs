@@ -3,10 +3,12 @@
 
 using System;
 using System.Collections.Generic;
+using NetExtender.Types.Dictionaries;
+using NetExtender.Types.Monads;
 
 namespace NetExtender.Types.Counters
 {
-    public class SortedCounter<T> : SortedCounter<T, Int32> where T : notnull
+    public class SortedCounter<T> : SortedCounter<T, Int32>
     {
         public SortedCounter()
         {
@@ -72,13 +74,13 @@ namespace NetExtender.Types.Counters
             return left + right;
         }
 
-        protected sealed override Int32 Substract(Int32 left, Int32 right)
+        protected sealed override Int32 Subtract(Int32 left, Int32 right)
         {
             return left - right;
         }
     }
     
-    public class SortedCounter64<T> : SortedCounter<T, Int64> where T : notnull
+    public class SortedCounter64<T> : SortedCounter<T, Int64>
     {
         public SortedCounter64()
         {
@@ -144,13 +146,13 @@ namespace NetExtender.Types.Counters
             return left + right;
         }
 
-        protected sealed override Int64 Substract(Int64 left, Int64 right)
+        protected sealed override Int64 Subtract(Int64 left, Int64 right)
         {
             return left - right;
         }
     }
     
-    public class DecimalSortedCounter<T> : SortedCounter<T, Decimal> where T : notnull
+    public class DecimalSortedCounter<T> : SortedCounter<T, Decimal>
     {
         public DecimalSortedCounter()
         {
@@ -216,17 +218,25 @@ namespace NetExtender.Types.Counters
             return left + right;
         }
 
-        protected sealed override Decimal Substract(Decimal left, Decimal right)
+        protected sealed override Decimal Subtract(Decimal left, Decimal right)
         {
             return left - right;
         }
     }
     
-    public class SortedCounter<T, TCount> : CounterAbstraction<T, TCount> where T : notnull where TCount : unmanaged, IConvertible
+    public class SortedCounter<T, TCount> : CounterAbstraction<T, TCount> where TCount : unmanaged, IConvertible
     {
-        protected sealed override SortedDictionary<T, TCount> Internal { get; }
+        protected sealed override NullableSortedDictionary<T, TCount> Internal { get; }
 
         public IComparer<T> Comparer
+        {
+            get
+            {
+                return Internal.KeyComparer;
+            }
+        }
+
+        public IComparer<NullMaybe<T>> NullComparer
         {
             get
             {
@@ -236,12 +246,12 @@ namespace NetExtender.Types.Counters
 
         public SortedCounter()
         {
-            Internal = new SortedDictionary<T, TCount>();
+            Internal = new NullableSortedDictionary<T, TCount>();
         }
 
         public SortedCounter(IComparer<T>? comparer)
         {
-            Internal = new SortedDictionary<T, TCount>(comparer);
+            Internal = new NullableSortedDictionary<T, TCount>(comparer);
         }
 
         public SortedCounter(IEnumerable<T> collection)
@@ -251,7 +261,7 @@ namespace NetExtender.Types.Counters
                 throw new ArgumentNullException(nameof(collection));
             }
 
-            Internal = new SortedDictionary<T, TCount>();
+            Internal = new NullableSortedDictionary<T, TCount>();
             AddRange(collection);
         }
 
@@ -262,7 +272,7 @@ namespace NetExtender.Types.Counters
                 throw new ArgumentNullException(nameof(collection));
             }
 
-            Internal = new SortedDictionary<T, TCount>();
+            Internal = new NullableSortedDictionary<T, TCount>();
             AddRange(collection);
         }
 
@@ -273,7 +283,7 @@ namespace NetExtender.Types.Counters
                 throw new ArgumentNullException(nameof(collection));
             }
 
-            Internal = new SortedDictionary<T, TCount>(comparer);
+            Internal = new NullableSortedDictionary<T, TCount>(comparer);
             AddRange(collection);
         }
 
@@ -284,7 +294,7 @@ namespace NetExtender.Types.Counters
                 throw new ArgumentNullException(nameof(collection));
             }
 
-            Internal = new SortedDictionary<T, TCount>(comparer);
+            Internal = new NullableSortedDictionary<T, TCount>(comparer);
             AddRange(collection);
         }
         

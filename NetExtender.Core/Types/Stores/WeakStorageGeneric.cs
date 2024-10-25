@@ -14,13 +14,8 @@ namespace NetExtender.Types.Storages
 {
     public class WeakStorageGeneric<TKey, TValue> : IStorage<TKey, TValue>, IReadOnlyStorage<TKey, TValue> where TKey : class
     {
-        private IWeakDictionary<TKey, Box<TValue>> Internal { get; }
-
-        public WeakStorageGeneric()
-        {
-            Internal = new ConcurrentWeakDictionary<TKey, Box<TValue>>();
-        }
-
+        private IWeakDictionary<TKey, Box<TValue>> Internal { get; } = new ConcurrentWeakDictionary<TKey, Box<TValue>>();
+        
         public Boolean Contains(TKey key)
         {
             return Internal.Contains(key);

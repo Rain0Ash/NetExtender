@@ -518,7 +518,7 @@ namespace NetExtender.Utilities.Types
 
                 KeyValuePair<String, IReflectionProperty> Property(MemberInfo member)
                 {
-                    Type reflection = typeof(ReflectionProperty<,>).MakeGenericType(type, member.GetMemberType());
+                    Type reflection = typeof(ReflectionProperty<,>).MakeGenericType(type, member.MemberType());
                     IReflectionProperty property = (IReflectionProperty?) Activator.CreateInstance(reflection, member.Name) ?? throw new InvalidOperationException();
                     return new KeyValuePair<String, IReflectionProperty>(member.Name, property);
                 }

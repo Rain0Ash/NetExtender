@@ -2,10 +2,9 @@ using System;
 using System.Collections.Specialized;
 using System.Windows.Controls;
 using System.Windows.Data;
-using NetExtender.UserInterface.WindowsPresentation.Types.TextBlocks;
 using NetExtender.WindowsPresentation.Utilities.Types;
 
-namespace NetExtender.UserInterface.WindowsPresentation.Types.DataGrids
+namespace NetExtender.UserInterface.WindowsPresentation
 {
     public class DataGrid : ViewDataGrid
     {

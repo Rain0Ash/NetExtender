@@ -2,11 +2,14 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Interop;
-using NetExtender.UserInterface.Windows.Types;
+using NetExtender.Windows;
+using NetExtender.Windows.Types;
 
-namespace NetExtender.UserInterface.WindowsPresentation.Windows
+namespace NetExtender.UserInterface.WindowsPresentation
 {
     public abstract class WndProcWindow : SoundWindow
     {
@@ -14,11 +17,23 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
 
         protected WndProcWindow()
         {
-            Started += InitizalizeWndProc;
+            Started += InitializeWndProc;
             Closed += DisposeWndProc;
         }
+        
+        private void InitializeWndProc(Object? sender, RoutedEventArgs args)
+        {
+            Hwnd = HwndSource.FromHwnd(Handle);
+            Hwnd?.AddHook(WndProc);
+        }
+        
+        private void DisposeWndProc(Object? sender, EventArgs args)
+        {
+            Hwnd?.RemoveHook(WndProc);
+            Hwnd?.Dispose();
+        }
 
-        protected virtual Boolean WndProc(ref WinMessage message)
+        protected virtual Boolean WndProc(ref WindowsMessage message)
         {
             return false;
         }
@@ -26,22 +41,25 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
         // ReSharper disable once RedundantAssignment
         private IntPtr WndProc(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, ref Boolean handled)
         {
-            WinMessage message = new WinMessage(hwnd, msg, wParam, lParam);
+            WindowsMessage message = new WindowsMessage(hwnd, msg, wParam, lParam);
             handled = WndProc(ref message);
 
             return IntPtr.Zero;
         }
-
-        private void InitizalizeWndProc(Object? sender, RoutedEventArgs args)
+        
+        [DllImport("user32.dll")]
+        private static extern Int32 SendMessage(IntPtr handle, Int32 message, IntPtr wparam, IntPtr lparam);
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        protected static Int32 SendMessage(IntPtr handle, WM message, IntPtr wparam, IntPtr lparam)
         {
-            Hwnd = HwndSource.FromHwnd(Handle);
-            Hwnd?.AddHook(WndProc);
+            return SendMessage(handle, (Int32) message, wparam, lparam);
         }
-
-        private void DisposeWndProc(Object? sender, EventArgs args)
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        protected static Int32 SendMessage(IntPtr handle, WindowsMessage message)
         {
-            Hwnd?.RemoveHook(WndProc);
-            Hwnd?.Dispose();
+            return SendMessage(handle, message.Message, message.WParam, message.LParam);
         }
     }
 }

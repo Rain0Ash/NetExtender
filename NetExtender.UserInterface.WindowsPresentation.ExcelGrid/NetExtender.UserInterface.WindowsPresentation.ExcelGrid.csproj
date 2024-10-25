@@ -1,0 +1,85 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0-windows</TargetFramework>
+        <Nullable>enable</Nullable>
+        <OutputType>Library</OutputType>
+        <UseWpf>true</UseWpf>
+        <LangVersion>10</LangVersion>
+        <Authors>Rain0Ash</Authors>
+        <PackageProjectUrl>https://github.com/Rain0Ash/NetExtender</PackageProjectUrl>
+        <Version>0.8.9</Version>
+        <SignAssembly>true</SignAssembly>
+        <AssemblyOriginatorKeyFile>../SignTool/Private/NetExtender.snk</AssemblyOriginatorKeyFile>
+        <Title>NetExtender.UserInterface.WindowsPresentation.ExcelGrid</Title>
+        <Description>Windows Presentation Foundation User Interface ExcelGrid module of NetExtender Framework</Description>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <RepositoryUrl>https://github.com/Rain0Ash/NetExtender</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <PackageTags>Extension</PackageTags>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <IsPackable>true</IsPackable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\NetExtender.UserInterface.Windows\NetExtender.UserInterface.Windows.csproj"/>
+        <ProjectReference Include="..\NetExtender.UserInterface.WindowsPresentation\NetExtender.UserInterface.WindowsPresentation.csproj"/>
+        <ProjectReference Include="..\NetExtender.Windows\NetExtender.Windows.csproj"/>
+        <ProjectReference Include="..\NetExtender.WindowsPresentation\NetExtender.WindowsPresentation.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Resource Include="Cursors\AutoFill.cur">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Resource>
+        <Resource Include="Cursors\Cross.cur">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Resource>
+        <Resource Include="Cursors\DownArrow.cur">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Resource>
+        <Resource Include="Cursors\RightArrow.cur">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Resource>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="ExcelGrid.Default.cs">
+        <DependentUpon>ExcelGrid.cs</DependentUpon>
+      </Compile>
+      <Compile Update="ExcelGrid.Dependency.cs">
+        <DependentUpon>ExcelGrid.cs</DependentUpon>
+      </Compile>
+      <Compile Update="ExcelGrid.Commands.cs">
+        <DependentUpon>ExcelGrid.cs</DependentUpon>
+      </Compile>
+      <Compile Update="ExcelGrid.Csv.cs">
+        <DependentUpon>ExcelGrid.cs</DependentUpon>
+      </Compile>
+      <Compile Update="ExcelGrid.Size.cs">
+        <DependentUpon>ExcelGrid.cs</DependentUpon>
+      </Compile>
+      <Compile Update="ExcelGrid.Cells.cs">
+        <DependentUpon>ExcelGrid.cs</DependentUpon>
+      </Compile>
+      <Compile Update="ExcelGrid.Mouse.cs">
+        <DependentUpon>ExcelGrid.cs</DependentUpon>
+      </Compile>
+      <Compile Update="ExcelGrid.Sort.cs">
+        <DependentUpon>ExcelGrid.cs</DependentUpon>
+      </Compile>
+      <Compile Update="ExcelGrid.Common.cs">
+        <DependentUpon>ExcelGrid.cs</DependentUpon>
+      </Compile>
+      <Compile Update="ExcelGrid.Elements.cs">
+        <DependentUpon>ExcelGrid.cs</DependentUpon>
+      </Compile>
+      <Compile Update="ExcelGrid.Keyboard.cs">
+        <DependentUpon>ExcelGrid.cs</DependentUpon>
+      </Compile>
+      <Compile Update="ExcelGrid.Content.cs">
+        <DependentUpon>ExcelGrid.cs</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
+</Project>

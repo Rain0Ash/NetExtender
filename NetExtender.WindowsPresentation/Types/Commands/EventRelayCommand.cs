@@ -3,16 +3,20 @@ using System;
 namespace NetExtender.WindowsPresentation.Types.Commands
 {
     public delegate void ExecuteDelegate(Object? parameter);
+    public delegate void ExecuteSenderDelegate(Object? sender, Object? parameter);
     public delegate void ExecuteDelegate<in T>(T? parameter);
+    public delegate void ExecuteSenderDelegate<in T>(Object? sender, T? parameter);
     public delegate Boolean CanExecuteDelegate(Object? parameter);
+    public delegate Boolean CanExecuteSenderDelegate(Object? sender, Object? parameter);
     public delegate Boolean CanExecuteDelegate<in T>(T? parameter);
+    public delegate Boolean CanExecuteSenderDelegate<in T>(Object? sender, T? parameter);
     
     public class EventRelayCommand<T> : Command<T>
     {
         public event ExecuteDelegate<T>? Executed;
         public event CanExecuteDelegate<T>? CanExecuted;
-
-        public override Boolean CanExecute(T? parameter)
+        
+        protected override Boolean CanExecuteImplementation(Object? sender, T? parameter)
         {
             if (CanExecuted is null)
             {
@@ -29,10 +33,39 @@ namespace NetExtender.WindowsPresentation.Types.Commands
 
             return true;
         }
-
-        public override void Execute(T? parameter)
+        
+        protected override void ExecuteImplementation(Object? sender, T? parameter)
         {
             Executed?.Invoke(parameter);
+        }
+    }
+    
+    public class EventRelaySenderCommand<T> : Command<T>
+    {
+        public event ExecuteSenderDelegate<T>? Executed;
+        public event CanExecuteSenderDelegate<T>? CanExecuted;
+        
+        protected override Boolean CanExecuteImplementation(Object? sender, T? parameter)
+        {
+            if (CanExecuted is null)
+            {
+                return true;
+            }
+            
+            foreach (Delegate @delegate in CanExecuted.GetInvocationList())
+            {
+                if (@delegate is CanExecuteSenderDelegate<T> validator && !validator.Invoke(sender, parameter))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+        
+        protected override void ExecuteImplementation(Object? sender, T? parameter)
+        {
+            Executed?.Invoke(sender, parameter);
         }
     }
 }

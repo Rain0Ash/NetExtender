@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
+#pragma warning disable CA2200
+// ReSharper disable PossibleIntendedRethrow
 
 namespace NetExtender.WindowsPresentation.Types.Commands
 {
@@ -14,7 +16,7 @@ namespace NetExtender.WindowsPresentation.Types.Commands
         {
             get
             {
-                return _reverter as IMultiCommand<T> ?? (IMultiCommand<T>) (_reverter = new RelayMultiCommand<T>(Revert, Revert)
+                return _reverter as IMultiCommand<T> ?? (IMultiCommand<T>) (_reverter = new RelaySenderMultiCommand<T>(Revert, Revert)
                 {
                     CanExecuteHandler = CanRevert,
                     CanExecuteMultiHandler = CanRevert
@@ -30,29 +32,154 @@ namespace NetExtender.WindowsPresentation.Types.Commands
             }
         }
 
-        public virtual Boolean CanExecute(IEnumerable<T?>? parameter)
+        public Boolean CanExecute(IEnumerable<T?>? parameter)
         {
-            return parameter?.All(CanExecute) is not false;
+            return CanExecute(null, parameter);
         }
 
-        public virtual Boolean CanExecute(IEnumerable? parameter)
+        public virtual Boolean CanExecute(Object? sender, IEnumerable<T?>? parameter)
         {
-            return CanExecute(parameter?.OfType<T>());
+            if (parameter is null)
+            {
+                return true;
+            }
+            
+            // ReSharper disable once LoopCanBeConvertedToQuery
+            foreach (T? item in parameter)
+            {
+                if (!CanExecute(sender, item))
+                {
+                    return false;
+                }
+            }
+            
+            return true;
         }
 
-        public override Boolean CanExecute(Object? parameter)
+        public Boolean CanExecute(IEnumerable? parameter)
+        {
+            return CanExecute(null, parameter);
+        }
+
+        public Boolean CanExecute(Object? sender, IEnumerable? parameter)
+        {
+            return CanExecute(sender, parameter?.OfType<T>());
+        }
+        
+        protected override Boolean CanExecuteImplementation(Object? sender, Object? parameter)
         {
             return parameter switch
             {
-                null => CanExecute(default(T)),
-                T value => CanExecute(value),
-                IEnumerable<T> value => CanExecute(value),
-                IEnumerable value => CanExecute(value),
-                _ => base.CanExecute(parameter)
+                null => CanExecuteImplementation(sender, default),
+                T value => CanExecuteImplementation(sender, value),
+                IEnumerable<T> value => CanExecute(sender, value),
+                IEnumerable value => CanExecute(sender, value),
+                _ => base.CanExecuteImplementation(sender, parameter)
             };
         }
+        
+        public void Execute(IEnumerable<T?>? parameter)
+        {
+            Execute(null, parameter);
+        }
+        
+        public virtual void Execute(Object? sender, IEnumerable<T?>? parameter)
+        {
+            if (parameter is null)
+            {
+                return;
+            }
 
-        public virtual void Execute(IEnumerable<T?>? parameter)
+            foreach (T? value in parameter)
+            {
+                Execute(sender, value);
+            }
+        }
+        
+        public void Execute(IEnumerable? parameter)
+        {
+            Execute(null, parameter);
+        }
+        
+        public void Execute(Object? sender, IEnumerable? parameter)
+        {
+            Execute(sender, parameter?.OfType<T>());
+        }
+
+        protected override void ExecuteImplementation(Object? sender, Object? parameter)
+        {
+            switch (parameter)
+            {
+                case null:
+                    ExecuteImplementation(sender, default);
+                    return;
+                case T value:
+                    ExecuteImplementation(sender, value);
+                    return;
+                case IEnumerable<T> value:
+                    Execute(sender, value);
+                    return;
+                case IEnumerable value:
+                    Execute(sender, value);
+                    return;
+                default:
+                    base.ExecuteImplementation(sender, parameter);
+                    return;
+            }
+        }
+        
+        public Boolean CanRevert(IEnumerable<T?>? parameter)
+        {
+            return CanRevert(null, parameter);
+        }
+        
+        public virtual Boolean CanRevert(Object? sender, IEnumerable<T?>? parameter)
+        {
+            if (parameter is null)
+            {
+                return true;
+            }
+            
+            // ReSharper disable once LoopCanBeConvertedToQuery
+            foreach (T? item in parameter)
+            {
+                if (!CanRevert(sender, item))
+                {
+                    return false;
+                }
+            }
+            
+            return true;
+        }
+        
+        public Boolean CanRevert(IEnumerable? parameter)
+        {
+            return CanRevert(null, parameter);
+        }
+        
+        public Boolean CanRevert(Object? sender, IEnumerable? parameter)
+        {
+            return CanRevert(sender, parameter?.OfType<T>());
+        }
+        
+        protected override Boolean CanRevertImplementation(Object? sender, Object? parameter)
+        {
+            return parameter switch
+            {
+                null => CanRevertImplementation(sender, default),
+                T value => CanRevertImplementation(sender, value),
+                IEnumerable<T> value => CanRevert(sender, value),
+                IEnumerable value => CanRevert(sender, value),
+                _ => base.CanRevertImplementation(sender, parameter)
+            };
+        }
+        
+        public void Revert(IEnumerable<T?>? parameter)
+        {
+            Revert(null, parameter);
+        }
+        
+        public virtual void Revert(Object? sender, IEnumerable<T?>? parameter)
         {
             if (parameter is null)
             {
@@ -61,114 +188,57 @@ namespace NetExtender.WindowsPresentation.Types.Commands
             
             foreach (T? value in parameter)
             {
-                Execute(value);
+                Revert(sender, value);
             }
         }
-
-        public virtual void Execute(IEnumerable? parameter)
+        
+        public void Revert(IEnumerable? parameter)
         {
-            Execute(parameter?.OfType<T>());
+            Revert(null, parameter);
         }
-
-        public override void Execute(Object? parameter)
+        
+        public void Revert(Object? sender, IEnumerable? parameter)
+        {
+            Revert(sender, parameter?.OfType<T>());
+        }
+        
+        protected override void RevertImplementation(Object? sender, Object? parameter)
         {
             switch (parameter)
             {
                 case null:
-                    Execute(default(T));
+                    RevertImplementation(sender, default);
                     return;
                 case T value:
-                    Execute(value);
+                    RevertImplementation(sender, value);
                     return;
                 case IEnumerable<T> value:
-                    Execute(value);
+                    Revert(sender, value);
                     return;
                 case IEnumerable value:
-                    Execute(value);
+                    Revert(sender, value);
                     return;
                 default:
-                    base.Execute(parameter);
-                    return;
-            }
-        }
-
-        public virtual Boolean CanRevert(IEnumerable<T?>? parameter)
-        {
-            return parameter?.All(CanRevert) is not false;
-        }
-
-        public virtual Boolean CanRevert(IEnumerable? parameter)
-        {
-            return CanRevert(parameter?.OfType<T>());
-        }
-        
-        public override Boolean CanRevert(Object? parameter)
-        {
-            return parameter switch
-            {
-                null => CanRevert(default(T)),
-                T value => CanRevert(value),
-                IEnumerable<T> value => CanRevert(value),
-                IEnumerable value => CanRevert(value),
-                _ => base.CanRevert(parameter)
-            };
-        }
-
-        public virtual void Revert(IEnumerable<T?>? parameter)
-        {
-            if (parameter is null)
-            {
-                return;
-            }
-            
-            foreach (T? value in parameter)
-            {
-                Revert(value);
-            }
-        }
-
-        public virtual void Revert(IEnumerable? parameter)
-        {
-            Revert(parameter?.OfType<T>());
-        }
-        
-        public override void Revert(Object? parameter)
-        {
-            switch (parameter)
-            {
-                case null:
-                    Revert(default(T));
-                    return;
-                case T value:
-                    Revert(value);
-                    return;
-                case IEnumerable<T> value:
-                    Revert(value);
-                    return;
-                case IEnumerable value:
-                    Revert(value);
-                    return;
-                default:
-                    base.Revert(parameter);
+                    base.RevertImplementation(sender, parameter);
                     return;
             }
         }
         
         private sealed class None : RevertMultiCommand<T>
         {
-            public override void Execute(T? parameter)
+            protected override void ExecuteImplementation(Object? sender, T? parameter)
             {
             }
             
-            public override void Execute(IEnumerable<T?>? parameter)
+            public override void Execute(Object? sender, IEnumerable<T?>? parameter)
             {
             }
             
-            public override void Revert(T? parameter)
+            protected override void RevertImplementation(Object? sender, T? parameter)
             {
             }
             
-            public override void Revert(IEnumerable<T?>? parameter)
+            public override void Revert(Object? sender, IEnumerable<T?>? parameter)
             {
             }
         }
@@ -182,19 +252,43 @@ namespace NetExtender.WindowsPresentation.Types.Commands
         {
             get
             {
-                return _reverter as IMultiCommand ?? (IMultiCommand) (_reverter = new RelayMultiCommand<Object>(Revert)
+                return _reverter as IMultiCommand ?? (IMultiCommand) (_reverter = new RelaySenderMultiCommand<Object>(Revert)
                 {
                     CanExecuteHandler = CanRevert
                 });
             }
         }
-
-        public virtual Boolean CanExecute(IEnumerable? parameter)
+        
+        public Boolean CanExecute(IEnumerable? parameter)
         {
-            return parameter?.Cast<Object?>().All(CanExecute) is not false;
+            return CanExecute(null, parameter);
         }
-
-        public virtual void Execute(IEnumerable? parameter)
+        
+        public virtual Boolean CanExecute(Object? sender, IEnumerable? parameter)
+        {
+            if (parameter is null)
+            {
+                return true;
+            }
+            
+            // ReSharper disable once LoopCanBeConvertedToQuery
+            foreach (Object? value in parameter)
+            {
+                if (!CanExecute(sender, value))
+                {
+                    return false;
+                }
+            }
+            
+            return true;
+        }
+        
+        public void Execute(IEnumerable? parameter)
+        {
+            Execute(null, parameter);
+        }
+        
+        public virtual void Execute(Object? sender, IEnumerable? parameter)
         {
             if (parameter is null)
             {
@@ -203,16 +297,40 @@ namespace NetExtender.WindowsPresentation.Types.Commands
             
             foreach (Object? value in parameter)
             {
-                Execute(value);
+                Execute(sender, value);
             }
         }
         
-        public virtual Boolean CanRevert(IEnumerable? parameter)
+        public Boolean CanRevert(IEnumerable? parameter)
         {
-            return parameter?.Cast<Object?>().All(CanRevert) is not false;
+            return CanRevert(null, parameter);
         }
-
-        public virtual void Revert(IEnumerable? parameter)
+        
+        public virtual Boolean CanRevert(Object? sender, IEnumerable? parameter)
+        {
+            if (parameter is null)
+            {
+                return true;
+            }
+            
+            // ReSharper disable once LoopCanBeConvertedToQuery
+            foreach (Object? value in parameter)
+            {
+                if (!CanRevert(sender, value))
+                {
+                    return false;
+                }
+            }
+            
+            return true;
+        }
+        
+        public void Revert(IEnumerable? parameter)
+        {
+            Revert(null, parameter);
+        }
+        
+        public virtual void Revert(Object? sender, IEnumerable? parameter)
         {
             if (parameter is null)
             {
@@ -221,25 +339,25 @@ namespace NetExtender.WindowsPresentation.Types.Commands
             
             foreach (Object? value in parameter)
             {
-                Revert(value);
+                Revert(sender, value);
             }
         }
         
         private sealed class None : RevertMultiCommand
         {
-            public override void Execute(Object? parameter)
+            protected override void ExecuteImplementation(Object? sender, Object? parameter)
             {
             }
             
-            public override void Execute(IEnumerable? parameter)
+            public override void Execute(Object? sender, IEnumerable? parameter)
             {
             }
             
-            public override void Revert(Object? parameter)
+            protected override void RevertImplementation(Object? sender, Object? parameter)
             {
             }
             
-            public override void Revert(IEnumerable? parameter)
+            public override void Revert(Object? sender, IEnumerable? parameter)
             {
             }
         }

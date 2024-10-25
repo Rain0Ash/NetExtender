@@ -136,6 +136,10 @@ namespace NetExtender.Domains.Initializer
         {
         }
         
+        public abstract class ConsoleBuilder : WinFormsConsoleBuilder<T>
+        {
+        }
+
         public abstract class Middleware : Middleware<TBuilder>
         {
         }

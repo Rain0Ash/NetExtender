@@ -11,7 +11,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using NetExtender.Types.Exceptions;
-using NetExtender.Types.Native.Windows;
+using NetExtender.Windows.Types;
 
 namespace NetExtender.Utilities.Windows
 {
@@ -277,7 +277,6 @@ namespace NetExtender.Utilities.Windows
                 }
                 case true:
                 {
-                    raw.Dispose();
                     return null;
                 }
                 case false:

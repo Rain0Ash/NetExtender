@@ -6,6 +6,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
+using NetExtender.Types.Exceptions.Interfaces;
 using NetExtender.Utilities.Serialization;
 using Newtonsoft.Json;
 
@@ -63,14 +64,14 @@ namespace NetExtender.Types.Exceptions
             Code = code;
         }
 
-        public BusinessException(String? message, T code, Exception? innerException)
-            : base(message, innerException)
+        public BusinessException(String? message, T code, Exception? exception)
+            : base(message, exception)
         {
             Code = code;
         }
 
-        public BusinessException(String? message, T code, HttpStatusCode status, Exception? innerException)
-            : base(message, status, innerException)
+        public BusinessException(String? message, T code, HttpStatusCode status, Exception? exception)
+            : base(message, status, exception)
         {
             Code = code;
         }
@@ -143,7 +144,7 @@ namespace NetExtender.Types.Exceptions
     }
 
     [Serializable]
-    public class BusinessException : Exception
+    public class BusinessException : Exception, IBusinessException
     {
         public String? Description { get; init; }
         public HttpStatusCode? Status { get; init; }
@@ -194,13 +195,13 @@ namespace NetExtender.Types.Exceptions
             Status = status;
         }
 
-        public BusinessException(String? message, Exception? innerException)
-            : base(message ?? nameof(BusinessException), innerException)
+        public BusinessException(String? message, Exception? exception)
+            : base(message ?? nameof(BusinessException), exception)
         {
         }
 
-        public BusinessException(String? message, HttpStatusCode status, Exception? innerException)
-            : base(Format(message, status), innerException)
+        public BusinessException(String? message, HttpStatusCode status, Exception? exception)
+            : base(Format(message, status), exception)
         {
             Status = status;
         }
@@ -362,8 +363,8 @@ namespace NetExtender.Types.Exceptions
         {
         }
 
-        protected BusinessStatusException(String? message, HttpStatusCode status, Exception? innerException)
-            : base(message, status, innerException)
+        protected BusinessStatusException(String? message, HttpStatusCode status, Exception? exception)
+            : base(message, status, exception)
         {
         }
 
@@ -386,8 +387,8 @@ namespace NetExtender.Types.Exceptions
         {
         }
 
-        protected BusinessStatusException(String? message, T code, HttpStatusCode status, Exception? innerException)
-            : base(message, code, status, innerException)
+        protected BusinessStatusException(String? message, T code, HttpStatusCode status, Exception? exception)
+            : base(message, code, status, exception)
         {
         }
 

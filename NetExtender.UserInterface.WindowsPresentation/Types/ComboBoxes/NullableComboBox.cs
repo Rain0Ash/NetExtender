@@ -6,7 +6,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -14,7 +13,7 @@ using NetExtender.Interfaces.Notify;
 using NetExtender.Types.Monads;
 using NetExtender.Utilities.Types;
 
-namespace NetExtender.UserInterface.WindowsPresentation.Types.ComboBoxes
+namespace NetExtender.UserInterface.WindowsPresentation
 {
     public class NullableComboBox : ComboBox
     {
@@ -22,10 +21,12 @@ namespace NetExtender.UserInterface.WindowsPresentation.Types.ComboBoxes
 
         public String? DefaultItem
         {
+            [System.Diagnostics.DebuggerStepThrough]
             get
             {
                 return (String?) GetValue(DefaultItemProperty);
             }
+            [System.Diagnostics.DebuggerStepThrough]
             set
             {
                 SetValue(DefaultItemProperty, value);

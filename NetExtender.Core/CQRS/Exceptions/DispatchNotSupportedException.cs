@@ -32,8 +32,8 @@ namespace NetExtender.Initializer.CQRS.Exceptions
             Dispatcher = dispatcher;
         }
 
-        public DispatchNotSupportedException(Type? dispatcher, String? message, Exception? innerException)
-            : base(Format(dispatcher, message), innerException)
+        public DispatchNotSupportedException(Type? dispatcher, String? message, Exception? exception)
+            : base(Format(dispatcher, message), exception)
         {
             Dispatcher = dispatcher;
         }
@@ -64,8 +64,8 @@ namespace NetExtender.Initializer.CQRS.Exceptions
         {
         }
         
-        public DispatchNotSupportedException(String? message, Exception? innerException)
-            : base(message ?? Message, innerException)
+        public DispatchNotSupportedException(String? message, Exception? exception)
+            : base(message ?? Message, exception)
         {
         }
         

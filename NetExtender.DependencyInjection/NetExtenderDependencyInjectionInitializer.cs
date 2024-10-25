@@ -1,5 +1,5 @@
 using System.Runtime.CompilerServices;
-using NetExtender.Utilities.Types;
+using NetExtender.Patch;
 
 namespace NetExtender.DependencyInjection
 {

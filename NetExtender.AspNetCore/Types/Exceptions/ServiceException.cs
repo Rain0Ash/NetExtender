@@ -22,8 +22,8 @@ namespace NetExtender.AspNetCore.Types.Exceptions
         {
         }
 
-        public ServiceException(String message, Exception innerException)
-            : base(message, innerException)
+        public ServiceException(String message, Exception exception)
+            : base(message, exception)
         {
         }
 
@@ -38,8 +38,8 @@ namespace NetExtender.AspNetCore.Types.Exceptions
             StatusCode = code;
         }
 
-        public ServiceException(HttpStatusCode code, String message, Exception innerException)
-            : base(message, innerException)
+        public ServiceException(HttpStatusCode code, String message, Exception exception)
+            : base(message, exception)
         {
             StatusCode = code;
         }

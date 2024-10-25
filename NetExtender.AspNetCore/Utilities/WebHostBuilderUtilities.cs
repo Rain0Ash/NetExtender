@@ -296,7 +296,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
                 throw new ArgumentNullException(nameof(builder));
             }
 
-            return builder.ConfigureLogging(logging => logging.LoggingOff());
+            return builder.ConfigureLogging(static logging => logging.LoggingOff());
         }
 
         public static IWebHostBuilder UseHttpUrls(this IWebHostBuilder builder, UInt16 port)

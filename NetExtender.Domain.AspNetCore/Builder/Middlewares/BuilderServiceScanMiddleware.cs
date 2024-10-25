@@ -15,7 +15,7 @@ using NetExtender.Utilities.Types;
 namespace NetExtender.Domains.AspNetCore.Builder.Middlewares
 {
     [ApplicationBuilderMiddleware]
-    public sealed class BuilderServiceScanMiddleware : Middleware<IServiceCollection>, IMiddlewareConverter<IHostBuilder, IServiceCollection>, IMiddlewareConverter<IWebHostBuilder, IServiceCollection>, IMiddlewareConverter<WebApplicationBuilder, IServiceCollection>
+    internal sealed class BuilderServiceScanMiddleware : Middleware<IServiceCollection>, IMiddlewareConverter<IHostBuilder, IServiceCollection>, IMiddlewareConverter<IWebHostBuilder, IServiceCollection>, IMiddlewareConverter<WebApplicationBuilder, IServiceCollection>
     {
         public override void Invoke(Object? sender, IServiceCollection collection)
         {

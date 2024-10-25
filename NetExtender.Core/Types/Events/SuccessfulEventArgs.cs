@@ -7,7 +7,7 @@ namespace NetExtender.Types.Events
 {
     public class SuccessfulEventArgs<T> : SuccessfulEventArgs
     {
-        public T Value { get; }
+        public T Value { get; protected set; }
 
         public SuccessfulEventArgs(T value)
             : this(value, true)

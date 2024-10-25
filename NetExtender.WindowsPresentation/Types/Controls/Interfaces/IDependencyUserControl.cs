@@ -1,4 +1,4 @@
-namespace NetExtender.UserInterface.WindowsPresentation.Controls
+namespace NetExtender.UserInterface.WindowsPresentation
 {
     public interface IDependencyUserControl : IDependencyControl
     {

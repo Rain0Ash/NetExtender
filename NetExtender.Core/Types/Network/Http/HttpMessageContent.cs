@@ -162,9 +162,9 @@ namespace NetExtender.Types.Network
             {
                 if (SingleValueHeaderFields.Contains(header.Key))
                 {
-                    foreach (String str in header.Value)
+                    foreach (String field in header.Value)
                     {
-                        builder.Append(header.Key + ": " + str + "\r\n");
+                        builder.Append(header.Key + ": " + field + "\r\n");
                     }
                     
                     return;

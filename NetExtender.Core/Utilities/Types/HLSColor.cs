@@ -104,11 +104,11 @@ namespace NetExtender.Utilities.Types
 
                 Saturation = Luminosity <= HLSMax / 2 ? (difference * HLSMax + sum / 2) / sum : (difference * HLSMax + (2 * RGBMax - sum) / 2) / (2 * RGBMax - sum);
 
-                Int32 Rdelta = ((max - r) * (HLSMax / 6) + difference / 2) / difference;
-                Int32 Gdelta = ((max - g) * (HLSMax / 6) + difference / 2) / difference;
-                Int32 Bdelta = ((max - b) * (HLSMax / 6) + difference / 2) / difference;
+                Int32 ΔR = ((max - r) * (HLSMax / 6) + difference / 2) / difference;
+                Int32 ΔG = ((max - g) * (HLSMax / 6) + difference / 2) / difference;
+                Int32 ΔB = ((max - b) * (HLSMax / 6) + difference / 2) / difference;
 
-                Hue = r == max ? Bdelta - Gdelta : g == max ? HLSMax / 3 + Rdelta - Bdelta : 2 * HLSMax / 3 + Gdelta - Rdelta;
+                Hue = r == max ? ΔB - ΔG : g == max ? HLSMax / 3 + ΔR - ΔB : 2 * HLSMax / 3 + ΔG - ΔR;
                 Hue += Hue switch
                 {
                     < 0 => HLSMax,

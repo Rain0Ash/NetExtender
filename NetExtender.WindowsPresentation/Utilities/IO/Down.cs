@@ -4,7 +4,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows.Input;
-using NetExtender.WindowsPresentation.Types.Input;
+using NetExtender.WindowsPresentation.Types;
 
 namespace NetExtender.Utilities.Windows.IO
 {

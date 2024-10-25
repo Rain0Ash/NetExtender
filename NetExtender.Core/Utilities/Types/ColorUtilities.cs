@@ -488,21 +488,21 @@ namespace NetExtender.Utilities.Types
 
             Double rgbDeltaHalf = rgbDelta / 2;
 
-            Double deltaR = ((rgbMax - r) / 6 + rgbDeltaHalf) / rgbDelta;
-            Double deltaG = ((rgbMax - g) / 6 + rgbDeltaHalf) / rgbDelta;
-            Double deltaB = ((rgbMax - b) / 6 + rgbDeltaHalf) / rgbDelta;
+            Double ΔR = ((rgbMax - r) / 6 + rgbDeltaHalf) / rgbDelta;
+            Double ΔG = ((rgbMax - g) / 6 + rgbDeltaHalf) / rgbDelta;
+            Double ΔB = ((rgbMax - b) / 6 + rgbDeltaHalf) / rgbDelta;
 
             if (Math.Abs(r - rgbMax) < Double.Epsilon)
             {
-                h = deltaB - deltaG;
+                h = ΔB - ΔG;
             }
             else if (Math.Abs(g - rgbMax) < Double.Epsilon)
             {
-                h = OneThird + deltaR - deltaB;
+                h = OneThird + ΔR - ΔB;
             }
             else
             {
-                h = TwoThirds + deltaG - deltaR;
+                h = TwoThirds + ΔG - ΔR;
             }
 
             switch (h)

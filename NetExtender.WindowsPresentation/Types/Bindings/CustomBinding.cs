@@ -4,7 +4,7 @@ using NetExtender.Types.Exceptions;
 
 namespace NetExtender.WindowsPresentation.Types.Bindings
 {
-    public abstract class CustomBinding : Binding
+    public class CustomBinding : Binding
     {
         public new BindingMode Mode
         {
@@ -37,14 +37,26 @@ namespace NetExtender.WindowsPresentation.Types.Bindings
                 base.Converter = value;
             }
         }
-
-        protected CustomBinding()
+        
+        public CustomBinding()
         {
         }
-
-        protected CustomBinding(String path)
+        
+        public CustomBinding(String path)
             : base(path)
         {
+        }
+        
+        public CustomBinding(String path, Object? source)
+            : base(path)
+        {
+            Source = source;
+        }
+        
+        public CustomBinding(String path, RelativeSource? source)
+            : base(path)
+        {
+            RelativeSource = source;
         }
     }
 }

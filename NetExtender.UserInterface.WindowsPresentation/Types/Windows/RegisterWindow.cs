@@ -5,7 +5,7 @@ using System;
 using System.Windows;
 using NetExtender.WindowsPresentation.Utilities;
 
-namespace NetExtender.UserInterface.WindowsPresentation.Windows
+namespace NetExtender.UserInterface.WindowsPresentation
 {
     public class RegisterWindow : DependencyWindow
     {

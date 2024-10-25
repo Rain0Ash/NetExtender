@@ -161,580 +161,580 @@ namespace NetExtender.Configuration.Cryptography.Utilities
             return new CryptographyConfigProperty<T>(property, alternate, validate, converter);
         }
 
-        public static IReadOnlyCryptographyConfigProperty GetConfigurationProperty(this IReadOnlyConfig config, String? key, IStringCryptor cryptor, params String[]? sections)
+        public static IReadOnlyCryptographyConfigProperty ConfigurationProperty(this IReadOnlyConfig config, String? key, IStringCryptor cryptor, params String[]? sections)
         {
-            return GetConfigurationProperty(config, key, cryptor, (IEnumerable<String>?) sections);
+            return ConfigurationProperty(config, key, cryptor, (IEnumerable<String>?) sections);
         }
 
-        public static IReadOnlyCryptographyConfigProperty GetConfigurationProperty(this IReadOnlyConfig config, String? key, IStringCryptor cryptor, IEnumerable<String>? sections)
+        public static IReadOnlyCryptographyConfigProperty ConfigurationProperty(this IReadOnlyConfig config, String? key, IStringCryptor cryptor, IEnumerable<String>? sections)
         {
-            return GetConfigurationProperty(config, key, null, cryptor, sections);
+            return ConfigurationProperty(config, key, null, cryptor, sections);
         }
 
-        public static IReadOnlyCryptographyConfigProperty GetConfigurationProperty(this IReadOnlyConfig config, String? key, IStringCryptor cryptor, ConfigPropertyOptions options,
+        public static IReadOnlyCryptographyConfigProperty ConfigurationProperty(this IReadOnlyConfig config, String? key, IStringCryptor cryptor, ConfigPropertyOptions options,
             params String[]? sections)
         {
-            return GetConfigurationProperty(config, key, cryptor, options, (IEnumerable<String>?) sections);
+            return ConfigurationProperty(config, key, cryptor, options, (IEnumerable<String>?) sections);
         }
 
-        public static IReadOnlyCryptographyConfigProperty GetConfigurationProperty(this IReadOnlyConfig config, String? key, IStringCryptor cryptor, ConfigPropertyOptions options,
+        public static IReadOnlyCryptographyConfigProperty ConfigurationProperty(this IReadOnlyConfig config, String? key, IStringCryptor cryptor, ConfigPropertyOptions options,
             IEnumerable<String>? sections)
         {
-            return GetConfigurationProperty(config, key, null, cryptor, options, sections);
+            return ConfigurationProperty(config, key, null, cryptor, options, sections);
         }
 
-        public static IReadOnlyCryptographyConfigProperty GetConfigurationProperty(this IReadOnlyConfig config, String? key, String? alternate, IStringCryptor cryptor, params String[]? sections)
+        public static IReadOnlyCryptographyConfigProperty ConfigurationProperty(this IReadOnlyConfig config, String? key, String? alternate, IStringCryptor cryptor, params String[]? sections)
         {
-            return GetConfigurationProperty(config, key, alternate, cryptor, (IEnumerable<String>?) sections);
+            return ConfigurationProperty(config, key, alternate, cryptor, (IEnumerable<String>?) sections);
         }
 
-        public static IReadOnlyCryptographyConfigProperty GetConfigurationProperty(this IReadOnlyConfig config, String? key, String? alternate, IStringCryptor cryptor, IEnumerable<String>? sections)
+        public static IReadOnlyCryptographyConfigProperty ConfigurationProperty(this IReadOnlyConfig config, String? key, String? alternate, IStringCryptor cryptor, IEnumerable<String>? sections)
         {
-            return GetConfigurationProperty(config, key, alternate, cryptor, ConfigPropertyOptions.None, sections);
+            return ConfigurationProperty(config, key, alternate, cryptor, ConfigPropertyOptions.None, sections);
         }
 
-        public static IReadOnlyCryptographyConfigProperty GetConfigurationProperty(this IReadOnlyConfig config, String? key, String? alternate, IStringCryptor cryptor, ConfigPropertyOptions options,
+        public static IReadOnlyCryptographyConfigProperty ConfigurationProperty(this IReadOnlyConfig config, String? key, String? alternate, IStringCryptor cryptor, ConfigPropertyOptions options,
             params String[]? sections)
         {
-            return GetConfigurationProperty(config, key, alternate, cryptor, options, (IEnumerable<String>?) sections);
+            return ConfigurationProperty(config, key, alternate, cryptor, options, (IEnumerable<String>?) sections);
         }
 
-        public static IReadOnlyCryptographyConfigProperty GetConfigurationProperty(this IReadOnlyConfig config, String? key, String? alternate, IStringCryptor cryptor, ConfigPropertyOptions options,
+        public static IReadOnlyCryptographyConfigProperty ConfigurationProperty(this IReadOnlyConfig config, String? key, String? alternate, IStringCryptor cryptor, ConfigPropertyOptions options,
             IEnumerable<String>? sections)
         {
             return new ReadOnlyCryptographyConfigPropertyWrapper(config, key, alternate, cryptor, options, sections);
         }
 
-        public static ICryptographyConfigProperty GetConfigurationProperty(this IConfig config, String? key, IStringCryptor cryptor, params String[]? sections)
+        public static ICryptographyConfigProperty ConfigurationProperty(this IConfig config, String? key, IStringCryptor cryptor, params String[]? sections)
         {
-            return GetConfigurationProperty(config, key, cryptor, (IEnumerable<String>?) sections);
+            return ConfigurationProperty(config, key, cryptor, (IEnumerable<String>?) sections);
         }
 
-        public static ICryptographyConfigProperty GetConfigurationProperty(this IConfig config, String? key, IStringCryptor cryptor, IEnumerable<String>? sections)
+        public static ICryptographyConfigProperty ConfigurationProperty(this IConfig config, String? key, IStringCryptor cryptor, IEnumerable<String>? sections)
         {
-            return GetConfigurationProperty(config, key, null, cryptor, sections);
+            return ConfigurationProperty(config, key, null, cryptor, sections);
         }
 
-        public static ICryptographyConfigProperty GetConfigurationProperty(this IConfig config, String? key, IStringCryptor cryptor, ConfigPropertyOptions options, params String[]? sections)
+        public static ICryptographyConfigProperty ConfigurationProperty(this IConfig config, String? key, IStringCryptor cryptor, ConfigPropertyOptions options, params String[]? sections)
         {
-            return GetConfigurationProperty(config, key, cryptor, options, (IEnumerable<String>?) sections);
+            return ConfigurationProperty(config, key, cryptor, options, (IEnumerable<String>?) sections);
         }
 
-        public static ICryptographyConfigProperty GetConfigurationProperty(this IConfig config, String? key, IStringCryptor cryptor, ConfigPropertyOptions options, IEnumerable<String>? sections)
+        public static ICryptographyConfigProperty ConfigurationProperty(this IConfig config, String? key, IStringCryptor cryptor, ConfigPropertyOptions options, IEnumerable<String>? sections)
         {
-            return GetConfigurationProperty(config, key, null, cryptor, options, sections);
+            return ConfigurationProperty(config, key, null, cryptor, options, sections);
         }
 
-        public static ICryptographyConfigProperty GetConfigurationProperty(this IConfig config, String? key, String? alternate, IStringCryptor cryptor, params String[]? sections)
+        public static ICryptographyConfigProperty ConfigurationProperty(this IConfig config, String? key, String? alternate, IStringCryptor cryptor, params String[]? sections)
         {
-            return GetConfigurationProperty(config, key, alternate, cryptor, (IEnumerable<String>?) sections);
+            return ConfigurationProperty(config, key, alternate, cryptor, (IEnumerable<String>?) sections);
         }
 
-        public static ICryptographyConfigProperty GetConfigurationProperty(this IConfig config, String? key, String? alternate, IStringCryptor cryptor, IEnumerable<String>? sections)
+        public static ICryptographyConfigProperty ConfigurationProperty(this IConfig config, String? key, String? alternate, IStringCryptor cryptor, IEnumerable<String>? sections)
         {
-            return GetConfigurationProperty(config, key, alternate, cryptor, ConfigPropertyOptions.None, sections);
+            return ConfigurationProperty(config, key, alternate, cryptor, ConfigPropertyOptions.None, sections);
         }
 
-        public static ICryptographyConfigProperty GetConfigurationProperty(this IConfig config, String? key, String? alternate, IStringCryptor cryptor, ConfigPropertyOptions options,
+        public static ICryptographyConfigProperty ConfigurationProperty(this IConfig config, String? key, String? alternate, IStringCryptor cryptor, ConfigPropertyOptions options,
             params String[]? sections)
         {
-            return GetConfigurationProperty(config, key, alternate, cryptor, options, (IEnumerable<String>?) sections);
+            return ConfigurationProperty(config, key, alternate, cryptor, options, (IEnumerable<String>?) sections);
         }
 
-        public static ICryptographyConfigProperty GetConfigurationProperty(this IConfig config, String? key, String? alternate, IStringCryptor cryptor, ConfigPropertyOptions options,
+        public static ICryptographyConfigProperty ConfigurationProperty(this IConfig config, String? key, String? alternate, IStringCryptor cryptor, ConfigPropertyOptions options,
             IEnumerable<String>? sections)
         {
             return new CryptographyConfigPropertyWrapper(config, key, alternate, cryptor, options, sections);
         }
 
-        public static IReadOnlyCryptographyConfigProperty GetConfigurationProperty(this IReadOnlyCryptographyConfig config, String? key, params String[]? sections)
+        public static IReadOnlyCryptographyConfigProperty ConfigurationProperty(this IReadOnlyCryptographyConfig config, String? key, params String[]? sections)
         {
-            return GetConfigurationProperty(config, key, (IEnumerable<String>?) sections);
+            return ConfigurationProperty(config, key, (IEnumerable<String>?) sections);
         }
 
-        public static IReadOnlyCryptographyConfigProperty GetConfigurationProperty(this IReadOnlyCryptographyConfig config, String? key, IEnumerable<String>? sections)
+        public static IReadOnlyCryptographyConfigProperty ConfigurationProperty(this IReadOnlyCryptographyConfig config, String? key, IEnumerable<String>? sections)
         {
-            return GetConfigurationProperty(config, key, (String?) null, sections);
+            return ConfigurationProperty(config, key, (String?) null, sections);
         }
 
-        public static IReadOnlyCryptographyConfigProperty GetConfigurationProperty(this IReadOnlyCryptographyConfig config, String? key, ConfigPropertyOptions options, params String[]? sections)
+        public static IReadOnlyCryptographyConfigProperty ConfigurationProperty(this IReadOnlyCryptographyConfig config, String? key, ConfigPropertyOptions options, params String[]? sections)
         {
-            return GetConfigurationProperty(config, key, options, (IEnumerable<String>?) sections);
+            return ConfigurationProperty(config, key, options, (IEnumerable<String>?) sections);
         }
 
-        public static IReadOnlyCryptographyConfigProperty GetConfigurationProperty(this IReadOnlyCryptographyConfig config, String? key, ConfigPropertyOptions options, IEnumerable<String>? sections)
+        public static IReadOnlyCryptographyConfigProperty ConfigurationProperty(this IReadOnlyCryptographyConfig config, String? key, ConfigPropertyOptions options, IEnumerable<String>? sections)
         {
-            return GetConfigurationProperty(config, key, (String?) null, options, sections);
+            return ConfigurationProperty(config, key, (String?) null, options, sections);
         }
 
-        public static IReadOnlyCryptographyConfigProperty GetConfigurationProperty(this IReadOnlyCryptographyConfig config, String? key, IStringCryptor? cryptor, params String[]? sections)
+        public static IReadOnlyCryptographyConfigProperty ConfigurationProperty(this IReadOnlyCryptographyConfig config, String? key, IStringCryptor? cryptor, params String[]? sections)
         {
-            return GetConfigurationProperty(config, key, cryptor, (IEnumerable<String>?) sections);
+            return ConfigurationProperty(config, key, cryptor, (IEnumerable<String>?) sections);
         }
 
-        public static IReadOnlyCryptographyConfigProperty GetConfigurationProperty(this IReadOnlyCryptographyConfig config, String? key, IStringCryptor? cryptor, IEnumerable<String>? sections)
+        public static IReadOnlyCryptographyConfigProperty ConfigurationProperty(this IReadOnlyCryptographyConfig config, String? key, IStringCryptor? cryptor, IEnumerable<String>? sections)
         {
-            return GetConfigurationProperty(config, key, null, cryptor, ConfigPropertyOptions.None, sections);
+            return ConfigurationProperty(config, key, null, cryptor, ConfigPropertyOptions.None, sections);
         }
 
-        public static IReadOnlyCryptographyConfigProperty GetConfigurationProperty(this IReadOnlyCryptographyConfig config, String? key, IStringCryptor? cryptor, ConfigPropertyOptions options,
+        public static IReadOnlyCryptographyConfigProperty ConfigurationProperty(this IReadOnlyCryptographyConfig config, String? key, IStringCryptor? cryptor, ConfigPropertyOptions options,
             params String[]? sections)
         {
-            return GetConfigurationProperty(config, key, cryptor, options, (IEnumerable<String>?) sections);
+            return ConfigurationProperty(config, key, cryptor, options, (IEnumerable<String>?) sections);
         }
 
-        public static IReadOnlyCryptographyConfigProperty GetConfigurationProperty(this IReadOnlyCryptographyConfig config, String? key, IStringCryptor? cryptor, ConfigPropertyOptions options,
+        public static IReadOnlyCryptographyConfigProperty ConfigurationProperty(this IReadOnlyCryptographyConfig config, String? key, IStringCryptor? cryptor, ConfigPropertyOptions options,
             IEnumerable<String>? sections)
         {
-            return GetConfigurationProperty(config, key, null, cryptor, options, sections);
+            return ConfigurationProperty(config, key, null, cryptor, options, sections);
         }
 
-        public static IReadOnlyCryptographyConfigProperty GetConfigurationProperty(this IReadOnlyCryptographyConfig config, String? key, String? alternate, params String[]? sections)
+        public static IReadOnlyCryptographyConfigProperty ConfigurationProperty(this IReadOnlyCryptographyConfig config, String? key, String? alternate, params String[]? sections)
         {
-            return GetConfigurationProperty(config, key, alternate, (IEnumerable<String>?) sections);
+            return ConfigurationProperty(config, key, alternate, (IEnumerable<String>?) sections);
         }
 
-        public static IReadOnlyCryptographyConfigProperty GetConfigurationProperty(this IReadOnlyCryptographyConfig config, String? key, String? alternate, IEnumerable<String>? sections)
+        public static IReadOnlyCryptographyConfigProperty ConfigurationProperty(this IReadOnlyCryptographyConfig config, String? key, String? alternate, IEnumerable<String>? sections)
         {
-            return GetConfigurationProperty(config, key, alternate, null, sections);
+            return ConfigurationProperty(config, key, alternate, null, sections);
         }
 
-        public static IReadOnlyCryptographyConfigProperty GetConfigurationProperty(this IReadOnlyCryptographyConfig config, String? key, String? alternate, ConfigPropertyOptions options,
+        public static IReadOnlyCryptographyConfigProperty ConfigurationProperty(this IReadOnlyCryptographyConfig config, String? key, String? alternate, ConfigPropertyOptions options,
             params String[]? sections)
         {
-            return GetConfigurationProperty(config, key, alternate, options, (IEnumerable<String>?) sections);
+            return ConfigurationProperty(config, key, alternate, options, (IEnumerable<String>?) sections);
         }
 
-        public static IReadOnlyCryptographyConfigProperty GetConfigurationProperty(this IReadOnlyCryptographyConfig config, String? key, String? alternate, ConfigPropertyOptions options,
+        public static IReadOnlyCryptographyConfigProperty ConfigurationProperty(this IReadOnlyCryptographyConfig config, String? key, String? alternate, ConfigPropertyOptions options,
             IEnumerable<String>? sections)
         {
-            return GetConfigurationProperty(config, key, alternate, null, options, sections);
+            return ConfigurationProperty(config, key, alternate, null, options, sections);
         }
 
-        public static IReadOnlyCryptographyConfigProperty GetConfigurationProperty(this IReadOnlyCryptographyConfig config, String? key, String? alternate, IStringCryptor? cryptor,
+        public static IReadOnlyCryptographyConfigProperty ConfigurationProperty(this IReadOnlyCryptographyConfig config, String? key, String? alternate, IStringCryptor? cryptor,
             params String[]? sections)
         {
-            return GetConfigurationProperty(config, key, alternate, cryptor, (IEnumerable<String>?) sections);
+            return ConfigurationProperty(config, key, alternate, cryptor, (IEnumerable<String>?) sections);
         }
 
-        public static IReadOnlyCryptographyConfigProperty GetConfigurationProperty(this IReadOnlyCryptographyConfig config, String? key, String? alternate, IStringCryptor? cryptor,
+        public static IReadOnlyCryptographyConfigProperty ConfigurationProperty(this IReadOnlyCryptographyConfig config, String? key, String? alternate, IStringCryptor? cryptor,
             IEnumerable<String>? sections)
         {
-            return GetConfigurationProperty(config, key, alternate, cryptor, ConfigPropertyOptions.None, sections);
+            return ConfigurationProperty(config, key, alternate, cryptor, ConfigPropertyOptions.None, sections);
         }
 
-        public static IReadOnlyCryptographyConfigProperty GetConfigurationProperty(this IReadOnlyCryptographyConfig config, String? key, String? alternate, IStringCryptor? cryptor,
+        public static IReadOnlyCryptographyConfigProperty ConfigurationProperty(this IReadOnlyCryptographyConfig config, String? key, String? alternate, IStringCryptor? cryptor,
             ConfigPropertyOptions options, params String[]? sections)
         {
-            return GetConfigurationProperty(config, key, alternate, cryptor, options, (IEnumerable<String>?) sections);
+            return ConfigurationProperty(config, key, alternate, cryptor, options, (IEnumerable<String>?) sections);
         }
 
-        public static IReadOnlyCryptographyConfigProperty GetConfigurationProperty(this IReadOnlyCryptographyConfig config, String? key, String? alternate, IStringCryptor? cryptor,
+        public static IReadOnlyCryptographyConfigProperty ConfigurationProperty(this IReadOnlyCryptographyConfig config, String? key, String? alternate, IStringCryptor? cryptor,
             ConfigPropertyOptions options, IEnumerable<String>? sections)
         {
             return new ReadOnlyCryptographyConfigProperty(config, key, alternate, cryptor, options, sections);
         }
 
-        public static ICryptographyConfigProperty GetConfigurationProperty(this ICryptographyConfig config, String? key, params String[]? sections)
+        public static ICryptographyConfigProperty ConfigurationProperty(this ICryptographyConfig config, String? key, params String[]? sections)
         {
-            return GetConfigurationProperty(config, key, (IEnumerable<String>?) sections);
+            return ConfigurationProperty(config, key, (IEnumerable<String>?) sections);
         }
 
-        public static ICryptographyConfigProperty GetConfigurationProperty(this ICryptographyConfig config, String? key, IEnumerable<String>? sections)
+        public static ICryptographyConfigProperty ConfigurationProperty(this ICryptographyConfig config, String? key, IEnumerable<String>? sections)
         {
-            return GetConfigurationProperty(config, key, (String?) null, sections);
+            return ConfigurationProperty(config, key, (String?) null, sections);
         }
 
-        public static ICryptographyConfigProperty GetConfigurationProperty(this ICryptographyConfig config, String? key, ConfigPropertyOptions options, params String[]? sections)
+        public static ICryptographyConfigProperty ConfigurationProperty(this ICryptographyConfig config, String? key, ConfigPropertyOptions options, params String[]? sections)
         {
-            return GetConfigurationProperty(config, key, options, (IEnumerable<String>?) sections);
+            return ConfigurationProperty(config, key, options, (IEnumerable<String>?) sections);
         }
 
-        public static ICryptographyConfigProperty GetConfigurationProperty(this ICryptographyConfig config, String? key, ConfigPropertyOptions options, IEnumerable<String>? sections)
+        public static ICryptographyConfigProperty ConfigurationProperty(this ICryptographyConfig config, String? key, ConfigPropertyOptions options, IEnumerable<String>? sections)
         {
-            return GetConfigurationProperty(config, key, (String?) null, options, sections);
+            return ConfigurationProperty(config, key, (String?) null, options, sections);
         }
 
-        public static ICryptographyConfigProperty GetConfigurationProperty(this ICryptographyConfig config, String? key, IStringCryptor? cryptor, params String[]? sections)
+        public static ICryptographyConfigProperty ConfigurationProperty(this ICryptographyConfig config, String? key, IStringCryptor? cryptor, params String[]? sections)
         {
-            return GetConfigurationProperty(config, key, cryptor, (IEnumerable<String>?) sections);
+            return ConfigurationProperty(config, key, cryptor, (IEnumerable<String>?) sections);
         }
 
-        public static ICryptographyConfigProperty GetConfigurationProperty(this ICryptographyConfig config, String? key, IStringCryptor? cryptor, IEnumerable<String>? sections)
+        public static ICryptographyConfigProperty ConfigurationProperty(this ICryptographyConfig config, String? key, IStringCryptor? cryptor, IEnumerable<String>? sections)
         {
-            return GetConfigurationProperty(config, key, null, cryptor, ConfigPropertyOptions.None, sections);
+            return ConfigurationProperty(config, key, null, cryptor, ConfigPropertyOptions.None, sections);
         }
 
-        public static ICryptographyConfigProperty GetConfigurationProperty(this ICryptographyConfig config, String? key, IStringCryptor? cryptor, ConfigPropertyOptions options,
+        public static ICryptographyConfigProperty ConfigurationProperty(this ICryptographyConfig config, String? key, IStringCryptor? cryptor, ConfigPropertyOptions options,
             params String[]? sections)
         {
-            return GetConfigurationProperty(config, key, cryptor, options, (IEnumerable<String>?) sections);
+            return ConfigurationProperty(config, key, cryptor, options, (IEnumerable<String>?) sections);
         }
 
-        public static ICryptographyConfigProperty GetConfigurationProperty(this ICryptographyConfig config, String? key, IStringCryptor? cryptor, ConfigPropertyOptions options,
+        public static ICryptographyConfigProperty ConfigurationProperty(this ICryptographyConfig config, String? key, IStringCryptor? cryptor, ConfigPropertyOptions options,
             IEnumerable<String>? sections)
         {
-            return GetConfigurationProperty(config, key, null, cryptor, options, sections);
+            return ConfigurationProperty(config, key, null, cryptor, options, sections);
         }
 
-        public static ICryptographyConfigProperty GetConfigurationProperty(this ICryptographyConfig config, String? key, String? alternate, params String[]? sections)
+        public static ICryptographyConfigProperty ConfigurationProperty(this ICryptographyConfig config, String? key, String? alternate, params String[]? sections)
         {
-            return GetConfigurationProperty(config, key, alternate, (IEnumerable<String>?) sections);
+            return ConfigurationProperty(config, key, alternate, (IEnumerable<String>?) sections);
         }
 
-        public static ICryptographyConfigProperty GetConfigurationProperty(this ICryptographyConfig config, String? key, String? alternate, IEnumerable<String>? sections)
+        public static ICryptographyConfigProperty ConfigurationProperty(this ICryptographyConfig config, String? key, String? alternate, IEnumerable<String>? sections)
         {
-            return GetConfigurationProperty(config, key, alternate, null, sections);
+            return ConfigurationProperty(config, key, alternate, null, sections);
         }
 
-        public static ICryptographyConfigProperty GetConfigurationProperty(this ICryptographyConfig config, String? key, String? alternate, ConfigPropertyOptions options, params String[]? sections)
+        public static ICryptographyConfigProperty ConfigurationProperty(this ICryptographyConfig config, String? key, String? alternate, ConfigPropertyOptions options, params String[]? sections)
         {
-            return GetConfigurationProperty(config, key, alternate, options, (IEnumerable<String>?) sections);
+            return ConfigurationProperty(config, key, alternate, options, (IEnumerable<String>?) sections);
         }
 
-        public static ICryptographyConfigProperty GetConfigurationProperty(this ICryptographyConfig config, String? key, String? alternate, ConfigPropertyOptions options,
+        public static ICryptographyConfigProperty ConfigurationProperty(this ICryptographyConfig config, String? key, String? alternate, ConfigPropertyOptions options,
             IEnumerable<String>? sections)
         {
-            return GetConfigurationProperty(config, key, alternate, null, options, sections);
+            return ConfigurationProperty(config, key, alternate, null, options, sections);
         }
 
-        public static ICryptographyConfigProperty GetConfigurationProperty(this ICryptographyConfig config, String? key, String? alternate, IStringCryptor? cryptor, params String[]? sections)
+        public static ICryptographyConfigProperty ConfigurationProperty(this ICryptographyConfig config, String? key, String? alternate, IStringCryptor? cryptor, params String[]? sections)
         {
-            return GetConfigurationProperty(config, key, alternate, cryptor, (IEnumerable<String>?) sections);
+            return ConfigurationProperty(config, key, alternate, cryptor, (IEnumerable<String>?) sections);
         }
 
-        public static ICryptographyConfigProperty GetConfigurationProperty(this ICryptographyConfig config, String? key, String? alternate, IStringCryptor? cryptor, IEnumerable<String>? sections)
+        public static ICryptographyConfigProperty ConfigurationProperty(this ICryptographyConfig config, String? key, String? alternate, IStringCryptor? cryptor, IEnumerable<String>? sections)
         {
-            return GetConfigurationProperty(config, key, alternate, cryptor, ConfigPropertyOptions.None, sections);
+            return ConfigurationProperty(config, key, alternate, cryptor, ConfigPropertyOptions.None, sections);
         }
 
-        public static ICryptographyConfigProperty GetConfigurationProperty(this ICryptographyConfig config, String? key, String? alternate, IStringCryptor? cryptor, ConfigPropertyOptions options,
+        public static ICryptographyConfigProperty ConfigurationProperty(this ICryptographyConfig config, String? key, String? alternate, IStringCryptor? cryptor, ConfigPropertyOptions options,
             params String[]? sections)
         {
-            return GetConfigurationProperty(config, key, alternate, cryptor, options, (IEnumerable<String>?) sections);
+            return ConfigurationProperty(config, key, alternate, cryptor, options, (IEnumerable<String>?) sections);
         }
 
-        public static ICryptographyConfigProperty GetConfigurationProperty(this ICryptographyConfig config, String? key, String? alternate, IStringCryptor? cryptor, ConfigPropertyOptions options,
+        public static ICryptographyConfigProperty ConfigurationProperty(this ICryptographyConfig config, String? key, String? alternate, IStringCryptor? cryptor, ConfigPropertyOptions options,
             IEnumerable<String>? sections)
         {
             return new CryptographyConfigProperty(config, key, alternate, cryptor, options, sections);
         }
 
-        public static IReadOnlyCryptographyConfigProperty<T?> GetConfigurationProperty<T>(this IReadOnlyConfig config, String? key, IStringCryptor cryptor, params String[]? sections)
+        public static IReadOnlyCryptographyConfigProperty<T?> ConfigurationProperty<T>(this IReadOnlyConfig config, String? key, IStringCryptor cryptor, params String[]? sections)
         {
-            return GetConfigurationProperty<T>(config, key, cryptor, (IEnumerable<String>?) sections);
+            return ConfigurationProperty<T>(config, key, cryptor, (IEnumerable<String>?) sections);
         }
 
-        public static IReadOnlyCryptographyConfigProperty<T?> GetConfigurationProperty<T>(this IReadOnlyConfig config, String? key, IStringCryptor cryptor, IEnumerable<String>? sections)
+        public static IReadOnlyCryptographyConfigProperty<T?> ConfigurationProperty<T>(this IReadOnlyConfig config, String? key, IStringCryptor cryptor, IEnumerable<String>? sections)
         {
-            return GetConfigurationProperty(config, key, default(T), cryptor, sections);
+            return ConfigurationProperty(config, key, default(T), cryptor, sections);
         }
 
-        public static IReadOnlyCryptographyConfigProperty<T> GetConfigurationProperty<T>(this IReadOnlyConfig config, String? key, T alternate, IStringCryptor cryptor, params String[]? sections)
+        public static IReadOnlyCryptographyConfigProperty<T> ConfigurationProperty<T>(this IReadOnlyConfig config, String? key, T alternate, IStringCryptor cryptor, params String[]? sections)
         {
-            return GetConfigurationProperty(config, key, alternate, cryptor, (IEnumerable<String>?) sections);
+            return ConfigurationProperty(config, key, alternate, cryptor, (IEnumerable<String>?) sections);
         }
 
-        public static IReadOnlyCryptographyConfigProperty<T> GetConfigurationProperty<T>(this IReadOnlyConfig config, String? key, T alternate, IStringCryptor cryptor, IEnumerable<String>? sections)
+        public static IReadOnlyCryptographyConfigProperty<T> ConfigurationProperty<T>(this IReadOnlyConfig config, String? key, T alternate, IStringCryptor cryptor, IEnumerable<String>? sections)
         {
-            return GetConfigurationProperty(config, key, alternate, cryptor, null, sections);
+            return ConfigurationProperty(config, key, alternate, cryptor, null, sections);
         }
 
-        public static IReadOnlyCryptographyConfigProperty<T> GetConfigurationProperty<T>(this IReadOnlyConfig config, String? key, T alternate, IStringCryptor cryptor, ConfigPropertyOptions options,
+        public static IReadOnlyCryptographyConfigProperty<T> ConfigurationProperty<T>(this IReadOnlyConfig config, String? key, T alternate, IStringCryptor cryptor, ConfigPropertyOptions options,
             params String[]? sections)
         {
-            return GetConfigurationProperty(config, key, alternate, cryptor, options, (IEnumerable<String>?) sections);
+            return ConfigurationProperty(config, key, alternate, cryptor, options, (IEnumerable<String>?) sections);
         }
 
-        public static IReadOnlyCryptographyConfigProperty<T> GetConfigurationProperty<T>(this IReadOnlyConfig config, String? key, T alternate, IStringCryptor cryptor, ConfigPropertyOptions options,
+        public static IReadOnlyCryptographyConfigProperty<T> ConfigurationProperty<T>(this IReadOnlyConfig config, String? key, T alternate, IStringCryptor cryptor, ConfigPropertyOptions options,
             IEnumerable<String>? sections)
         {
-            return GetConfigurationProperty(config, key, alternate, cryptor, null, options, sections);
+            return ConfigurationProperty(config, key, alternate, cryptor, null, options, sections);
         }
 
-        public static IReadOnlyCryptographyConfigProperty<T> GetConfigurationProperty<T>(this IReadOnlyConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
+        public static IReadOnlyCryptographyConfigProperty<T> ConfigurationProperty<T>(this IReadOnlyConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
             params String[]? sections)
         {
-            return GetConfigurationProperty(config, key, alternate, cryptor, validate, (IEnumerable<String>?) sections);
+            return ConfigurationProperty(config, key, alternate, cryptor, validate, (IEnumerable<String>?) sections);
         }
 
-        public static IReadOnlyCryptographyConfigProperty<T> GetConfigurationProperty<T>(this IReadOnlyConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
+        public static IReadOnlyCryptographyConfigProperty<T> ConfigurationProperty<T>(this IReadOnlyConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
             IEnumerable<String>? sections)
         {
-            return GetConfigurationProperty(config, key, alternate, cryptor, validate, ConfigPropertyOptions.None, sections);
+            return ConfigurationProperty(config, key, alternate, cryptor, validate, ConfigPropertyOptions.None, sections);
         }
 
-        public static IReadOnlyCryptographyConfigProperty<T> GetConfigurationProperty<T>(this IReadOnlyConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
+        public static IReadOnlyCryptographyConfigProperty<T> ConfigurationProperty<T>(this IReadOnlyConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
             ConfigPropertyOptions options, params String[]? sections)
         {
-            return GetConfigurationProperty(config, key, alternate, cryptor, validate, options, (IEnumerable<String>?) sections);
+            return ConfigurationProperty(config, key, alternate, cryptor, validate, options, (IEnumerable<String>?) sections);
         }
 
-        public static IReadOnlyCryptographyConfigProperty<T> GetConfigurationProperty<T>(this IReadOnlyConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
+        public static IReadOnlyCryptographyConfigProperty<T> ConfigurationProperty<T>(this IReadOnlyConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
             ConfigPropertyOptions options, IEnumerable<String>? sections)
         {
-            return GetConfigurationProperty(config, key, alternate, cryptor, validate, (TryConverter<String?, T>?) null, options, sections);
+            return ConfigurationProperty(config, key, alternate, cryptor, validate, (TryConverter<String?, T>?) null, options, sections);
         }
 
-        public static IReadOnlyCryptographyConfigProperty<T> GetConfigurationProperty<T>(this IReadOnlyConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
+        public static IReadOnlyCryptographyConfigProperty<T> ConfigurationProperty<T>(this IReadOnlyConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
             TryConverter<String?, T>? converter, ConfigPropertyOptions options, params String[]? sections)
         {
-            return GetConfigurationProperty(config, key, alternate, cryptor, validate, converter, options, (IEnumerable<String>?) sections);
+            return ConfigurationProperty(config, key, alternate, cryptor, validate, converter, options, (IEnumerable<String>?) sections);
         }
 
-        public static IReadOnlyCryptographyConfigProperty<T> GetConfigurationProperty<T>(this IReadOnlyConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
+        public static IReadOnlyCryptographyConfigProperty<T> ConfigurationProperty<T>(this IReadOnlyConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
             IOneWayConverter<String?, T>? converter, ConfigPropertyOptions options, params String[]? sections)
         {
-            return GetConfigurationProperty(config, key, alternate, cryptor, validate, converter, options, (IEnumerable<String>?) sections);
+            return ConfigurationProperty(config, key, alternate, cryptor, validate, converter, options, (IEnumerable<String>?) sections);
         }
 
-        public static IReadOnlyCryptographyConfigProperty<T> GetConfigurationProperty<T>(this IReadOnlyConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
+        public static IReadOnlyCryptographyConfigProperty<T> ConfigurationProperty<T>(this IReadOnlyConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
             TryConverter<String?, T>? converter, ConfigPropertyOptions options, IEnumerable<String>? sections)
         {
             return new ReadOnlyCryptographyConfigProperty<T>(config, key, alternate, cryptor, validate, converter, options, sections);
         }
 
-        public static IReadOnlyCryptographyConfigProperty<T> GetConfigurationProperty<T>(this IReadOnlyConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
+        public static IReadOnlyCryptographyConfigProperty<T> ConfigurationProperty<T>(this IReadOnlyConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
             IOneWayConverter<String?, T>? converter, ConfigPropertyOptions options, IEnumerable<String>? sections)
         {
             return new ReadOnlyCryptographyConfigProperty<T>(config, key, alternate, cryptor, validate, converter, options, sections);
         }
 
-        public static ICryptographyConfigProperty<T?> GetConfigurationProperty<T>(this IConfig config, String? key, IStringCryptor cryptor, params String[]? sections)
+        public static ICryptographyConfigProperty<T?> ConfigurationProperty<T>(this IConfig config, String? key, IStringCryptor cryptor, params String[]? sections)
         {
-            return GetConfigurationProperty<T>(config, key, cryptor, (IEnumerable<String>?) sections);
+            return ConfigurationProperty<T>(config, key, cryptor, (IEnumerable<String>?) sections);
         }
 
-        public static ICryptographyConfigProperty<T?> GetConfigurationProperty<T>(this IConfig config, String? key, IStringCryptor cryptor, IEnumerable<String>? sections)
+        public static ICryptographyConfigProperty<T?> ConfigurationProperty<T>(this IConfig config, String? key, IStringCryptor cryptor, IEnumerable<String>? sections)
         {
-            return GetConfigurationProperty(config, key, default(T), cryptor, sections);
+            return ConfigurationProperty(config, key, default(T), cryptor, sections);
         }
 
-        public static ICryptographyConfigProperty<T> GetConfigurationProperty<T>(this IConfig config, String? key, T alternate, IStringCryptor cryptor, params String[]? sections)
+        public static ICryptographyConfigProperty<T> ConfigurationProperty<T>(this IConfig config, String? key, T alternate, IStringCryptor cryptor, params String[]? sections)
         {
-            return GetConfigurationProperty(config, key, alternate, cryptor, (IEnumerable<String>?) sections);
+            return ConfigurationProperty(config, key, alternate, cryptor, (IEnumerable<String>?) sections);
         }
 
-        public static ICryptographyConfigProperty<T> GetConfigurationProperty<T>(this IConfig config, String? key, T alternate, IStringCryptor cryptor, IEnumerable<String>? sections)
+        public static ICryptographyConfigProperty<T> ConfigurationProperty<T>(this IConfig config, String? key, T alternate, IStringCryptor cryptor, IEnumerable<String>? sections)
         {
-            return GetConfigurationProperty(config, key, alternate, cryptor, null, sections);
+            return ConfigurationProperty(config, key, alternate, cryptor, null, sections);
         }
 
-        public static ICryptographyConfigProperty<T> GetConfigurationProperty<T>(this IConfig config, String? key, T alternate, IStringCryptor cryptor, ConfigPropertyOptions options,
+        public static ICryptographyConfigProperty<T> ConfigurationProperty<T>(this IConfig config, String? key, T alternate, IStringCryptor cryptor, ConfigPropertyOptions options,
             params String[]? sections)
         {
-            return GetConfigurationProperty(config, key, alternate, cryptor, options, (IEnumerable<String>?) sections);
+            return ConfigurationProperty(config, key, alternate, cryptor, options, (IEnumerable<String>?) sections);
         }
 
-        public static ICryptographyConfigProperty<T> GetConfigurationProperty<T>(this IConfig config, String? key, T alternate, IStringCryptor cryptor, ConfigPropertyOptions options,
+        public static ICryptographyConfigProperty<T> ConfigurationProperty<T>(this IConfig config, String? key, T alternate, IStringCryptor cryptor, ConfigPropertyOptions options,
             IEnumerable<String>? sections)
         {
-            return GetConfigurationProperty(config, key, alternate, cryptor, null, options, sections);
+            return ConfigurationProperty(config, key, alternate, cryptor, null, options, sections);
         }
 
-        public static ICryptographyConfigProperty<T> GetConfigurationProperty<T>(this IConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
+        public static ICryptographyConfigProperty<T> ConfigurationProperty<T>(this IConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
             params String[]? sections)
         {
-            return GetConfigurationProperty(config, key, alternate, cryptor, validate, (IEnumerable<String>?) sections);
+            return ConfigurationProperty(config, key, alternate, cryptor, validate, (IEnumerable<String>?) sections);
         }
 
-        public static ICryptographyConfigProperty<T> GetConfigurationProperty<T>(this IConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
+        public static ICryptographyConfigProperty<T> ConfigurationProperty<T>(this IConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
             IEnumerable<String>? sections)
         {
-            return GetConfigurationProperty(config, key, alternate, cryptor, validate, ConfigPropertyOptions.None, sections);
+            return ConfigurationProperty(config, key, alternate, cryptor, validate, ConfigPropertyOptions.None, sections);
         }
 
-        public static ICryptographyConfigProperty<T> GetConfigurationProperty<T>(this IConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
+        public static ICryptographyConfigProperty<T> ConfigurationProperty<T>(this IConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
             ConfigPropertyOptions options, params String[]? sections)
         {
-            return GetConfigurationProperty(config, key, alternate, cryptor, validate, options, (IEnumerable<String>?) sections);
+            return ConfigurationProperty(config, key, alternate, cryptor, validate, options, (IEnumerable<String>?) sections);
         }
 
-        public static ICryptographyConfigProperty<T> GetConfigurationProperty<T>(this IConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
+        public static ICryptographyConfigProperty<T> ConfigurationProperty<T>(this IConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
             ConfigPropertyOptions options, IEnumerable<String>? sections)
         {
-            return GetConfigurationProperty(config, key, alternate, cryptor, validate, (TryConverter<String?, T>?) null, options, sections);
+            return ConfigurationProperty(config, key, alternate, cryptor, validate, (TryConverter<String?, T>?) null, options, sections);
         }
 
-        public static ICryptographyConfigProperty<T> GetConfigurationProperty<T>(this IConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
+        public static ICryptographyConfigProperty<T> ConfigurationProperty<T>(this IConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
             TryConverter<String?, T>? converter, ConfigPropertyOptions options, params String[]? sections)
         {
-            return GetConfigurationProperty(config, key, alternate, cryptor, validate, converter, options, (IEnumerable<String>?) sections);
+            return ConfigurationProperty(config, key, alternate, cryptor, validate, converter, options, (IEnumerable<String>?) sections);
         }
 
-        public static ICryptographyConfigProperty<T> GetConfigurationProperty<T>(this IConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
+        public static ICryptographyConfigProperty<T> ConfigurationProperty<T>(this IConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
             IOneWayConverter<String?, T>? converter, ConfigPropertyOptions options, params String[]? sections)
         {
-            return GetConfigurationProperty(config, key, alternate, cryptor, validate, converter, options, (IEnumerable<String>?) sections);
+            return ConfigurationProperty(config, key, alternate, cryptor, validate, converter, options, (IEnumerable<String>?) sections);
         }
 
-        public static ICryptographyConfigProperty<T> GetConfigurationProperty<T>(this IConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
+        public static ICryptographyConfigProperty<T> ConfigurationProperty<T>(this IConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
             TryConverter<String?, T>? converter, ConfigPropertyOptions options, IEnumerable<String>? sections)
         {
             return new CryptographyConfigProperty<T>(config, key, alternate, cryptor, validate, converter, options, sections);
         }
 
-        public static ICryptographyConfigProperty<T> GetConfigurationProperty<T>(this IConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
+        public static ICryptographyConfigProperty<T> ConfigurationProperty<T>(this IConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
             IOneWayConverter<String?, T>? converter, ConfigPropertyOptions options, IEnumerable<String>? sections)
         {
             return new CryptographyConfigProperty<T>(config, key, alternate, cryptor, validate, converter, options, sections);
         }
 
-        public static IReadOnlyCryptographyConfigProperty<T?> GetConfigurationProperty<T>(this IReadOnlyCryptographyConfig config, String? key, IStringCryptor cryptor, params String[]? sections)
+        public static IReadOnlyCryptographyConfigProperty<T?> ConfigurationProperty<T>(this IReadOnlyCryptographyConfig config, String? key, IStringCryptor cryptor, params String[]? sections)
         {
-            return GetConfigurationProperty<T>(config, key, cryptor, (IEnumerable<String>?) sections);
+            return ConfigurationProperty<T>(config, key, cryptor, (IEnumerable<String>?) sections);
         }
 
-        public static IReadOnlyCryptographyConfigProperty<T?> GetConfigurationProperty<T>(this IReadOnlyCryptographyConfig config, String? key, IStringCryptor cryptor, IEnumerable<String>? sections)
+        public static IReadOnlyCryptographyConfigProperty<T?> ConfigurationProperty<T>(this IReadOnlyCryptographyConfig config, String? key, IStringCryptor cryptor, IEnumerable<String>? sections)
         {
-            return GetConfigurationProperty(config, key, default(T), cryptor, sections);
+            return ConfigurationProperty(config, key, default(T), cryptor, sections);
         }
 
-        public static IReadOnlyCryptographyConfigProperty<T> GetConfigurationProperty<T>(this IReadOnlyCryptographyConfig config, String? key, T alternate, IStringCryptor cryptor, params String[]? sections)
+        public static IReadOnlyCryptographyConfigProperty<T> ConfigurationProperty<T>(this IReadOnlyCryptographyConfig config, String? key, T alternate, IStringCryptor cryptor, params String[]? sections)
         {
-            return GetConfigurationProperty(config, key, alternate, cryptor, (IEnumerable<String>?) sections);
+            return ConfigurationProperty(config, key, alternate, cryptor, (IEnumerable<String>?) sections);
         }
 
-        public static IReadOnlyCryptographyConfigProperty<T> GetConfigurationProperty<T>(this IReadOnlyCryptographyConfig config, String? key, T alternate, IStringCryptor cryptor, IEnumerable<String>? sections)
+        public static IReadOnlyCryptographyConfigProperty<T> ConfigurationProperty<T>(this IReadOnlyCryptographyConfig config, String? key, T alternate, IStringCryptor cryptor, IEnumerable<String>? sections)
         {
-            return GetConfigurationProperty(config, key, alternate, cryptor, null, sections);
+            return ConfigurationProperty(config, key, alternate, cryptor, null, sections);
         }
 
-        public static IReadOnlyCryptographyConfigProperty<T> GetConfigurationProperty<T>(this IReadOnlyCryptographyConfig config, String? key, T alternate, IStringCryptor cryptor, ConfigPropertyOptions options,
+        public static IReadOnlyCryptographyConfigProperty<T> ConfigurationProperty<T>(this IReadOnlyCryptographyConfig config, String? key, T alternate, IStringCryptor cryptor, ConfigPropertyOptions options,
             params String[]? sections)
         {
-            return GetConfigurationProperty(config, key, alternate, cryptor, options, (IEnumerable<String>?) sections);
+            return ConfigurationProperty(config, key, alternate, cryptor, options, (IEnumerable<String>?) sections);
         }
 
-        public static IReadOnlyCryptographyConfigProperty<T> GetConfigurationProperty<T>(this IReadOnlyCryptographyConfig config, String? key, T alternate, IStringCryptor cryptor, ConfigPropertyOptions options,
+        public static IReadOnlyCryptographyConfigProperty<T> ConfigurationProperty<T>(this IReadOnlyCryptographyConfig config, String? key, T alternate, IStringCryptor cryptor, ConfigPropertyOptions options,
             IEnumerable<String>? sections)
         {
-            return GetConfigurationProperty(config, key, alternate, cryptor, null, options, sections);
+            return ConfigurationProperty(config, key, alternate, cryptor, null, options, sections);
         }
 
-        public static IReadOnlyCryptographyConfigProperty<T> GetConfigurationProperty<T>(this IReadOnlyCryptographyConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
+        public static IReadOnlyCryptographyConfigProperty<T> ConfigurationProperty<T>(this IReadOnlyCryptographyConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
             params String[]? sections)
         {
-            return GetConfigurationProperty(config, key, alternate, cryptor, validate, (IEnumerable<String>?) sections);
+            return ConfigurationProperty(config, key, alternate, cryptor, validate, (IEnumerable<String>?) sections);
         }
 
-        public static IReadOnlyCryptographyConfigProperty<T> GetConfigurationProperty<T>(this IReadOnlyCryptographyConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
+        public static IReadOnlyCryptographyConfigProperty<T> ConfigurationProperty<T>(this IReadOnlyCryptographyConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
             IEnumerable<String>? sections)
         {
-            return GetConfigurationProperty(config, key, alternate, cryptor, validate, ConfigPropertyOptions.None, sections);
+            return ConfigurationProperty(config, key, alternate, cryptor, validate, ConfigPropertyOptions.None, sections);
         }
 
-        public static IReadOnlyCryptographyConfigProperty<T> GetConfigurationProperty<T>(this IReadOnlyCryptographyConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
+        public static IReadOnlyCryptographyConfigProperty<T> ConfigurationProperty<T>(this IReadOnlyCryptographyConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
             ConfigPropertyOptions options, params String[]? sections)
         {
-            return GetConfigurationProperty(config, key, alternate, cryptor, validate, options, (IEnumerable<String>?) sections);
+            return ConfigurationProperty(config, key, alternate, cryptor, validate, options, (IEnumerable<String>?) sections);
         }
 
-        public static IReadOnlyCryptographyConfigProperty<T> GetConfigurationProperty<T>(this IReadOnlyCryptographyConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
+        public static IReadOnlyCryptographyConfigProperty<T> ConfigurationProperty<T>(this IReadOnlyCryptographyConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
             ConfigPropertyOptions options, IEnumerable<String>? sections)
         {
-            return GetConfigurationProperty(config, key, alternate, cryptor, validate, (TryConverter<String?, T>?) null, options, sections);
+            return ConfigurationProperty(config, key, alternate, cryptor, validate, (TryConverter<String?, T>?) null, options, sections);
         }
 
-        public static IReadOnlyCryptographyConfigProperty<T> GetConfigurationProperty<T>(this IReadOnlyCryptographyConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
+        public static IReadOnlyCryptographyConfigProperty<T> ConfigurationProperty<T>(this IReadOnlyCryptographyConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
             TryConverter<String?, T>? converter, ConfigPropertyOptions options, params String[]? sections)
         {
-            return GetConfigurationProperty(config, key, alternate, cryptor, validate, converter, options, (IEnumerable<String>?) sections);
+            return ConfigurationProperty(config, key, alternate, cryptor, validate, converter, options, (IEnumerable<String>?) sections);
         }
 
-        public static IReadOnlyCryptographyConfigProperty<T> GetConfigurationProperty<T>(this IReadOnlyCryptographyConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
+        public static IReadOnlyCryptographyConfigProperty<T> ConfigurationProperty<T>(this IReadOnlyCryptographyConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
             IOneWayConverter<String?, T>? converter, ConfigPropertyOptions options, params String[]? sections)
         {
-            return GetConfigurationProperty(config, key, alternate, cryptor, validate, converter, options, (IEnumerable<String>?) sections);
+            return ConfigurationProperty(config, key, alternate, cryptor, validate, converter, options, (IEnumerable<String>?) sections);
         }
 
-        public static IReadOnlyCryptographyConfigProperty<T> GetConfigurationProperty<T>(this IReadOnlyCryptographyConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
+        public static IReadOnlyCryptographyConfigProperty<T> ConfigurationProperty<T>(this IReadOnlyCryptographyConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
             TryConverter<String?, T>? converter, ConfigPropertyOptions options, IEnumerable<String>? sections)
         {
             return new ReadOnlyCryptographyConfigProperty<T>(config, key, alternate, cryptor, validate, converter, options, sections);
         }
 
-        public static IReadOnlyCryptographyConfigProperty<T> GetConfigurationProperty<T>(this IReadOnlyCryptographyConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
+        public static IReadOnlyCryptographyConfigProperty<T> ConfigurationProperty<T>(this IReadOnlyCryptographyConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
             IOneWayConverter<String?, T>? converter, ConfigPropertyOptions options, IEnumerable<String>? sections)
         {
             return new ReadOnlyCryptographyConfigProperty<T>(config, key, alternate, cryptor, validate, converter, options, sections);
         }
 
-        public static ICryptographyConfigProperty<T?> GetConfigurationProperty<T>(this ICryptographyConfig config, String? key, IStringCryptor cryptor, params String[]? sections)
+        public static ICryptographyConfigProperty<T?> ConfigurationProperty<T>(this ICryptographyConfig config, String? key, IStringCryptor cryptor, params String[]? sections)
         {
-            return GetConfigurationProperty<T>(config, key, cryptor, (IEnumerable<String>?) sections);
+            return ConfigurationProperty<T>(config, key, cryptor, (IEnumerable<String>?) sections);
         }
 
-        public static ICryptographyConfigProperty<T?> GetConfigurationProperty<T>(this ICryptographyConfig config, String? key, IStringCryptor cryptor, IEnumerable<String>? sections)
+        public static ICryptographyConfigProperty<T?> ConfigurationProperty<T>(this ICryptographyConfig config, String? key, IStringCryptor cryptor, IEnumerable<String>? sections)
         {
-            return GetConfigurationProperty(config, key, default(T), cryptor, sections);
+            return ConfigurationProperty(config, key, default(T), cryptor, sections);
         }
 
-        public static ICryptographyConfigProperty<T> GetConfigurationProperty<T>(this ICryptographyConfig config, String? key, T alternate, IStringCryptor cryptor, params String[]? sections)
+        public static ICryptographyConfigProperty<T> ConfigurationProperty<T>(this ICryptographyConfig config, String? key, T alternate, IStringCryptor cryptor, params String[]? sections)
         {
-            return GetConfigurationProperty(config, key, alternate, cryptor, (IEnumerable<String>?) sections);
+            return ConfigurationProperty(config, key, alternate, cryptor, (IEnumerable<String>?) sections);
         }
 
-        public static ICryptographyConfigProperty<T> GetConfigurationProperty<T>(this ICryptographyConfig config, String? key, T alternate, IStringCryptor cryptor, IEnumerable<String>? sections)
+        public static ICryptographyConfigProperty<T> ConfigurationProperty<T>(this ICryptographyConfig config, String? key, T alternate, IStringCryptor cryptor, IEnumerable<String>? sections)
         {
-            return GetConfigurationProperty(config, key, alternate, cryptor, null, sections);
+            return ConfigurationProperty(config, key, alternate, cryptor, null, sections);
         }
 
-        public static ICryptographyConfigProperty<T> GetConfigurationProperty<T>(this ICryptographyConfig config, String? key, T alternate, IStringCryptor cryptor, ConfigPropertyOptions options,
+        public static ICryptographyConfigProperty<T> ConfigurationProperty<T>(this ICryptographyConfig config, String? key, T alternate, IStringCryptor cryptor, ConfigPropertyOptions options,
             params String[]? sections)
         {
-            return GetConfigurationProperty(config, key, alternate, cryptor, options, (IEnumerable<String>?) sections);
+            return ConfigurationProperty(config, key, alternate, cryptor, options, (IEnumerable<String>?) sections);
         }
 
-        public static ICryptographyConfigProperty<T> GetConfigurationProperty<T>(this ICryptographyConfig config, String? key, T alternate, IStringCryptor cryptor, ConfigPropertyOptions options,
+        public static ICryptographyConfigProperty<T> ConfigurationProperty<T>(this ICryptographyConfig config, String? key, T alternate, IStringCryptor cryptor, ConfigPropertyOptions options,
             IEnumerable<String>? sections)
         {
-            return GetConfigurationProperty(config, key, alternate, cryptor, null, options, sections);
+            return ConfigurationProperty(config, key, alternate, cryptor, null, options, sections);
         }
 
-        public static ICryptographyConfigProperty<T> GetConfigurationProperty<T>(this ICryptographyConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
+        public static ICryptographyConfigProperty<T> ConfigurationProperty<T>(this ICryptographyConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
             params String[]? sections)
         {
-            return GetConfigurationProperty(config, key, alternate, cryptor, validate, (IEnumerable<String>?) sections);
+            return ConfigurationProperty(config, key, alternate, cryptor, validate, (IEnumerable<String>?) sections);
         }
 
-        public static ICryptographyConfigProperty<T> GetConfigurationProperty<T>(this ICryptographyConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
+        public static ICryptographyConfigProperty<T> ConfigurationProperty<T>(this ICryptographyConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
             IEnumerable<String>? sections)
         {
-            return GetConfigurationProperty(config, key, alternate, cryptor, validate, ConfigPropertyOptions.None, sections);
+            return ConfigurationProperty(config, key, alternate, cryptor, validate, ConfigPropertyOptions.None, sections);
         }
 
-        public static ICryptographyConfigProperty<T> GetConfigurationProperty<T>(this ICryptographyConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
+        public static ICryptographyConfigProperty<T> ConfigurationProperty<T>(this ICryptographyConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
             ConfigPropertyOptions options, params String[]? sections)
         {
-            return GetConfigurationProperty(config, key, alternate, cryptor, validate, options, (IEnumerable<String>?) sections);
+            return ConfigurationProperty(config, key, alternate, cryptor, validate, options, (IEnumerable<String>?) sections);
         }
 
-        public static ICryptographyConfigProperty<T> GetConfigurationProperty<T>(this ICryptographyConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
+        public static ICryptographyConfigProperty<T> ConfigurationProperty<T>(this ICryptographyConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
             ConfigPropertyOptions options, IEnumerable<String>? sections)
         {
-            return GetConfigurationProperty(config, key, alternate, cryptor, validate, (TryConverter<String?, T>?) null, options, sections);
+            return ConfigurationProperty(config, key, alternate, cryptor, validate, (TryConverter<String?, T>?) null, options, sections);
         }
 
-        public static ICryptographyConfigProperty<T> GetConfigurationProperty<T>(this ICryptographyConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
+        public static ICryptographyConfigProperty<T> ConfigurationProperty<T>(this ICryptographyConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
             TryConverter<String?, T>? converter, ConfigPropertyOptions options, params String[]? sections)
         {
-            return GetConfigurationProperty(config, key, alternate, cryptor, validate, converter, options, (IEnumerable<String>?) sections);
+            return ConfigurationProperty(config, key, alternate, cryptor, validate, converter, options, (IEnumerable<String>?) sections);
         }
 
-        public static ICryptographyConfigProperty<T> GetConfigurationProperty<T>(this ICryptographyConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
+        public static ICryptographyConfigProperty<T> ConfigurationProperty<T>(this ICryptographyConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
             IOneWayConverter<String?, T>? converter, ConfigPropertyOptions options, params String[]? sections)
         {
-            return GetConfigurationProperty(config, key, alternate, cryptor, validate, converter, options, (IEnumerable<String>?) sections);
+            return ConfigurationProperty(config, key, alternate, cryptor, validate, converter, options, (IEnumerable<String>?) sections);
         }
 
-        public static ICryptographyConfigProperty<T> GetConfigurationProperty<T>(this ICryptographyConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
+        public static ICryptographyConfigProperty<T> ConfigurationProperty<T>(this ICryptographyConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
             TryConverter<String?, T>? converter, ConfigPropertyOptions options, IEnumerable<String>? sections)
         {
             return new CryptographyConfigProperty<T>(config, key, alternate, cryptor, validate, converter, options, sections);
         }
 
-        public static ICryptographyConfigProperty<T> GetConfigurationProperty<T>(this ICryptographyConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
+        public static ICryptographyConfigProperty<T> ConfigurationProperty<T>(this ICryptographyConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate,
             IOneWayConverter<String?, T>? converter, ConfigPropertyOptions options, IEnumerable<String>? sections)
         {
             return new CryptographyConfigProperty<T>(config, key, alternate, cryptor, validate, converter, options, sections);

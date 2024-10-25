@@ -40,7 +40,6 @@ namespace NetExtender.Utilities.Core
 
         public static ReadOnlyAttribute Default { get; } = new ReadOnlyAttribute(null);
         public static ReadOnlyAttribute Yes { get; } = new ReadOnlyAttribute(true);
-
         public static ReadOnlyAttribute No { get; } = new ReadOnlyAttribute(false);
 
         public Boolean? State { get; }

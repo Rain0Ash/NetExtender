@@ -5,7 +5,7 @@ using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
 
-namespace NetExtender.Types.Native.Windows
+namespace NetExtender.Windows.Types
 {
     [StructLayout(LayoutKind.Sequential)]
     public readonly struct WinRectangle

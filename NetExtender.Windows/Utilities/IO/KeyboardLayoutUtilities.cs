@@ -7,7 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using NetExtender.Utilities.Threading;
 using NetExtender.Utilities.Types;
-using NetExtender.Windows.Types.IO;
+using NetExtender.Windows.Types;
 
 namespace NetExtender.Windows.Utilities.IO
 {

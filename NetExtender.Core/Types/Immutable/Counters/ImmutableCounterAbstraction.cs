@@ -294,7 +294,7 @@ namespace NetExtender.Types.Immutable.Counters
                 return Convert(Internal.Remove(item));
             }
 
-            result = Substract(result, count);
+            result = Subtract(result, count);
             return Convert(Internal.SetItem(item, result));
         }
 

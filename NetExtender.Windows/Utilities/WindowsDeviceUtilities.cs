@@ -7,7 +7,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using NetExtender.Types.Native.Windows;
+using NetExtender.Windows.Types;
 using NetExtender.Utilities.Core;
 using NetExtender.Utilities.IO;
 

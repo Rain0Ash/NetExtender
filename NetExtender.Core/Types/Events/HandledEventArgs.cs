@@ -21,7 +21,7 @@ namespace NetExtender.Types.Events
             return args is not null ? new HandledEventArgs<T>(args.Value, args.IsCancelled) : null;
         }
 
-        public T Value { get; }
+        public T Value { get; protected set; }
 
         public HandledEventArgs(T value)
         {

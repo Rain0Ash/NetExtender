@@ -15,8 +15,8 @@ namespace NetExtender.Types.Middlewares.Exceptions
         {
         }
         
-        public MiddlewareConvertNoInvokeException(String? message, Exception? innerException)
-            : base(message, innerException)
+        public MiddlewareConvertNoInvokeException(String? message, Exception? exception)
+            : base(message, exception)
         {
         }
         

@@ -141,14 +141,21 @@ namespace NetExtender.Types.Monads.Debouce
             }
         }
         
+        public Debounce(TimeSpan delay)
+        {
+            _delay = delay >= default(TimeSpan) ? Normalize(delay) : throw new ArgumentOutOfRangeException(nameof(delay), delay, null);
+            Value = default!;
+            SetTime = default;
+        }
+        
         public Debounce(T value)
             : this(value, default)
         {
         }
         
         public Debounce(T value, TimeSpan delay)
+            : this(delay)
         {
-            _delay = delay >= default(TimeSpan) ? Normalize(delay) : throw new ArgumentOutOfRangeException(nameof(value), value, null);
             Value = value;
             SetTime = DateTime.Now;
         }

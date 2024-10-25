@@ -42,7 +42,7 @@ namespace NetExtender.Types.Numerics
 
         public static Point2<T> operator -(Point2<T> first, Point2<T> second)
         {
-            return new Point2<T>(MathUnsafe.Substract(first.X, second.X), MathUnsafe.Substract(first.Y, second.Y));
+            return new Point2<T>(MathUnsafe.Subtract(first.X, second.X), MathUnsafe.Subtract(first.Y, second.Y));
         }
 
         public static Point2<T> operator *(Point2<T> first, Point2<T> second)
@@ -193,7 +193,7 @@ namespace NetExtender.Types.Numerics
 
         public static Point3<T> operator -(Point3<T> first, Point3<T> second)
         {
-            return new Point3<T>(MathUnsafe.Substract(first.X, second.X), MathUnsafe.Substract(first.Y, second.Y), MathUnsafe.Substract(first.Z, second.Z));
+            return new Point3<T>(MathUnsafe.Subtract(first.X, second.X), MathUnsafe.Subtract(first.Y, second.Y), MathUnsafe.Subtract(first.Z, second.Z));
         }
 
         public static Point3<T> operator *(Point3<T> first, Point3<T> second)

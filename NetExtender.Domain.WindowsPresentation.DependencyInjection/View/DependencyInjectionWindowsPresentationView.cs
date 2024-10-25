@@ -5,7 +5,7 @@ using System;
 using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using NetExtender.Domains.WindowsPresentation.Builder;
-using NetExtender.UserInterface.WindowsPresentation.Windows;
+using NetExtender.UserInterface.WindowsPresentation;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Domains.WindowsPresentation.View

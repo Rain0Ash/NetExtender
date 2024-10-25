@@ -10,18 +10,18 @@ namespace NetExtender.Types.Exceptions
         {
         }
 
-        public ArgumentNullStringException(String? paramName)
-            : base(paramName)
+        public ArgumentNullStringException(String? parameter)
+            : base(parameter)
         {
         }
 
-        public ArgumentNullStringException(String? message, Exception? innerException)
-            : base(message, innerException)
+        public ArgumentNullStringException(String? message, Exception? exception)
+            : base(message, exception)
         {
         }
 
-        public ArgumentNullStringException(String? paramName, String? message)
-            : base(paramName, message)
+        public ArgumentNullStringException(String? parameter, String? message)
+            : base(parameter, message)
         {
         }
 

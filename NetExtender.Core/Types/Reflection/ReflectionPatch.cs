@@ -1,5 +1,8 @@
 using System;
+using System.Runtime.Serialization;
+using NetExtender.Types.Exceptions;
 using NetExtender.Types.Reflection.Interfaces;
+using NetExtender.Utilities.Core;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Reflection
@@ -9,6 +12,14 @@ namespace NetExtender.Types.Reflection
         None,
         Apply,
         Failed
+    }
+    
+    public enum ReflectionPatchThrow : Byte
+    {
+        Throw,
+        Ignore,
+        Log,
+        LogThrow,
     }
     
     public abstract class ReflectionPatch<TFactory> : ReflectionPatch<ReflectionPatch, TFactory> where TFactory : ReflectionPatch<TFactory>, new()
@@ -48,7 +59,7 @@ namespace NetExtender.Types.Reflection
             }
         }
         
-        ReflectionPatchState IReflectionPatch.State
+        ReflectionPatchState IReflectionPatchInfo.State
         {
             get
             {
@@ -56,7 +67,7 @@ namespace NetExtender.Types.Reflection
             }
         }
         
-        public static Boolean IsThrow
+        public static ReflectionPatchThrow IsThrow
         {
             get
             {
@@ -64,7 +75,7 @@ namespace NetExtender.Types.Reflection
             }
         }
         
-        Boolean IReflectionPatch.IsThrow
+        ReflectionPatchThrow IReflectionPatchInfo.IsThrow
         {
             get
             {
@@ -90,11 +101,11 @@ namespace NetExtender.Types.Reflection
         public Object SyncRoot { get; } = ConcurrentUtilities.SyncRoot;
         public abstract ReflectionPatchState State { get; protected set; }
         
-        public virtual Boolean IsThrow
+        public virtual ReflectionPatchThrow IsThrow
         {
             get
             {
-                return true;
+                return ReflectionPatchThrow.Throw;
             }
         }
         
@@ -104,18 +115,31 @@ namespace NetExtender.Types.Reflection
             {
                 try
                 {
-                    if (State is default(ReflectionPatchState) && !Initialize())
+                    if (State is not default(ReflectionPatchState) || Initialize())
                     {
-                        State = ReflectionPatchState.Failed;
+                        return;
                     }
+                    
+                    State = ReflectionPatchState.Failed;
+                    ReflectionPatchUtilities.Set(this);
                 }
-                catch (Exception)
+                catch (Exception exception)
                 {
                     State = ReflectionPatchState.Failed;
-                    
-                    if (IsThrow)
+                    switch (IsThrow)
                     {
-                        throw;
+                        case ReflectionPatchThrow.Throw:
+                            throw;
+                        case ReflectionPatchThrow.Ignore:
+                            break;
+                        case ReflectionPatchThrow.Log:
+                            ReflectionPatchUtilities.Set(this, exception);
+                            break;
+                        case ReflectionPatchThrow.LogThrow:
+                            ReflectionPatchUtilities.Set(this, exception);
+                            throw;
+                        default:
+                            throw new EnumUndefinedOrNotSupportedException<ReflectionPatchThrow>(IsThrow, nameof(IsThrow), null);
                     }
                 }
             }
@@ -136,14 +160,26 @@ namespace NetExtender.Types.Reflection
                     {
                         State = Make();
                     }
+                    
+                    ReflectionPatchUtilities.Set(this);
                 }
-                catch (Exception)
+                catch (Exception exception)
                 {
                     State = ReflectionPatchState.Failed;
-                    
-                    if (IsThrow)
+                    switch (IsThrow)
                     {
-                        throw;
+                        case ReflectionPatchThrow.Throw:
+                            throw;
+                        case ReflectionPatchThrow.Ignore:
+                            break;
+                        case ReflectionPatchThrow.Log:
+                            ReflectionPatchUtilities.Set(this, exception);
+                            break;
+                        case ReflectionPatchThrow.LogThrow:
+                            ReflectionPatchUtilities.Set(this, exception);
+                            throw;
+                        default:
+                            throw new EnumUndefinedOrNotSupportedException<ReflectionPatchThrow>(IsThrow, nameof(IsThrow), null);
                     }
                 }
 
@@ -152,5 +188,34 @@ namespace NetExtender.Types.Reflection
         }
 
         protected abstract ReflectionPatchState Make();
+        
+        public override String ToString()
+        {
+            Type type = GetType();
+            return type.FullName ?? type.Name;
+        }
+        
+        [Serializable]
+        protected class ReflectionPatchSignatureMissingException : ReflectionOperationException
+        {
+            public ReflectionPatchSignatureMissingException()
+            {
+            }
+            
+            public ReflectionPatchSignatureMissingException(String? message)
+                : base(message)
+            {
+            }
+            
+            public ReflectionPatchSignatureMissingException(String? message, Exception? exception)
+                : base(message, exception)
+            {
+            }
+            
+            protected ReflectionPatchSignatureMissingException(SerializationInfo info, StreamingContext context)
+                : base(info, context)
+            {
+            }
+        }
     }
 }

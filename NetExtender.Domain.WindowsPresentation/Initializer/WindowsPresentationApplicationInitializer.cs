@@ -136,6 +136,10 @@ namespace NetExtender.Domains.Initializer
         {
         }
         
+        public new abstract class ConsoleBuilder : WindowsPresentationApplicationInitializer<T, TBuilder, Application>.ConsoleBuilder
+        {
+        }
+        
         public new abstract class Middleware : Middleware<TBuilder>
         {
         }
@@ -144,6 +148,10 @@ namespace NetExtender.Domains.Initializer
     public abstract class WindowsPresentationApplicationInitializer<T, TBuilder, TApplication> : ApplicationInitializer<WindowsPresentationApplication<TApplication>, WindowsPresentationView<T, TBuilder>> where T : Window where TBuilder : IApplicationBuilder<T>, new() where TApplication : Application, new()
     {
         public abstract class Builder : WindowsPresentationBuilder<T>
+        {
+        }
+        
+        public abstract class ConsoleBuilder : WindowsPresentationConsoleBuilder<T>
         {
         }
         

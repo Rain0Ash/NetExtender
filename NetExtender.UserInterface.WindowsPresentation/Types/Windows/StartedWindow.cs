@@ -4,7 +4,7 @@
 using System;
 using System.Windows;
 
-namespace NetExtender.UserInterface.WindowsPresentation.Windows
+namespace NetExtender.UserInterface.WindowsPresentation
 {
     public abstract class StartedWindow : HandleWindow
     {

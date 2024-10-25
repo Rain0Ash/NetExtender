@@ -22,8 +22,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessContinue100Exception(String? message, Exception? innerException)
-			: base(message, Generic, innerException)
+		public BusinessContinue100Exception(String? message, Exception? exception)
+			: base(message, Generic, exception)
 		{
 		}
 
@@ -48,8 +48,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessContinue100Exception(String? message, T code, Exception? innerException)
-			: base(message, code, Generic, innerException)
+		public BusinessContinue100Exception(String? message, T code, Exception? exception)
+			: base(message, code, Generic, exception)
 		{
 		}
 
@@ -74,8 +74,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessSwitchingProtocols101Exception(String? message, Exception? innerException)
-			: base(message, Generic, innerException)
+		public BusinessSwitchingProtocols101Exception(String? message, Exception? exception)
+			: base(message, Generic, exception)
 		{
 		}
 
@@ -100,8 +100,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessSwitchingProtocols101Exception(String? message, T code, Exception? innerException)
-			: base(message, code, Generic, innerException)
+		public BusinessSwitchingProtocols101Exception(String? message, T code, Exception? exception)
+			: base(message, code, Generic, exception)
 		{
 		}
 
@@ -126,8 +126,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessOK200Exception(String? message, Exception? innerException)
-			: base(message, Generic, innerException)
+		public BusinessOK200Exception(String? message, Exception? exception)
+			: base(message, Generic, exception)
 		{
 		}
 
@@ -152,8 +152,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessOK200Exception(String? message, T code, Exception? innerException)
-			: base(message, code, Generic, innerException)
+		public BusinessOK200Exception(String? message, T code, Exception? exception)
+			: base(message, code, Generic, exception)
 		{
 		}
 
@@ -178,8 +178,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessCreated201Exception(String? message, Exception? innerException)
-			: base(message, Generic, innerException)
+		public BusinessCreated201Exception(String? message, Exception? exception)
+			: base(message, Generic, exception)
 		{
 		}
 
@@ -204,8 +204,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessCreated201Exception(String? message, T code, Exception? innerException)
-			: base(message, code, Generic, innerException)
+		public BusinessCreated201Exception(String? message, T code, Exception? exception)
+			: base(message, code, Generic, exception)
 		{
 		}
 
@@ -230,8 +230,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessAccepted202Exception(String? message, Exception? innerException)
-			: base(message, Generic, innerException)
+		public BusinessAccepted202Exception(String? message, Exception? exception)
+			: base(message, Generic, exception)
 		{
 		}
 
@@ -256,8 +256,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessAccepted202Exception(String? message, T code, Exception? innerException)
-			: base(message, code, Generic, innerException)
+		public BusinessAccepted202Exception(String? message, T code, Exception? exception)
+			: base(message, code, Generic, exception)
 		{
 		}
 
@@ -282,8 +282,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessNonAuthoritativeInformation203Exception(String? message, Exception? innerException)
-			: base(message, Generic, innerException)
+		public BusinessNonAuthoritativeInformation203Exception(String? message, Exception? exception)
+			: base(message, Generic, exception)
 		{
 		}
 
@@ -308,8 +308,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessNonAuthoritativeInformation203Exception(String? message, T code, Exception? innerException)
-			: base(message, code, Generic, innerException)
+		public BusinessNonAuthoritativeInformation203Exception(String? message, T code, Exception? exception)
+			: base(message, code, Generic, exception)
 		{
 		}
 
@@ -334,8 +334,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessNoContent204Exception(String? message, Exception? innerException)
-			: base(message, Generic, innerException)
+		public BusinessNoContent204Exception(String? message, Exception? exception)
+			: base(message, Generic, exception)
 		{
 		}
 
@@ -360,8 +360,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessNoContent204Exception(String? message, T code, Exception? innerException)
-			: base(message, code, Generic, innerException)
+		public BusinessNoContent204Exception(String? message, T code, Exception? exception)
+			: base(message, code, Generic, exception)
 		{
 		}
 
@@ -386,8 +386,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessResetContent205Exception(String? message, Exception? innerException)
-			: base(message, Generic, innerException)
+		public BusinessResetContent205Exception(String? message, Exception? exception)
+			: base(message, Generic, exception)
 		{
 		}
 
@@ -412,8 +412,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessResetContent205Exception(String? message, T code, Exception? innerException)
-			: base(message, code, Generic, innerException)
+		public BusinessResetContent205Exception(String? message, T code, Exception? exception)
+			: base(message, code, Generic, exception)
 		{
 		}
 
@@ -438,8 +438,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessPartialContent206Exception(String? message, Exception? innerException)
-			: base(message, Generic, innerException)
+		public BusinessPartialContent206Exception(String? message, Exception? exception)
+			: base(message, Generic, exception)
 		{
 		}
 
@@ -464,8 +464,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessPartialContent206Exception(String? message, T code, Exception? innerException)
-			: base(message, code, Generic, innerException)
+		public BusinessPartialContent206Exception(String? message, T code, Exception? exception)
+			: base(message, code, Generic, exception)
 		{
 		}
 
@@ -490,8 +490,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessMultipleChoices300Exception(String? message, Exception? innerException)
-			: base(message, Generic, innerException)
+		public BusinessMultipleChoices300Exception(String? message, Exception? exception)
+			: base(message, Generic, exception)
 		{
 		}
 
@@ -516,8 +516,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessMultipleChoices300Exception(String? message, T code, Exception? innerException)
-			: base(message, code, Generic, innerException)
+		public BusinessMultipleChoices300Exception(String? message, T code, Exception? exception)
+			: base(message, code, Generic, exception)
 		{
 		}
 
@@ -542,8 +542,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessAmbiguous300Exception(String? message, Exception? innerException)
-			: base(message, Generic, innerException)
+		public BusinessAmbiguous300Exception(String? message, Exception? exception)
+			: base(message, Generic, exception)
 		{
 		}
 
@@ -568,8 +568,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessAmbiguous300Exception(String? message, T code, Exception? innerException)
-			: base(message, code, Generic, innerException)
+		public BusinessAmbiguous300Exception(String? message, T code, Exception? exception)
+			: base(message, code, Generic, exception)
 		{
 		}
 
@@ -594,8 +594,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessMovedPermanently301Exception(String? message, Exception? innerException)
-			: base(message, Generic, innerException)
+		public BusinessMovedPermanently301Exception(String? message, Exception? exception)
+			: base(message, Generic, exception)
 		{
 		}
 
@@ -620,8 +620,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessMovedPermanently301Exception(String? message, T code, Exception? innerException)
-			: base(message, code, Generic, innerException)
+		public BusinessMovedPermanently301Exception(String? message, T code, Exception? exception)
+			: base(message, code, Generic, exception)
 		{
 		}
 
@@ -646,8 +646,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessMoved301Exception(String? message, Exception? innerException)
-			: base(message, Generic, innerException)
+		public BusinessMoved301Exception(String? message, Exception? exception)
+			: base(message, Generic, exception)
 		{
 		}
 
@@ -672,8 +672,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessMoved301Exception(String? message, T code, Exception? innerException)
-			: base(message, code, Generic, innerException)
+		public BusinessMoved301Exception(String? message, T code, Exception? exception)
+			: base(message, code, Generic, exception)
 		{
 		}
 
@@ -698,8 +698,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessFound302Exception(String? message, Exception? innerException)
-			: base(message, Generic, innerException)
+		public BusinessFound302Exception(String? message, Exception? exception)
+			: base(message, Generic, exception)
 		{
 		}
 
@@ -724,8 +724,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessFound302Exception(String? message, T code, Exception? innerException)
-			: base(message, code, Generic, innerException)
+		public BusinessFound302Exception(String? message, T code, Exception? exception)
+			: base(message, code, Generic, exception)
 		{
 		}
 
@@ -750,8 +750,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessRedirect302Exception(String? message, Exception? innerException)
-			: base(message, Generic, innerException)
+		public BusinessRedirect302Exception(String? message, Exception? exception)
+			: base(message, Generic, exception)
 		{
 		}
 
@@ -776,8 +776,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessRedirect302Exception(String? message, T code, Exception? innerException)
-			: base(message, code, Generic, innerException)
+		public BusinessRedirect302Exception(String? message, T code, Exception? exception)
+			: base(message, code, Generic, exception)
 		{
 		}
 
@@ -802,8 +802,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessSeeOther303Exception(String? message, Exception? innerException)
-			: base(message, Generic, innerException)
+		public BusinessSeeOther303Exception(String? message, Exception? exception)
+			: base(message, Generic, exception)
 		{
 		}
 
@@ -828,8 +828,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessSeeOther303Exception(String? message, T code, Exception? innerException)
-			: base(message, code, Generic, innerException)
+		public BusinessSeeOther303Exception(String? message, T code, Exception? exception)
+			: base(message, code, Generic, exception)
 		{
 		}
 
@@ -854,8 +854,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessRedirectMethod303Exception(String? message, Exception? innerException)
-			: base(message, Generic, innerException)
+		public BusinessRedirectMethod303Exception(String? message, Exception? exception)
+			: base(message, Generic, exception)
 		{
 		}
 
@@ -880,8 +880,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessRedirectMethod303Exception(String? message, T code, Exception? innerException)
-			: base(message, code, Generic, innerException)
+		public BusinessRedirectMethod303Exception(String? message, T code, Exception? exception)
+			: base(message, code, Generic, exception)
 		{
 		}
 
@@ -906,8 +906,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessNotModified304Exception(String? message, Exception? innerException)
-			: base(message, Generic, innerException)
+		public BusinessNotModified304Exception(String? message, Exception? exception)
+			: base(message, Generic, exception)
 		{
 		}
 
@@ -932,8 +932,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessNotModified304Exception(String? message, T code, Exception? innerException)
-			: base(message, code, Generic, innerException)
+		public BusinessNotModified304Exception(String? message, T code, Exception? exception)
+			: base(message, code, Generic, exception)
 		{
 		}
 
@@ -958,8 +958,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessUseProxy305Exception(String? message, Exception? innerException)
-			: base(message, Generic, innerException)
+		public BusinessUseProxy305Exception(String? message, Exception? exception)
+			: base(message, Generic, exception)
 		{
 		}
 
@@ -984,8 +984,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessUseProxy305Exception(String? message, T code, Exception? innerException)
-			: base(message, code, Generic, innerException)
+		public BusinessUseProxy305Exception(String? message, T code, Exception? exception)
+			: base(message, code, Generic, exception)
 		{
 		}
 
@@ -1010,8 +1010,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessUnused306Exception(String? message, Exception? innerException)
-			: base(message, Generic, innerException)
+		public BusinessUnused306Exception(String? message, Exception? exception)
+			: base(message, Generic, exception)
 		{
 		}
 
@@ -1036,8 +1036,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessUnused306Exception(String? message, T code, Exception? innerException)
-			: base(message, code, Generic, innerException)
+		public BusinessUnused306Exception(String? message, T code, Exception? exception)
+			: base(message, code, Generic, exception)
 		{
 		}
 
@@ -1062,8 +1062,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessTemporaryRedirect307Exception(String? message, Exception? innerException)
-			: base(message, Generic, innerException)
+		public BusinessTemporaryRedirect307Exception(String? message, Exception? exception)
+			: base(message, Generic, exception)
 		{
 		}
 
@@ -1088,8 +1088,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessTemporaryRedirect307Exception(String? message, T code, Exception? innerException)
-			: base(message, code, Generic, innerException)
+		public BusinessTemporaryRedirect307Exception(String? message, T code, Exception? exception)
+			: base(message, code, Generic, exception)
 		{
 		}
 
@@ -1114,8 +1114,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessRedirectKeepVerb307Exception(String? message, Exception? innerException)
-			: base(message, Generic, innerException)
+		public BusinessRedirectKeepVerb307Exception(String? message, Exception? exception)
+			: base(message, Generic, exception)
 		{
 		}
 
@@ -1140,8 +1140,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessRedirectKeepVerb307Exception(String? message, T code, Exception? innerException)
-			: base(message, code, Generic, innerException)
+		public BusinessRedirectKeepVerb307Exception(String? message, T code, Exception? exception)
+			: base(message, code, Generic, exception)
 		{
 		}
 
@@ -1166,8 +1166,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessBadRequest400Exception(String? message, Exception? innerException)
-			: base(message, Generic, innerException)
+		public BusinessBadRequest400Exception(String? message, Exception? exception)
+			: base(message, Generic, exception)
 		{
 		}
 
@@ -1192,8 +1192,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessBadRequest400Exception(String? message, T code, Exception? innerException)
-			: base(message, code, Generic, innerException)
+		public BusinessBadRequest400Exception(String? message, T code, Exception? exception)
+			: base(message, code, Generic, exception)
 		{
 		}
 
@@ -1218,8 +1218,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessUnauthorized401Exception(String? message, Exception? innerException)
-			: base(message, Generic, innerException)
+		public BusinessUnauthorized401Exception(String? message, Exception? exception)
+			: base(message, Generic, exception)
 		{
 		}
 
@@ -1244,8 +1244,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessUnauthorized401Exception(String? message, T code, Exception? innerException)
-			: base(message, code, Generic, innerException)
+		public BusinessUnauthorized401Exception(String? message, T code, Exception? exception)
+			: base(message, code, Generic, exception)
 		{
 		}
 
@@ -1270,8 +1270,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessPaymentRequired402Exception(String? message, Exception? innerException)
-			: base(message, Generic, innerException)
+		public BusinessPaymentRequired402Exception(String? message, Exception? exception)
+			: base(message, Generic, exception)
 		{
 		}
 
@@ -1296,8 +1296,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessPaymentRequired402Exception(String? message, T code, Exception? innerException)
-			: base(message, code, Generic, innerException)
+		public BusinessPaymentRequired402Exception(String? message, T code, Exception? exception)
+			: base(message, code, Generic, exception)
 		{
 		}
 
@@ -1322,8 +1322,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessForbidden403Exception(String? message, Exception? innerException)
-			: base(message, Generic, innerException)
+		public BusinessForbidden403Exception(String? message, Exception? exception)
+			: base(message, Generic, exception)
 		{
 		}
 
@@ -1348,8 +1348,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessForbidden403Exception(String? message, T code, Exception? innerException)
-			: base(message, code, Generic, innerException)
+		public BusinessForbidden403Exception(String? message, T code, Exception? exception)
+			: base(message, code, Generic, exception)
 		{
 		}
 
@@ -1374,8 +1374,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessNotFound404Exception(String? message, Exception? innerException)
-			: base(message, Generic, innerException)
+		public BusinessNotFound404Exception(String? message, Exception? exception)
+			: base(message, Generic, exception)
 		{
 		}
 
@@ -1400,8 +1400,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessNotFound404Exception(String? message, T code, Exception? innerException)
-			: base(message, code, Generic, innerException)
+		public BusinessNotFound404Exception(String? message, T code, Exception? exception)
+			: base(message, code, Generic, exception)
 		{
 		}
 
@@ -1426,8 +1426,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessMethodNotAllowed405Exception(String? message, Exception? innerException)
-			: base(message, Generic, innerException)
+		public BusinessMethodNotAllowed405Exception(String? message, Exception? exception)
+			: base(message, Generic, exception)
 		{
 		}
 
@@ -1452,8 +1452,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessMethodNotAllowed405Exception(String? message, T code, Exception? innerException)
-			: base(message, code, Generic, innerException)
+		public BusinessMethodNotAllowed405Exception(String? message, T code, Exception? exception)
+			: base(message, code, Generic, exception)
 		{
 		}
 
@@ -1478,8 +1478,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessNotAcceptable406Exception(String? message, Exception? innerException)
-			: base(message, Generic, innerException)
+		public BusinessNotAcceptable406Exception(String? message, Exception? exception)
+			: base(message, Generic, exception)
 		{
 		}
 
@@ -1504,8 +1504,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessNotAcceptable406Exception(String? message, T code, Exception? innerException)
-			: base(message, code, Generic, innerException)
+		public BusinessNotAcceptable406Exception(String? message, T code, Exception? exception)
+			: base(message, code, Generic, exception)
 		{
 		}
 
@@ -1530,8 +1530,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessProxyAuthenticationRequired407Exception(String? message, Exception? innerException)
-			: base(message, Generic, innerException)
+		public BusinessProxyAuthenticationRequired407Exception(String? message, Exception? exception)
+			: base(message, Generic, exception)
 		{
 		}
 
@@ -1556,8 +1556,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessProxyAuthenticationRequired407Exception(String? message, T code, Exception? innerException)
-			: base(message, code, Generic, innerException)
+		public BusinessProxyAuthenticationRequired407Exception(String? message, T code, Exception? exception)
+			: base(message, code, Generic, exception)
 		{
 		}
 
@@ -1582,8 +1582,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessRequestTimeout408Exception(String? message, Exception? innerException)
-			: base(message, Generic, innerException)
+		public BusinessRequestTimeout408Exception(String? message, Exception? exception)
+			: base(message, Generic, exception)
 		{
 		}
 
@@ -1608,8 +1608,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessRequestTimeout408Exception(String? message, T code, Exception? innerException)
-			: base(message, code, Generic, innerException)
+		public BusinessRequestTimeout408Exception(String? message, T code, Exception? exception)
+			: base(message, code, Generic, exception)
 		{
 		}
 
@@ -1634,8 +1634,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessConflict409Exception(String? message, Exception? innerException)
-			: base(message, Generic, innerException)
+		public BusinessConflict409Exception(String? message, Exception? exception)
+			: base(message, Generic, exception)
 		{
 		}
 
@@ -1660,8 +1660,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessConflict409Exception(String? message, T code, Exception? innerException)
-			: base(message, code, Generic, innerException)
+		public BusinessConflict409Exception(String? message, T code, Exception? exception)
+			: base(message, code, Generic, exception)
 		{
 		}
 
@@ -1686,8 +1686,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessGone410Exception(String? message, Exception? innerException)
-			: base(message, Generic, innerException)
+		public BusinessGone410Exception(String? message, Exception? exception)
+			: base(message, Generic, exception)
 		{
 		}
 
@@ -1712,8 +1712,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessGone410Exception(String? message, T code, Exception? innerException)
-			: base(message, code, Generic, innerException)
+		public BusinessGone410Exception(String? message, T code, Exception? exception)
+			: base(message, code, Generic, exception)
 		{
 		}
 
@@ -1738,8 +1738,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessLengthRequired411Exception(String? message, Exception? innerException)
-			: base(message, Generic, innerException)
+		public BusinessLengthRequired411Exception(String? message, Exception? exception)
+			: base(message, Generic, exception)
 		{
 		}
 
@@ -1764,8 +1764,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessLengthRequired411Exception(String? message, T code, Exception? innerException)
-			: base(message, code, Generic, innerException)
+		public BusinessLengthRequired411Exception(String? message, T code, Exception? exception)
+			: base(message, code, Generic, exception)
 		{
 		}
 
@@ -1790,8 +1790,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessPreconditionFailed412Exception(String? message, Exception? innerException)
-			: base(message, Generic, innerException)
+		public BusinessPreconditionFailed412Exception(String? message, Exception? exception)
+			: base(message, Generic, exception)
 		{
 		}
 
@@ -1816,8 +1816,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessPreconditionFailed412Exception(String? message, T code, Exception? innerException)
-			: base(message, code, Generic, innerException)
+		public BusinessPreconditionFailed412Exception(String? message, T code, Exception? exception)
+			: base(message, code, Generic, exception)
 		{
 		}
 
@@ -1842,8 +1842,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessRequestEntityTooLarge413Exception(String? message, Exception? innerException)
-			: base(message, Generic, innerException)
+		public BusinessRequestEntityTooLarge413Exception(String? message, Exception? exception)
+			: base(message, Generic, exception)
 		{
 		}
 
@@ -1868,8 +1868,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessRequestEntityTooLarge413Exception(String? message, T code, Exception? innerException)
-			: base(message, code, Generic, innerException)
+		public BusinessRequestEntityTooLarge413Exception(String? message, T code, Exception? exception)
+			: base(message, code, Generic, exception)
 		{
 		}
 
@@ -1894,8 +1894,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessRequestUriTooLong414Exception(String? message, Exception? innerException)
-			: base(message, Generic, innerException)
+		public BusinessRequestUriTooLong414Exception(String? message, Exception? exception)
+			: base(message, Generic, exception)
 		{
 		}
 
@@ -1920,8 +1920,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessRequestUriTooLong414Exception(String? message, T code, Exception? innerException)
-			: base(message, code, Generic, innerException)
+		public BusinessRequestUriTooLong414Exception(String? message, T code, Exception? exception)
+			: base(message, code, Generic, exception)
 		{
 		}
 
@@ -1946,8 +1946,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessUnsupportedMediaType415Exception(String? message, Exception? innerException)
-			: base(message, Generic, innerException)
+		public BusinessUnsupportedMediaType415Exception(String? message, Exception? exception)
+			: base(message, Generic, exception)
 		{
 		}
 
@@ -1972,8 +1972,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessUnsupportedMediaType415Exception(String? message, T code, Exception? innerException)
-			: base(message, code, Generic, innerException)
+		public BusinessUnsupportedMediaType415Exception(String? message, T code, Exception? exception)
+			: base(message, code, Generic, exception)
 		{
 		}
 
@@ -1998,8 +1998,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessRequestedRangeNotSatisfiable416Exception(String? message, Exception? innerException)
-			: base(message, Generic, innerException)
+		public BusinessRequestedRangeNotSatisfiable416Exception(String? message, Exception? exception)
+			: base(message, Generic, exception)
 		{
 		}
 
@@ -2024,8 +2024,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessRequestedRangeNotSatisfiable416Exception(String? message, T code, Exception? innerException)
-			: base(message, code, Generic, innerException)
+		public BusinessRequestedRangeNotSatisfiable416Exception(String? message, T code, Exception? exception)
+			: base(message, code, Generic, exception)
 		{
 		}
 
@@ -2050,8 +2050,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessExpectationFailed417Exception(String? message, Exception? innerException)
-			: base(message, Generic, innerException)
+		public BusinessExpectationFailed417Exception(String? message, Exception? exception)
+			: base(message, Generic, exception)
 		{
 		}
 
@@ -2076,8 +2076,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessExpectationFailed417Exception(String? message, T code, Exception? innerException)
-			: base(message, code, Generic, innerException)
+		public BusinessExpectationFailed417Exception(String? message, T code, Exception? exception)
+			: base(message, code, Generic, exception)
 		{
 		}
 
@@ -2102,8 +2102,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessIamATeapot418Exception(String? message, Exception? innerException)
-			: base(message, Generic, innerException)
+		public BusinessIamATeapot418Exception(String? message, Exception? exception)
+			: base(message, Generic, exception)
 		{
 		}
 
@@ -2128,8 +2128,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessIamATeapot418Exception(String? message, T code, Exception? innerException)
-			: base(message, code, Generic, innerException)
+		public BusinessIamATeapot418Exception(String? message, T code, Exception? exception)
+			: base(message, code, Generic, exception)
 		{
 		}
 
@@ -2154,8 +2154,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessUpgradeRequired426Exception(String? message, Exception? innerException)
-			: base(message, Generic, innerException)
+		public BusinessUpgradeRequired426Exception(String? message, Exception? exception)
+			: base(message, Generic, exception)
 		{
 		}
 
@@ -2180,8 +2180,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessUpgradeRequired426Exception(String? message, T code, Exception? innerException)
-			: base(message, code, Generic, innerException)
+		public BusinessUpgradeRequired426Exception(String? message, T code, Exception? exception)
+			: base(message, code, Generic, exception)
 		{
 		}
 
@@ -2206,8 +2206,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessInternalServerError500Exception(String? message, Exception? innerException)
-			: base(message, Generic, innerException)
+		public BusinessInternalServerError500Exception(String? message, Exception? exception)
+			: base(message, Generic, exception)
 		{
 		}
 
@@ -2232,8 +2232,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessInternalServerError500Exception(String? message, T code, Exception? innerException)
-			: base(message, code, Generic, innerException)
+		public BusinessInternalServerError500Exception(String? message, T code, Exception? exception)
+			: base(message, code, Generic, exception)
 		{
 		}
 
@@ -2258,8 +2258,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessNotImplemented501Exception(String? message, Exception? innerException)
-			: base(message, Generic, innerException)
+		public BusinessNotImplemented501Exception(String? message, Exception? exception)
+			: base(message, Generic, exception)
 		{
 		}
 
@@ -2284,8 +2284,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessNotImplemented501Exception(String? message, T code, Exception? innerException)
-			: base(message, code, Generic, innerException)
+		public BusinessNotImplemented501Exception(String? message, T code, Exception? exception)
+			: base(message, code, Generic, exception)
 		{
 		}
 
@@ -2310,8 +2310,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessBadGateway502Exception(String? message, Exception? innerException)
-			: base(message, Generic, innerException)
+		public BusinessBadGateway502Exception(String? message, Exception? exception)
+			: base(message, Generic, exception)
 		{
 		}
 
@@ -2336,8 +2336,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessBadGateway502Exception(String? message, T code, Exception? innerException)
-			: base(message, code, Generic, innerException)
+		public BusinessBadGateway502Exception(String? message, T code, Exception? exception)
+			: base(message, code, Generic, exception)
 		{
 		}
 
@@ -2362,8 +2362,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessServiceUnavailable503Exception(String? message, Exception? innerException)
-			: base(message, Generic, innerException)
+		public BusinessServiceUnavailable503Exception(String? message, Exception? exception)
+			: base(message, Generic, exception)
 		{
 		}
 
@@ -2388,8 +2388,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessServiceUnavailable503Exception(String? message, T code, Exception? innerException)
-			: base(message, code, Generic, innerException)
+		public BusinessServiceUnavailable503Exception(String? message, T code, Exception? exception)
+			: base(message, code, Generic, exception)
 		{
 		}
 
@@ -2414,8 +2414,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessGatewayTimeout504Exception(String? message, Exception? innerException)
-			: base(message, Generic, innerException)
+		public BusinessGatewayTimeout504Exception(String? message, Exception? exception)
+			: base(message, Generic, exception)
 		{
 		}
 
@@ -2440,8 +2440,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessGatewayTimeout504Exception(String? message, T code, Exception? innerException)
-			: base(message, code, Generic, innerException)
+		public BusinessGatewayTimeout504Exception(String? message, T code, Exception? exception)
+			: base(message, code, Generic, exception)
 		{
 		}
 
@@ -2466,8 +2466,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessHttpVersionNotSupported505Exception(String? message, Exception? innerException)
-			: base(message, Generic, innerException)
+		public BusinessHttpVersionNotSupported505Exception(String? message, Exception? exception)
+			: base(message, Generic, exception)
 		{
 		}
 
@@ -2492,8 +2492,8 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
-		public BusinessHttpVersionNotSupported505Exception(String? message, T code, Exception? innerException)
-			: base(message, code, Generic, innerException)
+		public BusinessHttpVersionNotSupported505Exception(String? message, T code, Exception? exception)
+			: base(message, code, Generic, exception)
 		{
 		}
 

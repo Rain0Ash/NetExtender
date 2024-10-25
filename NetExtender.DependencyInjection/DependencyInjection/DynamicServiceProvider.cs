@@ -15,12 +15,12 @@ namespace NetExtender.DependencyInjection
 {
     public class DynamicServiceProvider : IObservableServiceProvider, ISuppressObservableCollection<ServiceDescriptor>
     {
-        public event ServiceProviderChangedEventHandler? Changed;
         protected ISuppressObservableCollection<ServiceDescriptor> Collection { get; }
         
         public event NotifyCollectionChangedEventHandler? CollectionChanged;
         public event PropertyChangingEventHandler? PropertyChanging;
         public event PropertyChangedEventHandler? PropertyChanged;
+        public event ServiceProviderChangedEventHandler? Changed;
         
         private ServiceProvider? _provider;
         public IServiceProvider Provider

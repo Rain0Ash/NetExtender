@@ -18,8 +18,8 @@ namespace NetExtender.Types.Exceptions
         {
         }
 
-        public ReadOnlyException(String? message, Exception? innerException)
-            : base(message, innerException)
+        public ReadOnlyException(String? message, Exception? exception)
+            : base(message, exception)
         {
         }
 

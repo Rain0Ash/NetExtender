@@ -51,8 +51,8 @@ namespace NetExtender.Types.Exceptions
         WriteLine("\t\t{");
         WriteLine("\t\t}");
         WriteLine(String.Empty);
-        WriteLine($"\t\tpublic {name}({nameof(String)}? message, {nameof(Exception)}? innerException)");
-        WriteLine("\t\t\t: base(message, Generic, innerException)");
+        WriteLine($"\t\tpublic {name}({nameof(String)}? message, {nameof(Exception)}? exception)");
+        WriteLine("\t\t\t: base(message, Generic, exception)");
         WriteLine("\t\t{");
         WriteLine("\t\t}");
         WriteLine(String.Empty);
@@ -79,8 +79,8 @@ namespace NetExtender.Types.Exceptions
         WriteLine("\t\t{");
         WriteLine("\t\t}");
         WriteLine(String.Empty);
-        WriteLine($"\t\tpublic {name}({nameof(String)}? message, T code, {nameof(Exception)}? innerException)");
-        WriteLine("\t\t\t: base(message, code, Generic, innerException)");
+        WriteLine($"\t\tpublic {name}({nameof(String)}? message, T code, {nameof(Exception)}? exception)");
+        WriteLine("\t\t\t: base(message, code, Generic, exception)");
         WriteLine("\t\t{");
         WriteLine("\t\t}");
         WriteLine(String.Empty);

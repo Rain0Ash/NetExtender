@@ -45,7 +45,7 @@ namespace NetExtender.Configuration.Environment
 
         protected override Task<String?> TryGetValueAsync(String? key, CancellationToken token)
         {
-            return TryGetValue(key).ToTask();
+            return Task.Run(() => TryGetValue(key), token);
         }
 
         protected override Boolean TrySetValue(String? key, String? value)
@@ -55,7 +55,7 @@ namespace NetExtender.Configuration.Environment
 
         protected override Task<Boolean> TrySetValueAsync(String? key, String? value, CancellationToken token)
         {
-            return TrySetValue(key, value).ToTask();
+            return Task.Run(() => TrySetValue(key, value), token);
         }
 
         protected override String[]? TryGetExists()
@@ -65,7 +65,7 @@ namespace NetExtender.Configuration.Environment
 
         protected override Task<String[]?> TryGetExistsAsync(CancellationToken token)
         {
-            return TryGetExists().ToTask();
+            return Task.Run(TryGetExists, token);
         }
 
         protected override ConfigurationSingleKeyEntry[]? TryGetExistsValues()
@@ -80,7 +80,7 @@ namespace NetExtender.Configuration.Environment
 
         protected override Task<ConfigurationSingleKeyEntry[]?> TryGetExistsValuesAsync(CancellationToken token)
         {
-            return TryGetExistsValues().ToTask();
+            return Task.Run(TryGetExistsValues, token);
         }
     }
 }

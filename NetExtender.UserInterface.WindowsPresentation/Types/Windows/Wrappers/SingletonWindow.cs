@@ -12,7 +12,7 @@ using NetExtender.WindowsPresentation.Types;
 using NetExtender.WindowsPresentation.Types.Interfaces;
 using NetExtender.WindowsPresentation.Utilities.Types;
 
-namespace NetExtender.UserInterface.WindowsPresentation.Windows
+namespace NetExtender.UserInterface.WindowsPresentation
 {
     [SuppressMessage("ReSharper", "StaticMemberInGenericType")]
     public class SingletonWindow<T> : SingletonWindow where T : Window

@@ -2,7 +2,7 @@ using System;
 using System.Windows;
 using System.Windows.Controls.Primitives;
 
-namespace NetExtender.UserInterface.WindowsPresentation.Types.Buttons
+namespace NetExtender.UserInterface.WindowsPresentation
 {
     public class LockToggleButton : ToggleButton
     {
@@ -10,10 +10,12 @@ namespace NetExtender.UserInterface.WindowsPresentation.Types.Buttons
 
         public Boolean IsLocked
         {
+            [System.Diagnostics.DebuggerStepThrough]
             get
             {
                 return (Boolean) GetValue(IsLockedProperty);
             }
+            [System.Diagnostics.DebuggerStepThrough]
             set
             {
                 SetValue(IsLockedProperty, value);

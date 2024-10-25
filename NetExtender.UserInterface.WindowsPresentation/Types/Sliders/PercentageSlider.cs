@@ -1,17 +1,18 @@
 using System.Windows.Controls;
+using NetExtender.WindowsPresentation.Utilities.Types;
 
-namespace NetExtender.UserInterface.WindowsPresentation.Types.Sliders
+namespace NetExtender.UserInterface.WindowsPresentation
 {
     public class PercentageSlider : Slider
     {
-        public PercentageSlider()
+        static PercentageSlider()
         {
-            Minimum = 0;
-            Maximum = 100;
-            Delay = 1;
-            Interval = 1;
-            TickFrequency = 1;
-            IsSnapToTickEnabled = true;
+            MinimumProperty.OverrideMetadataDefaultValue<PercentageSlider>(0);
+            MaximumProperty.OverrideMetadataDefaultValue<PercentageSlider>(100);
+            DelayProperty.OverrideMetadataDefaultValue<PercentageSlider>(1);
+            IntervalProperty.OverrideMetadataDefaultValue<PercentageSlider>(1);
+            TickFrequencyProperty.OverrideMetadataDefaultValue<PercentageSlider>(1);
+            IsSnapToTickEnabledProperty.OverrideMetadataDefaultValue<PercentageSlider>(true);
         }
     }
 }

@@ -3,7 +3,7 @@ using System.Windows;
 using System.Windows.Input;
 using NetExtender.Types.Events;
 
-namespace NetExtender.UserInterface.WindowsPresentation.Types.DataGrids
+namespace NetExtender.UserInterface.WindowsPresentation
 {
     public delegate void ItemSelectedEventHandler(Object sender, ItemSelectedEventArgs args);
 
@@ -30,10 +30,12 @@ namespace NetExtender.UserInterface.WindowsPresentation.Types.DataGrids
 
         public Boolean IsItemSelectEnabled
         {
+            [System.Diagnostics.DebuggerStepThrough]
             get
             {
                 return (Boolean) GetValue(IsItemSelectEnabledProperty);
             }
+            [System.Diagnostics.DebuggerStepThrough]
             set
             {
                 SetValue(IsItemSelectEnabledProperty, value);

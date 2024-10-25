@@ -18,18 +18,18 @@ namespace NetExtender.Types.Exceptions
         {
         }
 
-        public FactoryException(String? message, Exception? innerException)
-            : base(message, innerException)
+        public FactoryException(String? message, Exception? exception)
+            : base(message, exception)
         {
         }
 
-        public FactoryException(String? message, String? paramName)
-            : base(message, paramName)
+        public FactoryException(String? message, String? parameter)
+            : base(message, parameter)
         {
         }
 
-        public FactoryException(String? message, String? paramName, Exception? innerException)
-            : base(message, paramName, innerException)
+        public FactoryException(String? message, String? parameter, Exception? exception)
+            : base(message, parameter, exception)
         {
         }
 

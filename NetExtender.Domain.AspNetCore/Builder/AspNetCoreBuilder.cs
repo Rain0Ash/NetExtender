@@ -45,10 +45,10 @@ namespace NetExtender.Domains.AspNetCore.Builder
     {
         protected override TType New<TType>(ImmutableArray<String> arguments)
         {
+            Setup(arguments);
+            
             try
             {
-                Arguments = arguments;
-                
                 if (typeof(TType) == typeof(WebApplication))
                 {
                     WebApplication builder = WebApplication.Create(Arguments?.ToArray() ?? Array.Empty<String>());
@@ -71,10 +71,7 @@ namespace NetExtender.Domains.AspNetCore.Builder
             }
             finally
             {
-                if (Confidential)
-                {
-                    Arguments = null;
-                }
+                Finish();
             }
         }
 
@@ -136,10 +133,10 @@ namespace NetExtender.Domains.AspNetCore.Builder
     {
         protected override TType New<TType>(ImmutableArray<String> arguments)
         {
+            Setup(arguments);
+            
             try
             {
-                Arguments = arguments;
-                
                 if (typeof(TType) == typeof(WebApplication))
                 {
                     WebApplication builder = WebApplication.Create(Arguments?.ToArray() ?? Array.Empty<String>());
@@ -162,10 +159,7 @@ namespace NetExtender.Domains.AspNetCore.Builder
             }
             finally
             {
-                if (Confidential)
-                {
-                    Arguments = null;
-                }
+                Finish();
             }
         }
         

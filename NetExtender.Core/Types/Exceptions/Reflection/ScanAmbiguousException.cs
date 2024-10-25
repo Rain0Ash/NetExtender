@@ -15,8 +15,8 @@ namespace NetExtender.Types.Exceptions
         {
         }
         
-        public ScanAmbiguousException(String? message, Exception? innerException)
-            : base(message, innerException)
+        public ScanAmbiguousException(String? message, Exception? exception)
+            : base(message, exception)
         {
         }
         

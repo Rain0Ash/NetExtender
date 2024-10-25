@@ -162,7 +162,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(values));
             }
 
-            return values.WhereNotNull().Sum(str => str.Length);
+            return values.WhereNotNull().Sum(static value => value.Length);
         }
 
         public static Int64 CharLongLength(this String?[] values)
@@ -1934,7 +1934,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(split));
             }
 
-            return split.SelectManyWhereNotNull(str => SplitByUpperCase(str, options)).ToArray();
+            return split.SelectManyWhereNotNull(value => SplitByUpperCase(value, options)).ToArray();
         }
 
         public static String[] SplitBy(this String value)
@@ -2953,7 +2953,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(values));
             }
 
-            return values.FirstOrDefault(str => !String.IsNullOrWhiteSpace(str));
+            return values.FirstOrDefault(static value => !String.IsNullOrWhiteSpace(value));
         }
 
         /// <summary>
@@ -3030,7 +3030,8 @@ namespace NetExtender.Utilities.Types
             Int32 index = value.IndexOf(occurence, StringComparison.Ordinal);
             return index < 0 ? value : value.Remove(index, occurence.Length);
         }
-
+        
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static unsafe String RemoveAllWhiteSpace(this String value)
         {
             if (value is null)
@@ -3038,52 +3039,82 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(value));
             }
 
-            if (value.Length <= 0)
+            switch (value.Length)
             {
-                return String.Empty;
-            }
-
-            fixed (Char* pointer = value)
-            {
-                Char* destination = pointer;
-                for (Char* chr = pointer; *chr != 0; chr++)
+                case <= 0:
+                    return String.Empty;
+                case <= UInt16.MaxValue:
                 {
-                    switch (*chr)
+                    Int32 length;
+                    Char* buffer = stackalloc Char[value.Length];
+                    fixed (Char* original = value)
                     {
-                        case '\u0020':
-                        case '\u00A0':
-                        case '\u1680':
-                        case '\u2000':
-                        case '\u2001':
-                        case '\u2002':
-                        case '\u2003':
-                        case '\u2004':
-                        case '\u2005':
-                        case '\u2006':
-                        case '\u2007':
-                        case '\u2008':
-                        case '\u2009':
-                        case '\u200A':
-                        case '\u202F':
-                        case '\u205F':
-                        case '\u3000':
-                        case '\u2028':
-                        case '\u2029':
-                        case '\u0009':
-                        case '\u000A':
-                        case '\u000B':
-                        case '\u000C':
-                        case '\u000D':
-                        case '\u0085':
-                            continue;
-                        default:
-                            *destination++ = *chr;
-                            break;
+                        length = RemoveWhiteSpace(original, buffer, value.Length);
                     }
+                    
+                    return new String(buffer, 0, length);
                 }
-
-                return new String(pointer, 0, (Int32) (destination - pointer));
+                default:
+                {
+                    Int32 length;
+                    Char[] buffer = new Char[value.Length];
+                    
+                    fixed (Char* original = value)
+                    fixed (Char* result = buffer)
+                    {
+                        length = RemoveWhiteSpace(original, result, value.Length);
+                    }
+                    
+                    return new String(buffer, 0, length);
+                }
             }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        private static unsafe Int32 RemoveWhiteSpace(Char* source, Char* destination, Int32 length)
+        {
+            Int32 newLength = 0;
+            Char* end = source + length;
+
+            while (source < end)
+            {
+                switch (*source)
+                {
+                    case '\u0020':
+                    case '\u00A0':
+                    case '\u1680':
+                    case '\u2000':
+                    case '\u2001':
+                    case '\u2002':
+                    case '\u2003':
+                    case '\u2004':
+                    case '\u2005':
+                    case '\u2006':
+                    case '\u2007':
+                    case '\u2008':
+                    case '\u2009':
+                    case '\u200A':
+                    case '\u202F':
+                    case '\u205F':
+                    case '\u3000':
+                    case '\u2028':
+                    case '\u2029':
+                    case '\u0009':
+                    case '\u000A':
+                    case '\u000B':
+                    case '\u000C':
+                    case '\u000D':
+                    case '\u0085':
+                        break;
+                    default:
+                        *destination++ = *source;
+                        newLength++;
+                        break;
+                }
+                source++;
+            }
+
+            return newLength;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -3498,6 +3529,12 @@ namespace NetExtender.Utilities.Types
             }
 
             return builder.ToString().Normalize(NormalizationForm.FormC);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static StringComparer ToComparer(this StringComparison comparison)
+        {
+            return StringComparer.FromComparison(comparison);
         }
 
         public static CultureInfo? ToCultureInfo(this StringComparison comparison)

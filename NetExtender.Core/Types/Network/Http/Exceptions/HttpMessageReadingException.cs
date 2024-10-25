@@ -19,8 +19,8 @@ namespace NetExtender.Types.Network.Exceptions
         {
         }
         
-        public HttpMessageReadingException(String? message, Exception? innerException)
-            : base(message ?? Message, innerException)
+        public HttpMessageReadingException(String? message, Exception? exception)
+            : base(message ?? Message, exception)
         {
         }
         

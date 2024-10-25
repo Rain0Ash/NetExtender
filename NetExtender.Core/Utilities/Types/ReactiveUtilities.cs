@@ -302,7 +302,7 @@ namespace NetExtender.Utilities.Types
                         break;
                 }
 
-                if (@event is null || !typeof(MulticastDelegate).IsAssignableFrom(@event.FieldType) || @event.FieldType.GetMethod("Invoke") is not { } method)
+                if (@event is null || !typeof(MulticastDelegate).IsAssignableFrom(@event.FieldType) || @event.FieldType.GetMethod(nameof(Action.Invoke)) is not { } method)
                 {
                     return null;
                 }

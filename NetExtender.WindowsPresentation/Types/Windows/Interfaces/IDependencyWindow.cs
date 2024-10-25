@@ -1,4 +1,4 @@
-namespace NetExtender.UserInterface.WindowsPresentation.Windows
+namespace NetExtender.UserInterface.WindowsPresentation
 {
     public interface IDependencyWindow
     {

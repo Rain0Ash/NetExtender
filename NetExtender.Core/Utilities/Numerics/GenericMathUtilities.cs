@@ -2,10 +2,10 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Numerics;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Numerics;
 using System.Runtime.CompilerServices;
 using NetExtender.Types.Exceptions;
 
@@ -6068,7 +6068,7 @@ namespace NetExtender.Utilities.Numerics
 		{
 			if (!@base.InRange(MinimumBase, MaximumBase))
 			{
-				throw new ArgumentOutOfRangeException(nameof(@base), @base, "Base out of range");
+				throw new ArgumentOutOfRangeException(nameof(@base), @base, @"Base out of range");
 			}
 
 			if (value == 0)
@@ -6102,7 +6102,7 @@ namespace NetExtender.Utilities.Numerics
 		{
 			if (!@base.InRange(MinimumBase, MaximumBase))
 			{
-				throw new ArgumentOutOfRangeException(nameof(@base), @base, "Base out of range");
+				throw new ArgumentOutOfRangeException(nameof(@base), @base, @"Base out of range");
 			}
 
 			if (value <= 0)
@@ -6130,7 +6130,7 @@ namespace NetExtender.Utilities.Numerics
 		{
 			if (!@base.InRange(MinimumBase, MaximumBase))
 			{
-				throw new ArgumentOutOfRangeException(nameof(@base), @base, "Base out of range");
+				throw new ArgumentOutOfRangeException(nameof(@base), @base, @"Base out of range");
 			}
 
 			if (value == 0)
@@ -6164,7 +6164,7 @@ namespace NetExtender.Utilities.Numerics
 		{
 			if (!@base.InRange(MinimumBase, MaximumBase))
 			{
-				throw new ArgumentOutOfRangeException(nameof(@base), @base, "Base out of range");
+				throw new ArgumentOutOfRangeException(nameof(@base), @base, @"Base out of range");
 			}
 
 			if (value <= 0)
@@ -6192,7 +6192,7 @@ namespace NetExtender.Utilities.Numerics
 		{
 			if (!@base.InRange(MinimumBase, MaximumBase))
 			{
-				throw new ArgumentOutOfRangeException(nameof(@base), @base, "Base out of range");
+				throw new ArgumentOutOfRangeException(nameof(@base), @base, @"Base out of range");
 			}
 
 			if (value == 0)
@@ -6226,7 +6226,7 @@ namespace NetExtender.Utilities.Numerics
 		{
 			if (!@base.InRange(MinimumBase, MaximumBase))
 			{
-				throw new ArgumentOutOfRangeException(nameof(@base), @base, "Base out of range");
+				throw new ArgumentOutOfRangeException(nameof(@base), @base, @"Base out of range");
 			}
 
 			if (value <= 0)
@@ -6254,7 +6254,7 @@ namespace NetExtender.Utilities.Numerics
 		{
 			if (!@base.InRange(MinimumBase, MaximumBase))
 			{
-				throw new ArgumentOutOfRangeException(nameof(@base), @base, "Base out of range");
+				throw new ArgumentOutOfRangeException(nameof(@base), @base, @"Base out of range");
 			}
 
 			if (value == 0)
@@ -6288,7 +6288,7 @@ namespace NetExtender.Utilities.Numerics
 		{
 			if (!@base.InRange(MinimumBase, MaximumBase))
 			{
-				throw new ArgumentOutOfRangeException(nameof(@base), @base, "Base out of range");
+				throw new ArgumentOutOfRangeException(nameof(@base), @base, @"Base out of range");
 			}
 
 			if (value <= 0)
@@ -6316,7 +6316,7 @@ namespace NetExtender.Utilities.Numerics
 		{
 			if (!@base.InRange(MinimumBase, MaximumBase))
 			{
-				throw new ArgumentOutOfRangeException(nameof(@base), @base, "Base out of range");
+				throw new ArgumentOutOfRangeException(nameof(@base), @base, @"Base out of range");
 			}
 
 			if (value == 0)
@@ -9248,7 +9248,7 @@ namespace NetExtender.Utilities.Numerics
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static T Substract<T>(T left, T right) where T : unmanaged, IConvertible
+		public static T Subtract<T>(T left, T right) where T : unmanaged, IConvertible
 		{
 			if (typeof(T) == typeof(Char))
 			{

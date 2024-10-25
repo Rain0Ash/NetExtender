@@ -18,8 +18,8 @@ namespace NetExtender.Types.Network.Exceptions
         {
         }
         
-        public HttpMessageUnexpectedEndException(String? message, Exception? innerException)
-            : base(message ?? Message, innerException)
+        public HttpMessageUnexpectedEndException(String? message, Exception? exception)
+            : base(message ?? Message, exception)
         {
         }
         

@@ -5,13 +5,13 @@ using System;
 using System.Windows;
 using NetExtender.Types.HotKeys;
 using NetExtender.Types.HotKeys.Events;
-using NetExtender.UserInterface.Windows.Types;
 using NetExtender.Utilities.UserInterface;
 using NetExtender.Windows;
+using NetExtender.Windows.Types;
 
-namespace NetExtender.UserInterface.WindowsPresentation.Windows
+namespace NetExtender.UserInterface.WindowsPresentation
 {
-    public abstract class HotKeyWindow : WndProcWindow
+    public abstract class HotKeyWindow : ChromeWindow
     {
         public event EventHandler<HotKeyEventArgs>? HotKey;
 
@@ -26,7 +26,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
         {
         }
 
-        protected override Boolean WndProc(ref WinMessage message)
+        protected override Boolean WndProc(ref WindowsMessage message)
         {
             if (message.Message != WM.HOTKEY)
             {

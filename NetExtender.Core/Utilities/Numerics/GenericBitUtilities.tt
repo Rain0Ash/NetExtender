@@ -13,22 +13,6 @@ using System.Runtime.CompilerServices;
 namespace NetExtender.Utilities.Numerics
 {
 <#
-    List<Type> vtypes = new List<Type>
-    {
-        typeof(Char),
-        typeof(SByte),
-        typeof(Byte),
-        typeof(Int16),
-        typeof(UInt16),
-        typeof(Int32),
-        typeof(UInt32),
-        typeof(Int64),
-        typeof(UInt64),
-        typeof(Single),
-        typeof(Double),
-        typeof(Decimal)
-    };
-
     List<String> types = new List<String>
     {
         nameof(Char),

@@ -108,13 +108,13 @@ namespace NetExtender.Utilities.Types
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void AddRange<T>(this IObservableCollection<T> collection, params T[] source)
+        public static void AddRange<T>(this IObservableCollection<T> collection, params T[]? source)
         {
-            AddRange(collection, (IEnumerable<T>) source);
+            AddRange(collection, (IEnumerable<T>?) source);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void AddRange<T>(this IObservableCollection<T> collection, IEnumerable<T> source)
+        public static void AddRange<T>(this IObservableCollection<T> collection, IEnumerable<T>? source)
         {
             if (collection is null)
             {
@@ -126,22 +126,23 @@ namespace NetExtender.Utilities.Types
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Replace<T>(this IObservableCollection<T> collection, params T[] source)
-        {
-            Replace(collection, (IEnumerable<T>) source);
-        }
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Replace<T>(this IObservableCollection<T> collection, IEnumerable<T> source)
+        public static void Replace<T>(this IObservableCollection<T> collection, params T[]? source)
         {
             if (collection is null)
             {
                 throw new ArgumentNullException(nameof(collection));
             }
-
-            if (source is null)
+            
+            using IDisposable? suppress = collection.Suppress();
+            ListUtilities.Replace(collection, source);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void Replace<T>(this IObservableCollection<T> collection, IEnumerable<T>? source)
+        {
+            if (collection is null)
             {
-                throw new ArgumentNullException(nameof(source));
+                throw new ArgumentNullException(nameof(collection));
             }
 
             using IDisposable? suppress = collection.Suppress();
@@ -149,22 +150,23 @@ namespace NetExtender.Utilities.Types
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Replace<T>(this IObservableCollection<T> collection, Int32 start, params T[] source)
-        {
-            Replace(collection, start, (IEnumerable<T>) source);
-        }
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Replace<T>(this IObservableCollection<T> collection, Int32 start, IEnumerable<T> source)
+        public static void Replace<T>(this IObservableCollection<T> collection, Int32 start, params T[]? source)
         {
             if (collection is null)
             {
                 throw new ArgumentNullException(nameof(collection));
             }
-
-            if (source is null)
+            
+            using IDisposable? suppress = collection.Suppress();
+            ListUtilities.Replace(collection, start, source);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void Replace<T>(this IObservableCollection<T> collection, Int32 start, IEnumerable<T>? source)
+        {
+            if (collection is null)
             {
-                throw new ArgumentNullException(nameof(source));
+                throw new ArgumentNullException(nameof(collection));
             }
 
             using IDisposable? suppress = collection.Suppress();
@@ -172,22 +174,23 @@ namespace NetExtender.Utilities.Types
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void FullReplace<T>(this IObservableCollection<T> collection, params T[] source)
-        {
-            FullReplace(collection, (IEnumerable<T>) source);
-        }
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void FullReplace<T>(this IObservableCollection<T> collection, IEnumerable<T> source)
+        public static void FullReplace<T>(this IObservableCollection<T> collection, params T[]? source)
         {
             if (collection is null)
             {
                 throw new ArgumentNullException(nameof(collection));
             }
-
-            if (source is null)
+            
+            using IDisposable? suppress = collection.Suppress();
+            ListUtilities.FullReplace(collection, source);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void FullReplace<T>(this IObservableCollection<T> collection, IEnumerable<T>? source)
+        {
+            if (collection is null)
             {
-                throw new ArgumentNullException(nameof(source));
+                throw new ArgumentNullException(nameof(collection));
             }
 
             using IDisposable? suppress = collection.Suppress();
@@ -195,22 +198,23 @@ namespace NetExtender.Utilities.Types
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void FullReplace<T>(this IObservableCollection<T> collection, Int32 start, params T[] source)
-        {
-            FullReplace(collection, start, (IEnumerable<T>) source);
-        }
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void FullReplace<T>(this IObservableCollection<T> collection, Int32 start, IEnumerable<T> source)
+        public static void FullReplace<T>(this IObservableCollection<T> collection, Int32 start, params T[]? source)
         {
             if (collection is null)
             {
                 throw new ArgumentNullException(nameof(collection));
             }
-
-            if (source is null)
+            
+            using IDisposable? suppress = collection.Suppress();
+            ListUtilities.FullReplace(collection, start, source);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void FullReplace<T>(this IObservableCollection<T> collection, Int32 start, IEnumerable<T>? source)
+        {
+            if (collection is null)
             {
-                throw new ArgumentNullException(nameof(source));
+                throw new ArgumentNullException(nameof(collection));
             }
 
             using IDisposable? suppress = collection.Suppress();
@@ -218,13 +222,13 @@ namespace NetExtender.Utilities.Types
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Reload<T>(this IObservableCollection<T> collection, params T[] source)
+        public static void Reload<T>(this IObservableCollection<T> collection, params T[]? source)
         {
-            Reload(collection, (IEnumerable<T>) source);
+            Reload(collection, (IEnumerable<T>?) source);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Reload<T>(this IObservableCollection<T> collection, IEnumerable<T> source)
+        public static void Reload<T>(this IObservableCollection<T> collection, IEnumerable<T>? source)
         {
             if (collection is null)
             {
@@ -233,7 +237,8 @@ namespace NetExtender.Utilities.Types
 
             if (source is null)
             {
-                throw new ArgumentNullException(nameof(source));
+                collection.Clear();
+                return;
             }
 
             using IDisposable? suppress = collection.Suppress();
@@ -242,7 +247,7 @@ namespace NetExtender.Utilities.Types
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void RemoveRange<T>(this IObservableCollection<T> collection, params T[] source)
+        public static void RemoveRange<T>(this IObservableCollection<T> collection, params T[]? source)
         {
             if (collection is null)
             {
@@ -254,7 +259,7 @@ namespace NetExtender.Utilities.Types
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void RemoveRange<T>(this IObservableCollection<T> collection, IEnumerable<T> source)
+        public static void RemoveRange<T>(this IObservableCollection<T> collection, IEnumerable<T>? source)
         {
             if (collection is null)
             {
@@ -278,7 +283,7 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Int32 RemoveAll<T>(this IObservableCollection<T> collection, params T[] source)
+        public static Int32 RemoveAll<T>(this IObservableCollection<T> collection, params T[]? source)
         {
             if (collection is null)
             {
@@ -290,7 +295,7 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Int32 RemoveAll<T>(this IObservableCollection<T> collection, IEnumerable<T> source)
+        public static Int32 RemoveAll<T>(this IObservableCollection<T> collection, IEnumerable<T>? source)
         {
             if (collection is null)
             {

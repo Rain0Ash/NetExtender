@@ -4,7 +4,7 @@
 using System;
 using System.ComponentModel;
 
-namespace NetExtender.UserInterface.WindowsPresentation.Types.Sounds
+namespace NetExtender.UserInterface.WindowsPresentation.Sounds
 {
     public delegate void WindowSoundEventHandler(Object? sender, WindowSoundEventArgs args);
     

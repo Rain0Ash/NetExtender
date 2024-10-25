@@ -5,7 +5,7 @@ using NetExtender.Localization.Property.Localization.Initializers;
 using NetExtender.Utilities.Core;
 using NetExtender.WindowsPresentation.Types.Bindings;
 
-namespace NetExtender.UserInterface.WindowsPresentation.Windows
+namespace NetExtender.UserInterface.WindowsPresentation
 {
     [ReflectionNaming(typeof(LocalizationBinding))]
     public abstract class LocalizationWindow : CenterWindow

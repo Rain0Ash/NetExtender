@@ -1,6 +1,6 @@
 using NetExtender.DependencyInjection.Interfaces;
 
-namespace NetExtender.UserInterface.WindowsPresentation.Windows
+namespace NetExtender.UserInterface.WindowsPresentation
 {
     public interface IReactiveWindow : ITransientReactiveWindow
     {

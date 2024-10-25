@@ -25,7 +25,7 @@ namespace NetExtender.Types.Dictionaries
         {
             get
             {
-                return _keys ??= new SelectorCollectionWrapper<NullMaybe<TKey>, TKey>(base.Keys, nullable => nullable);
+                return _keys ??= new SelectorCollectionWrapper<NullMaybe<TKey>, TKey>(base.Keys, static nullable => nullable);
             }
         }
 
@@ -50,6 +50,15 @@ namespace NetExtender.Types.Dictionaries
             get
             {
                 return Values;
+            }
+        }
+        
+        private IComparer<TKey>? _comparer;
+        public IComparer<TKey> KeyComparer
+        {
+            get
+            {
+                return _comparer ??= Comparer.ToComparer();
             }
         }
 

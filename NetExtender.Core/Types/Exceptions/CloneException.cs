@@ -18,8 +18,8 @@ namespace NetExtender.Types.Exceptions
         {
         }
 
-        public CloneException(String? message, Exception? innerException)
-            : base(message, innerException)
+        public CloneException(String? message, Exception? exception)
+            : base(message, exception)
         {
         }
 

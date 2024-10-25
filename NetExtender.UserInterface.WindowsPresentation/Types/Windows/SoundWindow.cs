@@ -3,9 +3,9 @@
 
 using System;
 using System.Threading.Tasks;
-using NetExtender.UserInterface.WindowsPresentation.Types.Sounds;
+using NetExtender.UserInterface.WindowsPresentation.Sounds;
 
-namespace NetExtender.UserInterface.WindowsPresentation.Windows
+namespace NetExtender.UserInterface.WindowsPresentation
 {
     public abstract class SoundWindow : StartedWindow
     {

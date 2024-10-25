@@ -103,8 +103,14 @@ namespace NetExtender.Utilities.Types
 
             collection.Insert(index.GetOffset(collection.Count), item);
         }
-
-        public static void InsertRange<T>(this IList<T> collection, Int32 index, IEnumerable<T> source)
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void InsertRange<T>(this IList<T> collection, Int32 index, params T[]? source)
+        {
+            InsertRange(collection, index, (IEnumerable<T>?) source);
+        }
+        
+        public static void InsertRange<T>(this IList<T> collection, Int32 index, IEnumerable<T>? source)
         {
             if (collection is null)
             {
@@ -113,7 +119,7 @@ namespace NetExtender.Utilities.Types
 
             if (source is null)
             {
-                throw new ArgumentNullException(nameof(source));
+                return;
             }
 
             foreach (T item in source)
@@ -163,36 +169,36 @@ namespace NetExtender.Utilities.Types
             return true;
         }
         
-        public static void Replace<T>(this IList<T> collection, params T[] items)
+        public static void Replace<T>(this IList<T> collection, params T[]? items)
         {
             Replace(collection, 0, items);
         }
 
-        public static void Replace<T>(this IList<T> collection, IEnumerable<T> source)
+        public static void Replace<T>(this IList<T> collection, IEnumerable<T>? source)
         {
             Replace(collection, 0, source);
         }
         
-        public static void Replace<T>(this IList<T> collection, Int32 start, params T[] items)
+        public static void Replace<T>(this IList<T> collection, Int32 start, params T[]? items)
         {
-            Replace(collection, start, (IEnumerable<T>) items);
+            Replace(collection, start, (IEnumerable<T>?) items);
         }
         
-        public static void Replace<T>(this IList<T> collection, Int32 start, IEnumerable<T> source)
+        public static void Replace<T>(this IList<T> collection, Int32 start, IEnumerable<T>? source)
         {
             if (collection is null)
             {
                 throw new ArgumentNullException(nameof(collection));
             }
-        
-            if (source is null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-        
+            
             if (collection.IsReadOnly)
             {
                 throw new NotSupportedException();
+            }
+            
+            if (source is null)
+            {
+                return;
             }
             
             if (start < 0 || start > collection.Count)
@@ -215,36 +221,36 @@ namespace NetExtender.Utilities.Types
             }
         }
         
-        public static void FullReplace<T>(this IList<T> collection, params T[] items)
+        public static void FullReplace<T>(this IList<T> collection, params T[]? items)
         {
             FullReplace(collection, 0, items);
         }
 
-        public static void FullReplace<T>(this IList<T> collection, IEnumerable<T> source)
+        public static void FullReplace<T>(this IList<T> collection, IEnumerable<T>? source)
         {
             FullReplace(collection, 0, source);
         }
         
-        public static void FullReplace<T>(this IList<T> collection, Int32 start, params T[] items)
+        public static void FullReplace<T>(this IList<T> collection, Int32 start, params T[]? items)
         {
-            FullReplace(collection, start, (IEnumerable<T>) items);
+            FullReplace(collection, start, (IEnumerable<T>?) items);
         }
         
-        public static void FullReplace<T>(this IList<T> collection, Int32 start, IEnumerable<T> source)
+        public static void FullReplace<T>(this IList<T> collection, Int32 start, IEnumerable<T>? source)
         {
             if (collection is null)
             {
                 throw new ArgumentNullException(nameof(collection));
             }
-        
-            if (source is null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-        
+            
             if (collection.IsReadOnly)
             {
                 throw new NotSupportedException();
+            }
+            
+            if (source is null)
+            {
+                return;
             }
             
             if (start < 0 || start > collection.Count)

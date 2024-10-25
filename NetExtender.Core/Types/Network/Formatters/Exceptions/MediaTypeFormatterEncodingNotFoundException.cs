@@ -18,8 +18,8 @@ namespace NetExtender.Types.Network.Formatters.Exceptions
         {
         }
         
-        public MediaTypeFormatterEncodingNotFoundException(String? message, Exception? innerException)
-            : base(message ?? Message, innerException)
+        public MediaTypeFormatterEncodingNotFoundException(String? message, Exception? exception)
+            : base(message ?? Message, exception)
         {
         }
         

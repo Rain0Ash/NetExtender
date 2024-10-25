@@ -9,10 +9,10 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 using NetExtender.Types.Exceptions;
-using NetExtender.Types.Native.Windows;
 using NetExtender.UserInterface;
 using NetExtender.UserInterface.Interfaces;
 using NetExtender.Utilities.Core;
+using NetExtender.Windows.Types;
 using NetExtender.Workstation.Interfaces;
 
 namespace NetExtender.Utilities.UserInterface

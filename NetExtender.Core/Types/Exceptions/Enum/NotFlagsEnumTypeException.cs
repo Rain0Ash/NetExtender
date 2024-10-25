@@ -26,18 +26,18 @@ namespace NetExtender.Types.Exceptions
         {
         }
 
-        public NotFlagsEnumTypeException(String? message, Exception? innerException)
-            : base(message, innerException)
+        public NotFlagsEnumTypeException(String? message, Exception? exception)
+            : base(message, exception)
         {
         }
 
-        public NotFlagsEnumTypeException(String? message, String? paramName)
-            : base(message, paramName)
+        public NotFlagsEnumTypeException(String? message, String? parameter)
+            : base(message, parameter)
         {
         }
 
-        public NotFlagsEnumTypeException(String? message, String? paramName, Exception? innerException)
-            : base(message, paramName, innerException)
+        public NotFlagsEnumTypeException(String? message, String? parameter, Exception? exception)
+            : base(message, parameter, exception)
         {
         }
 
@@ -59,18 +59,18 @@ namespace NetExtender.Types.Exceptions
         {
         }
 
-        protected NotFlagsEnumTypeException(String? message, Exception? innerException)
-            : base(message, innerException)
+        protected NotFlagsEnumTypeException(String? message, Exception? exception)
+            : base(message, exception)
         {
         }
 
-        protected NotFlagsEnumTypeException(String? message, String? paramName)
-            : base(message, paramName)
+        protected NotFlagsEnumTypeException(String? message, String? parameter)
+            : base(message, parameter)
         {
         }
 
-        protected NotFlagsEnumTypeException(String? message, String? paramName, Exception? innerException)
-            : base(message, paramName, innerException)
+        protected NotFlagsEnumTypeException(String? message, String? parameter, Exception? exception)
+            : base(message, parameter, exception)
         {
         }
 

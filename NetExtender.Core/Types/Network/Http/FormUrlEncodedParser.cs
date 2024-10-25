@@ -148,8 +148,8 @@ namespace NetExtender.Types.Network
                     
                     if (read > index)
                     {
-                        String str = Encoding.UTF8.GetString(buffer, index, read - index);
-                        current.Value.Append(str);
+                        String value = Encoding.UTF8.GetString(buffer, index, read - index);
+                        current.Value.Append(value);
                     }
                     
                     current.CopyTo(source);

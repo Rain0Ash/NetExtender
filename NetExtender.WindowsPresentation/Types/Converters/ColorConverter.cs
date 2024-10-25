@@ -86,10 +86,10 @@ namespace NetExtender.WindowsPresentation.Types.Converters
             result = value switch
             {
                 null => null,
-                String @string => WindowsPresentationColorUtilities.TryParse(@string, out System.Windows.Media.Color color) ? new SolidColorBrush(color) : null,
-                System.Drawing.Color color => new SolidColorBrush(color.ToMediaColor()),
-                System.Windows.Media.Color color => new SolidColorBrush(color),
-                IColor color when color.ToColor(out System.Drawing.Color convert) => new SolidColorBrush(convert.ToMediaColor()),
+                String @string => WindowsPresentationColorUtilities.TryParse(@string, out System.Windows.Media.Color color) ? color.ToBrush() : null,
+                System.Drawing.Color color => color.ToBrush(),
+                System.Windows.Media.Color color => color.ToBrush(),
+                IColor color when color.ToColor(out System.Drawing.Color convert) => convert.ToBrush(),
                 _ => null
             };
 

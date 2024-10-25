@@ -52,7 +52,7 @@ namespace NetExtender.Utilities.Numerics
     Dictionary<String, String> operands = new Dictionary<String, String>
     {
         {"+", "Add"},
-        {"-", "Substract"},
+        {"-", "Subtract"},
         {"*", "Multiply"},
         {"/", "Divide"},
         {"%", "Modulo"},

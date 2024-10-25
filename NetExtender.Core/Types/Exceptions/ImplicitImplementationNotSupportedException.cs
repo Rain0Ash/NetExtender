@@ -15,8 +15,8 @@ namespace NetExtender.Types.Exceptions
         {
         }
         
-        public ImplicitImplementationNotSupportedException(String? message, Exception? innerException)
-            : base(message, innerException)
+        public ImplicitImplementationNotSupportedException(String? message, Exception? exception)
+            : base(message, exception)
         {
         }
         

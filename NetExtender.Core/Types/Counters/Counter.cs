@@ -3,10 +3,12 @@
 
 using System;
 using System.Collections.Generic;
+using NetExtender.Types.Dictionaries;
+using NetExtender.Types.Monads;
 
 namespace NetExtender.Types.Counters
 {
-    public class Counter<T> : Counter<T, Int32> where T : notnull
+    public class Counter<T> : Counter<T, Int32>
     {
         public Counter()
         {
@@ -82,13 +84,13 @@ namespace NetExtender.Types.Counters
             return left + right;
         }
 
-        protected sealed override Int32 Substract(Int32 left, Int32 right)
+        protected sealed override Int32 Subtract(Int32 left, Int32 right)
         {
             return left - right;
         }
     }
     
-    public class Counter64<T> : Counter<T, Int64> where T : notnull
+    public class Counter64<T> : Counter<T, Int64>
     {
         public Counter64()
         {
@@ -164,13 +166,13 @@ namespace NetExtender.Types.Counters
             return left + right;
         }
 
-        protected sealed override Int64 Substract(Int64 left, Int64 right)
+        protected sealed override Int64 Subtract(Int64 left, Int64 right)
         {
             return left - right;
         }
     }
     
-    public class DecimalCounter<T> : Counter<T, Decimal> where T : notnull
+    public class DecimalCounter<T> : Counter<T, Decimal>
     {
         public DecimalCounter()
         {
@@ -246,17 +248,25 @@ namespace NetExtender.Types.Counters
             return left + right;
         }
 
-        protected sealed override Decimal Substract(Decimal left, Decimal right)
+        protected sealed override Decimal Subtract(Decimal left, Decimal right)
         {
             return left - right;
         }
     }
     
-    public class Counter<T, TCount> : CounterAbstraction<T, TCount> where T : notnull where TCount : unmanaged, IConvertible
+    public class Counter<T, TCount> : CounterAbstraction<T, TCount> where TCount : unmanaged, IConvertible
     {
-        protected sealed override Dictionary<T, TCount> Internal { get; }
+        protected sealed override NullableDictionary<T, TCount> Internal { get; }
         
         public IEqualityComparer<T> Comparer
+        {
+            get
+            {
+                return Internal.KeyComparer;
+            }
+        }
+        
+        public IEqualityComparer<NullMaybe<T>> NullComparer
         {
             get
             {
@@ -266,22 +276,22 @@ namespace NetExtender.Types.Counters
 
         public Counter()
         {
-            Internal = new Dictionary<T, TCount>();
+            Internal = new NullableDictionary<T, TCount>();
         }
 
         public Counter(Int32 capacity)
         {
-            Internal = new Dictionary<T, TCount>(capacity);
+            Internal = new NullableDictionary<T, TCount>(capacity);
         }
 
         public Counter(IEqualityComparer<T>? comparer)
         {
-            Internal = new Dictionary<T, TCount>(comparer);
+            Internal = new NullableDictionary<T, TCount>(comparer);
         }
 
         public Counter(Int32 capacity, IEqualityComparer<T>? comparer)
         {
-            Internal = new Dictionary<T, TCount>(capacity, comparer);
+            Internal = new NullableDictionary<T, TCount>(capacity, comparer);
         }
 
         public Counter(IEnumerable<T> collection)
@@ -291,7 +301,7 @@ namespace NetExtender.Types.Counters
                 throw new ArgumentNullException(nameof(collection));
             }
 
-            Internal = new Dictionary<T, TCount>();
+            Internal = new NullableDictionary<T, TCount>();
             AddRange(collection);
         }
 
@@ -302,7 +312,7 @@ namespace NetExtender.Types.Counters
                 throw new ArgumentNullException(nameof(collection));
             }
 
-            Internal = new Dictionary<T, TCount>();
+            Internal = new NullableDictionary<T, TCount>();
             AddRange(collection);
         }
 
@@ -313,7 +323,7 @@ namespace NetExtender.Types.Counters
                 throw new ArgumentNullException(nameof(collection));
             }
 
-            Internal = new Dictionary<T, TCount>(comparer);
+            Internal = new NullableDictionary<T, TCount>(comparer);
             AddRange(collection);
         }
 
@@ -324,7 +334,7 @@ namespace NetExtender.Types.Counters
                 throw new ArgumentNullException(nameof(collection));
             }
 
-            Internal = new Dictionary<T, TCount>(comparer);
+            Internal = new NullableDictionary<T, TCount>(comparer);
             AddRange(collection);
         }
 

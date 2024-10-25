@@ -37,13 +37,13 @@ namespace NetExtender.Windows.Services.Exceptions
             ServiceName = serviceName;
         }
 
-        public WindowsServiceNotFoundException(String? message, Exception? innerException)
-            : base(message, innerException)
+        public WindowsServiceNotFoundException(String? message, Exception? exception)
+            : base(message, exception)
         {
         }
 
-        public WindowsServiceNotFoundException(String? message, String? serviceName, Exception? innerException)
-            : base(message, innerException)
+        public WindowsServiceNotFoundException(String? message, String? serviceName, Exception? exception)
+            : base(message, exception)
         {
             ServiceName = serviceName;
         }

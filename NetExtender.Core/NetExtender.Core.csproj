@@ -25,9 +25,9 @@
     <ItemGroup>
         <PackageReference Include="AgileObjects.ReadableExpressions" Version="4.1.3" />
         <PackageReference Include="Lib.Harmony.Thin" Version="2.3.3" />
-        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.4"/>
-        <PackageReference Include="Microsoft.Extensions.ObjectPool" Version="6.0.25"/>
-        <PackageReference Include="Microsoft.Extensions.Primitives" Version="6.0.0"/>
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.2" />
+        <PackageReference Include="Microsoft.Extensions.ObjectPool" Version="6.0.35" />
+        <PackageReference Include="Microsoft.Extensions.Primitives" Version="8.0.0" />
         <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="3.0.1"/>
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3"/>
         <PackageReference Include="System.Linq.Async" Version="6.0.1"/>
@@ -42,6 +42,7 @@
         <Folder Include="IO\Shortcut"/>
         <Folder Include="NewtonSoft\Network\Http\"/>
         <Folder Include="Types\Enums\Converters\"/>
+        <Folder Include="Types\Reflection\Operator\" />
     </ItemGroup>
 
     <ItemGroup>
@@ -190,6 +191,9 @@
         </Compile>
         <Compile Update="Utilities\Types\Enumerable\LinkedListNodeUtilities.cs">
           <DependentUpon>LinkedListUtilities.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\Reflection\UnaryReflectionOperator.cs">
+          <DependentUpon>ReflectionOperator.cs</DependentUpon>
         </Compile>
     </ItemGroup>
 

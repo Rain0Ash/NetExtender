@@ -18,18 +18,18 @@ namespace NetExtender.Types.Exceptions
         {
         }
 
-        public NotEnumTypeException(String? message, Exception? innerException)
-            : base(message, innerException)
+        public NotEnumTypeException(String? message, Exception? exception)
+            : base(message, exception)
         {
         }
 
-        public NotEnumTypeException(String? message, String? paramName)
-            : base(message, paramName)
+        public NotEnumTypeException(String? message, String? parameter)
+            : base(message, parameter)
         {
         }
 
-        public NotEnumTypeException(String? message, String? paramName, Exception? innerException)
-            : base(message, paramName, innerException)
+        public NotEnumTypeException(String? message, String? parameter, Exception? exception)
+            : base(message, parameter, exception)
         {
         }
 

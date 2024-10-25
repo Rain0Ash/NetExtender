@@ -15,8 +15,8 @@ namespace NetExtender.Types.Middlewares.Exceptions
         {
         }
         
-        public MiddlewareException(String? message, Exception? innerException)
-            : base(message, innerException)
+        public MiddlewareException(String? message, Exception? exception)
+            : base(message, exception)
         {
         }
         

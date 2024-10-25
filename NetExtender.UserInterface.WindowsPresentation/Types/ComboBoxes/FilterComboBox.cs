@@ -8,7 +8,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Input;
 
-namespace NetExtender.UserInterface.WindowsPresentation.Types.ComboBoxes
+namespace NetExtender.UserInterface.WindowsPresentation
 {
     public class FilterComboBox : ComboBox
     {

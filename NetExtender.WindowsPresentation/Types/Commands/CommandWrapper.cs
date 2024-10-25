@@ -18,25 +18,25 @@ namespace NetExtender.WindowsPresentation.Types.Commands
         {
             CanExecuteChanged?.Invoke(this, args);
         }
-
-        public override Boolean CanExecute(T? parameter)
+        
+        protected override Boolean CanExecuteImplementation(Object? sender, T? parameter)
         {
-            return Command.CanExecute(parameter);
+            return Command.CanExecute(sender, parameter);
+        }
+        
+        protected override Boolean CanExecuteImplementation(Object? sender, Object? parameter)
+        {
+            return Command.CanExecute(sender, parameter);
         }
 
-        public override Boolean CanExecute(Object? parameter)
+        protected override void ExecuteImplementation(Object? sender, T? parameter)
         {
-            return Command.CanExecute(parameter);
+            Command.Execute(sender, parameter);
         }
-
-        public override void Execute(T? parameter)
+        
+        protected override void ExecuteImplementation(Object? sender, Object? parameter)
         {
-            Command.Execute(parameter);
-        }
-
-        public override void Execute(Object? parameter)
-        {
-            Command.Execute(parameter);
+            Command.Execute(sender, parameter);
         }
 
         public override Int32 GetHashCode()
@@ -57,43 +57,91 @@ namespace NetExtender.WindowsPresentation.Types.Commands
     
     public sealed class CommandWrapper : Command
     {
-        private ICommand Command { get; }
+        private ISenderCommand Command { get; }
         public override event EventHandler? CanExecuteChanged;
-
+        
         public CommandWrapper(ICommand command)
         {
-            Command = command ?? throw new ArgumentNullException(nameof(command));
+            Command = command switch
+            {
+                null => throw new ArgumentNullException(nameof(command)),
+                ISenderCommand sender => sender,
+                _ => new Wrapper(command)
+            };
+
             Command.CanExecuteChanged += OnCanExecuteChanged;
         }
-
+        
         private void OnCanExecuteChanged(Object? sender, EventArgs args)
         {
             CanExecuteChanged?.Invoke(this, args);
         }
-
-        public override Boolean CanExecute(Object? parameter)
+        
+        protected override Boolean CanExecuteImplementation(Object? sender, Object? parameter)
         {
-            return Command.CanExecute(parameter);
+            return Command.CanExecute(sender, parameter);
         }
-
-        public override void Execute(Object? parameter)
+        
+        protected override void ExecuteImplementation(Object? sender, Object? parameter)
         {
-            Command.Execute(parameter);
+            Command.Execute(sender, parameter);
         }
-
+        
         public override Int32 GetHashCode()
         {
             return Command.GetHashCode();
         }
-
+        
         public override Boolean Equals(Object? other)
         {
             return ReferenceEquals(this, other) || Command.Equals(other);
         }
-
+        
         public override String? ToString()
         {
             return Command.ToString();
+        }
+
+        private sealed class Wrapper : Command
+        {
+            private ICommand Command { get; }
+            public override event EventHandler? CanExecuteChanged;
+            
+            public Wrapper(ICommand command)
+            {
+                Command = command ?? throw new ArgumentNullException(nameof(command));
+                Command.CanExecuteChanged += OnCanExecuteChanged;
+            }
+            
+            private void OnCanExecuteChanged(Object? sender, EventArgs args)
+            {
+                CanExecuteChanged?.Invoke(this, args);
+            }
+            
+            protected override Boolean CanExecuteImplementation(Object? sender, Object? parameter)
+            {
+                return Command.CanExecute(parameter);
+            }
+            
+            protected override void ExecuteImplementation(Object? sender, Object? parameter)
+            {
+                Command.Execute(parameter);
+            }
+            
+            public override Int32 GetHashCode()
+            {
+                return Command.GetHashCode();
+            }
+            
+            public override Boolean Equals(Object? other)
+            {
+                return ReferenceEquals(this, other) || Command.Equals(other);
+            }
+            
+            public override String? ToString()
+            {
+                return Name ?? Command.ToString();
+            }
         }
     }
 }

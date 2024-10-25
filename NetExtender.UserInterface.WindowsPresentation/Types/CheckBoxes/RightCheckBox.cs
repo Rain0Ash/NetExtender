@@ -4,7 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Shapes;
 using NetExtender.WindowsPresentation.Utilities.Types;
 
-namespace NetExtender.UserInterface.WindowsPresentation.Types.CheckBoxes
+namespace NetExtender.UserInterface.WindowsPresentation
 {
     public class RightCheckBox : CheckBox
     {
@@ -19,10 +19,12 @@ namespace NetExtender.UserInterface.WindowsPresentation.Types.CheckBoxes
         
         public Boolean IsRight
         {
+            [System.Diagnostics.DebuggerStepThrough]
             get
             {
                 return (Boolean) GetValue(IsRightProperty);
             }
+            [System.Diagnostics.DebuggerStepThrough]
             set
             {
                 SetValue(IsRightProperty, value);

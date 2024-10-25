@@ -64,7 +64,7 @@ namespace NetExtender.Utilities.Types
             {
                 0 => 0,
                 1 => values[0].Length,
-                _ => values.Sum(segment => segment.Length)
+                _ => values.Sum(static segment => segment.Length)
             };
         }
 
@@ -75,7 +75,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(values));
             }
 
-            return values.Sum(str => str.Length);
+            return values.Sum(static value => value.Length);
         }
 
         public static Int64 CharLongLength(this StringSegment[] values)
@@ -89,7 +89,7 @@ namespace NetExtender.Utilities.Types
             {
                 0 => 0,
                 1 => values[0].Length,
-                _ => values.Aggregate<StringSegment, Int64>(0, (current, segment) => current + segment.Length)
+                _ => values.Aggregate<StringSegment, Int64>(0, static (current, segment) => current + segment.Length)
             };
         }
 
@@ -100,7 +100,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(values));
             }
 
-            return values.Aggregate<StringSegment, Int64>(0, (current, segment) => current + segment.Length);
+            return values.Aggregate<StringSegment, Int64>(0, static (current, segment) => current + segment.Length);
         }
 
         public static Boolean IsNumeric(this StringSegment value)

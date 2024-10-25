@@ -8,7 +8,7 @@ using System.Windows.Input;
 using NetExtender.Types.Exceptions;
 using NetExtender.Utilities.Threading;
 using NetExtender.Utilities.Types;
-using NetExtender.WindowsPresentation.Types.Input;
+using NetExtender.WindowsPresentation.Types;
 
 namespace NetExtender.Utilities.Windows.IO
 {

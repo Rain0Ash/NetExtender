@@ -1,0 +1,218 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Windows.Data;
+using NetExtender.UserInterface.WindowsPresentation.Types.Comparers;
+
+namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
+{
+    public partial class ExcelGrid
+    {
+        protected Int32 FindPropertyNameIndex(SortDescription description)
+        {
+            for (Int32 i = 0; i < PropertyDefinitions.Count; i++)
+            {
+                if (PropertyDefinitions[i].PropertyName == description.PropertyName)
+                {
+                    return i;
+                }
+            }
+            
+            return -1;
+        }
+        
+        protected Int32 FindNextColumn(Int32 row, Int32 column, Int32 delta)
+        {
+            Int32 columns = Columns;
+            while (column >= 0 && column < columns - 1)
+            {
+                if (!TryGet(new ExcelCell(row, column), out Object? value) || String.IsNullOrEmpty(value?.ToString()))
+                {
+                    break;
+                }
+                
+                column += delta;
+            }
+            
+            return column;
+        }
+        
+        protected Int32 FindNextRow(Int32 row, Int32 column, Int32 delta)
+        {
+            Int32 rows = Rows;
+            while (row >= 0 && row < rows)
+            {
+                if (!TryGet(new ExcelCell(row, column), out Object? value) || String.IsNullOrEmpty(value?.ToString()))
+                {
+                    break;
+                }
+                
+                row += delta;
+            }
+            
+            return rows <= 0 || row < rows ? row : rows - 1;
+        }
+        
+        public Int32 FindSourceIndex(Int32 index)
+        {
+            if (View is not { } view || ItemsSource is not { } source || index < 0 || index == source.Count)
+            {
+                return index;
+            }
+            
+            if (CustomSort is null && view.SortDescriptions.Count <= 0 || CustomSort is ISortDescriptionComparer { Descriptions.Count: <= 0 })
+            {
+                return index;
+            }
+            
+            if (view.IsEmpty)
+            {
+                return -1;
+            }
+            
+            if (view is CollectionView collection)
+            {
+                return source.IndexOf(collection.GetItemAt(index));
+            }
+            
+            Int32 i = 0;
+            foreach (Object? item in view)
+            {
+                if (i++ == index)
+                {
+                    return source.IndexOf(item);
+                }
+            }
+            
+            return -1;
+        }
+        
+        public Int32 FindViewIndex(Int32 index)
+        {
+            if (View is not { } view || ItemsSource is not { } source || index < 0 || index == source.Count)
+            {
+                return index;
+            }
+            
+            if (CustomSort is null && view.SortDescriptions.Count <= 0 || CustomSort is ISortDescriptionComparer { Descriptions.Count: 0 })
+            {
+                return index;
+            }
+            
+            if (view is CollectionView collection)
+            {
+                return collection.IndexOf(source[index]!);
+            }
+            
+            Int32 result = 0;
+            foreach (Object? item in view)
+            {
+                if (view == item)
+                {
+                    return result;
+                }
+                
+                result++;
+            }
+            
+            return -1;
+        }
+        
+        protected IEnumerable<Object> EnumerateItems(ExcelCellRange range)
+        {
+            if (Operator is not { } @operator)
+            {
+                yield break;
+            }
+            
+            Int32 minimum = ItemsInRows ? range.TopRow : range.LeftColumn;
+            Int32 maximum = ItemsInRows ? range.BottomRow : range.RightColumn;
+            for (Int32 index = minimum; index <= maximum; index++)
+            {
+                ExcelCell cell = ItemsInRows ? new ExcelCell(index, range.LeftColumn) : new ExcelCell(range.TopRow, index);
+                
+                if (@operator.GetItem(cell) is { } item)
+                {
+                    yield return item;
+                }
+            }
+        }
+        
+        protected static Type? GetEnumType(Type? type)
+        {
+            if (type is null)
+            {
+                return null;
+            }
+            
+            if (Nullable.GetUnderlyingType(type) is { } underlying)
+            {
+                type = underlying;
+            }
+            
+            return typeof(Enum).IsAssignableFrom(type) ? type : null;
+        }
+        
+        protected static Type? GetItemType(IEnumerable? source)
+        {
+            if (source is null)
+            {
+                return null;
+            }
+            
+            try
+            {
+                return source.AsQueryable().ElementType;
+            }
+            catch (ArgumentException)
+            {
+                return source.GetType().GetInterfaces().FirstOrDefault(static type => type.IsGenericType && type.GetGenericTypeDefinition() == typeof(IEnumerable<>))?.GetGenericArguments()[0];
+            }
+        }
+        
+        protected static Boolean IsIList(Type type)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+            
+            if (!typeof(IList).IsAssignableFrom(type))
+            {
+                return false;
+            }
+            
+            if (ElementType(type) is not { } element || element == typeof(String))
+            {
+                return false;
+            }
+            
+            if (element.IsGenericType && element.GetGenericTypeDefinition() == typeof(IList<>))
+            {
+                return true;
+            }
+            
+            return ElementType(element) is not null;
+        }
+        
+        protected static Type? ElementType(Type type)
+        {
+            foreach (Type @interface in type.GetInterfaces())
+            {
+                if (!@interface.IsGenericType || @interface.GetGenericTypeDefinition() != typeof(IEnumerable<>))
+                {
+                    continue;
+                }
+                
+                if (@interface.GetGenericArguments() is { Length: > 0 } args)
+                {
+                    return args[0];
+                }
+            }
+
+            return null;
+        }
+    }
+}

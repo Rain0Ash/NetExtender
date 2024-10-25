@@ -10,29 +10,58 @@ namespace NetExtender.WindowsPresentation.Types.Commands
     {
         public new static Command Empty { get; } = new None();
         
-        public virtual Boolean CanExecute(IEnumerable<T?>? parameter)
+        public Boolean CanExecute(IEnumerable<T?>? parameter)
         {
-            return parameter?.All(CanExecute) is not false;
+            return CanExecute(null, parameter);
         }
-
-        public virtual Boolean CanExecute(IEnumerable? parameter)
+        
+        public Boolean CanExecute(Object? sender, IEnumerable<T?>? parameter)
         {
-            return CanExecute(parameter?.OfType<T>());
+            if (parameter is null)
+            {
+                return true;
+            }
+            
+            // ReSharper disable once LoopCanBeConvertedToQuery
+            foreach (T? item in parameter)
+            {
+                if (!CanExecute(sender, item))
+                {
+                    return false;
+                }
+            }
+            
+            return true;
         }
-
-        public override Boolean CanExecute(Object? parameter)
+        
+        public Boolean CanExecute(IEnumerable? parameter)
+        {
+            return CanExecute(null, parameter);
+        }
+        
+        public Boolean CanExecute(Object? sender, IEnumerable? parameter)
+        {
+            return CanExecute(sender, parameter?.OfType<T>());
+        }
+        
+        protected override Boolean CanExecuteImplementation(Object? sender, Object? parameter)
         {
             return parameter switch
             {
-                null => CanExecute(default(T)),
-                T value => CanExecute(value),
-                IEnumerable<T> value => CanExecute(value),
-                IEnumerable value => CanExecute(value),
-                _ => base.CanExecute(parameter)
+                null => CanExecuteImplementation(sender, default),
+                T value => CanExecuteImplementation(sender, value),
+                IEnumerable<T> value => CanExecute(sender, value),
+                IEnumerable value => CanExecute(sender, value),
+                _ => base.CanExecuteImplementation(sender, parameter)
             };
         }
+        
+        public void Execute(IEnumerable<T?>? parameter)
+        {
+            Execute(null, parameter);
+        }
 
-        public virtual void Execute(IEnumerable<T?>? parameter)
+        public virtual void Execute(Object? sender, IEnumerable<T?>? parameter)
         {
             if (parameter is null)
             {
@@ -41,44 +70,49 @@ namespace NetExtender.WindowsPresentation.Types.Commands
             
             foreach (T? value in parameter)
             {
-                Execute(value);
+                Execute(sender, value);
             }
         }
 
-        public virtual void Execute(IEnumerable? parameter)
+        public void Execute(IEnumerable? parameter)
         {
-            Execute(parameter?.OfType<T>());
+            Execute(null, parameter);
         }
 
-        public override void Execute(Object? parameter)
+        public void Execute(Object? sender, IEnumerable? parameter)
+        {
+            Execute(sender, parameter?.OfType<T>());
+        }
+
+        protected override void ExecuteImplementation(Object? sender, Object? parameter)
         {
             switch (parameter)
             {
                 case null:
-                    Execute(default(T));
+                    ExecuteImplementation(sender, default);
                     return;
                 case T value:
-                    Execute(value);
+                    ExecuteImplementation(sender, value);
                     return;
                 case IEnumerable<T> value:
-                    Execute(value);
+                    Execute(sender, value);
                     return;
                 case IEnumerable value:
-                    Execute(value);
+                    Execute(sender, value);
                     return;
                 default:
-                    base.Execute(parameter);
+                    base.ExecuteImplementation(sender, parameter);
                     return;
             }
         }
         
         private sealed class None : MultiCommand<T>
         {
-            public override void Execute(T? parameter)
+            protected override void ExecuteImplementation(Object? sender, T? parameter)
             {
             }
             
-            public override void Execute(IEnumerable<T?>? parameter)
+            public override void Execute(Object? sender, IEnumerable<T?>? parameter)
             {
             }
         }
@@ -88,12 +122,36 @@ namespace NetExtender.WindowsPresentation.Types.Commands
     {
         public new static Command Empty { get; } = new None();
         
-        public virtual Boolean CanExecute(IEnumerable? parameter)
+        public Boolean CanExecute(IEnumerable? parameter)
         {
-            return parameter?.Cast<Object?>().All(CanExecute) is not false;
+            return CanExecute(null, parameter);
         }
-
-        public virtual void Execute(IEnumerable? parameter)
+        
+        public virtual Boolean CanExecute(Object? sender, IEnumerable? parameter)
+        {
+            if (parameter is null)
+            {
+                return true;
+            }
+            
+            // ReSharper disable once LoopCanBeConvertedToQuery
+            foreach (Object? value in parameter)
+            {
+                if (!CanExecute(sender, value))
+                {
+                    return false;
+                }
+            }
+            
+            return true;
+        }
+        
+        public void Execute(IEnumerable? parameter)
+        {
+            Execute(null, parameter);
+        }
+        
+        public virtual void Execute(Object? sender, IEnumerable? parameter)
         {
             if (parameter is null)
             {
@@ -102,17 +160,17 @@ namespace NetExtender.WindowsPresentation.Types.Commands
             
             foreach (Object? value in parameter)
             {
-                Execute(value);
+                Execute(sender, value);
             }
         }
         
         private sealed class None : MultiCommand
         {
-            public override void Execute(Object? parameter)
+            protected override void ExecuteImplementation(Object? sender, Object? parameter)
             {
             }
             
-            public override void Execute(IEnumerable? parameter)
+            public override void Execute(Object? sender, IEnumerable? parameter)
             {
             }
         }

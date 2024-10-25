@@ -18,8 +18,8 @@ namespace NetExtender.Types.Exceptions
         {
         }
 
-        public AssemblySignInitializationNotSupportedException(String? message, Exception? innerException)
-            : base(message, innerException)
+        public AssemblySignInitializationNotSupportedException(String? message, Exception? exception)
+            : base(message, exception)
         {
         }
 

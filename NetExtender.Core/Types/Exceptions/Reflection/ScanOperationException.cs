@@ -18,8 +18,8 @@ namespace NetExtender.Types.Exceptions
         {
         }
         
-        public ScanOperationException(String? message, Exception? innerException)
-            : base(message ?? Message, innerException)
+        public ScanOperationException(String? message, Exception? exception)
+            : base(message ?? Message, exception)
         {
         }
         

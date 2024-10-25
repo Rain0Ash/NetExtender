@@ -1,10 +1,19 @@
 using System.Windows;
 using System.Windows.Controls;
+using NetExtender.WindowsPresentation.Utilities.Types;
 
-namespace NetExtender.UserInterface.WindowsPresentation.Types.Labels
+namespace NetExtender.UserInterface.WindowsPresentation
 {
     public class CenterLabel : Label
     {
+        static CenterLabel()
+        {
+            HorizontalAlignmentProperty.OverrideMetadataDefaultValue<CenterLabel>(HorizontalAlignment.Stretch);
+            VerticalAlignmentProperty.OverrideMetadataDefaultValue<CenterLabel>(VerticalAlignment.Stretch);
+            HorizontalContentAlignmentProperty.OverrideMetadataDefaultValue<CenterLabel>(HorizontalAlignment.Center);
+            VerticalContentAlignmentProperty.OverrideMetadataDefaultValue<CenterLabel>(VerticalAlignment.Center);
+        }
+        
         public CenterLabel()
         {
             HorizontalContentAlignment = HorizontalAlignment.Center;

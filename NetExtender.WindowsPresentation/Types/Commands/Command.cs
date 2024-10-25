@@ -1,5 +1,11 @@
 using System;
 using System.Windows.Input;
+using NetExtender.Types.Exceptions;
+using NetExtender.Types.Exceptions.Handlers;
+using NetExtender.WindowsPresentation.Types.Exceptions;
+using NetExtender.WindowsPresentation.Utilities.Types;
+#pragma warning disable CA2200
+// ReSharper disable PossibleIntendedRethrow
 
 namespace NetExtender.WindowsPresentation.Types.Commands
 {
@@ -7,49 +13,95 @@ namespace NetExtender.WindowsPresentation.Types.Commands
     {
         public new static Command<T> Empty { get; } = new None();
         
-        public virtual Boolean CanExecute(T? parameter)
+        public Boolean CanExecute(T? parameter)
+        {
+            return CanExecute(null, parameter);
+        }
+        
+        public Boolean CanExecute(Object? sender, T? parameter)
+        {
+            try
+            {
+                return CanExecuteImplementation(sender, parameter);
+            }
+            catch (Exception exception)
+            {
+                ExceptionHandlerAction action = Handle(sender, parameter, exception);
+                if (HandleCanExecute(action, exception) is not { } result)
+                {
+                    throw;
+                }
+                
+                return result;
+            }
+        }
+        
+        protected virtual Boolean CanExecuteImplementation(Object? sender, T? parameter)
         {
             return true;
         }
-
-        public override Boolean CanExecute(Object? parameter)
+        
+        protected override Boolean CanExecuteImplementation(Object? sender, Object? parameter)
         {
             return parameter switch
             {
-                null => CanExecute(default),
-                T value => CanExecute(value),
+                null => CanExecuteImplementation(sender, default),
+                T value => CanExecuteImplementation(sender, value),
                 _ => false
             };
         }
+        
+        public void Execute(T? parameter)
+        {
+            Execute(null, parameter);
+        }
 
-        public abstract void Execute(T? parameter);
-
-        public override void Execute(Object? parameter)
+        public void Execute(Object? sender, T? parameter)
+        {
+            try
+            {
+                ExecuteImplementation(sender, parameter);
+            }
+            catch (Exception exception)
+            {
+                ExceptionHandlerAction action = Handle(sender, parameter, exception);
+                if (HandleExecute(action, exception))
+                {
+                    throw;
+                }
+            }
+        }
+        
+        protected abstract void ExecuteImplementation(Object? sender, T? parameter);
+        
+        protected override void ExecuteImplementation(Object? sender, Object? parameter)
         {
             switch (parameter)
             {
                 case null:
-                    Execute(default);
+                    ExecuteImplementation(sender, default);
                     return;
                 case T value:
-                    Execute(value);
+                    ExecuteImplementation(sender, value);
                     return;
                 default:
-                    throw new ArgumentException($"Argument is not of type '{typeof(T).Name}' for {GetType().Name}.", nameof(parameter));
+                    throw new CommandParameterTypeException($"Argument is not of type '{typeof(T).Name}' for {GetType().Name}.", nameof(parameter));
             }
         }
         
         private sealed class None : Command<T>
         {
-            public override void Execute(T? parameter)
+            protected override void ExecuteImplementation(Object? sender, T? parameter)
             {
             }
         }
     }
 
-    public abstract class Command : ICommand
+    public abstract class Command : ISenderCommand
     {
         public static Command Empty { get; } = new None();
+        
+        public String? Name { get; init; }
         
         public virtual event EventHandler? CanExecuteChanged
         {
@@ -62,17 +114,141 @@ namespace NetExtender.WindowsPresentation.Types.Commands
                 CommandManager.RequerySuggested -= value;
             }
         }
+        
+        public Boolean CanExecute(Object? parameter)
+        {
+            Sender(out Object? sender, ref parameter);
+            return CanExecute(sender, parameter);
+        }
 
-        public virtual Boolean CanExecute(Object? parameter)
+        public Boolean CanExecute(Object? sender, Object? parameter)
+        {
+            try
+            {
+                return CanExecuteImplementation(sender, parameter);
+            }
+            catch (CommandParameterTypeException)
+            {
+                throw;
+            }
+            catch (Exception exception)
+            {
+                ExceptionHandlerAction action = Handle(sender, parameter, exception);
+                if (HandleCanExecute(action, exception) is not { } result)
+                {
+                    throw;
+                }
+                
+                return result;
+            }
+        }
+
+        protected virtual Boolean CanExecuteImplementation(Object? sender, Object? parameter)
         {
             return true;
         }
+        
+        public void Execute(Object? parameter)
+        {
+            Sender(out Object? sender, ref parameter);
+            Execute(sender, parameter);
+        }
+        
+        public void Execute(Object? sender, Object? parameter)
+        {
+            try
+            {
+                ExecuteImplementation(sender, parameter);
+            }
+            catch (CommandParameterTypeException)
+            {
+                throw;
+            }
+            catch (Exception exception)
+            {
+                ExceptionHandlerAction action = Handle(sender, parameter, exception);
+                if (HandleExecute(action, exception))
+                {
+                    throw;
+                }
+            }
+        }
+        
+        protected abstract void ExecuteImplementation(Object? sender, Object? parameter);
+        
+        public static void Sender(out Object? sender, ref Object? parameter)
+        {
+            sender = null;
+            if (parameter is CommandSenderArgs args)
+            {
+                (sender, parameter) = args;
+            }
+        }
+        
+        protected virtual ExceptionHandlerAction Handle<T>(Object? sender, T? parameter, Exception? exception)
+        {
+            return WindowsPresentationCommandUtilities.Exception(this, sender, parameter, exception);
+        }
+        
+        protected virtual Boolean? HandleCanExecute(ExceptionHandlerAction action, Exception? exception)
+        {
+            switch (action)
+            {
+                case ExceptionHandlerAction.Successful:
+                    return true;
+                case ExceptionHandlerAction.Ignore:
+                    return false;
+                case ExceptionHandlerAction.Default:
+                    goto case ExceptionHandlerAction.Throw;
+                case ExceptionHandlerAction.Throw:
+                    return null;
+                case ExceptionHandlerAction.Rethrow:
+                {
+                    if (exception is null)
+                    {
+                        goto case ExceptionHandlerAction.Ignore;
+                    }
 
-        public abstract void Execute(Object? parameter);
+                    throw exception;
+                }
+                default:
+                    throw new EnumUndefinedOrNotSupportedException<ExceptionHandlerAction>(action, nameof(action), null);
+            }
+        }
+        
+        protected virtual Boolean HandleExecute(ExceptionHandlerAction action, Exception? exception)
+        {
+            switch (action)
+            {
+                case ExceptionHandlerAction.Successful:
+                case ExceptionHandlerAction.Ignore:
+                    return false;
+                case ExceptionHandlerAction.Default:
+                    goto case ExceptionHandlerAction.Throw;
+                case ExceptionHandlerAction.Throw:
+                    return true;
+                case ExceptionHandlerAction.Rethrow:
+                {
+                    if (exception is null)
+                    {
+                        goto case ExceptionHandlerAction.Ignore;
+                    }
+                    
+                    throw exception;
+                }
+                default:
+                    throw new EnumUndefinedOrNotSupportedException<ExceptionHandlerAction>(action, nameof(action), null);
+            }
+        }
+        
+        public override String? ToString()
+        {
+            return Name ?? GetType().Name;
+        }
         
         private sealed class None : Command
         {
-            public override void Execute(Object? parameter)
+            protected override void ExecuteImplementation(Object? sender, Object? parameter)
             {
             }
         }

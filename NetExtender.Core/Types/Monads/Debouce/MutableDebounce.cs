@@ -80,6 +80,11 @@ namespace NetExtender.Types.Monads.Debouce
             }
         }
         
+        public NotifyDebounce(TimeSpan delay)
+            : base(delay)
+        {
+        }
+        
         public NotifyDebounce(T value)
             : base(value)
         {
@@ -349,6 +354,11 @@ namespace NetExtender.Types.Monads.Debouce
             }
         }
         
+        public MutableDebounce(TimeSpan delay)
+        {
+            _internal = new Debounce<T>(delay);
+        }
+        
         public MutableDebounce(T value)
         {
             _internal = new Debounce<T>(value);
@@ -588,8 +598,8 @@ namespace NetExtender.Types.Monads.Debouce
         {
         }
         
-        public DebounceException(String? message, Exception? innerException)
-            : base(message, innerException)
+        public DebounceException(String? message, Exception? exception)
+            : base(message, exception)
         {
         }
         

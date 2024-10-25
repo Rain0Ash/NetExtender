@@ -6,34 +6,38 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace NetExtender.UserInterface.WindowsPresentation.Types.Grids
+namespace NetExtender.UserInterface.WindowsPresentation
 {
     public class MultiGrid : Grid
     {
-        public static readonly DependencyProperty ColumnsDependencyProperty = DependencyProperty.Register(nameof(Columns), typeof(Int32), typeof(MultiGrid), new PropertyMetadata(0));
+        public static readonly DependencyProperty ColumnsDependencyProperty = DependencyProperty.Register(nameof(Columns), typeof(Int32), typeof(MultiGrid), new PropertyMetadata(1));
+        public static readonly DependencyProperty RowsDependencyProperty = DependencyProperty.Register(nameof(Rows), typeof(Int32), typeof(MultiGrid), new PropertyMetadata(1));
+        
         private DependencyPropertyDescriptor ColumnsPropertyDescriptor { get; } = DependencyPropertyDescriptor.FromProperty(ColumnsDependencyProperty, typeof(MultiGrid));
-
+        private DependencyPropertyDescriptor RowsPropertyDescriptor { get; } = DependencyPropertyDescriptor.FromProperty(RowsDependencyProperty, typeof(MultiGrid));
+        
         public Int32 Columns
         {
+            [System.Diagnostics.DebuggerStepThrough]
             get
             {
                 return (Int32) GetValue(ColumnsDependencyProperty);
             }
+            [System.Diagnostics.DebuggerStepThrough]
             set
             {
                 SetValue(ColumnsDependencyProperty, value);
             }
         }
-
-        public static readonly DependencyProperty RowsDependencyProperty = DependencyProperty.Register(nameof(Rows), typeof(Int32), typeof(MultiGrid), new PropertyMetadata(0));
-        private DependencyPropertyDescriptor RowsPropertyDescriptor { get; } = DependencyPropertyDescriptor.FromProperty(RowsDependencyProperty, typeof(MultiGrid));
-
+        
         public Int32 Rows
         {
+            [System.Diagnostics.DebuggerStepThrough]
             get
             {
                 return (Int32) GetValue(RowsDependencyProperty);
             }
+            [System.Diagnostics.DebuggerStepThrough]
             set
             {
                 SetValue(RowsDependencyProperty, value);

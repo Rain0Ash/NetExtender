@@ -6,14 +6,19 @@ using System.Windows.Media;
 using NetExtender.Types.Entities;
 using NetExtender.Types.Images;
 using NetExtender.WindowsPresentation.Types.Bindings;
+using NetExtender.WindowsPresentation.Utilities.Types;
 
-namespace NetExtender.UserInterface.WindowsPresentation.Types.ComboBoxes
+namespace NetExtender.UserInterface.WindowsPresentation
 {
     public class LocalizationSelectorComboBox : ComboBox
     {
+        static LocalizationSelectorComboBox()
+        {
+            SelectedValuePathProperty.OverrideMetadataDefaultValue<LocalizationSelectorComboBox>(nameof(LocalizationImageEntry<Any>.Identifier));
+        }
+        
         public LocalizationSelectorComboBox()
         {
-            SelectedValuePath = nameof(LocalizationImageEntry<Any>.Identifier);
             Initialized += OnInitialized;
         }
         

@@ -282,28 +282,28 @@ namespace NetExtender.Utilities.Types
             return !predicate(item) && collection.Remove(item);
         }
 
-        public static void AddRange<T>(this ICollection<T> collection, params T[] items)
+        public static void AddRange<T>(this ICollection<T> collection, params T[]? items)
         {
-            AddRange(collection, (IEnumerable<T>) items);
+            AddRange(collection, (IEnumerable<T>?) items);
         }
 
-        public static void AddRange<T>(this ICollection<T> collection, IEnumerable<T> source)
+        public static void AddRange<T>(this ICollection<T> collection, IEnumerable<T>? source)
         {
             if (collection is null)
             {
                 throw new ArgumentNullException(nameof(collection));
             }
-
-            if (source is null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-
+            
             if (collection.IsReadOnly)
             {
                 throw new NotSupportedException();
             }
-
+            
+            if (source is null)
+            {
+                return;
+            }
+            
             if (collection is List<T> list)
             {
                 list.AddRange(source);
@@ -316,21 +316,16 @@ namespace NetExtender.Utilities.Types
             }
         }
 
-        public static void Reload<T>(this ICollection<T> collection, params T[] items)
+        public static void Reload<T>(this ICollection<T> collection, params T[]? items)
         {
-            Reload(collection, (IEnumerable<T>) items);
+            Reload(collection, (IEnumerable<T>?) items);
         }
 
-        public static void Reload<T>(this ICollection<T> collection, IEnumerable<T> source)
+        public static void Reload<T>(this ICollection<T> collection, IEnumerable<T>? source)
         {
             if (collection is null)
             {
                 throw new ArgumentNullException(nameof(collection));
-            }
-
-            if (source is null)
-            {
-                throw new ArgumentNullException(nameof(source));
             }
             
             if (collection.IsReadOnly)
@@ -339,31 +334,35 @@ namespace NetExtender.Utilities.Types
             }
             
             collection.Clear();
-            collection.AddRange(source);
+            
+            if (source is not null)
+            {
+                collection.AddRange(source);
+            }
         }
 
-        public static void RemoveRange<T>(this ICollection<T> collection, params T[] items)
+        public static void RemoveRange<T>(this ICollection<T> collection, params T[]? items)
         {
-            RemoveRange(collection, (IEnumerable<T>) items);
+            RemoveRange(collection, (IEnumerable<T>?) items);
         }
 
-        public static void RemoveRange<T>(this ICollection<T> collection, IEnumerable<T> source)
+        public static void RemoveRange<T>(this ICollection<T> collection, IEnumerable<T>? source)
         {
             if (collection is null)
             {
                 throw new ArgumentNullException(nameof(collection));
             }
-
-            if (source is null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-
+            
             if (collection.IsReadOnly)
             {
                 throw new NotSupportedException();
             }
-
+            
+            if (source is null)
+            {
+                return;
+            }
+            
             foreach (T item in source)
             {
                 collection.Remove(item);
@@ -391,28 +390,28 @@ namespace NetExtender.Utilities.Types
             return result;
         }
 
-        public static Int32 RemoveAll<T>(this ICollection<T> collection, params T[] source)
+        public static Int32 RemoveAll<T>(this ICollection<T> collection, params T[]? source)
         {
-            return RemoveAll(collection, (IEnumerable<T>) source);
+            return RemoveAll(collection, (IEnumerable<T>?) source);
         }
 
-        public static Int32 RemoveAll<T>(this ICollection<T> collection, IEnumerable<T> source)
+        public static Int32 RemoveAll<T>(this ICollection<T> collection, IEnumerable<T>? source)
         {
             if (collection is null)
             {
                 throw new ArgumentNullException(nameof(collection));
             }
-
-            if (source is null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-
+            
             if (collection.IsReadOnly)
             {
                 throw new NotSupportedException();
             }
-
+            
+            if (source is null)
+            {
+                return 0;
+            }
+            
             Int32 count = 0;
             foreach (T item in source)
             {
@@ -516,6 +515,46 @@ namespace NetExtender.Utilities.Types
             for (Int32 i = index; i < array.Length && enumerator.MoveNext(); i++)
             {
                 array[i] = enumerator.Current;
+            }
+        }
+
+        public static void CopyTo<TSource, TResult>(this IEnumerable<TSource> source, TResult[] array, Func<TSource, TResult> selector)
+        {
+            CopyTo(source, array, 0, selector);
+        }
+
+        public static void CopyTo<TSource, TResult>(this IEnumerable<TSource> source, TResult[] array, Int32 index, Func<TSource, TResult> selector)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (array is null)
+            {
+                throw new ArgumentNullException(nameof(array));
+            }
+            
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+            
+            if (index < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(index), index, null);
+            }
+            
+            if (source is IReadOnlyCollection<TSource> count && count.Count + index > array.Length)
+            {
+                throw new ArgumentOutOfRangeException(nameof(array), array.Length, null);
+            }
+            
+            using IEnumerator<TSource> enumerator = source.GetEnumerator();
+
+            for (Int32 i = index; i < array.Length && enumerator.MoveNext(); i++)
+            {
+                array[i] = selector(enumerator.Current);
             }
         }
     }

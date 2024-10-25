@@ -193,7 +193,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.UserInterface.W
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.UserInterface.WindowsPresentation", "NetExtender.UserInterface.WindowsPresentation\NetExtender.UserInterface.WindowsPresentation.csproj", "{893248EA-B992-462C-AD27-628EB72EFF59}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.UserInterface.WindowsPresentation.Localization", "NetExtender.UserInterface.WindowsPresentation.Localization\NetExtender.UserInterface.WindowsPresentation.Localization.csproj", "{9BAFDC4C-6F4F-421E-BD4A-72B1B778EB7B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.UserInterface.WindowsPresentation.ExcelGrid", "NetExtender.UserInterface.WindowsPresentation.ExcelGrid\NetExtender.UserInterface.WindowsPresentation.ExcelGrid.csproj", "{CDE66263-E671-4140-BCB6-BFA9919EE687}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.UserInterface.WindowsPresentation.Localization", "NetExtender.UserInterface.WindowsPresentation.Localization\NetExtender.UserInterface.WindowsPresentation.Localization.csproj", "{9BAFDC4C-6F4F-421E-BD4A-72B1B778EB7B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.UserInterface.WindowsPresentationForms", "NetExtender.UserInterface.WindowsPresentationForms\NetExtender.UserInterface.WindowsPresentationForms.csproj", "{947201F3-F6F9-488F-934B-BA40166C9748}"
 EndProject
@@ -564,6 +566,11 @@ Global
                 {893248EA-B992-462C-AD27-628EB72EFF59}.Release|Any CPU.ActiveCfg = Release|Any CPU
                 {893248EA-B992-462C-AD27-628EB72EFF59}.Release|Any CPU.Build.0 = Release|Any CPU
 
+                {CDE66263-E671-4140-BCB6-BFA9919EE687}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+                {CDE66263-E671-4140-BCB6-BFA9919EE687}.Debug|Any CPU.Build.0 = Debug|Any CPU
+                {CDE66263-E671-4140-BCB6-BFA9919EE687}.Release|Any CPU.ActiveCfg = Release|Any CPU
+                {CDE66263-E671-4140-BCB6-BFA9919EE687}.Release|Any CPU.Build.0 = Release|Any CPU
+
                 {9BAFDC4C-6F4F-421E-BD4A-72B1B778EB7B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
                 {9BAFDC4C-6F4F-421E-BD4A-72B1B778EB7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
                 {9BAFDC4C-6F4F-421E-BD4A-72B1B778EB7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -756,6 +763,7 @@ Global
                 {879289F6-2ED8-48D7-AC55-C0528E036D88} = {FD7B50FD-1BB3-4D14-B9E6-BF0B09172F97}
                 {DD3793F2-6663-4150-8221-4CF7FF6BF120} = {FD7B50FD-1BB3-4D14-B9E6-BF0B09172F97}
                 {893248EA-B992-462C-AD27-628EB72EFF59} = {FD7B50FD-1BB3-4D14-B9E6-BF0B09172F97}
+                {CDE66263-E671-4140-BCB6-BFA9919EE687} = {FD7B50FD-1BB3-4D14-B9E6-BF0B09172F97}
                 {9BAFDC4C-6F4F-421E-BD4A-72B1B778EB7B} = {FD7B50FD-1BB3-4D14-B9E6-BF0B09172F97}
                 {947201F3-F6F9-488F-934B-BA40166C9748} = {FD7B50FD-1BB3-4D14-B9E6-BF0B09172F97}
                 {7AF8C949-E014-43DE-A0FE-4D49735536D9} = {FD7B50FD-1BB3-4D14-B9E6-BF0B09172F97}

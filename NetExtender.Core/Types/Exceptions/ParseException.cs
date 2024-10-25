@@ -2,6 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Runtime.Serialization;
 
 namespace NetExtender.Serialization
 {
@@ -47,6 +48,18 @@ namespace NetExtender.Serialization
             : base(message, exception)
         {
             Line = line;
+        }
+        
+        protected ParseException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
+            Line = info.GetInt32(nameof(Line));
+        }
+        
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue(nameof(Line), Line);
+            base.GetObjectData(info, context);
         }
     }
 }

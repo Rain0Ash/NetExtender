@@ -47,6 +47,15 @@ namespace NetExtender.Types.Dictionaries
             }
         }
         
+        private IEqualityComparer<TKey>? _comparer;
+        public IEqualityComparer<TKey> KeyComparer
+        {
+            get
+            {
+                return _comparer ??= Comparer.ToEqualityComparer();
+            }
+        }
+        
         Boolean ICollection<KeyValuePair<TKey, TValue>>.IsReadOnly
         {
             get
@@ -86,6 +95,11 @@ namespace NetExtender.Types.Dictionaries
 
         public NullableDictionary(IEnumerable<KeyValuePair<NullMaybe<TKey>, TValue>> collection, IEqualityComparer<NullMaybe<TKey>>? comparer)
             : base(collection, comparer)
+        {
+        }
+
+        public NullableDictionary(IEqualityComparer<TKey>? comparer)
+            : base(comparer?.ToNullMaybeEqualityComparer())
         {
         }
 

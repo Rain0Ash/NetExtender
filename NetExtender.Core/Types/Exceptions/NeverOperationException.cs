@@ -23,8 +23,8 @@ namespace NetExtender.Types.Exceptions
         {
         }
 
-        public NeverOperationException(String? message, Exception? innerException)
-            : base(message, innerException)
+        public NeverOperationException(String? message, Exception? exception)
+            : base(message, exception)
         {
         }
 

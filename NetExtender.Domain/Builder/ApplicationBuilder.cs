@@ -2,12 +2,19 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Reflection;
 using NetExtender.Domains.Builder.Interfaces;
+using NetExtender.Types.Exceptions;
 using NetExtender.Types.Middlewares;
 using NetExtender.Types.Middlewares.Interfaces;
+using NetExtender.Types.Reflection;
+using NetExtender.Types.Reflection.Interfaces;
+using NetExtender.Utilities.Core;
+using NetExtender.Utilities.IO;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Domains.Builder
@@ -50,6 +57,72 @@ namespace NetExtender.Domains.Builder
                 return true;
             }
         }
+        
+        public virtual ReflectionPatchThrow Patch
+        {
+            get
+            {
+                return ReflectionPatchThrow.Throw;
+            }
+        }
+        
+        protected virtual void Setup(ImmutableArray<String> arguments)
+        {
+            Arguments = arguments;
+            
+            switch (Patch)
+            {
+                case ReflectionPatchThrow.Ignore:
+                    return;
+                case ReflectionPatchThrow.Log:
+                    switch (ReflectionPatchUtilities.Failed.ToArray())
+                    {
+                        case { Length: 1 } patches:
+                        {
+                            (IReflectionPatchInfo patch, Exception? exception) = patches[0];
+                            $"Patch '{patch}' failed{(exception?.Message is { } message ? $":{Environment.NewLine}{message}" : ".")}".ToConsole(ConsoleColor.Red);
+                            return;
+                        }
+                        case { Length: > 1 } patches:
+                        {
+                            $"Patching failed:{Environment.NewLine}{String.Join($"{Environment.NewLine}    ", patches.Keys())}".ToConsole(ConsoleColor.Red);
+                            return;
+                        }
+                        default:
+                        {
+                            return;
+                        }
+                    }
+                case ReflectionPatchThrow.Throw:
+                case ReflectionPatchThrow.LogThrow:
+                    switch (ReflectionPatchUtilities.Failed.ToArray())
+                    {
+                        case { Length: 1 } patches:
+                        {
+                            (IReflectionPatchInfo patch, Exception? exception) = patches[0];
+                            throw new ReflectionOperationException($"Patch '{patch}' failed.", exception);
+                        }
+                        case { Length: > 1 } patches:
+                        {
+                            throw new AggregateException("Patching failed.", patches.Select(static pair => new ReflectionOperationException($"Patch '{pair.Key}' failed.", pair.Value)));
+                        }
+                        default:
+                        {
+                            return;
+                        }
+                    }
+                default:
+                    throw new EnumUndefinedOrNotSupportedException<ReflectionPatchThrow>(Patch, nameof(Patch), null);
+            }
+        }
+        
+        protected virtual void Finish()
+        {
+            if (Confidential)
+            {
+                Arguments = null;
+            }
+        }
 
         protected virtual T New(ImmutableArray<String> arguments)
         {
@@ -58,9 +131,10 @@ namespace NetExtender.Domains.Builder
 
         protected virtual TType New<TType>(ImmutableArray<String> arguments) where TType : class
         {
+            Setup(arguments);
+            
             try
             {
-                Arguments = arguments;
                 TType? instance = Activator.CreateInstance(typeof(TType), BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic) as TType;
                 return instance ?? throw new InvalidOperationException($"Can't create instance of {typeof(TType)} for builder");
             }
@@ -70,10 +144,7 @@ namespace NetExtender.Domains.Builder
             }
             finally
             {
-                if (Confidential)
-                {
-                    Arguments = null;
-                }
+                Finish();
             }
         }
         

@@ -14,18 +14,18 @@ namespace NetExtender.Types.Exceptions
         {
         }
 
-        public ArgumentNullOrWhiteSpaceStringException(String? value, String? message, Exception? innerException)
-            : base(value is null ? new ArgumentNullException(message, innerException) : new ArgumentWhiteSpaceStringException(message, innerException))
+        public ArgumentNullOrWhiteSpaceStringException(String? value, String? message, Exception? exception)
+            : base(value is null ? new ArgumentNullException(message, exception) : new ArgumentWhiteSpaceStringException(message, exception))
         {
         }
 
-        public ArgumentNullOrWhiteSpaceStringException(String? value, String? message, String? paramName)
-            : base(value is null ? new ArgumentNullException(paramName, message) : new ArgumentWhiteSpaceStringException(message, paramName))
+        public ArgumentNullOrWhiteSpaceStringException(String? value, String? message, String? parameter)
+            : base(value is null ? new ArgumentNullException(parameter, message) : new ArgumentWhiteSpaceStringException(message, parameter))
         {
         }
 
-        public ArgumentNullOrWhiteSpaceStringException(String? value, String? message, String? paramName, Exception? innerException)
-            : base(value is null ? new ArgumentNullException(message, innerException) : new ArgumentWhiteSpaceStringException(message, paramName, innerException))
+        public ArgumentNullOrWhiteSpaceStringException(String? value, String? message, String? parameter, Exception? exception)
+            : base(value is null ? new ArgumentNullException(message, exception) : new ArgumentWhiteSpaceStringException(message, parameter, exception))
         {
         }
 

@@ -209,7 +209,7 @@ namespace NetExtender.Utilities.Types
                 case 1:
                     return builder.Append(values[0]);
                 default:
-                    Int32 length = builder.Length + values.WhereNotNull().Sum(str => str.Length);
+                    Int32 length = builder.Length + values.WhereNotNull().Sum(static value => value.Length);
 
                     if (length > builder.MaxCapacity)
                     {
@@ -1795,7 +1795,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(builder));
             }
 
-            return builder.ToString().Split(separator, options).Select(str => new StringBuilder(str));
+            return builder.ToString().Split(separator, options).Select(static value => new StringBuilder(value));
         }
 
         public static IEnumerable<StringBuilder> Split(this StringBuilder builder, Char separator, Int32 count, StringSplitOptions options = StringSplitOptions.None)
@@ -1805,7 +1805,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(builder));
             }
 
-            return builder.ToString().Split(separator, count, options).Select(str => new StringBuilder(str));
+            return builder.ToString().Split(separator, count, options).Select(static value => new StringBuilder(value));
         }
 
         public static IEnumerable<StringBuilder> Split(this StringBuilder builder, params Char[]? separator)
@@ -1815,7 +1815,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(builder));
             }
 
-            return builder.ToString().Split(separator).Select(str => new StringBuilder(str));
+            return builder.ToString().Split(separator).Select(static value => new StringBuilder(value));
         }
 
         public static IEnumerable<StringBuilder> Split(this StringBuilder builder, Char[]? separator, Int32 count)
@@ -1825,7 +1825,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(builder));
             }
 
-            return builder.ToString().Split(separator, count).Select(str => new StringBuilder(str));
+            return builder.ToString().Split(separator, count).Select(static value => new StringBuilder(value));
         }
 
         public static IEnumerable<StringBuilder> Split(this StringBuilder builder, Char[]? separator, StringSplitOptions options)
@@ -1835,7 +1835,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(builder));
             }
 
-            return builder.ToString().Split(separator, options).Select(str => new StringBuilder(str));
+            return builder.ToString().Split(separator, options).Select(static value => new StringBuilder(value));
         }
 
         public static IEnumerable<StringBuilder> Split(this StringBuilder builder, Char[]? separator, Int32 count, StringSplitOptions options)
@@ -1845,7 +1845,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(builder));
             }
 
-            return builder.ToString().Split(separator, count, options).Select(str => new StringBuilder(str));
+            return builder.ToString().Split(separator, count, options).Select(static value => new StringBuilder(value));
         }
 
         public static IEnumerable<StringBuilder> Split(this StringBuilder builder, String? separator, StringSplitOptions options = StringSplitOptions.None)
@@ -1855,7 +1855,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(builder));
             }
 
-            return builder.ToString().Split(separator, options).Select(str => new StringBuilder(str));
+            return builder.ToString().Split(separator, options).Select(static value => new StringBuilder(value));
         }
 
         public static IEnumerable<StringBuilder> Split(this StringBuilder builder, String? separator, Int32 count, StringSplitOptions options = StringSplitOptions.None)
@@ -1865,7 +1865,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(builder));
             }
 
-            return builder.ToString().Split(separator, count, options).Select(str => new StringBuilder(str));
+            return builder.ToString().Split(separator, count, options).Select(static value => new StringBuilder(value));
         }
 
         public static IEnumerable<StringBuilder> Split(this StringBuilder builder, String[]? separator, StringSplitOptions options)
@@ -1875,7 +1875,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(builder));
             }
 
-            return builder.ToString().Split(separator, options).Select(str => new StringBuilder(str));
+            return builder.ToString().Split(separator, options).Select(static value => new StringBuilder(value));
         }
 
         public static IEnumerable<StringBuilder> Split(this StringBuilder builder, String[]? separator, Int32 count, StringSplitOptions options)
@@ -1885,7 +1885,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(builder));
             }
 
-            return builder.ToString().Split(separator, count, options).Select(str => new StringBuilder(str));
+            return builder.ToString().Split(separator, count, options).Select(static value => new StringBuilder(value));
         }
 
         public static StringBuilder Replace(this StringBuilder builder, Char before, Char after)

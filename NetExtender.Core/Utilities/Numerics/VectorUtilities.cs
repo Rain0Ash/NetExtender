@@ -180,7 +180,7 @@ namespace NetExtender.Utilities.Numerics
 
         /// <inheritdoc cref="Vector.Subtract{T}"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Vector<T> Substract<T>(this Vector<T> first, Vector<T> second) where T : struct
+        public static Vector<T> Subtract<T>(this Vector<T> first, Vector<T> second) where T : struct
         {
             return Vector.Subtract(first, second);
         }

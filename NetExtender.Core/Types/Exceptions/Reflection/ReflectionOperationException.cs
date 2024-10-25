@@ -18,8 +18,8 @@ namespace NetExtender.Types.Exceptions
         {
         }
         
-        public ReflectionExampleException(String? message, Exception? innerException)
-            : base(message ?? Message, innerException)
+        public ReflectionExampleException(String? message, Exception? exception)
+            : base(message ?? Message, exception)
         {
         }
         
@@ -44,8 +44,8 @@ namespace NetExtender.Types.Exceptions
         {
         }
         
-        public NotSupportedReflectionException(String? message, Exception? innerException)
-            : base(message ?? Message, innerException)
+        public NotSupportedReflectionException(String? message, Exception? exception)
+            : base(message ?? Message, exception)
         {
         }
         
@@ -70,8 +70,8 @@ namespace NetExtender.Types.Exceptions
         {
         }
         
-        public ReflectionOperationException(String? message, Exception? innerException)
-            : base(message ?? Message, innerException)
+        public ReflectionOperationException(String? message, Exception? exception)
+            : base(message ?? Message, exception)
         {
         }
         

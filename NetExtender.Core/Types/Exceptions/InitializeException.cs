@@ -18,18 +18,18 @@ namespace NetExtender.Types.Exceptions
         {
         }
 
-        public AlreadyInitializedException(String? message, Exception? innerException)
-            : base(message, innerException)
+        public AlreadyInitializedException(String? message, Exception? exception)
+            : base(message, exception)
         {
         }
 
-        public AlreadyInitializedException(String? message, String? paramName)
-            : base(message, paramName)
+        public AlreadyInitializedException(String? message, String? parameter)
+            : base(message, parameter)
         {
         }
 
-        public AlreadyInitializedException(String? message, String? paramName, Exception? innerException)
-            : base(message, paramName, innerException)
+        public AlreadyInitializedException(String? message, String? parameter, Exception? exception)
+            : base(message, parameter, exception)
         {
         }
 
@@ -51,18 +51,18 @@ namespace NetExtender.Types.Exceptions
         {
         }
 
-        public NotInitializedException(String? message, Exception? innerException)
-            : base(message, innerException)
+        public NotInitializedException(String? message, Exception? exception)
+            : base(message, exception)
         {
         }
 
-        public NotInitializedException(String? message, String? paramName)
-            : base(message, paramName)
+        public NotInitializedException(String? message, String? parameter)
+            : base(message, parameter)
         {
         }
 
-        public NotInitializedException(String? message, String? paramName, Exception? innerException)
-            : base(message, paramName, innerException)
+        public NotInitializedException(String? message, String? parameter, Exception? exception)
+            : base(message, parameter, exception)
         {
         }
 
@@ -84,18 +84,18 @@ namespace NetExtender.Types.Exceptions
         {
         }
 
-        public InvalidInitializationException(String? message, Exception? innerException)
-            : base(message, innerException)
+        public InvalidInitializationException(String? message, Exception? exception)
+            : base(message, exception)
         {
         }
 
-        public InvalidInitializationException(String? message, String? paramName)
-            : base(message, paramName)
+        public InvalidInitializationException(String? message, String? parameter)
+            : base(message, parameter)
         {
         }
 
-        public InvalidInitializationException(String? message, String? paramName, Exception? innerException)
-            : base(message, paramName, innerException)
+        public InvalidInitializationException(String? message, String? parameter, Exception? exception)
+            : base(message, parameter, exception)
         {
         }
 
@@ -117,18 +117,18 @@ namespace NetExtender.Types.Exceptions
         {
         }
 
-        public InitializeException(String? message, Exception? innerException)
-            : base(message, innerException)
+        public InitializeException(String? message, Exception? exception)
+            : base(message, exception)
         {
         }
 
-        public InitializeException(String? message, String? paramName)
-            : base(message, paramName)
+        public InitializeException(String? message, String? parameter)
+            : base(message, parameter)
         {
         }
 
-        public InitializeException(String? message, String? paramName, Exception? innerException)
-            : base(message, paramName, innerException)
+        public InitializeException(String? message, String? parameter, Exception? exception)
+            : base(message, parameter, exception)
         {
         }
 

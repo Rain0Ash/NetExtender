@@ -164,8 +164,8 @@ namespace NetExtender.Types.Network
                     
                     if (consumed > index)
                     {
-                        String str = Encoding.UTF8.GetString(buffer, index, consumed - index);
-                        current.Append(str);
+                        String value = Encoding.UTF8.GetString(buffer, index, consumed - index);
+                        current.Append(value);
                     }
                     
                     current.Append('.');

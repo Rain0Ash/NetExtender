@@ -26,9 +26,9 @@ namespace NetExtender.Types.Exceptions
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static EnumNotSupportedException<T, TEnum> Create(TEnum value, String? message, System.Exception? innerException)
+        public static EnumNotSupportedException<T, TEnum> Create(TEnum value, String? message, System.Exception? exception)
         {
-            return new Exception(value, message, innerException);
+            return new Exception(value, message, exception);
         }
         
         [return: NotNullIfNotNull("exception")]
@@ -72,8 +72,8 @@ namespace NetExtender.Types.Exceptions
         {
         }
 
-        protected EnumNotSupportedException(String? message, System.Exception? innerException)
-            : base(message, innerException)
+        protected EnumNotSupportedException(String? message, System.Exception? exception)
+            : base(message, exception)
         {
         }
 
@@ -98,8 +98,8 @@ namespace NetExtender.Types.Exceptions
                 Enum = value;
             }
 
-            public Exception(TEnum value, String? message, System.Exception? innerException)
-                : base(value is not null ? message ?? $"Specified value '{value}' of enum type '{value.Underlying}' is not supported." : throw new ArgumentNullException(nameof(value)), innerException)
+            public Exception(TEnum value, String? message, System.Exception? exception)
+                : base(value is not null ? message ?? $"Specified value '{value}' of enum type '{value.Underlying}' is not supported." : throw new ArgumentNullException(nameof(value)), exception)
             {
                 Enum = value;
             }
@@ -134,9 +134,9 @@ namespace NetExtender.Types.Exceptions
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static EnumNotSupportedException<T> Create(T value, String? message, System.Exception? innerException)
+        public static EnumNotSupportedException<T> Create(T value, String? message, System.Exception? exception)
         {
-            return new Exception(value, message, innerException);
+            return new Exception(value, message, exception);
         }
         
         public static implicit operator T(EnumNotSupportedException<T>? exception)
@@ -171,8 +171,8 @@ namespace NetExtender.Types.Exceptions
         {
         }
 
-        protected EnumNotSupportedException(String? message, System.Exception? innerException)
-            : base(message, innerException)
+        protected EnumNotSupportedException(String? message, System.Exception? exception)
+            : base(message, exception)
         {
         }
 
@@ -197,8 +197,8 @@ namespace NetExtender.Types.Exceptions
                 Value = value;
             }
 
-            public Exception(T value, String? message, System.Exception? innerException)
-                : base(message ?? $"Specified value '{value}' of enum type '{typeof(T)}' is not supported.", innerException)
+            public Exception(T value, String? message, System.Exception? exception)
+                : base(message ?? $"Specified value '{value}' of enum type '{typeof(T)}' is not supported.", exception)
             {
                 Value = value;
             }
@@ -245,8 +245,8 @@ namespace NetExtender.Types.Exceptions
         {
         }
 
-        protected EnumNotSupportedException(String? message, Exception? innerException)
-            : base(message, innerException)
+        protected EnumNotSupportedException(String? message, Exception? exception)
+            : base(message, exception)
         {
         }
 

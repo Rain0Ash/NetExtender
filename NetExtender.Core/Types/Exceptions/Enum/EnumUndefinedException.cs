@@ -20,21 +20,21 @@ namespace NetExtender.Types.Exceptions
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static EnumUndefinedException<T, TEnum> Create(TEnum value, String? paramName)
+        public static EnumUndefinedException<T, TEnum> Create(TEnum value, String? parameter)
         {
-            return new Exception(value, paramName);
+            return new Exception(value, parameter);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static EnumUndefinedException<T, TEnum> Create(TEnum value, String? message, System.Exception? innerException)
+        public static EnumUndefinedException<T, TEnum> Create(TEnum value, String? message, System.Exception? exception)
         {
-            return new Exception(value, message, innerException);
+            return new Exception(value, message, exception);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static EnumUndefinedException<T, TEnum> Create(TEnum value, String? paramName, String? message)
+        public static EnumUndefinedException<T, TEnum> Create(TEnum value, String? parameter, String? message)
         {
-            return new Exception(value, paramName, message);
+            return new Exception(value, parameter, message);
         }
 
         public static implicit operator T(EnumUndefinedException<T, TEnum>? exception)
@@ -72,23 +72,23 @@ namespace NetExtender.Types.Exceptions
         {
         }
 
-        protected EnumUndefinedException(String? paramName)
-            : base(paramName)
+        protected EnumUndefinedException(String? parameter)
+            : base(parameter)
         {
         }
 
-        protected EnumUndefinedException(String? message, System.Exception? innerException)
-            : base(message, innerException)
+        protected EnumUndefinedException(String? message, System.Exception? exception)
+            : base(message, exception)
         {
         }
 
-        protected EnumUndefinedException(String? paramName, T value, String? message)
-            : base(paramName, value, message)
+        protected EnumUndefinedException(String? parameter, T value, String? message)
+            : base(parameter, value, message)
         {
         }
 
-        protected EnumUndefinedException(String? paramName, String? message)
-            : base(paramName, message)
+        protected EnumUndefinedException(String? parameter, String? message)
+            : base(parameter, message)
         {
         }
 
@@ -108,19 +108,19 @@ namespace NetExtender.Types.Exceptions
                 Enum = value;
             }
 
-            public Exception(TEnum value, String? paramName)
-                : this(value, paramName, (String?) null)
+            public Exception(TEnum value, String? parameter)
+                : this(value, parameter, (String?) null)
             {
             }
 
-            public Exception(TEnum value, String? message, System.Exception? innerException)
-                : base(value is not null ? message ?? $"Specified value '{value}' was out of the range of valid values of enum type '{value.Underlying}'." : throw new ArgumentNullException(nameof(value)), innerException)
+            public Exception(TEnum value, String? message, System.Exception? exception)
+                : base(value is not null ? message ?? $"Specified value '{value}' was out of the range of valid values of enum type '{value.Underlying}'." : throw new ArgumentNullException(nameof(value)), exception)
             {
                 Enum = value;
             }
 
-            public Exception(TEnum value, String? paramName, String? message)
-                : base(paramName, value, value is not null ? message ?? $"Specified value '{value}' was out of the range of valid values of enum type '{value.Underlying}'." : throw new ArgumentNullException(nameof(value)))
+            public Exception(TEnum value, String? parameter, String? message)
+                : base(parameter, value, value is not null ? message ?? $"Specified value '{value}' was out of the range of valid values of enum type '{value.Underlying}'." : throw new ArgumentNullException(nameof(value)))
             {
                 Enum = value;
             }
@@ -149,21 +149,21 @@ namespace NetExtender.Types.Exceptions
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static EnumUndefinedException<T> Create(T value, String? paramName)
+        public static EnumUndefinedException<T> Create(T value, String? parameter)
         {
-            return new Exception(value, paramName);
+            return new Exception(value, parameter);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static EnumUndefinedException<T> Create(T value, String? message, System.Exception? innerException)
+        public static EnumUndefinedException<T> Create(T value, String? message, System.Exception? exception)
         {
-            return new Exception(value, message, innerException);
+            return new Exception(value, message, exception);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static EnumUndefinedException<T> Create(T value, String? paramName, String? message)
+        public static EnumUndefinedException<T> Create(T value, String? parameter, String? message)
         {
-            return new Exception(value, paramName, message);
+            return new Exception(value, parameter, message);
         }
 
         public static implicit operator T(EnumUndefinedException<T>? exception)
@@ -193,23 +193,23 @@ namespace NetExtender.Types.Exceptions
         {
         }
 
-        protected EnumUndefinedException(String? paramName)
-            : base(paramName)
+        protected EnumUndefinedException(String? parameter)
+            : base(parameter)
         {
         }
 
-        protected EnumUndefinedException(String? message, System.Exception? innerException)
-            : base(message, innerException)
+        protected EnumUndefinedException(String? message, System.Exception? exception)
+            : base(message, exception)
         {
         }
 
-        protected EnumUndefinedException(String? paramName, T value, String? message)
-            : base(paramName, value, message)
+        protected EnumUndefinedException(String? parameter, T value, String? message)
+            : base(parameter, value, message)
         {
         }
 
-        protected EnumUndefinedException(String? paramName, String? message)
-            : base(paramName, message)
+        protected EnumUndefinedException(String? parameter, String? message)
+            : base(parameter, message)
         {
         }
 
@@ -229,19 +229,19 @@ namespace NetExtender.Types.Exceptions
                 Value = value;
             }
 
-            public Exception(T value, String? paramName)
-                : this(value, paramName, (String?) null)
+            public Exception(T value, String? parameter)
+                : this(value, parameter, (String?) null)
             {
             }
 
-            public Exception(T value, String? message, System.Exception? innerException)
-                : base(message ?? $"Specified value '{value}' was out of the range of valid values of enum type '{typeof(T)}'.", innerException)
+            public Exception(T value, String? message, System.Exception? exception)
+                : base(message ?? $"Specified value '{value}' was out of the range of valid values of enum type '{typeof(T)}'.", exception)
             {
                 Value = value;
             }
 
-            public Exception(T value, String? paramName, String? message)
-                : base(paramName, value, message ?? $"Specified value '{value}' was out of the range of valid values of enum type '{typeof(T)}'.")
+            public Exception(T value, String? parameter, String? message)
+                : base(parameter, value, message ?? $"Specified value '{value}' was out of the range of valid values of enum type '{typeof(T)}'.")
             {
                 Value = value;
             }
@@ -283,23 +283,23 @@ namespace NetExtender.Types.Exceptions
         {
         }
 
-        protected EnumUndefinedException(String? paramName)
-            : base(paramName)
+        protected EnumUndefinedException(String? parameter)
+            : base(parameter)
         {
         }
 
-        protected EnumUndefinedException(String? message, Exception? innerException)
-            : base(message ?? "Specified value was out of the range of valid values of enum.", innerException)
+        protected EnumUndefinedException(String? message, Exception? exception)
+            : base(message ?? "Specified value was out of the range of valid values of enum.", exception)
         {
         }
 
-        protected EnumUndefinedException(String? paramName, Enum? value, String? message)
-            : base(paramName, value, message is null && value is not null ? $"Specified value '{value}' was out of the range of valid values of enum type '{value.GetType()}'." : message)
+        protected EnumUndefinedException(String? parameter, Enum? value, String? message)
+            : base(parameter, value, message is null && value is not null ? $"Specified value '{value}' was out of the range of valid values of enum type '{value.GetType()}'." : message)
         {
         }
 
-        protected EnumUndefinedException(String? paramName, String? message)
-            : base(paramName, message ?? "Specified value was out of the range of valid values of enum.")
+        protected EnumUndefinedException(String? parameter, String? message)
+            : base(parameter, message ?? "Specified value was out of the range of valid values of enum.")
         {
         }
 

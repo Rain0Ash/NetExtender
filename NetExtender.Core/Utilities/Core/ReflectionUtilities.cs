@@ -2,8 +2,10 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -17,7 +19,6 @@ using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
-using HarmonyLib;
 using NetExtender.Types.Anonymous;
 using NetExtender.Types.Assemblies;
 using NetExtender.Types.Assemblies.Interfaces;
@@ -196,6 +197,7 @@ namespace NetExtender.Utilities.Core
         private static HashSet<Type> VarArgTypes { get; }
         private static Predicate<Type> IsByRefLikePredicate { get; }
         public static Boolean AssemblyLoadCallStaticConstructor { get; set; }
+        public static event EmptyHandler? Reset;
 
         static ReflectionUtilities()
         {
@@ -206,10 +208,13 @@ namespace NetExtender.Utilities.Core
             
             Scan().ContinueWith(static _ =>
             {
-                if (scanningset.Count <= 0)
+                if (scanningset.Count > 0)
                 {
-                    inherit.Reset(InheritEvaluator.Create);
+                    return;
                 }
+                
+                inherit.Reset(InheritEvaluator.Create);
+                Reset?.Invoke();
             });
 
             AppDomain.CurrentDomain.AssemblyLoad += OnAssemblyLoad;
@@ -244,10 +249,13 @@ namespace NetExtender.Utilities.Core
 
             await Task.WhenAll(scanningbag).ContinueWith(static () =>
             {
-                if (scanningset.Count <= 0)
+                if (scanningset.Count > 0)
                 {
-                    inherit.Reset(InheritEvaluator.Create);
+                    return;
                 }
+                
+                inherit.Reset(InheritEvaluator.Create);
+                Reset?.Invoke();
             });
         }
         
@@ -323,6 +331,43 @@ namespace NetExtender.Utilities.Core
             return simple ? AssignStorage<TFrom, TTo>.Simple : AssignStorage<TFrom, TTo>.Assign;
         }
         
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        [return: NotNullIfNotNull("source")]
+        public static Type? BiggestCommonType(this IEnumerable? source)
+        {
+            if (source is null)
+            {
+                return null;
+            }
+            
+            Type? result = null;
+            foreach (Object? item in source)
+            {
+                if (item?.GetType() is not { } type)
+                {
+                    continue;
+                }
+                
+                if (result is null)
+                {
+                    result = type;
+                    continue;
+                }
+                
+                while (result?.BaseType is not null && !result.IsAssignableFrom(type))
+                {
+                    result = result.BaseType;
+                }
+            }
+            
+            return result switch
+            {
+                null when source is IList list => list.AsQueryable().ElementType,
+                null => typeof(Object),
+                _ => result
+            };
+        }
+        
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String Join(params String[] values)
         {
@@ -361,7 +406,8 @@ namespace NetExtender.Utilities.Core
 
             return VarArgTypes.Contains(type);
         }
-
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsStackOnly(this Type type)
         {
             if (type is null)
@@ -371,7 +417,8 @@ namespace NetExtender.Utilities.Core
 
             return type.IsByRef || type.IsVarArgType() || IsByRefLikePredicate.Invoke(type);
         }
-
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsBoxable(this Type type)
         {
             if (type is null)
@@ -381,7 +428,8 @@ namespace NetExtender.Utilities.Core
 
             return !type.IsPointer && !type.IsStackOnly();
         }
-
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsILBoxable(this Type type)
         {
             if (type is null)
@@ -391,7 +439,8 @@ namespace NetExtender.Utilities.Core
 
             return type.IsBoxable() || type.IsByRef || type.IsPointer;
         }
-
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsAssignableFrom<T>(this Type type)
         {
             if (type is null)
@@ -401,7 +450,8 @@ namespace NetExtender.Utilities.Core
 
             return type.IsAssignableFrom(typeof(T));
         }
-
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsAssignableFrom<T>(this TypeInfo type)
         {
             if (type is null)
@@ -411,7 +461,8 @@ namespace NetExtender.Utilities.Core
 
             return type.IsAssignableFrom(typeof(T).GetTypeInfo());
         }
-
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsAssignableTo<T>(this Type type)
         {
             if (type is null)
@@ -421,7 +472,8 @@ namespace NetExtender.Utilities.Core
 
             return type.IsAssignableTo(typeof(T));
         }
-
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsAssignableTo<T>(this TypeInfo type)
         {
             if (type is null)
@@ -431,7 +483,8 @@ namespace NetExtender.Utilities.Core
 
             return type.IsAssignableTo(typeof(T).GetTypeInfo());
         }
-
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsSameAsOrSubclassOf(this Type type, Type other)
         {
             if (type is null)
@@ -446,7 +499,8 @@ namespace NetExtender.Utilities.Core
 
             return type == other || type.IsSubclassOf(other);
         }
-
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsSameAsOrSubclassOf(this TypeInfo type, Type other)
         {
             if (type is null)
@@ -461,7 +515,8 @@ namespace NetExtender.Utilities.Core
 
             return type.AsType() == other || type.IsSubclassOf(other);
         }
-
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsSameAsOrSubclassOf<T>(this Type type)
         {
             if (type is null)
@@ -471,7 +526,8 @@ namespace NetExtender.Utilities.Core
 
             return type.IsSameAsOrSubclassOf(typeof(T));
         }
-
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsSameAsOrSubclassOf<T>(this TypeInfo type)
         {
             if (type is null)
@@ -481,7 +537,8 @@ namespace NetExtender.Utilities.Core
 
             return type.IsSameAsOrSubclassOf(typeof(T));
         }
-
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsGenericTypeDefinedAs(this Type type, Type? other)
         {
             if (type is null)
@@ -496,7 +553,8 @@ namespace NetExtender.Utilities.Core
 
             return type.GetGenericTypeDefinition() == other;
         }
-
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsGenericTypeDefinedAs(this TypeInfo type, Type? other)
         {
             if (type is null)
@@ -511,7 +569,8 @@ namespace NetExtender.Utilities.Core
 
             return type.GetGenericTypeDefinition() == other;
         }
-
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Int32 GetGenericArgumentsCount(this Type type)
         {
             if (type is null)
@@ -521,7 +580,8 @@ namespace NetExtender.Utilities.Core
 
             return type.IsGenericType ? type.GetGenericArguments().Length : 0;
         }
-
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean HasInterface<T>(this Type type) where T : class
         {
             if (type is null)
@@ -531,7 +591,8 @@ namespace NetExtender.Utilities.Core
 
             return type.HasInterface(typeof(T));
         }
-
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean HasInterface<T>(this TypeInfo type) where T : class
         {
             if (type is null)
@@ -541,7 +602,8 @@ namespace NetExtender.Utilities.Core
 
             return type.HasInterface(typeof(T));
         }
-
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean HasInterface(this Type type, Type @interface)
         {
             if (type is null)
@@ -556,7 +618,8 @@ namespace NetExtender.Utilities.Core
 
             return type.GetInterfaces().Contains(@interface);
         }
-
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean HasInterface(this TypeInfo type, Type @interface)
         {
             if (type is null)
@@ -787,7 +850,7 @@ namespace NetExtender.Utilities.Core
                 throw new TypeAccessException();
             }
 
-            return declaring.IsVisible && !declaring.IsSealed && !method.IsStatic && (method.IsPublic || method.IsFamily || method.IsFamilyOrAssembly);
+            return declaring is { IsVisible: true, IsSealed: false } && !method.IsStatic && (method.IsPublic || method.IsFamily || method.IsFamilyOrAssembly);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1049,6 +1112,947 @@ namespace NetExtender.Utilities.Core
             return info.GetCustomAttributes(typeof(T), inherit).OfType<T>();
         }
         
+        public static List<Object> FilterOnBrowsableAttribute<T>(T source) where T : IEnumerable
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            List<Object> result = new List<Object>();
+
+            foreach (Object? @object in source)
+            {
+                if (@object is null)
+                {
+                    continue;
+                }
+                
+                const BindingFlags binding = BindingFlags.Static | BindingFlags.Public | BindingFlags.GetField;
+                if (@object.ToString() is not { Length: > 0 } name || @object.GetType().GetField(name, binding) is not { } field)
+                {
+                    result.Add(@object);
+                    continue;
+                }
+                
+                if (field.GetCustomAttributes<BrowsableAttribute>(true).FirstOrDefault() is not { } browsable || browsable.Browsable)
+                {
+                    result.Add(@object);
+                }
+            }
+
+            return result;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<MemberInfo> GetMembers(this Type type, Type attribute)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+            
+            if (attribute is null)
+            {
+                throw new ArgumentNullException(nameof(attribute));
+            }
+            
+            foreach (MemberInfo member in type.GetMembers())
+            {
+                if (member.HasAttribute(attribute))
+                {
+                    yield return member;
+                }
+            }
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<MemberInfo> GetMembers(this Type type, Type attribute, Boolean inherit)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+            
+            if (attribute is null)
+            {
+                throw new ArgumentNullException(nameof(attribute));
+            }
+            
+            foreach (MemberInfo member in type.GetMembers())
+            {
+                if (member.HasAttribute(attribute, inherit))
+                {
+                    yield return member;
+                }
+            }
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<MemberInfo> GetMembers(this Type type, Type attribute, BindingFlags binding)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+            
+            if (attribute is null)
+            {
+                throw new ArgumentNullException(nameof(attribute));
+            }
+            
+            foreach (MemberInfo member in type.GetMembers(binding))
+            {
+                if (member.HasAttribute(attribute))
+                {
+                    yield return member;
+                }
+            }
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<MemberInfo> GetMembers(this Type type, Type attribute, BindingFlags binding, Boolean inherit)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+            
+            if (attribute is null)
+            {
+                throw new ArgumentNullException(nameof(attribute));
+            }
+            
+            foreach (MemberInfo member in type.GetMembers(binding))
+            {
+                if (member.HasAttribute(attribute, inherit))
+                {
+                    yield return member;
+                }
+            }
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<MemberInfo> GetMembers<TAttribute>(this Type type) where TAttribute : Attribute
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+            
+            MemberInfo[] members = type.GetMembers();
+            return members.Where(static member => member.HasAttribute<TAttribute>());
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<MemberInfo> GetMembers<TAttribute>(this Type type, Boolean inherit) where TAttribute : Attribute
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+            
+            MemberInfo[] members = type.GetMembers();
+            return inherit ? members.Where(static member => member.HasAttribute<TAttribute>(false)) : members.Where(static member => member.HasAttribute<TAttribute>(true));
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<MemberInfo> GetMembers<TAttribute>(this Type type, BindingFlags binding) where TAttribute : Attribute
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+            
+            MemberInfo[] members = type.GetMembers(binding);
+            return members.Where(static member => member.HasAttribute<TAttribute>());
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<MemberInfo> GetMembers<TAttribute>(this Type type, BindingFlags binding, Boolean inherit) where TAttribute : Attribute
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+            
+            MemberInfo[] members = type.GetMembers(binding);
+            return inherit ? members.Where(static member => member.HasAttribute<TAttribute>(false)) : members.Where(static member => member.HasAttribute<TAttribute>(true));
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<FieldInfo> GetFields(this Type type, Type attribute)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+            
+            if (attribute is null)
+            {
+                throw new ArgumentNullException(nameof(attribute));
+            }
+            
+            foreach (FieldInfo field in type.GetFields())
+            {
+                if (field.HasAttribute(attribute))
+                {
+                    yield return field;
+                }
+            }
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<FieldInfo> GetFields(this Type type, Type attribute, Boolean inherit)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+            
+            if (attribute is null)
+            {
+                throw new ArgumentNullException(nameof(attribute));
+            }
+            
+            foreach (FieldInfo field in type.GetFields())
+            {
+                if (field.HasAttribute(attribute, inherit))
+                {
+                    yield return field;
+                }
+            }
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<FieldInfo> GetFields(this Type type, Type attribute, BindingFlags binding)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+            
+            if (attribute is null)
+            {
+                throw new ArgumentNullException(nameof(attribute));
+            }
+            
+            foreach (FieldInfo field in type.GetFields(binding))
+            {
+                if (field.HasAttribute(attribute))
+                {
+                    yield return field;
+                }
+            }
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<FieldInfo> GetFields(this Type type, Type attribute, BindingFlags binding, Boolean inherit)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+            
+            if (attribute is null)
+            {
+                throw new ArgumentNullException(nameof(attribute));
+            }
+            
+            foreach (FieldInfo field in type.GetFields(binding))
+            {
+                if (field.HasAttribute(attribute, inherit))
+                {
+                    yield return field;
+                }
+            }
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<FieldInfo> GetFields<TAttribute>(this Type type) where TAttribute : Attribute
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+            
+            FieldInfo[] fields = type.GetFields();
+            return fields.Where(static field => field.HasAttribute<TAttribute>());
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<FieldInfo> GetFields<TAttribute>(this Type type, Boolean inherit) where TAttribute : Attribute
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+            
+            FieldInfo[] fields = type.GetFields();
+            return inherit ? fields.Where(static field => field.HasAttribute<TAttribute>(false)) : fields.Where(static field => field.HasAttribute<TAttribute>(true));
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<FieldInfo> GetFields<TAttribute>(this Type type, BindingFlags binding) where TAttribute : Attribute
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+            
+            FieldInfo[] fields = type.GetFields(binding);
+            return fields.Where(static field => field.HasAttribute<TAttribute>());
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<FieldInfo> GetFields<TAttribute>(this Type type, BindingFlags binding, Boolean inherit) where TAttribute : Attribute
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+            
+            FieldInfo[] fields = type.GetFields(binding);
+            return inherit ? fields.Where(static field => field.HasAttribute<TAttribute>(false)) : fields.Where(static field => field.HasAttribute<TAttribute>(true));
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<PropertyInfo> GetProperties(this Type type, Type attribute)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+            
+            if (attribute is null)
+            {
+                throw new ArgumentNullException(nameof(attribute));
+            }
+            
+            foreach (PropertyInfo property in type.GetProperties())
+            {
+                if (property.HasAttribute(attribute))
+                {
+                    yield return property;
+                }
+            }
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<PropertyInfo> GetProperties(this Type type, Type attribute, Boolean inherit)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+            
+            if (attribute is null)
+            {
+                throw new ArgumentNullException(nameof(attribute));
+            }
+            
+            foreach (PropertyInfo property in type.GetProperties())
+            {
+                if (property.HasAttribute(attribute, inherit))
+                {
+                    yield return property;
+                }
+            }
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<PropertyInfo> GetProperties(this Type type, Type attribute, BindingFlags binding)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+            
+            if (attribute is null)
+            {
+                throw new ArgumentNullException(nameof(attribute));
+            }
+            
+            foreach (PropertyInfo property in type.GetProperties(binding))
+            {
+                if (property.HasAttribute(attribute))
+                {
+                    yield return property;
+                }
+            }
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<PropertyInfo> GetProperties(this Type type, Type attribute, BindingFlags binding, Boolean inherit)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+            
+            if (attribute is null)
+            {
+                throw new ArgumentNullException(nameof(attribute));
+            }
+            
+            foreach (PropertyInfo property in type.GetProperties(binding))
+            {
+                if (property.HasAttribute(attribute, inherit))
+                {
+                    yield return property;
+                }
+            }
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<PropertyInfo> GetProperties<TAttribute>(this Type type) where TAttribute : Attribute
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+            
+            PropertyInfo[] properties = type.GetProperties();
+            return properties.Where(static property => property.HasAttribute<TAttribute>());
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<PropertyInfo> GetProperties<TAttribute>(this Type type, Boolean inherit) where TAttribute : Attribute
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+            
+            PropertyInfo[] properties = type.GetProperties();
+            return inherit ? properties.Where(static property => property.HasAttribute<TAttribute>(false)) : properties.Where(static property => property.HasAttribute<TAttribute>(true));
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<PropertyInfo> GetProperties<TAttribute>(this Type type, BindingFlags binding) where TAttribute : Attribute
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+            
+            PropertyInfo[] properties = type.GetProperties(binding);
+            return properties.Where(static property => property.HasAttribute<TAttribute>());
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<PropertyInfo> GetProperties<TAttribute>(this Type type, BindingFlags binding, Boolean inherit) where TAttribute : Attribute
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+            
+            PropertyInfo[] properties = type.GetProperties(binding);
+            return inherit ? properties.Where(static property => property.HasAttribute<TAttribute>(false)) : properties.Where(static property => property.HasAttribute<TAttribute>(true));
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<EventInfo> GetEvents(this Type type, Type attribute)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+            
+            if (attribute is null)
+            {
+                throw new ArgumentNullException(nameof(attribute));
+            }
+            
+            foreach (EventInfo @event in type.GetEvents())
+            {
+                if (@event.HasAttribute(attribute))
+                {
+                    yield return @event;
+                }
+            }
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<EventInfo> GetEvents(this Type type, Type attribute, Boolean inherit)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+            
+            if (attribute is null)
+            {
+                throw new ArgumentNullException(nameof(attribute));
+            }
+            
+            foreach (EventInfo @event in type.GetEvents())
+            {
+                if (@event.HasAttribute(attribute, inherit))
+                {
+                    yield return @event;
+                }
+            }
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<EventInfo> GetEvents(this Type type, Type attribute, BindingFlags binding)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+            
+            if (attribute is null)
+            {
+                throw new ArgumentNullException(nameof(attribute));
+            }
+            
+            foreach (EventInfo @event in type.GetEvents(binding))
+            {
+                if (@event.HasAttribute(attribute))
+                {
+                    yield return @event;
+                }
+            }
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<EventInfo> GetEvents(this Type type, Type attribute, BindingFlags binding, Boolean inherit)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+            
+            if (attribute is null)
+            {
+                throw new ArgumentNullException(nameof(attribute));
+            }
+            
+            foreach (EventInfo @event in type.GetEvents(binding))
+            {
+                if (@event.HasAttribute(attribute, inherit))
+                {
+                    yield return @event;
+                }
+            }
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<EventInfo> GetEvents<TAttribute>(this Type type) where TAttribute : Attribute
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+            
+            EventInfo[] events = type.GetEvents();
+            return events.Where(static @event => @event.HasAttribute<TAttribute>());
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<EventInfo> GetEvents<TAttribute>(this Type type, Boolean inherit) where TAttribute : Attribute
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+            
+            EventInfo[] events = type.GetEvents();
+            return inherit ? events.Where(static @event => @event.HasAttribute<TAttribute>(false)) : events.Where(static @event => @event.HasAttribute<TAttribute>(true));
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<EventInfo> GetEvents<TAttribute>(this Type type, BindingFlags binding) where TAttribute : Attribute
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+            
+            EventInfo[] events = type.GetEvents(binding);
+            return events.Where(static @event => @event.HasAttribute<TAttribute>());
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<EventInfo> GetEvents<TAttribute>(this Type type, BindingFlags binding, Boolean inherit) where TAttribute : Attribute
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+            
+            EventInfo[] events = type.GetEvents(binding);
+            return inherit ? events.Where(static @event => @event.HasAttribute<TAttribute>(false)) : events.Where(static @event => @event.HasAttribute<TAttribute>(true));
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<MethodInfo> GetMethods(this Type type, Type attribute)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+            
+            if (attribute is null)
+            {
+                throw new ArgumentNullException(nameof(attribute));
+            }
+            
+            foreach (MethodInfo method in type.GetMethods())
+            {
+                if (method.HasAttribute(attribute))
+                {
+                    yield return method;
+                }
+            }
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<MethodInfo> GetMethods(this Type type, Type attribute, Boolean inherit)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+            
+            if (attribute is null)
+            {
+                throw new ArgumentNullException(nameof(attribute));
+            }
+            
+            foreach (MethodInfo method in type.GetMethods())
+            {
+                if (method.HasAttribute(attribute, inherit))
+                {
+                    yield return method;
+                }
+            }
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<MethodInfo> GetMethods(this Type type, Type attribute, BindingFlags binding)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+            
+            if (attribute is null)
+            {
+                throw new ArgumentNullException(nameof(attribute));
+            }
+            
+            foreach (MethodInfo method in type.GetMethods(binding))
+            {
+                if (method.HasAttribute(attribute))
+                {
+                    yield return method;
+                }
+            }
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<MethodInfo> GetMethods(this Type type, Type attribute, BindingFlags binding, Boolean inherit)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+            
+            if (attribute is null)
+            {
+                throw new ArgumentNullException(nameof(attribute));
+            }
+            
+            foreach (MethodInfo method in type.GetMethods(binding))
+            {
+                if (method.HasAttribute(attribute, inherit))
+                {
+                    yield return method;
+                }
+            }
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<MethodInfo> GetMethods<TAttribute>(this Type type) where TAttribute : Attribute
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+            
+            MethodInfo[] methods = type.GetMethods();
+            return methods.Where(static method => method.HasAttribute<TAttribute>());
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<MethodInfo> GetMethods<TAttribute>(this Type type, Boolean inherit) where TAttribute : Attribute
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+            
+            MethodInfo[] methods = type.GetMethods();
+            return inherit ? methods.Where(static method => method.HasAttribute<TAttribute>(false)) : methods.Where(static method => method.HasAttribute<TAttribute>(true));
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<MethodInfo> GetMethods<TAttribute>(this Type type, BindingFlags binding) where TAttribute : Attribute
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+            
+            MethodInfo[] methods = type.GetMethods(binding);
+            return methods.Where(static method => method.HasAttribute<TAttribute>());
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<MethodInfo> GetMethods<TAttribute>(this Type type, BindingFlags binding, Boolean inherit) where TAttribute : Attribute
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+            
+            MethodInfo[] methods = type.GetMethods(binding);
+            return inherit ? methods.Where(static method => method.HasAttribute<TAttribute>(false)) : methods.Where(static method => method.HasAttribute<TAttribute>(true));
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<ConstructorInfo> GetConstructors(this Type type, Type attribute)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+            
+            if (attribute is null)
+            {
+                throw new ArgumentNullException(nameof(attribute));
+            }
+            
+            foreach (ConstructorInfo constructor in type.GetConstructors())
+            {
+                if (constructor.HasAttribute(attribute))
+                {
+                    yield return constructor;
+                }
+            }
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<ConstructorInfo> GetConstructors(this Type type, Type attribute, Boolean inherit)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+            
+            if (attribute is null)
+            {
+                throw new ArgumentNullException(nameof(attribute));
+            }
+            
+            foreach (ConstructorInfo constructor in type.GetConstructors())
+            {
+                if (constructor.HasAttribute(attribute, inherit))
+                {
+                    yield return constructor;
+                }
+            }
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<ConstructorInfo> GetConstructors(this Type type, Type attribute, BindingFlags binding)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+            
+            if (attribute is null)
+            {
+                throw new ArgumentNullException(nameof(attribute));
+            }
+            
+            foreach (ConstructorInfo constructor in type.GetConstructors(binding))
+            {
+                if (constructor.HasAttribute(attribute))
+                {
+                    yield return constructor;
+                }
+            }
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<ConstructorInfo> GetConstructors(this Type type, Type attribute, BindingFlags binding, Boolean inherit)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+            
+            if (attribute is null)
+            {
+                throw new ArgumentNullException(nameof(attribute));
+            }
+            
+            foreach (ConstructorInfo constructor in type.GetConstructors(binding))
+            {
+                if (constructor.HasAttribute(attribute, inherit))
+                {
+                    yield return constructor;
+                }
+            }
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<ConstructorInfo> GetConstructors<TAttribute>(this Type type) where TAttribute : Attribute
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+            
+            ConstructorInfo[] constructors = type.GetConstructors();
+            return constructors.Where(static constructor => constructor.HasAttribute<TAttribute>());
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<ConstructorInfo> GetConstructors<TAttribute>(this Type type, Boolean inherit) where TAttribute : Attribute
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+            
+            ConstructorInfo[] constructors = type.GetConstructors();
+            return inherit ? constructors.Where(static constructor => constructor.HasAttribute<TAttribute>(false)) : constructors.Where(static constructor => constructor.HasAttribute<TAttribute>(true));
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<ConstructorInfo> GetConstructors<TAttribute>(this Type type, BindingFlags binding) where TAttribute : Attribute
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+            
+            ConstructorInfo[] constructors = type.GetConstructors(binding);
+            return constructors.Where(static constructor => constructor.HasAttribute<TAttribute>());
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<ConstructorInfo> GetConstructors<TAttribute>(this Type type, BindingFlags binding, Boolean inherit) where TAttribute : Attribute
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+            
+            ConstructorInfo[] constructors = type.GetConstructors(binding);
+            return inherit ? constructors.Where(static constructor => constructor.HasAttribute<TAttribute>(false)) : constructors.Where(static constructor => constructor.HasAttribute<TAttribute>(true));
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T? GetFirstAttributeOrDefault<T>(this PropertyDescriptor descriptor) where T : Attribute
+        {
+            if (descriptor is null)
+            {
+                throw new ArgumentNullException(nameof(descriptor));
+            }
+            
+            return descriptor.Attributes.OfType<T>().FirstOrDefault();
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static TResult? GetAttributeValue<T, TResult>(this PropertyDescriptor descriptor, Func<T, TResult> selector) where T : Attribute
+        {
+            return GetAttributeValue(descriptor, selector, default);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static TResult? GetAttributeValue<T, TResult>(this PropertyDescriptor descriptor, Func<T, TResult> selector, TResult? @default) where T : Attribute
+        {
+            if (descriptor is null)
+            {
+                throw new ArgumentNullException(nameof(descriptor));
+            }
+            
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+            
+            return descriptor.Attributes.OfType<T>().FirstOrDefault() is { } result ? selector(result) : @default;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Attribute? GetFirstAttributeOrDefault(this PropertyDescriptor descriptor, Type attribute)
+        {
+            if (descriptor is null)
+            {
+                throw new ArgumentNullException(nameof(descriptor));
+            }
+            
+            if (attribute is null)
+            {
+                throw new ArgumentNullException(nameof(attribute));
+            }
+            
+            return descriptor.Attributes.Cast<Attribute>().FirstOrDefault(item => item.GetType().IsAssignableFrom(attribute));
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsReadOnly(this PropertyDescriptor descriptor)
+        {
+            if (descriptor is null)
+            {
+                throw new ArgumentNullException(nameof(descriptor));
+            }
+            
+            return descriptor.GetFirstAttributeOrDefault<ReadOnlyAttribute>() is { } attribute ? attribute.IsReadOnly : descriptor.IsReadOnly;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String AttributeCategory(this PropertyDescriptor dependency)
+        {
+            if (dependency is null)
+            {
+                throw new ArgumentNullException(nameof(dependency));
+            }
+            
+            return dependency.GetFirstAttributeOrDefault<CategoryAttribute>() is { } attribute ? attribute.Category : dependency.Category;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String AttributeDescription(this PropertyDescriptor dependency)
+        {
+            if (dependency is null)
+            {
+                throw new ArgumentNullException(nameof(dependency));
+            }
+            
+            return dependency.GetFirstAttributeOrDefault<DescriptionAttribute>() is { } attribute ? attribute.Description : dependency.Description;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String AttributeDisplayName(this PropertyDescriptor dependency)
+        {
+            if (dependency is null)
+            {
+                throw new ArgumentNullException(nameof(dependency));
+            }
+            
+            return dependency.GetFirstAttributeOrDefault<DisplayNameAttribute>() is { } attribute ? attribute.DisplayName : dependency.DisplayName;
+        }
+        
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [return: NotNullIfNotNull("parameters")]
         public static Type[]? Types(this ParameterInfo[]? parameters)
@@ -1068,7 +2072,7 @@ namespace NetExtender.Utilities.Core
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Type GetMemberType(this MemberInfo info)
+        public static Type MemberType(this MemberInfo info)
         {
             if (info is null)
             {
@@ -2011,17 +3015,11 @@ namespace NetExtender.Utilities.Core
         {
             return GetEntryTypeNamespace(false);
         }
-
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String GetEntryTypeNamespace(Boolean root)
         {
-            String? @namespace = GetEntryPointType().Namespace;
-
-            if (@namespace is null)
-            {
-                throw new InvalidOperationException();
-            }
-
-            return root ? @namespace.Split('.')[0] : @namespace;
+            return GetEntryPointType().Namespace is { } @namespace ? root ? @namespace.Split('.')[0] : @namespace : throw new InvalidOperationException();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -2348,6 +3346,109 @@ namespace NetExtender.Utilities.Core
             }
             
             return source.WhereNotNull().Select(static type => type.FullName ?? type.Name);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<String> Name(this IEnumerable<MemberInfo> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            return source.Select(static member => member.Name);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableHashSet<String> ToNameSet(this IEnumerable<MemberInfo> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            return source.Name().ToImmutableHashSet();
+        }
+        
+        public static IEnumerable<MemberInfo> Where(this IEnumerable<MemberInfo> source, Type type)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+            
+            foreach (MemberInfo member in source)
+            {
+                if (member.MemberType() == type)
+                {
+                    yield return member;
+                }
+            }
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<MemberInfo> Where<T>(this IEnumerable<MemberInfo> source)
+        {
+            return Where(source, typeof(T));
+        }
+        
+        public static IEnumerable<FieldInfo> Where(this IEnumerable<FieldInfo> source, Type type)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+            
+            foreach (FieldInfo field in source)
+            {
+                if (field.FieldType == type)
+                {
+                    yield return field;
+                }
+            }
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<FieldInfo> Where<T>(this IEnumerable<FieldInfo> source)
+        {
+            return Where(source, typeof(T));
+        }
+        
+        public static IEnumerable<PropertyInfo> Where(this IEnumerable<PropertyInfo> source, Type type)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+            
+            foreach (PropertyInfo property in source)
+            {
+                if (property.PropertyType == type)
+                {
+                    yield return property;
+                }
+            }
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<PropertyInfo> Where<T>(this IEnumerable<PropertyInfo> source)
+        {
+            return Where(source, typeof(T));
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -2690,16 +3791,19 @@ namespace NetExtender.Utilities.Core
         /// Calls the static constructor of types with <see cref="StaticInitializerAttribute"/> in assembly.
         /// </summary>
         /// <param name="assembly">The assembly of which to call the static constructor.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Assembly CallStaticInitializerAttribute(this Assembly assembly)
         {
             return CallStaticInitializerAttribute<StaticInitializerAttribute>(assembly);
         }
-
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<Assembly> CallStaticInitializerAttribute(this IEnumerable<Assembly> assemblies)
         {
             return CallStaticInitializerAttribute(assemblies, false);
         }
-
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<Assembly> CallStaticInitializerAttribute(this IEnumerable<Assembly> assemblies, Boolean lazy)
         {
             if (assemblies is null)
@@ -2714,12 +3818,14 @@ namespace NetExtender.Utilities.Core
 
             return assemblies.ForEach(Call).MaterializeIfNot(lazy);
         }
-
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<Assembly> CallStaticInitializerAttribute()
         {
             return CallStaticInitializerAttribute(Custom.Assemblies);
         }
-
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static IEnumerable<Assembly> CallStaticInitializerRequiredAttribute()
         {
             static void Call(Assembly assembly)
@@ -2758,15 +3864,16 @@ namespace NetExtender.Utilities.Core
         /// Returns all the public properties of this object whose property type is <typeparamref name="T"/>.
         /// </summary>
         /// <typeparam name="T">The type of the properties.</typeparam>
-        /// <param name="obj">The object.</param>
-        public static IEnumerable<PropertyInfo> GetAllPropertiesOfType<T>(this Object obj)
+        /// <param name="object">The object.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<PropertyInfo> GetAllPropertiesOfType<T>(this Object @object)
         {
-            if (obj is null)
+            if (@object is null)
             {
-                throw new ArgumentNullException(nameof(obj));
+                throw new ArgumentNullException(nameof(@object));
             }
 
-            return GetAllPropertiesOfType<T>(obj.GetType());
+            return GetAllPropertiesOfType<T>(@object.GetType());
         }
 
         /// <summary>
@@ -2774,6 +3881,7 @@ namespace NetExtender.Utilities.Core
         /// </summary>
         /// <typeparam name="T">The type of the properties.</typeparam>
         /// <param name="type">The type of which to get the properties.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<PropertyInfo> GetAllPropertiesOfType<T>(this Type type)
         {
             if (type is null)
@@ -2781,19 +3889,19 @@ namespace NetExtender.Utilities.Core
                 throw new ArgumentNullException(nameof(type));
             }
 
-            return type.GetProperties().Where(info => info.PropertyType == typeof(T));
+            return type.GetProperties().Where(static info => info.PropertyType == typeof(T));
         }
 
         /// <summary>
         /// Gets the value of the property or field with the specified name in this object or type.
         /// </summary>
-        /// <param name="obj">The object or type that has the property or field.</param>
+        /// <param name="object">The object or type that has the property or field.</param>
         /// <param name="name">The name of the property or field.</param>
-        public static Object? GetPropertyValue(this Object obj, String name)
+        public static Object? GetPropertyValue(this Object @object, String name)
         {
-            if (obj is null)
+            if (@object is null)
             {
-                throw new ArgumentNullException(nameof(obj));
+                throw new ArgumentNullException(nameof(@object));
             }
 
             if (name is null)
@@ -2801,7 +3909,7 @@ namespace NetExtender.Utilities.Core
                 throw new ArgumentNullException(nameof(name));
             }
 
-            if (GetPropertyValue(obj, name, out Object? result))
+            if (GetPropertyValue(@object, name, out Object? result))
             {
                 return result;
             }
@@ -2812,14 +3920,14 @@ namespace NetExtender.Utilities.Core
         /// <summary>
         /// Gets the value of the property or field with the specified name in this object or type.
         /// </summary>
-        /// <param name="obj">The object or type that has the property or field.</param>
+        /// <param name="object">The object or type that has the property or field.</param>
         /// <param name="name">The name of the property or field.</param>
-        /// <param name="result">Object if successful else <see cref="obj"/> <see cref="Type"/></param>
-        public static Boolean GetPropertyValue(this Object obj, String name, out Object? result)
+        /// <param name="result">Object if successful else <see cref="object"/> <see cref="Type"/></param>
+        public static Boolean GetPropertyValue(this Object @object, String name, out Object? result)
         {
-            if (obj is null)
+            if (@object is null)
             {
-                throw new ArgumentNullException(nameof(obj));
+                throw new ArgumentNullException(nameof(@object));
             }
 
             if (name is null)
@@ -2827,23 +3935,23 @@ namespace NetExtender.Utilities.Core
                 throw new ArgumentNullException(nameof(name));
             }
 
-            if (obj is not Type type)
+            if (@object is not Type type)
             {
-                type = obj.GetType();
+                type = @object.GetType();
             }
 
             const BindingFlags binding = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
             PropertyInfo? property = type.GetProperty(name, binding);
             if (property is not null)
             {
-                result = property.GetValue(obj);
+                result = property.GetValue(@object);
                 return true;
             }
 
             FieldInfo? field = type.GetField(name, binding);
             if (field is not null)
             {
-                result = field.GetValue(obj);
+                result = field.GetValue(@object);
                 return true;
             }
 
@@ -2854,13 +3962,13 @@ namespace NetExtender.Utilities.Core
         /// <summary>
         /// Gets the value of the property or field with the specified name in this object or type.
         /// </summary>
-        /// <param name="obj">The object or type that has the property or field.</param>
+        /// <param name="object">The object or type that has the property or field.</param>
         /// <param name="name">The name of the property or field.</param>
-        public static T? GetPropertyValue<T>(this Object obj, String name)
+        public static T? GetPropertyValue<T>(this Object @object, String name)
         {
-            if (obj is null)
+            if (@object is null)
             {
-                throw new ArgumentNullException(nameof(obj));
+                throw new ArgumentNullException(nameof(@object));
             }
 
             if (name is null)
@@ -2868,7 +3976,7 @@ namespace NetExtender.Utilities.Core
                 throw new ArgumentNullException(nameof(name));
             }
 
-            Object? value = GetPropertyValue(obj, name);
+            Object? value = GetPropertyValue(@object, name);
             return value switch
             {
                 null => default,
@@ -2880,14 +3988,14 @@ namespace NetExtender.Utilities.Core
         /// <summary>
         /// Gets the value of the property or field with the specified name in this object or type.
         /// </summary>
-        /// <param name="obj">The object or type that has the property or field.</param>
+        /// <param name="object">The object or type that has the property or field.</param>
         /// <param name="name">The name of the property or field.</param>
         /// <param name="converter">Converter function</param>
-        public static T GetPropertyValue<T>(this Object obj, String name, ParseHandler<Object?, T> converter)
+        public static T GetPropertyValue<T>(this Object @object, String name, ParseHandler<Object?, T> converter)
         {
-            if (obj is null)
+            if (@object is null)
             {
-                throw new ArgumentNullException(nameof(obj));
+                throw new ArgumentNullException(nameof(@object));
             }
 
             if (name is null)
@@ -2900,20 +4008,20 @@ namespace NetExtender.Utilities.Core
                 throw new ArgumentNullException(nameof(converter));
             }
 
-            return converter(GetPropertyValue(obj, name));
+            return converter(GetPropertyValue(@object, name));
         }
 
         /// <summary>
         /// Gets the value of the property or field with the specified name in this object or type.
         /// </summary>
-        /// <param name="obj">The object or type that has the property or field.</param>
+        /// <param name="object">The object or type that has the property or field.</param>
         /// <param name="name">The name of the property or field.</param>
         /// <param name="result">Result value</param>
-        public static Boolean TryGetPropertyValue<T>(this Object obj, String name, out T? result)
+        public static Boolean TryGetPropertyValue<T>(this Object @object, String name, out T? result)
         {
-            if (obj is null)
+            if (@object is null)
             {
-                throw new ArgumentNullException(nameof(obj));
+                throw new ArgumentNullException(nameof(@object));
             }
 
             if (name is null)
@@ -2921,7 +4029,7 @@ namespace NetExtender.Utilities.Core
                 throw new ArgumentNullException(nameof(name));
             }
 
-            if (GetPropertyValue(obj, name, out Object? property))
+            if (GetPropertyValue(@object, name, out Object? property))
             {
                 if (property is T value)
                 {
@@ -2947,15 +4055,15 @@ namespace NetExtender.Utilities.Core
         /// <summary>
         /// Gets the value of the property or field with the specified name in this object or type.
         /// </summary>
-        /// <param name="obj">The object or type that has the property or field.</param>
+        /// <param name="object">The object or type that has the property or field.</param>
         /// <param name="name">The name of the property or field.</param>
         /// <param name="converter">Converter function</param>
         /// <param name="result">Result value</param>
-        public static Boolean TryGetPropertyValue<T>(this Object obj, String name, TryParseHandler<Object?, T> converter, out T? result)
+        public static Boolean TryGetPropertyValue<T>(this Object @object, String name, TryParseHandler<Object?, T> converter, out T? result)
         {
-            if (obj is null)
+            if (@object is null)
             {
-                throw new ArgumentNullException(nameof(obj));
+                throw new ArgumentNullException(nameof(@object));
             }
 
             if (name is null)
@@ -2968,7 +4076,7 @@ namespace NetExtender.Utilities.Core
                 throw new ArgumentNullException(nameof(converter));
             }
 
-            if (GetPropertyValue(obj, name, out Object? value) && converter(value, out result))
+            if (GetPropertyValue(@object, name, out Object? value) && converter(value, out result))
             {
                 return true;
             }
@@ -2991,7 +4099,12 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(type));
             }
-
+            
+            if (name is null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+            
             Type property = GetPropertyTypeReal(type, name);
 
             // get the generic type of nullable, not THE nullable
@@ -3018,7 +4131,12 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(type));
             }
-
+            
+            if (name is null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+            
             Type property = GetPropertyTypeReal(type, name, binding);
 
             // get the generic type of nullable, not THE nullable
@@ -3035,13 +4153,19 @@ namespace NetExtender.Utilities.Core
         /// </summary>
         /// <param name="type">The type that has the specified property.</param>
         /// <param name="name">The name of the property.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Type GetPropertyTypeReal(this Type type, String name)
         {
             if (type is null)
             {
                 throw new ArgumentNullException(nameof(type));
             }
-
+            
+            if (name is null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+            
             PropertyInfo property = GetPropertyInfo(type, name);
             return property.PropertyType;
         }
@@ -3052,13 +4176,19 @@ namespace NetExtender.Utilities.Core
         /// <param name="type">The type that has the specified property.</param>
         /// <param name="name">The name of the property.</param>
         /// <param name="binding">A bitmask comprised of one or more <see cref="BindingFlags"/> that specify how the search is conducted. -or- Zero, to return null.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Type GetPropertyTypeReal(this Type type, String name, BindingFlags binding)
         {
             if (type is null)
             {
                 throw new ArgumentNullException(nameof(type));
             }
-
+            
+            if (name is null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+            
             PropertyInfo property = GetPropertyInfo(type, name, binding);
             return property.PropertyType;
         }
@@ -3066,32 +4196,44 @@ namespace NetExtender.Utilities.Core
         /// <summary>
         /// Gets the property information by name for the type of the object.
         /// </summary>
-        /// <param name="obj">Object with a type that has the specified property.</param>
+        /// <param name="object">Object with a type that has the specified property.</param>
         /// <param name="name">The name of the property.</param>
-        public static PropertyInfo GetPropertyInfo(this Object obj, String name)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static PropertyInfo GetPropertyInfo(this Object @object, String name)
         {
-            if (obj is null)
+            if (@object is null)
             {
-                throw new ArgumentNullException(nameof(obj));
+                throw new ArgumentNullException(nameof(@object));
             }
-
-            return GetPropertyInfo(obj.GetType(), name);
+            
+            if (name is null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+            
+            return GetPropertyInfo(@object.GetType(), name);
         }
 
         /// <summary>
         /// Gets the property information by name for the type of the object.
         /// </summary>
-        /// <param name="obj">Object with a type that has the specified property.</param>
+        /// <param name="object">Object with a type that has the specified property.</param>
         /// <param name="name">The name of the property.</param>
         /// <param name="binding">A bitmask comprised of one or more <see cref="BindingFlags"/> that specify how the search is conducted. -or- Zero, to return null.</param>
-        public static PropertyInfo GetPropertyInfo(this Object obj, String name, BindingFlags binding)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static PropertyInfo GetPropertyInfo(this Object @object, String name, BindingFlags binding)
         {
-            if (obj is null)
+            if (@object is null)
             {
-                throw new ArgumentNullException(nameof(obj));
+                throw new ArgumentNullException(nameof(@object));
             }
-
-            return GetPropertyInfo(obj.GetType(), name, binding);
+            
+            if (name is null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+            
+            return GetPropertyInfo(@object.GetType(), name, binding);
         }
 
         /// <summary>
@@ -3148,7 +4290,8 @@ namespace NetExtender.Utilities.Core
 
             return property;
         }
-
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsIndexer(this PropertyInfo info)
         {
             if (info is null)
@@ -3174,6 +4317,17 @@ namespace NetExtender.Utilities.Core
             }
 
             return method.ReturnType.IsVoid();
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsOverridden(this MethodInfo method)
+        {
+            if (method is null)
+            {
+                throw new ArgumentNullException(nameof(method));
+            }
+            
+            return method.GetBaseDefinition().DeclaringType != method.DeclaringType;
         }
 
         public static FieldAttributes Access(this FieldAttributes attributes)
@@ -3239,7 +4393,8 @@ namespace NetExtender.Utilities.Core
                 _ => throw new EnumUndefinedOrNotSupportedException<MethodVisibilityType>(type, nameof(type), null)
             };
         }
-
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryCreateDelegate(this MethodInfo? info, [MaybeNullWhen(false)] out Delegate result)
         {
             return TryCreateDelegate<Delegate>(info, out result);
@@ -3268,13 +4423,14 @@ namespace NetExtender.Utilities.Core
         /// <summary>
         /// Gets the field information by name for the type of the object.
         /// </summary>
-        /// <param name="obj">Object with a type that has the specified field.</param>
+        /// <param name="object">Object with a type that has the specified field.</param>
         /// <param name="name">The name of the field.</param>
-        public static FieldInfo GetFieldInfo(this Object obj, String name)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static FieldInfo GetFieldInfo(this Object @object, String name)
         {
-            if (obj is null)
+            if (@object is null)
             {
-                throw new ArgumentNullException(nameof(obj));
+                throw new ArgumentNullException(nameof(@object));
             }
 
             if (name is null)
@@ -3282,7 +4438,7 @@ namespace NetExtender.Utilities.Core
                 throw new ArgumentNullException(nameof(name));
             }
 
-            return GetFieldInfo(obj.GetType(), name);
+            return GetFieldInfo(@object.GetType(), name);
         }
 
         /// <summary>
@@ -3336,6 +4492,7 @@ namespace NetExtender.Utilities.Core
         /// Gets the constants defined in this type.
         /// </summary>
         /// <param name="type">The type from which to get the constants.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<FieldInfo> GetConstants(this Type type)
         {
             return GetConstants(type, true);
@@ -3346,6 +4503,7 @@ namespace NetExtender.Utilities.Core
         /// </summary>
         /// <param name="type">The type from which to get the constants.</param>
         /// <param name="inherited">Determines whether or not to include inherited constants.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<FieldInfo> GetConstants(this Type type, Boolean inherited)
         {
             if (type is null)
@@ -3354,42 +4512,46 @@ namespace NetExtender.Utilities.Core
             }
 
             BindingFlags binding = BindingFlags.Public | BindingFlags.Static | (inherited ? BindingFlags.FlattenHierarchy : BindingFlags.DeclaredOnly);
-            return type.GetFields(binding).Where(field => field.IsLiteral && !field.IsInitOnly);
+            return type.GetFields(binding).Where(static field => field is { IsLiteral: true, IsInitOnly: false });
         }
-
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<FieldInfo> GetAccessibleFields(this Type type)
         {
             return GetAccessibleMembers(type, RuntimeReflectionExtensions.GetRuntimeFields);
         }
-
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<PropertyInfo> GetAccessibleProperties(this Type type)
         {
             return GetAccessibleMembers(type, RuntimeReflectionExtensions.GetRuntimeProperties);
         }
-
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<EventInfo> GetAccessibleEvents(this Type type)
         {
             return GetAccessibleMembers(type, RuntimeReflectionExtensions.GetRuntimeEvents);
         }
-
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<MethodInfo> GetAccessibleMethods(this Type type)
         {
             return GetAccessibleMembers(type, RuntimeReflectionExtensions.GetRuntimeMethods);
         }
 
-        private static IEnumerable<T> GetAccessibleMembers<T>(this Type type, Func<Type, IEnumerable<T>> finder) where T : MemberInfo
+        private static IEnumerable<T> GetAccessibleMembers<T>(this Type type, Func<Type, IEnumerable<T>> selector) where T : MemberInfo
         {
             if (type is null)
             {
                 throw new ArgumentNullException(nameof(type));
             }
 
-            if (finder is null)
+            if (selector is null)
             {
-                throw new ArgumentNullException(nameof(finder));
+                throw new ArgumentNullException(nameof(selector));
             }
 
-            List<T> result = new List<T>(finder(type));
+            List<T> result = new List<T>(selector(type));
 
             if (!type.IsInterface)
             {
@@ -3400,11 +4562,11 @@ namespace NetExtender.Utilities.Core
             {
                 if (@interface.IsVisible)
                 {
-                    result.AddRange(finder.Invoke(@interface));
+                    result.AddRange(selector.Invoke(@interface));
                 }
             }
 
-            result.AddRange(finder.Invoke(typeof(Object)));
+            result.AddRange(selector.Invoke(typeof(Object)));
             return result.ToArray();
         }
 
@@ -4088,11 +5250,13 @@ namespace NetExtender.Utilities.Core
             return result.ToArray();
         }
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean HasImplementation(this MethodInfo method)
         {
             return HasImplementation(method, out Boolean? _);
         }
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean HasImplementation(this MethodInfo method, out Boolean @virtual)
         {
             Boolean result = HasImplementation(method, out Boolean? state);
@@ -4264,14 +5428,14 @@ namespace NetExtender.Utilities.Core
         /// <summary>
         /// Sets the value of the property or field with the specified name in this object or type.
         /// </summary>
-        /// <param name="obj">The objector type that has the property or field.</param>
+        /// <param name="object">The objector type that has the property or field.</param>
         /// <param name="name">The name of the property or field.</param>
         /// <param name="value">The value to set.</param>
-        public static T SetValue<T>(this T obj, String name, Object? value)
+        public static T SetValue<T>(this T @object, String name, Object? value)
         {
-            if (obj is null)
+            if (@object is null)
             {
-                throw new ArgumentNullException(nameof(obj));
+                throw new ArgumentNullException(nameof(@object));
             }
 
             if (name is null)
@@ -4279,16 +5443,16 @@ namespace NetExtender.Utilities.Core
                 throw new ArgumentNullException(nameof(name));
             }
 
-            if (obj is not Type type)
+            if (@object is not Type type)
             {
-                type = obj.GetType();
+                type = @object.GetType();
             }
 
             PropertyInfo? property = type.GetProperty(name);
             if (property is not null)
             {
-                property.SetValue(obj, value);
-                return obj;
+                property.SetValue(@object, value);
+                return @object;
             }
 
             FieldInfo? field = type.GetField(name);
@@ -4298,104 +5462,129 @@ namespace NetExtender.Utilities.Core
                 throw new Exception($"'{name}' is neither a property or a field of type '{type}'.");
             }
 
-            field.SetValue(obj, value);
-            return obj;
+            field.SetValue(@object, value);
+            return @object;
         }
 
         /// <summary>
         /// Sets the specified field to the provided value in the object.
         /// </summary>
-        /// <param name="obj">The object with the field.</param>
+        /// <param name="object">The object with the field.</param>
         /// <param name="name">The name of the field to set.</param>
         /// <param name="value">The value to set the field to.</param>
-        public static T SetField<T>(this T obj, String name, Object value)
+        public static T SetField<T>(this T @object, String name, Object? value)
         {
-            if (obj is null)
+            if (@object is null)
             {
-                throw new ArgumentNullException(nameof(obj));
+                throw new ArgumentNullException(nameof(@object));
             }
-
-            FieldInfo field = GetFieldInfo(obj, name);
-            field.SetValue(obj, value);
-            return obj;
+            
+            if (name is null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+            
+            FieldInfo field = GetFieldInfo(@object, name);
+            field.SetValue(@object, value);
+            return @object;
         }
 
         /// <summary>
         /// Sets the specified property to the provided value in the object.
         /// </summary>
-        /// <param name="obj">The object with the property.</param>
+        /// <param name="object">The object with the property.</param>
         /// <param name="name">The name of the property to set.</param>
         /// <param name="value">The value to set the property to.</param>
-        public static T SetProperty<T>(this T obj, String name, Object value)
+        public static T SetProperty<T>(this T @object, String name, Object? value)
         {
-            if (obj is null)
+            if (@object is null)
             {
-                throw new ArgumentNullException(nameof(obj));
+                throw new ArgumentNullException(nameof(@object));
             }
-
-            PropertyInfo property = GetPropertyInfo(obj, name);
-            property.SetValue(obj, value);
-            return obj;
+            
+            if (name is null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+            
+            PropertyInfo property = GetPropertyInfo(@object, name);
+            property.SetValue(@object, value);
+            return @object;
         }
 
         /// <summary>
         /// Sets the specified property to the provided value in the object.
         /// </summary>
-        /// <param name="obj">The object with the property.</param>
+        /// <param name="object">The object with the property.</param>
         /// <param name="name">The name of the property to set.</param>
         /// <param name="value">The value to set the property to.</param>
         /// <param name="binding">A bitmask comprised of one or more <see cref="BindingFlags"/> that specify how the search is conducted. -or- Zero, to return null.</param>
-        public static T SetProperty<T>(this T obj, String name, Object value, BindingFlags binding)
+        public static T SetProperty<T>(this T @object, String name, Object? value, BindingFlags binding)
         {
-            if (obj is null)
+            if (@object is null)
             {
-                throw new ArgumentNullException(nameof(obj));
+                throw new ArgumentNullException(nameof(@object));
             }
-
-            PropertyInfo property = GetPropertyInfo(obj, name, binding);
-            property.SetValue(obj, value);
-            return obj;
+            
+            if (name is null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+            
+            PropertyInfo property = GetPropertyInfo(@object, name, binding);
+            property.SetValue(@object, value);
+            return @object;
         }
 
         /// <summary>
         /// Sets the specified property to a value that will be extracted from the provided string value using the <see cref="TypeDescriptor.GetConverter(Type)"/> and <see cref="TypeConverter.ConvertFromString(string)"/>.
         /// </summary>
-        /// <param name="obj">The object with the property.</param>
+        /// <param name="object">The object with the property.</param>
         /// <param name="name">The name of the property to set.</param>
         /// <param name="value">The string representation of the value to set to the property.</param>
-        public static T SetPropertyFromString<T>(this T obj, String name, String value)
+        public static T SetPropertyFromString<T>(this T @object, String name, String? value)
         {
-            if (obj is null)
+            if (@object is null)
             {
-                throw new ArgumentNullException(nameof(obj));
+                throw new ArgumentNullException(nameof(@object));
             }
-
-            PropertyInfo property = GetPropertyInfo(obj, name);
+            
+            if (name is null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+            
+            PropertyInfo property = GetPropertyInfo(@object, name);
             TypeConverter converter = TypeDescriptor.GetConverter(property.PropertyType);
-            Object? result = converter.ConvertFromString(value);
-            property.SetValue(obj, result);
-            return obj;
+            Object? result = converter.ConvertFromString(value!);
+            property.SetValue(@object, result);
+            return @object;
         }
 
         /// <summary>
         /// Sets the specified property to a value that will be extracted from the provided string value using the <see cref="TypeDescriptor.GetConverter(Type)"/> and <see cref="TypeConverter.ConvertFromString(string)"/>.
         /// </summary>
-        /// <param name="obj">The object with the property.</param>
+        /// <param name="object">The object with the property.</param>
         /// <param name="name">The name of the property to set.</param>
         /// <param name="value">The string representation of the value to set to the property.</param>
         /// <param name="binding">A bitmask comprised of one or more <see cref="BindingFlags"/> that specify how the search is conducted. -or- Zero, to return null.</param>
-        public static T SetPropertyFromString<T>(this T obj, String name, String value, BindingFlags binding)
+        public static T SetPropertyFromString<T>(this T @object, String name, String? value, BindingFlags binding)
         {
-            if (obj is null)
+            if (@object is null)
             {
-                throw new ArgumentNullException(nameof(obj));
+                throw new ArgumentNullException(nameof(@object));
             }
-
-            PropertyInfo property = GetPropertyInfo(obj, name, binding);
+            
+            if (name is null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+            
+            PropertyInfo property = GetPropertyInfo(@object, name, binding);
             TypeConverter converter = TypeDescriptor.GetConverter(property.PropertyType);
-            Object? result = converter.ConvertFromString(value);
-            property.SetValue(obj, result);
-            return obj;
+            Object? result = converter.ConvertFromString(value!);
+            property.SetValue(@object, result);
+            return @object;
         }
 
         /// <summary>
@@ -4404,52 +5593,59 @@ namespace NetExtender.Utilities.Core
         /// </summary>
         /// <typeparam name="T">Object type</typeparam>
         /// <typeparam name="TValue">The type of the properties.</typeparam>
-        /// <param name="obj">The object.</param>
+        /// <param name="object">The object.</param>
         /// <param name="value">The value to set the properties to.</param>
-        public static T SetAllPropertiesOfType<T, TValue>(this T obj, TValue value)
+        public static T SetAllPropertiesOfType<T, TValue>(this T @object, TValue? value)
         {
-            if (obj is null)
+            if (@object is null)
             {
-                throw new ArgumentNullException(nameof(obj));
+                throw new ArgumentNullException(nameof(@object));
             }
 
-            FieldInfo[] fields = obj.GetType().GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            FieldInfo[] fields = @object.GetType().GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
 
             foreach (FieldInfo field in fields)
             {
                 if (field.FieldType == typeof(TValue))
                 {
-                    field.SetValue(obj, value);
+                    field.SetValue(@object, value);
                 }
             }
 
-            return obj;
+            return @object;
         }
 
         /// <summary>
         /// Determines whether or not this object has a property with the specified name.
         /// </summary>
-        /// <param name="obj">The object.</param>
+        /// <param name="object">The object.</param>
         /// <param name="name">The name of the property.</param>
-        public static Boolean HasProperty(this Object obj, String name)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean HasProperty(this Object @object, String name)
         {
-            return HasProperty(obj, name, true);
+            return HasProperty(@object, name, true);
         }
 
         /// <summary>
         /// Determines whether or not this object has a property with the specified name.
         /// </summary>
-        /// <param name="obj">The object.</param>
+        /// <param name="object">The object.</param>
         /// <param name="name">The name of the property.</param>
         /// <param name="inherited">Determines whether of not to include inherited properties.</param>
-        public static Boolean HasProperty(this Object obj, String name, Boolean inherited)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean HasProperty(this Object @object, String name, Boolean inherited)
         {
-            if (obj is null)
+            if (@object is null)
             {
-                throw new ArgumentNullException(nameof(obj));
+                throw new ArgumentNullException(nameof(@object));
             }
-
-            Type type = obj.GetType();
+            
+            if (name is null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+            
+            Type type = @object.GetType();
             return HasProperty(type, name, inherited);
         }
 
@@ -4458,6 +5654,7 @@ namespace NetExtender.Utilities.Core
         /// </summary>
         /// <param name="type">The type.</param>
         /// <param name="name">The name of the property.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean HasProperty(this Type type, String name)
         {
             return HasProperty(type, name, true);
@@ -4469,6 +5666,7 @@ namespace NetExtender.Utilities.Core
         /// <param name="type">The type.</param>
         /// <param name="name">The name of the property.</param>
         /// <param name="inherited">Determines whether of not to include inherited properties.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean HasProperty(this Type type, String name, Boolean inherited)
         {
             if (type is null)
@@ -4481,17 +5679,18 @@ namespace NetExtender.Utilities.Core
                 throw new ArgumentNullException(nameof(name));
             }
 
-            BindingFlags binding = BindingFlags.Public | BindingFlags.Instance | (inherited ? BindingFlags.FlattenHierarchy : BindingFlags.DeclaredOnly);
-
-            PropertyInfo? property = type.GetProperty(name, binding);
+            const BindingFlags binding = BindingFlags.Public | BindingFlags.Instance;
+            PropertyInfo? property = type.GetProperty(name, binding | (inherited ? BindingFlags.FlattenHierarchy : BindingFlags.DeclaredOnly));
             return property is not null;
         }
-
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static Boolean IsMulticastDelegateFieldType(this Type? type)
         {
             return type is not null && (type == typeof(MulticastDelegate) || type.IsSubclassOf(typeof(MulticastDelegate)));
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static FieldInfo? GetEventField(this Type type, String name)
         {
             if (type is null)
@@ -4529,6 +5728,7 @@ namespace NetExtender.Utilities.Core
             return field;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static FieldInfo? GetEventField<T>(this Type type) where T : Delegate
         {
             if (type is null)
@@ -4591,6 +5791,7 @@ namespace NetExtender.Utilities.Core
             return fields.ToArray();
         }
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static MethodInfo? GetEventRaiseMethod(this Type type, String name)
         {
             if (type is null)
@@ -4603,9 +5804,10 @@ namespace NetExtender.Utilities.Core
                 throw new ArgumentNullException(nameof(name));
             }
 
-            return type.GetEventField(name)?.FieldType.GetMethod("Invoke");
+            return type.GetEventField(name)?.FieldType.GetMethod(nameof(Action.Invoke));
         }
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static MethodInfo? GetEventRaiseMethod<T>(this Type type) where T : Delegate
         {
             if (type is null)
@@ -4613,7 +5815,7 @@ namespace NetExtender.Utilities.Core
                 throw new ArgumentNullException(nameof(type));
             }
 
-            return type.GetEventField<T>()?.FieldType.GetMethod("Invoke");
+            return type.GetEventField<T>()?.FieldType.GetMethod(nameof(Action.Invoke));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -4621,7 +5823,8 @@ namespace NetExtender.Utilities.Core
         {
             return GetEventDelegate(type, name, @object, out _);
         }
-
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static MulticastDelegate? GetEventDelegate(this Type type, String name, Object? @object, out FieldInfo? field)
         {
             if (type is null)
@@ -4804,10 +6007,21 @@ namespace NetExtender.Utilities.Core
                 return true;
             }
 
-            Type? baseType = type.BaseType;
-            return baseType is not null && baseType.ImplementsGeneric(@interface, out result);
+            Type? @base = type.BaseType;
+            return @base is not null && @base.ImplementsGeneric(@interface, out result);
         }
-
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsSerializable<T>(this IEnumerable<T?> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            return typeof(T).IsValueType ? typeof(T).IsSerializable : source.All(static value => value?.GetType().IsSerializable is not false);
+        }
+        
         public static String? StripQualifier(this Type type)
         {
             return StripQualifier(type, AssemblyNameType.Default);
@@ -5086,12 +6300,7 @@ namespace NetExtender.Utilities.Core
                     throw new ArgumentNullException(nameof(type));
                 }
 
-                static ValueType Create(Type type)
-                {
-                    return (ValueType) Activator.CreateInstance(type)!;
-                }
-
-                return type.IsValueType ? Values.GetOrAdd(type, Create) : null;
+                return type.IsValueType ? Values.GetOrAdd(type, static type => (ValueType) Activator.CreateInstance(type)!) : null;
             }
         }
 
@@ -5143,6 +6352,17 @@ namespace NetExtender.Utilities.Core
         public static Object? Default(Type type)
         {
             return GenericDefaultStorage.Default(type);
+        }
+
+        /// <summary>
+        /// Gets the default value of this type.
+        /// </summary>
+        /// <param name="type">The type for which to get the default value.</param>
+        /// <param name="nullable"><see cref="Nullable{T}"/> is value or null.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Object? Default(Type type, Boolean nullable)
+        {
+            return nullable || Nullable.GetUnderlyingType(type) is null ? Default(type) : null;
         }
 
         /// <summary>

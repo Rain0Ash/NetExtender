@@ -10,7 +10,7 @@ using NetExtender.Types.Singletons;
 using NetExtender.Types.Singletons.Interfaces;
 using NetExtender.Utilities.Core;
 
-namespace NetExtender.UserInterface.WindowsPresentation.Types.Sounds
+namespace NetExtender.UserInterface.WindowsPresentation.Sounds
 {
     public abstract class WindowSoundsContainer
     {

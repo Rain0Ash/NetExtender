@@ -79,7 +79,7 @@ namespace NetExtender.Types.Concurrent.Counters
             return left + right;
         }
 
-        protected sealed override Int32 Substract(Int32 left, Int32 right)
+        protected sealed override Int32 Subtract(Int32 left, Int32 right)
         {
             return left - right;
         }
@@ -156,7 +156,7 @@ namespace NetExtender.Types.Concurrent.Counters
             return left + right;
         }
 
-        protected sealed override Int64 Substract(Int64 left, Int64 right)
+        protected sealed override Int64 Subtract(Int64 left, Int64 right)
         {
             return left - right;
         }
@@ -233,7 +233,7 @@ namespace NetExtender.Types.Concurrent.Counters
             return left + right;
         }
 
-        protected sealed override Decimal Substract(Decimal left, Decimal right)
+        protected sealed override Decimal Subtract(Decimal left, Decimal right)
         {
             return left - right;
         }

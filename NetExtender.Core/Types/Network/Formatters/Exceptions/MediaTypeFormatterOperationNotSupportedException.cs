@@ -18,8 +18,8 @@ namespace NetExtender.Types.Network.Formatters.Exceptions
         {
         }
         
-        public MediaTypeFormatterOperationNotSupportedException(String? message, Exception? innerException)
-            : base(message ?? Message, innerException)
+        public MediaTypeFormatterOperationNotSupportedException(String? message, Exception? exception)
+            : base(message ?? Message, exception)
         {
         }
         

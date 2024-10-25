@@ -25,13 +25,13 @@ namespace NetExtender.Types.Network.Formatters.Exceptions
         {
         }
         
-        public MediaTypeNotSupportedException(String? message, Exception? innerException)
-            : base(typeof(T), message, innerException)
+        public MediaTypeNotSupportedException(String? message, Exception? exception)
+            : base(typeof(T), message, exception)
         {
         }
         
-        public MediaTypeNotSupportedException(MediaTypeHeaderValue? media, String? message, Exception? innerException)
-            : base(typeof(T), media, message, innerException)
+        public MediaTypeNotSupportedException(MediaTypeHeaderValue? media, String? message, Exception? exception)
+            : base(typeof(T), media, message, exception)
         {
         }
         
@@ -88,25 +88,25 @@ namespace NetExtender.Types.Network.Formatters.Exceptions
             MediaType = media;
         }
         
-        public MediaTypeNotSupportedException(String? message, Exception? innerException)
-            : base(Format(null, null, message), innerException)
+        public MediaTypeNotSupportedException(String? message, Exception? exception)
+            : base(Format(null, null, message), exception)
         {
         }
         
-        public MediaTypeNotSupportedException(MediaTypeHeaderValue? media, String? message, Exception? innerException)
-            : base(Format(null, media, message), innerException)
+        public MediaTypeNotSupportedException(MediaTypeHeaderValue? media, String? message, Exception? exception)
+            : base(Format(null, media, message), exception)
         {
             MediaType = media;
         }
         
-        public MediaTypeNotSupportedException(Type? type, String? message, Exception? innerException)
-            : base(Format(type, null, message), innerException)
+        public MediaTypeNotSupportedException(Type? type, String? message, Exception? exception)
+            : base(Format(type, null, message), exception)
         {
             Type = type;
         }
         
-        public MediaTypeNotSupportedException(Type? type, MediaTypeHeaderValue? media, String? message, Exception? innerException)
-            : base(Format(type, media, message), innerException)
+        public MediaTypeNotSupportedException(Type? type, MediaTypeHeaderValue? media, String? message, Exception? exception)
+            : base(Format(type, media, message), exception)
         {
             Type = type;
             MediaType = media;

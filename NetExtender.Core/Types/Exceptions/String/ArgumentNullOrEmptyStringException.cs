@@ -14,18 +14,18 @@ namespace NetExtender.Types.Exceptions
         {
         }
 
-        public ArgumentNullOrEmptyStringException(String? value, String? message, Exception? innerException)
-            : base(value is null ? new ArgumentNullException(message, innerException) : new ArgumentEmptyStringException(message, innerException))
+        public ArgumentNullOrEmptyStringException(String? value, String? message, Exception? exception)
+            : base(value is null ? new ArgumentNullException(message, exception) : new ArgumentEmptyStringException(message, exception))
         {
         }
 
-        public ArgumentNullOrEmptyStringException(String? value, String? message, String? paramName)
-            : base(value is null ? new ArgumentNullException(paramName, message) : new ArgumentEmptyStringException(message, paramName))
+        public ArgumentNullOrEmptyStringException(String? value, String? message, String? parameter)
+            : base(value is null ? new ArgumentNullException(parameter, message) : new ArgumentEmptyStringException(message, parameter))
         {
         }
 
-        public ArgumentNullOrEmptyStringException(String? value, String? message, String? paramName, Exception? innerException)
-            : base(value is null ? new ArgumentNullException(message, innerException) : new ArgumentEmptyStringException(message, paramName, innerException))
+        public ArgumentNullOrEmptyStringException(String? value, String? message, String? parameter, Exception? exception)
+            : base(value is null ? new ArgumentNullException(message, exception) : new ArgumentEmptyStringException(message, parameter, exception))
         {
         }
 

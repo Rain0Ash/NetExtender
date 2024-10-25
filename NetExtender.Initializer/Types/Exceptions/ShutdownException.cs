@@ -32,13 +32,13 @@ namespace NetExtender.Types.Exceptions
             Code = code;
         }
 
-        public ShutdownException(String? message, Exception? innerException)
-            : this(0, message, innerException)
+        public ShutdownException(String? message, Exception? exception)
+            : this(0, message, exception)
         {
         }
 
-        public ShutdownException(Int32 code, String? message, Exception? innerException)
-            : base(message, innerException)
+        public ShutdownException(Int32 code, String? message, Exception? exception)
+            : base(message, exception)
         {
             Code = code;
         }

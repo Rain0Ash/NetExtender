@@ -5,18 +5,43 @@ using System;
 using System.Collections.Immutable;
 using System.Windows;
 using NetExtender.Domains.Builder;
+using NetExtender.Domains.WindowsPresentation.Builder.Interfaces;
 
 namespace NetExtender.Domains.WindowsPresentation.Builder
 {
-    public abstract class WindowsPresentationBuilder : ApplicationBuilder<Window>
+    public class WindowsPresentationBuilder : WindowsPresentationBuilder<Window>
     {
     }
 
-    public class WindowsPresentationBuilder<T> : ApplicationBuilder<T> where T : Window
+    public class WindowsPresentationBuilder<T> : ApplicationBuilder<T>, IWindowsPresentationBuilder<T> where T : Window
     {
+        public virtual Boolean IsConsoleVisible
+        {
+            get
+            {
+                return false;
+            }
+        }
+        
         public override T Build(ImmutableArray<String> arguments)
         {
+            Manager?.Invoke(this, this);
             return New(arguments);
+        }
+    }
+    
+    public class WindowsPresentationConsoleBuilder : WindowsPresentationConsoleBuilder<Window>
+    {
+    }
+    
+    public class WindowsPresentationConsoleBuilder<T> : WindowsPresentationBuilder<T> where T : Window
+    {
+        public override Boolean IsConsoleVisible
+        {
+            get
+            {
+                return true;
+            }
         }
     }
 }

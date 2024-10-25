@@ -21,8 +21,8 @@ namespace NetExtender.Types.Exceptions
         {
         }
 
-        public TypeNotSupportedException(String? message, Exception? innerException)
-            : base(typeof(T), message, innerException)
+        public TypeNotSupportedException(String? message, Exception? exception)
+            : base(typeof(T), message, exception)
         {
         }
 
@@ -54,8 +54,8 @@ namespace NetExtender.Types.Exceptions
             Type = type;
         }
 
-        public TypeNotSupportedException(Type type, String? message, Exception? innerException)
-            : base(message, innerException)
+        public TypeNotSupportedException(Type type, String? message, Exception? exception)
+            : base(message, exception)
         {
             Type = type;
         }

@@ -18,8 +18,8 @@ namespace NetExtender.DependencyInjection.Exceptions
         {
         }
         
-        public ServiceCollectionFinalException(String? message, Exception? innerException)
-            : base(message ?? Message, innerException)
+        public ServiceCollectionFinalException(String? message, Exception? exception)
+            : base(message ?? Message, exception)
         {
         }
         

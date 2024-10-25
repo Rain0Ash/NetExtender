@@ -6,7 +6,7 @@ using System.Windows;
 using System.Windows.Media;
 using NetExtender.Utilities.UserInterface;
 
-namespace NetExtender.UserInterface.WindowsPresentation.Windows
+namespace NetExtender.UserInterface.WindowsPresentation
 {
     public enum WindowCenterMode : Byte
     {

@@ -18,8 +18,8 @@ namespace NetExtender.Types.Network.Exceptions
         {
         }
         
-        public HttpMessageMimeMultipartReadingException(String? message, Exception? innerException)
-            : base(message ?? Message, innerException)
+        public HttpMessageMimeMultipartReadingException(String? message, Exception? exception)
+            : base(message ?? Message, exception)
         {
         }
         

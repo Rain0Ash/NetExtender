@@ -24,6 +24,7 @@
     <ItemGroup>
         <ProjectReference Include="..\NetExtender.Domain\NetExtender.Domain.csproj"/>
         <ProjectReference Include="..\NetExtender.WindowsPresentation\NetExtender.WindowsPresentation.csproj"/>
+        <ProjectReference Include="..\NetExtender.UserInterface.Windows\NetExtender.UserInterface.Windows.csproj" />
     </ItemGroup>
 
 </Project>

@@ -9,7 +9,7 @@ using NetExtender.UserInterface.Interfaces;
 using NetExtender.UserInterface.Utilities;
 using NetExtender.Utilities.UserInterface;
 
-namespace NetExtender.UserInterface.WindowsPresentation.Windows
+namespace NetExtender.UserInterface.WindowsPresentation
 {
     public class WindowWrapper : IWindow
     {

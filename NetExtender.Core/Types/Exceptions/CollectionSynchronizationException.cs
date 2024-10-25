@@ -18,8 +18,8 @@ namespace NetExtender.Types.Exceptions
         {
         }
 
-        public CollectionSynchronizationException(String? message, Exception? innerException)
-            : base(message, innerException)
+        public CollectionSynchronizationException(String? message, Exception? exception)
+            : base(message, exception)
         {
         }
 

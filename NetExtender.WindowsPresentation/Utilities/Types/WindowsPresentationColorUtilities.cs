@@ -1,15 +1,24 @@
 using System;
+using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Windows.Media;
 using NetExtender.Types.Drawing.Colors.Interfaces;
 using NetExtender.Types.Random.Interfaces;
+using NetExtender.Utilities.Core;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.WindowsPresentation.Utilities.Types
 {
     public static class WindowsPresentationColorUtilities
     {
+        private static ImmutableDictionary<Color, SolidColorBrush> Storage { get; } = typeof(Brushes)
+            .GetProperties(BindingFlags.Static | BindingFlags.Public)
+            .Where(typeof(SolidColorBrush)).Select(static property => (SolidColorBrush?) property.GetValue(null)).WhereNotNull()
+            .ToImmutableDictionary(static brush => brush.Color, static brush => brush);
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static System.Drawing.Color ToColor(this Color value)
         {
@@ -26,6 +35,24 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
         public static Color ToMediaColor(this System.Drawing.Color value)
         {
             return Color.FromArgb(value.A, value.R, value.G, value.B);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static SolidColorBrush ToBrush(this ConsoleColor color)
+        {
+            return ToBrush(color.ToColor());
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static SolidColorBrush ToBrush(this System.Drawing.Color color)
+        {
+            return ToBrush(color.ToMediaColor());
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static SolidColorBrush ToBrush(this Color color)
+        {
+            return Storage.TryGetValue(color, out SolidColorBrush? brush) ? brush : new SolidColorBrush(color);
         }
         
         /// <inheritdoc cref="ColorUtilities.ToConsoleColor(System.Drawing.Color)"/>

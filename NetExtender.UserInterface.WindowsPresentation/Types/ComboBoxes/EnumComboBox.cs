@@ -9,7 +9,7 @@ using NetExtender.Types.Enums;
 using NetExtender.Utilities.Core;
 using NetExtender.Utilities.Types;
 
-namespace NetExtender.UserInterface.WindowsPresentation.Types.ComboBoxes
+namespace NetExtender.UserInterface.WindowsPresentation
 {
     public class EnumComboBox : NullableComboBox
     {

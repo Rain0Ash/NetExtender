@@ -6,11 +6,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using NetExtender.Interfaces.Notify;
+using NetExtender.Types.Collections.Interfaces;
 
 namespace NetExtender.Types.Collections
 {
-    public class ItemObservableCollection<T> : SuppressObservableCollection<T>, INotifyItemCollection
+    public class ItemObservableCollection<T> : SuppressObservableCollection<T>, IItemObservableCollection<T>
     {
         public event PropertyChangingEventHandler? ItemChanging;
         public event PropertyChangedEventHandler? ItemChanged;
@@ -45,8 +45,8 @@ namespace NetExtender.Types.Collections
         {
             ItemChanged?.Invoke(sender, args);
         }
-
-        private void Subscribe(IList? items)
+        
+        protected virtual void Subscribe(IList? items)
         {
             if (items is null)
             {
@@ -66,8 +66,8 @@ namespace NetExtender.Types.Collections
                 }
             }
         }
-
-        private void Unsubscribe(IList? items)
+        
+        protected virtual void Unsubscribe(IList? items)
         {
             if (items is null)
             {

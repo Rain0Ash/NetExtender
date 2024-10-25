@@ -10,7 +10,7 @@ using NetExtender.Types.Flags;
 using NetExtender.Types.Flags.Interfaces;
 using NetExtender.Utilities.Types;
 
-namespace NetExtender.WindowsPresentation.Types.Input
+namespace NetExtender.WindowsPresentation.Types
 {
     [Serializable]
     public readonly struct Keys : IFlag, IEquatable<Keys>, IReadOnlyCollection<Key>
@@ -221,7 +221,8 @@ namespace NetExtender.WindowsPresentation.Types.Input
 
         public override String ToString()
         {
-            return String.Join(" + ", GetEnumerator().AsEnumerable());
+            using IEnumerator<Key> enumerator = GetEnumerator();
+            return String.Join(" + ", enumerator.AsEnumerable());
         }
 
         IEnumerable<Int32> IFlag.Enumerate()

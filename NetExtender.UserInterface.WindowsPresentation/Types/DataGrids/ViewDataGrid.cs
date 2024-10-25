@@ -1,14 +1,15 @@
 using System.Windows.Controls;
+using NetExtender.WindowsPresentation.Utilities.Types;
 
-namespace NetExtender.UserInterface.WindowsPresentation.Types.DataGrids
+namespace NetExtender.UserInterface.WindowsPresentation
 {
     public class ViewDataGrid : FixedDataGrid
     {
-        public ViewDataGrid()
+        static ViewDataGrid()
         {
-            SelectionMode = DataGridSelectionMode.Single;
-            AutoGenerateColumns = false;
-            IsReadOnly = true;
+            SelectionModeProperty.OverrideMetadataDefaultValue<ViewDataGrid>(DataGridSelectionMode.Single);
+            AutoGenerateColumnsProperty.OverrideMetadataDefaultValue<ViewDataGrid>(false);
+            IsReadOnlyProperty.OverrideMetadataDefaultValue<ViewDataGrid>(true);
             
             /*CellStyle = new Style(typeof(DataGridCell))
             {
