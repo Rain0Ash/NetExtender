@@ -8,9 +8,9 @@ namespace NetExtender.UserInterface.WindowsPresentation
     {
         static CenterTextBlock()
         {
-            TextAlignmentProperty.OverrideMetadataDefaultValue<CenterTextBlock>(TextAlignment.Center);
-            HorizontalAlignmentProperty.OverrideMetadataDefaultValue<CenterTextBlock>(HorizontalAlignment.Center);
-            VerticalAlignmentProperty.OverrideMetadataDefaultValue<CenterTextBlock>(VerticalAlignment.Center);
+            TextAlignmentProperty.OverrideMetadataDefaultValue<CenterTextBlock, TextAlignment>(TextAlignment.Center);
+            HorizontalAlignmentProperty.OverrideMetadataDefaultValue<CenterTextBlock, HorizontalAlignment>(HorizontalAlignment.Center);
+            VerticalAlignmentProperty.OverrideMetadataDefaultValue<CenterTextBlock, VerticalAlignment>(VerticalAlignment.Center);
         }
     }
 }

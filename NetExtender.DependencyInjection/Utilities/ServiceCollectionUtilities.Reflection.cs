@@ -798,7 +798,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(assembly));
             }
             
-            return Scan(collection, assembly.GetTypes(), handler);
+            return Scan(collection, assembly.GetSafeTypes(), handler);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

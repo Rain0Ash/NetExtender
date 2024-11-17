@@ -18,32 +18,32 @@ namespace NetExtender.Utilities.Core
         }
 
         public EquatableComparisonAttribute(String? name)
-            : this(name, null)
+            : this(null, name)
         {
         }
 
         public EquatableComparisonAttribute(String? name, Int32 order)
-            : this(name, null, order)
+            : this(null, name, order)
         {
         }
 
         public EquatableComparisonAttribute(Type? type)
-            : this(null, type)
+            : this(type, null)
         {
         }
 
         public EquatableComparisonAttribute(Type? type, Int32 order)
-            : this(null, type, order)
+            : this(type, null, order)
         {
         }
 
-        public EquatableComparisonAttribute(String? name, Type? type)
-            : base(name, type)
+        public EquatableComparisonAttribute(Type? type, String? name)
+            : base(type, name)
         {
         }
 
-        public EquatableComparisonAttribute(String? name, Type? type, Int32 order)
-            : base(name, type, order)
+        public EquatableComparisonAttribute(Type? type, String? name, Int32 order)
+            : base(type, name, order)
         {
         }
 

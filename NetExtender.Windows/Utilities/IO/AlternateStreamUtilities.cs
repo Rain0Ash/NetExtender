@@ -4,9 +4,9 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Security;
 using System.Threading.Tasks;
@@ -470,26 +470,30 @@ namespace NetExtender.Utilities.Windows.IO
 
         [DllImport("kernel32", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern Boolean BackupRead(
-            SafeFileHandle hFile,
-            ref Win32StreamId pBuffer,
-            Int32 numberOfBytesToRead,
-            out Int32 numberOfBytesRead,
-            [MarshalAs(UnmanagedType.Bool)] Boolean abort,
-            [MarshalAs(UnmanagedType.Bool)] Boolean processSecurity,
-            ref IntPtr context);
-
+        private static extern Boolean BackupRead(SafeFileHandle file, ref Win32StreamId buffer, Int32 request, out Int32 read, [MarshalAs(UnmanagedType.Bool)] Boolean abort, [MarshalAs(UnmanagedType.Bool)] Boolean security, ref IntPtr context);
+        
         [DllImport("kernel32", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern Boolean BackupRead(
-            SafeFileHandle hFile,
-            SafeGlobalHandle pBuffer,
-            Int32 numberOfBytesToRead,
-            out Int32 numberOfBytesRead,
-            [MarshalAs(UnmanagedType.Bool)] Boolean abort,
-            [MarshalAs(UnmanagedType.Bool)] Boolean processSecurity,
-            ref IntPtr context);
-
+        private static extern Boolean BackupRead(SafeFileHandle file, SafeGlobalHandle buffer, Int32 request, out Int32 read, [MarshalAs(UnmanagedType.Bool)] Boolean abort, [MarshalAs(UnmanagedType.Bool)] Boolean security, ref IntPtr context);
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static Boolean BackupRead(SafeFileHandle file, ref Win32StreamId buffer, Int32 request, out Int32 read, ref IntPtr context)
+        {
+            return BackupRead(file, ref buffer, request, out read, false, false, ref context);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static Boolean BackupRead(SafeFileHandle file, SafeGlobalHandle buffer, Int32 request, out Int32 read, ref IntPtr context)
+        {
+            return BackupRead(file, buffer, request, out read, false, false, ref context);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static Boolean AbortBackupRead(SafeFileHandle file, SafeGlobalHandle buffer, Int32 request, out Int32 read, ref IntPtr context)
+        {
+            return BackupRead(file, buffer, request, out read, true, false, ref context);
+        }
+        
         [DllImport("kernel32", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern Boolean BackupSeek(
@@ -535,9 +539,8 @@ namespace NetExtender.Utilities.Windows.IO
         {
             return String.IsNullOrEmpty(name) || name.IndexOfAny(InvalidStreamNameChars) == -1;
         }
-
-        //TODO: refactoring
-        [SuppressMessage("ReSharper", "CognitiveComplexity")]
+        
+        // ReSharper disable once CognitiveComplexity
         private static IEnumerable<Win32StreamInfo> GetDataStreams(String path)
         {
             if (String.IsNullOrEmpty(path))
@@ -547,19 +550,19 @@ namespace NetExtender.Utilities.Windows.IO
 
             if (path.IndexOfAny(Path.GetInvalidPathChars()) != -1)
             {
-                throw new ArgumentException(@"The specified stream name contains invalid characters.", nameof(path));
+                throw new ArgumentException("The specified stream name contains invalid characters.", nameof(path));
             }
 
             using SafeFileHandle file = WindowsPathUtilities.Safe.CreateFile(path, NativeFileAccess.GenericRead, FileShare.Read, IntPtr.Zero, FileMode.Open, NativeFileFlags.BackupSemantics, IntPtr.Zero);
-            using StreamName streamname = new StreamName();
 
             if (file.IsInvalid)
             {
                 yield break;
             }
-
+            
+            using StreamName stream = new StreamName();
             Win32StreamId id = new Win32StreamId();
-            Int32 headersize = Marshal.SizeOf(id);
+            Int32 size = Marshal.SizeOf(id);
             Boolean finished = false;
             IntPtr context = IntPtr.Zero;
             Int32 read;
@@ -568,36 +571,26 @@ namespace NetExtender.Utilities.Windows.IO
             {
                 while (!finished)
                 {
-                    // Read the next stream header:
-                    if (!BackupRead(file, ref id, headersize, out read, false, false, ref context))
+                    if (!BackupRead(file, ref id, size, out read, ref context) || size != read)
                     {
                         break;
                     }
 
-                    if (headersize != read)
+                    String? name = null;
+                    if (id.StreamNameSize > 0)
                     {
-                        break;
-                    }
-
-                    String? name;
-                    if (id.StreamNameSize <= 0)
-                    {
-                        name = null;
-                    }
-                    else
-                    {
-                        streamname.EnsureCapacity(id.StreamNameSize);
-                        if (!BackupRead(file, streamname.MemoryBlock, id.StreamNameSize, out read, false, false, ref context))
+                        stream.EnsureCapacity(id.StreamNameSize);
+                        if (!BackupRead(file, stream.MemoryBlock, id.StreamNameSize, out read, ref context))
                         {
                             name = null;
                             finished = true;
                         }
                         else
                         {
-                            name = streamname.ReadStreamName(read >> 1);
+                            name = stream.ReadStreamName(read >> 1);
                         }
                     }
-
+                    
                     if (!String.IsNullOrEmpty(name))
                     {
                         yield return new Win32StreamInfo((FileStreamType) id.StreamId, (FileStreamAttributes) id.StreamAttributes, id.Size.ToInt64(), name);
@@ -616,7 +609,7 @@ namespace NetExtender.Utilities.Windows.IO
             }
             finally
             {
-                BackupRead(file, streamname.MemoryBlock, 0, out read, true, false, ref context);
+                AbortBackupRead(file, stream.MemoryBlock, 0, out read, ref context);
             }
         }
     }

@@ -123,6 +123,12 @@ namespace NetExtender.Initializer
             [MethodImpl(MethodImplOptions.AggressiveOptimization)]
             internal static Type Seal(Type type, IDynamicAssembly assembly)
             {
+                return Seal(type, null, null, assembly);
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+            internal static Type Seal(Type type, Func<Type, String, String?>? name, Action<Type, TypeBuilder>? builder, IDynamicAssembly assembly)
+            {
                 if (type is null)
                 {
                     throw new ArgumentNullException(nameof(type));
@@ -153,18 +159,19 @@ namespace NetExtender.Initializer
                     throw new TypeSealException(type, "You can seal only class type.");
                 }
                 
-                static Type Create(Type type, IDynamicAssembly assembly)
+                static Type Create(Type type, Func<Type, String, String?>? name, Action<Type, TypeBuilder>? handler, IDynamicAssembly assembly)
                 {
                     const TypeAttributes attributes = TypeAttributes.Class | TypeAttributes.Sealed;
                     String @namespace = !String.IsNullOrWhiteSpace(type.Namespace) ? type.Namespace + "." : String.Empty;
-                    TypeBuilder builder = assembly.Module.DefineType($"{@namespace}Seal(<{type.Name}>)", attributes, type);
+                    TypeBuilder builder = assembly.Module.DefineType(name?.Invoke(type, @namespace) ?? $"{@namespace}{nameof(Seal)}(<{type.Name}>)", attributes, type);
                     
                     InheritConstructor(builder, type);
                     OverrideToString(builder, type);
+                    handler?.Invoke(type, builder);
                     return builder.CreateType() ?? throw new TypeSealException(type, "Unknown seal exception.");
                 }
 
-                return Create(type, assembly);
+                return Create(type, name, builder, assembly);
             }
             
             [MethodImpl(MethodImplOptions.AggressiveOptimization)]

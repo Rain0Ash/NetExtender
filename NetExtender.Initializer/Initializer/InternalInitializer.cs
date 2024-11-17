@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using NetExtender.Patch;
 
 namespace NetExtender.Initializer
 {
@@ -19,6 +20,9 @@ namespace NetExtender.Initializer
             public IDictionary<String, AssemblyVerifyInfo?> Assemblies { get; } = new Dictionary<String, AssemblyVerifyInfo?>();
             public IDictionary<String, AssemblyVerifyInfo?> Include { get; } = new Dictionary<String, AssemblyVerifyInfo?>();
             public ISet<String> Exclude { get; } = new HashSet<String>();
+            public ReflectionPatchCategory IncludePatchCategory { get; set; } = ReflectionPatchCategory.Capability;
+            public ISet<String> IncludePatch { get; } = new HashSet<String>();
+            public ISet<String> ExcludePatch { get; } = new HashSet<String>();
         }
     }
 }

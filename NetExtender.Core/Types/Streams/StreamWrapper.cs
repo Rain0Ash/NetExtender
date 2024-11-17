@@ -221,18 +221,30 @@ namespace NetExtender.Types.Streams
 
         protected override void Dispose(Boolean disposing)
         {
-            if (disposing)
+            try
             {
-                Stream.Dispose();
+                if (disposing)
+                {
+                    Stream.Dispose();
+                }
             }
-
-            base.Dispose(disposing);
+            finally
+            {
+                base.Dispose(disposing);
+            }
         }
 
         public override async ValueTask DisposeAsync()
         {
-            await Stream.DisposeAsync();
-            GC.SuppressFinalize(this);
+            try
+            {
+                await Stream.DisposeAsync();
+            }
+            finally
+            {
+                await base.DisposeAsync();
+                GC.SuppressFinalize(this);
+            }
         }
     }
 }

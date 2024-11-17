@@ -80,6 +80,9 @@
       <Compile Update="ExcelGrid.Content.cs">
         <DependentUpon>ExcelGrid.cs</DependentUpon>
       </Compile>
+      <Compile Update="ExcelGrid.Interface.cs">
+        <DependentUpon>ExcelGrid.cs</DependentUpon>
+      </Compile>
     </ItemGroup>
 
 </Project>

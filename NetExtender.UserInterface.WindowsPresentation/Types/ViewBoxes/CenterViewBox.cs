@@ -8,8 +8,8 @@ namespace NetExtender.UserInterface.WindowsPresentation.Types.ViewBoxes
     {
         static CenterViewBox()
         {
-            HorizontalAlignmentProperty.OverrideMetadataDefaultValue<CenterViewBox>(HorizontalAlignment.Center);
-            VerticalAlignmentProperty.OverrideMetadataDefaultValue<CenterViewBox>(VerticalAlignment.Center);
+            HorizontalAlignmentProperty.OverrideMetadataDefaultValue<CenterViewBox, HorizontalAlignment>(HorizontalAlignment.Center);
+            VerticalAlignmentProperty.OverrideMetadataDefaultValue<CenterViewBox, VerticalAlignment>(VerticalAlignment.Center);
         }
     }
 }

@@ -141,8 +141,8 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
 
             return result;
         }
-        
-        protected internal class Commands
+        //protected internal
+        public class Commands
         {
             public static ICommand SortAscending { get; } = new RoutedCommand(nameof(SortAscending), typeof(ExcelGrid));
             public static ICommand SortDescending { get; } = new RoutedCommand(nameof(SortDescending), typeof(ExcelGrid));

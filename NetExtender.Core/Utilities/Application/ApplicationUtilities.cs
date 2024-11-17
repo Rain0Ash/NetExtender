@@ -20,17 +20,17 @@ namespace NetExtender.Utilities.Application
     {
         static ApplicationUtilities()
         {
-            FriendlyName = GetFriendlyNameInternal();
-            Directory = GetDirectoryInternal();
+            FriendlyName = GetFriendlyName();
+            Directory = GetDirectory();
 
             if (FriendlyName is not null)
             {
-                Path = GetPathInternal(FriendlyName, Directory);
+                Path = GetPath(FriendlyName, Directory);
             }
 
             if (Path is not null)
             {
-                BuildDateTime = GetBuildDateTimeInternal(Path);
+                BuildTime = GetBuildDateTime(Path);
             }
         }
         
@@ -41,13 +41,13 @@ namespace NetExtender.Utilities.Application
                 return Initializer.Initializer.Arguments ?? Environment.GetCommandLineArgs().ToImmutableArray();
             }
         }
-        
+
         public static String? FriendlyName { get; }
         public static String? Path { get; }
 
         public static String? Directory { get; }
 
-        public static DateTime? BuildDateTime { get; }
+        public static DateTime? BuildTime { get; }
 
         public static Int32 ProcessId
         {
@@ -61,7 +61,7 @@ namespace NetExtender.Utilities.Application
             }
         }
 
-        private static String? GetFriendlyNameInternal()
+        private static String? GetFriendlyName()
         {
             try
             {
@@ -73,7 +73,7 @@ namespace NetExtender.Utilities.Application
             }
         }
 
-        private static String? GetDirectoryInternal()
+        private static String? GetDirectory()
         {
             try
             {
@@ -98,12 +98,12 @@ namespace NetExtender.Utilities.Application
             }
         }
 
-        private static DateTime? GetBuildDateTimeInternal()
+        private static DateTime? GetBuildDateTime()
         {
-            return GetBuildDateTimeInternal(Path ?? GetPathInternal());
+            return GetBuildDateTime(Path ?? GetPath());
         }
 
-        private static DateTime? GetBuildDateTimeInternal(String? path)
+        private static DateTime? GetBuildDateTime(String? path)
         {
             try
             {
@@ -115,13 +115,13 @@ namespace NetExtender.Utilities.Application
             }
         }
 
-        private static String? GetPathInternal()
+        private static String? GetPath()
         {
-            return GetPathInternal(FriendlyName ?? GetFriendlyNameInternal(), Directory ?? GetDirectoryInternal());
+            return GetPath(FriendlyName ?? GetFriendlyName(), Directory ?? GetDirectory());
         }
 
         // ReSharper disable once UnusedParameter.Local
-        private static String? GetPathInternal(String? name, String? directory)
+        private static String? GetPath(String? name, String? directory)
         {
             try
             {

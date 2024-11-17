@@ -84,13 +84,13 @@ namespace NetExtender.Types.Reflection
             {
                 return result;
             }
-            
-            if (type.GetMethods(binding).Where(method => method.Name.Contains(name)).Cast<MethodBase>().ToArray() is not { Length: > 0 } methods)
+
+            if (type.GetMethods(binding).Where(method => method.Name.Contains(name)).ToArray() is { Length: > 0 } methods)
             {
-                return null;
+                return Type.DefaultBinder.SelectMethod(binding, methods, new[] { type });
             }
-            
-            return (MethodInfo?) Type.DefaultBinder.SelectMethod(binding, methods, new[] { type }, null);
+
+            return null;
         }
         
         public abstract Object? Invoke(Object? value);

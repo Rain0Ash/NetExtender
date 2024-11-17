@@ -10,12 +10,23 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Win32.SafeHandles;
+using NetExtender.IO.Interfaces;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Utilities.IO
 {
     public static class FileUtilities
     {
+        private static IUnsafeFileSystemHandler NetExtender
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get
+            {
+                return IUnsafeFileSystemHandler.Default;
+            }
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean HasAttribute(String path, FileAttributes attributes)
         {
             return HasAttribute(path, attributes, out _);
@@ -29,10 +40,10 @@ namespace NetExtender.Utilities.IO
             }
 
             current = File.GetAttributes(path);
-
             return HasAttribute(current, attributes);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean HasAttribute(this FileAttributes current, FileAttributes attributes)
         {
             return (current & attributes) == attributes;
@@ -66,6 +77,7 @@ namespace NetExtender.Utilities.IO
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static FileInfo CopyTo(this FileInfo info, FileInfo destination)
         {
             if (info is null)
@@ -81,6 +93,7 @@ namespace NetExtender.Utilities.IO
             return info.CopyTo(destination.FullName);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static FileInfo CopyTo(this FileInfo info, FileInfo destination, Boolean overwrite)
         {
             if (info is null)
@@ -96,6 +109,7 @@ namespace NetExtender.Utilities.IO
             return info.CopyTo(destination.FullName, overwrite);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryCopyTo(this FileInfo info, String destination)
         {
             return TryCopyTo(info, destination, out _);
@@ -125,6 +139,7 @@ namespace NetExtender.Utilities.IO
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryCopyTo(this FileInfo info, String destination, Boolean overwrite)
         {
             return TryCopyTo(info, destination, overwrite, out _);
@@ -231,11 +246,13 @@ namespace NetExtender.Utilities.IO
             return reader.CurrentEncoding;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Byte[] ReadFileBytes(String path)
         {
             return File.ReadAllBytes(path);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Byte[]? TryReadFileBytes(String path)
         {
             try
@@ -248,6 +265,7 @@ namespace NetExtender.Utilities.IO
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryReadFileBytes(String path, [MaybeNullWhen(false)] out Byte[] result)
         {
             try
@@ -262,16 +280,19 @@ namespace NetExtender.Utilities.IO
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String ReadFileText(String path)
         {
             return File.ReadAllText(path);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String ReadFileText(String path, Encoding? encoding)
         {
             return encoding is null ? ReadFileText(path) : File.ReadAllText(path, encoding);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String? TryReadFileText(String path)
         {
             try
@@ -284,6 +305,7 @@ namespace NetExtender.Utilities.IO
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String? TryReadFileText(String path, Encoding encoding)
         {
             try
@@ -296,6 +318,7 @@ namespace NetExtender.Utilities.IO
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryReadFileText(String path, [MaybeNullWhen(false)] out String result)
         {
             try
@@ -310,6 +333,7 @@ namespace NetExtender.Utilities.IO
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryReadFileText(String path, Encoding encoding, [MaybeNullWhen(false)] out String result)
         {
             try
@@ -324,16 +348,19 @@ namespace NetExtender.Utilities.IO
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String[] ReadFileLines(String path)
         {
             return File.ReadAllLines(path);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String[] ReadFileLines(String path, Encoding? encoding)
         {
             return encoding is null ? ReadFileLines(path) : File.ReadAllLines(path, encoding);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String[]? TryReadFileLines(String path)
         {
             try
@@ -346,6 +373,7 @@ namespace NetExtender.Utilities.IO
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String[]? TryReadFileLines(String path, Encoding encoding)
         {
             try
@@ -358,6 +386,7 @@ namespace NetExtender.Utilities.IO
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryReadFileLines(String path, [MaybeNullWhen(false)] out String[] result)
         {
             try
@@ -372,6 +401,7 @@ namespace NetExtender.Utilities.IO
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryReadFileLines(String path, Encoding? encoding, [MaybeNullWhen(false)] out String[] result)
         {
             try
@@ -386,11 +416,13 @@ namespace NetExtender.Utilities.IO
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static StreamReader GetFileReader(String path, Encoding? encoding = null)
         {
             return encoding is null ? new StreamReader(path) : new StreamReader(path, encoding);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<String> ReadFileSequential(String path)
         {
             StreamReader file = GetFileReader(path);
@@ -401,6 +433,7 @@ namespace NetExtender.Utilities.IO
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<String> ReadFileSequential(String path, Encoding? encoding)
         {
             using StreamReader file = GetFileReader(path, encoding);
@@ -411,6 +444,7 @@ namespace NetExtender.Utilities.IO
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<String>? TryReadFileSequential(String path)
         {
             try
@@ -423,6 +457,7 @@ namespace NetExtender.Utilities.IO
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<String>? TryReadFileSequential(String path, Encoding encoding)
         {
             try
@@ -435,6 +470,7 @@ namespace NetExtender.Utilities.IO
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryReadFileSequential(String path, [MaybeNullWhen(false)] out IEnumerable<String> result)
         {
             try
@@ -449,6 +485,7 @@ namespace NetExtender.Utilities.IO
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryReadFileSequential(String path, Encoding encoding, [MaybeNullWhen(false)] out IEnumerable<String> result)
         {
             try

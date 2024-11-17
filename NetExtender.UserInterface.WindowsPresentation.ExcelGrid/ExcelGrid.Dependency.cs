@@ -631,16 +631,16 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
             
             if (excel.AutoInsert)
             {
-                column = Math.Clamp(column, 0, excel.Columns - 1 + (excel.CanInsertColumns ? 1 : 0));
-                row = Math.Clamp(row, 0, excel.Rows - 1 + (excel.CanInsertRows ? 1 : 0));
+                column = Clamp(column, 0, excel.Columns - 1 + (excel.CanInsertColumns ? 1 : 0));
+                row = Clamp(row, 0, excel.Rows - 1 + (excel.CanInsertRows ? 1 : 0));
             }
             else
             {
-                column = Math.Clamp(column, 0, excel.Columns - 1);
-                row = Math.Clamp(row, 0, excel.Rows - 1);
+                column = Clamp(column, 0, excel.Columns - 1);
+                row = Clamp(row, 0, excel.Rows - 1);
             }
             
-            return new ExcelCell(row, column);
+            return new ExcelCell(column, row);
         }
         
         protected static void SelectionCellChanged(DependencyObject? sender, DependencyPropertyChangedEventArgs args)
@@ -660,9 +660,9 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 return null;
             }
             
-            Int32 column = Math.Clamp(cell.Column, 0, excel.Columns - 1);
-            Int32 row = Math.Clamp(cell.Row, 0, excel.Rows - 1);
-            return new ExcelCell(row, column);
+            Int32 column = Clamp(cell.Column, 0, excel.Columns - 1);
+            Int32 row = Clamp(cell.Row, 0, excel.Rows - 1);
+            return new ExcelCell(column, row);
         }
 
         protected static void ItemsSourceChanged(DependencyObject? sender, DependencyPropertyChangedEventArgs args)
@@ -673,6 +673,22 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
             }
             
             excel.ItemsSourceChanged();
+        }
+        
+        private static Int32 Clamp(Int32 value, Int32 min, Int32 max)
+        {
+            Int32 result = value;
+            if (result > max)
+            {
+                result = max;
+            }
+            
+            if (result < min)
+            {
+                result = min;
+            }
+            
+            return result;
         }
         
         protected static void Reload(DependencyObject? sender, DependencyPropertyChangedEventArgs args)

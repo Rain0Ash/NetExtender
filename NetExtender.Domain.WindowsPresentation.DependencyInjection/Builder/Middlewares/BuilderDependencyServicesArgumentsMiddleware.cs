@@ -15,8 +15,23 @@ namespace NetExtender.Domains.WindowsPresentation.Builder.Middlewares
     [ApplicationBuilderMiddleware]
     public class BuilderDependencyServicesArgumentsMiddleware : Middleware<IServiceProvider>
     {
+        public BuilderDependencyServicesArgumentsMiddleware()
+        {
+            Idempotency = MiddlewareIdempotencyMode.Single;
+        }
+        
         public override void Invoke(Object? sender, IServiceProvider provider)
         {
+            if (provider is null)
+            {
+                throw new ArgumentNullException(nameof(provider));
+            }
+
+            if (!Memorize(sender, provider))
+            {
+                return;
+            }
+            
             _ = provider.GetService<Arguments>();
         }
     }

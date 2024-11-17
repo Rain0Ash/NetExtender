@@ -2,93 +2,71 @@ using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using NetExtender.WindowsPresentation.Types.Bindings;
 
 namespace NetExtender.UserInterface.WindowsPresentation
 {
-    public class TextMenuItem : MenuItem
+    public class TextMenuItem : AutoHideMenuItem
     {
-        public static readonly DependencyProperty AutoHideProperty = DependencyProperty.Register(nameof(AutoHide), typeof(Boolean), typeof(TextMenuItem), new PropertyMetadata(true, OnAutoHideChanged));
-        public static readonly RoutedEvent AutoHideChangedEvent = EventManager.RegisterRoutedEvent(nameof(AutoHideChanged), RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(TextMenuItem));
+        public static readonly DependencyProperty TextProperty = TextBlock.TextProperty.AddOwner(typeof(TextMenuItem), new FrameworkPropertyMetadata(String.Empty, FrameworkPropertyMetadataOptions.None));
+        public static readonly DependencyProperty TextAlignmentProperty = TextBlock.TextAlignmentProperty.AddOwner(typeof(TextMenuItem), new FrameworkPropertyMetadata(TextAlignment.Center, FrameworkPropertyMetadataOptions.None));
         
-        private static Binding CommandParameterBinding { get; } = new Binding();
+        protected static RelativeSource RelativeSource { get; } = new RelativeSource(RelativeSourceMode.FindAncestor, typeof(TextMenuItem), 1);
+        protected static Binding TextBinding { get; } = new TwoWayBinding(nameof(Text), RelativeSource);
+        protected static Binding TextAlignmentBinding { get; } = new TwoWayBinding(nameof(TextAlignment), RelativeSource);
+        protected static Binding IsEnabledBinding { get; } = new TwoWayBinding(nameof(IsEnabled), RelativeSource);
         
-        public Boolean AutoHide
+        public String Text
         {
             [System.Diagnostics.DebuggerStepThrough]
             get
             {
-                return (Boolean) GetValue(AutoHideProperty);
+                return (String) GetValue(TextProperty);
             }
             [System.Diagnostics.DebuggerStepThrough]
             set
             {
-                SetValue(AutoHideProperty, value);
+                SetValue(TextProperty, value);
             }
         }
         
-        public event RoutedEventHandler AutoHideChanged
+        public TextAlignment TextAlignment
         {
             [System.Diagnostics.DebuggerStepThrough]
-            add
+            get
             {
-                AddHandler(AutoHideChangedEvent, value);
+                return (TextAlignment) GetValue(TextAlignmentProperty);
             }
             [System.Diagnostics.DebuggerStepThrough]
-            remove
+            set
             {
-                RemoveHandler(AutoHideChangedEvent, value);
+                SetValue(TextAlignmentProperty, value);
             }
         }
         
         public TextMenuItem()
         {
             Loaded += OnLoaded;
-            IsEnabledChanged += OnIsEnabledChanged;
-            SetBinding(CommandParameterProperty, CommandParameterBinding);
         }
         
         private void OnLoaded(Object sender, RoutedEventArgs args)
         {
-            UpdateVisibility();
+            Header ??= CreateHeader();
         }
         
-        private void OnIsEnabledChanged(Object sender, DependencyPropertyChangedEventArgs args)
+        protected virtual Object CreateHeader()
         {
-            UpdateVisibility();
-        }
-        
-        private void UpdateVisibility()
-        {
-            if (AutoHide)
+            TextBlock header = new TextBlock
             {
-                SetCurrentValue(VisibilityProperty, IsEnabled ? Visibility.Visible : Visibility.Collapsed);
-            }
-        }
-        
-        private static void OnAutoHideChanged(DependencyObject @object, DependencyPropertyChangedEventArgs args)
-        {
-            if (@object is not TextMenuItem item)
-            {
-                return;
-            }
+                TextAlignment = TextAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Stretch,
+                VerticalAlignment = VerticalAlignment.Stretch
+            };
             
-            item.UpdateVisibility();
-            item.OnAutoHideChanged(new RoutedEventArgs(AutoHideChangedEvent));
-        }
-
-        protected virtual void OnAutoHideChanged(RoutedEventArgs args)
-        {
-            RaiseEvent(args);
-        }
-        
-        public override String? ToString()
-        {
-            if (Header is TextBlock block)
-            {
-                return block.Text;
-            }
-            
-            return Header.ToString() ?? Name;
+            header.SetBinding(TextBlock.TextProperty, TextBinding);
+            header.SetBinding(TextBlock.TextAlignmentProperty, TextAlignmentBinding);
+            header.SetBinding(IsEnabledProperty, IsEnabledBinding);
+            return header;
         }
     }
 }

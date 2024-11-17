@@ -103,12 +103,12 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 throw new ArgumentNullException(nameof(element));
             }
             
-            if (descriptor.Property is not { } property || property.IsEnabledBy.Property is null)
+            if (descriptor.Property is not { } property || property.IsEnabledByProperty is null)
             {
                 return false;
             }
             
-            element.SetIsEnabledBinding(property.IsEnabledBy.Property, property.IsEnabledBy.Value, property.IsEnabledBy.Source);
+            element.SetIsEnabledBinding(property.IsEnabledByProperty, property.IsEnabledByValue, property.IsEnabledBySource);
             return true;
         }
         
@@ -228,8 +228,8 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 return null;
             }
             
-            element.VerticalAlignment = VerticalAlignment.Stretch;
             element.HorizontalAlignment = HorizontalAlignment.Stretch;
+            element.VerticalAlignment = VerticalAlignment.Stretch;
             return element;
         }
         

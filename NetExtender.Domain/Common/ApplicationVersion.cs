@@ -109,7 +109,7 @@ namespace NetExtender.Domains
         }
 
         public ApplicationVersion(UInt32 major, UInt32 minor = 0, UInt32 patch = 0)
-            : this(major, minor, patch, ApplicationUtilities.BuildDateTime)
+            : this(major, minor, patch, ApplicationUtilities.BuildTime)
         {
         }
 

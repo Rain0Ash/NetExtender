@@ -5,7 +5,9 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
+using NetExtender.IO.Interfaces;
 using NetExtender.Types.Exceptions;
 using NetExtender.Utilities.Types;
 
@@ -42,6 +44,15 @@ namespace NetExtender.Utilities.IO
 
     public static class PathUtilities
     {
+        private static IUnsafeFileSystemHandler NetExtender
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get
+            {
+                return IUnsafeFileSystemHandler.Default;
+            }
+        }
+
         public static readonly Char[] Separators = {Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar};
 
         /// <summary>

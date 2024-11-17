@@ -44,8 +44,11 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Compile Update="Patch\WindowsPresentation.Patch.cs">
-        <DependentUpon>WindowsPresentationPatch.cs</DependentUpon>
+      <Compile Update="Patch\WindowsPresentationCommandSender.Patch.cs">
+        <DependentUpon>WindowsPresentationCommandSenderPatch.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Patch\WindowsPresentationFusion.Patch.cs">
+        <DependentUpon>WindowsPresentationFusionPatch.cs</DependentUpon>
       </Compile>
     </ItemGroup>
 

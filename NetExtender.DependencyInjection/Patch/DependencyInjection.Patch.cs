@@ -23,12 +23,10 @@ namespace NetExtender.Patch
             
             [ReflectionSignature(typeof(ActivatorUtilities))]
             public delegate Object CreateConstructorCallSite(Object lifetime, Type serviceType, Type implementationType, Object callSiteChain);
-
-            public delegate IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions);
         }
         
         [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
-        protected class Patch : ReflectionPatch
+        protected class Patch : AutoReflectionPatch
         {
             [ReflectionNaming(typeof(ActivatorUtilities))]
             protected static Type CallSiteFactory
@@ -55,7 +53,7 @@ namespace NetExtender.Patch
                 get
                 {
                     const BindingFlags binding = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
-                    ParameterInfo[]? parameters = typeof(Signature.TryFindPreferredConstructor).GetMethod(nameof(Action.Invoke))?.GetParameters();
+                    ParameterInfo[]? parameters = typeof(Signature.TryFindPreferredConstructor).GetMethod(nameof(Action.Invoke))?.GetSafeParameters();
                     return parameters is not null ? ActivatorUtilities.GetMethod(nameof(Signature.TryFindPreferredConstructor), binding, parameters)?.CreateDelegate<Signature.TryFindPreferredConstructor>() : null;
                 }
             }
@@ -65,7 +63,7 @@ namespace NetExtender.Patch
                 get
                 {
                     const BindingFlags binding = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
-                    ParameterInfo[]? parameters = typeof(Signature.CreateInstance).GetMethod(nameof(Action.Invoke))?.GetParameters();
+                    ParameterInfo[]? parameters = typeof(Signature.CreateInstance).GetMethod(nameof(Action.Invoke))?.GetSafeParameters();
                     return parameters is not null ? ActivatorUtilities.GetMethod(nameof(Signature.CreateInstance), binding, parameters)?.CreateDelegate<Signature.CreateInstance>() : null;
                 }
             }
@@ -79,7 +77,7 @@ namespace NetExtender.Patch
                 }
             }
 
-            protected virtual Signature.Transpiler Transpiler
+            protected virtual HarmonyUtilities.Signature.Transpiler Transpiler
             {
                 get
                 {
@@ -118,8 +116,24 @@ namespace NetExtender.Patch
                 }
             }
 
+            public override String Name
+            {
+                get
+                {
+                    return GetName(typeof(DependencyInjectionPatch));
+                }
+            }
+            
+            public sealed override ReflectionPatchCategory Category
+            {
+                get
+                {
+                    return ReflectionPatchCategory.Capability;
+                }
+            }
+            
             public sealed override ReflectionPatchState State { get; protected set; }
-
+            
             public override ReflectionPatchThrow IsThrow
             {
                 get
@@ -138,16 +152,20 @@ namespace NetExtender.Patch
                 Harmony harmony = new Harmony($"{nameof(NetExtender)}.{nameof(DependencyInjection)}.{nameof(DependencyInjectionPatch)}");
                 HarmonyMethod transpiler = new HarmonyMethod(Transpiler);
 
-                harmony.Transpiler(constructor.Method, transpiler);
+                harmony.Transpiler(transpiler, constructor.Method);
                 
                 if (instance.Method.DeclaringType?.Assembly.GetName().Version?.Major <= 7)
                 {
-                    harmony.Transpiler(instance.Method, transpiler);
+                    harmony.Transpiler(transpiler, instance.Method);
                 }
                 
-                harmony.Transpiler(callsite, transpiler);
+                harmony.Transpiler(transpiler, callsite);
 
                 return ReflectionPatchState.Apply;
+            }
+            
+            protected override void Dispose(Boolean disposing)
+            {
             }
         }
     }

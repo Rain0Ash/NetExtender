@@ -1,19 +1,18 @@
 using System;
 using System.Windows;
-using NetExtender.Types.Reflection;
 
 namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
 {
     public partial class ExcelGrid
     {
-        protected GridLength GetColumnWidth(Int32 column)
+        protected GridLength ColumnWidth(Int32 column)
         {
             return column >= 0 && column < ColumnDefinitions.Count && ColumnDefinitions[column] is ExcelColumnDefinition { Width: { Value: >= 0 } width } ? width : DefaultColumnWidth;
         }
         
-        protected GridLength GetRowHeight(Int32 i)
+        protected GridLength RowHeight(Int32 row)
         {
-            return i >= 0 && i < RowDefinitions.Count && RowDefinitions[i] is ExcelRowDefinition { Height: { Value: >= 0 } height } ? height : DefaultRowHeight;
+            return row >= 0 && row < RowDefinitions.Count && RowDefinitions[row] is ExcelRowDefinition { Height: { Value: >= 0 } height } ? height : DefaultRowHeight;
         }
         
         protected void AutoSizeAllColumns()
@@ -61,7 +60,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
 
             for (Int32 row = 0; row < grid.RowDefinitions.Count; row++)
             {
-                if (GetElement(new ExcelCell(row, column)) is { } element)
+                if (GetElement(new ExcelCell(column, row)) is { } element)
                 {
                     width = Math.Max(width, element.ActualWidth + element.Margin.Left + element.Margin.Right);
                 }
@@ -83,7 +82,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
 
             for (Int32 column = 0; column < grid.ColumnDefinitions.Count; column++)
             {
-                if (GetElement(new ExcelCell(row, column)) is { } element)
+                if (GetElement(new ExcelCell(column, row)) is { } element)
                 {
                     height = Math.Max(height, element.ActualHeight + element.Margin.Top + element.Margin.Bottom);
                 }
@@ -100,12 +99,12 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 return;
             }
             
-            using StackOverflowCounter overflow = new StackOverflowCounter(nameof(UpdateGridSize)) { Limit = 3 };
+            /*using StackOverflowCounter overflow = new StackOverflowCounter(nameof(UpdateGridSize)) { Limit = 3 };
             
             if (!overflow)
             {
                 return;
-            }
+            }*/
             
             grid.UpdateLayout();
             ColumnGrid.UpdateLayout();
@@ -113,7 +112,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
 
             for (Int32 row = 0; row < Rows; row++)
             {
-                if (DefaultRowHeight == GridLength.Auto || GetRowHeight(row) == GridLength.Auto)
+                if (DefaultRowHeight == GridLength.Auto || RowHeight(row) == GridLength.Auto)
                 {
                     AutoSizeRow(row);
                 }
@@ -123,7 +122,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
             Double stars = 0;
             for (Int32 column = 0; column < Columns; column++)
             {
-                GridLength length = GetColumnWidth(column);
+                GridLength length = ColumnWidth(column);
                 if (length == GridLength.Auto)
                 {
                     width += AutoSizeColumn(column) ?? 0;
@@ -141,7 +140,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
             stars = Math.Max((SheetScrollViewer.ViewportWidth - width) / stars, 0);
             for (Int32 column = 0; column < Columns; column++)
             {
-                if (GetColumnWidth(column) is { IsStar: true } length)
+                if (ColumnWidth(column) is { IsStar: true } length)
                 {
                     TrySetColumnWidth(column, new GridLength(stars * length.Value));
                 }

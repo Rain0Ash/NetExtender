@@ -197,7 +197,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 EndKeyIsPressed = false;
             }
 
-            ExcelCell cell = new ExcelCell(row, column);
+            ExcelCell cell = new ExcelCell(column, row);
             if (!HandleAutoInsert(cell))
             {
                 SelectionCell = cell;

@@ -12,7 +12,7 @@ using NetExtender.WindowsPresentation.Types.Commands;
 
 namespace NetExtender.Patch
 {
-    public partial class WindowsPresentationPatch
+    public partial class WindowsPresentationCommandSenderPatch
     {
         protected static class Signature
         {
@@ -21,12 +21,10 @@ namespace NetExtender.Patch
             
             [ReflectionSignature]
             public delegate void CriticalExecuteCommandSource(ICommandSource commandSource, Boolean userInitiated);
-
-            public delegate IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions);
         }
         
         [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
-        protected class Patch : ReflectionPatch
+        protected class Patch : AutoReflectionPatch
         {
             [ReflectionNaming]
             protected static Type CommandHelpers
@@ -46,7 +44,7 @@ namespace NetExtender.Patch
                 get
                 {
                     const BindingFlags binding = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
-                    ParameterInfo[]? parameters = typeof(Signature.CanExecuteCommandSource).GetMethod(nameof(Action.Invoke))?.GetParameters();
+                    ParameterInfo[]? parameters = typeof(Signature.CanExecuteCommandSource).GetMethod(nameof(Action.Invoke))?.GetSafeParameters();
                     return parameters is not null ? CommandHelpers.GetMethod(nameof(Signature.CanExecuteCommandSource), binding, parameters)?.CreateDelegate<Signature.CanExecuteCommandSource>() : null;
                 }
             }
@@ -57,12 +55,12 @@ namespace NetExtender.Patch
                 get
                 {
                     const BindingFlags binding = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
-                    ParameterInfo[]? parameters = typeof(Signature.CriticalExecuteCommandSource).GetMethod(nameof(Action.Invoke))?.GetParameters();
+                    ParameterInfo[]? parameters = typeof(Signature.CriticalExecuteCommandSource).GetMethod(nameof(Action.Invoke))?.GetSafeParameters();
                     return parameters is not null ? CommandHelpers.GetMethod(nameof(Signature.CriticalExecuteCommandSource), binding, parameters)?.CreateDelegate<Signature.CriticalExecuteCommandSource>() : null;
                 }
             }
 
-            protected virtual Signature.Transpiler CanExecuteTranspiler
+            protected virtual HarmonyUtilities.Signature.Transpiler CanExecuteTranspiler
             {
                 get
                 {
@@ -96,7 +94,7 @@ namespace NetExtender.Patch
                 }
             }
 
-            protected virtual Signature.Transpiler ExecuteTranspiler
+            protected virtual HarmonyUtilities.Signature.Transpiler ExecuteTranspiler
             {
                 get
                 {
@@ -130,6 +128,22 @@ namespace NetExtender.Patch
                 }
             }
 
+            public override String Name
+            {
+                get
+                {
+                    return GetName(typeof(WindowsPresentationCommandSenderPatch));
+                }
+            }
+            
+            public sealed override ReflectionPatchCategory Category
+            {
+                get
+                {
+                    return ReflectionPatchCategory.Capability;
+                }
+            }
+
             public sealed override ReflectionPatchState State { get; protected set; }
 
             public override ReflectionPatchThrow IsThrow
@@ -147,22 +161,22 @@ namespace NetExtender.Patch
                     return ReflectionPatchState.Failed;
                 }
 
-                Harmony harmony = new Harmony($"{nameof(NetExtender)}.{nameof(WindowsPresentation)}.{nameof(WindowsPresentationPatch)}");
+                Harmony harmony = new Harmony($"{nameof(NetExtender)}.{nameof(WindowsPresentation)}.{nameof(WindowsPresentationCommandSenderPatch)}");
 
-                harmony.Transpiler(canexecute.Method, new HarmonyMethod(CanExecuteTranspiler));
-                harmony.Transpiler(execute.Method, new HarmonyMethod(ExecuteTranspiler));
+                harmony.Transpiler(CanExecuteTranspiler, canexecute.Method);
+                harmony.Transpiler(ExecuteTranspiler, execute.Method);
 
                 return ReflectionPatchState.Apply;
             }
             
-            [ReflectionNaming]
+            [ReflectionSignature]
             protected static Boolean CanExecute(ICommand command, ICommandSource? source)
             {
                 Object? parameter = source?.CommandParameter;
                 return command.CanExecute(new CommandSenderArgs(source, parameter)) || command.CanExecute(parameter);
             }
             
-            [ReflectionNaming]
+            [ReflectionSignature]
             protected static Boolean Execute(ICommand command, ICommandSource? source)
             {
                 const Boolean result = false;
@@ -181,6 +195,10 @@ namespace NetExtender.Patch
                 }
                 
                 return result;
+            }
+            
+            protected override void Dispose(Boolean disposing)
+            {
             }
         }
     }

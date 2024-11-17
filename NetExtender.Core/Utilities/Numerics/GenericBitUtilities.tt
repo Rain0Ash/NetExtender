@@ -2,6 +2,7 @@
 <#@ output extension=".cs" encoding="utf-8"#>
 <#@ assembly name="System.Core"#>
 <#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Linq" #>
 // This is an independent project of an individual developer. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 

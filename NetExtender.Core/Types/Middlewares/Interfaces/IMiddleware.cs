@@ -81,6 +81,7 @@ namespace NetExtender.Types.Middlewares.Interfaces
     public interface IMiddlewareInfo
     {
         public MiddlewareExecutionContext Context { get; }
+        public MiddlewareIdempotencyMode Idempotency { get; }
         
         public Boolean IsAsync
         {

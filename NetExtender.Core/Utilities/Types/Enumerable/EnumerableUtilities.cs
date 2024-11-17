@@ -10,6 +10,11 @@ namespace NetExtender.Utilities.Types
     [SuppressMessage("ReSharper", "IteratorNeverReturns")]
     public static partial class EnumerableUtilities
     {
+        public static IEnumerable<T> GetEnumerableFrom<T>(T item)
+        {
+            yield return item;
+        }
+        
         public static Boolean IsReadOnly<T>(this IEnumerable<T> source)
         {
             return source switch

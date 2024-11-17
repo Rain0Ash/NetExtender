@@ -21,13 +21,13 @@ namespace NetExtender.Utilities.Core
 
         public StringComparison Comparison { get; init; } = StringComparison.Ordinal;
 
-        protected ComparisonAttribute(String? name, Type? type)
-            : base(name, type)
+        protected ComparisonAttribute(Type? type, String? name)
+            : base(type, name)
         {
         }
 
-        protected ComparisonAttribute(String? name, Type? type, Int32 order)
-            : base(name, type, order)
+        protected ComparisonAttribute(Type? type, String? name, Int32 order)
+            : base(type, name, order)
         {
         }
 

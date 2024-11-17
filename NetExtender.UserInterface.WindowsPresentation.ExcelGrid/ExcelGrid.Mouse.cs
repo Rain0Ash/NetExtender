@@ -173,7 +173,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
             Int32 column = Get(args.GetPosition(ColumnGrid)).Column;
             if (column >= 0)
             {
-                SelectionCell = new ExcelCell(Rows - 1, column);
+                SelectionCell = new ExcelCell(column, Rows - 1);
             }
         }
         
@@ -190,8 +190,8 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
             if (column >= 0)
             {
                 Boolean shift = (Keyboard.Modifiers & ModifierKeys.Shift) != ModifierKeys.None;
-                SelectionCell = new ExcelCell(Rows - 1, column);
-                CurrentCell = shift ? new ExcelCell(0, CurrentCell.Column) : new ExcelCell(0, column);
+                SelectionCell = new ExcelCell(column, Rows - 1);
+                CurrentCell = shift ? new ExcelCell(CurrentCell.Column, 0) : new ExcelCell(column, 0);
                 ScrollIntoView(SelectionCell);
             }
             
@@ -217,7 +217,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 return;
             }
             
-            SelectionCell = new ExcelCell(row, Columns - 1);
+            SelectionCell = new ExcelCell(Columns - 1, row);
             args.Handled = true;
         }
         
@@ -244,8 +244,8 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 return;
             }
             
-            SelectionCell = new ExcelCell(row, Columns - 1);
-            CurrentCell = Keyboard.Modifiers.HasFlag(ModifierKeys.Shift) ? new ExcelCell(CurrentCell.Row, 0) : new ExcelCell(row, 0);
+            SelectionCell = new ExcelCell(Columns - 1, row);
+            CurrentCell = Keyboard.Modifiers.HasFlag(ModifierKeys.Shift) ? new ExcelCell(0, CurrentCell.Row) : new ExcelCell(0, row);
 
             ScrollIntoView(SelectionCell);
             RowGrid.CaptureMouse();
@@ -274,7 +274,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
             }
             
             index = FindViewIndex(index);
-            ExcelCell cell = ItemsInRows ? new ExcelCell(index, 0) : new ExcelCell(0, index);
+            ExcelCell cell = ItemsInRows ? new ExcelCell(0, index) : new ExcelCell(index, 0);
             SelectionCell = cell;
             CurrentCell = cell;
             ScrollIntoView(cell);

@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Concurrent;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using NetExtender.Types.Exceptions;
 using NetExtender.Types.Middlewares.Exceptions;
 using NetExtender.Types.Middlewares.Interfaces;
 
@@ -18,6 +20,15 @@ namespace NetExtender.Types.Middlewares
     {
         Parallel,
         Sequential
+    }
+
+    public enum MiddlewareIdempotencyMode : Byte
+    {
+        None,
+        Single,
+        Sender,
+        Argument,
+        SenderArgument
     }
     
     public abstract class AsyncValueMiddleware<T> : AsyncMiddleware<T>
@@ -68,9 +79,22 @@ namespace NetExtender.Types.Middlewares
                 Delegate = @delegate ?? throw new ArgumentNullException(nameof(@delegate));
             }
             
-            public override ValueTask InvokeValueAsync(T argument)
+            public override async ValueTask InvokeValueAsync(T argument)
             {
-                return Delegate.Invoke(argument);
+                if (!Memorize(argument))
+                {
+                    return;
+                }
+
+                try
+                {
+                    await Delegate.Invoke(argument);
+                }
+                catch (Exception)
+                {
+                    Forget(argument);
+                    throw;
+                }
             }
             
             public override ValueTask InvokeValueAsync(Object? sender, T argument)
@@ -103,9 +127,22 @@ namespace NetExtender.Types.Middlewares
                 Delegate = @delegate ?? throw new ArgumentNullException(nameof(@delegate));
             }
             
-            public override ValueTask InvokeValueAsync(Object? sender, T argument)
+            public override async ValueTask InvokeValueAsync(Object? sender, T argument)
             {
-                return Delegate.Invoke(sender, argument);
+                if (!Memorize(sender, argument))
+                {
+                    return;
+                }
+
+                try
+                {
+                    await Delegate.Invoke(sender, argument);
+                }
+                catch (Exception)
+                {
+                    Forget(sender, argument);
+                    throw;
+                }
             }
             
             public override Int32 GetHashCode()
@@ -139,6 +176,8 @@ namespace NetExtender.Types.Middlewares
             return value is not null ? new AsyncSenderHandler(value) : null;
         }
         
+        protected ConcurrentHashSet<(Object? Sender, T Argument)> Memory { get; } = new ConcurrentHashSet<(Object? Sender, T Argument)>();
+        
         public Boolean IsAsync
         {
             get
@@ -154,7 +193,28 @@ namespace NetExtender.Types.Middlewares
                 return false;
             }
         }
+
+        protected Boolean Memorize(T argument)
+        {
+            return Memorize(Memory, null, argument);
+        }
+
+        protected Boolean Memorize(Object? sender, T argument)
+        {
+            return Memorize(Memory, sender, argument);
+        }
+
+        protected Boolean Forget(T argument)
+        {
+            return Forget(Memory, null, argument);
+        }
+
+        protected Boolean Forget(Object? sender, T argument)
+        {
+            return Forget(Memory, sender, argument);
+        }
         
+        //TODO: в DomainBuilder везде расставить Manager.Invoke, добавить рефлексивную проверку, что Domain устанавливает правила патчей ранее, чем происходит ModuleInitializer
         public virtual Task InvokeAsync(T argument)
         {
             return InvokeAsync(null, argument);
@@ -282,9 +342,22 @@ namespace NetExtender.Types.Middlewares
                 Delegate = @delegate ?? throw new ArgumentNullException(nameof(@delegate));
             }
             
-            public override Task InvokeAsync(T argument)
+            public override async Task InvokeAsync(T argument)
             {
-                return Delegate.Invoke(argument);
+                if (!Memorize(argument))
+                {
+                    return;
+                }
+
+                try
+                {
+                    await Delegate.Invoke(argument);
+                }
+                catch (Exception)
+                {
+                    Forget(argument);
+                    throw;
+                }
             }
             
             public override Task InvokeAsync(Object? sender, T argument)
@@ -317,9 +390,22 @@ namespace NetExtender.Types.Middlewares
                 Delegate = @delegate ?? throw new ArgumentNullException(nameof(@delegate));
             }
             
-            public override Task InvokeAsync(Object? sender, T argument)
+            public override async Task InvokeAsync(Object? sender, T argument)
             {
-                return Delegate.Invoke(sender, argument);
+                if (!Memorize(sender, argument))
+                {
+                    return;
+                }
+
+                try
+                {
+                    await Delegate.Invoke(sender, argument);
+                }
+                catch (Exception)
+                {
+                    Forget(sender, argument);
+                    throw;
+                }
             }
             
             public override Int32 GetHashCode()
@@ -353,12 +439,34 @@ namespace NetExtender.Types.Middlewares
             return value is not null ? new SenderHandler(value) : null;
         }
         
+        protected ConcurrentHashSet<(Object? Sender, T Argument)> Memory { get; } = new ConcurrentHashSet<(Object? Sender, T Argument)>();
+        
         public Boolean IsAsync
         {
             get
             {
                 return false;
             }
+        }
+
+        protected Boolean Memorize(T argument)
+        {
+            return Memorize(Memory, null, argument);
+        }
+
+        protected Boolean Memorize(Object? sender, T argument)
+        {
+            return Memorize(Memory, sender, argument);
+        }
+
+        protected Boolean Forget(T argument)
+        {
+            return Forget(Memory, null, argument);
+        }
+
+        protected Boolean Forget(Object? sender, T argument)
+        {
+            return Forget(Memory, sender, argument);
         }
         
         public virtual void Invoke(T argument)
@@ -414,7 +522,20 @@ namespace NetExtender.Types.Middlewares
             
             public override void Invoke(T argument)
             {
-                Delegate.Invoke(argument);
+                if (!Memorize(argument))
+                {
+                    return;
+                }
+
+                try
+                {
+                    Delegate.Invoke(argument);
+                }
+                catch (Exception)
+                {
+                    Forget(argument);
+                    throw;
+                }
             }
             
             public override void Invoke(Object? sender, T argument)
@@ -449,7 +570,20 @@ namespace NetExtender.Types.Middlewares
             
             public override void Invoke(Object? sender, T argument)
             {
-                Delegate.Invoke(sender, argument);
+                if (!Memorize(sender, argument))
+                {
+                    return;
+                }
+
+                try
+                {
+                    Delegate.Invoke(sender, argument);
+                }
+                catch (Exception)
+                {
+                    Forget(sender, argument);
+                    throw;
+                }
             }
             
             public override Int32 GetHashCode()
@@ -471,8 +605,57 @@ namespace NetExtender.Types.Middlewares
     
     public abstract class Middleware : IMiddlewareInfo
     {
+        internal MiddlewareExecutionOptions Options
+        {
+            init
+            {
+                Context = value.Context;
+                Idempotency = value.Idempotency;
+            }
+        }
+
         public MiddlewareExecutionContext Context { get; init; }
-        
+        public MiddlewareIdempotencyMode Idempotency { get; init; }
+
+        private Boolean _single;
+        protected virtual Boolean Memorize<T>(ConcurrentHashSet<(Object?, T)> set, Object? sender, T argument)
+        {
+            if (set is null)
+            {
+                throw new ArgumentNullException(nameof(set));
+            }
+
+            return Idempotency switch
+            {
+                MiddlewareIdempotencyMode.None => true,
+                MiddlewareIdempotencyMode.Single => _single = true,
+                MiddlewareIdempotencyMode.Sender when sender is not null => set.Add((sender, default!)),
+                MiddlewareIdempotencyMode.Sender => true,
+                MiddlewareIdempotencyMode.Argument => set.Add((null, argument)),
+                MiddlewareIdempotencyMode.SenderArgument => set.Add((sender, argument)),
+                _ => throw new EnumUndefinedOrNotSupportedException<MiddlewareIdempotencyMode>(Idempotency, nameof(Idempotency), null)
+            };
+        }
+
+        protected virtual Boolean Forget<T>(ConcurrentHashSet<(Object?, T)> set, Object? sender, T argument)
+        {
+            if (set is null)
+            {
+                throw new ArgumentNullException(nameof(set));
+            }
+
+            return Idempotency switch
+            {
+                MiddlewareIdempotencyMode.None => false,
+                MiddlewareIdempotencyMode.Single => _single && !(_single = false),
+                MiddlewareIdempotencyMode.Sender when sender is not null => set.TryRemove((sender, default!)),
+                MiddlewareIdempotencyMode.Sender => false,
+                MiddlewareIdempotencyMode.Argument => set.TryRemove((null, argument)),
+                MiddlewareIdempotencyMode.SenderArgument => set.TryRemove((sender, argument)),
+                _ => throw new EnumUndefinedOrNotSupportedException<MiddlewareIdempotencyMode>(Idempotency, nameof(Idempotency), null)
+            };
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IMiddleware<T> Create<T>(MiddlewareDelegate<T> @delegate)
         {
@@ -485,14 +668,14 @@ namespace NetExtender.Types.Middlewares
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IMiddleware<T> Create<T>(MiddlewareDelegate<T> @delegate, MiddlewareExecutionContext context)
+        public static IMiddleware<T> Create<T>(MiddlewareDelegate<T> @delegate, MiddlewareExecutionOptions options)
         {
             if (@delegate is null)
             {
                 throw new ArgumentNullException(nameof(@delegate));
             }
 
-            return new Middleware<T>.Handler(@delegate) { Context = context };
+            return new Middleware<T>.Handler(@delegate) { Options = options };
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -507,14 +690,14 @@ namespace NetExtender.Types.Middlewares
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IMiddleware<T> Create<T>(MiddlewareSenderDelegate<T> @delegate, MiddlewareExecutionContext context)
+        public static IMiddleware<T> Create<T>(MiddlewareSenderDelegate<T> @delegate, MiddlewareExecutionOptions options)
         {
             if (@delegate is null)
             {
                 throw new ArgumentNullException(nameof(@delegate));
             }
 
-            return new Middleware<T>.SenderHandler(@delegate) { Context = context };
+            return new Middleware<T>.SenderHandler(@delegate) { Options = options };
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -529,14 +712,14 @@ namespace NetExtender.Types.Middlewares
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IAsyncMiddleware<T> Create<T>(MiddlewareDelegateAsync<T> @delegate, MiddlewareExecutionContext context)
+        public static IAsyncMiddleware<T> Create<T>(MiddlewareDelegateAsync<T> @delegate, MiddlewareExecutionOptions options)
         {
             if (@delegate is null)
             {
                 throw new ArgumentNullException(nameof(@delegate));
             }
             
-            return new AsyncMiddleware<T>.AsyncHandler(@delegate) { Context = context };
+            return new AsyncMiddleware<T>.AsyncHandler(@delegate) { Options = options };
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -551,14 +734,14 @@ namespace NetExtender.Types.Middlewares
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IAsyncMiddleware<T> Create<T>(MiddlewareSenderDelegateAsync<T> @delegate, MiddlewareExecutionContext context)
+        public static IAsyncMiddleware<T> Create<T>(MiddlewareSenderDelegateAsync<T> @delegate, MiddlewareExecutionOptions options)
         {
             if (@delegate is null)
             {
                 throw new ArgumentNullException(nameof(@delegate));
             }
 
-            return new AsyncMiddleware<T>.AsyncSenderHandler(@delegate) { Context = context };
+            return new AsyncMiddleware<T>.AsyncSenderHandler(@delegate) { Options = options };
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -573,14 +756,14 @@ namespace NetExtender.Types.Middlewares
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IAsyncMiddleware<T> Create<T>(MiddlewareDelegateValueAsync<T> @delegate, MiddlewareExecutionContext context)
+        public static IAsyncMiddleware<T> Create<T>(MiddlewareDelegateValueAsync<T> @delegate, MiddlewareExecutionOptions options)
         {
             if (@delegate is null)
             {
                 throw new ArgumentNullException(nameof(@delegate));
             }
             
-            return new AsyncValueMiddleware<T>.AsyncValueHandler(@delegate) { Context = context };
+            return new AsyncValueMiddleware<T>.AsyncValueHandler(@delegate) { Options = options };
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -595,14 +778,14 @@ namespace NetExtender.Types.Middlewares
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IAsyncMiddleware<T> Create<T>(MiddlewareSenderDelegateValueAsync<T> @delegate, MiddlewareExecutionContext context)
+        public static IAsyncMiddleware<T> Create<T>(MiddlewareSenderDelegateValueAsync<T> @delegate, MiddlewareExecutionOptions options)
         {
             if (@delegate is null)
             {
                 throw new ArgumentNullException(nameof(@delegate));
             }
             
-            return new AsyncValueMiddleware<T>.AsyncValueSenderHandler(@delegate) { Context = context };
+            return new AsyncValueMiddleware<T>.AsyncValueSenderHandler(@delegate) { Options = options };
         }
     }
 }

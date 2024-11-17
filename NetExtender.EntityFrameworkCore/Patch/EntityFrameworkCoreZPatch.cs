@@ -3,11 +3,11 @@ using NetExtender.Types.Reflection;
 
 namespace NetExtender.Patch
 {
-    public partial class WindowsPresentationPatch : ReflectionPatch<WindowsPresentationPatch>
+    public partial class EntityFrameworkCoreZPatch : AutoReflectionPatch<EntityFrameworkCoreZPatch>
     {
         protected static Func<Patch> Factory { get; set; }
 
-        static WindowsPresentationPatch()
+        static EntityFrameworkCoreZPatch()
         {
             Factory = static () => new Patch();
         }

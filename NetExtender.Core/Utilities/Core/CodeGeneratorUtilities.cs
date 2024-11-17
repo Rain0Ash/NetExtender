@@ -10,8 +10,11 @@ using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
+using HarmonyLib;
 using NetExtender.Types.Exceptions;
 using NetExtender.Types.Immutable.Dictionaries;
+using NetExtender.Types.Storages;
+using NetExtender.Types.Storages.Interfaces;
 
 namespace NetExtender.Utilities.Core
 {
@@ -29,7 +32,7 @@ namespace NetExtender.Utilities.Core
         ConstantLoading
     }
     
-    public static class CodeGeneratorUtilities
+    public static partial class CodeGeneratorUtilities
     {
         private static ImmutableDictionary<OpCode, OpCodeCategory> OpCodeCategoryStorage { get; } = new Dictionary<OpCode, OpCodeCategory>
         {
@@ -121,6 +124,16 @@ namespace NetExtender.Utilities.Core
         
         private static ImmutableMultiDictionary<OpCodeCategory, OpCode> CategoryOpCodeStorage { get; } = ImmutableMultiDictionary<OpCodeCategory, OpCode>.Empty.AddRange(Initialize(OpCodeCategoryStorage));
         
+        internal static class Storage
+        {
+            public static class Parameters
+            {
+                public static IStorage<ConstructorBuilder, ParameterInfo[]> ConstructorBuilder { get; } = new WeakStorage<ConstructorBuilder, ParameterInfo[]>();
+                public static IStorage<MethodBuilder, ParameterInfo[]> MethodBuilder { get; } = new WeakStorage<MethodBuilder, ParameterInfo[]>();
+                public static IStorage<PropertyBuilder, ParameterInfo[]> PropertyBuilder { get; } = new WeakStorage<PropertyBuilder, ParameterInfo[]>();
+            }
+        }
+        
         private static IEnumerable<KeyValuePair<OpCodeCategory, ImmutableHashSet<OpCode>>> Initialize(ImmutableDictionary<OpCode, OpCodeCategory> storage)
         {
             if (storage is null)
@@ -150,6 +163,12 @@ namespace NetExtender.Utilities.Core
                 OpCodeCategory.Unknown => ImmutableHashSet<OpCode>.Empty,
                 _ => CategoryOpCodeStorage.TryGetValue(category, out ImmutableHashSet<OpCode>? result) ? result : throw new EnumUndefinedOrNotSupportedException<OpCodeCategory>(category, nameof(category), null)
             };
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int32 Id(this Label label)
+        {
+            return label.GetHashCode();
         }
         
         public static void EmitInstance(this ILGenerator generator, Type type)
@@ -665,6 +684,7 @@ namespace NetExtender.Utilities.Core
             }
         }
 
+        [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
         public static class Generator
         {
             public static class Attribute

@@ -7,6 +7,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using NetExtender.IO.Interfaces;
 using NetExtender.Types.Exceptions;
 using NetExtender.Utilities.Application;
 using NetExtender.Utilities.Types;
@@ -15,6 +16,15 @@ namespace NetExtender.Utilities.IO
 {
     public static class DirectoryUtilities
     {
+        private static IUnsafeFileSystemHandler NetExtender
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get
+            {
+                return IUnsafeFileSystemHandler.Default;
+            }
+        }
+
         public static String? Desktop
         {
             get
@@ -162,7 +172,6 @@ namespace NetExtender.Utilities.IO
             }
 
             DirectoryInfo? directory = info.Directory;
-
             return directory is not null ? LatestExist(directory) : null;
         }
 

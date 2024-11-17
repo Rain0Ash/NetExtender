@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid.Interfaces
 {
@@ -12,7 +13,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid.Interfaces
         public Boolean CanDeleteRows { get; }
         public Boolean CanDeleteColumns { get; }
         
-        public void AutoGenerateColumns();
+        public IEnumerable<ExcelColumnDefinition> AutoGenerateColumns();
         public void UpdatePropertyDefinitions();
         public Boolean CanSort(Int32 index);
         public Object? GetItem(ExcelCell cell);

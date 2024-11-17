@@ -7,8 +7,8 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
 {
     public class ExcelAutoFiller
     {
-        private TryGetter<ExcelCell, Object?> Getter { get; }
-        private TrySetter<ExcelCell, Object?> Setter { get; }
+        protected TryGetter<ExcelCell, Object?> Getter { get; }
+        protected TrySetter<ExcelCell, Object?> Setter { get; }
         
         public ExcelAutoFiller(TryGetter<ExcelCell, Object?> getter, TrySetter<ExcelCell, Object?> setter)
         {
@@ -16,13 +16,13 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
             Setter = setter ?? throw new ArgumentNullException(nameof(setter));
         }
 
-        public void AutoFill(ExcelCell current, ExcelCell selection, ExcelCell autofill)
+        public virtual void AutoFill(ExcelCell current, ExcelCell selection, ExcelCell autofill)
         {
-            for (Int32 i = Math.Min(current.Row, autofill.Row); i <= Math.Max(current.Row, autofill.Row); i++)
+            for (Int32 row = Math.Min(current.Row, autofill.Row); row <= Math.Max(current.Row, autofill.Row); row++)
             {
-                for (Int32 j = Math.Min(current.Column, autofill.Column); j <= Math.Max(current.Column, autofill.Column); j++)
+                for (Int32 column = Math.Min(current.Column, autofill.Column); column <= Math.Max(current.Column, autofill.Column); column++)
                 {
-                    ExcelCell cell = new ExcelCell(i, j);
+                    ExcelCell cell = new ExcelCell(column, row);
                     if (TryExtrapolate(cell, current, selection, autofill, out Object? value))
                     {
                         Setter(cell, value);
@@ -31,41 +31,41 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
             }
         }
 
-        public Boolean TryExtrapolate(ExcelCell cell, ExcelCell current, ExcelCell selection, ExcelCell autofill, [MaybeNullWhen(false)] out Object result)
+        public virtual Boolean TryExtrapolate(ExcelCell cell, ExcelCell current, ExcelCell selection, ExcelCell autofill, [MaybeNullWhen(false)] out Object result)
         {
-            Int32 minrow = Math.Min(current.Row, selection.Row);
-            Int32 maxrow = Math.Max(current.Row, selection.Row);
             Int32 mincolumn = Math.Min(current.Column, selection.Column);
             Int32 maxcolumn = Math.Max(current.Column, selection.Column);
+            Int32 minrow = Math.Min(current.Row, selection.Row);
+            Int32 maxrow = Math.Max(current.Row, selection.Row);
 
-            Int32 i = cell.Row;
-            Int32 j = cell.Column;
+            Int32 row = cell.Row;
+            Int32 column = cell.Column;
 
-            if (i >= minrow && i <= maxrow && j >= mincolumn && j <= maxcolumn)
+            if (column >= mincolumn && column <= maxcolumn && row >= minrow && row <= maxrow)
             {
                 result = null;
                 return false;
             }
 
             Object? value = null;
-            if (i < minrow)
+            if (row < minrow)
             {
-                TryExtrapolate(cell, new ExcelCell(minrow, j), new ExcelCell(maxrow, j), out value);
+                TryExtrapolate(cell, new ExcelCell(column, minrow), new ExcelCell(column, maxrow), out value);
             }
 
-            if (i > maxrow)
+            if (row > maxrow)
             {
-                TryExtrapolate(cell, new ExcelCell(minrow, j), new ExcelCell(maxrow, j), out value);
+                TryExtrapolate(cell, new ExcelCell(column, minrow), new ExcelCell(column, maxrow), out value);
             }
 
-            if (j < mincolumn)
+            if (column < mincolumn)
             {
-                TryExtrapolate(cell, new ExcelCell(i, mincolumn), new ExcelCell(i, maxcolumn), out value);
+                TryExtrapolate(cell, new ExcelCell(mincolumn, row), new ExcelCell(maxcolumn, row), out value);
             }
 
-            if (j > maxcolumn)
+            if (column > maxcolumn)
             {
-                TryExtrapolate(cell, new ExcelCell(i, mincolumn), new ExcelCell(i, maxcolumn), out value);
+                TryExtrapolate(cell, new ExcelCell(mincolumn, row), new ExcelCell(maxcolumn, row), out value);
             }
             
             result = value;
@@ -76,35 +76,17 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 return true;
             }
             
-            cell = new ExcelCell(PeriodicClamp(i, minrow, maxrow), PeriodicClamp(j, mincolumn, maxcolumn));
+            cell = new ExcelCell(PeriodicClamp(column, mincolumn, maxcolumn), PeriodicClamp(row, minrow, maxrow));
             Getter.Invoke(cell, out result);
             return result is not null;
         }
-
-        private static Int32 PeriodicClamp(Int32 value, Int32 min, Int32 max)
-        {
-            if (min >= max)
-            {
-                return min;
-            }
-
-            Int32 difference = max - min + 1;
-            Int32 offset = (value - (max + 1)) % difference;
-            
-            if (offset < 0)
-            {
-                offset += difference;
-            }
-
-            return min + offset;
-        }
         
         // ReSharper disable once CognitiveComplexity
-        private Boolean TryExtrapolate(ExcelCell cell, ExcelCell start, ExcelCell end, [MaybeNullWhen(false)] out Object result)
+        protected virtual Boolean TryExtrapolate(ExcelCell cell, ExcelCell start, ExcelCell end, [MaybeNullWhen(false)] out Object result)
         {
             try
             {
-                if (!Getter(start, out Object? first) || first is null || Getter(end, out Object? last) || last is null)
+                if (!Getter(start, out Object? first) || first is null || !Getter(end, out Object? last) || last is null)
                 {
                     result = null;
                     return false;
@@ -157,6 +139,24 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 result = null;
                 return false;
             }
+        }
+        
+        protected static Int32 PeriodicClamp(Int32 value, Int32 min, Int32 max)
+        {
+            if (min >= max)
+            {
+                return min;
+            }
+            
+            Int32 difference = max - min + 1;
+            Int32 offset = (value - (max + 1)) % difference;
+            
+            if (offset < 0)
+            {
+                offset += difference;
+            }
+            
+            return min + offset;
         }
     }
 }

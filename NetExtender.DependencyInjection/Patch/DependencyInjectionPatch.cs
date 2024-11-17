@@ -3,7 +3,7 @@ using NetExtender.Types.Reflection;
 
 namespace NetExtender.Patch
 {
-    public partial class DependencyInjectionPatch : ReflectionPatch<DependencyInjectionPatch>
+    public partial class DependencyInjectionPatch : AutoReflectionPatch<DependencyInjectionPatch>
     {
         protected static Func<Patch> Factory { get; set; }
 

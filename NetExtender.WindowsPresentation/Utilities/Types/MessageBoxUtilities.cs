@@ -1,12 +1,11 @@
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using NetExtender.Types.Strings.Interfaces;
+// ReSharper disable MemberHidesStaticFromOuterClass
 
 namespace NetExtender.WindowsPresentation.Utilities.Types
 {
-    [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
     public static class MessageBoxUtilities
     {
         public static class OK

@@ -1,0 +1,282 @@
+<#@ template language="C#" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Reflection" #>
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
+using System;
+using System.Reflection;
+
+namespace NetExtender.Utilities.Delegates
+{
+<#
+    List<String> names = new List<String>
+    {
+        "First",
+        "Second",
+        "Third",
+        "Fourth",
+        "Fifth",
+        "Sixth",
+        "Seventh",
+        "Eighth",
+        "Ninth",
+        "Tenth",
+        "Eleventh",
+        "Twelfth",
+        "Thirteenth",
+        "Fourteenth",
+        "Fifteenth",
+        "Sixteenth"
+    };
+
+    void CreateInternal(Int32 argument, Boolean result)
+    {
+        String name = !result ? "Action" : "Func";
+        String fullname = "Value" + name;
+        StringBuilder generic = new StringBuilder();
+
+        if (result || argument > 0)
+        {
+            generic.Append('<');
+
+            for (Int32 i = 1; i <= argument; i++)
+            {
+                generic.Append(argument > 1 ? $"T{i}" : "T");
+
+                if (result || i < argument)
+                {
+                    generic.Append(", ");
+                }
+            }
+
+            if (result)
+            {
+                generic.Append("TResult");
+            }
+            
+            generic.Append('>');
+        }
+
+        String @delegate = name + generic;
+        Boolean @readonly = argument <= 0;
+        
+        WriteLine($"\tpublic {(@readonly ? "readonly" : String.Empty)} struct {fullname}{generic} : I{fullname}<{fullname}{generic}{(result ? ", TResult" : String.Empty)}>");
+        WriteLine("\t{");
+        
+        WriteLine($"\t\tpublic static implicit operator {@delegate}?({fullname}{generic} value)");
+        WriteLine("\t\t{");
+        WriteLine("\t\t\treturn value.Delegate;");
+        WriteLine("\t\t}");
+        
+        WriteLine(String.Empty);
+        
+        WriteLine($"\t\tpublic static {nameof(Boolean)} operator ==({fullname}{generic} first, {fullname}{generic} second)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn first.{nameof(Equals)}(second);");
+        WriteLine("\t\t}");
+        
+        WriteLine(String.Empty);
+        
+        WriteLine($"\t\tpublic static {nameof(Boolean)} operator !=({fullname}{generic} first, {fullname}{generic} second)");
+        WriteLine("\t\t{");
+        WriteLine("\t\t\treturn !(first == second);");
+        WriteLine("\t\t}");
+        
+        WriteLine(String.Empty);
+
+        WriteLine($"\t\tpublic {@delegate}? Delegate {{ get; }}");
+        
+        WriteLine(String.Empty);
+        WriteLine($"\t\tpublic {(!@readonly ? "readonly " : String.Empty)}{nameof(Int32)} Arguments");
+        WriteLine("\t\t{");
+        WriteLine("\t\t\tget");
+        WriteLine("\t\t\t{");
+        WriteLine($"\t\t\t\treturn {argument};");
+        WriteLine("\t\t\t}");
+        WriteLine("\t\t}");
+        
+        WriteLine(String.Empty);
+        WriteLine($"\t\tpublic {(!@readonly ? "readonly " : String.Empty)}{nameof(MethodInfo)}? Method");
+        WriteLine("\t\t{");
+        WriteLine("\t\t\tget");
+        WriteLine("\t\t\t{");
+        WriteLine("\t\t\t\treturn Delegate?.Method;");
+        WriteLine("\t\t\t}");
+        WriteLine("\t\t}");
+        
+        WriteLine(String.Empty);
+
+        if (argument > 1)
+        {
+            WriteLine(String.Empty);
+        }
+
+        for (Int32 i = 1; i <= argument; i++)
+        {
+            WriteLine($"\t\tpublic {(argument > 1 ? $"T{i}" : "T")} {(argument > 1 ? names[i - 1] : "Argument")} {{ get; set; }}");
+        }
+        
+        WriteLine(String.Empty);
+        
+        StringBuilder arguments = new StringBuilder();
+
+        if (argument > 0)
+        {
+            for (Int32 i = 1; i <= argument; i++)
+            {
+                arguments.Append(argument > 1 ? $"T{i}" : "T");
+                arguments.Append(' ');
+                arguments.Append(argument > 1 ? names[i - 1].ToLower() : "argument");
+
+                if (i < argument)
+                {
+                    arguments.Append(", ");
+                }
+            }
+        }
+        
+        WriteLine($"\t\tpublic {fullname}({@delegate} @delegate{(argument > 0 ? $", {arguments}" : String.Empty)})");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\tDelegate = @delegate ?? throw new {nameof(ArgumentNullException)}(nameof(@delegate));");
+
+        for (Int32 i = 0; i < argument; i++)
+        {
+            String parameter = argument > 1 ? names[i] : "Argument";
+            WriteLine($"\t\t\t{parameter} = {parameter.ToLower()};");
+        }
+        
+        WriteLine("\t\t}");
+        
+        WriteLine(String.Empty);
+        
+        WriteLine($"\t\tpublic {(!@readonly ? "readonly " : String.Empty)}{nameof(Object)}?[] GetArguments()");
+        WriteLine("\t\t{");
+        if (argument > 0)
+        {
+            WriteLine($"\t\t\treturn Delegate is not null ? new {nameof(Object)}?[] {{ {(argument > 1 ? String.Join(", ", names.Take(argument)) : "Argument")} }} : {nameof(Array)}.{nameof(Array.Empty)}<{nameof(Object)}?>();");
+        }
+        else
+        {
+            WriteLine($"\t\t\treturn {nameof(Array)}.{nameof(Array.Empty)}<{nameof(Object)}?>();");
+        }
+        WriteLine("\t\t}");
+        
+        WriteLine(String.Empty);
+        
+        WriteLine($"\t\tpublic {(!@readonly ? "readonly " : String.Empty)}{(result ? "TResult" : "void")} Invoke()");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\t{(result ? "return " : String.Empty)}{(result ? "Delegate is not null ? " : String.Empty)}Delegate{(!result ? "?" : String.Empty)}.Invoke({(argument > 0 ? argument > 1 ? String.Join(", ", names.Take(argument)) : "Argument" : String.Empty)}){(result ? " : default!" : String.Empty)};");
+        WriteLine("\t\t}");
+        
+        WriteLine(String.Empty);
+        
+        WriteLine($"\t\t{(!@readonly ? "readonly " : String.Empty)}{nameof(Object)}? IValueDelegate<{fullname}{generic}>.Invoke()");
+        WriteLine("\t\t{");
+        if (result)
+        {
+            WriteLine("\t\t\treturn Invoke();");
+        }
+        else
+        {
+            WriteLine("\t\t\tInvoke();");
+            WriteLine("\t\t\treturn null;");
+        }
+        WriteLine("\t\t}");
+        
+        WriteLine(String.Empty);
+        WriteLine($"\t\tpublic override {(!@readonly ? "readonly " : String.Empty)}{nameof(Int32)} {nameof(GetHashCode)}()");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn Delegate?.{nameof(GetHashCode)}() ?? 0;");
+        WriteLine("\t\t}");
+        
+        WriteLine(String.Empty);
+        WriteLine($"\t\tpublic override {(!@readonly ? "readonly " : String.Empty)}{nameof(Boolean)} {nameof(Equals)}({nameof(Object)}? other)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn other is {fullname}{generic} @delegate && {nameof(Equals)}(@delegate);");
+        WriteLine("\t\t}");
+        
+        WriteLine(String.Empty);
+        WriteLine($"\t\tpublic {(!@readonly ? "readonly " : String.Empty)}{nameof(Boolean)} {nameof(Equals)}({fullname}{generic} other)");
+        WriteLine("\t\t{");
+        WriteLine("\t\t\treturn Equals(Delegate, other.Delegate);");
+        WriteLine("\t\t}");
+        
+        WriteLine(String.Empty);
+        WriteLine($"\t\tpublic override {(!@readonly ? "readonly " : String.Empty)}{nameof(String)}? {nameof(ToString)}()");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn Delegate?.{nameof(ToString)}();");
+        WriteLine("\t\t}");
+        
+        WriteLine(String.Empty);
+        WriteLine($"\t\tpublic {nameof(Object)}? this[{nameof(Int32)} {nameof(argument)}]");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\t{(!@readonly ? "readonly " : String.Empty)}get");
+        WriteLine("\t\t\t{");
+        if (argument > 0)
+        {
+            WriteLine($"\t\t\t\treturn {nameof(argument)} switch");
+            WriteLine("\t\t\t\t{");
+            for (Int32 i = 0; i < argument; i++)
+            {
+                WriteLine($"\t\t\t\t\t{i} => {(argument > 1 ? names[i] : "Argument")},");
+            }
+            WriteLine($"\t\t\t\t\t_ => throw new {nameof(ArgumentOutOfRangeException)}(nameof({nameof(argument)}), {nameof(argument)}, null)");
+            WriteLine("\t\t\t\t};");
+        }
+        else
+        {
+            WriteLine($"\t\t\t\tthrow new {nameof(ArgumentOutOfRangeException)}(nameof({nameof(argument)}), {nameof(argument)}, null);");
+        }
+        WriteLine("\t\t\t}");
+        WriteLine("\t\t\tset");
+        WriteLine("\t\t\t{");
+        if (argument > 0)
+        {
+            WriteLine($"\t\t\t\tswitch({nameof(argument)})");
+            WriteLine("\t\t\t\t{");
+            for (Int32 i = 0; i < argument; i++)
+            {
+                WriteLine($"\t\t\t\t\tcase {i}:");
+                WriteLine($"\t\t\t\t\t\t{(argument > 1 ? names[i] : "Argument")} = ({(argument > 1 ? $"T{i + 1}" : "T")}) value!;");
+                WriteLine("\t\t\t\t\t\treturn;");
+            }
+            WriteLine("\t\t\t\t\tdefault:");
+            WriteLine($"\t\t\t\t\t\tthrow new {nameof(ArgumentOutOfRangeException)}(nameof({nameof(argument)}), {nameof(argument)}, null);");
+            WriteLine("\t\t\t\t}");
+        }
+        else
+        {
+            WriteLine($"\t\t\t\tthrow new {nameof(ArgumentOutOfRangeException)}(nameof({nameof(argument)}), {nameof(argument)}, null);");
+        }
+        WriteLine("\t\t\t}");
+        WriteLine("\t\t}");
+
+        WriteLine("\t}");
+    }
+
+    void Create()
+    {
+        for (Int32 i = 0; i <= names.Count; i++)
+        {
+            CreateInternal(i, false);
+            WriteLine(String.Empty);
+        }
+        
+        for (Int32 i = 0; i <= names.Count; i++)
+        {
+            CreateInternal(i, true);
+            
+            if (i <= names.Count - 1)
+            {
+                WriteLine(String.Empty);
+            }
+        }
+    }
+#>
+<#
+    Create();
+#>
+}

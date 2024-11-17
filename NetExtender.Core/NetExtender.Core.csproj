@@ -195,6 +195,89 @@
         <Compile Update="Types\Reflection\UnaryReflectionOperator.cs">
           <DependentUpon>ReflectionOperator.cs</DependentUpon>
         </Compile>
+        <Compile Update="Utilities\Core\HarmonyUtilities.Always.cs">
+          <DependentUpon>HarmonyUtilities.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Utilities\Core\HarmonyUtilities.Debugger.cs">
+          <DependentUpon>HarmonyUtilities.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Utilities\Core\HarmonyUtilities.Http.cs">
+          <DependentUpon>HarmonyUtilities.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Utilities\Core\HarmonyUtilities.File.cs">
+          <DependentUpon>HarmonyUtilities.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Utilities\Core\HarmonyUtilities.Directory.cs">
+          <DependentUpon>HarmonyUtilities.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Utilities\Core\HarmonyUtilities.FileStream.cs">
+          <DependentUpon>HarmonyUtilities.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Utilities\Core\HarmonyUtilities.Path.cs">
+          <DependentUpon>HarmonyUtilities.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Patch\NetExtenderFileStream.Patch.cs">
+          <DependentUpon>NetExtenderFileStreamPatch.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Patch\NetExtenderIron.Patch.cs">
+          <DependentUpon>NetExtenderIronPatch.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\Interception\Interfaces\IInterceptFileHandler.cs">
+          <DependentUpon>IFileSystemIntercept.cs</DependentUpon>
+        </Compile>
+        <Compile Update="IO\Interfaces\IFileSystemHandler.Directory.cs">
+          <DependentUpon>IFileSystemHandler.cs</DependentUpon>
+        </Compile>
+        <Compile Update="IO\Interfaces\IFileSystemHandler.File.cs">
+          <DependentUpon>IFileSystemHandler.cs</DependentUpon>
+        </Compile>
+        <Compile Update="IO\Interfaces\IFileSystemHandler.Path.cs">
+          <DependentUpon>IFileSystemHandler.cs</DependentUpon>
+        </Compile>
+        <Compile Update="IO\FileSystemHandler.Directory.cs">
+          <DependentUpon>FileSystemHandler.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Utilities\Core\ReflectionUtilities.Difference.cs">
+          <DependentUpon>ReflectionUtilities.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Utilities\Core\ReflectionUtilities.Seal.cs">
+          <DependentUpon>ReflectionUtilities.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Utilities\Core\ReflectionUtilities.Static.cs">
+          <DependentUpon>ReflectionUtilities.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Utilities\Core\HarmonyUtilities.FileSystem.cs">
+          <DependentUpon>HarmonyUtilities.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Utilities\Core\CodeGeneratorUtilities.Inherit.cs">
+          <DependentUpon>CodeGeneratorUtilities.cs</DependentUpon>
+        </Compile>
+        <Compile Update="IO\FileSystemHandler.File.cs">
+          <DependentUpon>FileSystemHandler.cs</DependentUpon>
+        </Compile>
+        <Compile Update="IO\FileSystemHandler.Path.cs">
+          <DependentUpon>FileSystemHandler.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\Interception\Interfaces\IInterceptDirectoryHandler.cs">
+          <DependentUpon>IFileSystemIntercept.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\Interception\Interfaces\IInterceptPathHandler.cs">
+          <DependentUpon>IFileSystemIntercept.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\Delegates\ValueDelegate.cs">
+          <AutoGen>True</AutoGen>
+          <DesignTime>True</DesignTime>
+          <DependentUpon>ValueDelegate.tt</DependentUpon>
+        </Compile>
+        <Compile Update="Types\Interception\IO\FileSystemIntercept.Directory.cs">
+          <DependentUpon>FileSystemIntercept.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\Interception\IO\FileSystemIntercept.File.cs">
+          <DependentUpon>FileSystemIntercept.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\Interception\IO\FileSystemIntercept.Path.cs">
+          <DependentUpon>FileSystemIntercept.cs</DependentUpon>
+        </Compile>
     </ItemGroup>
 
     <ItemGroup>
@@ -226,6 +309,10 @@
         <None Update="Types\Sizes\UnsafeSizeGenerics.tt">
             <Generator>TextTemplatingFileGenerator</Generator>
             <LastGenOutput>UnsafeSizeGenerics.cs</LastGenOutput>
+        </None>
+        <None Update="Types\Delegates\ValueDelegate.tt">
+          <Generator>TextTemplatingFileGenerator</Generator>
+          <LastGenOutput>ValueDelegate.cs</LastGenOutput>
         </None>
     </ItemGroup>
 

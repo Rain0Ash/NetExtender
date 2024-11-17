@@ -3,6 +3,7 @@
 <#@ assembly name="System.Core"#>
 <#@ import namespace="System.Collections" #>
 <#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Linq" #>
 // This is an independent project of an individual developer. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
@@ -10,7 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Linq;
-using NetExtender.Random.Interfaces;
+using NetExtender.Types.Random.Interfaces;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Utilities.Numerics
@@ -94,7 +95,7 @@ namespace NetExtender.Utilities.Numerics
     List<(String, String, Boolean)?> random = new List<(String, String, Boolean)?>
     {
         null,
-        ("System.Random", "random", false),
+        ("Random", "random", false),
         ("T", "random", true)
     };
 

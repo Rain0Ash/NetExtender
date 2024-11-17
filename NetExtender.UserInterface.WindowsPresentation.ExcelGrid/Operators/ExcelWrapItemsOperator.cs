@@ -8,7 +8,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
         {
             get
             {
-                Int32 count = Excel.PropertyDefinitions.Count;
+                Int32 count = Excel.ColumnDefinitions.Count;
                 return count == 0 || Excel.ItemsInRows ? count : (Excel.ItemsSource?.Count ?? 0) / count;
             }
         }
@@ -17,12 +17,12 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
         {
             get
             {
-                Int32 count = Excel.PropertyDefinitions.Count;
+                Int32 count = Excel.RowDefinitions.Count;
                 return count != 0 && Excel.ItemsInRows ? (Excel.ItemsSource?.Count ?? 0) / count : count;
             }
         }
         
-        public ExcelWrapItemsOperator(ExcelGrid excel)
+        public ExcelWrapItemsOperator(IExcelGrid excel)
             : base(excel)
         {
         }

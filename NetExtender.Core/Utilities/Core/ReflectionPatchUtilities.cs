@@ -1,21 +1,18 @@
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using NetExtender.Types.Reflection;
+using NetExtender.Patch;
 using NetExtender.Types.Reflection.Interfaces;
 
 namespace NetExtender.Utilities.Core
 {
     public static class ReflectionPatchUtilities
     {
-        private static ConcurrentDictionary<IReflectionPatchInfo, Exception?> Storage { get; } = new ConcurrentDictionary<IReflectionPatchInfo, Exception?>();
-        
         public static IEnumerable<IReflectionPatchInfo> Applied
         {
             get
             {
-                return Storage.Keys.Where(static patch => patch.State == ReflectionPatchState.Apply);
+                return Initializer.Initializer.PatchUtilities.Applied.Cast<IReflectionPatchInfo>();
             }
         }
         
@@ -23,23 +20,71 @@ namespace NetExtender.Utilities.Core
         {
             get
             {
-                return Storage.Where(static patch => patch.Key.State == ReflectionPatchState.Failed);
+                static KeyValuePair<IReflectionPatchInfo, Exception?> Selector(KeyValuePair<IPatchInfo, Exception?> pair)
+                {
+                    return new KeyValuePair<IReflectionPatchInfo, Exception?>((IReflectionPatchInfo) pair.Key, pair.Value);
+                }
+                
+                return Initializer.Initializer.PatchUtilities.Failed.Select(Selector);
             }
         }
         
-        internal static void Set(IReflectionPatchInfo patch)
+        public static IEnumerable<IReflectionPatchInfo> NotRequired
         {
-            Set(patch, null);
+            get
+            {
+                return Initializer.Initializer.PatchUtilities.NotRequired.Cast<IReflectionPatchInfo>();
+            }
         }
-        
-        internal static void Set(IReflectionPatchInfo patch, Exception? exception)
+
+        public static Exception? Require(this IReflectionPatch? patch)
         {
             if (patch is null)
             {
-                throw new ArgumentNullException(nameof(patch));
+                return null;
             }
-            
-            Storage[patch] = exception;
+
+            if (patch.State is ReflectionPatchState.None)
+            {
+                patch.Apply();
+            }
+
+            return patch.State switch
+            {
+                ReflectionPatchState.Apply => null,
+                ReflectionPatchState.NotRequired => new NotSupportedException(),
+                _ => Exception(patch) ?? new NotSupportedException()
+            };
+        }
+
+        public static Exception? Exception(this IReflectionPatchInfo? patch)
+        {
+            return Initializer.Initializer.PatchUtilities.Exception(patch?.Patch);
+        }
+        
+        internal static Boolean Set(IReflectionPatchInfo? patch)
+        {
+            return Set(patch, null);
+        }
+        
+        internal static Boolean Set(IReflectionPatchInfo? patch, Exception? exception)
+        {
+            return Initializer.Initializer.PatchUtilities.Set(patch?.Patch, exception);
+        }
+
+        internal static Boolean IsAllowAutoInit(IReflectionPatchInfo? patch)
+        {
+            return Initializer.Initializer.PatchUtilities.IsAllowAutoInit(patch?.Patch);
+        }
+
+        internal static Boolean IncludeAutoInit(IReflectionPatchInfo? patch)
+        {
+            return Initializer.Initializer.PatchUtilities.IncludeAutoInit(patch?.Patch);
+        }
+
+        internal static Boolean ExcludeAutoInit(IReflectionPatchInfo? patch)
+        {
+            return Initializer.Initializer.PatchUtilities.ExcludeAutoInit(patch?.Patch);
         }
     }
 }

@@ -328,6 +328,7 @@ namespace NetExtender.Utilities.Types
             return TryGetKey(source, key, alternate, out TKey? result) ? result : alternate;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TKey TryGetKey<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source, TValue key, Func<TKey> factory)
         {
             if (source is null)
@@ -343,6 +344,7 @@ namespace NetExtender.Utilities.Types
             return TryGetKey(source, key, out TKey? result) ? result : factory.Invoke();
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TKey TryGetKey<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source, TValue key, Func<TValue, TKey> factory)
         {
             if (source is null)
@@ -479,7 +481,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return source.GroupBy(item => item.Key);
+            return source.GroupBy(static item => item.Key);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -490,7 +492,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return source.GroupBy(item => item.Key);
+            return source.GroupBy(static item => item.Key);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -501,7 +503,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return source.GroupBy(item => item.Value);
+            return source.GroupBy(static item => item.Value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -512,7 +514,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return source.GroupBy(item => item.Key, item => item.Value);
+            return source.GroupBy(static item => item.Key, static item => item.Value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -523,7 +525,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return source.GroupBy(item => item.Value, item => item.Key);
+            return source.GroupBy(static item => item.Value, static item => item.Key);
         }
 
         public static IEnumerable<KeyValuePair<TValue, TKey>> ReversePairs<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source)
@@ -533,7 +535,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return source.Select(pair => pair.Reverse());
+            return source.Select(static pair => pair.Reverse());
         }
 
         public static IEnumerable<TKey> Keys<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source)
@@ -562,6 +564,7 @@ namespace NetExtender.Utilities.Types
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<KeyValuePair<TKey, TValue>> ForEachKey<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source, Action<TKey> action)
         {
             if (source is null)
@@ -569,9 +572,10 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return source.ForEachBy(item => item.Key, action);
+            return source.ForEachBy(static item => item.Key, action);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<KeyValuePair<TKey, TValue>> ForEachKeyWhere<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source, Func<TKey, Boolean> where, Action<TKey> action)
         {
             if (source is null)
@@ -579,9 +583,10 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return source.ForEachByWhere(item => item.Key, where, action);
+            return source.ForEachByWhere(static item => item.Key, where, action);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<KeyValuePair<TKey, TValue>> ForEachKeyWhere<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source, Func<TKey, Int32, Boolean> where, Action<TKey> action)
         {
             if (source is null)
@@ -589,9 +594,10 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return source.ForEachByWhere(item => item.Key, where, action);
+            return source.ForEachByWhere(static item => item.Key, where, action);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<KeyValuePair<TKey, TValue>> ForEachKeyWhereNot<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source, Func<TKey, Boolean> where, Action<TKey> action)
         {
             if (source is null)
@@ -599,9 +605,10 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return source.ForEachByWhereNot(item => item.Key, where, action);
+            return source.ForEachByWhereNot(static item => item.Key, where, action);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<KeyValuePair<TKey, TValue>> ForEachKeyWhereNot<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source, Func<TKey, Int32, Boolean> where, Action<TKey> action)
         {
             if (source is null)
@@ -609,9 +616,10 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return source.ForEachByWhereNot(item => item.Key, where, action);
+            return source.ForEachByWhereNot(static item => item.Key, where, action);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<KeyValuePair<TKey, TValue>> ForEachKey<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source, Action<TKey, Int32> action)
         {
             if (source is null)
@@ -619,9 +627,10 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return source.ForEachBy(item => item.Key, action);
+            return source.ForEachBy(static item => item.Key, action);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<KeyValuePair<TKey, TValue>> ForEachKeyWhere<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source, Func<TKey, Boolean> where, Action<TKey, Int32> action)
         {
             if (source is null)
@@ -629,9 +638,10 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return source.ForEachByWhere(item => item.Key, where, action);
+            return source.ForEachByWhere(static item => item.Key, where, action);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<KeyValuePair<TKey, TValue>> ForEachKeyWhere<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source, Func<TKey, Int32, Boolean> where, Action<TKey, Int32> action)
         {
             if (source is null)
@@ -639,9 +649,10 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return source.ForEachByWhere(item => item.Key, where, action);
+            return source.ForEachByWhere(static item => item.Key, where, action);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<KeyValuePair<TKey, TValue>> ForEachKeyWhereNot<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source, Func<TKey, Boolean> where, Action<TKey, Int32> action)
         {
             if (source is null)
@@ -649,9 +660,10 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return source.ForEachByWhereNot(item => item.Key, where, action);
+            return source.ForEachByWhereNot(static item => item.Key, where, action);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<KeyValuePair<TKey, TValue>> ForEachKeyWhereNot<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source, Func<TKey, Int32, Boolean> where, Action<TKey, Int32> action)
         {
             if (source is null)
@@ -659,9 +671,10 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return source.ForEachByWhereNot(item => item.Key, where, action);
+            return source.ForEachByWhereNot(static item => item.Key, where, action);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<KeyValuePair<TKey, TValue>> ForEachValue<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source, Action<TValue> action)
         {
             if (source is null)
@@ -669,9 +682,10 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return source.ForEachBy(item => item.Value, action);
+            return source.ForEachBy(static item => item.Value, action);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<KeyValuePair<TKey, TValue>> ForEachValueWhere<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source, Func<TValue, Boolean> where, Action<TValue> action)
         {
             if (source is null)
@@ -679,9 +693,10 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return source.ForEachByWhere(item => item.Value, where, action);
+            return source.ForEachByWhere(static item => item.Value, where, action);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<KeyValuePair<TKey, TValue>> ForEachValueWhere<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source, Func<TValue, Int32, Boolean> where, Action<TValue> action)
         {
             if (source is null)
@@ -689,9 +704,10 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return source.ForEachByWhere(item => item.Value, where, action);
+            return source.ForEachByWhere(static item => item.Value, where, action);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<KeyValuePair<TKey, TValue>> ForEachValueWhereNot<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source, Func<TValue, Boolean> where, Action<TValue> action)
         {
             if (source is null)
@@ -699,9 +715,10 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return source.ForEachByWhereNot(item => item.Value, where, action);
+            return source.ForEachByWhereNot(static item => item.Value, where, action);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<KeyValuePair<TKey, TValue>> ForEachValueWhereNot<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source, Func<TValue, Int32, Boolean> where, Action<TValue> action)
         {
             if (source is null)
@@ -709,9 +726,10 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return source.ForEachByWhereNot(item => item.Value, where, action);
+            return source.ForEachByWhereNot(static item => item.Value, where, action);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<KeyValuePair<TKey, TValue>> ForEachValue<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source, Action<TValue, Int32> action)
         {
             if (source is null)
@@ -719,9 +737,10 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return source.ForEachBy(item => item.Value, action);
+            return source.ForEachBy(static item => item.Value, action);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<KeyValuePair<TKey, TValue>> ForEachValueWhere<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source, Func<TValue, Boolean> where, Action<TValue, Int32> action)
         {
             if (source is null)
@@ -729,9 +748,10 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return source.ForEachByWhere(item => item.Value, where, action);
+            return source.ForEachByWhere(static item => item.Value, where, action);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<KeyValuePair<TKey, TValue>> ForEachValueWhere<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source, Func<TValue, Int32, Boolean> where, Action<TValue, Int32> action)
         {
             if (source is null)
@@ -739,9 +759,10 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return source.ForEachByWhere(item => item.Value, where, action);
+            return source.ForEachByWhere(static item => item.Value, where, action);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<KeyValuePair<TKey, TValue>> ForEachValueWhereNot<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source, Func<TValue, Boolean> where, Action<TValue, Int32> action)
         {
             if (source is null)
@@ -749,9 +770,10 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return source.ForEachByWhereNot(item => item.Value, where, action);
+            return source.ForEachByWhereNot(static item => item.Value, where, action);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<KeyValuePair<TKey, TValue>> ForEachValueWhereNot<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source, Func<TValue, Int32, Boolean> where, Action<TValue, Int32> action)
         {
             if (source is null)
@@ -759,9 +781,10 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return source.ForEachByWhereNot(item => item.Value, where, action);
+            return source.ForEachByWhereNot(static item => item.Value, where, action);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<KeyValuePair<TKey, TValue>> WhereKeyNotNull<TKey, TValue>(this IEnumerable<KeyValuePair<TKey?, TValue>> source)
         {
             if (source is null)
@@ -769,9 +792,42 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return source.Where(item => item.Key is not null)!;
+            return source.Where(static item => item.Key is not null)!;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<KeyValuePair<TKey, TValue>> WhereKeyNotNull<TKey, TValue>(this IEnumerable<KeyValuePair<TKey?, TValue>> source, Func<TKey, Boolean> predicate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            return source.WhereKeyNotNull().Where(item => predicate(item.Key));
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<KeyValuePair<TKey, TValue>> WhereKeyNotNull<TKey, TValue>(this IEnumerable<KeyValuePair<TKey?, TValue>> source, Func<KeyValuePair<TKey, TValue>, Boolean> predicate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            return source.WhereKeyNotNull().Where(predicate);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<KeyValuePair<TKey, TValue>> WhereValueNotNull<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue?>> source)
         {
             if (source is null)
@@ -779,9 +835,42 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return source.Where(item => item.Value is not null)!;
+            return source.Where(static item => item.Value is not null)!;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<KeyValuePair<TKey, TValue>> WhereValueNotNull<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue?>> source, Func<TValue, Boolean> predicate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            return source.WhereValueNotNull().Where(pair => predicate(pair.Value));
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<KeyValuePair<TKey, TValue>> WhereValueNotNull<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue?>> source, Func<KeyValuePair<TKey, TValue>, Boolean> predicate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            return source.WhereValueNotNull().Where(predicate);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<KeyValuePair<TKey, TValue>> WhereKeyValueNotNull<TKey, TValue>(this IEnumerable<KeyValuePair<TKey?, TValue?>> source)
         {
             if (source is null)
@@ -789,9 +878,26 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return source.Where(item => item.Key is not null && item.Value is not null)!;
+            return source.Where(static item => item.Key is not null && item.Value is not null)!;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<KeyValuePair<TKey, TValue>> WhereKeyValueNotNull<TKey, TValue>(this IEnumerable<KeyValuePair<TKey?, TValue?>> source, Func<KeyValuePair<TKey, TValue>, Boolean> predicate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            return source.WhereKeyValueNotNull().Where(predicate);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IOrderedEnumerable<KeyValuePair<TKey, TValue>> OrderByKeys<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source)
         {
             if (source is null)
@@ -802,6 +908,7 @@ namespace NetExtender.Utilities.Types
             return OrderByKeys(source, Comparer<TKey>.Default);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IOrderedEnumerable<KeyValuePair<TKey, TValue>> OrderByKeys<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source, IComparer<TKey>? comparer)
         {
             if (source is null)
@@ -809,9 +916,10 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return source.OrderBy(item => item.Key, comparer);
+            return source.OrderBy(static item => item.Key, comparer);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IOrderedEnumerable<KeyValuePair<TKey, TValue>> OrderByKeysDescending<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source)
         {
             if (source is null)
@@ -822,6 +930,7 @@ namespace NetExtender.Utilities.Types
             return OrderByKeysDescending(source, Comparer<TKey>.Default);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IOrderedEnumerable<KeyValuePair<TKey, TValue>> OrderByKeysDescending<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source, IComparer<TKey>? comparer)
         {
             if (source is null)
@@ -829,9 +938,10 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return source.OrderByDescending(item => item.Key, comparer);
+            return source.OrderByDescending(static item => item.Key, comparer);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<TValue> OrderValuesByKeys<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source)
         {
             if (source is null)
@@ -842,6 +952,7 @@ namespace NetExtender.Utilities.Types
             return OrderValuesByKeys(source, Comparer<TKey>.Default);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<TValue> OrderValuesByKeys<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source, IComparer<TKey>? comparer)
         {
             if (source is null)
@@ -849,9 +960,10 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return source.OrderBy(item => item.Key, comparer).Select(item => item.Value);
+            return source.OrderBy(static item => item.Key, comparer).Select(static item => item.Value);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<TValue> OrderValuesByKeysDescending<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source)
         {
             if (source is null)
@@ -862,6 +974,7 @@ namespace NetExtender.Utilities.Types
             return OrderValuesByKeysDescending(source, Comparer<TKey>.Default);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<TValue> OrderValuesByKeysDescending<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source, IComparer<TKey>? comparer)
         {
             if (source is null)
@@ -869,9 +982,10 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return source.OrderByDescending(item => item.Key, comparer).Select(item => item.Value);
+            return source.OrderByDescending(static item => item.Key, comparer).Select(static item => item.Value);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IOrderedEnumerable<KeyValuePair<TKey, TValue>> OrderByValues<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source)
         {
             if (source is null)
@@ -882,6 +996,7 @@ namespace NetExtender.Utilities.Types
             return OrderByValues(source, Comparer<TValue>.Default);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IOrderedEnumerable<KeyValuePair<TKey, TValue>> OrderByValues<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source, IComparer<TValue>? comparer)
         {
             if (source is null)
@@ -889,9 +1004,10 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return source.OrderBy(item => item.Value, comparer);
+            return source.OrderBy(static item => item.Value, comparer);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IOrderedEnumerable<KeyValuePair<TKey, TValue>> OrderByValuesDescending<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source)
         {
             if (source is null)
@@ -902,6 +1018,7 @@ namespace NetExtender.Utilities.Types
             return OrderByValuesDescending(source, Comparer<TValue>.Default);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IOrderedEnumerable<KeyValuePair<TKey, TValue>> OrderByValuesDescending<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source, IComparer<TValue>? comparer)
         {
             if (source is null)
@@ -909,9 +1026,10 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return source.OrderByDescending(item => item.Value, comparer);
+            return source.OrderByDescending(static item => item.Value, comparer);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<TKey> OrderKeysByValues<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source)
         {
             if (source is null)
@@ -922,6 +1040,7 @@ namespace NetExtender.Utilities.Types
             return OrderKeysByValues(source, Comparer<TValue>.Default);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<TKey> OrderKeysByValues<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source, IComparer<TValue>? comparer)
         {
             if (source is null)
@@ -929,9 +1048,10 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return source.OrderBy(item => item.Value, comparer).Select(item => item.Key);
+            return source.OrderBy(static item => item.Value, comparer).Select(static item => item.Key);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<TKey> OrderKeysByValuesDescending<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source)
         {
             if (source is null)
@@ -942,6 +1062,7 @@ namespace NetExtender.Utilities.Types
             return OrderKeysByValuesDescending(source, Comparer<TValue>.Default);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<TKey> OrderKeysByValuesDescending<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source, IComparer<TValue>? comparer)
         {
             if (source is null)
@@ -949,9 +1070,10 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return source.OrderByDescending(item => item.Value, comparer).Select(item => item.Key);
+            return source.OrderByDescending(static item => item.Value, comparer).Select(static item => item.Key);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<KeyValuePair<TKey, TValue>> DistinctByKey<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source)
         {
             if (source is null)
@@ -962,6 +1084,7 @@ namespace NetExtender.Utilities.Types
             return DistinctByKey(source, EqualityComparer<TKey>.Default);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<KeyValuePair<TKey, TValue>> DistinctByKey<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source, IEqualityComparer<TKey>? comparer)
         {
             if (source is null)
@@ -969,9 +1092,10 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return source.DistinctBy(item => item.Key, comparer);
+            return source.DistinctBy(static item => item.Key, comparer);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<KeyValuePair<TKey, TValue>> DistinctByValue<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source)
         {
             if (source is null)
@@ -982,6 +1106,7 @@ namespace NetExtender.Utilities.Types
             return DistinctByValue(source, EqualityComparer<TValue>.Default);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<KeyValuePair<TKey, TValue>> DistinctByValue<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source, IEqualityComparer<TValue>? comparer)
         {
             if (source is null)
@@ -989,10 +1114,10 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return source.DistinctBy(item => item.Value, comparer);
+            return source.DistinctBy(static item => item.Value, comparer);
         }
 
-        public static IEnumerable<(TKey key, TValue value)> ToTuple<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source)
+        public static IEnumerable<(TKey Key, TValue Value)> ToTuple<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source)
         {
             if (source is null)
             {

@@ -20,7 +20,15 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
         public Int32 Column { get; }
         public Int32 Row { get; }
         
-        public ExcelCell(Int32 row, Int32 column)
+        public Boolean IsEmpty
+        {
+            get
+            {
+                return Column < 0 || Row < 0;
+            }
+        }
+        
+        public ExcelCell(Int32 column, Int32 row)
         {
             Column = column;
             Row = row;

@@ -3,14 +3,51 @@
 
 using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using NetExtender.Types.Concurrent.Dictionaries;
 using NetExtender.Types.Dictionaries.Interfaces;
+using NetExtender.Types.Sets.Interfaces;
 using NetExtender.Types.Storages.Interfaces;
 
 namespace NetExtender.Types.Storages
 {
+    public class WeakStorage<T> : IStorage<T>, IReadOnlyStorage<T> where T : class
+    {
+        protected IWeakSet<T> Internal { get; } = new ConcurrentWeakSet<T>();
+        
+        public Boolean Contains(T item)
+        {
+            return Internal.Contains(item);
+        }
+
+        public Boolean Add(T item)
+        {
+            return Internal.Add(item);
+        }
+
+        public Boolean Remove(T item)
+        {
+            return Internal.Remove(item);
+        }
+
+        public void Clear()
+        {
+            Internal.Clear();
+        }
+
+        public IEnumerator<T> GetEnumerator()
+        {
+            return Internal.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return ((IEnumerable) Internal).GetEnumerator();
+        }
+    }
+    
     public class WeakStorage<TKey, TValue> : IStorage<TKey, TValue>, IReadOnlyStorage<TKey, TValue> where TKey : class where TValue : class?
     {
         protected IWeakDictionary<TKey, TValue> Internal { get; } = new ConcurrentWeakDictionary<TKey, TValue>();

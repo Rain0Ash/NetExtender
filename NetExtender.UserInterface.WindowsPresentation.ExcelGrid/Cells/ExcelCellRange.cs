@@ -57,8 +57,8 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
         
         public ExcelCellRange(ExcelCell first, ExcelCell second)
         {
-            TopLeft = new ExcelCell(Math.Min(first.Row, second.Row), Math.Min(first.Column, second.Column));
-            BottomRight = new ExcelCell(Math.Max(first.Row, second.Row), Math.Max(first.Column, second.Column));
+            TopLeft = new ExcelCell(Math.Min(first.Column, second.Column), Math.Min(first.Row, second.Row));
+            BottomRight = new ExcelCell(Math.Max(first.Column, second.Column), Math.Max(first.Row, second.Row));
         }
         
         public override Int32 GetHashCode()

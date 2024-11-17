@@ -1,3 +1,4 @@
+using System;
 using System.Windows.Controls;
 using NetExtender.WindowsPresentation.Utilities.Types;
 
@@ -7,9 +8,9 @@ namespace NetExtender.UserInterface.WindowsPresentation
     {
         static ViewDataGrid()
         {
-            SelectionModeProperty.OverrideMetadataDefaultValue<ViewDataGrid>(DataGridSelectionMode.Single);
-            AutoGenerateColumnsProperty.OverrideMetadataDefaultValue<ViewDataGrid>(false);
-            IsReadOnlyProperty.OverrideMetadataDefaultValue<ViewDataGrid>(true);
+            SelectionModeProperty.OverrideMetadataDefaultValue<ViewDataGrid, DataGridSelectionMode>(DataGridSelectionMode.Single);
+            AutoGenerateColumnsProperty.OverrideMetadataDefaultValue<ViewDataGrid, Boolean>(false);
+            IsReadOnlyProperty.OverrideMetadataDefaultValue<ViewDataGrid, Boolean>(true);
             
             /*CellStyle = new Style(typeof(DataGridCell))
             {

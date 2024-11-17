@@ -170,12 +170,12 @@ namespace NetExtender.UserInterface.WindowsPresentation
         {
         }
         
-#pragma warning disable CS0693 // Type parameter has the same name as the type parameter from outer type
+#pragma warning disable CS0693
         protected override View<TEnum> Convert<TEnum>(TEnum value)
         {
             return value is T @enum ? Unsafe.As<View<TEnum>>(Convert(@enum)) : base.Convert(value);
         }
-#pragma warning restore CS0693 // Type parameter has the same name as the type parameter from outer type
+#pragma warning restore CS0693
         
         protected virtual View<T> Convert(T value)
         {
@@ -225,12 +225,12 @@ namespace NetExtender.UserInterface.WindowsPresentation
         {
         }
         
-#pragma warning disable CS0693 // Type parameter has the same name as the type parameter from outer type
+#pragma warning disable CS0693
         protected override View<T> Convert<T>(T value)
         {
             return value is TEnum @enum ? Unsafe.As<View<T>>(Convert(@enum)) : base.Convert(value);
         }
-#pragma warning restore CS0693 // Type parameter has the same name as the type parameter from outer type
+#pragma warning restore CS0693
         
         protected virtual View<TEnum> Convert(TEnum value)
         {

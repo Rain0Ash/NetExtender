@@ -38,6 +38,9 @@
         <Compile Update="Utilities\ServiceProviderUtilities.ServiceProvider.cs">
           <DependentUpon>ServiceProviderUtilities.cs</DependentUpon>
         </Compile>
+        <Compile Update="Patch\DependencyInjection.Patch.cs">
+          <DependentUpon>DependencyInjectionPatch.cs</DependentUpon>
+        </Compile>
     </ItemGroup>
 
 </Project>

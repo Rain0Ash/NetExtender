@@ -112,6 +112,7 @@ namespace NetExtender.Domains.WindowsPresentation.AspNetCore.Builder
         
         public override WindowsPresentationAspNetCoreContext Build(ImmutableArray<String> arguments)
         {
+            Manager?.Invoke(this, this);
             return new WindowsPresentationAspNetCoreContext<Window, IHost>(Window(arguments), Host(arguments));
         }
         
@@ -218,6 +219,7 @@ namespace NetExtender.Domains.WindowsPresentation.AspNetCore.Builder
         
         public override WindowsPresentationAspNetCoreWebContext Build(ImmutableArray<String> arguments)
         {
+            Manager?.Invoke(this, this);
             return new WindowsPresentationAspNetCoreWebContext<Window, IWebHost>(Window(arguments), Host(arguments));
         }
         

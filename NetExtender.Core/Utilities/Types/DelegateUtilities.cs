@@ -16,6 +16,13 @@ namespace NetExtender.Utilities.Types
     public static class DelegateUtilities
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [return: NotNullIfNotNull("delegate")]
+        public static TDelegate? Unsafe<TDelegate>(this Delegate? @delegate) where TDelegate : Delegate
+        {
+            return System.Runtime.CompilerServices.Unsafe.As<TDelegate>(@delegate);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Predicate<T> AsPredicate<T>(this Func<T, Boolean> function)
         {
             if (function is null)
@@ -27,17 +34,6 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Comparison<T> AsComparison<T>(this Func<T, T, Int32> function)
-        {
-            if (function is null)
-            {
-                throw new ArgumentNullException(nameof(function));
-            }
-
-            return As<Comparison<T>>(function);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Func<T, Boolean> AsFunc<T>(this Predicate<T> predicate)
         {
             if (predicate is null)
@@ -46,6 +42,17 @@ namespace NetExtender.Utilities.Types
             }
 
             return As<Func<T, Boolean>>(predicate);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Comparison<T> AsComparison<T>(this Func<T, T, Int32> function)
+        {
+            if (function is null)
+            {
+                throw new ArgumentNullException(nameof(function));
+            }
+
+            return As<Comparison<T>>(function);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -583,8 +590,8 @@ namespace NetExtender.Utilities.Types
 
             ParameterInfo[] parameters = info.GetParameters();
             DynamicMethod method = new DynamicMethod($"{info.Name}.DynamicInvoke", typeof(Object), new[] { typeof(Object), typeof(Object?[]) }, true);
-            method.DefineParameter(1, ParameterAttributes.None, "instance");
-            method.DefineParameter(2, ParameterAttributes.None, "arguments");
+            ParameterBuilder? instance = method.DefineParameter(1, ParameterAttributes.None, nameof(instance));
+            ParameterBuilder? arguments = method.DefineParameter(2, ParameterAttributes.None, nameof(arguments));
             ILGenerator generator = method.GetILGenerator();
 
             if (!info.IsStatic)

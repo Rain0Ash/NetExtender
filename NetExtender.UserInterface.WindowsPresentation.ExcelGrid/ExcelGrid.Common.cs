@@ -28,7 +28,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
             Int32 columns = Columns;
             while (column >= 0 && column < columns - 1)
             {
-                if (!TryGet(new ExcelCell(row, column), out Object? value) || String.IsNullOrEmpty(value?.ToString()))
+                if (!TryGet(new ExcelCell(column, row), out Object? value) || String.IsNullOrEmpty(value?.ToString()))
                 {
                     break;
                 }
@@ -44,7 +44,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
             Int32 rows = Rows;
             while (row >= 0 && row < rows)
             {
-                if (!TryGet(new ExcelCell(row, column), out Object? value) || String.IsNullOrEmpty(value?.ToString()))
+                if (!TryGet(new ExcelCell(column, row), out Object? value) || String.IsNullOrEmpty(value?.ToString()))
                 {
                     break;
                 }
@@ -57,7 +57,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
         
         public Int32 FindSourceIndex(Int32 index)
         {
-            if (View is not { } view || ItemsSource is not { } source || index < 0 || index == source.Count)
+            if (View is not { } view || ItemsSource is not { } source || index < 0 || index >= source.Count)
             {
                 return index;
             }
@@ -91,7 +91,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
         
         public Int32 FindViewIndex(Int32 index)
         {
-            if (View is not { } view || ItemsSource is not { } source || index < 0 || index == source.Count)
+            if (View is not { } view || ItemsSource is not { } source || index < 0 || index >= source.Count)
             {
                 return index;
             }
@@ -127,11 +127,11 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 yield break;
             }
             
-            Int32 minimum = ItemsInRows ? range.TopRow : range.LeftColumn;
-            Int32 maximum = ItemsInRows ? range.BottomRow : range.RightColumn;
+            Int32 minimum = ItemsInColumns ? range.LeftColumn : range.TopRow;
+            Int32 maximum = ItemsInColumns ? range.RightColumn : range.BottomRow;
             for (Int32 index = minimum; index <= maximum; index++)
             {
-                ExcelCell cell = ItemsInRows ? new ExcelCell(index, range.LeftColumn) : new ExcelCell(range.TopRow, index);
+                ExcelCell cell = ItemsInColumns ? new ExcelCell(index, range.TopRow) : new ExcelCell(range.LeftColumn, index);
                 
                 if (@operator.GetItem(cell) is { } item)
                 {

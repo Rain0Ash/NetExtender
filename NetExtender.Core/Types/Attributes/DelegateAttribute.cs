@@ -15,16 +15,16 @@ namespace NetExtender.Utilities.Core
         public String? Name { get; }
         public Int32 Order { get; init; } = Int32.MinValue;
 
-        protected DelegateAttribute(String? name, Type? type)
+        protected DelegateAttribute(Type? type, String? name)
         {
-            Name = name;
             Type = type;
+            Name = name;
         }
 
-        protected DelegateAttribute(String? name, Type? type, Int32 order)
+        protected DelegateAttribute(Type? type, String? name, Int32 order)
         {
-            Name = name;
             Type = type;
+            Name = name;
             Order = order;
         }
     }

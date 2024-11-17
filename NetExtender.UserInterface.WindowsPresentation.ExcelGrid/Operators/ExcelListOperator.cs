@@ -9,12 +9,12 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
 {
     public class ExcelListOperator : ExcelGridOperator
     {
-        public ExcelListOperator(ExcelGrid excel)
+        public ExcelListOperator(IExcelGrid excel)
             : base(excel)
         {
         }
 
-        protected override IEnumerable<ExcelColumnDefinition> GenerateColumnDefinitions(IList? source)
+        protected override IEnumerable<ExcelColumnDefinition> AutoGenerateColumns(IList? source)
         {
             if (source is null)
             {

@@ -8,33 +8,19 @@ namespace NetExtender.IO.Shortcut.Interfaces
     public interface IShortcut
     {
         public String Name { get; }
-
         public String FullName { get; }
-
         public String? Arguments { get; init; }
-
         public String? Description { get; init; }
-
         public String? Hotkey { get; init; }
-
         public String? IconLocation { get; init; }
-
         public String RelativePath { init; }
-
         public String TargetPath { get; init; }
-
         public Int32 WindowStyle { get; init; }
-
         public String WorkingDirectory { get; init; }
-
         public String CreatingPath { get; }
-
         public String? SavePath { get; }
-
         public String? SaveDirectory { get; init; }
-
         public Boolean Overwrite { get; set; }
-
         public Boolean Save();
     }
 }

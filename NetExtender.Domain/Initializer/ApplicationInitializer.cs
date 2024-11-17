@@ -17,6 +17,7 @@ using NetExtender.Types.Attributes;
 using NetExtender.Types.Tasks;
 using NetExtender.Types.Dispatchers.Interfaces;
 using NetExtender.Utilities.Application;
+using NetExtender.Utilities.Core;
 using NetExtender.Utilities.Threading;
 
 namespace NetExtender.Domains.Initializer
@@ -76,13 +77,18 @@ namespace NetExtender.Domains.Initializer
                 }
             }
             
-            Instance = assembly.GetTypes().Where(type => type.IsSubclassOf(typeof(ApplicationInitializer))).ToArray() switch
+            Instance = assembly.GetSafeTypes().Where(type => type.IsSubclassOf(typeof(ApplicationInitializer))).ToArray() switch
             {
                 { Length: 0 } => throw new EntryPointNotFoundException($"Application initializer for assembly '{assembly}' not found."),
                 { Length: 1 } initializer => Initialize(initializer[0]),
                 { } result => throw new AmbiguousMatchException($"Multiple application initializer was found: {String.Join(", ", (IEnumerable<Type>) result)}."),
                 _ => throw new InvalidOperationException()
             };
+
+            if (IsDomain is false)
+            {
+                IsDomain = null;
+            }
         }
 
         protected ApplicationInitializer()

@@ -9,7 +9,13 @@ namespace NetExtender.DependencyInjection
         [ModuleInitializer]
         public static void Initialize()
         {
-            WindowsPresentationPatch.Apply();
+            Initializer.Initializer.Module(Patch);
+        }
+        
+        private static void Patch()
+        {
+            WindowsPresentationFusionPatch.Auto();
+            WindowsPresentationCommandSenderPatch.Auto();
         }
 #pragma warning restore CA2255
     }

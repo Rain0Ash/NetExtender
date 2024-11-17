@@ -2,8 +2,10 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
@@ -143,6 +145,33 @@ namespace NetExtender.Initializer
             }
         }
 
+        private static event Action? DomainInitialized;
+
+        private static Boolean? _domain = false;
+        protected internal static Boolean? IsDomain
+        {
+            get
+            {
+                return _domain;
+            }
+            set
+            {
+                if (_domain is not false && value is false || _domain is true)
+                {
+                    throw new InvalidOperationException();
+                }
+
+                if (_domain == value)
+                {
+                    return;
+                }
+
+                _domain = value;
+                DomainInitialized?.Invoke();
+                DomainInitialized = null;
+            }
+        }
+
         protected Initializer(Boolean subscribe)
         {
             if (!subscribe)
@@ -152,6 +181,50 @@ namespace NetExtender.Initializer
 
             AppDomain.CurrentDomain.ProcessExit += ExitShutdown;
             AppDomain.CurrentDomain.UnhandledException += UnhandledException;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void Module(Action initializer)
+        {
+            if (initializer is null)
+            {
+                throw new ArgumentNullException(nameof(initializer));
+            }
+
+            if (initializer.Method is not { DeclaringType: { } type } method)
+            {
+                throw new ArgumentException($"Method '{initializer}' must have declaring type.", nameof(initializer));
+            }
+
+            if (!method.IsStatic)
+            {
+                throw new ArgumentException($"Method '{method}' must be static.", nameof(initializer));
+            }
+            
+            if (!type.IsAbstract || !type.IsSealed)
+            {
+                throw new ArgumentException($"{type.FullName} is not a static class.", nameof(type));
+            }
+            
+            const BindingFlags binding = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
+
+            static Boolean Predicate(MethodInfo method)
+            {
+                return method.IsStatic && method.GetParameters().Length <= 0 && method.ReturnType == typeof(void) && method.GetCustomAttribute<ModuleInitializerAttribute>() is not null;
+            }
+
+            if (type.GetMethods(binding).SingleOrDefault(Predicate) is null)
+            {
+                throw new ArgumentException($"Type '{type}' is not module initializer.", nameof(type));
+            }
+
+            if (IsDomain is not null)
+            {
+                initializer.Invoke();
+                return;
+            }
+            
+            DomainInitialized += initializer;
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

@@ -211,7 +211,7 @@ namespace NetExtender.Utilities.Core
                 throw new ArgumentNullException(nameof(assembly));
             }
             
-            return await Scan(assembly.GetTypes()).ConfigureAwait(false);
+            return await Scan(assembly.GetSafeTypes()).ConfigureAwait(false);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

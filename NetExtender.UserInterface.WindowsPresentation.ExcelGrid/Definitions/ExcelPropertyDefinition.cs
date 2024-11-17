@@ -5,7 +5,6 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Media;
 using NetExtender.Interfaces.Notify;
 using NetExtender.Utilities.Types;
 
@@ -247,12 +246,42 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
             }
         }
         
-        private ExcelEnabledBy? _enabled;
-        public virtual ExcelEnabledBy IsEnabledBy
+        private String? _enabledByProperty;
+        public String? IsEnabledByProperty
         {
             get
             {
-                return _enabled ??= new ExcelEnabledBy();
+                return _enabledByProperty;
+            }
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _enabledByProperty, value);
+            }
+        }
+        
+        private Object? _enabledByValue;
+        public Object? IsEnabledByValue
+        {
+            get
+            {
+                return _enabledByValue;
+            }
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _enabledByValue, value);
+            }
+        }
+        
+        private Object? _enabledBySource;
+        public Object? IsEnabledBySource
+        {
+            get
+            {
+                return _enabledBySource;
+            }
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _enabledBySource, value);
             }
         }
         
@@ -291,8 +320,8 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 return;
             }
             
-            IsEnabledBy.Property = attribute.Property;
-            IsEnabledBy.Value = attribute.Value;
+            IsEnabledByProperty = attribute.Property;
+            IsEnabledByValue = attribute.Value;
         }
         
         public void SetNullable(PropertyEnableByAttribute? attribute)
@@ -302,8 +331,8 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 return;
             }
             
-            IsEnabledBy.Property ??= attribute.Property;
-            IsEnabledBy.Value ??= attribute.Value;
+            IsEnabledByProperty ??= attribute.Property;
+            IsEnabledByValue ??= attribute.Value;
         }
     }
 }

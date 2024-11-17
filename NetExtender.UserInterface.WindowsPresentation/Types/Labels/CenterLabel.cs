@@ -8,10 +8,10 @@ namespace NetExtender.UserInterface.WindowsPresentation
     {
         static CenterLabel()
         {
-            HorizontalAlignmentProperty.OverrideMetadataDefaultValue<CenterLabel>(HorizontalAlignment.Stretch);
-            VerticalAlignmentProperty.OverrideMetadataDefaultValue<CenterLabel>(VerticalAlignment.Stretch);
-            HorizontalContentAlignmentProperty.OverrideMetadataDefaultValue<CenterLabel>(HorizontalAlignment.Center);
-            VerticalContentAlignmentProperty.OverrideMetadataDefaultValue<CenterLabel>(VerticalAlignment.Center);
+            HorizontalAlignmentProperty.OverrideMetadataDefaultValue<CenterLabel, HorizontalAlignment>(HorizontalAlignment.Stretch);
+            VerticalAlignmentProperty.OverrideMetadataDefaultValue<CenterLabel, VerticalAlignment>(VerticalAlignment.Stretch);
+            HorizontalContentAlignmentProperty.OverrideMetadataDefaultValue<CenterLabel, HorizontalAlignment>(HorizontalAlignment.Center);
+            VerticalContentAlignmentProperty.OverrideMetadataDefaultValue<CenterLabel, VerticalAlignment>(VerticalAlignment.Center);
         }
         
         public CenterLabel()

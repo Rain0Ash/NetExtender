@@ -23,12 +23,12 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
             }
         }
         
-        public ExcelMultiListOperator(ExcelGrid excel)
+        public ExcelMultiListOperator(IExcelGrid excel)
             : base(excel)
         {
         }
         
-        protected override IEnumerable<ExcelColumnDefinition> GenerateColumnDefinitions(IList? source)
+        protected override IEnumerable<ExcelColumnDefinition> AutoGenerateColumns(IList? source)
         {
             if (source is null)
             {

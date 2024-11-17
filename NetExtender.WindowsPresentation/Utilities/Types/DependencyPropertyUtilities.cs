@@ -1172,5 +1172,29 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
         {
             OverrideMetadataDefaultValue(property, typeof(T), key, options, value);
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void OverrideMetadataDefaultValue<T, TValue>(this DependencyProperty property, TValue value) where T : DependencyObject
+        {
+            OverrideMetadataDefaultValue<T>(property, value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void OverrideMetadataDefaultValue<T, TValue>(this DependencyProperty property, FrameworkPropertyMetadataOptions? options, TValue value) where T : DependencyObject
+        {
+            OverrideMetadataDefaultValue<T>(property, options, value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void OverrideMetadataDefaultValue<T, TValue>(this DependencyProperty property, DependencyPropertyKey key, TValue value) where T : DependencyObject
+        {
+            OverrideMetadataDefaultValue<T>(property, key, value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void OverrideMetadataDefaultValue<T, TValue>(this DependencyProperty property, DependencyPropertyKey key, FrameworkPropertyMetadataOptions? options, TValue value) where T : DependencyObject
+        {
+            OverrideMetadataDefaultValue<T>(property, key, options, value);
+        }
     }
 }

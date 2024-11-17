@@ -38,13 +38,13 @@ namespace NetExtender.Utilities.Core
         {
         }
 
-        public EquatableAttribute(String? name, Type? type)
-            : base(name, type)
+        public EquatableAttribute(Type? type, String? name)
+            : base(type, name)
         {
         }
 
-        public EquatableAttribute(String? name, Type? type, Int32 order)
-            : base(name, type, order)
+        public EquatableAttribute(Type? type, String? name, Int32 order)
+            : base(type, name, order)
         {
         }
     }

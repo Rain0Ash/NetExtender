@@ -75,7 +75,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 row = grid.RowDefinitions.Count - 1;
             }
             
-            return column >= 0 && row >= 0 ? new ExcelCell(row, column) : new ExcelCell(-1, -1);
+            return column >= 0 && row >= 0 ? new ExcelCell(column, row) : new ExcelCell(-1, -1);
         }
         
         protected Point? Position(ExcelCell cell)
@@ -149,7 +149,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
             {
                 for (Int32 column = 0; column < range.Columns; column++)
                 {
-                    if (!TryGet(new ExcelCell(range.TopRow + row, range.LeftColumn + column), out Object? value))
+                    if (!TryGet(new ExcelCell(range.LeftColumn + column, range.TopRow + row), out Object? value))
                     {
                         result = default;
                         return false;
@@ -175,7 +175,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
             {
                 for (Int32 column = 0; column < range.Columns; column++)
                 {
-                    ExcelCell cell = new ExcelCell(range.TopRow + row, range.LeftColumn + column);
+                    ExcelCell cell = new ExcelCell(range.LeftColumn + column, range.TopRow + row);
                     
                     if (!TryGet(cell, out Object? value))
                     {
@@ -208,7 +208,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
             {
                 for (Int32 column = 0; column < range.Columns; column++)
                 {
-                    result[row, column] = Format(new ExcelCell(range.TopRow + row, range.LeftColumn + column), values[row, column]);
+                    result[row, column] = Format(new ExcelCell(range.LeftColumn + column, range.TopRow + row), values[row, column]);
                 }
             }
             
@@ -247,7 +247,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
             Int32 rows = values.GetUpperBound(0) + 1;
             Int32 columns = values.GetUpperBound(1) + 1;
             
-            ExcelCell end = new ExcelCell(Math.Max(range.BottomRow, range.TopRow + rows - 1), Math.Max(range.BottomRight.Column, range.LeftColumn + columns - 1));
+            ExcelCell end = new ExcelCell(Math.Max(range.BottomRight.Column, range.LeftColumn + columns - 1), Math.Max(range.BottomRow, range.TopRow + rows - 1));
             result = new ExcelCellRange(range.TopLeft, end);
             
             if (Operator is not { } @operator)
@@ -285,7 +285,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                     }
                     
                     Object value = values[(row - result.TopRow) % rows, (column - result.LeftColumn) % columns];
-                    TrySet(new ExcelCell(row, column), value);
+                    TrySet(new ExcelCell(column, row), value);
                 }
             }
             
@@ -368,15 +368,15 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 row = row < Rows - 1 || CanInsertRows && EasyInsertByKeyboard ? row + 1 : 0;
             }
             
-            ExcelCell cell = new ExcelCell(row, column);
+            ExcelCell cell = new ExcelCell(column, row);
             
             if (HandleAutoInsert(cell))
             {
                 return;
             }
             
-            SelectionCell = cell;
             CurrentCell = cell;
+            SelectionCell = cell;
             ScrollIntoView(cell);
         }
         

@@ -29,7 +29,7 @@ namespace NetExtender.WindowsPresentation.Types.Bindings
 
         private static Boolean Initialize([MaybeNullWhen(false)] out Type type)
         {
-            type = Assembly?.GetTypes().FirstOrDefault(type => type.Name == nameof(Localization) + nameof(Window) && type.HasAttribute<ReflectionNamingAttribute>());
+            type = Assembly?.GetSafeTypes().FirstOrDefault(type => type.Name == nameof(Localization) + nameof(Window) && type.HasAttribute<ReflectionNamingAttribute>());
             return type is not null;
         }
 
@@ -64,7 +64,7 @@ namespace NetExtender.WindowsPresentation.Types.Bindings
         
         private static Boolean Initialize([MaybeNullWhen(false)] out Type type)
         {
-            type = Assembly?.GetTypes().FirstOrDefault(type => type.Name == nameof(Localization) + nameof(Control) && type.HasAttribute<ReflectionNamingAttribute>());
+            type = Assembly?.GetSafeTypes().FirstOrDefault(type => type.Name == nameof(Localization) + nameof(Control) && type.HasAttribute<ReflectionNamingAttribute>());
             return type is not null;
         }
         
@@ -99,7 +99,7 @@ namespace NetExtender.WindowsPresentation.Types.Bindings
         
         private static Boolean Initialize([MaybeNullWhen(false)] out Type type)
         {
-            type = Assembly?.GetTypes().FirstOrDefault(type => type.Name == nameof(Localization) + nameof(UserControl) && type.HasAttribute<ReflectionNamingAttribute>());
+            type = Assembly?.GetSafeTypes().FirstOrDefault(type => type.Name == nameof(Localization) + nameof(UserControl) && type.HasAttribute<ReflectionNamingAttribute>());
             return type is not null;
         }
         

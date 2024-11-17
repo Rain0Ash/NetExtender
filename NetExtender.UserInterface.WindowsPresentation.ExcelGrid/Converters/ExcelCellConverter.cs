@@ -48,7 +48,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 column += column * alphabet + scolumn[i] - 'A';
             }
 
-            return new ExcelCell(row, column);
+            return new ExcelCell(column, row);
         }
 
         public override Object? ConvertBack(Object? value, Type? targetType, Object? parameter, CultureInfo? culture)

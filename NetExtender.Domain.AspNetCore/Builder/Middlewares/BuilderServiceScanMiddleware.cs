@@ -17,11 +17,21 @@ namespace NetExtender.Domains.AspNetCore.Builder.Middlewares
     [ApplicationBuilderMiddleware]
     internal sealed class BuilderServiceScanMiddleware : Middleware<IServiceCollection>, IMiddlewareConverter<IHostBuilder, IServiceCollection>, IMiddlewareConverter<IWebHostBuilder, IServiceCollection>, IMiddlewareConverter<WebApplicationBuilder, IServiceCollection>
     {
+        public BuilderServiceScanMiddleware()
+        {
+            Idempotency = MiddlewareIdempotencyMode.Argument;
+        }
+        
         public override void Invoke(Object? sender, IServiceCollection collection)
         {
             if (collection is null)
             {
                 throw new ArgumentNullException(nameof(collection));
+            }
+
+            if (!Memorize(sender, collection))
+            {
+                return;
             }
 
             switch (sender)
@@ -36,7 +46,7 @@ namespace NetExtender.Domains.AspNetCore.Builder.Middlewares
                     return;
             }
         }
-        
+
         public IServiceCollection Convert(Object? sender, IHostBuilder builder)
         {
             switch (builder)

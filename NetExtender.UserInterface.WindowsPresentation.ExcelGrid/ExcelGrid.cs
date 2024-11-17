@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
@@ -12,6 +11,7 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Threading;
 using NetExtender.Types.Collections;
+using NetExtender.Types.Collections.Interfaces;
 using NetExtender.UserInterface.WindowsPresentation.ExcelGrid.Interfaces;
 using NetExtender.Utilities.UserInterface;
 
@@ -24,7 +24,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
         Cell
     }
     
-    public partial class ExcelGrid : Control, IWeakEventListener
+    public partial class ExcelGrid : Control, IExcelGrid, IWeakEventListener
     {
         protected Grid? SheetGrid { get; set; }
         protected Grid ColumnGrid { get; set; } = null!;
@@ -32,9 +32,9 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
         
         public IExcelGridOperator? Operator { get; protected set; }
         
-        public ObservableCollection<ExcelPropertyDefinition> PropertyDefinitions { get; }
+        public SuppressObservableCollection<ExcelPropertyDefinition> PropertyDefinitions { get; }
         
-        public ObservableCollection<ExcelPropertyDefinition> ColumnDefinitions
+        public SuppressObservableCollection<ExcelPropertyDefinition> ColumnDefinitions
         {
             get
             {
@@ -42,11 +42,27 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
             }
         }
         
-        public ObservableCollection<ExcelPropertyDefinition> RowDefinitions
+        IObservableCollection<ExcelPropertyDefinition> IExcelGrid.ColumnDefinitions
+        {
+            get
+            {
+                return ColumnDefinitions;
+            }
+        }
+        
+        public SuppressObservableCollection<ExcelPropertyDefinition> RowDefinitions
         {
             get
             {
                 return PropertyDefinitions;
+            }
+        }
+        
+        IObservableCollection<ExcelPropertyDefinition> IExcelGrid.RowDefinitions
+        {
+            get
+            {
+                return RowDefinitions;
             }
         }
         
@@ -98,7 +114,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 {
                     for (Int32 column = Math.Min(CurrentCell.Column, SelectionCell.Column); column <= Math.Max(CurrentCell.Column, SelectionCell.Column); column++)
                     {
-                        yield return new ExcelCell(row, column);
+                        yield return new ExcelCell(column, row);
                     }
                 }
             }
@@ -113,22 +129,6 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
         }
         
         public ICollectionView? View { get; protected set; }
-
-        protected virtual Boolean CanDeleteColumns
-        {
-            get
-            {
-                return !IsReadOnly && (Operator?.CanDeleteColumns ?? false);
-            }
-        }
-        
-        protected virtual Boolean CanDeleteRows
-        {
-            get
-            {
-                return !IsReadOnly && (Operator?.CanDeleteRows ?? false);
-            }
-        }
         
         protected virtual Boolean CanInsertColumns
         {
@@ -143,6 +143,22 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
             get
             {
                 return !IsReadOnly && (Operator?.CanInsertRows ?? false);
+            }
+        }
+
+        protected virtual Boolean CanDeleteColumns
+        {
+            get
+            {
+                return !IsReadOnly && (Operator?.CanDeleteColumns ?? false);
+            }
+        }
+        
+        protected virtual Boolean CanDeleteRows
+        {
+            get
+            {
+                return !IsReadOnly && (Operator?.CanDeleteRows ?? false);
             }
         }
         
@@ -255,10 +271,15 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
             return true;
         }
         
-        internal ExcelPropertyDefinition? GetPropertyDefinition(ExcelCell cell)
+        protected virtual ExcelPropertyDefinition? GetPropertyDefinition(ExcelCell cell)
         {
             Int32 index = ItemsInRows ? cell.Column : cell.Row;
             return index < PropertyDefinitions.Count ? PropertyDefinitions[index] : null;
+        }
+        
+        ExcelPropertyDefinition? IExcelGrid.GetPropertyDefinition(ExcelCell cell)
+        {
+            return GetPropertyDefinition(cell);
         }
         
         private void PropertyDefinitionsChanged(Object? sender, NotifyCollectionChangedEventArgs args)
@@ -311,8 +332,6 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 NotifyCollection = null;
             }
             
-            View = null;
-            
             if (ItemsSource is not null)
             {
                 SynchronizationCollection = ItemsSource;
@@ -320,6 +339,10 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 CollectionViewSource source = new CollectionViewSource { Source = ItemsSource };
                 View = source.View;
                 UpdateCollectionView();
+            }
+            else
+            {
+                View = null;
             }
             
             Update();
@@ -395,6 +418,11 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
             {
                 Grid.SetColumn(border, column);
                 Grid.SetColumnSpan(border, columnspan);
+            }
+            
+            border = RowSelectionBackground;
+            if (border is not null)
+            {
                 Grid.SetRow(border, row);
                 Grid.SetRowSpan(border, rowspan);
             }

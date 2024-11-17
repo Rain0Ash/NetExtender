@@ -23,32 +23,32 @@ namespace NetExtender.Utilities.Core
         }
 
         public ComparableAttribute(String? name)
-            : this(name, null)
+            : this(null, name)
         {
         }
 
         public ComparableAttribute(String? name, Int32 order)
-            : this(name, null, order)
+            : this(null, name, order)
         {
         }
 
         public ComparableAttribute(Type? type)
-            : this(null, type)
+            : this(type, null)
         {
         }
 
         public ComparableAttribute(Type? type, Int32 order)
-            : this(null, type, order)
+            : this(type, null, order)
         {
         }
 
-        public ComparableAttribute(String? name, Type? type)
-            : base(name, type)
+        public ComparableAttribute(Type? type, String? name)
+            : base(type, name)
         {
         }
 
-        public ComparableAttribute(String? name, Type? type, Int32 order)
-            : base(name, type, order)
+        public ComparableAttribute(Type? type, String? name, Int32 order)
+            : base(type, name, order)
         {
         }
 

@@ -346,7 +346,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(assembly));
             }
             
-            return Scan<TAttribute>(manager, assembly.GetTypes());
+            return Scan<TAttribute>(manager, assembly.GetSafeTypes());
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

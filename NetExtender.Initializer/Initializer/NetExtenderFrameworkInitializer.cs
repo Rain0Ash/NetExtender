@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using NetExtender.Patch;
 
 namespace NetExtender.Initializer
 {
@@ -94,6 +95,34 @@ namespace NetExtender.Initializer
             get
             {
                 return Initializer.Exclude;
+            }
+        }
+        
+        public static ReflectionPatchCategory IncludePatchCategory
+        {
+            get
+            {
+                return Initializer.IncludePatchCategory;
+            }
+            set
+            {
+                Initializer.IncludePatchCategory = value;
+            }
+        }
+
+        public static ISet<String> IncludePatch
+        {
+            get
+            {
+                return Initializer.IncludePatch;
+            }
+        }
+
+        public static ISet<String> ExcludePatch
+        {
+            get
+            {
+                return Initializer.ExcludePatch;
             }
         }
 

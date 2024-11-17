@@ -94,7 +94,7 @@ resharper_autodetect_indent_settings = true
 resharper_braces_redundant = true
 resharper_can_use_global_alias = false
 resharper_csharp_allow_alias = false
-resharper_csharp_max_line_length = 185
+resharper_csharp_max_line_length = 600
 resharper_csharp_naming_rule.private_constants = AaBb
 resharper_csharp_naming_rule.private_static_readonly = AaBb
 resharper_enforce_line_ending_style = true
@@ -165,7 +165,7 @@ resharper_web_config_wrong_module_highlighting = warning
 
 [{*.har,*.inputactions,*.json}]
 indent_style = space
-indent_size = 2
+indent_size = 4
 
 [*.{appxmanifest,asax,ascx,aspx,axaml,build,cg,cginc,compute,cs,cshtml,dtd,hlsl,hlsli,hlslinc,master,nuspec,paml,razor,resw,resx,shader,skin,usf,ush,vb,xaml,xamlx,xoml,xsd}]
 indent_style = space

@@ -17,7 +17,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
 {
     public abstract class ExcelGridOperator : IExcelGridOperator
     {
-        protected ExcelGrid Excel { get; }
+        protected IExcelGrid Excel { get; }
         private Dictionary<ExcelPropertyDefinition, PropertyDescriptor> Descriptors { get; } = new Dictionary<ExcelPropertyDefinition, PropertyDescriptor>();
         
         public HorizontalAlignment DefaultHorizontalAlignment { get; set; } = HorizontalAlignment.Center;
@@ -35,7 +35,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
         {
             get
             {
-                return Excel.ItemsInRows ? Excel.PropertyDefinitions.Count : ItemCount;
+                return Excel.ItemsInRows ? Excel.ColumnDefinitions.Count : ItemCount;
             }
         }
         
@@ -43,7 +43,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
         {
             get
             {
-                return Excel.ItemsInRows ? ItemCount : Excel.PropertyDefinitions.Count;
+                return Excel.ItemsInRows ? ItemCount : Excel.RowDefinitions.Count;
             }
         }
         
@@ -79,34 +79,31 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
             }
         }
 
-        protected ExcelGridOperator(ExcelGrid excel)
+        protected ExcelGridOperator(IExcelGrid excel)
         {
             Excel = excel ?? throw new ArgumentNullException(nameof(excel));
         }
         
-        public virtual void AutoGenerateColumns()
+        public virtual IEnumerable<ExcelColumnDefinition> AutoGenerateColumns()
         {
-            Excel.ColumnDefinitions.Clear();
-            foreach (ExcelColumnDefinition definition in GenerateColumnDefinitions(Excel.ItemsSource))
-            {
-                Excel.ColumnDefinitions.Add(definition);
-                Excel.PropertyDefinitions.Add(definition);
-            }
+            return AutoGenerateColumns(Excel.ItemsSource);
         }
         
-        protected abstract IEnumerable<ExcelColumnDefinition> GenerateColumnDefinitions(IList? source);
+        protected abstract IEnumerable<ExcelColumnDefinition> AutoGenerateColumns(IList? source);
         
-        public virtual void UpdatePropertyDefinitions()
+        protected virtual void UpdatePropertyDefinitions(IEnumerable<ExcelPropertyDefinition> definitions, PropertyDescriptorCollection properties)
         {
-            Descriptors.Clear();
-            
-            if (GetItemType(Excel.ItemsSource) is not { } type)
+            if (definitions is null)
             {
-                return;
+                throw new ArgumentNullException(nameof(definitions));
             }
             
-            PropertyDescriptorCollection properties = TypeDescriptor.GetProperties(type);
-            foreach (ExcelPropertyDefinition definition in Excel.PropertyDefinitions)
+            if (properties is null)
+            {
+                throw new ArgumentNullException(nameof(properties));
+            }
+            
+            foreach (ExcelPropertyDefinition definition in definitions)
             {
                 if (String.IsNullOrEmpty(definition.PropertyName))
                 {
@@ -123,9 +120,31 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
             }
         }
         
+        public virtual void UpdatePropertyDefinitions()
+        {
+            Descriptors.Clear();
+            
+            if (GetItemType(Excel.ItemsSource) is not { } type)
+            {
+                return;
+            }
+            
+            PropertyDescriptorCollection properties = TypeDescriptor.GetProperties(type);
+            
+            ICollection<ExcelPropertyDefinition> columns = Excel.ColumnDefinitions;
+            ICollection<ExcelPropertyDefinition> rows = Excel.RowDefinitions;
+            
+            UpdatePropertyDefinitions(columns, properties);
+            
+            if (!ReferenceEquals(columns, rows))
+            {
+                UpdatePropertyDefinitions(rows, properties);
+            }
+        }
+        
         public virtual Boolean CanSort(Int32 index)
         {
-            return Excel.PropertyDefinitions[index].CanSort;
+            return Excel.ColumnDefinitions[index].CanSort;
         }
         
         public abstract Object? GetItem(ExcelCell cell);

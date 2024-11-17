@@ -14,7 +14,7 @@ namespace NetExtender.UserInterface.WindowsPresentation
     {
         static LocalizationSelectorComboBox()
         {
-            SelectedValuePathProperty.OverrideMetadataDefaultValue<LocalizationSelectorComboBox>(nameof(LocalizationImageEntry<Any>.Identifier));
+            SelectedValuePathProperty.OverrideMetadataDefaultValue<LocalizationSelectorComboBox, String>(nameof(LocalizationImageEntry<Any>.Identifier));
         }
         
         public LocalizationSelectorComboBox()

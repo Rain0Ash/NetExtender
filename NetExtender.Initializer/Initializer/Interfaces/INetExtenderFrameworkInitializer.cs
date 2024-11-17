@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using NetExtender.Patch;
 
 namespace NetExtender.Initializer
 {
@@ -15,5 +16,8 @@ namespace NetExtender.Initializer
         public IDictionary<String, AssemblyVerifyInfo?> Assemblies { get; }
         public IDictionary<String, AssemblyVerifyInfo?> Include { get; }
         public ISet<String> Exclude { get; }
+        public ReflectionPatchCategory IncludePatchCategory { get; set; }
+        public ISet<String> IncludePatch { get; }
+        public ISet<String> ExcludePatch { get; }
     }
 }

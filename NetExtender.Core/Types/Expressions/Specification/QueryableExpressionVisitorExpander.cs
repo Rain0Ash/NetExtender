@@ -9,6 +9,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
+using NetExtender.Utilities.Core;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Expressions.Specification
@@ -61,9 +62,14 @@ namespace NetExtender.Types.Expressions.Specification
                 throw new ArgumentNullException(nameof(method));
             }
 
+            if (method.GetSafeParameters() is not { } parameters)
+            {
+                return String.Empty;
+            }
+
             StringBuilder builder = new StringBuilder();
 
-            foreach (ParameterInfo info in method.GetParameters())
+            foreach (ParameterInfo info in parameters)
             {
                 AddTypeSignature(builder, info.ParameterType);
             }

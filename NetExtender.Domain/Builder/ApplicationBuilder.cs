@@ -2,16 +2,16 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using NetExtender.Domains.Builder.Interfaces;
+using NetExtender.Patch;
+using NetExtender.Types.Attributes.Interfaces;
 using NetExtender.Types.Exceptions;
 using NetExtender.Types.Middlewares;
 using NetExtender.Types.Middlewares.Interfaces;
-using NetExtender.Types.Reflection;
 using NetExtender.Types.Reflection.Interfaces;
 using NetExtender.Utilities.Core;
 using NetExtender.Utilities.IO;
@@ -69,6 +69,12 @@ namespace NetExtender.Domains.Builder
         protected virtual void Setup(ImmutableArray<String> arguments)
         {
             Arguments = arguments;
+            foreach (IInvokeAttribute attribute in ReflectionUtilities.GetCustomAttributes<PatchAttribute>(GetType()).OfType<IInvokeAttribute>())
+            {
+                attribute.Invoke(this, null);
+            }
+            
+            NetExtender.Initializer.Initializer.IsDomain = true;
             
             switch (Patch)
             {

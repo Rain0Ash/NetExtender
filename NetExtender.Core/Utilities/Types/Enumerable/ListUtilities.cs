@@ -4,6 +4,8 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Reflection;
+using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using NetExtender.Types.Comparers;
@@ -16,6 +18,32 @@ namespace NetExtender.Utilities.Types
 {
     public static class ListUtilities
     {
+        private static class ArrayAccessor<T>
+        {
+            public static readonly Func<List<T>, T[]> Getter;
+
+            static ArrayAccessor()
+            {
+                const MethodAttributes attributes = MethodAttributes.Static | MethodAttributes.Public;
+                DynamicMethod method = new DynamicMethod("get", attributes, CallingConventions.Standard, typeof(T[]), new[] { typeof(List<T>) }, typeof(ArrayAccessor<T>), true);
+                ILGenerator il = method.GetILGenerator();
+                il.Emit(OpCodes.Ldarg_0);
+                il.Emit(OpCodes.Ldfld, typeof(List<T>).GetField("_items", BindingFlags.NonPublic | BindingFlags.Instance)!);
+                il.Emit(OpCodes.Ret);
+                Getter = (Func<List<T>, T[]>)method.CreateDelegate(typeof(Func<List<T>, T[]>));
+            }
+        }
+
+        public static T[] GetInternalArray<T>(this List<T> list)
+        {
+            if (list is null)
+            {
+                throw new ArgumentNullException(nameof(list));
+            }
+
+            return ArrayAccessor<T>.Getter(list);
+        }
+        
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ReadOnlySpan<T> AsReadOnlySpan<T>(this List<T> collection)
         {

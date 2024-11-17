@@ -10,11 +10,6 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
 {
     public partial class ExcelGrid
     {
-        protected void RefreshIfRequired()
-        {
-            RefreshIfRequired(false);
-        }
-        
         protected void RefreshIfRequired(Boolean force)
         {
             if (!force && ItemsSource is INotifyCollectionChanged)
@@ -27,7 +22,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
         
         protected void SelectAll()
         {
-            SelectionCell = new ExcelCell(Rows - 1, Columns - 1);
+            SelectionCell = new ExcelCell(Columns - 1, Rows - 1);
             CurrentCell = new ExcelCell(0, 0);
             ScrollIntoView(CurrentCell);
         }
@@ -56,7 +51,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
             return element;
         }
         
-        private void AddInserterRow(Int32 rows)
+        protected virtual void AddInserterRow(Int32 rows)
         {
             if (SheetGrid is not { } grid)
             {
@@ -260,7 +255,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 Operator?.InsertRows(index, 1);
                 View?.Refresh();
                 index = FindViewIndex(index);
-                current = new ExcelCell(index, cell.Column);
+                current = new ExcelCell(cell.Column, index);
             }
             
             if (cell.Column >= Columns)
@@ -269,7 +264,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 Operator?.InsertColumns(index, 1);
                 View?.Refresh();
                 index = FindViewIndex(index);
-                current = new ExcelCell(cell.Row, index);
+                current = new ExcelCell(index, cell.Row);
             }
             
             SelectionCell = current;
@@ -303,7 +298,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
             Int32 to = Math.Max(CurrentCell.Row, SelectionCell.Row);
             
             @operator.InsertRows(from, to - from + 1);
-            RefreshIfRequired();
+            RefreshIfRequired(false);
         }
         
         protected virtual void DeleteColumns()
@@ -327,12 +322,13 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
             Int32 maximum = columns > 0 ? columns - 1 : 0;
             if (CurrentCell.Column > maximum)
             {
-                CurrentCell = new ExcelCell(maximum, CurrentCell.Column);
+                //TODO: is another cell (already changed)?
+                CurrentCell = new ExcelCell(maximum, CurrentCell.Row);
             }
 
             if (SelectionCell.Column > maximum)
             {
-                SelectionCell = new ExcelCell(maximum, SelectionCell.Column);
+                SelectionCell = new ExcelCell(maximum, SelectionCell.Row);
             }
             
             if (scroll)
@@ -356,18 +352,18 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
             Int32 from = Math.Min(CurrentCell.Row, SelectionCell.Row);
             Int32 to = Math.Max(CurrentCell.Row, SelectionCell.Row);
             @operator.DeleteRows(from, to - from + 1);
-            RefreshIfRequired();
+            RefreshIfRequired(false);
             
             Int32 rows = Rows;
             Int32 maximum = rows > 0 ? rows - 1 : 0;
             if (CurrentCell.Row > maximum)
             {
-                CurrentCell = new ExcelCell(maximum, CurrentCell.Column);
+                CurrentCell = new ExcelCell(CurrentCell.Column, maximum);
             }
 
             if (SelectionCell.Row > maximum)
             {
-                SelectionCell = new ExcelCell(maximum, SelectionCell.Column);
+                SelectionCell = new ExcelCell(SelectionCell.Column, maximum);
             }
             
             if (scroll)

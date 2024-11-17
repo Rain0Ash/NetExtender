@@ -77,11 +77,14 @@ namespace NetExtender.Domains.AspNetCore.Builder
 
         public override T Build(ImmutableArray<String> arguments)
         {
+            Manager?.Invoke(this, this);
             return New(arguments);
         }
 
         protected virtual T Build(T application)
         {
+            Manager?.Invoke(this, this);
+            Manager?.Invoke(this, application);
             return application ?? throw new InvalidOperationException();
         }
     }
@@ -109,6 +112,7 @@ namespace NetExtender.Domains.AspNetCore.Builder
     {
         public override IWebHost Build(ImmutableArray<String> arguments)
         {
+            Manager?.Invoke(this, this);
             return Build(new WebHostBuilder());
         }
 
@@ -125,6 +129,7 @@ namespace NetExtender.Domains.AspNetCore.Builder
 
         protected virtual IWebHost Build(IWebHost application)
         {
+            Manager?.Invoke(this, application);
             return application ?? throw new ArgumentNullException(nameof(application));
         }
     }
@@ -170,6 +175,7 @@ namespace NetExtender.Domains.AspNetCore.Builder
 
         protected virtual T Build(T application)
         {
+            Manager?.Invoke(this, this);
             return application ?? throw new ArgumentNullException(nameof(application));
         }
     }
@@ -188,6 +194,7 @@ namespace NetExtender.Domains.AspNetCore.Builder
                 throw new ArgumentNullException(nameof(builder));
             }
             
+            Manager?.Invoke(this, this);
             Manager?.Invoke(this, builder);
             return builder.Build() is T application ? Build(application) : throw new InvalidOperationException();
         }
@@ -208,6 +215,7 @@ namespace NetExtender.Domains.AspNetCore.Builder
 
         protected virtual WebApplicationBuilder Build(WebApplicationBuilder builder)
         {
+            Manager?.Invoke(this, this);
             return builder ?? throw new ArgumentNullException(nameof(builder));
         }
     }

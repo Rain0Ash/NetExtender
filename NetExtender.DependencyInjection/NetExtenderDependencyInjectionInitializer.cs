@@ -9,8 +9,13 @@ namespace NetExtender.DependencyInjection
         [ModuleInitializer]
         public static void Initialize()
         {
-            DependencyInjectionPatch.Apply();
+            Initializer.Initializer.Module(Patch);
         }
 #pragma warning restore CA2255
+
+        private static void Patch()
+        {
+            DependencyInjectionPatch.Auto();
+        }
     }
 }

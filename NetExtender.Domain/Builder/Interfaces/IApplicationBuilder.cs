@@ -3,9 +3,9 @@
 
 using System;
 using System.Collections.Immutable;
+using NetExtender.Patch;
 using NetExtender.Types.Middlewares.Interfaces;
 using NetExtender.Types.Monads.Interfaces;
-using NetExtender.Types.Reflection;
 
 namespace NetExtender.Domains.Builder.Interfaces
 {
