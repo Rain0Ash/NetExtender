@@ -120,10 +120,30 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
             return -1;
         }
         
-        protected IEnumerable<Object> EnumerateItems(ExcelCellRange range)
+        // ReSharper disable once CognitiveComplexity
+        protected IEnumerable<Object> EnumerateItems(ExcelCellRange? range)
         {
             if (Operator is not { } @operator)
             {
+                yield break;
+            }
+
+            if (range is null)
+            {
+                if (SelectionCollection is not { } selection)
+                {
+                    yield break;
+                }
+
+                IOrderedEnumerable<ExcelCell> order = ItemsInColumns ? selection.OrderBy(static cell => cell.Column).ThenBy(static cell => cell.Row) : selection.OrderBy(static cell => cell.Row).ThenBy(static cell => cell.Column);
+                foreach (ExcelCell cell in order)
+                {
+                    if (@operator.GetItem(cell) is { } item)
+                    {
+                        yield return item;
+                    }
+                }
+
                 yield break;
             }
             

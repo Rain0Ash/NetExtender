@@ -83,7 +83,7 @@ namespace NetExtender.UserInterface.WindowsPresentation
                 SetValue(MenuItemAllowCheckMarkProperty, value);
             }
         }
-        
+
         private static void ThicknessChanged(DependencyObject @object, DependencyPropertyChangedEventArgs args)
         {
             if (@object is not TextContextMenu menu)

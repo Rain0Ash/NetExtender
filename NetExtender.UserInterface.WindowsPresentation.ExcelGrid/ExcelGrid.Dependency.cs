@@ -334,6 +334,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
             set
             {
                 SetValue(SelectionCellProperty, value);
+                SelectionCollection?.Clear();
             }
         }
         

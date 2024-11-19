@@ -6,7 +6,6 @@ using System.Runtime.Versioning;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using NetExtender.Types.Interception;
 using NetExtender.Types.Interception.Interfaces;
 
 namespace NetExtender.Utilities.Core
@@ -19,7 +18,7 @@ namespace NetExtender.Utilities.Core
 
             static File()
             {
-                Interceptor = new HarmonyFileSystemIntercept(typeof(File));
+                Interceptor = new InterceptHarmonyFileSystem(typeof(File));
             }
 
             /// <inheritdoc cref="IInterceptFileHandler.CreateSymbolicLink(System.String, System.String)" />
@@ -125,67 +124,67 @@ namespace NetExtender.Utilities.Core
             }
 
             /// <inheritdoc cref="IInterceptFileHandler.Open(System.String, System.IO.FileMode)" />
-            public static FileStream Open(String path, FileMode mode)
+            public static System.IO.FileStream Open(String path, FileMode mode)
             {
                 return Interceptor.Open(path, mode);
             }
 
             /// <inheritdoc cref="IInterceptFileHandler.Open(System.String, System.IO.FileMode, System.IO.FileAccess)" />
-            public static FileStream Open(String path, FileMode mode, FileAccess access)
+            public static System.IO.FileStream Open(String path, FileMode mode, FileAccess access)
             {
                 return Interceptor.Open(path, mode, access);
             }
 
             /// <inheritdoc cref="IInterceptFileHandler.Open(System.String, System.IO.FileMode, System.IO.FileAccess, System.IO.FileShare)" />
-            public static FileStream Open(String path, FileMode mode, FileAccess access, FileShare share)
+            public static System.IO.FileStream Open(String path, FileMode mode, FileAccess access, FileShare share)
             {
                 return Interceptor.Open(path, mode, access, share);
             }
 
             /// <inheritdoc cref="IInterceptFileHandler.OpenRead(System.String)" />
-            public static FileStream OpenRead(String path)
+            public static System.IO.FileStream OpenRead(String path)
             {
                 return Interceptor.OpenRead(path);
             }
 
             /// <inheritdoc cref="IInterceptFileHandler.OpenWrite(System.String)" />
-            public static FileStream OpenWrite(String path)
+            public static System.IO.FileStream OpenWrite(String path)
             {
                 return Interceptor.OpenWrite(path);
             }
 
             /// <inheritdoc cref="IInterceptFileHandler.OpenText(System.String)" />
-            public static StreamReader OpenText(String path)
+            public static System.IO.StreamReader OpenText(String path)
             {
                 return Interceptor.OpenText(path);
             }
 
             /// <inheritdoc cref="IInterceptFileHandler.Create(System.String)" />
-            public static FileStream Create(String path)
+            public static System.IO.FileStream Create(String path)
             {
                 return Interceptor.Create(path);
             }
 
             /// <inheritdoc cref="IInterceptFileHandler.Create(System.String, System.Int32)" />
-            public static FileStream Create(String path, Int32 bufferSize)
+            public static System.IO.FileStream Create(String path, Int32 bufferSize)
             {
                 return Interceptor.Create(path, bufferSize);
             }
 
             /// <inheritdoc cref="IInterceptFileHandler.Create(System.String, System.Int32, System.IO.FileOptions)" />
-            public static FileStream Create(String path, Int32 bufferSize, FileOptions options)
+            public static System.IO.FileStream Create(String path, Int32 bufferSize, FileOptions options)
             {
                 return Interceptor.Create(path, bufferSize, options);
             }
 
             /// <inheritdoc cref="IInterceptFileHandler.CreateText(System.String)" />
-            public static StreamWriter CreateText(String path)
+            public static System.IO.StreamWriter CreateText(String path)
             {
                 return Interceptor.CreateText(path);
             }
 
             /// <inheritdoc cref="IInterceptFileHandler.AppendText(System.String)" />
-            public static StreamWriter AppendText(String path)
+            public static System.IO.StreamWriter AppendText(String path)
             {
                 return Interceptor.AppendText(path);
             }

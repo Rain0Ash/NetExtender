@@ -278,6 +278,15 @@
         <Compile Update="Types\Interception\IO\FileSystemIntercept.Path.cs">
           <DependentUpon>FileSystemIntercept.cs</DependentUpon>
         </Compile>
+        <Compile Update="Utilities\Core\HarmonyUtilities.Intercept.cs">
+          <DependentUpon>HarmonyUtilities.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Utilities\Core\HarmonyUtilities.StreamReader.cs">
+          <DependentUpon>HarmonyUtilities.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Utilities\Core\HarmonyUtilities.StreamWriter.cs">
+          <DependentUpon>HarmonyUtilities.cs</DependentUpon>
+        </Compile>
     </ItemGroup>
 
     <ItemGroup>

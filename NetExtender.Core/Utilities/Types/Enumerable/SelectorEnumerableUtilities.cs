@@ -1207,48 +1207,214 @@ namespace NetExtender.Utilities.Types
             
             return source.TakeLast(count).SelectMany(collection, selector);
         }
-        
-        public static IEnumerable<T> UnpackMany<T>(this IEnumerable<T> source, Func<T, IEnumerable<T>> selector)
+
+        //TODO: with depth
+        public static IEnumerable<T> UnpackMany<T>(this IEnumerable<T> source, Func<T, IEnumerable<T>?> unpacker)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
             
-            if (selector is null)
+            if (unpacker is null)
             {
-                throw new ArgumentNullException(nameof(selector));
+                throw new ArgumentNullException(nameof(unpacker));
             }
             
             foreach (T item in source)
             {
                 yield return item;
-                foreach (T subitem in selector(item))
+
+                if (unpacker(item) is not { } inner)
+                {
+                    continue;
+                }
+                
+                foreach (T subitem in inner)
                 {
                     yield return subitem;
                 }
             }
         }
-        
-        public static IEnumerable<T> UnpackMany<T>(this IEnumerable<T> source, Func<T, Int32, IEnumerable<T>> selector)
+
+        public static IEnumerable<T> UnpackMany<T>(this IEnumerable<T> source, Func<T, IEnumerable<T>?> unpacker, Func<T, T>? selector)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
             
+            if (unpacker is null)
+            {
+                throw new ArgumentNullException(nameof(unpacker));
+            }
+
             if (selector is null)
             {
-                throw new ArgumentNullException(nameof(selector));
+                foreach (T item in UnpackMany(source, unpacker))
+                {
+                    yield return item;
+                }
+                
+                yield break;
+            }
+            
+            foreach (T item in source)
+            {
+                yield return item;
+
+                if (unpacker(item) is not { } inner)
+                {
+                    continue;
+                }
+                
+                foreach (T subitem in inner)
+                {
+                    yield return selector(subitem);
+                }
+            }
+        }
+
+        public static IEnumerable<T> UnpackMany<T>(this IEnumerable<T> source, Func<T, IEnumerable<T>?> unpacker, Func<T, T, T>? selector)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (unpacker is null)
+            {
+                throw new ArgumentNullException(nameof(unpacker));
+            }
+
+            if (selector is null)
+            {
+                foreach (T item in UnpackMany(source, unpacker))
+                {
+                    yield return item;
+                }
+                
+                yield break;
+            }
+            
+            foreach (T item in source)
+            {
+                yield return item;
+
+                if (unpacker(item) is not { } inner)
+                {
+                    continue;
+                }
+                
+                foreach (T subitem in inner)
+                {
+                    yield return selector(item, subitem);
+                }
+            }
+        }
+        
+        public static IEnumerable<T> UnpackMany<T>(this IEnumerable<T> source, Func<T, Int32, IEnumerable<T>?> unpacker)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (unpacker is null)
+            {
+                throw new ArgumentNullException(nameof(unpacker));
             }
             
             Int32 i = 0;
             foreach (T item in source)
             {
                 yield return item;
-                foreach (T subitem in selector(item, i++))
+
+                if (unpacker(item, i++) is not { } inner)
+                {
+                    continue;
+                }
+                
+                foreach (T subitem in inner)
                 {
                     yield return subitem;
+                }
+            }
+        }
+
+        public static IEnumerable<T> UnpackMany<T>(this IEnumerable<T> source, Func<T, Int32, IEnumerable<T>?> unpacker, Func<T, T>? selector)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (unpacker is null)
+            {
+                throw new ArgumentNullException(nameof(unpacker));
+            }
+
+            if (selector is null)
+            {
+                foreach (T item in UnpackMany(source, unpacker))
+                {
+                    yield return item;
+                }
+                
+                yield break;
+            }
+            
+            Int32 i = 0;
+            foreach (T item in source)
+            {
+                yield return item;
+
+                if (unpacker(item, i++) is not { } inner)
+                {
+                    continue;
+                }
+                
+                foreach (T subitem in inner)
+                {
+                    yield return selector(subitem);
+                }
+            }
+        }
+        public static IEnumerable<T> UnpackMany<T>(this IEnumerable<T> source, Func<T, Int32, IEnumerable<T>?> unpacker, Func<T, T, T>? selector)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (unpacker is null)
+            {
+                throw new ArgumentNullException(nameof(unpacker));
+            }
+
+            if (selector is null)
+            {
+                foreach (T item in UnpackMany(source, unpacker))
+                {
+                    yield return item;
+                }
+                
+                yield break;
+            }
+            
+            Int32 i = 0;
+            foreach (T item in source)
+            {
+                yield return item;
+
+                if (unpacker(item, i++) is not { } inner)
+                {
+                    continue;
+                }
+                
+                foreach (T subitem in inner)
+                {
+                    yield return selector(item, subitem);
                 }
             }
         }

@@ -38,7 +38,7 @@ namespace NetExtender.Utilities.Core
                 
             try
             {
-                return assembly.Storage.GetOrAdd(type, Initializer.Initializer.ReflectionUtilities.Seal(type, name, builder, assembly));
+                return assembly.Storage.GetOrAdd(type, type is { IsAbstract: true, IsSealed: true } ? StaticStorage.Static(assembly, type, name, builder) : Initializer.Initializer.ReflectionUtilities.Seal(type, name, builder, assembly));
             }
             catch (Initializer.Initializer.ReflectionUtilities.TypeSealException exception)
             {
@@ -104,7 +104,7 @@ namespace NetExtender.Utilities.Core
                 throw new ArgumentNullException(nameof(type));
             }
             
-            return SealStorage.Seal(type, name, builder);
+            return type is { IsAbstract: true, IsSealed: true } ? StaticStorage.Static(type, name, builder) : SealStorage.Seal(type, name, builder);
         }
     }
 }

@@ -79,7 +79,7 @@ namespace NetExtender.UserInterface.WindowsPresentation
         
         public override String? ToString()
         {
-            return Header is TextBlock block ? (String?) block.Text : (String?) (Header.ToString() ?? Name);
+            return Header is TextBlock block ? (String?) block.Text : (String?) (Header?.ToString() ?? Name);
         }
     }
 }

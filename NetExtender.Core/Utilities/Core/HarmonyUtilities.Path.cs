@@ -1,6 +1,5 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
-using NetExtender.Types.Interception;
 using NetExtender.Types.Interception.Interfaces;
 
 #pragma warning disable CA1041
@@ -25,7 +24,7 @@ namespace NetExtender.Utilities.Core
 #pragma warning disable CS0612 // Type or member is obsolete
             static Path()
             {
-                Interceptor = new HarmonyFileSystemIntercept(typeof(Path));
+                Interceptor = new InterceptHarmonyFileSystem(typeof(Path));
                 PathSeparator = Interceptor.PathSeparator;
                 VolumeSeparatorChar = Interceptor.VolumeSeparatorChar;
                 DirectorySeparatorChar = Interceptor.DirectorySeparatorChar;

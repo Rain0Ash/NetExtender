@@ -17,16 +17,114 @@ namespace NetExtender.Types.Interception
         }
     }
     
-    public abstract partial class FileSystemIntercept<TInfo> : FileSystemHandler, IUnsafeFileSystemIntercept, IPropertyIntercept<FileSystemIntercept<TInfo>, IPropertyInterceptEventArgs>, IInterceptTargetRaise<IPropertyInterceptEventArgs>, IMethodIntercept<FileSystemIntercept<TInfo>, IMethodInterceptEventArgs>, IInterceptTargetRaise<IMethodInterceptEventArgs>
+    public abstract partial class FileSystemIntercept<TInfo> : FileSystemHandler, IUnsafeFileSystemIntercept, IInterceptIdentifierTarget<FileSystemIntercept<TInfo>>, IPropertyIntercept<FileSystemIntercept<TInfo>, IPropertyInterceptEventArgs>, IInterceptTargetRaise<IPropertyInterceptEventArgs>, IMethodIntercept<FileSystemIntercept<TInfo>, IMethodInterceptEventArgs>, IInterceptTargetRaise<IMethodInterceptEventArgs>, IDisposable
     {
         protected IAnyMemberInterceptor<FileSystemIntercept<TInfo>, TInfo> Interceptor { get; }
+        
+        public event EventHandler<FileSystemIntercept<TInfo>, IPropertyInterceptEventArgs>? PropertyIntercept
+        {
+            add
+            {
+                PropertyGetIntercept += value;
+                PropertySetIntercept += value;
+            }
+            remove
+            {
+                PropertyGetIntercept -= value;
+                PropertySetIntercept -= value;
+            }
+        }
+        
+        public event EventHandler<FileSystemIntercept<TInfo>, IPropertyInterceptEventArgs>? PropertyIntercepting
+        {
+            add
+            {
+                PropertyGetIntercepting += value;
+                PropertySetIntercepting += value;
+            }
+            remove
+            {
+                PropertyGetIntercepting -= value;
+                PropertySetIntercepting -= value;
+            }
+        }
+        
+        public event EventHandler<FileSystemIntercept<TInfo>, IPropertyInterceptEventArgs>? PropertyIntercepted
+        {
+            add
+            {
+                PropertyGetIntercepted += value;
+                PropertySetIntercepted += value;
+            }
+            remove
+            {
+                PropertyGetIntercepted -= value;
+                PropertySetIntercepted -= value;
+            }
+        }
+        
+        public event EventHandler<FileSystemIntercept<TInfo>, IPropertyInterceptEventArgs>? PropertyGetIntercept
+        {
+            add
+            {
+                PropertyGetIntercepting += value;
+                PropertyGetIntercepted += value;
+            }
+            remove
+            {
+                PropertyGetIntercepting -= value;
+                PropertyGetIntercepted -= value;
+            }
+        }
+        
+        public event EventHandler<FileSystemIntercept<TInfo>, IPropertyInterceptEventArgs>? PropertySetIntercept
+        {
+            add
+            {
+                PropertySetIntercepting += value;
+                PropertySetIntercepted += value;
+            }
+            remove
+            {
+                PropertySetIntercepting -= value;
+                PropertySetIntercepted -= value;
+            }
+        }
         
         public event EventHandler<FileSystemIntercept<TInfo>, IPropertyInterceptEventArgs>? PropertyGetIntercepting;
         public event EventHandler<FileSystemIntercept<TInfo>, IPropertyInterceptEventArgs>? PropertySetIntercepting;
         public event EventHandler<FileSystemIntercept<TInfo>, IPropertyInterceptEventArgs>? PropertyGetIntercepted;
         public event EventHandler<FileSystemIntercept<TInfo>, IPropertyInterceptEventArgs>? PropertySetIntercepted;
+        
+        public event EventHandler<FileSystemIntercept<TInfo>, IMethodInterceptEventArgs>? MethodIntercept
+        {
+            add
+            {
+                MethodIntercepting += value;
+                MethodIntercepted += value;
+            }
+            remove
+            {
+                MethodIntercepting -= value;
+                MethodIntercepted -= value;
+            }
+        }
+        
         public event EventHandler<FileSystemIntercept<TInfo>, IMethodInterceptEventArgs>? MethodIntercepting;
         public event EventHandler<FileSystemIntercept<TInfo>, IMethodInterceptEventArgs>? MethodIntercepted;
+        
+        private protected String? _identifier;
+        public virtual String Identifier
+        {
+            get
+            {
+                return _identifier ??= GetType().Name;
+            }
+            init
+            {
+                _identifier = value ?? throw new ArgumentNullException(nameof(value));
+            }
+        }
         
         protected FileSystemIntercept(IAnyMemberInterceptor<FileSystemIntercept<TInfo>, TInfo> interceptor)
         {
@@ -437,6 +535,21 @@ namespace NetExtender.Types.Interception
         void IInterceptTargetRaise<IMethodInterceptEventArgs>.RaiseIntercepted(IMethodInterceptEventArgs args)
         {
             MethodIntercepted?.Invoke(this, args);
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(Boolean disposing)
+        {
+        }
+
+        ~FileSystemIntercept()
+        {
+            Dispose(false);
         }
     }
 }

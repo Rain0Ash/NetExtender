@@ -8,6 +8,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.Versioning;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Win32.SafeHandles;
@@ -42,16 +43,114 @@ namespace NetExtender.Types.Streams
     }
     
     [SuppressMessage("Design", "CA1041")]
-    public class InterceptFileStream : FileStreamWrapper, IPropertyIntercept<InterceptFileStream, IPropertyInterceptEventArgs>, IInterceptTargetRaise<IPropertyInterceptEventArgs>, IMethodIntercept<InterceptFileStream, IFileStreamInterceptEventArgs>, IInterceptTargetRaise<IFileStreamInterceptEventArgs>
+    public class InterceptFileStream : FileStreamWrapper, IInterceptIdentifierTarget<InterceptFileStream>, IPropertyIntercept<InterceptFileStream, IPropertyInterceptEventArgs>, IInterceptTargetRaise<IPropertyInterceptEventArgs>, IMethodIntercept<InterceptFileStream, IFileStreamInterceptEventArgs>, IInterceptTargetRaise<IFileStreamInterceptEventArgs>
     {
         protected IAnyMemberInterceptor<InterceptFileStream, IPropertyInterceptEventArgs, FileStreamInterceptEventArgs, Info> Interceptor { get; }
+        
+        public event EventHandler<InterceptFileStream, IPropertyInterceptEventArgs>? PropertyIntercept
+        {
+            add
+            {
+                PropertyGetIntercept += value;
+                PropertySetIntercept += value;
+            }
+            remove
+            {
+                PropertyGetIntercept -= value;
+                PropertySetIntercept -= value;
+            }
+        }
+        
+        public event EventHandler<InterceptFileStream, IPropertyInterceptEventArgs>? PropertyIntercepting
+        {
+            add
+            {
+                PropertyGetIntercepting += value;
+                PropertySetIntercepting += value;
+            }
+            remove
+            {
+                PropertyGetIntercepting -= value;
+                PropertySetIntercepting -= value;
+            }
+        }
+        
+        public event EventHandler<InterceptFileStream, IPropertyInterceptEventArgs>? PropertyIntercepted
+        {
+            add
+            {
+                PropertyGetIntercepted += value;
+                PropertySetIntercepted += value;
+            }
+            remove
+            {
+                PropertyGetIntercepted -= value;
+                PropertySetIntercepted -= value;
+            }
+        }
+        
+        public event EventHandler<InterceptFileStream, IPropertyInterceptEventArgs>? PropertyGetIntercept
+        {
+            add
+            {
+                PropertyGetIntercepting += value;
+                PropertyGetIntercepted += value;
+            }
+            remove
+            {
+                PropertyGetIntercepting -= value;
+                PropertyGetIntercepted -= value;
+            }
+        }
+        
+        public event EventHandler<InterceptFileStream, IPropertyInterceptEventArgs>? PropertySetIntercept
+        {
+            add
+            {
+                PropertySetIntercepting += value;
+                PropertySetIntercepted += value;
+            }
+            remove
+            {
+                PropertySetIntercepting -= value;
+                PropertySetIntercepted -= value;
+            }
+        }
         
         public event EventHandler<InterceptFileStream, IPropertyInterceptEventArgs>? PropertyGetIntercepting;
         public event EventHandler<InterceptFileStream, IPropertyInterceptEventArgs>? PropertySetIntercepting;
         public event EventHandler<InterceptFileStream, IPropertyInterceptEventArgs>? PropertyGetIntercepted;
         public event EventHandler<InterceptFileStream, IPropertyInterceptEventArgs>? PropertySetIntercepted;
+        
+        public event EventHandler<InterceptFileStream, IFileStreamInterceptEventArgs>? MethodIntercept
+        {
+            add
+            {
+                MethodIntercepting += value;
+                MethodIntercepted += value;
+            }
+            remove
+            {
+                MethodIntercepting -= value;
+                MethodIntercepted -= value;
+            }
+        }
+        
         public event EventHandler<InterceptFileStream, IFileStreamInterceptEventArgs>? MethodIntercepting;
         public event EventHandler<InterceptFileStream, IFileStreamInterceptEventArgs>? MethodIntercepted;
+        
+        private protected String? _identifier;
+        public virtual String Identifier
+        {
+            get
+            {
+                return _identifier ??= GetType().Name;
+            }
+            init
+            {
+                _identifier = value ?? throw new ArgumentNullException(nameof(value));
+            }
+        }
         
         public override String Name
         {

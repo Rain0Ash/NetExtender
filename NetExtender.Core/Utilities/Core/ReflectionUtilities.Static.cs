@@ -15,18 +15,18 @@ namespace NetExtender.Utilities.Core
     {
 
         [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
-        public static class StaticStorage
+        private static class StaticStorage
         {
             private static IDynamicAssemblyUnsafeStorage Assembly { get; } = new DynamicAssemblyStorage($"{nameof(ReflectionUtilities)}<{nameof(Static)}>", AssemblyBuilderAccess.Run);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static Type Static(Type type, Func<Type, String, String?>? name, Action<Type, TypeBuilder>? builder)
             {
-                return Static(type, name, builder, Assembly);
+                return Static(Assembly, type, name, builder);
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static Type Static(Type type, Func<Type, String, String?>? name, Action<Type, TypeBuilder>? builder, IDynamicAssembly assembly)
+            public static Type Static(IDynamicAssembly assembly, Type type, Func<Type, String, String?>? name, Action<Type, TypeBuilder>? builder)
             {
                 if (type is null)
                 {

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
@@ -110,6 +111,16 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
         {
             get
             {
+                if (SelectionCollection is not null)
+                {
+                    foreach (ExcelCell cell in SelectionCollection.OrderBy(static cell => cell.Column).ThenBy(static cell => cell.Row))
+                    {
+                        yield return cell;
+                    }
+                    
+                    yield break;
+                }
+                
                 for (Int32 row = Math.Min(CurrentCell.Row, SelectionCell.Row); row <= Math.Max(CurrentCell.Row, SelectionCell.Row); row++)
                 {
                     for (Int32 column = Math.Min(CurrentCell.Column, SelectionCell.Column); column <= Math.Max(CurrentCell.Column, SelectionCell.Column); column++)
@@ -120,14 +131,23 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
             }
         }
         
-        protected ExcelCellRange SelectionRange
+        protected ExcelCellRange? SelectionRange
         {
             get
             {
-                return new ExcelCellRange(CurrentCell, SelectionCell);
+                return SelectionCollection is null ? new ExcelCellRange(CurrentCell, SelectionCell) : null;
             }
         }
-        
+
+        private readonly ObservableCollection<ExcelCell> _selection = new SuppressObservableCollection<ExcelCell>();
+        private ObservableCollection<ExcelCell>? SelectionCollection
+        {
+            get
+            {
+                return _selection.Count > 0 ? _selection : null;
+            }
+        }
+
         public ICollectionView? View { get; protected set; }
         
         protected virtual Boolean CanInsertColumns

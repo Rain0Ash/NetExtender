@@ -10,7 +10,6 @@ using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
-using HarmonyLib;
 using NetExtender.Types.Exceptions;
 using NetExtender.Types.Immutable.Dictionaries;
 using NetExtender.Types.Storages;

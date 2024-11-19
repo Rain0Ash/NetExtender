@@ -189,9 +189,8 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
             Int32 column = Get(args.GetPosition(ColumnGrid)).Column;
             if (column >= 0)
             {
-                Boolean shift = (Keyboard.Modifiers & ModifierKeys.Shift) != ModifierKeys.None;
                 SelectionCell = new ExcelCell(column, Rows - 1);
-                CurrentCell = shift ? new ExcelCell(CurrentCell.Column, 0) : new ExcelCell(column, 0);
+                CurrentCell = Keyboard.Modifiers.HasFlag(ModifierKeys.Shift) ? new ExcelCell(CurrentCell.Column, 0) : new ExcelCell(column, 0);
                 ScrollIntoView(SelectionCell);
             }
             

@@ -439,7 +439,10 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
             textblock.SetBinding(TextBlock.TextProperty, binding);
             SetIsEnabledBinding(descriptor, textblock);
             SetStyle(descriptor, textblock);
-            return new Border { Child = textblock };
+
+            Border border = new Border { Child = textblock };
+            SetStyle(descriptor, border);
+            return border;
         }
         
         protected virtual FrameworkElement CreateTextBox(ExcelCellDescriptor descriptor)
@@ -514,7 +517,10 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
             };
             
             grid.Children.Add(rectangle);
-            return new Border { Child = grid };
+            
+            Border border = new Border { Child = grid };
+            SetStyle(descriptor, border);
+            return border;
         }
         
         protected virtual FrameworkElement? CreateTemplateControl(ExcelCellDescriptor descriptor, DataTemplate? template)

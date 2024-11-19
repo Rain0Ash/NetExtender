@@ -66,7 +66,7 @@ namespace NetExtender.Types.Network
         }
     }
 
-    public class HttpInterceptClient : HttpClient, IHttpInterceptClient
+    public class HttpInterceptClient : HttpClient, IHttpInterceptClient, IInterceptIdentifierTarget<HttpInterceptClient>
     {
         protected HttpClientInterceptHandler Handler { get; }
 
@@ -110,16 +110,16 @@ namespace NetExtender.Types.Network
             }
         }
 
-        private protected String? _name;
-        public virtual String Name
+        private protected String? _identifier;
+        public virtual String Identifier
         {
             get
             {
-                return _name ??= GetType().Name;
+                return _identifier ??= GetType().Name;
             }
             init
             {
-                _name = value ?? throw new ArgumentNullException(nameof(value));
+                _identifier = value ?? throw new ArgumentNullException(nameof(value));
             }
         }
 

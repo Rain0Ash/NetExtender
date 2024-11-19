@@ -75,7 +75,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 }
                 case Key.Down:
                 {
-                    if (row < Rows - 1 || (CanInsertRows && EasyInsertByKeyboard))
+                    if (row < Rows - 1 || CanInsertRows && EasyInsertByKeyboard)
                     {
                         row++;
                     }
@@ -112,7 +112,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                     break;
                 }
                 case Key.Right:
-                    if (column < Columns - 1 || (CanInsertColumns && EasyInsertByKeyboard))
+                    if (column < Columns - 1 || CanInsertColumns && EasyInsertByKeyboard)
                     {
                         column++;
                     }

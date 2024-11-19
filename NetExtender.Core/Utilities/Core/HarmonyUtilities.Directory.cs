@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using NetExtender.Types.Interception;
 using NetExtender.Types.Interception.Interfaces;
 
 namespace NetExtender.Utilities.Core
@@ -16,7 +15,7 @@ namespace NetExtender.Utilities.Core
 
             static Directory()
             {
-                Interceptor = new HarmonyFileSystemIntercept(typeof(Directory));
+                Interceptor = new InterceptHarmonyFileSystem(typeof(Directory));
             }
 
             /// <inheritdoc cref="IInterceptDirectoryHandler.GetLogicalDrives()" />
