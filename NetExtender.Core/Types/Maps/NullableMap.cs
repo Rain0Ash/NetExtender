@@ -136,6 +136,11 @@ namespace NetExtender.Types.Maps
         {
         }
 
+        public NullableMap(Int32 capacity, IEqualityComparer<NullMaybe<TKey>>? comparer)
+            : base(capacity, comparer)
+        {
+        }
+
         public NullableMap(Int32 capacity, IEqualityComparer<NullMaybe<TKey>>? keyComparer, IEqualityComparer<NullMaybe<TValue>>? valueComparer)
             : base(capacity, keyComparer, valueComparer)
         {
@@ -267,14 +272,14 @@ namespace NetExtender.Types.Maps
             return base.RemoveByValue(new KeyValuePair<NullMaybe<TValue>, NullMaybe<TKey>>(item.Key, item.Value));
         }
 
-        public void CopyTo(KeyValuePair<TKey, TValue>[] array, Int32 arrayIndex)
+        public void CopyTo(KeyValuePair<TKey, TValue>[] array, Int32 index)
         {
-            CollectionUtilities.CopyTo(this, array, arrayIndex);
+            CollectionUtilities.CopyTo(this, array, index);
         }
 
-        public void CopyTo(KeyValuePair<TValue, TKey>[] array, Int32 arrayIndex)
+        public void CopyTo(KeyValuePair<TValue, TKey>[] array, Int32 index)
         {
-            this.ReversePairs<TKey, TValue>().CopyTo(array, arrayIndex);
+            this.ReversePairs<TKey, TValue>().CopyTo(array, index);
         }
 
         public new IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()

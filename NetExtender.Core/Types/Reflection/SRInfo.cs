@@ -1,7 +1,11 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using NetExtender.Types.Exceptions;
 using NetExtender.Utilities.Core;
 
 namespace NetExtender.Types.Reflection
@@ -48,7 +52,7 @@ namespace NetExtender.Types.Reflection
             
             if (String.IsNullOrEmpty(name))
             {
-                throw new ArgumentException("Value cannot be null or empty.", nameof(name));
+                throw new ArgumentNullOrEmptyStringException(name, nameof(name));
             }
             
             Name = name;
@@ -64,7 +68,7 @@ namespace NetExtender.Types.Reflection
             
             if (String.IsNullOrEmpty(name))
             {
-                throw new ArgumentException("Value cannot be null or empty.", nameof(name));
+                throw new ArgumentNullOrEmptyStringException(name, nameof(name));
             }
             
             SR = SRUtilities.SRType(assembly);

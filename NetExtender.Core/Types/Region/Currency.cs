@@ -10,11 +10,21 @@ namespace NetExtender.Types.Region
 {
     public partial class CountryInfo
     {
-        public readonly struct CountryCurrency : IReadOnlyCollection<CurrencyInfo>
+        public readonly struct CountryCurrency : IEquatableStruct<CountryCurrency>, IReadOnlyCollection<CurrencyInfo>, IEquatable<CurrencyInfo>
         {
             public static implicit operator CurrencyInfo?(CountryCurrency currency)
             {
                 return currency.Official ?? currency.Second ?? currency.Third;
+            }
+
+            public static Boolean operator ==(CountryCurrency first, CountryCurrency second)
+            {
+                return first.Equals(second);
+            }
+
+            public static Boolean operator !=(CountryCurrency first, CountryCurrency second)
+            {
+                return !(first == second);
             }
 
             public CurrencyInfo? Official { get; }
@@ -43,6 +53,14 @@ namespace NetExtender.Types.Region
                     }
 
                     return counter;
+                }
+            }
+            
+            public Boolean IsEmpty
+            {
+                get
+                {
+                    return Official is null && Second is null && Third is null;
                 }
             }
 
@@ -101,6 +119,32 @@ namespace NetExtender.Types.Region
             IEnumerator IEnumerable.GetEnumerator()
             {
                 return GetEnumerator();
+            }
+
+            public override Int32 GetHashCode()
+            {
+                return HashCode.Combine(Official, Second, Third);
+            }
+
+            public override Boolean Equals(Object? other)
+            {
+                return other switch
+                {
+                    null => IsEmpty,
+                    CurrencyInfo value => Equals(value),
+                    CountryCurrency value => Equals(value),
+                    _ => false
+                };
+            }
+
+            public Boolean Equals(CurrencyInfo? other)
+            {
+                return Official == other;
+            }
+
+            public Boolean Equals(CountryCurrency other)
+            {
+                return Official == other.Official && Second == other.Second && Third == other.Third;
             }
 
             public override String? ToString()

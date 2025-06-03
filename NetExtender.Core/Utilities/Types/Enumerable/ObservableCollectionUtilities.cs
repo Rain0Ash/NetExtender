@@ -32,13 +32,13 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ItemObservableCollection<T> ToItemObservableCollection<T>(this IEnumerable<T> collection)
+        public static ItemObservableCollection<T> ToItemObservableCollection<T>(this IEnumerable<T> collection) where T : class
         {
             return ToItemObservableCollection(collection, false);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ItemObservableCollection<T> ToItemObservableCollection<T>(this IEnumerable<T> collection, Boolean suppress)
+        public static ItemObservableCollection<T> ToItemObservableCollection<T>(this IEnumerable<T> collection, Boolean suppress) where T : class
         {
             if (collection is null)
             {

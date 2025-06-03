@@ -1,4 +1,8 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
@@ -53,6 +57,25 @@ namespace NetExtender.Initializer
                 {
                     Type = type ?? throw new ArgumentNullException(nameof(type));
                 }
+            }
+
+            private static Assembly? assembly;
+            private static Assembly? EntryAssembly
+            {
+                get
+                {
+                    return assembly ??= AppDomain.CurrentDomain.GetAssemblies().Where(static assembly => assembly.GetCustomAttributes(typeof(ApplicationEntryAssemblyAttribute), false).Length > 0).ToArray() switch
+                    {
+                        { Length: 0 } => System.Reflection.Assembly.GetEntryAssembly(),
+                        { Length: 1 } assembly => assembly[0].GetCustomAttribute<ApplicationEntryAssemblyAttribute>()?.Type?.Assembly ?? assembly[0],
+                        { } result => throw new AmbiguousMatchException($"Multiple entry assemblies was found: {String.Join(", ", (IEnumerable<Assembly>) result)}.")
+                    };
+                }
+            }
+
+            internal static Assembly? GetEntryAssembly(Boolean search)
+            {
+                return search ? EntryAssembly : System.Reflection.Assembly.GetEntryAssembly();
             }
             
             [MethodImpl(MethodImplOptions.AggressiveOptimization)]

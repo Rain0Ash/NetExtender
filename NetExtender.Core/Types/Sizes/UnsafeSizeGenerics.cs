@@ -2,7 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
-using NetExtender.Types.Sizes.Interfaces;
+using System.Runtime.CompilerServices;
 using NetExtender.Utilities.Core;
 
 // ReSharper disable MemberCanBePrivate.Global
@@ -34,6 +34,7 @@ namespace NetExtender.Types.Sizes
 
 		public Type Type
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return typeof(UnsafeSize8);
@@ -42,6 +43,7 @@ namespace NetExtender.Types.Sizes
 
 		ref UnsafeSize8 IUnsafeSize<UnsafeSize8>.Self
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return ref this;
@@ -50,6 +52,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Int32 Length
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Size;
@@ -58,6 +61,7 @@ namespace NetExtender.Types.Sizes
 
 		readonly Int32 IUnsafeSize.Size
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count;
@@ -67,10 +71,12 @@ namespace NetExtender.Types.Sizes
 		private Int32 _count;
 		public Int32 Count
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			readonly get
 			{
 				return _count;
 			}
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			set
 			{
 				if (value < 0 || value > Size)
@@ -84,6 +90,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Boolean IsEmpty
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count <= 0;
@@ -112,11 +119,13 @@ namespace NetExtender.Types.Sizes
 			}
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly ReadOnlySpan<Byte> AsReadOnlySpan()
 		{
 			return this;
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly Span<Byte> AsSpan()
 		{
 			return this;
@@ -154,6 +163,7 @@ namespace NetExtender.Types.Sizes
 
 		public Type Type
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return typeof(UnsafeSize16);
@@ -162,6 +172,7 @@ namespace NetExtender.Types.Sizes
 
 		ref UnsafeSize16 IUnsafeSize<UnsafeSize16>.Self
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return ref this;
@@ -170,6 +181,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Int32 Length
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Size;
@@ -178,6 +190,7 @@ namespace NetExtender.Types.Sizes
 
 		readonly Int32 IUnsafeSize.Size
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count;
@@ -187,10 +200,12 @@ namespace NetExtender.Types.Sizes
 		private Int32 _count;
 		public Int32 Count
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			readonly get
 			{
 				return _count;
 			}
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			set
 			{
 				if (value < 0 || value > Size)
@@ -204,6 +219,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Boolean IsEmpty
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count <= 0;
@@ -232,11 +248,13 @@ namespace NetExtender.Types.Sizes
 			}
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly ReadOnlySpan<Byte> AsReadOnlySpan()
 		{
 			return this;
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly Span<Byte> AsSpan()
 		{
 			return this;
@@ -274,6 +292,7 @@ namespace NetExtender.Types.Sizes
 
 		public Type Type
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return typeof(UnsafeSize24);
@@ -282,6 +301,7 @@ namespace NetExtender.Types.Sizes
 
 		ref UnsafeSize24 IUnsafeSize<UnsafeSize24>.Self
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return ref this;
@@ -290,6 +310,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Int32 Length
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Size;
@@ -298,6 +319,7 @@ namespace NetExtender.Types.Sizes
 
 		readonly Int32 IUnsafeSize.Size
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count;
@@ -307,10 +329,12 @@ namespace NetExtender.Types.Sizes
 		private Int32 _count;
 		public Int32 Count
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			readonly get
 			{
 				return _count;
 			}
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			set
 			{
 				if (value < 0 || value > Size)
@@ -324,6 +348,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Boolean IsEmpty
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count <= 0;
@@ -352,11 +377,13 @@ namespace NetExtender.Types.Sizes
 			}
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly ReadOnlySpan<Byte> AsReadOnlySpan()
 		{
 			return this;
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly Span<Byte> AsSpan()
 		{
 			return this;
@@ -394,6 +421,7 @@ namespace NetExtender.Types.Sizes
 
 		public Type Type
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return typeof(UnsafeSize32);
@@ -402,6 +430,7 @@ namespace NetExtender.Types.Sizes
 
 		ref UnsafeSize32 IUnsafeSize<UnsafeSize32>.Self
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return ref this;
@@ -410,6 +439,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Int32 Length
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Size;
@@ -418,6 +448,7 @@ namespace NetExtender.Types.Sizes
 
 		readonly Int32 IUnsafeSize.Size
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count;
@@ -427,10 +458,12 @@ namespace NetExtender.Types.Sizes
 		private Int32 _count;
 		public Int32 Count
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			readonly get
 			{
 				return _count;
 			}
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			set
 			{
 				if (value < 0 || value > Size)
@@ -444,6 +477,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Boolean IsEmpty
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count <= 0;
@@ -472,11 +506,13 @@ namespace NetExtender.Types.Sizes
 			}
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly ReadOnlySpan<Byte> AsReadOnlySpan()
 		{
 			return this;
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly Span<Byte> AsSpan()
 		{
 			return this;
@@ -514,6 +550,7 @@ namespace NetExtender.Types.Sizes
 
 		public Type Type
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return typeof(UnsafeSize40);
@@ -522,6 +559,7 @@ namespace NetExtender.Types.Sizes
 
 		ref UnsafeSize40 IUnsafeSize<UnsafeSize40>.Self
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return ref this;
@@ -530,6 +568,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Int32 Length
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Size;
@@ -538,6 +577,7 @@ namespace NetExtender.Types.Sizes
 
 		readonly Int32 IUnsafeSize.Size
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count;
@@ -547,10 +587,12 @@ namespace NetExtender.Types.Sizes
 		private Int32 _count;
 		public Int32 Count
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			readonly get
 			{
 				return _count;
 			}
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			set
 			{
 				if (value < 0 || value > Size)
@@ -564,6 +606,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Boolean IsEmpty
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count <= 0;
@@ -592,11 +635,13 @@ namespace NetExtender.Types.Sizes
 			}
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly ReadOnlySpan<Byte> AsReadOnlySpan()
 		{
 			return this;
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly Span<Byte> AsSpan()
 		{
 			return this;
@@ -634,6 +679,7 @@ namespace NetExtender.Types.Sizes
 
 		public Type Type
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return typeof(UnsafeSize48);
@@ -642,6 +688,7 @@ namespace NetExtender.Types.Sizes
 
 		ref UnsafeSize48 IUnsafeSize<UnsafeSize48>.Self
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return ref this;
@@ -650,6 +697,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Int32 Length
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Size;
@@ -658,6 +706,7 @@ namespace NetExtender.Types.Sizes
 
 		readonly Int32 IUnsafeSize.Size
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count;
@@ -667,10 +716,12 @@ namespace NetExtender.Types.Sizes
 		private Int32 _count;
 		public Int32 Count
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			readonly get
 			{
 				return _count;
 			}
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			set
 			{
 				if (value < 0 || value > Size)
@@ -684,6 +735,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Boolean IsEmpty
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count <= 0;
@@ -712,11 +764,13 @@ namespace NetExtender.Types.Sizes
 			}
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly ReadOnlySpan<Byte> AsReadOnlySpan()
 		{
 			return this;
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly Span<Byte> AsSpan()
 		{
 			return this;
@@ -754,6 +808,7 @@ namespace NetExtender.Types.Sizes
 
 		public Type Type
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return typeof(UnsafeSize56);
@@ -762,6 +817,7 @@ namespace NetExtender.Types.Sizes
 
 		ref UnsafeSize56 IUnsafeSize<UnsafeSize56>.Self
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return ref this;
@@ -770,6 +826,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Int32 Length
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Size;
@@ -778,6 +835,7 @@ namespace NetExtender.Types.Sizes
 
 		readonly Int32 IUnsafeSize.Size
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count;
@@ -787,10 +845,12 @@ namespace NetExtender.Types.Sizes
 		private Int32 _count;
 		public Int32 Count
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			readonly get
 			{
 				return _count;
 			}
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			set
 			{
 				if (value < 0 || value > Size)
@@ -804,6 +864,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Boolean IsEmpty
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count <= 0;
@@ -832,11 +893,13 @@ namespace NetExtender.Types.Sizes
 			}
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly ReadOnlySpan<Byte> AsReadOnlySpan()
 		{
 			return this;
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly Span<Byte> AsSpan()
 		{
 			return this;
@@ -874,6 +937,7 @@ namespace NetExtender.Types.Sizes
 
 		public Type Type
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return typeof(UnsafeSize64);
@@ -882,6 +946,7 @@ namespace NetExtender.Types.Sizes
 
 		ref UnsafeSize64 IUnsafeSize<UnsafeSize64>.Self
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return ref this;
@@ -890,6 +955,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Int32 Length
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Size;
@@ -898,6 +964,7 @@ namespace NetExtender.Types.Sizes
 
 		readonly Int32 IUnsafeSize.Size
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count;
@@ -907,10 +974,12 @@ namespace NetExtender.Types.Sizes
 		private Int32 _count;
 		public Int32 Count
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			readonly get
 			{
 				return _count;
 			}
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			set
 			{
 				if (value < 0 || value > Size)
@@ -924,6 +993,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Boolean IsEmpty
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count <= 0;
@@ -952,11 +1022,13 @@ namespace NetExtender.Types.Sizes
 			}
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly ReadOnlySpan<Byte> AsReadOnlySpan()
 		{
 			return this;
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly Span<Byte> AsSpan()
 		{
 			return this;
@@ -994,6 +1066,7 @@ namespace NetExtender.Types.Sizes
 
 		public Type Type
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return typeof(UnsafeSize80);
@@ -1002,6 +1075,7 @@ namespace NetExtender.Types.Sizes
 
 		ref UnsafeSize80 IUnsafeSize<UnsafeSize80>.Self
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return ref this;
@@ -1010,6 +1084,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Int32 Length
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Size;
@@ -1018,6 +1093,7 @@ namespace NetExtender.Types.Sizes
 
 		readonly Int32 IUnsafeSize.Size
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count;
@@ -1027,10 +1103,12 @@ namespace NetExtender.Types.Sizes
 		private Int32 _count;
 		public Int32 Count
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			readonly get
 			{
 				return _count;
 			}
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			set
 			{
 				if (value < 0 || value > Size)
@@ -1044,6 +1122,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Boolean IsEmpty
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count <= 0;
@@ -1072,11 +1151,13 @@ namespace NetExtender.Types.Sizes
 			}
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly ReadOnlySpan<Byte> AsReadOnlySpan()
 		{
 			return this;
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly Span<Byte> AsSpan()
 		{
 			return this;
@@ -1114,6 +1195,7 @@ namespace NetExtender.Types.Sizes
 
 		public Type Type
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return typeof(UnsafeSize96);
@@ -1122,6 +1204,7 @@ namespace NetExtender.Types.Sizes
 
 		ref UnsafeSize96 IUnsafeSize<UnsafeSize96>.Self
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return ref this;
@@ -1130,6 +1213,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Int32 Length
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Size;
@@ -1138,6 +1222,7 @@ namespace NetExtender.Types.Sizes
 
 		readonly Int32 IUnsafeSize.Size
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count;
@@ -1147,10 +1232,12 @@ namespace NetExtender.Types.Sizes
 		private Int32 _count;
 		public Int32 Count
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			readonly get
 			{
 				return _count;
 			}
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			set
 			{
 				if (value < 0 || value > Size)
@@ -1164,6 +1251,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Boolean IsEmpty
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count <= 0;
@@ -1192,11 +1280,13 @@ namespace NetExtender.Types.Sizes
 			}
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly ReadOnlySpan<Byte> AsReadOnlySpan()
 		{
 			return this;
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly Span<Byte> AsSpan()
 		{
 			return this;
@@ -1234,6 +1324,7 @@ namespace NetExtender.Types.Sizes
 
 		public Type Type
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return typeof(UnsafeSize112);
@@ -1242,6 +1333,7 @@ namespace NetExtender.Types.Sizes
 
 		ref UnsafeSize112 IUnsafeSize<UnsafeSize112>.Self
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return ref this;
@@ -1250,6 +1342,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Int32 Length
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Size;
@@ -1258,6 +1351,7 @@ namespace NetExtender.Types.Sizes
 
 		readonly Int32 IUnsafeSize.Size
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count;
@@ -1267,10 +1361,12 @@ namespace NetExtender.Types.Sizes
 		private Int32 _count;
 		public Int32 Count
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			readonly get
 			{
 				return _count;
 			}
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			set
 			{
 				if (value < 0 || value > Size)
@@ -1284,6 +1380,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Boolean IsEmpty
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count <= 0;
@@ -1312,11 +1409,13 @@ namespace NetExtender.Types.Sizes
 			}
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly ReadOnlySpan<Byte> AsReadOnlySpan()
 		{
 			return this;
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly Span<Byte> AsSpan()
 		{
 			return this;
@@ -1354,6 +1453,7 @@ namespace NetExtender.Types.Sizes
 
 		public Type Type
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return typeof(UnsafeSize128);
@@ -1362,6 +1462,7 @@ namespace NetExtender.Types.Sizes
 
 		ref UnsafeSize128 IUnsafeSize<UnsafeSize128>.Self
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return ref this;
@@ -1370,6 +1471,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Int32 Length
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Size;
@@ -1378,6 +1480,7 @@ namespace NetExtender.Types.Sizes
 
 		readonly Int32 IUnsafeSize.Size
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count;
@@ -1387,10 +1490,12 @@ namespace NetExtender.Types.Sizes
 		private Int32 _count;
 		public Int32 Count
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			readonly get
 			{
 				return _count;
 			}
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			set
 			{
 				if (value < 0 || value > Size)
@@ -1404,6 +1509,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Boolean IsEmpty
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count <= 0;
@@ -1432,11 +1538,13 @@ namespace NetExtender.Types.Sizes
 			}
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly ReadOnlySpan<Byte> AsReadOnlySpan()
 		{
 			return this;
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly Span<Byte> AsSpan()
 		{
 			return this;
@@ -1474,6 +1582,7 @@ namespace NetExtender.Types.Sizes
 
 		public Type Type
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return typeof(UnsafeSize144);
@@ -1482,6 +1591,7 @@ namespace NetExtender.Types.Sizes
 
 		ref UnsafeSize144 IUnsafeSize<UnsafeSize144>.Self
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return ref this;
@@ -1490,6 +1600,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Int32 Length
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Size;
@@ -1498,6 +1609,7 @@ namespace NetExtender.Types.Sizes
 
 		readonly Int32 IUnsafeSize.Size
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count;
@@ -1507,10 +1619,12 @@ namespace NetExtender.Types.Sizes
 		private Int32 _count;
 		public Int32 Count
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			readonly get
 			{
 				return _count;
 			}
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			set
 			{
 				if (value < 0 || value > Size)
@@ -1524,6 +1638,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Boolean IsEmpty
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count <= 0;
@@ -1552,11 +1667,13 @@ namespace NetExtender.Types.Sizes
 			}
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly ReadOnlySpan<Byte> AsReadOnlySpan()
 		{
 			return this;
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly Span<Byte> AsSpan()
 		{
 			return this;
@@ -1594,6 +1711,7 @@ namespace NetExtender.Types.Sizes
 
 		public Type Type
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return typeof(UnsafeSize160);
@@ -1602,6 +1720,7 @@ namespace NetExtender.Types.Sizes
 
 		ref UnsafeSize160 IUnsafeSize<UnsafeSize160>.Self
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return ref this;
@@ -1610,6 +1729,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Int32 Length
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Size;
@@ -1618,6 +1738,7 @@ namespace NetExtender.Types.Sizes
 
 		readonly Int32 IUnsafeSize.Size
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count;
@@ -1627,10 +1748,12 @@ namespace NetExtender.Types.Sizes
 		private Int32 _count;
 		public Int32 Count
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			readonly get
 			{
 				return _count;
 			}
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			set
 			{
 				if (value < 0 || value > Size)
@@ -1644,6 +1767,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Boolean IsEmpty
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count <= 0;
@@ -1672,11 +1796,13 @@ namespace NetExtender.Types.Sizes
 			}
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly ReadOnlySpan<Byte> AsReadOnlySpan()
 		{
 			return this;
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly Span<Byte> AsSpan()
 		{
 			return this;
@@ -1714,6 +1840,7 @@ namespace NetExtender.Types.Sizes
 
 		public Type Type
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return typeof(UnsafeSize176);
@@ -1722,6 +1849,7 @@ namespace NetExtender.Types.Sizes
 
 		ref UnsafeSize176 IUnsafeSize<UnsafeSize176>.Self
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return ref this;
@@ -1730,6 +1858,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Int32 Length
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Size;
@@ -1738,6 +1867,7 @@ namespace NetExtender.Types.Sizes
 
 		readonly Int32 IUnsafeSize.Size
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count;
@@ -1747,10 +1877,12 @@ namespace NetExtender.Types.Sizes
 		private Int32 _count;
 		public Int32 Count
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			readonly get
 			{
 				return _count;
 			}
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			set
 			{
 				if (value < 0 || value > Size)
@@ -1764,6 +1896,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Boolean IsEmpty
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count <= 0;
@@ -1792,11 +1925,13 @@ namespace NetExtender.Types.Sizes
 			}
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly ReadOnlySpan<Byte> AsReadOnlySpan()
 		{
 			return this;
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly Span<Byte> AsSpan()
 		{
 			return this;
@@ -1834,6 +1969,7 @@ namespace NetExtender.Types.Sizes
 
 		public Type Type
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return typeof(UnsafeSize192);
@@ -1842,6 +1978,7 @@ namespace NetExtender.Types.Sizes
 
 		ref UnsafeSize192 IUnsafeSize<UnsafeSize192>.Self
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return ref this;
@@ -1850,6 +1987,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Int32 Length
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Size;
@@ -1858,6 +1996,7 @@ namespace NetExtender.Types.Sizes
 
 		readonly Int32 IUnsafeSize.Size
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count;
@@ -1867,10 +2006,12 @@ namespace NetExtender.Types.Sizes
 		private Int32 _count;
 		public Int32 Count
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			readonly get
 			{
 				return _count;
 			}
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			set
 			{
 				if (value < 0 || value > Size)
@@ -1884,6 +2025,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Boolean IsEmpty
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count <= 0;
@@ -1912,11 +2054,13 @@ namespace NetExtender.Types.Sizes
 			}
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly ReadOnlySpan<Byte> AsReadOnlySpan()
 		{
 			return this;
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly Span<Byte> AsSpan()
 		{
 			return this;
@@ -1954,6 +2098,7 @@ namespace NetExtender.Types.Sizes
 
 		public Type Type
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return typeof(UnsafeSize208);
@@ -1962,6 +2107,7 @@ namespace NetExtender.Types.Sizes
 
 		ref UnsafeSize208 IUnsafeSize<UnsafeSize208>.Self
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return ref this;
@@ -1970,6 +2116,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Int32 Length
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Size;
@@ -1978,6 +2125,7 @@ namespace NetExtender.Types.Sizes
 
 		readonly Int32 IUnsafeSize.Size
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count;
@@ -1987,10 +2135,12 @@ namespace NetExtender.Types.Sizes
 		private Int32 _count;
 		public Int32 Count
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			readonly get
 			{
 				return _count;
 			}
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			set
 			{
 				if (value < 0 || value > Size)
@@ -2004,6 +2154,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Boolean IsEmpty
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count <= 0;
@@ -2032,11 +2183,13 @@ namespace NetExtender.Types.Sizes
 			}
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly ReadOnlySpan<Byte> AsReadOnlySpan()
 		{
 			return this;
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly Span<Byte> AsSpan()
 		{
 			return this;
@@ -2074,6 +2227,7 @@ namespace NetExtender.Types.Sizes
 
 		public Type Type
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return typeof(UnsafeSize224);
@@ -2082,6 +2236,7 @@ namespace NetExtender.Types.Sizes
 
 		ref UnsafeSize224 IUnsafeSize<UnsafeSize224>.Self
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return ref this;
@@ -2090,6 +2245,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Int32 Length
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Size;
@@ -2098,6 +2254,7 @@ namespace NetExtender.Types.Sizes
 
 		readonly Int32 IUnsafeSize.Size
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count;
@@ -2107,10 +2264,12 @@ namespace NetExtender.Types.Sizes
 		private Int32 _count;
 		public Int32 Count
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			readonly get
 			{
 				return _count;
 			}
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			set
 			{
 				if (value < 0 || value > Size)
@@ -2124,6 +2283,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Boolean IsEmpty
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count <= 0;
@@ -2152,11 +2312,13 @@ namespace NetExtender.Types.Sizes
 			}
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly ReadOnlySpan<Byte> AsReadOnlySpan()
 		{
 			return this;
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly Span<Byte> AsSpan()
 		{
 			return this;
@@ -2194,6 +2356,7 @@ namespace NetExtender.Types.Sizes
 
 		public Type Type
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return typeof(UnsafeSize240);
@@ -2202,6 +2365,7 @@ namespace NetExtender.Types.Sizes
 
 		ref UnsafeSize240 IUnsafeSize<UnsafeSize240>.Self
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return ref this;
@@ -2210,6 +2374,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Int32 Length
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Size;
@@ -2218,6 +2383,7 @@ namespace NetExtender.Types.Sizes
 
 		readonly Int32 IUnsafeSize.Size
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count;
@@ -2227,10 +2393,12 @@ namespace NetExtender.Types.Sizes
 		private Int32 _count;
 		public Int32 Count
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			readonly get
 			{
 				return _count;
 			}
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			set
 			{
 				if (value < 0 || value > Size)
@@ -2244,6 +2412,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Boolean IsEmpty
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count <= 0;
@@ -2272,11 +2441,13 @@ namespace NetExtender.Types.Sizes
 			}
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly ReadOnlySpan<Byte> AsReadOnlySpan()
 		{
 			return this;
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly Span<Byte> AsSpan()
 		{
 			return this;
@@ -2314,6 +2485,7 @@ namespace NetExtender.Types.Sizes
 
 		public Type Type
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return typeof(UnsafeSize256);
@@ -2322,6 +2494,7 @@ namespace NetExtender.Types.Sizes
 
 		ref UnsafeSize256 IUnsafeSize<UnsafeSize256>.Self
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return ref this;
@@ -2330,6 +2503,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Int32 Length
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Size;
@@ -2338,6 +2512,7 @@ namespace NetExtender.Types.Sizes
 
 		readonly Int32 IUnsafeSize.Size
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count;
@@ -2347,10 +2522,12 @@ namespace NetExtender.Types.Sizes
 		private Int32 _count;
 		public Int32 Count
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			readonly get
 			{
 				return _count;
 			}
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			set
 			{
 				if (value < 0 || value > Size)
@@ -2364,6 +2541,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Boolean IsEmpty
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count <= 0;
@@ -2392,11 +2570,13 @@ namespace NetExtender.Types.Sizes
 			}
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly ReadOnlySpan<Byte> AsReadOnlySpan()
 		{
 			return this;
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly Span<Byte> AsSpan()
 		{
 			return this;
@@ -2434,6 +2614,7 @@ namespace NetExtender.Types.Sizes
 
 		public Type Type
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return typeof(UnsafeSize288);
@@ -2442,6 +2623,7 @@ namespace NetExtender.Types.Sizes
 
 		ref UnsafeSize288 IUnsafeSize<UnsafeSize288>.Self
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return ref this;
@@ -2450,6 +2632,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Int32 Length
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Size;
@@ -2458,6 +2641,7 @@ namespace NetExtender.Types.Sizes
 
 		readonly Int32 IUnsafeSize.Size
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count;
@@ -2467,10 +2651,12 @@ namespace NetExtender.Types.Sizes
 		private Int32 _count;
 		public Int32 Count
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			readonly get
 			{
 				return _count;
 			}
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			set
 			{
 				if (value < 0 || value > Size)
@@ -2484,6 +2670,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Boolean IsEmpty
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count <= 0;
@@ -2512,11 +2699,13 @@ namespace NetExtender.Types.Sizes
 			}
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly ReadOnlySpan<Byte> AsReadOnlySpan()
 		{
 			return this;
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly Span<Byte> AsSpan()
 		{
 			return this;
@@ -2554,6 +2743,7 @@ namespace NetExtender.Types.Sizes
 
 		public Type Type
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return typeof(UnsafeSize320);
@@ -2562,6 +2752,7 @@ namespace NetExtender.Types.Sizes
 
 		ref UnsafeSize320 IUnsafeSize<UnsafeSize320>.Self
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return ref this;
@@ -2570,6 +2761,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Int32 Length
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Size;
@@ -2578,6 +2770,7 @@ namespace NetExtender.Types.Sizes
 
 		readonly Int32 IUnsafeSize.Size
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count;
@@ -2587,10 +2780,12 @@ namespace NetExtender.Types.Sizes
 		private Int32 _count;
 		public Int32 Count
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			readonly get
 			{
 				return _count;
 			}
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			set
 			{
 				if (value < 0 || value > Size)
@@ -2604,6 +2799,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Boolean IsEmpty
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count <= 0;
@@ -2632,11 +2828,13 @@ namespace NetExtender.Types.Sizes
 			}
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly ReadOnlySpan<Byte> AsReadOnlySpan()
 		{
 			return this;
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly Span<Byte> AsSpan()
 		{
 			return this;
@@ -2674,6 +2872,7 @@ namespace NetExtender.Types.Sizes
 
 		public Type Type
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return typeof(UnsafeSize352);
@@ -2682,6 +2881,7 @@ namespace NetExtender.Types.Sizes
 
 		ref UnsafeSize352 IUnsafeSize<UnsafeSize352>.Self
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return ref this;
@@ -2690,6 +2890,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Int32 Length
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Size;
@@ -2698,6 +2899,7 @@ namespace NetExtender.Types.Sizes
 
 		readonly Int32 IUnsafeSize.Size
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count;
@@ -2707,10 +2909,12 @@ namespace NetExtender.Types.Sizes
 		private Int32 _count;
 		public Int32 Count
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			readonly get
 			{
 				return _count;
 			}
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			set
 			{
 				if (value < 0 || value > Size)
@@ -2724,6 +2928,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Boolean IsEmpty
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count <= 0;
@@ -2752,11 +2957,13 @@ namespace NetExtender.Types.Sizes
 			}
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly ReadOnlySpan<Byte> AsReadOnlySpan()
 		{
 			return this;
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly Span<Byte> AsSpan()
 		{
 			return this;
@@ -2794,6 +3001,7 @@ namespace NetExtender.Types.Sizes
 
 		public Type Type
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return typeof(UnsafeSize384);
@@ -2802,6 +3010,7 @@ namespace NetExtender.Types.Sizes
 
 		ref UnsafeSize384 IUnsafeSize<UnsafeSize384>.Self
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return ref this;
@@ -2810,6 +3019,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Int32 Length
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Size;
@@ -2818,6 +3028,7 @@ namespace NetExtender.Types.Sizes
 
 		readonly Int32 IUnsafeSize.Size
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count;
@@ -2827,10 +3038,12 @@ namespace NetExtender.Types.Sizes
 		private Int32 _count;
 		public Int32 Count
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			readonly get
 			{
 				return _count;
 			}
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			set
 			{
 				if (value < 0 || value > Size)
@@ -2844,6 +3057,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Boolean IsEmpty
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count <= 0;
@@ -2872,11 +3086,13 @@ namespace NetExtender.Types.Sizes
 			}
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly ReadOnlySpan<Byte> AsReadOnlySpan()
 		{
 			return this;
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly Span<Byte> AsSpan()
 		{
 			return this;
@@ -2914,6 +3130,7 @@ namespace NetExtender.Types.Sizes
 
 		public Type Type
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return typeof(UnsafeSize416);
@@ -2922,6 +3139,7 @@ namespace NetExtender.Types.Sizes
 
 		ref UnsafeSize416 IUnsafeSize<UnsafeSize416>.Self
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return ref this;
@@ -2930,6 +3148,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Int32 Length
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Size;
@@ -2938,6 +3157,7 @@ namespace NetExtender.Types.Sizes
 
 		readonly Int32 IUnsafeSize.Size
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count;
@@ -2947,10 +3167,12 @@ namespace NetExtender.Types.Sizes
 		private Int32 _count;
 		public Int32 Count
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			readonly get
 			{
 				return _count;
 			}
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			set
 			{
 				if (value < 0 || value > Size)
@@ -2964,6 +3186,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Boolean IsEmpty
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count <= 0;
@@ -2992,11 +3215,13 @@ namespace NetExtender.Types.Sizes
 			}
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly ReadOnlySpan<Byte> AsReadOnlySpan()
 		{
 			return this;
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly Span<Byte> AsSpan()
 		{
 			return this;
@@ -3034,6 +3259,7 @@ namespace NetExtender.Types.Sizes
 
 		public Type Type
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return typeof(UnsafeSize448);
@@ -3042,6 +3268,7 @@ namespace NetExtender.Types.Sizes
 
 		ref UnsafeSize448 IUnsafeSize<UnsafeSize448>.Self
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return ref this;
@@ -3050,6 +3277,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Int32 Length
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Size;
@@ -3058,6 +3286,7 @@ namespace NetExtender.Types.Sizes
 
 		readonly Int32 IUnsafeSize.Size
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count;
@@ -3067,10 +3296,12 @@ namespace NetExtender.Types.Sizes
 		private Int32 _count;
 		public Int32 Count
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			readonly get
 			{
 				return _count;
 			}
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			set
 			{
 				if (value < 0 || value > Size)
@@ -3084,6 +3315,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Boolean IsEmpty
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count <= 0;
@@ -3112,11 +3344,13 @@ namespace NetExtender.Types.Sizes
 			}
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly ReadOnlySpan<Byte> AsReadOnlySpan()
 		{
 			return this;
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly Span<Byte> AsSpan()
 		{
 			return this;
@@ -3154,6 +3388,7 @@ namespace NetExtender.Types.Sizes
 
 		public Type Type
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return typeof(UnsafeSize480);
@@ -3162,6 +3397,7 @@ namespace NetExtender.Types.Sizes
 
 		ref UnsafeSize480 IUnsafeSize<UnsafeSize480>.Self
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return ref this;
@@ -3170,6 +3406,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Int32 Length
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Size;
@@ -3178,6 +3415,7 @@ namespace NetExtender.Types.Sizes
 
 		readonly Int32 IUnsafeSize.Size
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count;
@@ -3187,10 +3425,12 @@ namespace NetExtender.Types.Sizes
 		private Int32 _count;
 		public Int32 Count
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			readonly get
 			{
 				return _count;
 			}
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			set
 			{
 				if (value < 0 || value > Size)
@@ -3204,6 +3444,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Boolean IsEmpty
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count <= 0;
@@ -3232,11 +3473,13 @@ namespace NetExtender.Types.Sizes
 			}
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly ReadOnlySpan<Byte> AsReadOnlySpan()
 		{
 			return this;
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly Span<Byte> AsSpan()
 		{
 			return this;
@@ -3274,6 +3517,7 @@ namespace NetExtender.Types.Sizes
 
 		public Type Type
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return typeof(UnsafeSize512);
@@ -3282,6 +3526,7 @@ namespace NetExtender.Types.Sizes
 
 		ref UnsafeSize512 IUnsafeSize<UnsafeSize512>.Self
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return ref this;
@@ -3290,6 +3535,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Int32 Length
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Size;
@@ -3298,6 +3544,7 @@ namespace NetExtender.Types.Sizes
 
 		readonly Int32 IUnsafeSize.Size
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count;
@@ -3307,10 +3554,12 @@ namespace NetExtender.Types.Sizes
 		private Int32 _count;
 		public Int32 Count
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			readonly get
 			{
 				return _count;
 			}
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			set
 			{
 				if (value < 0 || value > Size)
@@ -3324,6 +3573,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Boolean IsEmpty
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count <= 0;
@@ -3352,11 +3602,13 @@ namespace NetExtender.Types.Sizes
 			}
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly ReadOnlySpan<Byte> AsReadOnlySpan()
 		{
 			return this;
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly Span<Byte> AsSpan()
 		{
 			return this;
@@ -3394,6 +3646,7 @@ namespace NetExtender.Types.Sizes
 
 		public Type Type
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return typeof(UnsafeSize576);
@@ -3402,6 +3655,7 @@ namespace NetExtender.Types.Sizes
 
 		ref UnsafeSize576 IUnsafeSize<UnsafeSize576>.Self
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return ref this;
@@ -3410,6 +3664,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Int32 Length
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Size;
@@ -3418,6 +3673,7 @@ namespace NetExtender.Types.Sizes
 
 		readonly Int32 IUnsafeSize.Size
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count;
@@ -3427,10 +3683,12 @@ namespace NetExtender.Types.Sizes
 		private Int32 _count;
 		public Int32 Count
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			readonly get
 			{
 				return _count;
 			}
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			set
 			{
 				if (value < 0 || value > Size)
@@ -3444,6 +3702,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Boolean IsEmpty
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count <= 0;
@@ -3472,11 +3731,13 @@ namespace NetExtender.Types.Sizes
 			}
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly ReadOnlySpan<Byte> AsReadOnlySpan()
 		{
 			return this;
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly Span<Byte> AsSpan()
 		{
 			return this;
@@ -3514,6 +3775,7 @@ namespace NetExtender.Types.Sizes
 
 		public Type Type
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return typeof(UnsafeSize640);
@@ -3522,6 +3784,7 @@ namespace NetExtender.Types.Sizes
 
 		ref UnsafeSize640 IUnsafeSize<UnsafeSize640>.Self
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return ref this;
@@ -3530,6 +3793,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Int32 Length
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Size;
@@ -3538,6 +3802,7 @@ namespace NetExtender.Types.Sizes
 
 		readonly Int32 IUnsafeSize.Size
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count;
@@ -3547,10 +3812,12 @@ namespace NetExtender.Types.Sizes
 		private Int32 _count;
 		public Int32 Count
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			readonly get
 			{
 				return _count;
 			}
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			set
 			{
 				if (value < 0 || value > Size)
@@ -3564,6 +3831,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Boolean IsEmpty
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count <= 0;
@@ -3592,11 +3860,13 @@ namespace NetExtender.Types.Sizes
 			}
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly ReadOnlySpan<Byte> AsReadOnlySpan()
 		{
 			return this;
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly Span<Byte> AsSpan()
 		{
 			return this;
@@ -3634,6 +3904,7 @@ namespace NetExtender.Types.Sizes
 
 		public Type Type
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return typeof(UnsafeSize704);
@@ -3642,6 +3913,7 @@ namespace NetExtender.Types.Sizes
 
 		ref UnsafeSize704 IUnsafeSize<UnsafeSize704>.Self
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return ref this;
@@ -3650,6 +3922,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Int32 Length
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Size;
@@ -3658,6 +3931,7 @@ namespace NetExtender.Types.Sizes
 
 		readonly Int32 IUnsafeSize.Size
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count;
@@ -3667,10 +3941,12 @@ namespace NetExtender.Types.Sizes
 		private Int32 _count;
 		public Int32 Count
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			readonly get
 			{
 				return _count;
 			}
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			set
 			{
 				if (value < 0 || value > Size)
@@ -3684,6 +3960,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Boolean IsEmpty
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count <= 0;
@@ -3712,11 +3989,13 @@ namespace NetExtender.Types.Sizes
 			}
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly ReadOnlySpan<Byte> AsReadOnlySpan()
 		{
 			return this;
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly Span<Byte> AsSpan()
 		{
 			return this;
@@ -3754,6 +4033,7 @@ namespace NetExtender.Types.Sizes
 
 		public Type Type
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return typeof(UnsafeSize768);
@@ -3762,6 +4042,7 @@ namespace NetExtender.Types.Sizes
 
 		ref UnsafeSize768 IUnsafeSize<UnsafeSize768>.Self
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return ref this;
@@ -3770,6 +4051,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Int32 Length
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Size;
@@ -3778,6 +4060,7 @@ namespace NetExtender.Types.Sizes
 
 		readonly Int32 IUnsafeSize.Size
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count;
@@ -3787,10 +4070,12 @@ namespace NetExtender.Types.Sizes
 		private Int32 _count;
 		public Int32 Count
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			readonly get
 			{
 				return _count;
 			}
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			set
 			{
 				if (value < 0 || value > Size)
@@ -3804,6 +4089,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Boolean IsEmpty
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count <= 0;
@@ -3832,11 +4118,13 @@ namespace NetExtender.Types.Sizes
 			}
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly ReadOnlySpan<Byte> AsReadOnlySpan()
 		{
 			return this;
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly Span<Byte> AsSpan()
 		{
 			return this;
@@ -3874,6 +4162,7 @@ namespace NetExtender.Types.Sizes
 
 		public Type Type
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return typeof(UnsafeSize832);
@@ -3882,6 +4171,7 @@ namespace NetExtender.Types.Sizes
 
 		ref UnsafeSize832 IUnsafeSize<UnsafeSize832>.Self
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return ref this;
@@ -3890,6 +4180,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Int32 Length
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Size;
@@ -3898,6 +4189,7 @@ namespace NetExtender.Types.Sizes
 
 		readonly Int32 IUnsafeSize.Size
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count;
@@ -3907,10 +4199,12 @@ namespace NetExtender.Types.Sizes
 		private Int32 _count;
 		public Int32 Count
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			readonly get
 			{
 				return _count;
 			}
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			set
 			{
 				if (value < 0 || value > Size)
@@ -3924,6 +4218,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Boolean IsEmpty
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count <= 0;
@@ -3952,11 +4247,13 @@ namespace NetExtender.Types.Sizes
 			}
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly ReadOnlySpan<Byte> AsReadOnlySpan()
 		{
 			return this;
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly Span<Byte> AsSpan()
 		{
 			return this;
@@ -3994,6 +4291,7 @@ namespace NetExtender.Types.Sizes
 
 		public Type Type
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return typeof(UnsafeSize896);
@@ -4002,6 +4300,7 @@ namespace NetExtender.Types.Sizes
 
 		ref UnsafeSize896 IUnsafeSize<UnsafeSize896>.Self
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return ref this;
@@ -4010,6 +4309,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Int32 Length
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Size;
@@ -4018,6 +4318,7 @@ namespace NetExtender.Types.Sizes
 
 		readonly Int32 IUnsafeSize.Size
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count;
@@ -4027,10 +4328,12 @@ namespace NetExtender.Types.Sizes
 		private Int32 _count;
 		public Int32 Count
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			readonly get
 			{
 				return _count;
 			}
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			set
 			{
 				if (value < 0 || value > Size)
@@ -4044,6 +4347,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Boolean IsEmpty
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count <= 0;
@@ -4072,11 +4376,13 @@ namespace NetExtender.Types.Sizes
 			}
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly ReadOnlySpan<Byte> AsReadOnlySpan()
 		{
 			return this;
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly Span<Byte> AsSpan()
 		{
 			return this;
@@ -4114,6 +4420,7 @@ namespace NetExtender.Types.Sizes
 
 		public Type Type
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return typeof(UnsafeSize960);
@@ -4122,6 +4429,7 @@ namespace NetExtender.Types.Sizes
 
 		ref UnsafeSize960 IUnsafeSize<UnsafeSize960>.Self
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return ref this;
@@ -4130,6 +4438,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Int32 Length
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Size;
@@ -4138,6 +4447,7 @@ namespace NetExtender.Types.Sizes
 
 		readonly Int32 IUnsafeSize.Size
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count;
@@ -4147,10 +4457,12 @@ namespace NetExtender.Types.Sizes
 		private Int32 _count;
 		public Int32 Count
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			readonly get
 			{
 				return _count;
 			}
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			set
 			{
 				if (value < 0 || value > Size)
@@ -4164,6 +4476,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Boolean IsEmpty
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count <= 0;
@@ -4192,11 +4505,13 @@ namespace NetExtender.Types.Sizes
 			}
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly ReadOnlySpan<Byte> AsReadOnlySpan()
 		{
 			return this;
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly Span<Byte> AsSpan()
 		{
 			return this;
@@ -4234,6 +4549,7 @@ namespace NetExtender.Types.Sizes
 
 		public Type Type
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return typeof(UnsafeSize1024);
@@ -4242,6 +4558,7 @@ namespace NetExtender.Types.Sizes
 
 		ref UnsafeSize1024 IUnsafeSize<UnsafeSize1024>.Self
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return ref this;
@@ -4250,6 +4567,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Int32 Length
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Size;
@@ -4258,6 +4576,7 @@ namespace NetExtender.Types.Sizes
 
 		readonly Int32 IUnsafeSize.Size
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count;
@@ -4267,10 +4586,12 @@ namespace NetExtender.Types.Sizes
 		private Int32 _count;
 		public Int32 Count
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			readonly get
 			{
 				return _count;
 			}
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			set
 			{
 				if (value < 0 || value > Size)
@@ -4284,6 +4605,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Boolean IsEmpty
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count <= 0;
@@ -4312,11 +4634,13 @@ namespace NetExtender.Types.Sizes
 			}
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly ReadOnlySpan<Byte> AsReadOnlySpan()
 		{
 			return this;
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly Span<Byte> AsSpan()
 		{
 			return this;
@@ -4354,6 +4678,7 @@ namespace NetExtender.Types.Sizes
 
 		public Type Type
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return typeof(UnsafeSize1152);
@@ -4362,6 +4687,7 @@ namespace NetExtender.Types.Sizes
 
 		ref UnsafeSize1152 IUnsafeSize<UnsafeSize1152>.Self
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return ref this;
@@ -4370,6 +4696,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Int32 Length
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Size;
@@ -4378,6 +4705,7 @@ namespace NetExtender.Types.Sizes
 
 		readonly Int32 IUnsafeSize.Size
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count;
@@ -4387,10 +4715,12 @@ namespace NetExtender.Types.Sizes
 		private Int32 _count;
 		public Int32 Count
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			readonly get
 			{
 				return _count;
 			}
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			set
 			{
 				if (value < 0 || value > Size)
@@ -4404,6 +4734,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Boolean IsEmpty
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count <= 0;
@@ -4432,11 +4763,13 @@ namespace NetExtender.Types.Sizes
 			}
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly ReadOnlySpan<Byte> AsReadOnlySpan()
 		{
 			return this;
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly Span<Byte> AsSpan()
 		{
 			return this;
@@ -4474,6 +4807,7 @@ namespace NetExtender.Types.Sizes
 
 		public Type Type
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return typeof(UnsafeSize1280);
@@ -4482,6 +4816,7 @@ namespace NetExtender.Types.Sizes
 
 		ref UnsafeSize1280 IUnsafeSize<UnsafeSize1280>.Self
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return ref this;
@@ -4490,6 +4825,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Int32 Length
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Size;
@@ -4498,6 +4834,7 @@ namespace NetExtender.Types.Sizes
 
 		readonly Int32 IUnsafeSize.Size
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count;
@@ -4507,10 +4844,12 @@ namespace NetExtender.Types.Sizes
 		private Int32 _count;
 		public Int32 Count
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			readonly get
 			{
 				return _count;
 			}
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			set
 			{
 				if (value < 0 || value > Size)
@@ -4524,6 +4863,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Boolean IsEmpty
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count <= 0;
@@ -4552,11 +4892,13 @@ namespace NetExtender.Types.Sizes
 			}
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly ReadOnlySpan<Byte> AsReadOnlySpan()
 		{
 			return this;
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly Span<Byte> AsSpan()
 		{
 			return this;
@@ -4594,6 +4936,7 @@ namespace NetExtender.Types.Sizes
 
 		public Type Type
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return typeof(UnsafeSize1408);
@@ -4602,6 +4945,7 @@ namespace NetExtender.Types.Sizes
 
 		ref UnsafeSize1408 IUnsafeSize<UnsafeSize1408>.Self
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return ref this;
@@ -4610,6 +4954,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Int32 Length
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Size;
@@ -4618,6 +4963,7 @@ namespace NetExtender.Types.Sizes
 
 		readonly Int32 IUnsafeSize.Size
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count;
@@ -4627,10 +4973,12 @@ namespace NetExtender.Types.Sizes
 		private Int32 _count;
 		public Int32 Count
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			readonly get
 			{
 				return _count;
 			}
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			set
 			{
 				if (value < 0 || value > Size)
@@ -4644,6 +4992,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Boolean IsEmpty
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count <= 0;
@@ -4672,11 +5021,13 @@ namespace NetExtender.Types.Sizes
 			}
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly ReadOnlySpan<Byte> AsReadOnlySpan()
 		{
 			return this;
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly Span<Byte> AsSpan()
 		{
 			return this;
@@ -4714,6 +5065,7 @@ namespace NetExtender.Types.Sizes
 
 		public Type Type
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return typeof(UnsafeSize1536);
@@ -4722,6 +5074,7 @@ namespace NetExtender.Types.Sizes
 
 		ref UnsafeSize1536 IUnsafeSize<UnsafeSize1536>.Self
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return ref this;
@@ -4730,6 +5083,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Int32 Length
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Size;
@@ -4738,6 +5092,7 @@ namespace NetExtender.Types.Sizes
 
 		readonly Int32 IUnsafeSize.Size
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count;
@@ -4747,10 +5102,12 @@ namespace NetExtender.Types.Sizes
 		private Int32 _count;
 		public Int32 Count
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			readonly get
 			{
 				return _count;
 			}
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			set
 			{
 				if (value < 0 || value > Size)
@@ -4764,6 +5121,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Boolean IsEmpty
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count <= 0;
@@ -4792,11 +5150,13 @@ namespace NetExtender.Types.Sizes
 			}
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly ReadOnlySpan<Byte> AsReadOnlySpan()
 		{
 			return this;
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly Span<Byte> AsSpan()
 		{
 			return this;
@@ -4834,6 +5194,7 @@ namespace NetExtender.Types.Sizes
 
 		public Type Type
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return typeof(UnsafeSize1664);
@@ -4842,6 +5203,7 @@ namespace NetExtender.Types.Sizes
 
 		ref UnsafeSize1664 IUnsafeSize<UnsafeSize1664>.Self
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return ref this;
@@ -4850,6 +5212,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Int32 Length
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Size;
@@ -4858,6 +5221,7 @@ namespace NetExtender.Types.Sizes
 
 		readonly Int32 IUnsafeSize.Size
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count;
@@ -4867,10 +5231,12 @@ namespace NetExtender.Types.Sizes
 		private Int32 _count;
 		public Int32 Count
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			readonly get
 			{
 				return _count;
 			}
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			set
 			{
 				if (value < 0 || value > Size)
@@ -4884,6 +5250,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Boolean IsEmpty
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count <= 0;
@@ -4912,11 +5279,13 @@ namespace NetExtender.Types.Sizes
 			}
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly ReadOnlySpan<Byte> AsReadOnlySpan()
 		{
 			return this;
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly Span<Byte> AsSpan()
 		{
 			return this;
@@ -4954,6 +5323,7 @@ namespace NetExtender.Types.Sizes
 
 		public Type Type
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return typeof(UnsafeSize1792);
@@ -4962,6 +5332,7 @@ namespace NetExtender.Types.Sizes
 
 		ref UnsafeSize1792 IUnsafeSize<UnsafeSize1792>.Self
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return ref this;
@@ -4970,6 +5341,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Int32 Length
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Size;
@@ -4978,6 +5350,7 @@ namespace NetExtender.Types.Sizes
 
 		readonly Int32 IUnsafeSize.Size
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count;
@@ -4987,10 +5360,12 @@ namespace NetExtender.Types.Sizes
 		private Int32 _count;
 		public Int32 Count
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			readonly get
 			{
 				return _count;
 			}
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			set
 			{
 				if (value < 0 || value > Size)
@@ -5004,6 +5379,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Boolean IsEmpty
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count <= 0;
@@ -5032,11 +5408,13 @@ namespace NetExtender.Types.Sizes
 			}
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly ReadOnlySpan<Byte> AsReadOnlySpan()
 		{
 			return this;
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly Span<Byte> AsSpan()
 		{
 			return this;
@@ -5074,6 +5452,7 @@ namespace NetExtender.Types.Sizes
 
 		public Type Type
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return typeof(UnsafeSize1920);
@@ -5082,6 +5461,7 @@ namespace NetExtender.Types.Sizes
 
 		ref UnsafeSize1920 IUnsafeSize<UnsafeSize1920>.Self
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return ref this;
@@ -5090,6 +5470,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Int32 Length
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Size;
@@ -5098,6 +5479,7 @@ namespace NetExtender.Types.Sizes
 
 		readonly Int32 IUnsafeSize.Size
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count;
@@ -5107,10 +5489,12 @@ namespace NetExtender.Types.Sizes
 		private Int32 _count;
 		public Int32 Count
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			readonly get
 			{
 				return _count;
 			}
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			set
 			{
 				if (value < 0 || value > Size)
@@ -5124,6 +5508,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Boolean IsEmpty
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count <= 0;
@@ -5152,11 +5537,13 @@ namespace NetExtender.Types.Sizes
 			}
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly ReadOnlySpan<Byte> AsReadOnlySpan()
 		{
 			return this;
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly Span<Byte> AsSpan()
 		{
 			return this;
@@ -5194,6 +5581,7 @@ namespace NetExtender.Types.Sizes
 
 		public Type Type
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return typeof(UnsafeSize2048);
@@ -5202,6 +5590,7 @@ namespace NetExtender.Types.Sizes
 
 		ref UnsafeSize2048 IUnsafeSize<UnsafeSize2048>.Self
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return ref this;
@@ -5210,6 +5599,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Int32 Length
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Size;
@@ -5218,6 +5608,7 @@ namespace NetExtender.Types.Sizes
 
 		readonly Int32 IUnsafeSize.Size
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count;
@@ -5227,10 +5618,12 @@ namespace NetExtender.Types.Sizes
 		private Int32 _count;
 		public Int32 Count
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			readonly get
 			{
 				return _count;
 			}
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			set
 			{
 				if (value < 0 || value > Size)
@@ -5244,6 +5637,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Boolean IsEmpty
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count <= 0;
@@ -5272,11 +5666,13 @@ namespace NetExtender.Types.Sizes
 			}
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly ReadOnlySpan<Byte> AsReadOnlySpan()
 		{
 			return this;
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly Span<Byte> AsSpan()
 		{
 			return this;
@@ -5314,6 +5710,7 @@ namespace NetExtender.Types.Sizes
 
 		public Type Type
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return typeof(UnsafeSize2176);
@@ -5322,6 +5719,7 @@ namespace NetExtender.Types.Sizes
 
 		ref UnsafeSize2176 IUnsafeSize<UnsafeSize2176>.Self
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return ref this;
@@ -5330,6 +5728,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Int32 Length
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Size;
@@ -5338,6 +5737,7 @@ namespace NetExtender.Types.Sizes
 
 		readonly Int32 IUnsafeSize.Size
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count;
@@ -5347,10 +5747,12 @@ namespace NetExtender.Types.Sizes
 		private Int32 _count;
 		public Int32 Count
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			readonly get
 			{
 				return _count;
 			}
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			set
 			{
 				if (value < 0 || value > Size)
@@ -5364,6 +5766,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Boolean IsEmpty
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count <= 0;
@@ -5392,11 +5795,13 @@ namespace NetExtender.Types.Sizes
 			}
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly ReadOnlySpan<Byte> AsReadOnlySpan()
 		{
 			return this;
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly Span<Byte> AsSpan()
 		{
 			return this;
@@ -5434,6 +5839,7 @@ namespace NetExtender.Types.Sizes
 
 		public Type Type
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return typeof(UnsafeSize2304);
@@ -5442,6 +5848,7 @@ namespace NetExtender.Types.Sizes
 
 		ref UnsafeSize2304 IUnsafeSize<UnsafeSize2304>.Self
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return ref this;
@@ -5450,6 +5857,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Int32 Length
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Size;
@@ -5458,6 +5866,7 @@ namespace NetExtender.Types.Sizes
 
 		readonly Int32 IUnsafeSize.Size
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count;
@@ -5467,10 +5876,12 @@ namespace NetExtender.Types.Sizes
 		private Int32 _count;
 		public Int32 Count
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			readonly get
 			{
 				return _count;
 			}
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			set
 			{
 				if (value < 0 || value > Size)
@@ -5484,6 +5895,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Boolean IsEmpty
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count <= 0;
@@ -5512,11 +5924,13 @@ namespace NetExtender.Types.Sizes
 			}
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly ReadOnlySpan<Byte> AsReadOnlySpan()
 		{
 			return this;
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly Span<Byte> AsSpan()
 		{
 			return this;
@@ -5554,6 +5968,7 @@ namespace NetExtender.Types.Sizes
 
 		public Type Type
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return typeof(UnsafeSize2432);
@@ -5562,6 +5977,7 @@ namespace NetExtender.Types.Sizes
 
 		ref UnsafeSize2432 IUnsafeSize<UnsafeSize2432>.Self
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return ref this;
@@ -5570,6 +5986,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Int32 Length
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Size;
@@ -5578,6 +5995,7 @@ namespace NetExtender.Types.Sizes
 
 		readonly Int32 IUnsafeSize.Size
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count;
@@ -5587,10 +6005,12 @@ namespace NetExtender.Types.Sizes
 		private Int32 _count;
 		public Int32 Count
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			readonly get
 			{
 				return _count;
 			}
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			set
 			{
 				if (value < 0 || value > Size)
@@ -5604,6 +6024,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Boolean IsEmpty
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count <= 0;
@@ -5632,11 +6053,13 @@ namespace NetExtender.Types.Sizes
 			}
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly ReadOnlySpan<Byte> AsReadOnlySpan()
 		{
 			return this;
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly Span<Byte> AsSpan()
 		{
 			return this;
@@ -5674,6 +6097,7 @@ namespace NetExtender.Types.Sizes
 
 		public Type Type
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return typeof(UnsafeSize2560);
@@ -5682,6 +6106,7 @@ namespace NetExtender.Types.Sizes
 
 		ref UnsafeSize2560 IUnsafeSize<UnsafeSize2560>.Self
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return ref this;
@@ -5690,6 +6115,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Int32 Length
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Size;
@@ -5698,6 +6124,7 @@ namespace NetExtender.Types.Sizes
 
 		readonly Int32 IUnsafeSize.Size
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count;
@@ -5707,10 +6134,12 @@ namespace NetExtender.Types.Sizes
 		private Int32 _count;
 		public Int32 Count
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			readonly get
 			{
 				return _count;
 			}
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			set
 			{
 				if (value < 0 || value > Size)
@@ -5724,6 +6153,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Boolean IsEmpty
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count <= 0;
@@ -5752,11 +6182,13 @@ namespace NetExtender.Types.Sizes
 			}
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly ReadOnlySpan<Byte> AsReadOnlySpan()
 		{
 			return this;
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly Span<Byte> AsSpan()
 		{
 			return this;
@@ -5794,6 +6226,7 @@ namespace NetExtender.Types.Sizes
 
 		public Type Type
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return typeof(UnsafeSize2688);
@@ -5802,6 +6235,7 @@ namespace NetExtender.Types.Sizes
 
 		ref UnsafeSize2688 IUnsafeSize<UnsafeSize2688>.Self
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return ref this;
@@ -5810,6 +6244,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Int32 Length
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Size;
@@ -5818,6 +6253,7 @@ namespace NetExtender.Types.Sizes
 
 		readonly Int32 IUnsafeSize.Size
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count;
@@ -5827,10 +6263,12 @@ namespace NetExtender.Types.Sizes
 		private Int32 _count;
 		public Int32 Count
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			readonly get
 			{
 				return _count;
 			}
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			set
 			{
 				if (value < 0 || value > Size)
@@ -5844,6 +6282,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Boolean IsEmpty
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count <= 0;
@@ -5872,11 +6311,13 @@ namespace NetExtender.Types.Sizes
 			}
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly ReadOnlySpan<Byte> AsReadOnlySpan()
 		{
 			return this;
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly Span<Byte> AsSpan()
 		{
 			return this;
@@ -5914,6 +6355,7 @@ namespace NetExtender.Types.Sizes
 
 		public Type Type
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return typeof(UnsafeSize2816);
@@ -5922,6 +6364,7 @@ namespace NetExtender.Types.Sizes
 
 		ref UnsafeSize2816 IUnsafeSize<UnsafeSize2816>.Self
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return ref this;
@@ -5930,6 +6373,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Int32 Length
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Size;
@@ -5938,6 +6382,7 @@ namespace NetExtender.Types.Sizes
 
 		readonly Int32 IUnsafeSize.Size
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count;
@@ -5947,10 +6392,12 @@ namespace NetExtender.Types.Sizes
 		private Int32 _count;
 		public Int32 Count
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			readonly get
 			{
 				return _count;
 			}
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			set
 			{
 				if (value < 0 || value > Size)
@@ -5964,6 +6411,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Boolean IsEmpty
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count <= 0;
@@ -5992,11 +6440,13 @@ namespace NetExtender.Types.Sizes
 			}
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly ReadOnlySpan<Byte> AsReadOnlySpan()
 		{
 			return this;
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly Span<Byte> AsSpan()
 		{
 			return this;
@@ -6034,6 +6484,7 @@ namespace NetExtender.Types.Sizes
 
 		public Type Type
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return typeof(UnsafeSize2944);
@@ -6042,6 +6493,7 @@ namespace NetExtender.Types.Sizes
 
 		ref UnsafeSize2944 IUnsafeSize<UnsafeSize2944>.Self
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return ref this;
@@ -6050,6 +6502,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Int32 Length
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Size;
@@ -6058,6 +6511,7 @@ namespace NetExtender.Types.Sizes
 
 		readonly Int32 IUnsafeSize.Size
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count;
@@ -6067,10 +6521,12 @@ namespace NetExtender.Types.Sizes
 		private Int32 _count;
 		public Int32 Count
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			readonly get
 			{
 				return _count;
 			}
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			set
 			{
 				if (value < 0 || value > Size)
@@ -6084,6 +6540,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Boolean IsEmpty
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count <= 0;
@@ -6112,11 +6569,13 @@ namespace NetExtender.Types.Sizes
 			}
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly ReadOnlySpan<Byte> AsReadOnlySpan()
 		{
 			return this;
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly Span<Byte> AsSpan()
 		{
 			return this;
@@ -6154,6 +6613,7 @@ namespace NetExtender.Types.Sizes
 
 		public Type Type
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return typeof(UnsafeSize3072);
@@ -6162,6 +6622,7 @@ namespace NetExtender.Types.Sizes
 
 		ref UnsafeSize3072 IUnsafeSize<UnsafeSize3072>.Self
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return ref this;
@@ -6170,6 +6631,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Int32 Length
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Size;
@@ -6178,6 +6640,7 @@ namespace NetExtender.Types.Sizes
 
 		readonly Int32 IUnsafeSize.Size
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count;
@@ -6187,10 +6650,12 @@ namespace NetExtender.Types.Sizes
 		private Int32 _count;
 		public Int32 Count
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			readonly get
 			{
 				return _count;
 			}
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			set
 			{
 				if (value < 0 || value > Size)
@@ -6204,6 +6669,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Boolean IsEmpty
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count <= 0;
@@ -6232,11 +6698,13 @@ namespace NetExtender.Types.Sizes
 			}
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly ReadOnlySpan<Byte> AsReadOnlySpan()
 		{
 			return this;
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly Span<Byte> AsSpan()
 		{
 			return this;
@@ -6274,6 +6742,7 @@ namespace NetExtender.Types.Sizes
 
 		public Type Type
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return typeof(UnsafeSize3200);
@@ -6282,6 +6751,7 @@ namespace NetExtender.Types.Sizes
 
 		ref UnsafeSize3200 IUnsafeSize<UnsafeSize3200>.Self
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return ref this;
@@ -6290,6 +6760,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Int32 Length
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Size;
@@ -6298,6 +6769,7 @@ namespace NetExtender.Types.Sizes
 
 		readonly Int32 IUnsafeSize.Size
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count;
@@ -6307,10 +6779,12 @@ namespace NetExtender.Types.Sizes
 		private Int32 _count;
 		public Int32 Count
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			readonly get
 			{
 				return _count;
 			}
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			set
 			{
 				if (value < 0 || value > Size)
@@ -6324,6 +6798,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Boolean IsEmpty
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count <= 0;
@@ -6352,11 +6827,13 @@ namespace NetExtender.Types.Sizes
 			}
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly ReadOnlySpan<Byte> AsReadOnlySpan()
 		{
 			return this;
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly Span<Byte> AsSpan()
 		{
 			return this;
@@ -6394,6 +6871,7 @@ namespace NetExtender.Types.Sizes
 
 		public Type Type
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return typeof(UnsafeSize3328);
@@ -6402,6 +6880,7 @@ namespace NetExtender.Types.Sizes
 
 		ref UnsafeSize3328 IUnsafeSize<UnsafeSize3328>.Self
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return ref this;
@@ -6410,6 +6889,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Int32 Length
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Size;
@@ -6418,6 +6898,7 @@ namespace NetExtender.Types.Sizes
 
 		readonly Int32 IUnsafeSize.Size
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count;
@@ -6427,10 +6908,12 @@ namespace NetExtender.Types.Sizes
 		private Int32 _count;
 		public Int32 Count
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			readonly get
 			{
 				return _count;
 			}
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			set
 			{
 				if (value < 0 || value > Size)
@@ -6444,6 +6927,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Boolean IsEmpty
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count <= 0;
@@ -6472,11 +6956,13 @@ namespace NetExtender.Types.Sizes
 			}
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly ReadOnlySpan<Byte> AsReadOnlySpan()
 		{
 			return this;
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly Span<Byte> AsSpan()
 		{
 			return this;
@@ -6514,6 +7000,7 @@ namespace NetExtender.Types.Sizes
 
 		public Type Type
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return typeof(UnsafeSize3456);
@@ -6522,6 +7009,7 @@ namespace NetExtender.Types.Sizes
 
 		ref UnsafeSize3456 IUnsafeSize<UnsafeSize3456>.Self
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return ref this;
@@ -6530,6 +7018,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Int32 Length
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Size;
@@ -6538,6 +7027,7 @@ namespace NetExtender.Types.Sizes
 
 		readonly Int32 IUnsafeSize.Size
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count;
@@ -6547,10 +7037,12 @@ namespace NetExtender.Types.Sizes
 		private Int32 _count;
 		public Int32 Count
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			readonly get
 			{
 				return _count;
 			}
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			set
 			{
 				if (value < 0 || value > Size)
@@ -6564,6 +7056,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Boolean IsEmpty
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count <= 0;
@@ -6592,11 +7085,13 @@ namespace NetExtender.Types.Sizes
 			}
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly ReadOnlySpan<Byte> AsReadOnlySpan()
 		{
 			return this;
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly Span<Byte> AsSpan()
 		{
 			return this;
@@ -6634,6 +7129,7 @@ namespace NetExtender.Types.Sizes
 
 		public Type Type
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return typeof(UnsafeSize3584);
@@ -6642,6 +7138,7 @@ namespace NetExtender.Types.Sizes
 
 		ref UnsafeSize3584 IUnsafeSize<UnsafeSize3584>.Self
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return ref this;
@@ -6650,6 +7147,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Int32 Length
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Size;
@@ -6658,6 +7156,7 @@ namespace NetExtender.Types.Sizes
 
 		readonly Int32 IUnsafeSize.Size
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count;
@@ -6667,10 +7166,12 @@ namespace NetExtender.Types.Sizes
 		private Int32 _count;
 		public Int32 Count
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			readonly get
 			{
 				return _count;
 			}
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			set
 			{
 				if (value < 0 || value > Size)
@@ -6684,6 +7185,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Boolean IsEmpty
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count <= 0;
@@ -6712,11 +7214,13 @@ namespace NetExtender.Types.Sizes
 			}
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly ReadOnlySpan<Byte> AsReadOnlySpan()
 		{
 			return this;
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly Span<Byte> AsSpan()
 		{
 			return this;
@@ -6754,6 +7258,7 @@ namespace NetExtender.Types.Sizes
 
 		public Type Type
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return typeof(UnsafeSize3712);
@@ -6762,6 +7267,7 @@ namespace NetExtender.Types.Sizes
 
 		ref UnsafeSize3712 IUnsafeSize<UnsafeSize3712>.Self
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return ref this;
@@ -6770,6 +7276,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Int32 Length
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Size;
@@ -6778,6 +7285,7 @@ namespace NetExtender.Types.Sizes
 
 		readonly Int32 IUnsafeSize.Size
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count;
@@ -6787,10 +7295,12 @@ namespace NetExtender.Types.Sizes
 		private Int32 _count;
 		public Int32 Count
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			readonly get
 			{
 				return _count;
 			}
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			set
 			{
 				if (value < 0 || value > Size)
@@ -6804,6 +7314,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Boolean IsEmpty
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count <= 0;
@@ -6832,11 +7343,13 @@ namespace NetExtender.Types.Sizes
 			}
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly ReadOnlySpan<Byte> AsReadOnlySpan()
 		{
 			return this;
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly Span<Byte> AsSpan()
 		{
 			return this;
@@ -6874,6 +7387,7 @@ namespace NetExtender.Types.Sizes
 
 		public Type Type
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return typeof(UnsafeSize3840);
@@ -6882,6 +7396,7 @@ namespace NetExtender.Types.Sizes
 
 		ref UnsafeSize3840 IUnsafeSize<UnsafeSize3840>.Self
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return ref this;
@@ -6890,6 +7405,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Int32 Length
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Size;
@@ -6898,6 +7414,7 @@ namespace NetExtender.Types.Sizes
 
 		readonly Int32 IUnsafeSize.Size
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count;
@@ -6907,10 +7424,12 @@ namespace NetExtender.Types.Sizes
 		private Int32 _count;
 		public Int32 Count
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			readonly get
 			{
 				return _count;
 			}
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			set
 			{
 				if (value < 0 || value > Size)
@@ -6924,6 +7443,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Boolean IsEmpty
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count <= 0;
@@ -6952,11 +7472,13 @@ namespace NetExtender.Types.Sizes
 			}
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly ReadOnlySpan<Byte> AsReadOnlySpan()
 		{
 			return this;
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly Span<Byte> AsSpan()
 		{
 			return this;
@@ -6994,6 +7516,7 @@ namespace NetExtender.Types.Sizes
 
 		public Type Type
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return typeof(UnsafeSize3968);
@@ -7002,6 +7525,7 @@ namespace NetExtender.Types.Sizes
 
 		ref UnsafeSize3968 IUnsafeSize<UnsafeSize3968>.Self
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return ref this;
@@ -7010,6 +7534,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Int32 Length
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Size;
@@ -7018,6 +7543,7 @@ namespace NetExtender.Types.Sizes
 
 		readonly Int32 IUnsafeSize.Size
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count;
@@ -7027,10 +7553,12 @@ namespace NetExtender.Types.Sizes
 		private Int32 _count;
 		public Int32 Count
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			readonly get
 			{
 				return _count;
 			}
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			set
 			{
 				if (value < 0 || value > Size)
@@ -7044,6 +7572,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Boolean IsEmpty
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count <= 0;
@@ -7072,11 +7601,13 @@ namespace NetExtender.Types.Sizes
 			}
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly ReadOnlySpan<Byte> AsReadOnlySpan()
 		{
 			return this;
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly Span<Byte> AsSpan()
 		{
 			return this;
@@ -7114,6 +7645,7 @@ namespace NetExtender.Types.Sizes
 
 		public Type Type
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return typeof(UnsafeSize4096);
@@ -7122,6 +7654,7 @@ namespace NetExtender.Types.Sizes
 
 		ref UnsafeSize4096 IUnsafeSize<UnsafeSize4096>.Self
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return ref this;
@@ -7130,6 +7663,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Int32 Length
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Size;
@@ -7138,6 +7672,7 @@ namespace NetExtender.Types.Sizes
 
 		readonly Int32 IUnsafeSize.Size
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count;
@@ -7147,10 +7682,12 @@ namespace NetExtender.Types.Sizes
 		private Int32 _count;
 		public Int32 Count
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			readonly get
 			{
 				return _count;
 			}
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			set
 			{
 				if (value < 0 || value > Size)
@@ -7164,6 +7701,7 @@ namespace NetExtender.Types.Sizes
 
 		public readonly Boolean IsEmpty
 		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				return Count <= 0;
@@ -7192,11 +7730,13 @@ namespace NetExtender.Types.Sizes
 			}
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly ReadOnlySpan<Byte> AsReadOnlySpan()
 		{
 			return this;
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly Span<Byte> AsSpan()
 		{
 			return this;

@@ -4,7 +4,7 @@
 using System;
 using System.Runtime.Serialization;
 
-namespace NetExtender.IO.FileSystem.Lock.Content
+namespace NetExtender.FileSystems.Lock.Content
 {
     /// <summary>
     /// Class which gets serialized into the file lock - responsible for letting conflicting

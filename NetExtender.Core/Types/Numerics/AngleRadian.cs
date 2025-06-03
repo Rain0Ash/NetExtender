@@ -8,8 +8,18 @@ using NetExtender.Utilities.Numerics;
 namespace NetExtender.Types.Numerics
 {
     [Serializable]
-    public readonly struct AngleRadian : IEquatable<AngleRadian>, IComparable<AngleRadian>, IFormattable
+    public readonly struct AngleRadian : IEquality<AngleRadian>, IFormattable
     {
+        public static implicit operator AngleRadian(Double radian)
+        {
+            return new AngleRadian(radian);
+        }
+
+        public static explicit operator Double(AngleRadian angle)
+        {
+            return angle.Radian;
+        }
+        
         /// <summary>
         /// Represents the zero <see cref="AngleRadian"/> value (0 degrees).
         /// </summary>
@@ -49,16 +59,6 @@ namespace NetExtender.Types.Numerics
         /// Represents the largest possible value of a <see cref="AngleRadian"/>.
         /// </summary>
         public static AngleRadian MaxValue { get; } = new AngleRadian(Double.MaxValue);
-
-        public static explicit operator Double(AngleRadian angle)
-        {
-            return angle.Radian;
-        }
-
-        public static implicit operator AngleRadian(Double radian)
-        {
-            return new AngleRadian(radian);
-        }
 
         /// <summary>
         /// Indicates whether two <see cref="AngleRadian"/> instances are equal.
@@ -220,6 +220,15 @@ namespace NetExtender.Types.Numerics
         }
 
         /// <summary>
+        /// Returns a hash code for this instance.
+        /// </summary>
+        /// <returns>A 32-bit signed integer hash code.</returns>
+        public override Int32 GetHashCode()
+        {
+            return Radian.GetHashCode();
+        }
+
+        /// <summary>
         /// Indicates whether two <see cref="AngleRadian"/> instances are equal.
         /// </summary>
         /// <param name="first">The first angle to compare.</param>
@@ -258,15 +267,6 @@ namespace NetExtender.Types.Numerics
                 AngleRevolution angle => Equals(angle.ToAngleRadian()),
                 _ => false
             };
-        }
-
-        /// <summary>
-        /// Returns a hash code for this instance.
-        /// </summary>
-        /// <returns>A 32-bit signed integer hash code.</returns>
-        public override Int32 GetHashCode()
-        {
-            return Radian.GetHashCode();
         }
 
         /// <summary>

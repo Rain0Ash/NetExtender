@@ -310,8 +310,14 @@ namespace NetExtender.StrongId.Template
                 return true;
             }
 
+            // ReSharper disable once CognitiveComplexity
             private static String Load(StrongIdUnderlyingType type, String @namespace, String property)
             {
+                if (@namespace is null)
+                {
+                    throw new ArgumentNullException(nameof(@namespace));
+                }
+
                 if (String.IsNullOrEmpty(property))
                 {
                     throw new ArgumentException("Value cannot be null or empty.", nameof(property));

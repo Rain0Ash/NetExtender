@@ -1,3 +1,6 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -7,10 +10,12 @@ using System.Runtime.Serialization;
 using NetExtender.Interfaces;
 using NetExtender.Interfaces.Notify;
 using NetExtender.Types.Monads.Interfaces;
+using NetExtender.Utilities.Serialization;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Monads.Debouce
 {
+    [Serializable]
     public class NotifyDebounce<T> : MutableDebounce<T>
     {
         public static implicit operator NotifyDebounce<T>(T value)
@@ -106,7 +111,8 @@ namespace NetExtender.Types.Monads.Debouce
         }
     }
     
-    public class MutableDebounce<T> : IDebounce<T>, IDebounceEquatable<T, Debounce<T>>, IDebounceEquatable<T, MutableDebounce<T>>, IDebounceComparable<T, Debounce<T>>, IDebounceComparable<T, MutableDebounce<T>>, ICloneable<Debounce<T>>, ICloneable<MutableDebounce<T>>, INotifyProperty
+    [Serializable]
+    public class MutableDebounce<T> : IDebounce<T>, IDebounceEquality<T, Debounce<T>>, IDebounceEquality<T, MutableDebounce<T>>, ICloneable<Debounce<T>>, ICloneable<MutableDebounce<T>>, ISerializable, INotifyProperty
     {
         [return: NotNullIfNotNull("value")]
         public static implicit operator T?(MutableDebounce<T>? value)
@@ -290,6 +296,8 @@ namespace NetExtender.Types.Monads.Debouce
         public event PropertyChangingEventHandler? PropertyChanging;
         public event PropertyChangedEventHandler? PropertyChanged;
         
+        protected Guid Id { get; } = Guid.NewGuid();
+        
         private Debounce<T> _internal;
         protected virtual Debounce<T> Internal
         {
@@ -307,7 +315,7 @@ namespace NetExtender.Types.Monads.Debouce
         {
             get
             {
-                return Internal.Value;
+                return _internal.Value;
             }
             set
             {
@@ -322,35 +330,43 @@ namespace NetExtender.Types.Monads.Debouce
         {
             get
             {
-                return Internal.Time;
+                return _internal.Time;
             }
         }
-        
-        public DateTime SetTime
-        {
-            get
-            {
-                return Internal.SetTime;
-            }
-        }
-        
+
         public TimeSpan Delay
         {
             get
             {
-                return Internal.Delay;
+                return _internal.Delay;
             }
             init
             {
                 Internal = Internal.With(value);
             }
         }
-        
+
+        public DateTime SetTime
+        {
+            get
+            {
+                return _internal.SetTime;
+            }
+        }
+
         public Boolean IsDebounce
         {
             get
             {
-                return Internal.IsDebounce;
+                return _internal.IsDebounce;
+            }
+        }
+        
+        public Boolean IsEmpty
+        {
+            get
+            {
+                return _internal.IsEmpty;
             }
         }
         
@@ -373,7 +389,19 @@ namespace NetExtender.Types.Monads.Debouce
         {
             _internal = value;
         }
+
+        protected MutableDebounce(SerializationInfo info, StreamingContext context)
+        {
+            _internal = new Debounce<T>(info.GetValue<T>(nameof(Value)), info.GetValue<TimeSpan>(nameof(Delay))) { SetTime = info.GetDateTime(nameof(SetTime)) };
+        }
         
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue(nameof(Value), _internal.Value);
+            info.AddValue(nameof(Delay), _internal.Delay);
+            info.AddValue(nameof(SetTime), _internal.SetTime);
+        }
+
         protected void OnPropertyChanging([CallerMemberName] String? property = null)
         {
             PropertyChanging?.Invoke(this, new PropertyChanging(property));
@@ -386,12 +414,12 @@ namespace NetExtender.Types.Monads.Debouce
         
         public Boolean Set(T value)
         {
-            if (!Internal.Set(value, out Debounce<T> result))
+            if (!_internal.Set(value, out Debounce<T> result))
             {
                 return false;
             }
             
-            Internal = result;
+            _internal = result;
             return true;
         }
         
@@ -403,13 +431,13 @@ namespace NetExtender.Types.Monads.Debouce
                 return true;
             }
             
-            result = default;
+            result = null;
             return false;
         }
         
         public Boolean Set(T value, out TimeSpan delta)
         {
-            if (!Internal.Set(value, out delta, out Debounce<T> result))
+            if (!_internal.Set(value, out delta, out Debounce<T> result))
             {
                 return false;
             }
@@ -432,7 +460,7 @@ namespace NetExtender.Types.Monads.Debouce
         
         public Boolean Set(T value, out DateTime time)
         {
-            if (!Internal.Set(value, out time, out Debounce<T> result))
+            if (!_internal.Set(value, out time, out Debounce<T> result))
             {
                 return false;
             }
@@ -449,53 +477,53 @@ namespace NetExtender.Types.Monads.Debouce
                 return true;
             }
             
-            result = default;
+            result = null;
             return false;
         }
         
         public Int32 CompareTo(T? other)
         {
-            return Internal.CompareTo(other);
+            return _internal.CompareTo(other);
         }
         
         public Int32 CompareTo(T? other, IComparer<T>? comparer)
         {
-            return Internal.CompareTo(other, comparer);
+            return _internal.CompareTo(other, comparer);
         }
 
         public Int32 CompareTo(Debounce<T> other)
         {
-            return Internal.CompareTo(other);
+            return _internal.CompareTo(other);
         }
 
         public Int32 CompareTo(Debounce<T> other, IComparer<T>? comparer)
         {
-            return Internal.CompareTo(other, comparer);
+            return _internal.CompareTo(other, comparer);
         }
 
         public Int32 CompareTo(MutableDebounce<T>? other)
         {
-            return other is not null ? Internal.CompareTo(other.Internal) : 1;
+            return other is not null ? _internal.CompareTo(other._internal) : 1;
         }
 
         public Int32 CompareTo(MutableDebounce<T>? other, IComparer<T>? comparer)
         {
-            return other is not null ? Internal.CompareTo(other.Internal, comparer) : 1;
+            return other is not null ? _internal.CompareTo(other._internal, comparer) : 1;
         }
 
         public Int32 CompareTo(IDebounce<T>? other)
         {
-            return Internal.CompareTo(other);
+            return _internal.CompareTo(other);
         }
 
         public Int32 CompareTo(IDebounce<T>? other, IComparer<T>? comparer)
         {
-            return Internal.CompareTo(other, comparer);
+            return _internal.CompareTo(other, comparer);
         }
 
         public sealed override Int32 GetHashCode()
         {
-            return Internal.GetHashCode();
+            return Id.GetHashCode();
         }
 
         public sealed override Boolean Equals(Object? other)
@@ -517,72 +545,157 @@ namespace NetExtender.Types.Monads.Debouce
 
         public Boolean Equals(T? other)
         {
-            return Internal.Equals(other);
+            return _internal.Equals(other);
         }
 
         public Boolean Equals(T? other, IEqualityComparer<T>? comparer)
         {
-            return Internal.Equals(other, comparer);
+            return _internal.Equals(other, comparer);
         }
 
         public Boolean Equals(Debounce<T> other)
         {
-            return Internal.Equals(other);
+            return _internal.Equals(other);
         }
 
         public Boolean Equals(Debounce<T> other, IEqualityComparer<T>? comparer)
         {
-            return Internal.Equals(other, comparer);
+            return _internal.Equals(other, comparer);
         }
 
         public Boolean Equals(MutableDebounce<T>? other)
         {
-            return other is not null && Equals(other.Internal);
+            return other is not null && Equals(other._internal);
         }
 
         public Boolean Equals(MutableDebounce<T>? other, IEqualityComparer<T>? comparer)
         {
-            return other is not null && Equals(other.Internal, comparer);
+            return other is not null && Equals(other._internal, comparer);
         }
 
         public Boolean Equals(IDebounce<T>? other)
         {
-            return Internal.Equals(other);
+            return _internal.Equals(other);
         }
 
         public Boolean Equals(IDebounce<T>? other, IEqualityComparer<T>? comparer)
         {
-            return Internal.Equals(other, comparer);
+            return _internal.Equals(other, comparer);
         }
         
         public virtual MutableDebounce<T> Clone()
         {
-            return new MutableDebounce<T>(Internal);
+            return new MutableDebounce<T>(_internal);
         }
-        
-        Object ICloneable.Clone()
-        {
-            return Clone();
-        }
-        
-        IDebounce IDebounce.Clone()
-        {
-            return Clone();
-        }
-        
-        IDebounce<T> IDebounce<T>.Clone()
-        {
-            return Clone();
-        }
-        
+
         Debounce<T> ICloneable<Debounce<T>>.Clone()
         {
             return Clone();
         }
-        
+
+        IDebounce<T> IDebounce<T>.Clone()
+        {
+            return Clone();
+        }
+
+        IDebounce<T> ICloneable<IDebounce<T>>.Clone()
+        {
+            return Clone();
+        }
+
+        IDebounce IDebounce.Clone()
+        {
+            return Clone();
+        }
+
+        IDebounce ICloneable<IDebounce>.Clone()
+        {
+            return Clone();
+        }
+
+        IMonad<T> IMonad<T>.Clone()
+        {
+            return Clone();
+        }
+
+        IMonad<T> ICloneable<IMonad<T>>.Clone()
+        {
+            return Clone();
+        }
+
+        IMonad IMonad.Clone()
+        {
+            return Clone();
+        }
+
+        IMonad ICloneable<IMonad>.Clone()
+        {
+            return Clone();
+        }
+
+        Object ICloneable.Clone()
+        {
+            return Clone();
+        }
+
         public sealed override String? ToString()
         {
-            return Internal.ToString();
+            return _internal.ToString();
+        }
+
+        public String ToString(String? format)
+        {
+            return _internal.ToString(format);
+        }
+
+        public String ToString(IFormatProvider? provider)
+        {
+            return _internal.ToString(provider);
+        }
+
+        public String ToString(String? format, IFormatProvider? provider)
+        {
+            return _internal.ToString(format, provider);
+        }
+
+        public String? GetString()
+        {
+            return _internal.GetString();
+        }
+
+        public String? GetString(EscapeType escape)
+        {
+            return _internal.GetString(escape);
+        }
+
+        public String? GetString(String? format)
+        {
+            return _internal.GetString(format);
+        }
+
+        public String? GetString(EscapeType escape, String? format)
+        {
+            return _internal.GetString(escape, format);
+        }
+
+        public String? GetString(IFormatProvider? provider)
+        {
+            return _internal.GetString(provider);
+        }
+
+        public String? GetString(EscapeType escape, IFormatProvider? provider)
+        {
+            return _internal.GetString(escape, provider);
+        }
+
+        public String? GetString(String? format, IFormatProvider? provider)
+        {
+            return _internal.GetString(format, provider);
+        }
+
+        public String? GetString(EscapeType escape, String? format, IFormatProvider? provider)
+        {
+            return _internal.GetString(escape, format, provider);
         }
     }
     

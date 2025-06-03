@@ -279,6 +279,12 @@ namespace NetExtender.Utilities.Core
         {
             return simple ? AssignStorage<TFrom, TTo>.Simple : AssignStorage<TFrom, TTo>.Assign;
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static TypeCode ToTypeCode(this Type? type)
+        {
+            return Type.GetTypeCode(type);
+        }
         
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         [return: NotNullIfNotNull("source")]
@@ -2833,7 +2839,7 @@ namespace NetExtender.Utilities.Core
 
         public static Boolean TryGetEntryPointType([MaybeNullWhen(false)] out Type result)
         {
-            Assembly? assembly = Assembly.GetEntryAssembly();
+            Assembly? assembly = GetEntryAssembly();
 
             if (assembly is not null)
             {
@@ -2897,6 +2903,27 @@ namespace NetExtender.Utilities.Core
             return new FileInfo(uri.LocalPath);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Assembly? GetEntryAssembly()
+        {
+            return GetEntryAssembly(true);
+        }
+
+        [SuppressMessage("Usage", "CA2200")]
+        public static Assembly? GetEntryAssembly(Boolean search)
+        {
+            try
+            {
+                return Initializer.Initializer.ReflectionUtilities.GetEntryAssembly(search);
+            }
+            catch (Exception exception)
+            {
+                // ReSharper disable once PossibleIntendedRethrow
+                throw exception;
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Assembly LoadAssembly(this AssemblyName assembly)
         {
             if (assembly is null)
@@ -2907,6 +2934,7 @@ namespace NetExtender.Utilities.Core
             return Assembly.Load(assembly);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Assembly LoadAssembly(String assembly)
         {
             if (assembly is null)
@@ -2955,6 +2983,7 @@ namespace NetExtender.Utilities.Core
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Assembly LoadAssemblyFile(String assembly)
         {
             if (assembly is null)
@@ -3008,6 +3037,7 @@ namespace NetExtender.Utilities.Core
             });
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Assembly LoadAssemblyFrom(String assembly, Byte[]? hash, AssembliesHashAlgorithm algorithm)
         {
             if (assembly is null)
@@ -3314,7 +3344,7 @@ namespace NetExtender.Utilities.Core
 
             if (String.IsNullOrEmpty(resource))
             {
-                throw new ArgumentException("Value cannot be null or empty.", nameof(resource));
+                throw new ArgumentNullOrEmptyStringException(resource, nameof(resource));
             }
 
             try
@@ -3477,7 +3507,7 @@ namespace NetExtender.Utilities.Core
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Type[] GetTypesWithoutNamespace(String name, Boolean insensitive)
         {
-            return GetTypesWithoutNamespace(Assembly.GetEntryAssembly() ?? throw new InvalidOperationException(), name, insensitive);
+            return GetTypesWithoutNamespace(GetEntryAssembly() ?? throw new InvalidOperationException(), name, insensitive);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -3511,7 +3541,7 @@ namespace NetExtender.Utilities.Core
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Type? GetTypeWithoutNamespace(String name, Boolean insensitive)
         {
-            return GetTypeWithoutNamespace(Assembly.GetEntryAssembly() ?? throw new InvalidOperationException(), name, insensitive);
+            return GetTypeWithoutNamespace(GetEntryAssembly() ?? throw new InvalidOperationException(), name, insensitive);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -3551,7 +3581,7 @@ namespace NetExtender.Utilities.Core
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryGetTypeWithoutNamespace(String name, Boolean insensitive, [MaybeNullWhen(false)] out Type result)
         {
-            return TryGetTypeWithoutNamespace(Assembly.GetEntryAssembly() ?? throw new InvalidOperationException(), name, insensitive, out result);
+            return TryGetTypeWithoutNamespace(GetEntryAssembly() ?? throw new InvalidOperationException(), name, insensitive, out result);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -3942,7 +3972,7 @@ namespace NetExtender.Utilities.Core
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<Type> GetTypesInNamespace(String @namespace, Boolean insensitive)
         {
-            return GetTypesInNamespace(Assembly.GetEntryAssembly() ?? throw new InvalidOperationException(), @namespace, insensitive);
+            return GetTypesInNamespace(GetEntryAssembly() ?? throw new InvalidOperationException(), @namespace, insensitive);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -4050,13 +4080,13 @@ namespace NetExtender.Utilities.Core
                 get
                 {
                     Assembly calling = Assembly.GetCallingAssembly();
-                    Assembly? entry = Assembly.GetEntryAssembly();
+                    Assembly? entry = GetEntryAssembly();
                     return AppDomain.CurrentDomain.GetAssemblies().WhereNot(IsSystemAssembly).Append(entry).Append(calling).WhereNotNull().Distinct()
-                        .OrderByDescending(assembly => assembly == Assembly.GetExecutingAssembly())
-                        .ThenByDescending(assembly => assembly.GetName().FullName.StartsWith(nameof(NetExtender)))
+                        .OrderByDescending(static assembly => assembly == Assembly.GetExecutingAssembly())
+                        .ThenByDescending(static assembly => assembly.GetName().FullName.StartsWith(nameof(NetExtender)))
                         .ThenByDescending(assembly => assembly == calling)
                         .ThenByDescending(assembly => assembly == entry)
-                        .ThenBy(assembly => assembly.GetName().FullName);
+                        .ThenBy(static assembly => assembly.GetName().FullName);
                 }
             }
 
@@ -6497,7 +6527,7 @@ namespace NetExtender.Utilities.Core
 
             static SizeStorage()
             {
-                Size = GetSize(typeof(T));
+                Size = SizeOf(typeof(T));
             }
         }
 
@@ -6536,13 +6566,13 @@ namespace NetExtender.Utilities.Core
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Int32 GetSize<T>(this T _) where T : struct
+        public static Int32 SizeOf<T>(this T _) where T : struct
         {
-            return GetSize<T>();
+            return SizeOf<T>();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Int32 GetSize<T>(this T[] array) where T : struct
+        public static Int32 SizeOf<T>(this T[] array) where T : struct
         {
             if (array is null)
             {
@@ -6552,7 +6582,7 @@ namespace NetExtender.Utilities.Core
             return SizeStorage<T>.Size * array.Length;
         }
 
-        public static Boolean GetSize<T>(this T[] array, out Int64 size) where T : struct
+        public static Boolean SizeOf<T>(this T[] array, out Int64 size) where T : struct
         {
             if (array is null)
             {
@@ -6571,7 +6601,7 @@ namespace NetExtender.Utilities.Core
             }
         }
 
-        public static Boolean GetSize<T>(this T[] array, out BigInteger size) where T : struct
+        public static Boolean SizeOf<T>(this T[] array, out BigInteger size) where T : struct
         {
             if (array is null)
             {
@@ -6591,12 +6621,12 @@ namespace NetExtender.Utilities.Core
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Int32 GetSize<T>() where T : struct
+        public static Int32 SizeOf<T>() where T : struct
         {
             return SizeStorage<T>.Size;
         }
 
-        public static Int32 GetSize(this Type type)
+        public static Int32 SizeOf(this Type type)
         {
             if (type is null)
             {

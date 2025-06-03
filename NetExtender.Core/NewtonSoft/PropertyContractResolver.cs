@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using NetExtender.Types.Exceptions;
 using NetExtender.Utilities.Types;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -57,12 +58,12 @@ namespace NetExtender.NewtonSoft
 
             if (String.IsNullOrEmpty(property))
             {
-                throw new ArgumentException(@"Value cannot be null or empty.", nameof(property));
+                throw new ArgumentNullOrEmptyStringException(property, nameof(property));
             }
 
             if (String.IsNullOrWhiteSpace(name))
             {
-                throw new ArgumentException(@"Value cannot be null or whitespace.", nameof(name));
+                throw new ArgumentNullOrWhiteSpaceStringException(name, nameof(name));
             }
 
             if (!Rename.ContainsKey(type))
@@ -84,7 +85,7 @@ namespace NetExtender.NewtonSoft
 
             if (String.IsNullOrEmpty(property))
             {
-                throw new ArgumentException(@"Value cannot be null or empty.", nameof(property));
+                throw new ArgumentNullOrEmptyStringException(property, nameof(property));
             }
 
             if (!Ignore.ContainsKey(type))
@@ -132,7 +133,7 @@ namespace NetExtender.NewtonSoft
 
             if (String.IsNullOrEmpty(property))
             {
-                throw new ArgumentException(@"Value cannot be null or empty.", nameof(property));
+                throw new ArgumentNullOrEmptyStringException(property, nameof(property));
             }
 
             if (!Order.ContainsKey(type))

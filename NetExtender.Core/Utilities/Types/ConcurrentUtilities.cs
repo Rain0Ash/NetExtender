@@ -29,14 +29,6 @@ namespace NetExtender.Utilities.Types
 
     public static class ConcurrentUtilities
     {
-        public static SyncRoot SyncRoot
-        {
-            get
-            {
-                return SyncRoot.Create();
-            }
-        }
-
         public static IDisposable? Lock(this Object value)
         {
             return value switch

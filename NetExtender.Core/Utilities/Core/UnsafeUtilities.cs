@@ -556,6 +556,12 @@ namespace NetExtender.Utilities.Core
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static TTo As<TFrom, TTo>(TFrom source) where TFrom : struct
+        {
+            return As<TFrom, TTo>(ref source);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ref TTo As<TFrom, TTo>(ref TFrom source)
         {
             return ref Unsafe.As<TFrom, TTo>(ref source);

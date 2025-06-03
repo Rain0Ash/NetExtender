@@ -23,7 +23,7 @@ namespace NetExtender.Types.Numerics
         DownRight = Down | Right
     }
 
-    public readonly struct Point2<T> : IEquatable<Point2<T>> where T : unmanaged, IEquatable<T>, IComparable<T>, IConvertible
+    public readonly struct Point2<T> : IEquatable<Point2<T>> where T : unmanaged, IComparable<T>, IEquatable<T>, IConvertible
     {
         public static Boolean operator ==(Point2<T> fisrt, Point2<T> second)
         {
@@ -174,7 +174,7 @@ namespace NetExtender.Types.Numerics
         }
     }
 
-    public readonly struct Point3<T> : IEquatable<Point3<T>> where T : unmanaged, IEquatable<T>, IComparable<T>, IConvertible
+    public readonly struct Point3<T> : IEquatable<Point3<T>> where T : unmanaged, IComparable<T>, IEquatable<T>, IConvertible
     {
         public static Boolean operator ==(Point3<T> fisrt, Point3<T> second)
         {

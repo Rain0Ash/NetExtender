@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -136,11 +137,11 @@ namespace NetExtender.Utilities.Types
             return Verify(destination, set, handler);
         }
 
-        public static IServiceCollection Register(this IServiceCollection collection, Type type)
+        public static IServiceCollection Register(this IServiceCollection services, Type type)
         {
-            if (collection is null)
+            if (services is null)
             {
-                throw new ArgumentNullException(nameof(collection));
+                throw new ArgumentNullException(nameof(services));
             }
 
             if (type is null)
@@ -148,30 +149,30 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(type));
             }
             
-            return type.GetServiceType(out ServiceLifetime lifetime) ? collection.Add(type, lifetime) : collection;
+            return type.GetServiceType(out ServiceLifetime lifetime) ? services.Add(type, lifetime) : services;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IServiceCollection Register(this IServiceCollection collection, params Type?[]? types)
+        public static IServiceCollection Register(this IServiceCollection services, params Type?[]? types)
         {
-            return Register(collection, (IEnumerable<Type?>?) types);
+            return Register(services, (IEnumerable<Type?>?) types);
         }
         
-        public static IServiceCollection Register(this IServiceCollection collection, IEnumerable<Type?>? types)
+        public static IServiceCollection Register(this IServiceCollection services, IEnumerable<Type?>? types)
         {
-            if (collection is null)
+            if (services is null)
             {
-                throw new ArgumentNullException(nameof(collection));
+                throw new ArgumentNullException(nameof(services));
             }
             
-            return types is not null ? types.WhereNotNull().Aggregate(collection, (current, type) => current.Register(type)) : collection;
+            return types is not null ? types.WhereNotNull().Aggregate(services, (current, type) => current.Register(type)) : services;
         }
         
-        public static IServiceCollection Register(this IServiceCollection collection, Assembly assembly)
+        public static IServiceCollection Register(this IServiceCollection services, Assembly assembly)
         {
-            if (collection is null)
+            if (services is null)
             {
-                throw new ArgumentNullException(nameof(collection));
+                throw new ArgumentNullException(nameof(services));
             }
 
             if (assembly is null)
@@ -179,30 +180,104 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(assembly));
             }
 
-            return assembly.DefinedTypes.Aggregate(collection, (current, type) => current.Register(type));
+            return assembly.DefinedTypes.Aggregate(services, (current, type) => current.Register(type));
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IServiceCollection Register(this IServiceCollection collection, params Assembly?[]? assemblies)
+        public static IServiceCollection Register(this IServiceCollection services, params Assembly?[]? assemblies)
         {
-            return Register(collection, (IEnumerable<Assembly?>?) assemblies);
+            return Register(services, (IEnumerable<Assembly?>?) assemblies);
         }
         
-        public static IServiceCollection Register(this IServiceCollection collection, IEnumerable<Assembly?>? assemblies)
+        public static IServiceCollection Register(this IServiceCollection services, IEnumerable<Assembly?>? assemblies)
         {
-            if (collection is null)
+            if (services is null)
             {
-                throw new ArgumentNullException(nameof(collection));
+                throw new ArgumentNullException(nameof(services));
             }
 
-            return assemblies is not null ? assemblies.WhereNotNull().Aggregate(collection, (current, assembly) => current.Register(assembly)) : collection;
+            return assemblies is not null ? assemblies.WhereNotNull().Aggregate(services, (current, assembly) => current.Register(assembly)) : services;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ServiceLifetime Find<TService>(this IServiceCollection services, ServiceLifetime alternate)
+        {
+            return Find(services, typeof(TService), alternate);
         }
 
-        public static IServiceCollection Add(this IServiceCollection collection, Type service, ServiceLifetime lifetime)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ServiceLifetime Find(this IServiceCollection services, Type service, ServiceLifetime alternate)
         {
-            if (collection is null)
+            return Find(services, service, out ServiceLifetime lifetime) ? lifetime : alternate;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Find<TService>(this IServiceCollection services, out ServiceLifetime result)
+        {
+            return Find(services, typeof(TService), out result);
+        }
+
+        public static Boolean Find(this IServiceCollection services, Type service, out ServiceLifetime result)
+        {
+            if (services is null)
             {
-                throw new ArgumentNullException(nameof(collection));
+                throw new ArgumentNullException(nameof(services));
+            }
+
+            if (service is null)
+            {
+                throw new ArgumentNullException(nameof(service));
+            }
+
+            if (Find(services, service, out ServiceDescriptor? descriptor))
+            {
+                result = descriptor.Lifetime;
+                return true;
+            }
+            
+            result = default;
+            return false;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Find<TService>(this IServiceCollection services, [MaybeNullWhen(false)] out ServiceDescriptor result)
+        {
+            return Find(services, typeof(TService), out result);
+        }
+
+        public static Boolean Find(this IServiceCollection services, Type service, [MaybeNullWhen(false)] out ServiceDescriptor result)
+        {
+            if (services is null)
+            {
+                throw new ArgumentNullException(nameof(services));
+            }
+
+            if (service is null)
+            {
+                throw new ArgumentNullException(nameof(service));
+            }
+
+            for (Int32 index = services.Count - 1; index >= 0; index--)
+            {
+                ServiceDescriptor descriptor = services[index];
+                if (descriptor.ServiceType != service)
+                {
+                    continue;
+                }
+
+                result = descriptor;
+                return true;
+            }
+
+            result = default;
+            return false;
+        }
+
+        public static IServiceCollection Add(this IServiceCollection services, Type service, ServiceLifetime lifetime)
+        {
+            if (services is null)
+            {
+                throw new ArgumentNullException(nameof(services));
             }
 
             if (service is null)
@@ -212,18 +287,18 @@ namespace NetExtender.Utilities.Types
 
             return lifetime switch
             {
-                ServiceLifetime.Transient => collection.AddTransient(service),
-                ServiceLifetime.Scoped => collection.AddScoped(service),
-                ServiceLifetime.Singleton => collection.AddSingleton(service),
+                ServiceLifetime.Transient => services.AddTransient(service),
+                ServiceLifetime.Scoped => services.AddScoped(service),
+                ServiceLifetime.Singleton => services.AddSingleton(service),
                 _ => throw new EnumUndefinedOrNotSupportedException<ServiceLifetime>(lifetime, nameof(lifetime), null)
             };
         }
 
-        public static IServiceCollection Add(this IServiceCollection collection, Type service, Type implementation, ServiceLifetime lifetime)
+        public static IServiceCollection Add(this IServiceCollection services, Type service, Type implementation, ServiceLifetime lifetime)
         {
-            if (collection is null)
+            if (services is null)
             {
-                throw new ArgumentNullException(nameof(collection));
+                throw new ArgumentNullException(nameof(services));
             }
 
             if (service is null)
@@ -238,18 +313,18 @@ namespace NetExtender.Utilities.Types
 
             return lifetime switch
             {
-                ServiceLifetime.Transient => collection.AddTransient(service, implementation),
-                ServiceLifetime.Scoped => collection.AddScoped(service, implementation),
-                ServiceLifetime.Singleton => collection.AddSingleton(service, implementation),
+                ServiceLifetime.Transient => services.AddTransient(service, implementation),
+                ServiceLifetime.Scoped => services.AddScoped(service, implementation),
+                ServiceLifetime.Singleton => services.AddSingleton(service, implementation),
                 _ => throw new EnumUndefinedOrNotSupportedException<ServiceLifetime>(lifetime, nameof(lifetime), null)
             };
         }
 
-        public static IServiceCollection Add(this IServiceCollection collection, Type service, Func<IServiceProvider, Object> factory, ServiceLifetime lifetime)
+        public static IServiceCollection Add(this IServiceCollection services, Type service, Func<IServiceProvider, Object> factory, ServiceLifetime lifetime)
         {
-            if (collection is null)
+            if (services is null)
             {
-                throw new ArgumentNullException(nameof(collection));
+                throw new ArgumentNullException(nameof(services));
             }
 
             if (service is null)
@@ -264,34 +339,34 @@ namespace NetExtender.Utilities.Types
 
             return lifetime switch
             {
-                ServiceLifetime.Transient => collection.AddTransient(service, factory),
-                ServiceLifetime.Scoped => collection.AddScoped(service, factory),
-                ServiceLifetime.Singleton => collection.AddSingleton(service, factory),
+                ServiceLifetime.Transient => services.AddTransient(service, factory),
+                ServiceLifetime.Scoped => services.AddScoped(service, factory),
+                ServiceLifetime.Singleton => services.AddSingleton(service, factory),
                 _ => throw new EnumUndefinedOrNotSupportedException<ServiceLifetime>(lifetime, nameof(lifetime), null)
             };
         }
 
-        public static IServiceCollection Add<TService>(this IServiceCollection collection, ServiceLifetime lifetime) where TService : class
+        public static IServiceCollection Add<TService>(this IServiceCollection services, ServiceLifetime lifetime) where TService : class
         {
-            if (collection is null)
+            if (services is null)
             {
-                throw new ArgumentNullException(nameof(collection));
+                throw new ArgumentNullException(nameof(services));
             }
 
             return lifetime switch
             {
-                ServiceLifetime.Transient => collection.AddTransient<TService>(),
-                ServiceLifetime.Scoped => collection.AddScoped<TService>(),
-                ServiceLifetime.Singleton => collection.AddSingleton<TService>(),
+                ServiceLifetime.Transient => services.AddTransient<TService>(),
+                ServiceLifetime.Scoped => services.AddScoped<TService>(),
+                ServiceLifetime.Singleton => services.AddSingleton<TService>(),
                 _ => throw new EnumUndefinedOrNotSupportedException<ServiceLifetime>(lifetime, nameof(lifetime), null)
             };
         }
 
-        public static IServiceCollection Add<TService, T>(this IServiceCollection collection, Func<IServiceProvider, T> factory, ServiceLifetime lifetime) where TService : class where T : class, TService
+        public static IServiceCollection Add<TService>(this IServiceCollection services, Func<IServiceProvider, TService> factory, ServiceLifetime lifetime) where TService : class
         {
-            if (collection is null)
+            if (services is null)
             {
-                throw new ArgumentNullException(nameof(collection));
+                throw new ArgumentNullException(nameof(services));
             }
 
             if (factory is null)
@@ -301,18 +376,55 @@ namespace NetExtender.Utilities.Types
 
             return lifetime switch
             {
-                ServiceLifetime.Transient => collection.AddTransient<TService, T>(factory),
-                ServiceLifetime.Scoped => collection.AddScoped<TService, T>(factory),
-                ServiceLifetime.Singleton => collection.AddSingleton<TService, T>(factory),
+                ServiceLifetime.Transient => services.AddTransient(factory),
+                ServiceLifetime.Scoped => services.AddScoped(factory),
+                ServiceLifetime.Singleton => services.AddSingleton(factory),
                 _ => throw new EnumUndefinedOrNotSupportedException<ServiceLifetime>(lifetime, nameof(lifetime), null)
             };
         }
 
-        public static IServiceCollection Add(this IServiceCollection collection, IDependencyService service)
+        public static IServiceCollection Add<TService, TImplementation>(this IServiceCollection services, ServiceLifetime lifetime) where TService : class where TImplementation : class, TService
         {
-            if (collection is null)
+            if (services is null)
             {
-                throw new ArgumentNullException(nameof(collection));
+                throw new ArgumentNullException(nameof(services));
+            }
+
+            return lifetime switch
+            {
+                ServiceLifetime.Transient => services.AddTransient<TService, TImplementation>(),
+                ServiceLifetime.Scoped => services.AddScoped<TService, TImplementation>(),
+                ServiceLifetime.Singleton => services.AddSingleton<TService, TImplementation>(),
+                _ => throw new EnumUndefinedOrNotSupportedException<ServiceLifetime>(lifetime, nameof(lifetime), null)
+            };
+        }
+
+        public static IServiceCollection Add<TService, TImplementation>(this IServiceCollection services, Func<IServiceProvider, TImplementation> factory, ServiceLifetime lifetime) where TService : class where TImplementation : class, TService
+        {
+            if (services is null)
+            {
+                throw new ArgumentNullException(nameof(services));
+            }
+
+            if (factory is null)
+            {
+                throw new ArgumentNullException(nameof(factory));
+            }
+
+            return lifetime switch
+            {
+                ServiceLifetime.Transient => services.AddTransient<TService, TImplementation>(factory),
+                ServiceLifetime.Scoped => services.AddScoped<TService, TImplementation>(factory),
+                ServiceLifetime.Singleton => services.AddSingleton<TService, TImplementation>(factory),
+                _ => throw new EnumUndefinedOrNotSupportedException<ServiceLifetime>(lifetime, nameof(lifetime), null)
+            };
+        }
+
+        public static IServiceCollection Add(this IServiceCollection services, IDependencyService service)
+        {
+            if (services is null)
+            {
+                throw new ArgumentNullException(nameof(services));
             }
 
             if (service is null)
@@ -320,14 +432,14 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(service));
             }
 
-            return collection.Add(service.GetType(), service.Lifetime);
+            return services.Add(service.GetType(), service.Lifetime);
         }
 
-        public static IServiceCollection AddIf(this IServiceCollection collection, Func<IServiceCollection, IServiceCollection> modifier, Boolean condition)
+        public static IServiceCollection AddIf(this IServiceCollection services, Func<IServiceCollection, IServiceCollection> modifier, Boolean condition)
         {
-            if (collection is null)
+            if (services is null)
             {
-                throw new ArgumentNullException(nameof(collection));
+                throw new ArgumentNullException(nameof(services));
             }
 
             if (modifier is null)
@@ -335,14 +447,14 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(modifier));
             }
 
-            return condition ? modifier(collection) : collection;
+            return condition ? modifier(services) : services;
         }
 
-        public static IServiceCollection AddIf(this IServiceCollection collection, Func<IServiceCollection, IServiceCollection> @if, Func<IServiceCollection, IServiceCollection> @else, Boolean condition)
+        public static IServiceCollection AddIf(this IServiceCollection services, Func<IServiceCollection, IServiceCollection> @if, Func<IServiceCollection, IServiceCollection> @else, Boolean condition)
         {
-            if (collection is null)
+            if (services is null)
             {
-                throw new ArgumentNullException(nameof(collection));
+                throw new ArgumentNullException(nameof(services));
             }
 
             if (@if is null)
@@ -355,14 +467,14 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(@else));
             }
 
-            return condition ? @if(collection) : @else(collection);
+            return condition ? @if(services) : @else(services);
         }
 
-        public static IServiceCollection AddIfNot(this IServiceCollection collection, Func<IServiceCollection, IServiceCollection> modifier, Boolean condition)
+        public static IServiceCollection AddIfNot(this IServiceCollection services, Func<IServiceCollection, IServiceCollection> modifier, Boolean condition)
         {
-            if (collection is null)
+            if (services is null)
             {
-                throw new ArgumentNullException(nameof(collection));
+                throw new ArgumentNullException(nameof(services));
             }
 
             if (modifier is null)
@@ -370,14 +482,14 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(modifier));
             }
 
-            return !condition ? modifier(collection) : collection;
+            return !condition ? modifier(services) : services;
         }
 
-        public static IServiceCollection AddIfNot(this IServiceCollection collection, Func<IServiceCollection, IServiceCollection> @if, Func<IServiceCollection, IServiceCollection> @else, Boolean condition)
+        public static IServiceCollection AddIfNot(this IServiceCollection services, Func<IServiceCollection, IServiceCollection> @if, Func<IServiceCollection, IServiceCollection> @else, Boolean condition)
         {
-            if (collection is null)
+            if (services is null)
             {
-                throw new ArgumentNullException(nameof(collection));
+                throw new ArgumentNullException(nameof(services));
             }
 
             if (@if is null)
@@ -390,22 +502,22 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(@else));
             }
 
-            return !condition ? @if(collection) : @else(collection);
+            return !condition ? @if(services) : @else(services);
         }
 
-        public static IServiceCollection AddLogging(this IServiceCollection collection)
+        public static IServiceCollection AddLogging(this IServiceCollection services)
         {
-            return AddLogging<Object?>(collection);
+            return AddLogging<Object?>(services);
         }
 
-        public static IServiceCollection AddLogging<T>(this IServiceCollection collection)
+        public static IServiceCollection AddLogging<T>(this IServiceCollection services)
         {
-            if (collection is null)
+            if (services is null)
             {
-                throw new ArgumentNullException(nameof(collection));
+                throw new ArgumentNullException(nameof(services));
             }
 
-            return collection.AddSingleton<ILogger>(provider => provider.GetRequiredService<ILogger<T>>());
+            return services.AddSingleton<ILogger>(provider => provider.GetRequiredService<ILogger<T>>());
         }
     }
 }

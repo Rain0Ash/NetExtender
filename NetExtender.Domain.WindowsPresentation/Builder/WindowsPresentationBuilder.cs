@@ -6,6 +6,8 @@ using System.Collections.Immutable;
 using System.Windows;
 using NetExtender.Domains.Builder;
 using NetExtender.Domains.WindowsPresentation.Builder.Interfaces;
+using NetExtender.Types.Console.Interfaces;
+using NetExtender.UserInterface.Console.Interfaces;
 
 namespace NetExtender.Domains.WindowsPresentation.Builder
 {
@@ -15,14 +17,29 @@ namespace NetExtender.Domains.WindowsPresentation.Builder
 
     public class WindowsPresentationBuilder<T> : ApplicationBuilder<T>, IWindowsPresentationBuilder<T> where T : Window
     {
-        public virtual Boolean IsConsoleVisible
+        public override IWindowConsole Console
         {
             get
             {
-                return false;
+                return IWindowConsole.Default;
             }
         }
-        
+
+        protected override void Initialize(ImmutableArray<String> arguments)
+        {
+            Initialize(arguments, Console);
+        }
+
+        protected sealed override void Initialize(ImmutableArray<String> arguments, IConsole console)
+        {
+            Initialize(arguments, console as IWindowConsole ?? throw new InvalidOperationException());
+        }
+
+        protected virtual void Initialize(ImmutableArray<String> arguments, IWindowConsole console)
+        {
+            base.Initialize(arguments, console);
+        }
+
         public override T Build(ImmutableArray<String> arguments)
         {
             Manager?.Invoke(this, this);
@@ -36,12 +53,10 @@ namespace NetExtender.Domains.WindowsPresentation.Builder
     
     public class WindowsPresentationConsoleBuilder<T> : WindowsPresentationBuilder<T> where T : Window
     {
-        public override Boolean IsConsoleVisible
+        protected override void Initialize(ImmutableArray<String> arguments, IWindowConsole console)
         {
-            get
-            {
-                return true;
-            }
+            console.IsVisible = true;
+            base.Initialize(arguments, console);
         }
     }
 }

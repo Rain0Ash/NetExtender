@@ -2,6 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Net.Mime;
 
 namespace NetExtender.AspNetCore.Types.Results
 {
@@ -15,7 +16,7 @@ namespace NetExtender.AspNetCore.Types.Results
             }
 
             Content = $"<html><body><script>{script}</script></body></html>";
-            ContentType = "text/html";
+            ContentType = MediaTypeNames.Text.Html;
         }
     }
 }

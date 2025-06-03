@@ -121,7 +121,7 @@ namespace NetExtender.Cryptography.Base
                 fixed (Byte* pinput = value)
                 fixed (Char* poutput = output)
                 {
-                    if (!InternalEncode(pinput, value.Length, poutput, length, zeroes, out Int32 written))
+                    if (!EncodeCore(pinput, value.Length, poutput, length, zeroes, out Int32 written))
                     {
                         throw new InvalidOperationException("Output buffer with insufficient size generated");
                     }
@@ -137,12 +137,12 @@ namespace NetExtender.Cryptography.Base
             fixed (Byte* pinput = value)
             fixed (Char* poutput = output)
             {
-                return InternalEncode(pinput, value.Length, poutput, output.Length, ZeroCount(value), out written);
+                return EncodeCore(pinput, value.Length, poutput, output.Length, ZeroCount(value), out written);
             }
         }
 
         // ReSharper disable once CognitiveComplexity
-        private unsafe Boolean InternalEncode(Byte* pinput, Int32 inputlength, Char* poutput, Int32 outputlength, Int32 zeroes, out Int32 written)
+        private unsafe Boolean EncodeCore(Byte* pinput, Int32 inputlength, Char* poutput, Int32 outputlength, Int32 zeroes, out Int32 written)
         {
             unchecked
             {
@@ -244,7 +244,7 @@ namespace NetExtender.Cryptography.Base
                 fixed (Char* pinput = value)
                 fixed (Byte* poutput = output)
                 {
-                    if (!InternalDecode(pinput, value.Length, poutput, count, zeroes, out Int32 written))
+                    if (!DecodeCore(pinput, value.Length, poutput, count, zeroes, out Int32 written))
                     {
                         throw new InvalidOperationException("Output buffer was too small while decoding Base58");
                     }
@@ -270,14 +270,14 @@ namespace NetExtender.Cryptography.Base
                 fixed (Char* pinput = input)
                 fixed (Byte* poutput = output)
                 {
-                    return InternalDecode(pinput, input.Length, poutput, output.Length, zeroes, out written);
+                    return DecodeCore(pinput, input.Length, poutput, output.Length, zeroes, out written);
                 }
             }
         }
 
         // ReSharper disable once CognitiveComplexity
 
-        private unsafe Boolean InternalDecode(Char* pinput, Int32 inputlength, Byte* poutput, Int32 outputlength, Int32 zeroes, out Int32 written)
+        private unsafe Boolean DecodeCore(Char* pinput, Int32 inputlength, Byte* poutput, Int32 outputlength, Int32 zeroes, out Int32 written)
         {
             unchecked
             {

@@ -7,7 +7,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
-using NetExtender.Types.Sizes.Interfaces;
+using System.Runtime.CompilerServices;
 using NetExtender.Utilities.Core;
 
 // ReSharper disable MemberCanBePrivate.Global
@@ -57,6 +57,7 @@ namespace NetExtender.Types.Sizes
         WriteLine(String.Empty);
         WriteLine($"\t\tpublic {nameof(Type)} Type");
         WriteLine("\t\t{");
+        WriteLine("\t\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
         WriteLine("\t\t\tget");
         WriteLine("\t\t\t{");
         WriteLine($"\t\t\t\treturn typeof({nameof(UnsafeSize)}{size});");
@@ -65,6 +66,7 @@ namespace NetExtender.Types.Sizes
         WriteLine(String.Empty);
         WriteLine($"\t\tref {nameof(UnsafeSize)}{size} IUnsafeSize<{nameof(UnsafeSize)}{size}>.Self");
         WriteLine("\t\t{");
+        WriteLine("\t\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
         WriteLine("\t\t\tget");
         WriteLine("\t\t\t{");
         WriteLine("\t\t\t\treturn ref this;");
@@ -73,6 +75,7 @@ namespace NetExtender.Types.Sizes
         WriteLine(String.Empty);
         WriteLine($"\t\tpublic readonly {nameof(Int32)} Length");
         WriteLine("\t\t{");
+        WriteLine("\t\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
         WriteLine("\t\t\tget");
         WriteLine("\t\t\t{");
         WriteLine("\t\t\t\treturn Size;");
@@ -81,6 +84,7 @@ namespace NetExtender.Types.Sizes
         WriteLine(String.Empty);
         WriteLine($"\t\treadonly {nameof(Int32)} I{nameof(UnsafeSize)}.Size");
         WriteLine("\t\t{");
+        WriteLine("\t\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
         WriteLine("\t\t\tget");
         WriteLine("\t\t\t{");
         WriteLine("\t\t\t\treturn Count;");
@@ -90,10 +94,12 @@ namespace NetExtender.Types.Sizes
         WriteLine($"\t\tprivate {nameof(Int32)} _count;");
         WriteLine($"\t\tpublic {nameof(Int32)} Count");
         WriteLine("\t\t{");
+        WriteLine("\t\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
         WriteLine("\t\t\treadonly get");
         WriteLine("\t\t\t{");
         WriteLine("\t\t\t\treturn _count;");
         WriteLine("\t\t\t}");
+        WriteLine("\t\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
         WriteLine("\t\t\tset");
         WriteLine("\t\t\t{");
         WriteLine("\t\t\t\tif (value < 0 || value > Size)");
@@ -107,6 +113,7 @@ namespace NetExtender.Types.Sizes
         WriteLine(String.Empty);
         WriteLine($"\t\tpublic readonly {nameof(Boolean)} IsEmpty");
         WriteLine("\t\t{");
+        WriteLine("\t\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
         WriteLine("\t\t\tget");
         WriteLine("\t\t\t{");
         WriteLine("\t\t\t\treturn Count <= 0;");
@@ -135,11 +142,13 @@ namespace NetExtender.Types.Sizes
         WriteLine("\t\t\t}");
         WriteLine("\t\t}");
         WriteLine(String.Empty);
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
         WriteLine($"\t\tpublic readonly ReadOnlySpan<{nameof(Byte)}> AsReadOnlySpan()");
         WriteLine("\t\t{");
         WriteLine("\t\t\treturn this;");
         WriteLine("\t\t}");
         WriteLine(String.Empty);
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
         WriteLine($"\t\tpublic readonly Span<{nameof(Byte)}> AsSpan()");
         WriteLine("\t\t{");
         WriteLine("\t\t\treturn this;");

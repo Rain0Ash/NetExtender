@@ -4,7 +4,7 @@
 using System;
 using System.Linq;
 using NetExtender.Types.Reflection.Interfaces;
-using NetExtender.Utilities.Numerics;
+using NetExtender.Utilities.Core;
 
 namespace NetExtender.Types.Reflection
 {

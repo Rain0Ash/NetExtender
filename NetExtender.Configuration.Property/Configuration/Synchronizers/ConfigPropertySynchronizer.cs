@@ -19,7 +19,7 @@ namespace NetExtender.Configuration.Synchronizers
     {
         private ImmutableList<IConfigPropertyInfo>? Internal { get; set; }
         
-        private Object SyncRoot { get; } = ConcurrentUtilities.SyncRoot;
+        private SyncRoot SyncRoot { get; } = SyncRoot.Create();
 
         public Int32 Count
         {
@@ -97,12 +97,12 @@ namespace NetExtender.Configuration.Synchronizers
             }
         }
 
-        public void CopyTo(IConfigPropertyInfo[] array, Int32 arrayIndex)
+        public void CopyTo(IConfigPropertyInfo[] array, Int32 index)
         {
             lock (SyncRoot)
             {
                 ImmutableList<IConfigPropertyInfo> collection = Internal ?? ImmutableList<IConfigPropertyInfo>.Empty;
-                collection.CopyTo(array, arrayIndex);
+                collection.CopyTo(array, index);
             }
         }
 

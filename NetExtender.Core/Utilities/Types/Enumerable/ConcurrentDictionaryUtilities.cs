@@ -3,7 +3,9 @@
 
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 using System.Threading;
 
 namespace NetExtender.Utilities.Types
@@ -107,6 +109,100 @@ namespace NetExtender.Utilities.Types
 
             Lazy<TValue> lazy = new Lazy<TValue>(() => factory(key), LazyThreadSafetyMode.ExecutionAndPublication);
             return dictionary.GetOrAdd(key, () => lazy.Value);
+        }
+
+        public static Boolean TryGetWeakValue<TKey, TValue>(this ConcurrentDictionary<TKey, WeakReference<TValue>> dictionary, TKey key, [MaybeNullWhen(false)] out TValue result) where TKey : notnull where TValue : class
+        {
+            if (dictionary is null)
+            {
+                throw new ArgumentNullException(nameof(dictionary));
+            }
+            
+            if (!dictionary.TryGetValue(key, out WeakReference<TValue>? reference))
+            {
+                result = null;
+                return false;
+            }
+
+            if (reference.TryGetTarget(out result))
+            {
+                return true;
+            }
+
+            dictionary.TryRemove(key, reference);
+            return false;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean TryRemove<TKey, TValue>(this ConcurrentDictionary<TKey, TValue> dictionary, TKey key) where TKey : notnull
+        {
+            if (dictionary is null)
+            {
+                throw new ArgumentNullException(nameof(dictionary));
+            }
+
+            return dictionary.TryRemove(key, out _);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean TryRemove<TKey, TValue>(this ConcurrentDictionary<TKey, TValue> dictionary, TKey key, TValue value) where TKey : notnull
+        {
+            if (dictionary is null)
+            {
+                throw new ArgumentNullException(nameof(dictionary));
+            }
+
+            return dictionary.TryRemove(new KeyValuePair<TKey, TValue>(key, value));
+        }
+
+        public static Boolean TryRemove<TKey, TValue>(this ConcurrentDictionary<TKey, TValue> dictionary, TKey key, [MaybeNullWhen(false)] ref TValue value) where TKey : notnull
+        {
+            if (dictionary is null)
+            {
+                throw new ArgumentNullException(nameof(dictionary));
+            }
+
+            if (TryRemove(dictionary, key, value))
+            {
+                return true;
+            }
+
+            dictionary.TryGetValue(key, out value);
+            return false;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean TryWeakRemove<TKey, TValue>(this ConcurrentDictionary<TKey, WeakReference<TValue>> dictionary, TKey key) where TKey : notnull where TValue : class
+        {
+            return TryWeakRemove(dictionary, key, out _);
+        }
+
+        public static Boolean TryWeakRemove<TKey, TValue>(this ConcurrentDictionary<TKey, WeakReference<TValue>> dictionary, TKey key, [MaybeNullWhen(false)] out TValue result) where TKey : notnull where TValue : class
+        {
+            if (dictionary is null)
+            {
+                throw new ArgumentNullException(nameof(dictionary));
+            }
+
+            if (!dictionary.TryGetValue(key, out WeakReference<TValue>? reference))
+            {
+                result = null;
+                return false;
+            }
+
+            if (!reference.TryGetTarget(out result))
+            {
+                dictionary.TryRemove(key, reference);
+                return false;
+            }
+
+            if (dictionary.TryRemove(key, reference))
+            {
+                return true;
+            }
+
+            result = null;
+            return false;
         }
     }
 }

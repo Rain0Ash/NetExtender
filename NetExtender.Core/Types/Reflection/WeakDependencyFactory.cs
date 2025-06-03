@@ -1,3 +1,6 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 using System;
 using System.Collections.Concurrent;
 using System.Reflection;
@@ -31,7 +34,7 @@ namespace NetExtender.Types.Reflection
                 
                 if (!type.HasInterface(typeof(IWeakDependency)))
                 {
-                    throw new ArgumentException($"Type '{type}' must implements '{typeof(IWeakDependency)}' method.");
+                    throw new ArgumentException($"Type '{type}' must implements '{nameof(IWeakDependency)}' method.");
                 }
                 
                 Assembly assembly = Loader.Assembly ?? throw new InvalidOperationException();

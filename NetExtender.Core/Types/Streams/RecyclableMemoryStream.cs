@@ -5,6 +5,7 @@ using System;
 using System.Buffers;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.IO;
@@ -26,6 +27,30 @@ namespace NetExtender.Types.Streams
         }
 
         protected Microsoft.IO.RecyclableMemoryStream Stream { get; }
+
+        public Guid Id
+        {
+            get
+            {
+                return Handler.GetId(Stream);
+            }
+        }
+
+        public String? Tag
+        {
+            get
+            {
+                return Handler.GetTag(Stream);
+            }
+        }
+
+        public String Name
+        {
+            get
+            {
+                return Handler.GetName(Stream);
+            }
+        }
 
         /// <inheritdoc cref="Microsoft.IO.RecyclableMemoryStream.Length"/>
         public Int64 Length
@@ -137,6 +162,26 @@ namespace NetExtender.Types.Streams
             }
         }
 
+        public RecyclableMemoryStream()
+            : this(new RecyclableMemoryStreamManager())
+        {
+        }
+
+        public RecyclableMemoryStream(Guid id)
+            : this(new RecyclableMemoryStreamManager(), id)
+        {
+        }
+
+        public RecyclableMemoryStream(String? tag)
+            : this(new RecyclableMemoryStreamManager(), tag)
+        {
+        }
+
+        public RecyclableMemoryStream(Guid id, String? tag)
+            : this(new RecyclableMemoryStreamManager(), id, tag)
+        {
+        }
+
         public RecyclableMemoryStream(RecyclableMemoryStreamManager manager)
         {
             if (manager is null)
@@ -145,6 +190,36 @@ namespace NetExtender.Types.Streams
             }
 
             Stream = new Microsoft.IO.RecyclableMemoryStream(manager);
+        }
+
+        public RecyclableMemoryStream(RecyclableMemoryStreamManager manager, Guid id)
+        {
+            if (manager is null)
+            {
+                throw new ArgumentNullException(nameof(manager));
+            }
+
+            Stream = new Microsoft.IO.RecyclableMemoryStream(manager, id);
+        }
+
+        public RecyclableMemoryStream(RecyclableMemoryStreamManager manager, String? tag)
+        {
+            if (manager is null)
+            {
+                throw new ArgumentNullException(nameof(manager));
+            }
+
+            Stream = new Microsoft.IO.RecyclableMemoryStream(manager, tag);
+        }
+
+        public RecyclableMemoryStream(RecyclableMemoryStreamManager manager, Guid id, String? tag)
+        {
+            if (manager is null)
+            {
+                throw new ArgumentNullException(nameof(manager));
+            }
+
+            Stream = new Microsoft.IO.RecyclableMemoryStream(manager, id, tag);
         }
 
         public RecyclableMemoryStream(RecyclableMemoryStreamManager manager, Int64 size)
@@ -157,9 +232,34 @@ namespace NetExtender.Types.Streams
             Stream = new Microsoft.IO.RecyclableMemoryStream(manager, null, size);
         }
 
-        public RecyclableMemoryStream()
-            : this(new RecyclableMemoryStreamManager())
+        public RecyclableMemoryStream(RecyclableMemoryStreamManager manager, Guid id, Int64 size)
         {
+            if (manager is null)
+            {
+                throw new ArgumentNullException(nameof(manager));
+            }
+
+            Stream = new Microsoft.IO.RecyclableMemoryStream(manager, id, null, size);
+        }
+
+        public RecyclableMemoryStream(RecyclableMemoryStreamManager manager, String? tag, Int64 size)
+        {
+            if (manager is null)
+            {
+                throw new ArgumentNullException(nameof(manager));
+            }
+
+            Stream = new Microsoft.IO.RecyclableMemoryStream(manager, tag, size);
+        }
+
+        public RecyclableMemoryStream(RecyclableMemoryStreamManager manager, Guid id, String? tag, Int64 size)
+        {
+            if (manager is null)
+            {
+                throw new ArgumentNullException(nameof(manager));
+            }
+
+            Stream = new Microsoft.IO.RecyclableMemoryStream(manager, id, tag, size);
         }
 
         public RecyclableMemoryStream(RecyclableMemoryStreamManager.Options options)
@@ -474,6 +574,51 @@ namespace NetExtender.Types.Streams
         public Object GetLifetimeService()
         {
             return Stream.GetLifetimeService();
+        }
+
+        public sealed override Int32 GetHashCode()
+        {
+            return Stream.GetHashCode();
+        }
+
+        public sealed override Boolean Equals(Object? obj)
+        {
+            return Stream.Equals(obj);
+        }
+
+        public sealed override String ToString()
+        {
+            return Stream.ToString();
+        }
+
+        internal static class Handler
+        {
+            private static Func<Microsoft.IO.RecyclableMemoryStream, Guid> Id { get; }
+            private static Func<Microsoft.IO.RecyclableMemoryStream, String?> Tag { get; }
+
+            static Handler()
+            {
+                const BindingFlags binding = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+                Id = typeof(Microsoft.IO.RecyclableMemoryStream).GetProperty(nameof(Id), binding)?.GetMethod?.CreateDelegate<Func<Microsoft.IO.RecyclableMemoryStream, Guid>>() ?? (static _ => Guid.Empty);
+                Tag = typeof(Microsoft.IO.RecyclableMemoryStream).GetProperty(nameof(Tag), binding)?.GetMethod?.CreateDelegate<Func<Microsoft.IO.RecyclableMemoryStream, String?>>() ?? (static _ => null);
+            }
+            
+            public static Guid GetId(Microsoft.IO.RecyclableMemoryStream stream)
+            {
+                return Id.Invoke(stream);
+            }
+            
+            public static String? GetTag(Microsoft.IO.RecyclableMemoryStream stream)
+            {
+                return Tag.Invoke(stream);
+            }
+
+            public static String GetName(Microsoft.IO.RecyclableMemoryStream stream)
+            {
+                Guid id = GetId(stream);
+                String? tag = GetTag(stream);
+                return String.IsNullOrEmpty(tag) ? id.ToString() : $"{tag} ({id})";
+            }
         }
     }
 }

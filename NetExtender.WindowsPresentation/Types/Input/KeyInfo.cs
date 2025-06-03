@@ -1,10 +1,13 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 using System;
 using System.Windows.Input;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.WindowsPresentation.Types
 {
-    public readonly struct KeyInfo : IEquatable<KeyInfo>, IComparable<KeyInfo>
+    public readonly struct KeyInfo : IEquality<KeyInfo>
     {
         public static Boolean operator ==(KeyInfo first, KeyInfo second)
         {
@@ -159,7 +162,7 @@ namespace NetExtender.WindowsPresentation.Types
         
         public override String ToString()
         {
-            return $"{{ {nameof(Key)}: {Key}, {nameof(Modifiers)}: {String.Join(" + ", Modifiers.Flags())}, {nameof(State)}: {State}, {nameof(IsRepeat)}: {IsRepeat} }}";
+            return $"{{ {nameof(Key)}: {Key}, {nameof(Modifiers)}: {Modifiers.Flags().ToString(" + ", null, null)}, {nameof(State)}: {State}, {nameof(IsRepeat)}: {IsRepeat} }}";
         }
     }
 }

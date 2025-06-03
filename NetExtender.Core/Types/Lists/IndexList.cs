@@ -12,9 +12,9 @@ using NetExtender.Types.Lists.Interfaces;
 
 namespace NetExtender.Types.Lists
 {
-    public class IndexList<T> : IIndexList<T>, IReadOnlyIndexList<T>
+    public class IndexList<T> : IIndexList<T>, IReadOnlyIndexList<T>, IList
     {
-        protected const Int32 MinimalIndexer = 4;
+        protected const Int32 IndexerBound = 4;
 
         protected List<T> Internal { get; }
         protected Indexer<T> Indexer { get; }
@@ -67,6 +67,38 @@ namespace NetExtender.Types.Lists
             get
             {
                 return ((ICollection<T>) Internal).IsReadOnly;
+            }
+        }
+
+        Boolean IList.IsReadOnly
+        {
+            get
+            {
+                return ((IList) Internal).IsReadOnly;
+            }
+        }
+
+        Boolean IList.IsFixedSize
+        {
+            get
+            {
+                return ((IList) Internal).IsFixedSize;
+            }
+        }
+
+        Object ICollection.SyncRoot
+        {
+            get
+            {
+                return ((ICollection) Internal).SyncRoot;
+            }
+        }
+
+        Boolean ICollection.IsSynchronized
+        {
+            get
+            {
+                return ((ICollection) Internal).IsSynchronized;
             }
         }
 
@@ -133,7 +165,7 @@ namespace NetExtender.Types.Lists
                 return Indexer.Contains(item);
             }
 
-            if (Internal.Count <= MinimalIndexer)
+            if (Internal.Count <= IndexerBound)
             {
                 return Internal.Contains(item);
             }
@@ -142,6 +174,11 @@ namespace NetExtender.Types.Lists
             Rebuild = false;
 
             return Indexer.Contains(item);
+        }
+
+        Boolean IList.Contains(Object? item)
+        {
+            return Contains((T) item!);
         }
 
         public Boolean Contains(T item, Boolean rebuild)
@@ -171,7 +208,7 @@ namespace NetExtender.Types.Lists
                 return Indexer.IndexOf(item);
             }
 
-            if (Internal.Count <= MinimalIndexer)
+            if (Internal.Count <= IndexerBound)
             {
                 return Internal.IndexOf(item);
             }
@@ -182,9 +219,14 @@ namespace NetExtender.Types.Lists
             return Indexer.IndexOf(item);
         }
 
+        Int32 IList.IndexOf(Object? item)
+        {
+            return IndexOf((T) item!);
+        }
+
         public Int32 IndexOf(T item, Boolean rebuild)
         {
-            return Internal.Count <= MinimalIndexer || !rebuild && Rebuild ? Internal.IndexOf(item) : IndexOf(item);
+            return Internal.Count <= IndexerBound || !rebuild && Rebuild ? Internal.IndexOf(item) : IndexOf(item);
         }
 
         public Int32 IndexOf(T item, Int32 index)
@@ -204,7 +246,7 @@ namespace NetExtender.Types.Lists
 
         public Int32 LastIndexOf(T item, Boolean rebuild)
         {
-            return Internal.Count <= MinimalIndexer || !rebuild && Rebuild ? Internal.LastIndexOf(item) : LastIndexOf(item);
+            return Internal.Count <= IndexerBound || !rebuild && Rebuild ? Internal.LastIndexOf(item) : LastIndexOf(item);
         }
 
         public Int32 LastIndexOf(T item, Int32 index)
@@ -264,24 +306,24 @@ namespace NetExtender.Types.Lists
             return Internal.FindIndex(match);
         }
 
-        public Int32 FindIndex(Int32 startIndex, Predicate<T> match)
+        public Int32 FindIndex(Int32 index, Predicate<T> match)
         {
             if (match is null)
             {
                 throw new ArgumentNullException(nameof(match));
             }
 
-            return Internal.FindIndex(startIndex, match);
+            return Internal.FindIndex(index, match);
         }
 
-        public Int32 FindIndex(Int32 startIndex, Int32 count, Predicate<T> match)
+        public Int32 FindIndex(Int32 index, Int32 count, Predicate<T> match)
         {
             if (match is null)
             {
                 throw new ArgumentNullException(nameof(match));
             }
 
-            return Internal.FindIndex(startIndex, count, match);
+            return Internal.FindIndex(index, count, match);
         }
 
         public T? FindLast(Predicate<T> match)
@@ -304,24 +346,24 @@ namespace NetExtender.Types.Lists
             return Internal.FindLastIndex(match);
         }
 
-        public Int32 FindLastIndex(Int32 startIndex, Predicate<T> match)
+        public Int32 FindLastIndex(Int32 index, Predicate<T> match)
         {
             if (match is null)
             {
                 throw new ArgumentNullException(nameof(match));
             }
 
-            return Internal.FindLastIndex(startIndex, match);
+            return Internal.FindLastIndex(index, match);
         }
 
-        public Int32 FindLastIndex(Int32 startIndex, Int32 count, Predicate<T> match)
+        public Int32 FindLastIndex(Int32 index, Int32 count, Predicate<T> match)
         {
             if (match is null)
             {
                 throw new ArgumentNullException(nameof(match));
             }
 
-            return Internal.FindLastIndex(startIndex, count, match);
+            return Internal.FindLastIndex(index, count, match);
         }
 
         public Boolean TrueForAll(Predicate<T> match)
@@ -340,6 +382,13 @@ namespace NetExtender.Types.Lists
             Rebuild = true;
         }
 
+        Int32 IList.Add(Object? item)
+        {
+            T value = (T) item!;
+            Add(value);
+            return IndexOf(value);
+        }
+
         public void AddRange(IEnumerable<T> collection)
         {
             Int32 count = Internal.Count;
@@ -351,6 +400,11 @@ namespace NetExtender.Types.Lists
         {
             Internal.Insert(index, item);
             Rebuild = true;
+        }
+
+        void IList.Insert(Int32 index, Object? item)
+        {
+            Insert(index, (T) item!);
         }
 
         public void InsertRange(Int32 index, IEnumerable<T> collection)
@@ -369,6 +423,11 @@ namespace NetExtender.Types.Lists
 
             Rebuild = true;
             return true;
+        }
+
+        void IList.Remove(Object? item)
+        {
+            Remove((T) item!);
         }
 
         public void RemoveRange(Int32 index, Int32 length)
@@ -421,8 +480,14 @@ namespace NetExtender.Types.Lists
             Rebuild = true;
         }
 
-        public void Sort(Comparison<T> comparison)
+        public void Sort(Comparison<T>? comparison)
         {
+            if (comparison is null)
+            {
+                Sort(default(IComparer<T>));
+                return;
+            }
+            
             Internal.Sort(comparison);
             Rebuild = true;
         }
@@ -454,14 +519,12 @@ namespace NetExtender.Types.Lists
             return new IndexList<TOutput>(Internal.ConvertAll(converter));
         }
 
-        public void ForEach(Action<T> action)
+        public void ForEach(Action<T>? action)
         {
-            if (action is null)
+            if (action is not null)
             {
-                throw new ArgumentNullException(nameof(action));
+                Internal.ForEach(action);
             }
-
-            Internal.ForEach(action);
         }
 
         public void CopyTo(T[] array)
@@ -469,14 +532,14 @@ namespace NetExtender.Types.Lists
             Internal.CopyTo(array);
         }
 
-        public void CopyTo(T[] array, Int32 arrayIndex)
+        public void CopyTo(T[] array, Int32 index)
         {
-            Internal.CopyTo(array, arrayIndex);
+            Internal.CopyTo(array, index);
         }
 
-        public void CopyTo(Int32 index, T[] array, Int32 arrayIndex, Int32 count)
+        void ICollection.CopyTo(Array array, Int32 index)
         {
-            Internal.CopyTo(index, array, arrayIndex, count);
+            ((ICollection) Internal).CopyTo(array, index);
         }
 
         public T[] ToArray()
@@ -509,6 +572,18 @@ namespace NetExtender.Types.Lists
             {
                 Internal[index] = value;
                 Rebuild = true;
+            }
+        }
+
+        Object? IList.this[Int32 index]
+        {
+            get
+            {
+                return this[index];
+            }
+            set
+            {
+                this[index] = (T) value!;
             }
         }
 

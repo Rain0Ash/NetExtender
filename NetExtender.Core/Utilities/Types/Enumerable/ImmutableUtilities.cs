@@ -281,7 +281,704 @@ namespace NetExtender.Utilities.Types
         {
             return source.Length > 0 ? source[RandomUtilities.NextNonNegative(source.Length - 1)] : default;
         }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableArray<T> AddIf<T>(this ImmutableArray<T> source, T item, Boolean condition)
+        {
+            return condition ? source.Add(item) : source;
+        }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableArray<T> AddIf<T>(this ImmutableArray<T> source, T item, Func<T, Boolean> predicate)
+        {
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            return predicate(item) ? source.Add(item) : source;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableArray<T> AddIfNot<T>(this ImmutableArray<T> source, T item, Boolean condition)
+        {
+            return condition ? source : source.Add(item);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableArray<T> AddIfNot<T>(this ImmutableArray<T> source, T item, Func<T, Boolean> predicate)
+        {
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            return predicate(item) ? source : source.Add(item);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableArray<T> AddIfNotNull<T>(this ImmutableArray<T> source, T? item)
+        {
+            return item is not null ? source.Add(item) : source;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableArray<T> AddIfUnique<T>(this ImmutableArray<T> source, T item)
+        {
+            return source.Contains(item) ? source : source.Add(item);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableArray<T> RemoveIf<T>(this ImmutableArray<T> source, T item, Boolean condition)
+        {
+            return condition ? source.Remove(item) : source;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableArray<T> RemoveIf<T>(this ImmutableArray<T> source, T item, Func<T, Boolean> predicate)
+        {
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            return predicate(item) ? source.Remove(item) : source;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableArray<T> RemoveIfNot<T>(this ImmutableArray<T> source, T item, Boolean condition)
+        {
+            return condition ? source : source.Remove(item);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableArray<T> RemoveIfNot<T>(this ImmutableArray<T> source, T item, Func<T, Boolean> predicate)
+        {
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            return predicate(item) ? source : source.Remove(item);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableList<T> AddIf<T>(this ImmutableList<T> source, T item, Boolean condition)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return condition ? source.Add(item) : source;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableList<T> AddIf<T>(this ImmutableList<T> source, T item, Func<T, Boolean> predicate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            return predicate(item) ? source.Add(item) : source;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableList<T> AddIfNot<T>(this ImmutableList<T> source, T item, Boolean condition)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return condition ? source : source.Add(item);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableList<T> AddIfNot<T>(this ImmutableList<T> source, T item, Func<T, Boolean> predicate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            return predicate(item) ? source : source.Add(item);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableList<T> AddIfNotNull<T>(this ImmutableList<T> source, T? item)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return item is not null ? source.Add(item) : source;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableList<T> AddIfUnique<T>(this ImmutableList<T> source, T item)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Contains(item) ? source : source.Add(item);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableList<T> RemoveIf<T>(this ImmutableList<T> source, T item, Boolean condition)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return condition ? source.Remove(item) : source;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableList<T> RemoveIf<T>(this ImmutableList<T> source, T item, Func<T, Boolean> predicate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            return predicate(item) ? source.Remove(item) : source;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableList<T> RemoveIfNot<T>(this ImmutableList<T> source, T item, Boolean condition)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return condition ? source : source.Remove(item);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableList<T> RemoveIfNot<T>(this ImmutableList<T> source, T item, Func<T, Boolean> predicate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            return predicate(item) ? source : source.Remove(item);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IImmutableList<T> AddIf<T>(this IImmutableList<T> source, T item, Boolean condition)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return condition ? source.Add(item) : source;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IImmutableList<T> AddIf<T>(this IImmutableList<T> source, T item, Func<T, Boolean> predicate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            return predicate(item) ? source.Add(item) : source;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IImmutableList<T> AddIfNot<T>(this IImmutableList<T> source, T item, Boolean condition)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return condition ? source : source.Add(item);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IImmutableList<T> AddIfNot<T>(this IImmutableList<T> source, T item, Func<T, Boolean> predicate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            return predicate(item) ? source : source.Add(item);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IImmutableList<T> AddIfNotNull<T>(this IImmutableList<T> source, T? item)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return item is not null ? source.Add(item) : source;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IImmutableList<T> AddIfUnique<T>(this IImmutableList<T> source, T item)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Contains(item) ? source : source.Add(item);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IImmutableList<T> RemoveIf<T>(this IImmutableList<T> source, T item, Boolean condition)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return condition ? source.Remove(item) : source;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IImmutableList<T> RemoveIf<T>(this IImmutableList<T> source, T item, Func<T, Boolean> predicate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            return predicate(item) ? source.Remove(item) : source;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IImmutableList<T> RemoveIfNot<T>(this IImmutableList<T> source, T item, Boolean condition)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return condition ? source : source.Remove(item);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IImmutableList<T> RemoveIfNot<T>(this IImmutableList<T> source, T item, Func<T, Boolean> predicate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            return predicate(item) ? source : source.Remove(item);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableHashSet<T> AddIf<T>(this ImmutableHashSet<T> source, T item, Boolean condition)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return condition ? source.Add(item) : source;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableHashSet<T> AddIf<T>(this ImmutableHashSet<T> source, T item, Func<T, Boolean> predicate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            return predicate(item) ? source.Add(item) : source;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableHashSet<T> AddIfNot<T>(this ImmutableHashSet<T> source, T item, Boolean condition)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return condition ? source : source.Add(item);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableHashSet<T> AddIfNot<T>(this ImmutableHashSet<T> source, T item, Func<T, Boolean> predicate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            return predicate(item) ? source : source.Add(item);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableHashSet<T> AddIfNotNull<T>(this ImmutableHashSet<T> source, T? item)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return item is not null ? source.Add(item) : source;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableHashSet<T> RemoveIf<T>(this ImmutableHashSet<T> source, T item, Boolean condition)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return condition ? source.Remove(item) : source;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableHashSet<T> RemoveIf<T>(this ImmutableHashSet<T> source, T item, Func<T, Boolean> predicate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            return predicate(item) ? source.Remove(item) : source;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableHashSet<T> RemoveIfNot<T>(this ImmutableHashSet<T> source, T item, Boolean condition)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return condition ? source : source.Remove(item);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableHashSet<T> RemoveIfNot<T>(this ImmutableHashSet<T> source, T item, Func<T, Boolean> predicate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            return predicate(item) ? source : source.Remove(item);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableSortedSet<T> AddIf<T>(this ImmutableSortedSet<T> source, T item, Boolean condition)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return condition ? source.Add(item) : source;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableSortedSet<T> AddIf<T>(this ImmutableSortedSet<T> source, T item, Func<T, Boolean> predicate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            return predicate(item) ? source.Add(item) : source;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableSortedSet<T> AddIfNot<T>(this ImmutableSortedSet<T> source, T item, Boolean condition)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return condition ? source : source.Add(item);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableSortedSet<T> AddIfNot<T>(this ImmutableSortedSet<T> source, T item, Func<T, Boolean> predicate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            return predicate(item) ? source : source.Add(item);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableSortedSet<T> AddIfNotNull<T>(this ImmutableSortedSet<T> source, T? item)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return item is not null ? source.Add(item) : source;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableSortedSet<T> RemoveIf<T>(this ImmutableSortedSet<T> source, T item, Boolean condition)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return condition ? source.Remove(item) : source;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableSortedSet<T> RemoveIf<T>(this ImmutableSortedSet<T> source, T item, Func<T, Boolean> predicate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            return predicate(item) ? source.Remove(item) : source;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableSortedSet<T> RemoveIfNot<T>(this ImmutableSortedSet<T> source, T item, Boolean condition)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return condition ? source : source.Remove(item);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableSortedSet<T> RemoveIfNot<T>(this ImmutableSortedSet<T> source, T item, Func<T, Boolean> predicate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            return predicate(item) ? source : source.Remove(item);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IImmutableSet<T> AddIf<T>(this IImmutableSet<T> source, T item, Boolean condition)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return condition ? source.Add(item) : source;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IImmutableSet<T> AddIf<T>(this IImmutableSet<T> source, T item, Func<T, Boolean> predicate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            return predicate(item) ? source.Add(item) : source;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IImmutableSet<T> AddIfNot<T>(this IImmutableSet<T> source, T item, Boolean condition)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return condition ? source : source.Add(item);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IImmutableSet<T> AddIfNot<T>(this IImmutableSet<T> source, T item, Func<T, Boolean> predicate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            return predicate(item) ? source : source.Add(item);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IImmutableSet<T> AddIfNotNull<T>(this IImmutableSet<T> source, T? item)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return item is not null ? source.Add(item) : source;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IImmutableSet<T> RemoveIf<T>(this IImmutableSet<T> source, T item, Boolean condition)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return condition ? source.Remove(item) : source;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IImmutableSet<T> RemoveIf<T>(this IImmutableSet<T> source, T item, Func<T, Boolean> predicate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            return predicate(item) ? source.Remove(item) : source;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IImmutableSet<T> RemoveIfNot<T>(this IImmutableSet<T> source, T item, Boolean condition)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return condition ? source : source.Remove(item);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IImmutableSet<T> RemoveIfNot<T>(this IImmutableSet<T> source, T item, Func<T, Boolean> predicate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            return predicate(item) ? source : source.Remove(item);
+        }
+        
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableArray<T> AddRange<T>(this ImmutableArray<T> source, params T[] values)
         {

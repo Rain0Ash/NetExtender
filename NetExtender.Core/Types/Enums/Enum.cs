@@ -10,13 +10,14 @@ using System.Text;
 using NetExtender.NewtonSoft.Types.Enums;
 using NetExtender.Types.Culture;
 using NetExtender.Types.Enums.Interfaces;
+using NetExtender.Types.Lists.Interfaces;
 using NetExtender.Utilities.Types;
 using Newtonsoft.Json;
 
 namespace NetExtender.Types.Enums
 {
     [JsonConverter(typeof(EnumJsonConverter))]
-    public abstract class Enum<T, TEnum> : Enum<T>, IEnum<T, TEnum>, IEquatable<Enum<T, TEnum>>, IComparable<Enum<T, TEnum>> where T : unmanaged, Enum where TEnum : Enum<T, TEnum>, new()
+    public abstract partial class Enum<T, TEnum> : Enum<T>, IEnum<T, TEnum>, IEquality<Enum<T, TEnum>> where T : unmanaged, Enum where TEnum : Enum<T, TEnum>, new()
     {
         public static implicit operator Enum<T, TEnum>(T value)
         {
@@ -26,15 +27,77 @@ namespace NetExtender.Types.Enums
         [return: NotNullIfNotNull("value")]
         public static explicit operator Enum<T, TEnum>?(String? value)
         {
-            return value is not null ? TryParse<TEnum>(value, out TEnum? result) ? result : throw new InvalidCastException($"Can't cast specified value '{value}' to enum '{typeof(T)}'.") : null;
+            return value is not null ? TryParse<TEnum>(value, out TEnum? result) ? result : throw new InvalidCastException($"Can't cast specified value '{value}' to enum '{typeof(T).Name}'.") : null;
+        }
+
+        private TEnum This
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get
+            {
+                return (TEnum) this;
+            }
         }
         
+        [JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
+        public sealed override Boolean IsFlags
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+            get
+            {
+                return EnumUtilities.EnumStorage<T>.IsFlags(This);
+            }
+        }
+
+        [JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
+        public new FlagsEnumerator Flags
+        {
+            get
+            {
+                return new FlagsEnumerator(This);
+            }
+        }
+
+        [JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
+        IReadOnlySortedList<TEnum> IEnum<T, TEnum>.Flags
+        {
+            get
+            {
+                return Flags.This;
+            }
+        }
+
+        [JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
+        IReadOnlySortedList<IEnum<T>> IEnum<T>.Flags
+        {
+            get
+            {
+                return Flags;
+            }
+        }
+
+        [JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
+        IReadOnlySortedList<IEnum> IEnum.Flags
+        {
+            get
+            {
+                return Flags.Interface;
+            }
+        }
+        
+        [JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public sealed override Boolean IsIntern
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
             get
             {
-                return EnumUtilities.EnumStorage<T>.IsIntern((TEnum) this);
+                return EnumUtilities.EnumStorage<T>.IsIntern(This);
             }
         }
         
@@ -54,7 +117,7 @@ namespace NetExtender.Types.Enums
         
         protected override TEnum Initialize()
         {
-            return (TEnum) this;
+            return This;
         }
         
         public override TEnum Intern()
@@ -67,13 +130,13 @@ namespace NetExtender.Types.Enums
         {
             if (IsIntern)
             {
-                result = (TEnum) this;
+                result = This;
                 return true;
             }
 
             if (Identifier is { } identifier ? !TryParse(identifier, Id, out TEnum? @enum) : !TryParse(Id, out @enum))
             {
-                result = (TEnum) this;
+                result = This;
                 return false;
             }
 
@@ -83,7 +146,7 @@ namespace NetExtender.Types.Enums
                 return true;
             }
 
-            result = (TEnum) this;
+            result = This;
             return false;
         }
         
@@ -147,20 +210,21 @@ namespace NetExtender.Types.Enums
             return Enum<T>.TryParse(identifier, value, out result);
         }
         
-        public sealed override Int32 CompareTo(Object? obj)
+        public sealed override Int32 CompareTo(Object? other)
         {
-            if (ReferenceEquals(this, obj))
+            if (ReferenceEquals(this, other))
             {
                 return 0;
             }
             
-            return obj switch
+            return other switch
             {
-                Enum<T, TEnum> other => CompareTo(other),
-                IEnum<T, TEnum> other => CompareTo(other),
-                Enum<T> other => CompareTo(other),
-                IEnum<T> other => CompareTo(other),
-                T other => CompareTo(other),
+                TEnum value => CompareTo(value),
+                Enum<T, TEnum> value => CompareTo(value),
+                IEnum<T, TEnum> value => CompareTo(value),
+                Enum<T> value => CompareTo(value),
+                IEnum<T> value => CompareTo(value),
+                T value => CompareTo(value),
                 _ => 1
             };
         }
@@ -168,6 +232,11 @@ namespace NetExtender.Types.Enums
         public sealed override Int32 CompareTo(IEnum<T>? other)
         {
             return other is Enum<T, TEnum> @enum ? CompareTo(@enum) : base.CompareTo(other);
+        }
+
+        public virtual Int32 CompareTo(TEnum? other)
+        {
+            return CompareTo((Enum<T, TEnum>?) other);
         }
 
         public Int32 CompareTo(Enum<T, TEnum>? other)
@@ -185,21 +254,22 @@ namespace NetExtender.Types.Enums
             return base.GetHashCode();
         }
 
-        public sealed override Boolean Equals(Object? obj)
+        public sealed override Boolean Equals(Object? other)
         {
-            if (ReferenceEquals(this, obj))
+            if (ReferenceEquals(this, other))
             {
                 return true;
             }
 
-            return obj switch
+            return other switch
             {
                 null => false,
-                Enum<T, TEnum> other => Equals(other),
-                IEnum<T, TEnum> other => Equals(other),
-                Enum<T> other => Equals(other),
-                IEnum<T> other => Equals(other),
-                T other => Equals(other),
+                TEnum value => Equals(value),
+                Enum<T, TEnum> value => Equals(value),
+                IEnum<T, TEnum> value => Equals(value),
+                Enum<T> value => Equals(value),
+                IEnum<T> value => Equals(value),
+                T value => Equals(value),
                 _ => false
             };
         }
@@ -207,6 +277,11 @@ namespace NetExtender.Types.Enums
         public sealed override Boolean Equals(IEnum<T>? other)
         {
             return other is Enum<T, TEnum> @enum ? Equals(@enum) : base.Equals(other);
+        }
+
+        public virtual Boolean Equals(TEnum? other)
+        {
+            return Equals((Enum<T, TEnum>?) other);
         }
 
         public Boolean Equals(Enum<T, TEnum>? other)
@@ -231,11 +306,11 @@ namespace NetExtender.Types.Enums
     }
     
     [JsonConverter(typeof(EnumJsonConverter))]
-    public class Enum<T> : IEnum<T>, IEquatable<Enum<T>>, IComparable<Enum<T>> where T : unmanaged, Enum
+    public partial class Enum<T> : IEnum<T>, IEquality<Enum<T>> where T : unmanaged, Enum
     {
         public static implicit operator Enum<T>(T value)
         {
-            return TryParse(value, out Enum<T>? result) ? result : new Enum<T>(value);
+            return TryParse(value, out Enum<T>? result) ? result : Create(value);
         }
 
         [return: NotNullIfNotNull("value")]
@@ -257,7 +332,7 @@ namespace NetExtender.Types.Enums
         [return: NotNullIfNotNull("value")]
         public static explicit operator Enum<T>?(String? value)
         {
-            return value is not null ? TryParse(value, out Enum<T>? result) ? result : throw new InvalidCastException($"Can't cast specified value '{value}' to enum '{typeof(T)}'.") : null;
+            return value is not null ? TryParse(value, out Enum<T>? result) ? result : throw new InvalidCastException($"Can't cast specified value '{value}' to enum '{typeof(T).Name}'.") : null;
         }
 
         [return: NotNullIfNotNull("value")]
@@ -327,6 +402,7 @@ namespace NetExtender.Types.Enums
         }
 
         [JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public Type Underlying
         {
             get
@@ -336,12 +412,21 @@ namespace NetExtender.Types.Enums
         }
 
         public T Id { get; private init; }
-        public String Title { get; private init; }
-        
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public LocalizationIdentifier? Identifier { get; private init; }
 
         [JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
+        Enum IEnum.Id
+        {
+            get
+            {
+                return Id;
+            }
+        }
+        
+        public String Title { get; private init; }
+
+        [JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public Boolean HasIdentifier
         {
             get
@@ -349,8 +434,54 @@ namespace NetExtender.Types.Enums
                 return Identifier is not null && Identifier != LocalizationIdentifier.Invariant;
             }
         }
+        
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]
+        public LocalizationIdentifier? Identifier { get; private init; }
 
         [JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
+        public virtual Boolean IsFlags
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get
+            {
+                return EnumUtilities.EnumStorage<T>.IsFlags(this);
+            }
+        }
+
+        [JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
+        public FlagsEnumerator Flags
+        {
+            get
+            {
+                return new FlagsEnumerator(this);
+            }
+        }
+
+        [JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
+        IReadOnlySortedList<IEnum<T>> IEnum<T>.Flags
+        {
+            get
+            {
+                return Flags;
+            }
+        }
+
+        [JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
+        IReadOnlySortedList<IEnum> IEnum.Flags
+        {
+            get
+            {
+                return Flags.Interface;
+            }
+        }
+
+        [JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public virtual Boolean IsIntern
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -429,9 +560,9 @@ namespace NetExtender.Types.Enums
 
         public virtual TEnum As<TEnum>() where TEnum : Enum<T, TEnum>, new()
         {
-            if (this is TEnum)
+            if (this is TEnum @enum)
             {
-                return (TEnum) this;
+                return @enum;
             }
 
             if ((Identifier is { } identifier ? TryParse<TEnum>(identifier, Id, out TEnum? result) : TryParse<TEnum>(Id, out result)) && Title == result.Title)
@@ -599,18 +730,18 @@ namespace NetExtender.Types.Enums
             return EnumUtilities.EnumStorage<T>.TryParse(identifier, value, out result);
         }
         
-        public virtual Int32 CompareTo(Object? obj)
+        public virtual Int32 CompareTo(Object? other)
         {
-            if (ReferenceEquals(this, obj))
+            if (ReferenceEquals(this, other))
             {
                 return 0;
             }
             
-            return obj switch
+            return other switch
             {
-                Enum<T> other => CompareTo(other),
-                IEnum<T> other => CompareTo(other),
-                T other => CompareTo(other),
+                Enum<T> value => CompareTo(value),
+                IEnum<T> value => CompareTo(value),
+                T value => CompareTo(value),
                 _ => 1
             };
         }
@@ -734,9 +865,11 @@ namespace NetExtender.Types.Enums
                 case "IDT":
                 case "idtitle":
                 case "IDTITLE":
+                case "id-title":
+                case "ID-TITLE":
                     return ToTitle(Id);
                 default:
-                    return new StringBuilder(format).Replace("{TYPE}", GetType().Name).Replace("{ID}", Id.ToString()).Replace("{NUMBER}", Id.ToDecimal().ToString(provider)).Replace("{TITLE}", Title).Replace("{IDTITLE}", ToTitle(Id)).ToString();
+                    return new StringBuilder(format).Replace("{TYPE}", GetType().Name).Replace("{ID}", Id.ToString()).Replace("{NUMBER}", Id.ToDecimal().ToString(provider)).Replace("{TITLE}", Title).Replace("{ID-TITLE}", ToTitle(Id)).ToString();
             }
         }
     }

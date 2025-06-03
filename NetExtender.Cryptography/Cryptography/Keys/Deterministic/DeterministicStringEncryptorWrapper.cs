@@ -77,7 +77,7 @@ namespace NetExtender.Cryptography.Keys.Deterministic
             }
         }
 
-        private String? EncryptNullInternal()
+        private String? EncryptNullCore()
         {
             if (Null.HasValue)
             {
@@ -89,7 +89,7 @@ namespace NetExtender.Cryptography.Keys.Deterministic
             return result;
         }
 
-        private String? EncryptNullStringInternal()
+        private String? EncryptNullStringCore()
         {
             if (Null.HasValue)
             {
@@ -105,7 +105,7 @@ namespace NetExtender.Cryptography.Keys.Deterministic
         {
             if (value is null)
             {
-                return EncryptNullInternal();
+                return EncryptNullCore();
             }
             
             if (Dictionary is null || Encryptor.IsDeterministic)
@@ -120,7 +120,7 @@ namespace NetExtender.Cryptography.Keys.Deterministic
         {
             if (value is null)
             {
-                return EncryptNullStringInternal();
+                return EncryptNullStringCore();
             }
             
             if (Dictionary is null || Encryptor.IsDeterministic)

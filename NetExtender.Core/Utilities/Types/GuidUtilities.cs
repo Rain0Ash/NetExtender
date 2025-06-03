@@ -16,9 +16,21 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Guid NewGuid(this DateTime timestamp)
+        {
+            return Create(Guid.NewGuid(), timestamp);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Guid NewGuid(this DateTimeOffset timestamp)
         {
             return Create(Guid.NewGuid(), timestamp);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Guid Create(this Guid value, DateTime timestamp)
+        {
+            return Create(value, (DateTimeOffset) timestamp);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]

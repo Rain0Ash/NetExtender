@@ -1,3 +1,6 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 using System;
 using System.Collections;
 using System.ComponentModel;
@@ -265,7 +268,7 @@ namespace NetExtender.UserInterface.WindowsPresentation
             CollectionView = CollectionViewSource.GetDefaultView(ItemsSource);
             foreach (Object? item in CollectionView)
             {
-                Int32 text = item.ToString()?.Length ?? 0;
+                Int32 text = item?.ToString()?.Length ?? 0;
                 SelectedItem = item;
 
                 SilenceEvents();

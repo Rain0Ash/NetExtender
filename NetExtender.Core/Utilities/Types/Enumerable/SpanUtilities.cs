@@ -8,6 +8,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography;
 using NetExtender.Types.Random.Interfaces;
 using NetExtender.Types.Spans;
 using NetExtender.Utilities.Core;
@@ -242,6 +243,203 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void Clear<T>(this Memory<T> source, Boolean crypto) where T : struct
+        {
+            Clear(source.Span, crypto);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void Clear<T>(this Memory<T> source, Int32 start, Boolean crypto) where T : struct
+        {
+            Clear(source.Span, start, crypto);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void Clear<T>(this Memory<T> source, Int32 start, Int32 length, Boolean crypto) where T : struct
+        {
+            Clear(source.Span, start, length, crypto);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void Clear<T>(this Span<T> source, Boolean crypto) where T : struct
+        {
+            if (crypto)
+            {
+                CryptographicOperations.ZeroMemory(source.As<T, Byte>());
+                return;
+            }
+            
+            source.Clear();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void Clear<T>(this Span<T> source, Int32 start, Boolean crypto) where T : struct
+        {
+            Clear(source, start, source.Length - start, crypto);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void Clear<T>(this Span<T> source, Int32 start, Int32 length, Boolean crypto) where T : struct
+        {
+            Clear(source.Slice(start, length), crypto);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean SequenceEqual<T>(this Memory<T> source, ReadOnlySpan<T> other)
+        {
+            return SequenceEqual(source, other, null);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean SequenceEqual<T>(this Memory<T> source, ReadOnlySpan<T> other, IEqualityComparer<T>? comparer)
+        {
+            return SequenceEqual(source.Span, other, comparer);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean SequenceEqual<T>(this Memory<T> source, ReadOnlyMemory<T> other)
+        {
+            return SequenceEqual(source, other, null);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean SequenceEqual<T>(this Memory<T> source, ReadOnlyMemory<T> other, IEqualityComparer<T>? comparer)
+        {
+            return SequenceEqual(source.Span, other.Span, comparer);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean SequenceEqual<T>(this Span<T> source, ReadOnlySpan<T> other)
+        {
+            return SequenceEqual(source, other, null);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean SequenceEqual<T>(this Span<T> source, ReadOnlySpan<T> other, IEqualityComparer<T>? comparer)
+        {
+            return SequenceEqual((ReadOnlySpan<T>) source, other, comparer);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean SequenceEqual<T>(this ReadOnlyMemory<T> source, ReadOnlySpan<T> other)
+        {
+            return SequenceEqual(source, other, null);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean SequenceEqual<T>(this ReadOnlyMemory<T> source, ReadOnlySpan<T> other, IEqualityComparer<T>? comparer)
+        {
+            return SequenceEqual(source.Span, other, comparer);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean SequenceEqual<T>(this ReadOnlyMemory<T> source, ReadOnlyMemory<T> other)
+        {
+            return SequenceEqual(source, other, null);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean SequenceEqual<T>(this ReadOnlyMemory<T> source, ReadOnlyMemory<T> other, IEqualityComparer<T>? comparer)
+        {
+            return SequenceEqual(source.Span, other.Span, comparer);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean SequenceEqual<T>(this ReadOnlySpan<T> source, ReadOnlySpan<T> other)
+        {
+            return SequenceEqual(source, other, null);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Boolean SequenceEqual<T>(this ReadOnlySpan<T> source, ReadOnlySpan<T> other, IEqualityComparer<T>? comparer)
+        {
+            if (source.Length != other.Length)
+            {
+                return false;
+            }
+            
+            comparer ??= EqualityComparer<T>.Default;
+            for (Int32 i = 0; i < source.Length; i++)
+            {
+                if (!comparer.Equals(source[i], other[i]))
+                {
+                    return false;
+                }
+            }
+            
+            return true;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean SequenceEqual<T>(this Memory<T> source, IEnumerable<T>? other)
+        {
+            return SequenceEqual(source, other, null);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean SequenceEqual<T>(this Memory<T> source, IEnumerable<T>? other, IEqualityComparer<T>? comparer)
+        {
+            return SequenceEqual(source.Span, other, comparer);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean SequenceEqual<T>(this Span<T> source, IEnumerable<T>? other)
+        {
+            return SequenceEqual(source, other, null);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean SequenceEqual<T>(this Span<T> source, IEnumerable<T>? other, IEqualityComparer<T>? comparer)
+        {
+            return SequenceEqual((ReadOnlySpan<T>) source, other, comparer);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean SequenceEqual<T>(this ReadOnlyMemory<T> source, IEnumerable<T>? other)
+        {
+            return SequenceEqual(source, other, null);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean SequenceEqual<T>(this ReadOnlyMemory<T> source, IEnumerable<T>? other, IEqualityComparer<T>? comparer)
+        {
+            return SequenceEqual(source.Span, other, comparer);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean SequenceEqual<T>(this ReadOnlySpan<T> source, IEnumerable<T>? other)
+        {
+            return SequenceEqual(source, other, null);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Boolean SequenceEqual<T>(this ReadOnlySpan<T> source, IEnumerable<T>? other, IEqualityComparer<T>? comparer)
+        {
+            if (other is null)
+            {
+                return source.IsEmpty;
+            }
+
+            if (other.CountIfMaterialized(out Int32 count) && count != source.Length)
+            {
+                return false;
+            }
+
+            comparer ??= EqualityComparer<T>.Default;
+            
+            using IEnumerator<T> enumerator = other.GetEnumerator();
+            foreach (T item in source)
+            {
+                if (!enumerator.MoveNext() || !comparer.Equals(item, enumerator.Current))
+                {
+                    return false;
+                }
+            }
+
+            return !enumerator.MoveNext();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean Any<T>(this Memory<T> source)
         {
             return !source.IsEmpty;
@@ -408,6 +606,65 @@ namespace NetExtender.Utilities.Types
         public static Int32 Count<T>(this ReadOnlySpan<T> source)
         {
             return source.Length;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int32 Count<T>(this Memory<T> source, T value)
+        {
+            return Count(source, value, null);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int32 Count<T>(this Memory<T> source, T value, IEqualityComparer<T>? comparer)
+        {
+            return Count(source.Span, value, comparer);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int32 Count<T>(this Span<T> source, T value)
+        {
+            return Count(source, value, null);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int32 Count<T>(this Span<T> source, T value, IEqualityComparer<T>? comparer)
+        {
+            return Count((ReadOnlySpan<T>) source, value, comparer);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int32 Count<T>(this ReadOnlyMemory<T> source, T value)
+        {
+            return Count(source, value, null);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int32 Count<T>(this ReadOnlyMemory<T> source, T value, IEqualityComparer<T>? comparer)
+        {
+            return Count(source.Span, value, comparer);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int32 Count<T>(this ReadOnlySpan<T> source, T value)
+        {
+            return Count(source, value, null);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Int32 Count<T>(this ReadOnlySpan<T> source, T value, IEqualityComparer<T>? comparer)
+        {
+            Int32 count = 0;
+            comparer ??= EqualityComparer<T>.Default;
+
+            foreach (T item in source)
+            {
+                if (comparer.Equals(item, value))
+                {
+                    count++;
+                }
+            }
+
+            return count;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

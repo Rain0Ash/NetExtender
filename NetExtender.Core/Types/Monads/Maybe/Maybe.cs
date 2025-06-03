@@ -4,13 +4,18 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using NetExtender.Interfaces;
+using NetExtender.NewtonSoft.Types.Monads;
 using NetExtender.Types.Monads.Interfaces;
 using NetExtender.Utilities.Serialization;
+using NetExtender.Utilities.Types;
+using Newtonsoft.Json;
 
 namespace NetExtender.Types.Monads
 {
     [Serializable]
-    public readonly struct Maybe<T> : IMaybe<T>, IEquatable<Maybe<T>>, IEquatable<NullMaybe<T>>, IComparable<Maybe<T>>, IComparable<NullMaybe<T>>
+    [JsonConverter(typeof(MaybeJsonConverter<>))]
+    public readonly struct Maybe<T> : IEqualityStruct<Maybe<T>>, IMaybe<T>, IMaybeEquality<T, Maybe<T>>, IMaybeEquality<T, NullMaybe<T>>, ICloneable<Maybe<T>>, ISerializable
     {
         public static implicit operator Boolean(Maybe<T> value)
         {
@@ -147,14 +152,29 @@ namespace NetExtender.Types.Monads
             return first.CompareTo(second) <= 0;
         }
 
-        public Boolean HasValue { get; }
-        private T Internal { get; }
+        private readonly Boolean? _state;
+        public Boolean HasValue
+        {
+            get
+            {
+                return _state ?? false;
+            }
+        }
 
+        private readonly T _value;
+        internal T Internal
+        {
+            get
+            {
+                return _value;
+            }
+        }
+        
         public T Value
         {
             get
             {
-                return HasValue ? Internal : throw new InvalidOperationException();
+                return HasValue ? _value : throw new InvalidOperationException();
             }
         }
         
@@ -166,27 +186,39 @@ namespace NetExtender.Types.Monads
             }
         }
 
+        public Boolean IsEmpty
+        {
+            get
+            {
+                return _state is null;
+            }
+        }
+
         public Maybe(T value)
         {
-            HasValue = true;
-            Internal = value;
+            _state = true;
+            _value = value;
         }
         
         private Maybe(SerializationInfo info, StreamingContext context)
         {
-            HasValue = info.GetValue<Boolean>(nameof(HasValue));
-            Internal = info.GetValue<T>(nameof(Value));
+            _state = info.GetBoolean(nameof(HasValue));
+            _value = _state is true ? info.GetValue<T>(nameof(Value)) : default!;
         }
         
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue(nameof(HasValue), HasValue);
-            info.AddValue(nameof(Value), Internal);
+
+            if (HasValue)
+            {
+                info.AddValue(nameof(Value), _value);
+            }
         }
 
         public void Deconstruct(out T value, out Boolean notnull)
         {
-            value = Internal;
+            value = _value;
             notnull = HasValue;
         }
 
@@ -197,21 +229,12 @@ namespace NetExtender.Types.Monads
 
         public Int32 CompareTo(T? other, IComparer<T>? comparer)
         {
-            try
+            if (other is null)
             {
-                comparer ??= Comparer<T>.Default;
-                
-                if (other is null)
-                {
-                    return !HasValue ? 0 : comparer.Compare(Internal, other);
-                }
+                return !HasValue ? 0 : comparer.SafeCompare(_value, other) ?? 0;
+            }
 
-                return HasValue ? comparer.Compare(Internal, other) : -1;
-            }
-            catch (ArgumentException)
-            {
-                return 0;
-            }
+            return HasValue ? comparer.SafeCompare(_value, other) ?? 0 : -1;
         }
 
         public Int32 CompareTo(Maybe<T> other)
@@ -221,15 +244,7 @@ namespace NetExtender.Types.Monads
 
         public Int32 CompareTo(Maybe<T> other, IComparer<T>? comparer)
         {
-            try
-            {
-                comparer ??= Comparer<T>.Default;
-                return other.HasValue ? HasValue ? comparer.Compare(Internal, other.Value) : -1 : HasValue ? 1 : 0;
-            }
-            catch (ArgumentException)
-            {
-                return 0;
-            }
+            return other.HasValue ? HasValue ? comparer.SafeCompare(_value, other._value) ?? 0 : -1 : HasValue ? 1 : 0;
         }
 
         public Int32 CompareTo(NullMaybe<T> other)
@@ -239,15 +254,7 @@ namespace NetExtender.Types.Monads
 
         public Int32 CompareTo(NullMaybe<T> other, IComparer<T>? comparer)
         {
-            try
-            {
-                comparer ??= Comparer<T>.Default;
-                return HasValue ? comparer.Compare(Internal, other.Value) : -1;
-            }
-            catch (ArgumentException)
-            {
-                return 0;
-            }
+            return HasValue ? comparer.SafeCompare(_value, other.Value) ?? 0 : -1;
         }
 
         public Int32 CompareTo(IMaybe<T>? other)
@@ -262,15 +269,7 @@ namespace NetExtender.Types.Monads
                 return 1;
             }
             
-            try
-            {
-                comparer ??= Comparer<T>.Default;
-                return other.HasValue ? HasValue ? comparer.Compare(Internal, other.Value) : -1 : HasValue ? 1 : 0;
-            }
-            catch (ArgumentException)
-            {
-                return 0;
-            }
+            return other.HasValue ? HasValue ? comparer.SafeCompare(_value, other.Value) ?? 0 : -1 : HasValue ? 1 : 0;
         }
 
         public Int32 CompareTo(INullMaybe<T>? other)
@@ -285,20 +284,12 @@ namespace NetExtender.Types.Monads
                 return 1;
             }
             
-            try
-            {
-                comparer ??= Comparer<T>.Default;
-                return HasValue ? comparer.Compare(Internal, other.Value) : -1;
-            }
-            catch (ArgumentException)
-            {
-                return 0;
-            }
+            return HasValue ? comparer.SafeCompare(_value, other.Value) ?? 0 : -1;
         }
 
         public override Int32 GetHashCode()
         {
-            return HasValue ? Value?.GetHashCode() ?? 0 : 0;
+            return HasValue && _value is not null ? _value.GetHashCode() : 0;
         }
 
         public override Boolean Equals(Object? other)
@@ -310,12 +301,14 @@ namespace NetExtender.Types.Monads
         {
             return other switch
             {
+                null => !HasValue || _value is null || _value.Equals(other),
                 T value => Equals(value, comparer),
                 Maybe<T> value => Equals(value, comparer),
                 NullMaybe<T> value => Equals(value, comparer),
                 IMaybe<T> value => Equals(value, comparer),
                 INullMaybe<T> value => Equals(value, comparer),
-                _ => !HasValue ? other is null : other is not null && Equals(Value, other)
+                _ when _value is not null => HasValue && _value.Equals(other),
+                _ => false
             };
         }
 
@@ -327,7 +320,7 @@ namespace NetExtender.Types.Monads
         public Boolean Equals(T? other, IEqualityComparer<T>? comparer)
         {
             comparer ??= EqualityComparer<T>.Default;
-            return HasValue && comparer.Equals(Value, other);
+            return HasValue && comparer.Equals(_value, other);
         }
 
         public Boolean Equals(Maybe<T> other)
@@ -338,7 +331,7 @@ namespace NetExtender.Types.Monads
         public Boolean Equals(Maybe<T> other, IEqualityComparer<T>? comparer)
         {
             comparer ??= EqualityComparer<T>.Default;
-            return !HasValue && !other.HasValue || HasValue && other.HasValue && comparer.Equals(Value, other.Value);
+            return !HasValue && !other.HasValue || HasValue && other.HasValue && comparer.Equals(_value, other._value);
         }
 
         public Boolean Equals(NullMaybe<T> other)
@@ -349,7 +342,7 @@ namespace NetExtender.Types.Monads
         public Boolean Equals(NullMaybe<T> other, IEqualityComparer<T>? comparer)
         {
             comparer ??= EqualityComparer<T>.Default;
-            return HasValue && comparer.Equals(Value, other.Value);
+            return HasValue && comparer.Equals(_value, other.Value);
         }
 
         public Boolean Equals(IMaybe<T>? other)
@@ -365,7 +358,7 @@ namespace NetExtender.Types.Monads
             }
             
             comparer ??= EqualityComparer<T>.Default;
-            return !HasValue && !other.HasValue || HasValue && other.HasValue && comparer.Equals(Value, other.Value);
+            return !HasValue && !other.HasValue || HasValue && other.HasValue && comparer.Equals(_value, other.Value);
         }
 
         public Boolean Equals(INullMaybe<T>? other)
@@ -376,12 +369,117 @@ namespace NetExtender.Types.Monads
         public Boolean Equals(INullMaybe<T>? other, IEqualityComparer<T>? comparer)
         {
             comparer ??= EqualityComparer<T>.Default;
-            return other is not null && HasValue && comparer.Equals(Value, other.Value);
+            return other is not null && HasValue && comparer.Equals(_value, other.Value);
+        }
+
+        public Maybe<T> Clone()
+        {
+            return this;
+        }
+
+        IMaybe<T> IMaybe<T>.Clone()
+        {
+            return Clone();
+        }
+
+        IMaybe<T> ICloneable<IMaybe<T>>.Clone()
+        {
+            return Clone();
+        }
+
+        IMaybe IMaybe.Clone()
+        {
+            return Clone();
+        }
+
+        IMaybe ICloneable<IMaybe>.Clone()
+        {
+            return Clone();
+        }
+
+        IMonad<T> IMonad<T>.Clone()
+        {
+            return Clone();
+        }
+
+        IMonad<T> ICloneable<IMonad<T>>.Clone()
+        {
+            return Clone();
+        }
+
+        IMonad IMonad.Clone()
+        {
+            return Clone();
+        }
+
+        IMonad ICloneable<IMonad>.Clone()
+        {
+            return Clone();
+        }
+
+        Object ICloneable.Clone()
+        {
+            return Clone();
         }
 
         public override String? ToString()
         {
-            return HasValue ? Value?.ToString() : null;
+            return HasValue && _value is not null ? _value.ToString() : null;
+        }
+
+        public String ToString(String? format)
+        {
+            return ToString(format, null);
+        }
+
+        public String ToString(IFormatProvider? provider)
+        {
+            return ToString(null, provider);
+        }
+
+        public String ToString(String? format, IFormatProvider? provider)
+        {
+            return HasValue && _value is not null ? StringUtilities.ToString(in _value, format, provider) : String.Empty;
+        }
+
+        public String? GetString()
+        {
+            return HasValue ? _value.GetString() : null;
+        }
+
+        public String? GetString(EscapeType escape)
+        {
+            return HasValue ? _value.GetString(escape) : null;
+        }
+
+        public String? GetString(String? format)
+        {
+            return HasValue ? _value.GetString(format) : null;
+        }
+
+        public String? GetString(EscapeType escape, String? format)
+        {
+            return HasValue ? _value.GetString(escape, format) : null;
+        }
+
+        public String? GetString(IFormatProvider? provider)
+        {
+            return HasValue ? _value.GetString(provider) : null;
+        }
+
+        public String? GetString(EscapeType escape, IFormatProvider? provider)
+        {
+            return HasValue ? _value.GetString(escape, provider) : null;
+        }
+
+        public String? GetString(String? format, IFormatProvider? provider)
+        {
+            return HasValue ? _value.GetString(format, provider) : null;
+        }
+
+        public String? GetString(EscapeType escape, String? format, IFormatProvider? provider)
+        {
+            return HasValue ? _value.GetString(escape, format, provider) : null;
         }
     }
 }

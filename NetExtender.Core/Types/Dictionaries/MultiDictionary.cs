@@ -222,31 +222,31 @@ namespace NetExtender.Types.Dictionaries
             return Remove(item.Key, item.Value);
         }
 
-        public void CopyTo(KeyValuePair<TKey, TValue>[] array, Int32 arrayIndex)
+        public void CopyTo(KeyValuePair<TKey, TValue>[] array, Int32 index)
         {
             if (array is null)
             {
                 throw new ArgumentNullException(nameof(array));
             }
 
-            if ((UInt32) arrayIndex > (UInt32) array.Length)
+            if (index > array.Length)
             {
-                throw new ArgumentOutOfRangeException(nameof(arrayIndex), arrayIndex, "Non-negative number required.");
+                throw new ArgumentOutOfRangeException(nameof(index), index, "Non-negative number required.");
             }
 
-            if (array.Length - arrayIndex < Count)
+            if (array.Length - index < Count)
             {
                 throw new ArgumentException("Destination array is not long enough to copy all the items in the collection. Check array index and length.", nameof(array));
             }
 
             ImmutableArray<KeyValuePair<TKey, TValue>> collection = ((IEnumerable<KeyValuePair<TKey, TValue>>) this).ToImmutableArray();
 
-            if (array.Length - arrayIndex < collection.Length)
+            if (array.Length - index < collection.Length)
             {
                 throw new ArgumentException("Destination array is not long enough to copy all the items in the collection. Check array index and length.", nameof(array));
             }
 
-            collection.CopyTo(array, arrayIndex);
+            collection.CopyTo(array, index);
         }
 
         IEnumerator<KeyValuePair<TKey, TValue>> IEnumerable<KeyValuePair<TKey, TValue>>.GetEnumerator()

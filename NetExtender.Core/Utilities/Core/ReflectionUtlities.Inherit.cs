@@ -1,3 +1,6 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 using System;
 using System.Collections;
 using System.Collections.Concurrent;
@@ -17,7 +20,7 @@ namespace NetExtender.Utilities.Core
     public static partial class ReflectionUtilities
     {
         [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
-        private readonly struct InheritEvaluator
+        private readonly struct InheritEvaluator : IStruct<InheritEvaluator>
         {
             public static implicit operator Inherit.Result(InheritEvaluator value)
             {
@@ -36,6 +39,7 @@ namespace NetExtender.Utilities.Core
             
             public Boolean IsEmpty
             {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 get
                 {
                     return Type is null;

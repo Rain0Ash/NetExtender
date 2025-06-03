@@ -4,9 +4,9 @@
             return this == other;
         }
                 
-        public override System.Boolean Equals(System.Object? obj)
+        public override System.Boolean Equals(System.Object? other)
         {
-            return obj is STRONGID other && Equals(other);
+            return other is STRONGID value && Equals(value);
         }
         
         public System.Boolean Equals(STRONGID other, TYPE epsilon)

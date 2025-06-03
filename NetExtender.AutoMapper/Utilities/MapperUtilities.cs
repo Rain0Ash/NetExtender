@@ -101,12 +101,12 @@ namespace NetExtender.Utilities
                 throw new ArgumentNullException(nameof(mapper));
             }
 
-            TMap MapInternal(T? item)
+            TMap MapCore(T? item)
             {
                 return mapper.Map<TMap>(item);
             }
 
-            return source.Select(MapInternal);
+            return source.Select(MapCore);
         }
 
         public static IEnumerable<TMap> TryMapSelect<T, TMap>(this IEnumerable<T> source)
@@ -126,12 +126,12 @@ namespace NetExtender.Utilities
                 throw new ArgumentNullException(nameof(mapper));
             }
 
-            Boolean MapInternal(T item, [MaybeNullWhen(false)] out TMap result)
+            Boolean MapCore(T item, [MaybeNullWhen(false)] out TMap result)
             {
                 return mapper.TryMap(item, out result);
             }
 
-            return source.TryParse<T, TMap>(MapInternal);
+            return source.TryParse<T, TMap>(MapCore);
         }
     }
 }

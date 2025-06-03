@@ -26,6 +26,16 @@ namespace NetExtender.Types.Region
                 return calling.ToString();
             }
 
+            public static Boolean operator ==(CountryCalling first, CountryCalling second)
+            {
+                return first.Equals(second);
+            }
+
+            public static Boolean operator !=(CountryCalling first, CountryCalling second)
+            {
+                return !(first == second);
+            }
+
             public Int32 Official
             {
                 get

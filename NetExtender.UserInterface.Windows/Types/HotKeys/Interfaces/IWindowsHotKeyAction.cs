@@ -6,11 +6,11 @@ using NetExtender.Utilities.UserInterface;
 
 namespace NetExtender.Types.HotKeys.Interfaces
 {
-    public interface IWindowsHotKeyAction<T> : IHotKeyAction<T, Char, HotKeyModifierKeys> where T : struct
+    public interface IWindowsHotKeyAction<T> : IHotKeyAction<T, Char, HotKeyModifierKeys> where T : struct, IStruct<T>
     {
     }
     
-    public interface IWindowsHotKeyAction<T, out TId> : IWindowsHotKeyAction<T>, IHotKeyAction<T, TId, Char, HotKeyModifierKeys> where T : struct where TId : unmanaged, IComparable<TId>, IConvertible
+    public interface IWindowsHotKeyAction<T, out TId> : IWindowsHotKeyAction<T>, IHotKeyAction<T, TId, Char, HotKeyModifierKeys> where T : struct, IStruct<T> where TId : unmanaged, IComparable<TId>, IConvertible
     {
     }
 }

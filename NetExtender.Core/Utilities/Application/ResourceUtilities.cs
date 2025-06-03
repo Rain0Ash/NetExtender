@@ -9,6 +9,8 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Resources;
+using NetExtender.Types.Exceptions;
+using NetExtender.Utilities.Core;
 
 namespace NetExtender.Utilities.Application
 {
@@ -61,7 +63,7 @@ namespace NetExtender.Utilities.Application
 
         public static IEnumerable<KeyValuePair<String, Object?>> Enumerate(String? resource)
         {
-            Assembly? assembly = Assembly.GetEntryAssembly();
+            Assembly? assembly = ReflectionUtilities.GetEntryAssembly();
             return assembly is not null ? Enumerate(assembly, resource) : Array.Empty<KeyValuePair<String, Object?>>();
         }
 
@@ -145,7 +147,7 @@ namespace NetExtender.Utilities.Application
 
         public static Boolean Resource(String resource, [MaybeNullWhen(false)] out String type, [MaybeNullWhen(false)] out Byte[] result)
         {
-            Assembly? assembly = Assembly.GetEntryAssembly();
+            Assembly? assembly = ReflectionUtilities.GetEntryAssembly();
 
             if (assembly is not null && Resource(assembly, resource, out type, out result))
             {
@@ -171,7 +173,7 @@ namespace NetExtender.Utilities.Application
 
             if (String.IsNullOrEmpty(resource))
             {
-                throw new ArgumentException("Value cannot be null or empty.", nameof(resource));
+                throw new ArgumentNullOrEmptyStringException(resource, nameof(resource));
             }
 
             using Stream? stream = TryGetResourceStream(assembly);

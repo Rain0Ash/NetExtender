@@ -5,7 +5,7 @@ using System;
 
 namespace NetExtender.Domains.Interfaces
 {
-    public interface IApplicationInfo : IComparable<IApplicationInfo>, IEquatable<IApplicationInfo>, IDisposable
+    public interface IApplicationInfo : IEquality<IApplicationInfo>, IDisposable
     {
         public static Boolean operator >(IApplicationInfo first, IApplicationInfo second)
         {

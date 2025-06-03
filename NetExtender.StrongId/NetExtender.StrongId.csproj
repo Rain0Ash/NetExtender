@@ -3,6 +3,7 @@
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
         <Nullable>enable</Nullable>
+        <ImplicitUsings>disable</ImplicitUsings>
         <OutputType>Library</OutputType>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>

@@ -1,4 +1,7 @@
-﻿using System;
+﻿// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
+using System;
 using System.Diagnostics.CodeAnalysis;
 using NetExtender.Types.Reflection;
 using NetExtender.Utilities.Core;
@@ -113,26 +116,16 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 }
                 
                 Type type = first.GetType();
-                if (ReflectionOperator.Get(last.GetType(), type, BinaryOperator.Subtraction)?.Invoke(last, first) is not { } subtract)
+                if (ReflectionOperator.Get(last.GetType(), type, BinaryOperator.Subtraction)?.Invoke(last, first) is { } subtract &&
+                    ReflectionOperator.Get(subtract.GetType(), extrapolation.GetType(), BinaryOperator.Multiply)?.Invoke(subtract, extrapolation) is { } multiply &&
+                    ReflectionOperator.Get(type, multiply.GetType(), BinaryOperator.Addition)?.Invoke(first, multiply) is { } addition)
                 {
-                    result = null;
-                    return false;
+                    result = addition;
+                    return true;
                 }
-                
-                if (ReflectionOperator.Get(subtract.GetType(), extrapolation.GetType(), BinaryOperator.Multiply)?.Invoke(subtract, extrapolation) is not { } multiply)
-                {
-                    result = null;
-                    return false;
-                }
-                
-                if (ReflectionOperator.Get(type, multiply.GetType(), BinaryOperator.Addition)?.Invoke(first, multiply) is not { } addition)
-                {
-                    result = null;
-                    return false;
-                }
-                
-                result = addition;
-                return true;
+
+                result = null;
+                return false;
             }
             catch (Exception)
             {

@@ -9,7 +9,7 @@ namespace NetExtender.Types.Concurrent
 {
     public sealed class ConcurrentLocker : IDisposable
     {
-        private Object SyncRoot { get; } = ConcurrentUtilities.SyncRoot;
+        private SyncRoot SyncRoot { get; } = SyncRoot.Create();
         private Boolean IsLocked { get; set; }
         private Object Item { get; }
         private Boolean Disposed { get; set; }

@@ -2,18 +2,21 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
-using System.Collections.Generic;
+using NetExtender.Interfaces;
 
 namespace NetExtender.Types.Monads.Interfaces
 {
-    public interface INullMaybe<T> : INullMaybe, IMaybeEquatable<T>, IMaybeEquatable<IMaybe<T>>, IMaybeEquatable<INullMaybe<T>>, IMaybeComparable<T>, IMaybeComparable<IMaybe<T>>, IMaybeComparable<INullMaybe<T>>
+    public interface INullMaybe<T> : INullMaybe, IMonad<T>, IMaybeEquality<T>, IMaybeEquality<IMaybe<T>>, IMaybeEquality<INullMaybe<T>>, ICloneable<INullMaybe<T>>
     {
         public new T Value { get; }
-        public Boolean Equals(Object? other, IEqualityComparer<T>? comparer);
+
+        public new INullMaybe<T> Clone();
     }
     
-    public interface INullMaybe
+    public interface INullMaybe : IMonad, ICloneable<INullMaybe>
     {
         public Object? Value { get; }
+        
+        public new INullMaybe Clone();
     }
 }

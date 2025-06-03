@@ -1,3 +1,6 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -5,7 +8,6 @@ using System.Diagnostics.CodeAnalysis;
 using NetExtender.Types.Nodes.Interfaces;
 using NetExtender.Types.Reflection;
 using NetExtender.Utilities.Core;
-using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Nodes
 {
@@ -95,7 +97,7 @@ namespace NetExtender.Types.Nodes
             }
         }
         
-        protected virtual void InternalInsertNodeToEmptyList(TNode @new)
+        protected virtual void InsertNodeToEmptyListCore(TNode @new)
         {
             @new.Next = @new;
             @new.Link = @new;
@@ -104,7 +106,7 @@ namespace NetExtender.Types.Nodes
             ++Count;
         }
         
-        protected virtual void InternalInsertNodeBefore(TNode? old, TNode @new)
+        protected virtual void InsertNodeBeforeCore(TNode? old, TNode @new)
         {
             @new.Next = old;
             @new.Link = old?.Link;
@@ -119,7 +121,7 @@ namespace NetExtender.Types.Nodes
             ++Count;
         }
         
-        protected virtual Boolean InternalRemoveNode(TNode? node)
+        protected virtual Boolean RemoveNodeCore(TNode? node)
         {
             if (node is null)
             {
@@ -242,11 +244,11 @@ namespace NetExtender.Types.Nodes
             
             if (Head is null)
             {
-                InternalInsertNodeToEmptyList(node);
+                InsertNodeToEmptyListCore(node);
             }
             else
             {
-                InternalInsertNodeBefore(Head, node);
+                InsertNodeBeforeCore(Head, node);
                 Head = node;
             }
             
@@ -260,12 +262,12 @@ namespace NetExtender.Types.Nodes
             
             if (Head is null)
             {
-                InternalInsertNodeToEmptyList(node);
+                InsertNodeToEmptyListCore(node);
                 MakeLink(node);
                 return;
             }
             
-            InternalInsertNodeBefore(Head, node);
+            InsertNodeBeforeCore(Head, node);
             MakeLink(node);
         }
         
@@ -274,7 +276,7 @@ namespace NetExtender.Types.Nodes
         {
             ValidateNode(node);
             ValidateNewNode(@new);
-            InternalInsertNodeBefore(node, @new);
+            InsertNodeBeforeCore(node, @new);
             
             MakeLink(@new);
             if (ReferenceEquals(Head, node))
@@ -288,7 +290,7 @@ namespace NetExtender.Types.Nodes
         {
             ValidateNode(node);
             ValidateNewNode(@new);
-            InternalInsertNodeBefore(node.Next, @new);
+            InsertNodeBeforeCore(node.Next, @new);
             MakeLink(@new);
         }
         
@@ -301,7 +303,7 @@ namespace NetExtender.Types.Nodes
             }
 
             ValidateNode(node);
-            return InternalRemoveNode(node);
+            return RemoveNodeCore(node);
         }
         
         /// <inheritdoc cref="LinkedList{T}.Remove(LinkedListNode{T})"/>
@@ -313,13 +315,13 @@ namespace NetExtender.Types.Nodes
         /// <inheritdoc cref="LinkedList{T}.RemoveFirst"/>
         public Boolean RemoveFirst()
         {
-            return Head is not null && InternalRemoveNode(Head);
+            return Head is not null && RemoveNodeCore(Head);
         }
 
         /// <inheritdoc cref="LinkedList{T}.RemoveLast"/>
         public Boolean RemoveLast()
         {
-            return Head is not null && InternalRemoveNode(Head.Link);
+            return Head is not null && RemoveNodeCore(Head.Link);
         }
 
         /// <inheritdoc cref="LinkedList{T}.Clear"/>

@@ -14,7 +14,7 @@ using System.Runtime.CompilerServices;
 namespace NetExtender.Utilities.Numerics
 {
 <#
-    List<String> types = new List<String>
+    List<String> Types = new List<String>
     {
         nameof(Char),
         nameof(SByte),
@@ -192,7 +192,7 @@ namespace NetExtender.Utilities.Numerics
 
     void BitwiseShift()
     {
-        ForEach(types.Where(NotChar).Where(IsIntType), BitwiseShiftImplementation);
+        ForEach(Types.Where(NotChar).Where(IsIntType), BitwiseShiftImplementation);
     }
 
     void BitwiseRotateImplementation(String type)
@@ -247,7 +247,7 @@ namespace NetExtender.Utilities.Numerics
 
     void BitwiseRotate()
     {
-        ForEach(types.Where(NotChar).Where(IsIntType), BitwiseRotateImplementation);
+        ForEach(Types.Where(NotChar).Where(IsIntType), BitwiseRotateImplementation);
     }
 
     void BitwisePopCountImplementation(String type)
@@ -273,7 +273,7 @@ namespace NetExtender.Utilities.Numerics
 
     void BitwisePopCount()
     {
-        ForEach(types.Where(NotChar).Where(IsIntType), BitwisePopCountImplementation);
+        ForEach(Types.Where(NotChar).Where(IsIntType), BitwisePopCountImplementation);
     }
 
     void BitwiseFillImplementation(String type)
@@ -333,7 +333,7 @@ namespace NetExtender.Utilities.Numerics
 
     void BitwiseFill()
     {
-        ForEach(types.Where(NotChar).Where(IsIntType), BitwiseFillImplementation);
+        ForEach(Types.Where(NotChar).Where(IsIntType), BitwiseFillImplementation);
     }
 
     void HighImplementation(String type)
@@ -350,7 +350,7 @@ namespace NetExtender.Utilities.Numerics
 
     void High()
     {
-        ForEach(types.Where(NotChar).Where(IsIntType).Where(type => type != nameof(SByte) && type != nameof(Byte)), HighImplementation);
+        ForEach(Types.Where(NotChar).Where(IsIntType).Where(type => type != nameof(SByte) && type != nameof(Byte)), HighImplementation);
     }
 
     void LowImplementation(String type)
@@ -367,7 +367,7 @@ namespace NetExtender.Utilities.Numerics
 
     void Low()
     {
-        ForEach(types.Where(NotChar).Where(IsIntType).Where(type => type != nameof(SByte) && type != nameof(Byte)), LowImplementation);
+        ForEach(Types.Where(NotChar).Where(IsIntType).Where(type => type != nameof(SByte) && type != nameof(Byte)), LowImplementation);
     }
 
     void HighestBitImplementation(String type)
@@ -393,7 +393,7 @@ namespace NetExtender.Utilities.Numerics
 
     void HighestBit()
     {
-        ForEach(types.Where(NotChar).Where(IsIntType), HighestBitImplementation);
+        ForEach(Types.Where(NotChar).Where(IsIntType), HighestBitImplementation);
     }
 
     void LowestBitImplementation(String type)
@@ -416,7 +416,7 @@ namespace NetExtender.Utilities.Numerics
 
     void LowestBit()
     {
-        ForEach(types.Where(NotChar).Where(IsIntType), LowestBitImplementation);
+        ForEach(Types.Where(NotChar).Where(IsIntType), LowestBitImplementation);
     }
 
 #>

@@ -290,7 +290,7 @@ namespace System.Collections.Concurrent
         /// contains too many items.</exception>
         public Boolean Add(T item)
         {
-            return AddInternal(item, item is not null ? Comparer.GetHashCode(item) : 0, true, out _);
+            return AddCore(item, item is not null ? Comparer.GetHashCode(item) : 0, true, out _);
         }
         
         /// <summary>
@@ -304,7 +304,7 @@ namespace System.Collections.Concurrent
         /// contains too many items.</exception>
         public Boolean Add(T item, out T set)
         {
-            return AddInternal(item, item is not null ? Comparer.GetHashCode(item) : 0, true, out set);
+            return AddCore(item, item is not null ? Comparer.GetHashCode(item) : 0, true, out set);
         }
 
         /// <summary>
@@ -447,16 +447,17 @@ namespace System.Collections.Concurrent
             }
         }
 
-        void ICollection<T>.CopyTo(T[] array, Int32 arrayIndex)
+        //TODO:
+        void ICollection<T>.CopyTo(T[] array, Int32 index)
         {
             if (array is null)
             {
                 throw new ArgumentNullException(nameof(array));
             }
 
-            if (arrayIndex < 0)
+            if (index < 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(arrayIndex));
+                throw new ArgumentOutOfRangeException(nameof(index));
             }
 
             Int32 locksAcquired = 0;
@@ -472,13 +473,12 @@ namespace System.Collections.Concurrent
                     count += countPerLock[i];
                 }
 
-                if (array.Length - count < arrayIndex || count < 0) //"count" itself or "count + arrayIndex" can overflow
+                if (array.Length - count < index || count < 0) //"count" itself or "count + arrayIndex" can overflow
                 {
-                    throw new ArgumentException(
-                        "The index is equal to or greater than the length of the array, or the number of elements in the set is greater than the available space from index to the end of the destination array.");
+                    throw new ArgumentException("The index is equal to or greater than the length of the array, or the number of elements in the set is greater than the available space from index to the end of the destination array.");
                 }
 
-                CopyToItems(array, arrayIndex);
+                CopyToItems(array, index);
             }
             finally
             {
@@ -495,7 +495,7 @@ namespace System.Collections.Concurrent
         {
             foreach (T item in collection)
             {
-                AddInternal(item, item is not null ? Comparer.GetHashCode(item) : 0, false, out _);
+                AddCore(item, item is not null ? Comparer.GetHashCode(item) : 0, false, out _);
             }
 
             if (_budget > 0)
@@ -507,7 +507,7 @@ namespace System.Collections.Concurrent
             _budget = tables.Buckets.Length / tables.Locks.Length;
         }
 
-        private Boolean AddInternal(T item, Int32 hashcode, Boolean acquire, out T set)
+        private Boolean AddCore(T item, Int32 hashcode, Boolean acquire, out T set)
         {
             while (true)
             {

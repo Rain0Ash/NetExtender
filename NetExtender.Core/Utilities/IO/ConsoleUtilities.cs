@@ -24,7 +24,7 @@ namespace NetExtender.Utilities.IO
 
     public static class ConsoleUtilities
     {
-        private static Object SyncRoot { get; } = ConcurrentUtilities.SyncRoot;
+        private static SyncRoot SyncRoot { get; } = SyncRoot.Create();
 
         public static event ConsoleCancelEventHandler CancelKeyPress
         {

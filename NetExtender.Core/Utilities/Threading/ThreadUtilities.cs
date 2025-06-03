@@ -41,6 +41,18 @@ namespace NetExtender.Utilities.Threading
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Single(ref Int32 @lock)
+        {
+            return Interlocked.CompareExchange(ref @lock, 1, 0) == 0;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void Exit(ref Int32 @lock)
+        {
+            @lock = 0;
+        }
+
         public static Thread SetName(this Thread thread, String? name)
         {
             if (thread is null)

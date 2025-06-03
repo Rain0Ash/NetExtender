@@ -73,4 +73,8 @@ namespace NetExtender
     
     [SuppressMessage("ReSharper", "TypeParameterCanBeVariant")]
     public delegate ValueTask EventAsyncHandler<in TSender, TArgument>(TSender sender, TArgument argument);
+    
+    public delegate Object? PlatformNotSupportedHandler(String method, Type? @return, PlatformNotSupportedException exception, params Object?[]? arguments);
+    public delegate T PlatformNotSupportedHandler<out T>(String method, PlatformNotSupportedException exception, params Object?[]? arguments);
+    public delegate T PlatformNotSupportedHandler<out T, in TArgument>(String method, PlatformNotSupportedException exception, TArgument argument);
 }

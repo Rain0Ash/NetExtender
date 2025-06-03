@@ -10,7 +10,7 @@ using System.Runtime.CompilerServices;
 using NetExtender.Types.Culture;
 using NetExtender.Types.Currency;
 using NetExtender.Types.Exceptions;
-using NetExtender.Utilities.Numerics;
+using NetExtender.Utilities.Core;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Region

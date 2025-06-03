@@ -213,9 +213,9 @@ namespace NetExtender.Types.Memento
             Clear();
         }
 
-        void ICollection<IMementoProperty<TSource>>.CopyTo(IMementoProperty<TSource>[] array, Int32 arrayIndex)
+        void ICollection<IMementoProperty<TSource>>.CopyTo(IMementoProperty<TSource>[] array, Int32 index)
         {
-            Internal.CopyTo(array, arrayIndex);
+            Internal.CopyTo(array, index);
         }
 
         public IEnumerator<IMementoProperty<TSource>> GetEnumerator()

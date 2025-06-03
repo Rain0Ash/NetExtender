@@ -476,7 +476,7 @@ namespace NetExtender.Utilities.Types
                 return clone;
             }
 
-            throw new CloneException($"{cloneable.GetType()} is not {typeof(T)}");
+            throw new CloneException($"{cloneable.GetType().Name} is not '{typeof(T).Name}'.");
         }
 
         /// <summary>
@@ -493,7 +493,7 @@ namespace NetExtender.Utilities.Types
 
             try
             {
-                if (DeepCopyInternal(original, new Dictionary<Object, Object?>(ReferenceEqualityComparer.Instance)) is T generic)
+                if (DeepCopyCore(original, new Dictionary<Object, Object?>(ReferenceEqualityComparer.Instance)) is T generic)
                 {
                     return generic;
                 }
@@ -506,7 +506,7 @@ namespace NetExtender.Utilities.Types
             }
         }
 
-        private static Object? DeepCopyInternal(Object? original, IDictionary<Object, Object?> visited)
+        private static Object? DeepCopyCore(Object? original, IDictionary<Object, Object?> visited)
         {
             if (visited is null)
             {
@@ -547,7 +547,7 @@ namespace NetExtender.Utilities.Types
                 if (type.GetElementType()?.IsPrimitive() is false)
                 {
                     Array cloned = (Array) clone;
-                    cloned.ForEach((arr, indices) => arr.SetValue(DeepCopyInternal(cloned?.GetValue(indices), visited), indices));
+                    cloned.ForEach((arr, indices) => arr.SetValue(DeepCopyCore(cloned?.GetValue(indices), visited), indices));
                 }
             }
 
@@ -582,7 +582,7 @@ namespace NetExtender.Utilities.Types
                 }
 
                 Object? origfield = field.GetValue(original);
-                Object? clonedfield = DeepCopyInternal(origfield, visited);
+                Object? clonedfield = DeepCopyCore(origfield, visited);
 
                 field.SetValue(clone, clonedfield);
             }

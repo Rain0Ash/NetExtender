@@ -1,3 +1,6 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -99,7 +102,7 @@ namespace NetExtender.Types.Sets
             }
             
             TSet @internal = Internal;
-            TSet set = CloneInternal();
+            TSet set = Clone();
             set.UnionWith(other);
 
             if (set.Count == @internal.Count)
@@ -127,7 +130,7 @@ namespace NetExtender.Types.Sets
             }
 
             TSet @internal = Internal;
-            TSet set = CloneInternal();
+            TSet set = Clone();
             set.IntersectWith(other);
 
             if (set.Count == @internal.Count)
@@ -155,7 +158,7 @@ namespace NetExtender.Types.Sets
             }
 
             TSet @internal = Internal;
-            TSet set = CloneInternal();
+            TSet set = Clone();
             set.ExceptWith(other);
 
             if (set.Count == @internal.Count)
@@ -183,7 +186,7 @@ namespace NetExtender.Types.Sets
             }
 
             TSet @internal = Internal;
-            TSet set = CloneInternal();
+            TSet set = Clone();
             set.SymmetricExceptWith(other);
 
             State state = Factory();

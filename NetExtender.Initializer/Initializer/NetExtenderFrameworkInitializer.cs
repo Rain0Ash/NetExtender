@@ -194,7 +194,7 @@ namespace NetExtender.Initializer
 
         private static Object? InvokeNetExtenderInitializerMethod()
         {
-            Type? type = Assembly.GetEntryAssembly()?.EntryPoint?.DeclaringType;
+            Type? type = NetExtender.Initializer.Initializer.ReflectionUtilities.GetEntryAssembly(true)?.EntryPoint?.DeclaringType;
 
             if (type is null)
             {

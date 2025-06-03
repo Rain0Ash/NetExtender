@@ -5,7 +5,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 using NetExtender.Types.Expressions.Specification.Interfaces;
-using NetExtender.Utilities.Numerics;
+using NetExtender.Utilities.Core;
 
 namespace NetExtender.Types.Expressions.Specification
 {

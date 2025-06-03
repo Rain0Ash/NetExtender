@@ -2289,7 +2289,7 @@ namespace NetExtender.Utilities.Numerics
 		{
 			if (multiplier == 0)
 			{
-				throw new ArgumentException(nameof(multiplier));
+				throw new ArgumentException(null, nameof(multiplier));
 			}
 
 			if (value == 0 || value == multiplier || multiplier == 1 || multiplier == -1)
@@ -2317,7 +2317,7 @@ namespace NetExtender.Utilities.Numerics
 		{
 			if (multiplier == 0)
 			{
-				throw new ArgumentException(nameof(multiplier));
+				throw new ArgumentException(null, nameof(multiplier));
 			}
 
 			if (value == 0 || value == multiplier || multiplier == 1 || multiplier == -1)
@@ -2347,7 +2347,7 @@ namespace NetExtender.Utilities.Numerics
 		{
 			if (multiplier == 0)
 			{
-				throw new ArgumentException(nameof(multiplier));
+				throw new ArgumentException(null, nameof(multiplier));
 			}
 
 			if (value == 0 || value == multiplier || multiplier == 1 || multiplier == -1)
@@ -2432,7 +2432,7 @@ namespace NetExtender.Utilities.Numerics
 		{
 			if (multiplier == 0)
 			{
-				throw new ArgumentException(nameof(multiplier));
+				throw new ArgumentException(null, nameof(multiplier));
 			}
 
 			if (value == 0 || value == multiplier || multiplier == 1)
@@ -2455,7 +2455,7 @@ namespace NetExtender.Utilities.Numerics
 		{
 			if (multiplier == 0)
 			{
-				throw new ArgumentException(nameof(multiplier));
+				throw new ArgumentException(null, nameof(multiplier));
 			}
 
 			if (value == 0 || value == multiplier || multiplier == 1)
@@ -2470,7 +2470,7 @@ namespace NetExtender.Utilities.Numerics
 		{
 			if (multiplier == 0)
 			{
-				throw new ArgumentException(nameof(multiplier));
+				throw new ArgumentException(null, nameof(multiplier));
 			}
 
 			if (value == 0 || value == multiplier || multiplier == 1)
@@ -2527,7 +2527,7 @@ namespace NetExtender.Utilities.Numerics
 		{
 			if (multiplier == 0)
 			{
-				throw new ArgumentException(nameof(multiplier));
+				throw new ArgumentException(null, nameof(multiplier));
 			}
 
 			if (value == 0 || value == multiplier || multiplier == 1 || multiplier == -1)
@@ -2555,7 +2555,7 @@ namespace NetExtender.Utilities.Numerics
 		{
 			if (multiplier == 0)
 			{
-				throw new ArgumentException(nameof(multiplier));
+				throw new ArgumentException(null, nameof(multiplier));
 			}
 
 			if (value == 0 || value == multiplier || multiplier == 1 || multiplier == -1)
@@ -2585,7 +2585,7 @@ namespace NetExtender.Utilities.Numerics
 		{
 			if (multiplier == 0)
 			{
-				throw new ArgumentException(nameof(multiplier));
+				throw new ArgumentException(null, nameof(multiplier));
 			}
 
 			if (value == 0 || value == multiplier || multiplier == 1 || multiplier == -1)
@@ -2670,7 +2670,7 @@ namespace NetExtender.Utilities.Numerics
 		{
 			if (multiplier == 0)
 			{
-				throw new ArgumentException(nameof(multiplier));
+				throw new ArgumentException(null, nameof(multiplier));
 			}
 
 			if (value == 0 || value == multiplier || multiplier == 1)
@@ -2693,7 +2693,7 @@ namespace NetExtender.Utilities.Numerics
 		{
 			if (multiplier == 0)
 			{
-				throw new ArgumentException(nameof(multiplier));
+				throw new ArgumentException(null, nameof(multiplier));
 			}
 
 			if (value == 0 || value == multiplier || multiplier == 1)
@@ -2708,7 +2708,7 @@ namespace NetExtender.Utilities.Numerics
 		{
 			if (multiplier == 0)
 			{
-				throw new ArgumentException(nameof(multiplier));
+				throw new ArgumentException(null, nameof(multiplier));
 			}
 
 			if (value == 0 || value == multiplier || multiplier == 1)
@@ -2765,7 +2765,7 @@ namespace NetExtender.Utilities.Numerics
 		{
 			if (multiplier == 0)
 			{
-				throw new ArgumentException(nameof(multiplier));
+				throw new ArgumentException(null, nameof(multiplier));
 			}
 
 			if (value == 0 || value == multiplier || multiplier == 1 || multiplier == -1)
@@ -2793,7 +2793,7 @@ namespace NetExtender.Utilities.Numerics
 		{
 			if (multiplier == 0)
 			{
-				throw new ArgumentException(nameof(multiplier));
+				throw new ArgumentException(null, nameof(multiplier));
 			}
 
 			if (value == 0 || value == multiplier || multiplier == 1 || multiplier == -1)
@@ -2823,7 +2823,7 @@ namespace NetExtender.Utilities.Numerics
 		{
 			if (multiplier == 0)
 			{
-				throw new ArgumentException(nameof(multiplier));
+				throw new ArgumentException(null, nameof(multiplier));
 			}
 
 			if (value == 0 || value == multiplier || multiplier == 1 || multiplier == -1)
@@ -2908,7 +2908,7 @@ namespace NetExtender.Utilities.Numerics
 		{
 			if (multiplier == 0)
 			{
-				throw new ArgumentException(nameof(multiplier));
+				throw new ArgumentException(null, nameof(multiplier));
 			}
 
 			if (value == 0 || value == multiplier || multiplier == 1)
@@ -2931,7 +2931,7 @@ namespace NetExtender.Utilities.Numerics
 		{
 			if (multiplier == 0)
 			{
-				throw new ArgumentException(nameof(multiplier));
+				throw new ArgumentException(null, nameof(multiplier));
 			}
 
 			if (value == 0 || value == multiplier || multiplier == 1)
@@ -2946,7 +2946,7 @@ namespace NetExtender.Utilities.Numerics
 		{
 			if (multiplier == 0)
 			{
-				throw new ArgumentException(nameof(multiplier));
+				throw new ArgumentException(null, nameof(multiplier));
 			}
 
 			if (value == 0 || value == multiplier || multiplier == 1)
@@ -3003,7 +3003,7 @@ namespace NetExtender.Utilities.Numerics
 		{
 			if (multiplier == 0)
 			{
-				throw new ArgumentException(nameof(multiplier));
+				throw new ArgumentException(null, nameof(multiplier));
 			}
 
 			if (value == 0 || value == multiplier || multiplier == 1 || multiplier == -1)
@@ -3031,7 +3031,7 @@ namespace NetExtender.Utilities.Numerics
 		{
 			if (multiplier == 0)
 			{
-				throw new ArgumentException(nameof(multiplier));
+				throw new ArgumentException(null, nameof(multiplier));
 			}
 
 			if (value == 0 || value == multiplier || multiplier == 1 || multiplier == -1)
@@ -3061,7 +3061,7 @@ namespace NetExtender.Utilities.Numerics
 		{
 			if (multiplier == 0)
 			{
-				throw new ArgumentException(nameof(multiplier));
+				throw new ArgumentException(null, nameof(multiplier));
 			}
 
 			if (value == 0 || value == multiplier || multiplier == 1 || multiplier == -1)
@@ -3146,7 +3146,7 @@ namespace NetExtender.Utilities.Numerics
 		{
 			if (multiplier == 0)
 			{
-				throw new ArgumentException(nameof(multiplier));
+				throw new ArgumentException(null, nameof(multiplier));
 			}
 
 			if (value == 0 || value == multiplier || multiplier == 1)
@@ -3169,7 +3169,7 @@ namespace NetExtender.Utilities.Numerics
 		{
 			if (multiplier == 0)
 			{
-				throw new ArgumentException(nameof(multiplier));
+				throw new ArgumentException(null, nameof(multiplier));
 			}
 
 			if (value == 0 || value == multiplier || multiplier == 1)
@@ -3184,7 +3184,7 @@ namespace NetExtender.Utilities.Numerics
 		{
 			if (multiplier == 0)
 			{
-				throw new ArgumentException(nameof(multiplier));
+				throw new ArgumentException(null, nameof(multiplier));
 			}
 
 			if (value == 0 || value == multiplier || multiplier == 1)
@@ -3241,7 +3241,7 @@ namespace NetExtender.Utilities.Numerics
 		{
 			if (IsEpsilon(multiplier))
 			{
-				throw new ArgumentException(nameof(multiplier));
+				throw new ArgumentException(null, nameof(multiplier));
 			}
 
 			if (IsEpsilon(value) || IsEpsilon(value - multiplier))
@@ -3269,7 +3269,7 @@ namespace NetExtender.Utilities.Numerics
 		{
 			if (IsEpsilon(multiplier))
 			{
-				throw new ArgumentException(nameof(multiplier));
+				throw new ArgumentException(null, nameof(multiplier));
 			}
 
 			if (IsEpsilon(value) || IsEpsilon(value - multiplier))
@@ -3299,7 +3299,7 @@ namespace NetExtender.Utilities.Numerics
 		{
 			if (IsEpsilon(multiplier))
 			{
-				throw new ArgumentException(nameof(multiplier));
+				throw new ArgumentException(null, nameof(multiplier));
 			}
 
 			if (IsEpsilon(value) || IsEpsilon(value - multiplier))
@@ -3384,7 +3384,7 @@ namespace NetExtender.Utilities.Numerics
 		{
 			if (IsEpsilon(multiplier))
 			{
-				throw new ArgumentException(nameof(multiplier));
+				throw new ArgumentException(null, nameof(multiplier));
 			}
 
 			if (IsEpsilon(value) || IsEpsilon(value - multiplier))
@@ -3412,7 +3412,7 @@ namespace NetExtender.Utilities.Numerics
 		{
 			if (IsEpsilon(multiplier))
 			{
-				throw new ArgumentException(nameof(multiplier));
+				throw new ArgumentException(null, nameof(multiplier));
 			}
 
 			if (IsEpsilon(value) || IsEpsilon(value - multiplier))
@@ -3442,7 +3442,7 @@ namespace NetExtender.Utilities.Numerics
 		{
 			if (IsEpsilon(multiplier))
 			{
-				throw new ArgumentException(nameof(multiplier));
+				throw new ArgumentException(null, nameof(multiplier));
 			}
 
 			if (IsEpsilon(value) || IsEpsilon(value - multiplier))
@@ -3527,7 +3527,7 @@ namespace NetExtender.Utilities.Numerics
 		{
 			if (multiplier == 0)
 			{
-				throw new ArgumentException(nameof(multiplier));
+				throw new ArgumentException(null, nameof(multiplier));
 			}
 
 			if (value == 0 || value == multiplier || multiplier == 1 || multiplier == -1)
@@ -3555,7 +3555,7 @@ namespace NetExtender.Utilities.Numerics
 		{
 			if (multiplier == 0)
 			{
-				throw new ArgumentException(nameof(multiplier));
+				throw new ArgumentException(null, nameof(multiplier));
 			}
 
 			if (value == 0 || value == multiplier || multiplier == 1 || multiplier == -1)
@@ -3585,7 +3585,7 @@ namespace NetExtender.Utilities.Numerics
 		{
 			if (multiplier == 0)
 			{
-				throw new ArgumentException(nameof(multiplier));
+				throw new ArgumentException(null, nameof(multiplier));
 			}
 
 			if (value == 0 || value == multiplier || multiplier == 1 || multiplier == -1)
@@ -9745,60 +9745,60 @@ namespace NetExtender.Utilities.Numerics
 			if (typeof(T) == typeof(Char))
 			{
 				Int32 i = ~Unsafe.As<T, Char>(ref value);
-				Char val = Unsafe.As<Int32, Char>(ref i);
-				return Unsafe.As<Char, T>(ref val);
+				Char result = Unsafe.As<Int32, Char>(ref i);
+				return Unsafe.As<Char, T>(ref result);
 			}
 
 			if (typeof(T) == typeof(SByte))
 			{
 				Int32 i = ~Unsafe.As<T, SByte>(ref value);
-				SByte val = Unsafe.As<Int32, SByte>(ref i);
-				return Unsafe.As<SByte, T>(ref val);
+				SByte result = Unsafe.As<Int32, SByte>(ref i);
+				return Unsafe.As<SByte, T>(ref result);
 			}
 
 			if (typeof(T) == typeof(Byte))
 			{
 				Int32 i = ~Unsafe.As<T, Byte>(ref value);
-				Byte val = Unsafe.As<Int32, Byte>(ref i);
-				return Unsafe.As<Byte, T>(ref val);
+				Byte result = Unsafe.As<Int32, Byte>(ref i);
+				return Unsafe.As<Byte, T>(ref result);
 			}
 
 			if (typeof(T) == typeof(Int16))
 			{
 				Int32 i = ~Unsafe.As<T, Int16>(ref value);
-				Int16 val = Unsafe.As<Int32, Int16>(ref i);
-				return Unsafe.As<Int16, T>(ref val);
+				Int16 result = Unsafe.As<Int32, Int16>(ref i);
+				return Unsafe.As<Int16, T>(ref result);
 			}
 
 			if (typeof(T) == typeof(UInt16))
 			{
 				Int32 i = ~Unsafe.As<T, UInt16>(ref value);
-				UInt16 val = Unsafe.As<Int32, UInt16>(ref i);
-				return Unsafe.As<UInt16, T>(ref val);
+				UInt16 result = Unsafe.As<Int32, UInt16>(ref i);
+				return Unsafe.As<UInt16, T>(ref result);
 			}
 
 			if (typeof(T) == typeof(Int32))
 			{
-				Int32 val = ~Unsafe.As<T, Int32>(ref value);
-				return Unsafe.As<Int32, T>(ref val);
+				Int32 result = ~Unsafe.As<T, Int32>(ref value);
+				return Unsafe.As<Int32, T>(ref result);
 			}
 
 			if (typeof(T) == typeof(UInt32))
 			{
-				UInt32 val = ~Unsafe.As<T, UInt32>(ref value);
-				return Unsafe.As<UInt32, T>(ref val);
+				UInt32 result = ~Unsafe.As<T, UInt32>(ref value);
+				return Unsafe.As<UInt32, T>(ref result);
 			}
 
 			if (typeof(T) == typeof(Int64))
 			{
-				Int64 val = ~Unsafe.As<T, Int64>(ref value);
-				return Unsafe.As<Int64, T>(ref val);
+				Int64 result = ~Unsafe.As<T, Int64>(ref value);
+				return Unsafe.As<Int64, T>(ref result);
 			}
 
 			if (typeof(T) == typeof(UInt64))
 			{
-				UInt64 val = ~Unsafe.As<T, UInt64>(ref value);
-				return Unsafe.As<UInt64, T>(ref val);
+				UInt64 result = ~Unsafe.As<T, UInt64>(ref value);
+				return Unsafe.As<UInt64, T>(ref result);
 			}
 
 			throw new NotSupportedException($"Operator ~ is not supported for {typeof(T)} type");
@@ -9809,44 +9809,44 @@ namespace NetExtender.Utilities.Numerics
 		{
 			if (typeof(T) == typeof(SByte))
 			{
-				SByte val = Math.Abs(Unsafe.As<T, SByte>(ref value));
-				return Unsafe.As<SByte, T>(ref val);
+				SByte result = Math.Abs(Unsafe.As<T, SByte>(ref value));
+				return Unsafe.As<SByte, T>(ref result);
 			}
 
 			if (typeof(T) == typeof(Int16))
 			{
-				Int16 val = Math.Abs(Unsafe.As<T, Int16>(ref value));
-				return Unsafe.As<Int16, T>(ref val);
+				Int16 result = Math.Abs(Unsafe.As<T, Int16>(ref value));
+				return Unsafe.As<Int16, T>(ref result);
 			}
 
 			if (typeof(T) == typeof(Int32))
 			{
-				Int32 val = Math.Abs(Unsafe.As<T, Int32>(ref value));
-				return Unsafe.As<Int32, T>(ref val);
+				Int32 result = Math.Abs(Unsafe.As<T, Int32>(ref value));
+				return Unsafe.As<Int32, T>(ref result);
 			}
 
 			if (typeof(T) == typeof(Int64))
 			{
-				Int64 val = Math.Abs(Unsafe.As<T, Int64>(ref value));
-				return Unsafe.As<Int64, T>(ref val);
+				Int64 result = Math.Abs(Unsafe.As<T, Int64>(ref value));
+				return Unsafe.As<Int64, T>(ref result);
 			}
 
 			if (typeof(T) == typeof(Single))
 			{
-				Single val = Math.Abs(Unsafe.As<T, Single>(ref value));
-				return Unsafe.As<Single, T>(ref val);
+				Single result = Math.Abs(Unsafe.As<T, Single>(ref value));
+				return Unsafe.As<Single, T>(ref result);
 			}
 
 			if (typeof(T) == typeof(Double))
 			{
-				Double val = Math.Abs(Unsafe.As<T, Double>(ref value));
-				return Unsafe.As<Double, T>(ref val);
+				Double result = Math.Abs(Unsafe.As<T, Double>(ref value));
+				return Unsafe.As<Double, T>(ref result);
 			}
 
 			if (typeof(T) == typeof(Decimal))
 			{
-				Decimal val = Math.Abs(Unsafe.As<T, Decimal>(ref value));
-				return Unsafe.As<Decimal, T>(ref val);
+				Decimal result = Math.Abs(Unsafe.As<T, Decimal>(ref value));
+				return Unsafe.As<Decimal, T>(ref result);
 			}
 
 			throw new NotSupportedException($"Operator | | is not supported for {typeof(T)} type");
@@ -9858,45 +9858,45 @@ namespace NetExtender.Utilities.Numerics
 			if (typeof(T) == typeof(SByte))
 			{
 				Int32 i = -Math.Abs(Unsafe.As<T, SByte>(ref value));
-				SByte val = Unsafe.As<Int32, SByte>(ref i);
-				return Unsafe.As<SByte, T>(ref val);
+				SByte result = Unsafe.As<Int32, SByte>(ref i);
+				return Unsafe.As<SByte, T>(ref result);
 			}
 
 			if (typeof(T) == typeof(Int16))
 			{
 				Int32 i = -Math.Abs(Unsafe.As<T, Int16>(ref value));
-				Int16 val = Unsafe.As<Int32, Int16>(ref i);
-				return Unsafe.As<Int16, T>(ref val);
+				Int16 result = Unsafe.As<Int32, Int16>(ref i);
+				return Unsafe.As<Int16, T>(ref result);
 			}
 
 			if (typeof(T) == typeof(Int32))
 			{
-				Int32 val = -Math.Abs(Unsafe.As<T, Int32>(ref value));
-				return Unsafe.As<Int32, T>(ref val);
+				Int32 result = -Math.Abs(Unsafe.As<T, Int32>(ref value));
+				return Unsafe.As<Int32, T>(ref result);
 			}
 
 			if (typeof(T) == typeof(Int64))
 			{
-				Int64 val = -Math.Abs(Unsafe.As<T, Int64>(ref value));
-				return Unsafe.As<Int64, T>(ref val);
+				Int64 result = -Math.Abs(Unsafe.As<T, Int64>(ref value));
+				return Unsafe.As<Int64, T>(ref result);
 			}
 
 			if (typeof(T) == typeof(Single))
 			{
-				Single val = -Math.Abs(Unsafe.As<T, Single>(ref value));
-				return Unsafe.As<Single, T>(ref val);
+				Single result = -Math.Abs(Unsafe.As<T, Single>(ref value));
+				return Unsafe.As<Single, T>(ref result);
 			}
 
 			if (typeof(T) == typeof(Double))
 			{
-				Double val = -Math.Abs(Unsafe.As<T, Double>(ref value));
-				return Unsafe.As<Double, T>(ref val);
+				Double result = -Math.Abs(Unsafe.As<T, Double>(ref value));
+				return Unsafe.As<Double, T>(ref result);
 			}
 
 			if (typeof(T) == typeof(Decimal))
 			{
-				Decimal val = -Math.Abs(Unsafe.As<T, Decimal>(ref value));
-				return Unsafe.As<Decimal, T>(ref val);
+				Decimal result = -Math.Abs(Unsafe.As<T, Decimal>(ref value));
+				return Unsafe.As<Decimal, T>(ref result);
 			}
 
 			throw new NotSupportedException($"Operator -| | is not supported for {typeof(T)} type");

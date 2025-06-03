@@ -22,7 +22,7 @@ namespace NetExtender.Utilities.Memento
                 throw new ArgumentNullException(nameof(source));
             }
 
-            static void Internal(T item)
+            static void Core(T item)
             {
                 if (item.HasValue)
                 {
@@ -30,7 +30,7 @@ namespace NetExtender.Utilities.Memento
                 }
             }
 
-            return source.WhereNotNull().ForEach(Internal);
+            return source.WhereNotNull().ForEach(Core);
         }
 
         public static IEnumerable<T> Update<T>(this IEnumerable<T> source) where T : IMementoItem
@@ -39,12 +39,13 @@ namespace NetExtender.Utilities.Memento
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            static void Internal(T item)
+            
+            static void Core(T item)
             {
                 item.Update();
             }
 
-            return source.WhereNotNull().ForEach(Internal);
+            return source.WhereNotNull().ForEach(Core);
         }
 
         public static IMemento<TSource> Create<TSource>(this IMementoBuilder<TSource> builder) where TSource : class

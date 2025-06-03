@@ -70,7 +70,7 @@ namespace NetExtender.Cryptography.Base
             String output = new String('\0', SafeCharCountForEncoding(value));
             fixed (Char* outputPtr = output)
             {
-                InternalEncode(value, value.Length, Alphabet.Value, outputPtr);
+                EncodeCore(value, value.Length, Alphabet.Value, outputPtr);
             }
 
             return output;
@@ -133,7 +133,7 @@ namespace NetExtender.Cryptography.Base
 
                 fixed (Char* poutput = output)
                 {
-                    InternalEncode(value, value.Length, alphabet, poutput);
+                    EncodeCore(value, value.Length, alphabet, poutput);
                 }
 
                 written = length;
@@ -141,7 +141,7 @@ namespace NetExtender.Cryptography.Base
             }
         }
 
-        private static unsafe void InternalEncode(ReadOnlySpan<Byte> value, Int32 length, String alphabet, Char* poutput)
+        private static unsafe void EncodeCore(ReadOnlySpan<Byte> value, Int32 length, String alphabet, Char* poutput)
         {
             unchecked
             {

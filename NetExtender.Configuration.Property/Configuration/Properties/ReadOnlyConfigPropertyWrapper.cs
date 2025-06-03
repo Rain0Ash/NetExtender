@@ -224,6 +224,11 @@ namespace NetExtender.Configuration.Properties
             return Internal.GetValue();
         }
 
+        T IGetter<T>.Get()
+        {
+            return GetValue();
+        }
+
         public T GetValue(Func<T, Boolean>? predicate)
         {
             return Internal.GetValue(predicate);
@@ -234,9 +239,19 @@ namespace NetExtender.Configuration.Properties
             return Internal.GetValueAsync();
         }
 
+        async ValueTask<T> IAsyncGetter<T>.GetAsync()
+        {
+            return await GetValueAsync();
+        }
+
         public Task<T> GetValueAsync(CancellationToken token)
         {
             return Internal.GetValueAsync(token);
+        }
+
+        async ValueTask<T> IAsyncGetter<T>.GetAsync(CancellationToken token)
+        {
+            return await GetValueAsync(token);
         }
 
         public Task<T> GetValueAsync(Func<T, Boolean>? predicate)

@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using NetExtender.Types.Exceptions;
 using NetExtender.Types.Immutable.Maps.Interfaces;
 using NetExtender.Utilities.Types;
@@ -36,6 +37,7 @@ namespace NetExtender.Types.Immutable.Maps
 
         public Boolean IsEmpty
         {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
                 return Count <= 0;

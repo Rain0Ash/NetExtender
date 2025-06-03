@@ -4,9 +4,9 @@
             return this == other;
         }
                 
-        public override System.Boolean Equals(System.Object? obj)
+        public override System.Boolean Equals(System.Object? other)
         {
-            return obj is STRONGID other && Equals(other);
+            return other is STRONGID value && Equals(value);
         }
 
         public override System.Int32 GetHashCode()

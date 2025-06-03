@@ -11,8 +11,18 @@ namespace NetExtender.AspNetCore.Types.Middlewares.Interfaces
         public void Invoke(HttpContext context);
     }
 
+    public interface IInvokeMiddleware
+    {
+        public void Invoke(HttpContext context, RequestDelegate next);
+    }
+
     public interface IAsyncMiddleware
     {
         public Task InvokeAsync(HttpContext context);
+    }
+
+    public interface IAsyncInvokeMiddleware
+    {
+        public Task InvokeAsync(HttpContext context, RequestDelegate next);
     }
 }

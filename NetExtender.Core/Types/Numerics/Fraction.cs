@@ -7,21 +7,12 @@ using NetExtender.Utilities.Numerics;
 
 namespace NetExtender.Types.Numerics
 {
+    // TODO: verify
     /// <summary>
     /// Represents a fraction
     /// </summary>
     public readonly struct Fraction
     {
-        /// <summary>
-        /// Converts the fraction to a decimal
-        /// </summary>
-        /// <param name="fraction">Fraction</param>
-        /// <returns>The fraction as a decimal</returns>
-        public static implicit operator Decimal(Fraction fraction)
-        {
-            return fraction.Numerator / (Decimal) fraction.Denominator;
-        }
-
         /// <summary>
         /// Converts the fraction to a double
         /// </summary>
@@ -30,6 +21,16 @@ namespace NetExtender.Types.Numerics
         public static implicit operator Double(Fraction fraction)
         {
             return fraction.Numerator / (Double) fraction.Denominator;
+        }
+
+        /// <summary>
+        /// Converts the fraction to a decimal
+        /// </summary>
+        /// <param name="fraction">Fraction</param>
+        /// <returns>The fraction as a decimal</returns>
+        public static implicit operator Decimal(Fraction fraction)
+        {
+            return fraction.Numerator / (Decimal) fraction.Denominator;
         }
 
         /// <summary>

@@ -112,6 +112,11 @@ namespace NetExtender.Types.Timers
             return Timer.TrySetKind(kind);
         }
 
+        public Boolean Change(TimeSpan dueTime, TimeSpan period)
+        {
+            return false;
+        }
+
         public ValueTask<Boolean> WaitForNextTickAsync()
         {
             return Timer.WaitForNextTickAsync();

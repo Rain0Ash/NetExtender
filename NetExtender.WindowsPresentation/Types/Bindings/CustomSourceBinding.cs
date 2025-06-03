@@ -1,3 +1,6 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 using System;
 using System.Collections.Concurrent;
 using System.Diagnostics.CodeAnalysis;
@@ -12,18 +15,18 @@ namespace NetExtender.WindowsPresentation.Types.Bindings
     {
         private static ConcurrentDictionary<Type, Func<RelativeSource?>> Factory { get; } = new ConcurrentDictionary<Type, Func<RelativeSource?>>();
 
-        private static Assembly? _assembly;
+        private static Assembly? assembly;
         protected static Assembly? Assembly
         {
             get
             {
-                if (_assembly is not null)
+                if (assembly is not null)
                 {
-                    return _assembly;
+                    return assembly;
                 }
 
-                Initialize(out _assembly);
-                return _assembly;
+                Initialize(out assembly);
+                return assembly;
             }
         }
 

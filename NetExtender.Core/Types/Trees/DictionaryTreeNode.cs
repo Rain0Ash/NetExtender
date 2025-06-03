@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using NetExtender.NewtonSoft.Types.Trees;
 using NetExtender.Types.Trees.Interfaces;
 using NetExtender.Utilities.Types;
@@ -47,6 +48,7 @@ namespace NetExtender.Types.Trees
         [JsonIgnore]
         public Boolean IsReadOnly
         {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
                 return !HasTree || Tree.IsReadOnly;
@@ -92,6 +94,7 @@ namespace NetExtender.Types.Trees
         [JsonIgnore]
         public Int32 Count
         {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
                 return HasTree ? Tree.Count : 0;
@@ -122,6 +125,7 @@ namespace NetExtender.Types.Trees
         [JsonIgnore]
         public Boolean IsEmpty
         {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
                 return !HasValue && TreeIsEmpty;
@@ -131,6 +135,7 @@ namespace NetExtender.Types.Trees
         [JsonIgnore]
         public Boolean HasValue
         {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
                 return Value.IsNotDefault();
@@ -140,6 +145,7 @@ namespace NetExtender.Types.Trees
         [JsonIgnore]
         public Boolean HasTree
         {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
                 return _tree is not null;
@@ -149,6 +155,7 @@ namespace NetExtender.Types.Trees
         [JsonIgnore]
         public Boolean TreeIsEmpty
         {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
                 return !HasTree || Tree.Count <= 0 || Tree.Values.All(node => node.IsEmpty);

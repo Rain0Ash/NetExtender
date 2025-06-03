@@ -6,6 +6,7 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using NetExtender.Types.Exceptions;
 
 namespace NetExtender.Types.Network.Formatters
 {
@@ -19,12 +20,12 @@ namespace NetExtender.Types.Network.Formatters
         {
             if (String.IsNullOrWhiteSpace(name))
             {
-                throw new ArgumentException("Value cannot be null or whitespace.", nameof(name));
+                throw new ArgumentNullOrWhiteSpaceStringException(name, nameof(name));
             }
 
             if (String.IsNullOrWhiteSpace(value))
             {
-                throw new ArgumentException("Value cannot be null or whitespace.", nameof(value));
+                throw new ArgumentNullOrWhiteSpaceStringException(value, nameof(value));
             }
 
             Name = name.Trim();
@@ -36,12 +37,12 @@ namespace NetExtender.Types.Network.Formatters
         {
             if (String.IsNullOrWhiteSpace(name))
             {
-                throw new ArgumentException("Value cannot be null or whitespace.", nameof(name));
+                throw new ArgumentNullOrWhiteSpaceStringException(name, nameof(name));
             }
 
             if (String.IsNullOrWhiteSpace(value))
             {
-                throw new ArgumentException("Value cannot be null or whitespace.", nameof(value));
+                throw new ArgumentNullOrWhiteSpaceStringException(value, nameof(value));
             }
 
             Name = name.Trim();

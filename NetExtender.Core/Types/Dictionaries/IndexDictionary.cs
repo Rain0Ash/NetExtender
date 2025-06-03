@@ -515,9 +515,9 @@ namespace NetExtender.Types.Dictionaries
             Order.Clear();
         }
 
-        public void CopyTo(KeyValuePair<TKey, TValue>[] array, Int32 arrayIndex)
+        public void CopyTo(KeyValuePair<TKey, TValue>[] array, Int32 index)
         {
-            ((ICollection<KeyValuePair<TKey, TValue>>) Dictionary).CopyTo(array, arrayIndex);
+            ((ICollection<KeyValuePair<TKey, TValue>>) Dictionary).CopyTo(array, index);
         }
 
         public IEnumerator<TKey> GetKeyEnumerator()

@@ -1,3 +1,6 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 namespace NetExtender.Types.Sets
 {
     /*public sealed class ObservableIndexSortedSet<T> : ObservableIndexSortedSetAbstraction<T>
@@ -225,14 +228,14 @@ namespace NetExtender.Types.Sets
             Internal.CopyTo(array);
         }
 
-        public virtual void CopyTo(T[] array, Int32 arrayIndex, Int32 count)
+        public virtual void CopyTo(T[] array, Int32 index, Int32 count)
         {
             if (array is null)
             {
                 throw new ArgumentNullException(nameof(array));
             }
 
-            Internal.CopyTo(array, arrayIndex, count);
+            Internal.CopyTo(array, index, count);
         }
 
         public sealed override IEnumerator<T> GetEnumerator()

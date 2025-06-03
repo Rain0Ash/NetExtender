@@ -1,3 +1,6 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -11,11 +14,11 @@ namespace NetExtender.Types.Collections
 {
     public abstract class ObservableCollectionAbstraction<T, TCollection> : IObservableCollectionAbstraction<T>, IReadOnlyObservableCollectionAbstraction<T>, ICollection where TCollection : ICollection<T>
     {
+        protected TCollection Internal { get; private set; }
+        
         public event NotifyCollectionChangedEventHandler? CollectionChanged;
         public event PropertyChangingEventHandler? PropertyChanging;
         public event PropertyChangedEventHandler? PropertyChanged;
-
-        protected TCollection Internal { get; private set; }
 
         public Int32 Count
         {
@@ -193,17 +196,17 @@ namespace NetExtender.Types.Collections
             CopyTo(generic, index);
         }
 
-        public virtual void CopyTo(T[] array, Int32 arrayIndex)
+        public virtual void CopyTo(T[] array, Int32 index)
         {
             if (array is null)
             {
                 throw new ArgumentNullException(nameof(array));
             }
 
-            Internal.CopyTo(array, arrayIndex);
+            Internal.CopyTo(array, index);
         }
         
-        protected abstract TCollection CloneInternal();
+        protected abstract TCollection Clone();
 
         public virtual IEnumerator<T> GetEnumerator()
         {

@@ -220,22 +220,22 @@ namespace NetExtender.Configuration.Cryptography.Properties
             }
         }
 
-        protected override Boolean KeyExistInternal()
+        protected override Boolean KeyExistCore()
         {
             return Cryptography.KeyExist(Key, Cryptor, Sections);
         }
 
-        protected override Task<Boolean> KeyExistInternalAsync(CancellationToken token)
+        protected override Task<Boolean> KeyExistCoreAsync(CancellationToken token)
         {
             return Cryptography.KeyExistAsync(Key, Cryptor, Sections, token);
         }
 
-        protected override String? GetValueInternal()
+        protected override String? GetValueCore()
         {
             return Cryptography.GetValue(Key, Alternate, Cryptor, Sections);
         }
 
-        protected override Task<String?> GetValueInternalAsync(CancellationToken token)
+        protected override Task<String?> GetValueCoreAsync(CancellationToken token)
         {
             return Cryptography.GetValueAsync(Key, Alternate, Cryptor, Sections, token);
         }
@@ -361,7 +361,7 @@ namespace NetExtender.Configuration.Cryptography.Properties
             return encryptor.TryEncrypt(sections, out result);
         }
 
-        protected override Boolean KeyExistInternal()
+        protected override Boolean KeyExistCore()
         {
             String? key = Key;
             if (IsCryptKey && !TryEncryptKey(Key, Cryptor, out key))
@@ -378,7 +378,7 @@ namespace NetExtender.Configuration.Cryptography.Properties
             return Config.KeyExist(key, sections);
         }
 
-        protected override Task<Boolean> KeyExistInternalAsync(CancellationToken token)
+        protected override Task<Boolean> KeyExistCoreAsync(CancellationToken token)
         {
             String? key = Key;
             if (IsCryptKey && !TryEncryptKey(Key, Cryptor, out key))
@@ -395,7 +395,7 @@ namespace NetExtender.Configuration.Cryptography.Properties
             return Config.KeyExistAsync(key, sections, token);
         }
 
-        protected override String? GetValueInternal()
+        protected override String? GetValueCore()
         {
             String? key = Key;
             if (IsCryptKey && !TryEncryptKey(Key, Cryptor, out key))
@@ -419,7 +419,7 @@ namespace NetExtender.Configuration.Cryptography.Properties
             return value;
         }
 
-        protected override async Task<String?> GetValueInternalAsync(CancellationToken token)
+        protected override async Task<String?> GetValueCoreAsync(CancellationToken token)
         {
             String? key = Key;
             if (IsCryptKey && !TryEncryptKey(Key, Cryptor, out key))

@@ -1,7 +1,11 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 using System;
 using System.Reflection;
 using System.Reflection.Emit;
 using NetExtender.Types.Assemblies.Interfaces;
+using NetExtender.Types.Exceptions;
 
 namespace NetExtender.Types.Assemblies
 {
@@ -25,7 +29,7 @@ namespace NetExtender.Types.Assemblies
         {
             if (String.IsNullOrEmpty(name))
             {
-                throw new ArgumentException("Value cannot be null or empty.", nameof(name));
+                throw new ArgumentNullOrEmptyStringException(name, nameof(name));
             }
             
             Name = new AssemblyName(name);

@@ -5,11 +5,11 @@ using System;
 
 namespace NetExtender.Types.Numerics.Interfaces
 {
-    public interface IGenericNumber : IUnderlyingType, IComparable, IComparable<ValueType>, IEquatable<ValueType>, IComparable<GenericNumber>, IEquatable<GenericNumber>, ISpanFormattable, IConvertible
+    public interface IGenericNumber : IUnderlyingType, IEquality<ValueType>, IEquality<GenericNumber>, IAnyEquality, ISpanFormattable, IConvertible
     {
     }
 
-    public interface IGenericNumber<T> : IUnderlyingType<T>, IComparable, IComparable<T>, IEquatable<T>, ISpanFormattable, IConvertible
+    public interface IGenericNumber<T> : IUnderlyingType<T>, IEquality<T>, IAnyEquality, ISpanFormattable, IConvertible
     {
     }
 }

@@ -41,13 +41,13 @@ namespace NetExtender.Types.Timers
             }
         }
 
-        private DateTimeFactory _factory = DateTimeFactory.Factory;
+        private DateTimeProvider _provider = DateTimeProvider.Provider;
 
         public DateTime Now
         {
             get
             {
-                return _factory.Now;
+                return _provider.Now;
             }
         }
         
@@ -55,11 +55,11 @@ namespace NetExtender.Types.Timers
         {
             get
             {
-                return _factory.Kind;
+                return _provider.Kind;
             }
             set
             {
-                _factory.Kind = value;
+                _provider.Kind = value;
             }
         }
 
@@ -105,6 +105,11 @@ namespace NetExtender.Types.Timers
         {
             Kind = kind;
             return true;
+        }
+
+        public Boolean Change(TimeSpan dueTime, TimeSpan period)
+        {
+            return false;
         }
 
         public void Start()

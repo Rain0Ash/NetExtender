@@ -4,6 +4,7 @@
 using System;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using NetExtender.Types.Numerics;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Utilities.Numerics
@@ -13,37 +14,81 @@ namespace NetExtender.Utilities.Numerics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsTrue(this Boolean? value)
         {
-            return value.HasValue && value.Value;
+            return value is true;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsNotTrue(this Boolean? value)
         {
-            return !value.HasValue || !value.Value;
+            return value is not true;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsFalse(this Boolean? value)
         {
-            return value.HasValue && !value.Value;
+            return value is false;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsNotFalse(this Boolean? value)
         {
-            return !value.HasValue || value.Value;
+            return value is not false;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsNull(this Boolean? value)
         {
-            return !value.HasValue;
+            return value is null;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsNotNull(this Boolean? value)
         {
-            return value.HasValue;
+            return value is not null;
+        }
+        
+        /// <summary>
+        /// Return NOT (!)
+        /// </summary>
+        /// <param name="value">Boolean</param>
+        /// <returns>!<see cref="value"/></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Not(Boolean value)
+        {
+            return !value;
+        }
+        
+        /// <summary>
+        /// Return NOT (!)
+        /// </summary>
+        /// <param name="value">Boolean?</param>
+        /// <returns>!<see cref="value"/></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean? Not(Boolean? value)
+        {
+            return !value;
+        }
+        
+        /// <summary>
+        /// Return NOT (!)
+        /// </summary>
+        /// <param name="value">Trilean</param>
+        /// <returns>!<see cref="value"/></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Trilean Not(Trilean value)
+        {
+            return !value;
+        }
+        
+        /// <summary>
+        /// Return NOT (!)
+        /// </summary>
+        /// <param name="value">Trilean</param>
+        /// <returns>!<see cref="value"/></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Not<T>(T value)
+        {
+            return Not(value.ToBoolean());
         }
 
         /// <summary>
@@ -56,6 +101,18 @@ namespace NetExtender.Utilities.Numerics
         public static Boolean Eq(Boolean first, Boolean second)
         {
             return first == second;
+        }
+
+        /// <summary>
+        /// Return EQ (==)
+        /// </summary>
+        /// <param name="first">First boolean</param>
+        /// <param name="second">Second boolean</param>
+        /// <returns><see cref="first"/> == <see cref="second"/></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Eq<T>(T first, T second)
+        {
+            return Eq(first.ToBoolean(), second.ToBoolean());
         }
 
         /// <summary>
@@ -106,6 +163,18 @@ namespace NetExtender.Utilities.Numerics
         /// </summary>
         /// <param name="first">First boolean</param>
         /// <param name="second">Second boolean</param>
+        /// <returns><see cref="first"/> && <see cref="second"/></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean And<T>(T first, T second)
+        {
+            return And(first.ToBoolean(), second.ToBoolean());
+        }
+
+        /// <summary>
+        /// Return AND (&&)
+        /// </summary>
+        /// <param name="first">First boolean</param>
+        /// <param name="second">Second boolean</param>
         /// <param name="third">Third boolean</param>
         /// <returns><see cref="first"/> && <see cref="second"/> && <see cref="third"/></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -142,6 +211,18 @@ namespace NetExtender.Utilities.Numerics
         public static Boolean Or(Boolean first, Boolean second)
         {
             return first || second;
+        }
+
+        /// <summary>
+        /// Return OR (||)
+        /// </summary>
+        /// <param name="first">First boolean</param>
+        /// <param name="second">Second boolean</param>
+        /// <returns><see cref="first"/> || <see cref="second"/></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Or<T>(T first, T second)
+        {
+            return Or(first.ToBoolean(), second.ToBoolean());
         }
 
         /// <summary>
@@ -192,6 +273,18 @@ namespace NetExtender.Utilities.Numerics
         /// </summary>
         /// <param name="first">First boolean</param>
         /// <param name="second">Second boolean</param>
+        /// <returns><see cref="first"/> ^ <see cref="second"/></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Xor<T>(T first, T second)
+        {
+            return Xor(first.ToBoolean(), second.ToBoolean());
+        }
+
+        /// <summary>
+        /// Return XOR (^)
+        /// </summary>
+        /// <param name="first">First boolean</param>
+        /// <param name="second">Second boolean</param>
         /// <param name="third">Third boolean</param>
         /// <returns><see cref="first"/> ^ <see cref="second"/> ^ <see cref="third"/></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -225,6 +318,12 @@ namespace NetExtender.Utilities.Numerics
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Impl<T>(T first, T second)
+        {
+            return Impl(first.ToBoolean(), second.ToBoolean());
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean Impl(Boolean first, Boolean second, Boolean third)
         {
             return Impl(Impl(first, second), third);
@@ -252,6 +351,12 @@ namespace NetExtender.Utilities.Numerics
         public static Boolean Rimpl(Boolean first, Boolean second)
         {
             return first || !second;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Rimpl<T>(T first, T second)
+        {
+            return Rimpl(first.ToBoolean(), second.ToBoolean());
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -285,6 +390,12 @@ namespace NetExtender.Utilities.Numerics
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Neq<T>(T first, T second)
+        {
+            return Neq(first.ToBoolean(), second.ToBoolean());
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean Neq(Boolean first, Boolean second, Boolean third)
         {
             return !Eq(first, second, third);
@@ -305,6 +416,12 @@ namespace NetExtender.Utilities.Numerics
         public static Boolean Nand(Boolean first, Boolean second)
         {
             return !And(first, second);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Nand<T>(T first, T second)
+        {
+            return Nand(first.ToBoolean(), second.ToBoolean());
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -331,6 +448,12 @@ namespace NetExtender.Utilities.Numerics
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Nor<T>(T first, T second)
+        {
+            return Nor(first.ToBoolean(), second.ToBoolean());
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean Nor(Boolean first, Boolean second, Boolean third)
         {
             return !Or(first, second, third);
@@ -351,6 +474,12 @@ namespace NetExtender.Utilities.Numerics
         public static Boolean Xnor(Boolean first, Boolean second)
         {
             return !Xor(first, second);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Xnor<T>(T first, T second)
+        {
+            return Xnor(first.ToBoolean(), second.ToBoolean());
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -377,6 +506,12 @@ namespace NetExtender.Utilities.Numerics
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Nimpl<T>(T first, T second)
+        {
+            return Nimpl(first.ToBoolean(), second.ToBoolean());
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean Nimpl(Boolean first, Boolean second, Boolean third)
         {
             return !Impl(first, second, third);
@@ -397,6 +532,12 @@ namespace NetExtender.Utilities.Numerics
         public static Boolean Nrimpl(Boolean first, Boolean second)
         {
             return !Rimpl(first, second);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Nrimpl<T>(T first, T second)
+        {
+            return Nrimpl(first.ToBoolean(), second.ToBoolean());
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

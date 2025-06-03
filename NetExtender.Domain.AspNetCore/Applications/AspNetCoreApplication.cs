@@ -43,10 +43,18 @@ namespace NetExtender.Domains.AspNetCore.Applications
                 return this;
             }
 
-            Context = host;
-            RegisterShutdownToken(token);
-            await Context.RunAsync(token).ConfigureAwait(false);
-            return this;
+            try
+            {
+                Context = host;
+                RegisterShutdownToken(token);
+                await Context.RunAsync(token).ConfigureAwait(false);
+                return this;
+            }
+            catch (TaskCanceledException)
+            {
+                Shutdown();
+                return this;
+            }
         }
 
         public override void Shutdown(Int32 code)
@@ -71,10 +79,18 @@ namespace NetExtender.Domains.AspNetCore.Applications
                 return this;
             }
 
-            Context = host;
-            RegisterShutdownToken(token);
-            await Context.RunAsync(token).ConfigureAwait(false);
-            return this;
+            try
+            {
+                Context = host;
+                RegisterShutdownToken(token);
+                await Context.RunAsync(token).ConfigureAwait(false);
+                return this;
+            }
+            catch (TaskCanceledException)
+            {
+                Shutdown();
+                return this;
+            }
         }
 
         public override void Shutdown(Int32 code)

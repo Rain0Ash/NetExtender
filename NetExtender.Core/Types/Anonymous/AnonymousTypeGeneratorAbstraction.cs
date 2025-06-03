@@ -73,14 +73,14 @@ namespace NetExtender.Types.Anonymous
                 throw new ArgumentNullException(nameof(fields));
             }
 
-            IEnumerable<KeyValuePair<String, MethodBuilder?>> Internal()
+            IEnumerable<KeyValuePair<String, MethodBuilder?>> Core()
             {
                 yield return new KeyValuePair<String, MethodBuilder?>(nameof(GetHashCode), DefineGetHashCode(builder, fields));
                 yield return new KeyValuePair<String, MethodBuilder?>(nameof(Equals), DefineEquals(builder, fields));
                 yield return new KeyValuePair<String, MethodBuilder?>(nameof(ToString), DefineToString(builder, fields));
             }
 
-            return Internal().WhereValueNotNull().ToArray();
+            return Core().WhereValueNotNull().ToArray();
         }
 
         public abstract Type DefineType(AnonymousTypePropertyInfo[] properties);

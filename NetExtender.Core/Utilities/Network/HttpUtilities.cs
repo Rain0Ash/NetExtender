@@ -10,6 +10,18 @@ namespace NetExtender.Utilities.Network
     public static class HttpUtilities
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsError(this HttpStatusCode code)
+        {
+            return code is >= HttpStatusCode.Ambiguous;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsError(this HttpStatusCode? code)
+        {
+            return code is >= HttpStatusCode.Ambiguous;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsClientError(this HttpStatusCode code)
         {
             return code is >= HttpStatusCode.BadRequest and < HttpStatusCode.InternalServerError;

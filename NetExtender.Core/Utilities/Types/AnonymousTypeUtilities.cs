@@ -11,6 +11,7 @@ using System.Runtime.CompilerServices;
 using NetExtender.Types.Anonymous;
 using NetExtender.Types.Anonymous.Interfaces;
 using NetExtender.Types.Dictionaries;
+using NetExtender.Types.Exceptions;
 using NetExtender.Types.Reflection;
 using NetExtender.Types.Reflection.Interfaces;
 using NetExtender.Types.Storages;
@@ -349,7 +350,7 @@ namespace NetExtender.Utilities.Types
 
                 if (String.IsNullOrEmpty(property))
                 {
-                    throw new ArgumentException("Value cannot be null or empty.", nameof(property));
+                    throw new ArgumentNullOrEmptyStringException(property, nameof(property));
                 }
 
                 Type type = value?.GetType() ?? typeof(Object);
@@ -396,12 +397,12 @@ namespace NetExtender.Utilities.Types
             {
                 if (String.IsNullOrEmpty(property))
                 {
-                    throw new ArgumentException("Value cannot be null or empty.", nameof(property));
+                    throw new ArgumentNullOrEmptyStringException(property, nameof(property));
                 }
 
                 if (type is null)
                 {
-                    throw new ArgumentException(nameof(type));
+                    throw new ArgumentException("Property 'Type' must be not null.", nameof(properties));
                 }
 
                 types.Add(new KeyValuePair<String, Type>(property, type));
@@ -506,7 +507,7 @@ namespace NetExtender.Utilities.Types
                 return !info.IsSpecialName && IsAnonymous(info);
             }
 
-            static IndexDictionary<String, IReflectionProperty> Internal(Type type)
+            static IndexDictionary<String, IReflectionProperty> Core(Type type)
             {
                 IndexDictionary<String, IReflectionProperty> store = new IndexDictionary<String, IReflectionProperty>();
 
@@ -527,7 +528,7 @@ namespace NetExtender.Utilities.Types
                 return store;
             }
 
-            return Storage.GetOrAdd(type, Internal);
+            return Storage.GetOrAdd(type, Core);
         }
 
         public static void Register(Type type, IndexDictionary<String, IReflectionProperty> store)
@@ -569,7 +570,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(value));
             }
 
-            static IEnumerable<KeyValuePair<String, Object?>> Internal(IAnonymousObject value)
+            static IEnumerable<KeyValuePair<String, Object?>> Core(IAnonymousObject value)
             {
                 foreach ((String name, IReflectionProperty member) in Enumerate(value))
                 {
@@ -577,7 +578,7 @@ namespace NetExtender.Utilities.Types
                 }
             }
 
-            return Internal(value).ToArray();
+            return Core(value).ToArray();
         }
 
         private static IReflectionProperty Member(IAnonymousObject value, Int32 index)

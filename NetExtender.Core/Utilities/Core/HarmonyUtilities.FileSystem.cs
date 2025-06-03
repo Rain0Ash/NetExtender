@@ -1,8 +1,13 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 using System;
 using System.Text.RegularExpressions;
+using NetExtender.FileSystems.Interfaces;
 using NetExtender.Types.Entities;
-using NetExtender.Types.Interception;
-using NetExtender.Types.Interception.Interfaces;
+using NetExtender.Types.Intercept;
+using NetExtender.Types.Intercept.Interfaces;
+#pragma warning disable CS0618
 
 namespace NetExtender.Utilities.Core
 {
@@ -12,35 +17,35 @@ namespace NetExtender.Utilities.Core
         {
             public readonly struct Handler
             {
-                public EventHandler<FileSystemIntercept<Any.Value>, IPropertyInterceptEventArgs>? PropertyIntercept { get; init; }
-                public EventHandler<FileSystemIntercept<Any.Value>, IPropertyInterceptEventArgs>? PropertyIntercepting { get; init; }
-                public EventHandler<FileSystemIntercept<Any.Value>, IPropertyInterceptEventArgs>? PropertyIntercepted { get; init; }
-                public EventHandler<FileSystemIntercept<Any.Value>, IPropertyInterceptEventArgs>? PropertyGetIntercept { get; init; }
-                public EventHandler<FileSystemIntercept<Any.Value>, IPropertyInterceptEventArgs>? PropertySetIntercept { get; init; }
-                public EventHandler<FileSystemIntercept<Any.Value>, IPropertyInterceptEventArgs>? PropertyGetIntercepting { get; init; }
-                public EventHandler<FileSystemIntercept<Any.Value>, IPropertyInterceptEventArgs>? PropertySetIntercepting { get; init; }
-                public EventHandler<FileSystemIntercept<Any.Value>, IPropertyInterceptEventArgs>? PropertyGetIntercepted { get; init; }
-                public EventHandler<FileSystemIntercept<Any.Value>, IPropertyInterceptEventArgs>? PropertySetIntercepted { get; init; }
-                public EventHandler<FileSystemIntercept<Any.Value>, IMethodInterceptEventArgs>? MethodIntercept { get; init; }
-                public EventHandler<FileSystemIntercept<Any.Value>, IMethodInterceptEventArgs>? MethodIntercepting { get; init; }
-                public EventHandler<FileSystemIntercept<Any.Value>, IMethodInterceptEventArgs>? MethodIntercepted { get; init; }
+                public EventHandler<FileSystemIntercept<IFileSystem, Any.Value>, IPropertyInterceptEventArgs>? PropertyIntercept { get; init; }
+                public EventHandler<FileSystemIntercept<IFileSystem, Any.Value>, IPropertyInterceptEventArgs>? PropertyIntercepting { get; init; }
+                public EventHandler<FileSystemIntercept<IFileSystem, Any.Value>, IPropertyInterceptEventArgs>? PropertyIntercepted { get; init; }
+                public EventHandler<FileSystemIntercept<IFileSystem, Any.Value>, IPropertyInterceptEventArgs>? PropertyGetIntercept { get; init; }
+                public EventHandler<FileSystemIntercept<IFileSystem, Any.Value>, IPropertyInterceptEventArgs>? PropertySetIntercept { get; init; }
+                public EventHandler<FileSystemIntercept<IFileSystem, Any.Value>, IPropertyInterceptEventArgs>? PropertyGetIntercepting { get; init; }
+                public EventHandler<FileSystemIntercept<IFileSystem, Any.Value>, IPropertyInterceptEventArgs>? PropertySetIntercepting { get; init; }
+                public EventHandler<FileSystemIntercept<IFileSystem, Any.Value>, IPropertyInterceptEventArgs>? PropertyGetIntercepted { get; init; }
+                public EventHandler<FileSystemIntercept<IFileSystem, Any.Value>, IPropertyInterceptEventArgs>? PropertySetIntercepted { get; init; }
+                public EventHandler<FileSystemIntercept<IFileSystem, Any.Value>, IMethodInterceptEventArgs>? MethodIntercept { get; init; }
+                public EventHandler<FileSystemIntercept<IFileSystem, Any.Value>, IMethodInterceptEventArgs>? MethodIntercepting { get; init; }
+                public EventHandler<FileSystemIntercept<IFileSystem, Any.Value>, IMethodInterceptEventArgs>? MethodIntercepted { get; init; }
             }
         }
         
         public class InterceptHarmonyFileSystem : FileSystemIntercept, IInterceptIdentifierTarget<InterceptHarmonyFileSystem>
         {
-            public new static event EventHandler<FileSystemIntercept<Any.Value>, IPropertyInterceptEventArgs>? PropertyIntercept;
-            public new static event EventHandler<FileSystemIntercept<Any.Value>, IPropertyInterceptEventArgs>? PropertyIntercepting;
-            public new static event EventHandler<FileSystemIntercept<Any.Value>, IPropertyInterceptEventArgs>? PropertyIntercepted;
-            public new static event EventHandler<FileSystemIntercept<Any.Value>, IPropertyInterceptEventArgs>? PropertyGetIntercept;
-            public new static event EventHandler<FileSystemIntercept<Any.Value>, IPropertyInterceptEventArgs>? PropertySetIntercept;
-            public new static event EventHandler<FileSystemIntercept<Any.Value>, IPropertyInterceptEventArgs>? PropertyGetIntercepting;
-            public new static event EventHandler<FileSystemIntercept<Any.Value>, IPropertyInterceptEventArgs>? PropertySetIntercepting;
-            public new static event EventHandler<FileSystemIntercept<Any.Value>, IPropertyInterceptEventArgs>? PropertyGetIntercepted;
-            public new static event EventHandler<FileSystemIntercept<Any.Value>, IPropertyInterceptEventArgs>? PropertySetIntercepted;
-            public new static event EventHandler<FileSystemIntercept<Any.Value>, IMethodInterceptEventArgs>? MethodIntercept;
-            public new static event EventHandler<FileSystemIntercept<Any.Value>, IMethodInterceptEventArgs>? MethodIntercepting;
-            public new static event EventHandler<FileSystemIntercept<Any.Value>, IMethodInterceptEventArgs>? MethodIntercepted;
+            public new static event EventHandler<FileSystemIntercept<IFileSystem, Any.Value>, IPropertyInterceptEventArgs>? PropertyIntercept;
+            public new static event EventHandler<FileSystemIntercept<IFileSystem, Any.Value>, IPropertyInterceptEventArgs>? PropertyIntercepting;
+            public new static event EventHandler<FileSystemIntercept<IFileSystem, Any.Value>, IPropertyInterceptEventArgs>? PropertyIntercepted;
+            public new static event EventHandler<FileSystemIntercept<IFileSystem, Any.Value>, IPropertyInterceptEventArgs>? PropertyGetIntercept;
+            public new static event EventHandler<FileSystemIntercept<IFileSystem, Any.Value>, IPropertyInterceptEventArgs>? PropertySetIntercept;
+            public new static event EventHandler<FileSystemIntercept<IFileSystem, Any.Value>, IPropertyInterceptEventArgs>? PropertyGetIntercepting;
+            public new static event EventHandler<FileSystemIntercept<IFileSystem, Any.Value>, IPropertyInterceptEventArgs>? PropertySetIntercepting;
+            public new static event EventHandler<FileSystemIntercept<IFileSystem, Any.Value>, IPropertyInterceptEventArgs>? PropertyGetIntercepted;
+            public new static event EventHandler<FileSystemIntercept<IFileSystem, Any.Value>, IPropertyInterceptEventArgs>? PropertySetIntercepted;
+            public new static event EventHandler<FileSystemIntercept<IFileSystem, Any.Value>, IMethodInterceptEventArgs>? MethodIntercept;
+            public new static event EventHandler<FileSystemIntercept<IFileSystem, Any.Value>, IMethodInterceptEventArgs>? MethodIntercepting;
+            public new static event EventHandler<FileSystemIntercept<IFileSystem, Any.Value>, IMethodInterceptEventArgs>? MethodIntercepted;
             
             static InterceptHarmonyFileSystem()
             {
@@ -67,62 +72,62 @@ namespace NetExtender.Utilities.Core
                 Initialize();
             }
 
-            private static void OnPropertyIntercept(FileSystemIntercept<Any.Value> sender, IPropertyInterceptEventArgs args)
+            private static void OnPropertyIntercept(FileSystemIntercept<IFileSystem, Any.Value> sender, IPropertyInterceptEventArgs args)
             {
                 PropertyIntercept?.Invoke(sender, args);
             }
 
-            private static void OnPropertyIntercepting(FileSystemIntercept<Any.Value> sender, IPropertyInterceptEventArgs args)
+            private static void OnPropertyIntercepting(FileSystemIntercept<IFileSystem, Any.Value> sender, IPropertyInterceptEventArgs args)
             {
                 PropertyIntercepting?.Invoke(sender, args);
             }
 
-            private static void OnPropertyIntercepted(FileSystemIntercept<Any.Value> sender, IPropertyInterceptEventArgs args)
+            private static void OnPropertyIntercepted(FileSystemIntercept<IFileSystem, Any.Value> sender, IPropertyInterceptEventArgs args)
             {
                 PropertyIntercepted?.Invoke(sender, args);
             }
 
-            private static void OnPropertyGetIntercept(FileSystemIntercept<Any.Value> sender, IPropertyInterceptEventArgs args)
+            private static void OnPropertyGetIntercept(FileSystemIntercept<IFileSystem, Any.Value> sender, IPropertyInterceptEventArgs args)
             {
                 PropertyGetIntercept?.Invoke(sender, args);
             }
 
-            private static void OnPropertySetIntercept(FileSystemIntercept<Any.Value> sender, IPropertyInterceptEventArgs args)
+            private static void OnPropertySetIntercept(FileSystemIntercept<IFileSystem, Any.Value> sender, IPropertyInterceptEventArgs args)
             {
                 PropertySetIntercept?.Invoke(sender, args);
             }
 
-            private static void OnPropertyGetIntercepting(FileSystemIntercept<Any.Value> sender, IPropertyInterceptEventArgs args)
+            private static void OnPropertyGetIntercepting(FileSystemIntercept<IFileSystem, Any.Value> sender, IPropertyInterceptEventArgs args)
             {
                 PropertyGetIntercepting?.Invoke(sender, args);
             }
 
-            private static void OnPropertySetIntercepting(FileSystemIntercept<Any.Value> sender, IPropertyInterceptEventArgs args)
+            private static void OnPropertySetIntercepting(FileSystemIntercept<IFileSystem, Any.Value> sender, IPropertyInterceptEventArgs args)
             {
                 PropertySetIntercepting?.Invoke(sender, args);
             }
 
-            private static void OnPropertyGetIntercepted(FileSystemIntercept<Any.Value> sender, IPropertyInterceptEventArgs args)
+            private static void OnPropertyGetIntercepted(FileSystemIntercept<IFileSystem, Any.Value> sender, IPropertyInterceptEventArgs args)
             {
                 PropertyGetIntercepted?.Invoke(sender, args);
             }
 
-            private static void OnPropertySetIntercepted(FileSystemIntercept<Any.Value> sender, IPropertyInterceptEventArgs args)
+            private static void OnPropertySetIntercepted(FileSystemIntercept<IFileSystem, Any.Value> sender, IPropertyInterceptEventArgs args)
             {
                 PropertySetIntercepted?.Invoke(sender, args);
             }
 
-            private static void OnMethodIntercept(FileSystemIntercept<Any.Value> sender, IMethodInterceptEventArgs args)
+            private static void OnMethodIntercept(FileSystemIntercept<IFileSystem, Any.Value> sender, IMethodInterceptEventArgs args)
             {
                 MethodIntercept?.Invoke(sender, args);
             }
 
-            private static void OnMethodIntercepting(FileSystemIntercept<Any.Value> sender, IMethodInterceptEventArgs args)
+            private static void OnMethodIntercepting(FileSystemIntercept<IFileSystem, Any.Value> sender, IMethodInterceptEventArgs args)
             {
                 MethodIntercepting?.Invoke(sender, args);
             }
 
-            private static void OnMethodIntercepted(FileSystemIntercept<Any.Value> sender, IMethodInterceptEventArgs args)
+            private static void OnMethodIntercepted(FileSystemIntercept<IFileSystem, Any.Value> sender, IMethodInterceptEventArgs args)
             {
                 MethodIntercepted?.Invoke(sender, args);
             }

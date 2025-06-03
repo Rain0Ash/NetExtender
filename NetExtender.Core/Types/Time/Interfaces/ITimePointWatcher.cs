@@ -5,7 +5,7 @@ using System;
 
 namespace NetExtender.Types.Times.Interfaces
 {
-    public interface ITimePointWatcher : IComparable<DateTime>, IComparable<DateTimeOffset>, IComparable<ITimePointWatcher>, IEquatable<DateTime>, IEquatable<DateTimeOffset>, ICloneable
+    public interface ITimePointWatcher : IEquality<DateTime>, IEquality<DateTimeOffset>, IComparable<ITimePointWatcher>, ICloneable
     {
         public DateTimeOffset Point { get; }
 

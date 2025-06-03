@@ -36,10 +36,11 @@ namespace NetExtender.StrongId.Generator
                 throw new ArgumentNullException(nameof(info));
             }
 
-            String name = info.Name;
+            String name = info.Name ?? throw new ArgumentNullException(nameof(info) + '.' + nameof(info.Name));
+
             if (String.IsNullOrEmpty(name))
             {
-                throw new ArgumentException("Value cannot be null or empty.", nameof(info.Name));
+                throw new ArgumentException("Value cannot be empty.", nameof(info) + '.' + nameof(info.Name));
             }
 
             Byte count = 0;

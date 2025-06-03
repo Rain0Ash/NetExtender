@@ -1,3 +1,6 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -113,8 +116,16 @@ namespace NetExtender.DependencyInjection
             }
         }
         
-        public Object SyncRoot { get; } = ConcurrentUtilities.SyncRoot;
+        public SyncRoot SyncRoot { get; } = SyncRoot.Create();
         
+        Object ICollection.SyncRoot
+        {
+            get
+            {
+                return SyncRoot;
+            }
+        }
+
         public Boolean IsSynchronized
         {
             get
@@ -347,9 +358,9 @@ namespace NetExtender.DependencyInjection
             CopyTo(services, index);
         }
         
-        public void CopyTo(ServiceDescriptor[] array, Int32 arrayIndex)
+        public void CopyTo(ServiceDescriptor[] array, Int32 index)
         {
-            Collection.CopyTo(array, arrayIndex);
+            Collection.CopyTo(array, index);
         }
         
         public IEnumerator<ServiceDescriptor> GetEnumerator()

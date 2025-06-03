@@ -23,7 +23,7 @@ namespace NetExtender.Types.Network
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static JObject? Parse(IEnumerable<KeyValuePair<String?, String?>> source, Int32 depth)
         {
-            return ParseInternal(source, depth, true);
+            return ParseCore(source, depth, true);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -40,7 +40,7 @@ namespace NetExtender.Types.Network
                 throw new ArgumentNullException(nameof(source));
             }
 
-            if (ParseInternal(source, depth, false) is not { } result)
+            if (ParseCore(source, depth, false) is not { } result)
             {
                 value = default;
                 return false;
@@ -51,7 +51,7 @@ namespace NetExtender.Types.Network
         }
 
         // ReSharper disable once CognitiveComplexity
-        private static JObject? ParseInternal(IEnumerable<KeyValuePair<String?, String?>> source, Int32 depth, Boolean @throw)
+        private static JObject? ParseCore(IEnumerable<KeyValuePair<String?, String?>> source, Int32 depth, Boolean @throw)
         {
             if (source is null)
             {

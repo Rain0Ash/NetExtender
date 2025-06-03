@@ -8,8 +8,18 @@ using NetExtender.Utilities.Numerics;
 namespace NetExtender.Types.Numerics
 {
     [Serializable]
-    public readonly struct AngleGradian : IEquatable<AngleGradian>, IComparable<AngleGradian>, IFormattable
+    public readonly struct AngleGradian : IEquality<AngleGradian>, IFormattable
     {
+        public static implicit operator AngleGradian(Double gradian)
+        {
+            return new AngleGradian(gradian);
+        }
+
+        public static explicit operator Double(AngleGradian angle)
+        {
+            return angle.Gradian;
+        }
+        
         /// <summary>
         /// Represents the zero <see cref="AngleGradian"/> value (0 degrees). This field is read-only.
         /// </summary>
@@ -49,16 +59,6 @@ namespace NetExtender.Types.Numerics
         /// Represents the largest possible value of a <see cref="AngleGradian"/>. This field is read-only.
         /// </summary>
         public static AngleGradian MaxValue { get; } = new AngleGradian(Double.MaxValue);
-
-        public static explicit operator Double(AngleGradian angle)
-        {
-            return angle.Gradian;
-        }
-
-        public static implicit operator AngleGradian(Double gradian)
-        {
-            return new AngleGradian(gradian);
-        }
 
         /// <summary>
         /// Indicates whether two <see cref="AngleGradian"/> instances are equal.
@@ -220,6 +220,16 @@ namespace NetExtender.Types.Numerics
         }
 
         /// <summary>
+        /// Returns a hash code for this instance.
+        /// </summary>
+        /// <returns>A 32-bit signed integer hash code.</returns>
+        [Pure]
+        public override Int32 GetHashCode()
+        {
+            return Gradian.GetHashCode();
+        }
+
+        /// <summary>
         /// Indicates whether two <see cref="AngleGradian"/> instances are equal.
         /// </summary>
         /// <param name="first">The first angle to compare.</param>
@@ -259,16 +269,6 @@ namespace NetExtender.Types.Numerics
                 AngleRevolution angle => Equals(angle.ToAngleGradian()),
                 _ => false
             };
-        }
-
-        /// <summary>
-        /// Returns a hash code for this instance.
-        /// </summary>
-        /// <returns>A 32-bit signed integer hash code.</returns>
-        [Pure]
-        public override Int32 GetHashCode()
-        {
-            return Gradian.GetHashCode();
         }
 
         /// <summary>

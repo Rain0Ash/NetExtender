@@ -5,9 +5,9 @@ using System;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
-using NetExtender.IO.FileSystem.Lock.Content;
+using NetExtender.FileSystems.Lock.Content;
 
-namespace NetExtender.IO.FileSystem.Lock.Common
+namespace NetExtender.FileSystems.Lock.Common
 {
     public static class LockHelper
     {

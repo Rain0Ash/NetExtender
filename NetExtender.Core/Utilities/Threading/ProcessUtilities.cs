@@ -8,6 +8,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
+using NetExtender.Types.Exceptions;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Utilities.Threading
@@ -80,7 +81,7 @@ namespace NetExtender.Utilities.Threading
         {
             if (String.IsNullOrEmpty(url))
             {
-                throw new ArgumentException("Value cannot be null or empty.", nameof(url));
+                throw new ArgumentNullOrEmptyStringException(url, nameof(url));
             }
 
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
@@ -355,7 +356,7 @@ namespace NetExtender.Utilities.Threading
 
             TaskCompletionSource<DateTime> start = new TaskCompletionSource<DateTime>();
 
-            async void OnProcessOnExited(Object? obj, EventArgs args)
+            async void OnProcessOnExited(Object? sender, EventArgs args)
             {
                 source.TrySetResult(new ProcessResult(process, await start.Task.ConfigureAwait(false), await output.ConfigureAwait(false), await error.ConfigureAwait(false)));
             }

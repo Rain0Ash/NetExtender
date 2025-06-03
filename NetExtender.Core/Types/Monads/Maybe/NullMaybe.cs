@@ -4,13 +4,18 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using NetExtender.Interfaces;
+using NetExtender.NewtonSoft.Types.Monads;
 using NetExtender.Types.Monads.Interfaces;
 using NetExtender.Utilities.Serialization;
+using NetExtender.Utilities.Types;
+using Newtonsoft.Json;
 
 namespace NetExtender.Types.Monads
 {
     [Serializable]
-    public readonly struct NullMaybe<T> : INullMaybe<T>, IEquatable<Maybe<T>>, IEquatable<NullMaybe<T>>, IComparable<Maybe<T>>, IComparable<NullMaybe<T>>
+    [JsonConverter(typeof(NullMaybeJsonConverter<>))]
+    public readonly struct NullMaybe<T> : IEqualityStruct<NullMaybe<T>>, INullMaybe<T>, IMaybeEquality<T, Maybe<T>>, IMaybeEquality<T, NullMaybe<T>>, ICloneable<NullMaybe<T>>, ISerializable
     {
         public static implicit operator NullMaybe<T>(Maybe<T> value)
         {
@@ -152,8 +157,15 @@ namespace NetExtender.Types.Monads
             return first.CompareTo(second) <= 0;
         }
 
-        public T Value { get; }
-        
+        private readonly Maybe<T> _value;
+        public T Value
+        {
+            get
+            {
+                return _value.Internal;
+            }
+        }
+
         Object? INullMaybe.Value
         {
             get
@@ -162,14 +174,22 @@ namespace NetExtender.Types.Monads
             }
         }
 
+        public Boolean IsEmpty
+        {
+            get
+            {
+                return _value.IsEmpty;
+            }
+        }
+
         public NullMaybe(T value)
         {
-            Value = value;
+            _value = value;
         }
         
         private NullMaybe(SerializationInfo info, StreamingContext context)
         {
-            Value = info.GetValue<T>(nameof(Value));
+            _value = info.GetValue<T>(nameof(Value));
         }
         
         public void GetObjectData(SerializationInfo info, StreamingContext context)
@@ -184,15 +204,7 @@ namespace NetExtender.Types.Monads
 
         public Int32 CompareTo(T? other, IComparer<T>? comparer)
         {
-            try
-            {
-                comparer ??= Comparer<T>.Default;
-                return comparer.Compare(Value, other);
-            }
-            catch (ArgumentException)
-            {
-                return 0;
-            }
+            return comparer.SafeCompare(Value, other) ?? 0;
         }
 
         public Int32 CompareTo(Maybe<T> other)
@@ -202,15 +214,7 @@ namespace NetExtender.Types.Monads
 
         public Int32 CompareTo(Maybe<T> other, IComparer<T>? comparer)
         {
-            try
-            {
-                comparer ??= Comparer<T>.Default;
-                return other.HasValue ? comparer.Compare(Value, other.Value) : 1;
-            }
-            catch (ArgumentException)
-            {
-                return 0;
-            }
+            return other.HasValue ? comparer.SafeCompare(Value, other.Value) ?? 0 : 1;
         }
 
         public Int32 CompareTo(NullMaybe<T> other)
@@ -220,15 +224,7 @@ namespace NetExtender.Types.Monads
 
         public Int32 CompareTo(NullMaybe<T> other, IComparer<T>? comparer)
         {
-            try
-            {
-                comparer ??= Comparer<T>.Default;
-                return comparer.Compare(Value, other.Value);
-            }
-            catch (ArgumentException)
-            {
-                return 0;
-            }
+            return comparer.SafeCompare(Value, other.Value) ?? 0;
         }
 
         public Int32 CompareTo(IMaybe<T>? other)
@@ -243,15 +239,7 @@ namespace NetExtender.Types.Monads
                 return 1;
             }
             
-            try
-            {
-                comparer ??= Comparer<T>.Default;
-                return other.HasValue ? comparer.Compare(Value, other.Value) : 1;
-            }
-            catch (ArgumentException)
-            {
-                return 0;
-            }
+            return other.HasValue ? comparer.SafeCompare(Value, other.Value) ?? 0 : 1;
         }
 
         public Int32 CompareTo(INullMaybe<T>? other)
@@ -261,20 +249,7 @@ namespace NetExtender.Types.Monads
 
         public Int32 CompareTo(INullMaybe<T>? other, IComparer<T>? comparer)
         {
-            if (other is null)
-            {
-                return 1;
-            }
-            
-            try
-            {
-                comparer ??= Comparer<T>.Default;
-                return comparer.Compare(Value, other.Value);
-            }
-            catch (ArgumentException)
-            {
-                return 0;
-            }
+            return other is not null ? comparer.SafeCompare(Value, other.Value) ?? 0 : 1;
         }
 
         public override Int32 GetHashCode()
@@ -356,9 +331,114 @@ namespace NetExtender.Types.Monads
             return other is not null && comparer.Equals(Value, other.Value);
         }
 
+        public NullMaybe<T> Clone()
+        {
+            return this;
+        }
+
+        INullMaybe<T> INullMaybe<T>.Clone()
+        {
+            return Clone();
+        }
+
+        INullMaybe<T> ICloneable<INullMaybe<T>>.Clone()
+        {
+            return Clone();
+        }
+
+        INullMaybe INullMaybe.Clone()
+        {
+            return Clone();
+        }
+
+        INullMaybe ICloneable<INullMaybe>.Clone()
+        {
+            return Clone();
+        }
+
+        IMonad<T> IMonad<T>.Clone()
+        {
+            return Clone();
+        }
+
+        IMonad<T> ICloneable<IMonad<T>>.Clone()
+        {
+            return Clone();
+        }
+
+        IMonad IMonad.Clone()
+        {
+            return Clone();
+        }
+
+        IMonad ICloneable<IMonad>.Clone()
+        {
+            return Clone();
+        }
+
+        Object ICloneable.Clone()
+        {
+            return Clone();
+        }
+
         public override String? ToString()
         {
-            return Value?.ToString();
+            return Value is { } value ? value.ToString() : null;
+        }
+
+        public String ToString(String? format)
+        {
+            return ToString(format, null);
+        }
+
+        public String ToString(IFormatProvider? provider)
+        {
+            return ToString(null, provider);
+        }
+
+        public String ToString(String? format, IFormatProvider? provider)
+        {
+            return Value is { } value ? StringUtilities.ToString(in value, format, provider) : String.Empty;
+        }
+
+        public String? GetString()
+        {
+            return _value.GetString();
+        }
+
+        public String? GetString(EscapeType escape)
+        {
+            return _value.GetString(escape);
+        }
+
+        public String? GetString(String? format)
+        {
+            return _value.GetString(format);
+        }
+
+        public String? GetString(EscapeType escape, String? format)
+        {
+            return _value.GetString(escape, format);
+        }
+
+        public String? GetString(IFormatProvider? provider)
+        {
+            return _value.GetString(provider);
+        }
+
+        public String? GetString(EscapeType escape, IFormatProvider? provider)
+        {
+            return _value.GetString(escape, provider);
+        }
+
+        public String? GetString(String? format, IFormatProvider? provider)
+        {
+            return _value.GetString(format, provider);
+        }
+
+        public String? GetString(EscapeType escape, String? format, IFormatProvider? provider)
+        {
+            return _value.GetString(escape, format, provider);
         }
     }
 }

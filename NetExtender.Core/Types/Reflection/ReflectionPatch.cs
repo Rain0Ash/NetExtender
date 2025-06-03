@@ -1,3 +1,6 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 using System;
 using System.Runtime.Serialization;
 using NetExtender.Patch;
@@ -43,7 +46,7 @@ namespace NetExtender.Types.Reflection
             return result;
         });
 
-        public static Object SyncRoot
+        public static SyncRoot SyncRoot
         {
             get
             {
@@ -51,7 +54,7 @@ namespace NetExtender.Types.Reflection
             }
         }
 
-        Object IReflectionPatch.SyncRoot
+        SyncRoot IReflectionPatch.SyncRoot
         {
             get
             {
@@ -282,7 +285,15 @@ namespace NetExtender.Types.Reflection
 
     public abstract class ReflectionPatch : IReflectionPatch, IPatch
     {
-        public Object SyncRoot { get; } = ConcurrentUtilities.SyncRoot;
+        public SyncRoot SyncRoot { get; } = SyncRoot.Create();
+
+        Object IPatch.SyncRoot
+        {
+            get
+            {
+                return SyncRoot;
+            }
+        }
 
         public virtual String Name
         {

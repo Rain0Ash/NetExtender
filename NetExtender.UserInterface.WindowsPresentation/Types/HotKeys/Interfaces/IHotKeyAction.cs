@@ -6,11 +6,11 @@ using System.Windows.Input;
 
 namespace NetExtender.Types.HotKeys.Interfaces
 {
-    public interface IHotKeyAction<T> : IHotKeyAction<T, Key, ModifierKeys> where T : struct
+    public interface IHotKeyAction<T> : IHotKeyAction<T, Key, ModifierKeys> where T : struct, IStruct<T>
     {
     }
     
-    public interface IHotKeyAction<T, out TId> : IHotKeyAction<T>, IHotKeyAction<T, TId, Key, ModifierKeys> where T : struct where TId : unmanaged, IComparable<TId>, IConvertible
+    public interface IHotKeyAction<T, out TId> : IHotKeyAction<T>, IHotKeyAction<T, TId, Key, ModifierKeys> where T : struct, IStruct<T> where TId : unmanaged, IComparable<TId>, IConvertible
     {
     }
 }

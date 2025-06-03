@@ -9,6 +9,7 @@ using System.Reflection;
 using NetExtender.Domains.Builder.Interfaces;
 using NetExtender.Patch;
 using NetExtender.Types.Attributes.Interfaces;
+using NetExtender.Types.Console.Interfaces;
 using NetExtender.Types.Exceptions;
 using NetExtender.Types.Middlewares;
 using NetExtender.Types.Middlewares.Interfaces;
@@ -19,8 +20,17 @@ using NetExtender.Utilities.Types;
 
 namespace NetExtender.Domains.Builder
 {
+    //TODO: ConsoleApplicationBuilder
     public abstract class ApplicationBuilder<T> : IApplicationBuilder<T> where T : class
     {
+        public virtual IConsole Console
+        {
+            get
+            {
+                return IConsole.Default;
+            }
+        }
+        
         private IMiddlewareManager? _manager;
         public virtual IMiddlewareManager? Manager
         {
@@ -65,21 +75,30 @@ namespace NetExtender.Domains.Builder
                 return ReflectionPatchThrow.Throw;
             }
         }
-        
+
+        protected virtual Boolean IsDesignMode
+        {
+            get
+            {
+                return Assembly.GetEntryAssembly()?.GetName().Name == "ef";
+            }
+        }
+
         protected virtual void Setup(ImmutableArray<String> arguments)
         {
             Arguments = arguments;
+            
             foreach (IInvokeAttribute attribute in ReflectionUtilities.GetCustomAttributes<PatchAttribute>(GetType()).OfType<IInvokeAttribute>())
             {
                 attribute.Invoke(this, null);
             }
-            
+
             NetExtender.Initializer.Initializer.IsDomain = true;
             
             switch (Patch)
             {
                 case ReflectionPatchThrow.Ignore:
-                    return;
+                    goto successful;
                 case ReflectionPatchThrow.Log:
                     switch (ReflectionPatchUtilities.Failed.ToArray())
                     {
@@ -96,7 +115,7 @@ namespace NetExtender.Domains.Builder
                         }
                         default:
                         {
-                            return;
+                            goto successful;
                         }
                     }
                 case ReflectionPatchThrow.Throw:
@@ -114,20 +133,32 @@ namespace NetExtender.Domains.Builder
                         }
                         default:
                         {
-                            return;
+                            goto successful;
                         }
                     }
                 default:
                     throw new EnumUndefinedOrNotSupportedException<ReflectionPatchThrow>(Patch, nameof(Patch), null);
             }
+
+            successful:
+            Initialize(arguments);
         }
-        
+
         protected virtual void Finish()
         {
             if (Confidential)
             {
                 Arguments = null;
             }
+        }
+
+        protected virtual void Initialize(ImmutableArray<String> arguments)
+        {
+            Initialize(arguments, Console);
+        }
+
+        protected virtual void Initialize(ImmutableArray<String> arguments, IConsole console)
+        {
         }
 
         protected virtual T New(ImmutableArray<String> arguments)
@@ -142,11 +173,11 @@ namespace NetExtender.Domains.Builder
             try
             {
                 TType? instance = Activator.CreateInstance(typeof(TType), BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic) as TType;
-                return instance ?? throw new InvalidOperationException($"Can't create instance of {typeof(TType)} for builder");
+                return instance ?? throw new InvalidOperationException($"Can't create instance of '{typeof(TType).Name}' for builder.");
             }
             catch (Exception exception)
             {
-                throw new InvalidOperationException($"Can't create instance of {typeof(TType)} for builder", exception);
+                throw new InvalidOperationException($"Can't create instance of '{typeof(TType).Name}' for builder.", exception);
             }
             finally
             {

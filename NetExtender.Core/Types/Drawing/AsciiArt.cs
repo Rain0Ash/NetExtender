@@ -7,6 +7,7 @@ using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.IO;
+using NetExtender.Types.Streams;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Drawing
@@ -34,7 +35,7 @@ namespace NetExtender.Types.Drawing
 
             if (!stream.CanRead)
             {
-                throw new ArgumentException(@"Stream cannot be read", nameof(stream));
+                throw new StreamArgumentNotSupportReadException(stream, nameof(stream));
             }
 
             String[] art = stream.ReadAsLines();

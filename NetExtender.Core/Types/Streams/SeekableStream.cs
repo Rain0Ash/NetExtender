@@ -115,7 +115,7 @@ namespace NetExtender.Types.Streams
 
             if (!buffer.CanSeek)
             {
-                throw new NotSupportedException("Buffer stream must be seekable");
+                throw new StreamArgumentNotSupportSeekException(buffer, nameof(buffer));
             }
         }
 

@@ -1,11 +1,15 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 using System.Threading;
 
 namespace NetExtender.Types.Reflection
 {
-    public readonly struct StackOverflowCounter : IEquatable<StackOverflowCounter>, IDisposable
+    public readonly struct StackOverflowCounter : IEquatableStruct<StackOverflowCounter>, IDisposable
     {
         public static Boolean operator ==(StackOverflowCounter first, StackOverflowCounter second)
         {
@@ -52,6 +56,7 @@ namespace NetExtender.Types.Reflection
         
         public Boolean IsEmpty
         {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
                 return _stack is null;
@@ -91,12 +96,12 @@ namespace NetExtender.Types.Reflection
         private sealed record Stack : IDisposable
         {
             [ThreadStatic]
-            private static Dictionary<String, Stack>? _storage;
+            private static Dictionary<String, Stack>? storage;
             private static Dictionary<String, Stack> Storage
             {
                 get
                 {
-                    return _storage ??= new Dictionary<String, Stack>();
+                    return storage ??= new Dictionary<String, Stack>();
                 }
             }
             

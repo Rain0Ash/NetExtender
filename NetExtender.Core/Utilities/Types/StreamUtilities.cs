@@ -86,7 +86,7 @@ namespace NetExtender.Utilities.Types
 
             if (!stream.CanRead)
             {
-                throw new ArgumentException("Stream not support reading");
+                throw new StreamArgumentNotSupportReadException(stream, nameof(stream));
             }
 
             encoding ??= Encoding.UTF8;
@@ -146,7 +146,7 @@ namespace NetExtender.Utilities.Types
 
             if (!stream.CanRead)
             {
-                throw new ArgumentException("Stream not support reading");
+                throw new StreamArgumentNotSupportReadException(stream, nameof(stream));
             }
 
             encoding ??= Encoding.UTF8;
@@ -219,7 +219,7 @@ namespace NetExtender.Utilities.Types
 
             if (!stream.CanRead)
             {
-                throw new ArgumentException("Stream not support reading");
+                throw new StreamArgumentNotSupportReadException(stream, nameof(stream));
             }
 
             Span<Byte> first = stackalloc Byte[1];
@@ -260,7 +260,7 @@ namespace NetExtender.Utilities.Types
 
             if (!stream.CanRead)
             {
-                throw new ArgumentException("Stream not support reading");
+                throw new StreamArgumentNotSupportReadException(stream, nameof(stream));
             }
 
             Span<Byte> first = stackalloc Byte[1];

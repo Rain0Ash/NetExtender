@@ -1,3 +1,6 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -237,8 +240,18 @@ namespace NetExtender.WindowsPresentation.Types.Bindings
         {
             return Clone();
         }
-        
+
+        IKeyboardBinding<T> ICloneable<IKeyboardBinding<T>>.Clone()
+        {
+            return Clone();
+        }
+
         IKeyboardBinding IKeyboardBinding.Clone()
+        {
+            return Clone();
+        }
+
+        IKeyboardBinding ICloneable<IKeyboardBinding>.Clone()
         {
             return Clone();
         }
@@ -248,12 +261,27 @@ namespace NetExtender.WindowsPresentation.Types.Bindings
             return Clone();
         }
         
+        IReadOnlyKeyboardBinding<T> ICloneable<IReadOnlyKeyboardBinding<T>>.Clone()
+        {
+            return Clone();
+        }
+        
         IReadOnlyKeyboardBinding IReadOnlyKeyboardBinding.Clone()
         {
             return Clone();
         }
         
+        IReadOnlyKeyboardBinding ICloneable<IReadOnlyKeyboardBinding>.Clone()
+        {
+            return Clone();
+        }
+        
         IKeyboardBindingInfo IKeyboardBindingInfo.Clone()
+        {
+            return Clone();
+        }
+        
+        IKeyboardBindingInfo ICloneable<IKeyboardBindingInfo>.Clone()
         {
             return Clone();
         }

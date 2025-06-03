@@ -3,6 +3,7 @@
 
 using System;
 using System.Net.Http.Headers;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace NetExtender.Types.Network
@@ -243,6 +244,7 @@ namespace NetExtender.Types.Network
             
             public Boolean IsEmpty
             {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 get
                 {
                     return Name.Length <= 0 && Value.Length <= 0;

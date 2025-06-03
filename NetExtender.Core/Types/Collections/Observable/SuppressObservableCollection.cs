@@ -8,6 +8,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using NetExtender.Types.Collections.Interfaces;
+using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Collections
 {
@@ -23,6 +24,8 @@ namespace NetExtender.Types.Collections
 
     public class SuppressObservableCollection<T> : ObservableCollection<T>, ISuppressObservableCollection<T>, IReadOnlySuppressObservableCollection<T>, ISuppressObservableCollectionHandler
     {
+        protected SyncRoot SyncRoot { get; } = SyncRoot.Create();
+        
         private event PropertyChangingEventHandler? PropertyChanging;
         event PropertyChangingEventHandler? INotifyPropertyChanging.PropertyChanging
         {
@@ -345,9 +348,9 @@ namespace NetExtender.Types.Collections
             Internal.Clear();
         }
 
-        public void CopyTo(T[] array, Int32 arrayIndex)
+        public void CopyTo(T[] array, Int32 index)
         {
-            Internal.CopyTo(array, arrayIndex);
+            Internal.CopyTo(array, index);
         }
 
         public IEnumerator<T> GetEnumerator()

@@ -11,7 +11,7 @@ using NetExtender.Types.Behavior.Interfaces;
 
 namespace NetExtender.Configuration.Properties.Interfaces
 {
-    public interface IReadOnlyConfigProperty<T> : IConfigPropertyValueInfo<T>, IReadableBehavior<ConfigPropertyOptions>, IReadOnlyValidable<T>, IFormattable
+    public interface IReadOnlyConfigProperty<T> : IConfigPropertyValueInfo<T>, IReadableBehavior<ConfigPropertyOptions>, IReadOnlyValidable<T>, IGetter<T>, IAsyncGetter<T>, IFormattable
     {
         public ITwoWayConverter<String?, T> Converter { get; }
         public T GetValue();

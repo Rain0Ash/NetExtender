@@ -1,3 +1,6 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 using System;
 using System.Buffers;
 using System.Collections.Generic;
@@ -8,13 +11,12 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.Versioning;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Win32.SafeHandles;
 using NetExtender.Types.Exceptions;
-using NetExtender.Types.Interception;
-using NetExtender.Types.Interception.Interfaces;
+using NetExtender.Types.Intercept;
+using NetExtender.Types.Intercept.Interfaces;
 using NetExtender.Types.Memory;
 using NetExtender.Utilities.Types;
 
@@ -387,7 +389,7 @@ namespace NetExtender.Types.Streams
             return Interceptor.Intercept(this, info, base.ReadByte);
         }
 
-        private Int32 ReadInternal(Span<Byte> buffer)
+        private Int32 ReadCore(Span<Byte> buffer)
         {
             return base.Read(buffer);
         }
@@ -403,13 +405,13 @@ namespace NetExtender.Types.Streams
 
         public virtual Int32 Read(Memory<Byte> buffer)
         {
-            static Int32 Internal(InterceptFileStream stream, Memory<Byte> buffer)
+            static Int32 Core(InterceptFileStream stream, Memory<Byte> buffer)
             {
-                return stream.ReadInternal(buffer.Span);
+                return stream.ReadCore(buffer.Span);
             }
             
             Info info = new Info(FileStreamIntercept.Read) { Buffer = buffer };
-            return Interceptor.Intercept(this, info, Internal, this, buffer);
+            return Interceptor.Intercept(this, info, Core, this, buffer);
         }
 
         public override async ValueTask<Int32> ReadAsync(Memory<Byte> buffer, CancellationToken token = default)
@@ -436,7 +438,7 @@ namespace NetExtender.Types.Streams
             Interceptor.Intercept(this, info, base.WriteByte, value);
         }
 
-        private void WriteInternal(ReadOnlySpan<Byte> buffer)
+        private void WriteCore(ReadOnlySpan<Byte> buffer)
         {
             base.Write(buffer);
         }
@@ -452,9 +454,9 @@ namespace NetExtender.Types.Streams
 
         public virtual void Write(ReadOnlyMemory<Byte> buffer)
         {
-            static void Internal(InterceptFileStream stream, ReadOnlyMemory<Byte> buffer)
+            static void Core(InterceptFileStream stream, ReadOnlyMemory<Byte> buffer)
             {
-                stream.WriteInternal(buffer.Span);
+                stream.WriteCore(buffer.Span);
             }
 
             Byte[] array = Pool.Rent(buffer.Length);
@@ -463,7 +465,7 @@ namespace NetExtender.Types.Streams
             {
                 buffer.CopyTo(array);
                 Info info = new Info(FileStreamIntercept.Write) { Buffer = new Memory<Byte>(array, 0, buffer.Length) };
-                Interceptor.Intercept(this, info, Internal, this, (ReadOnlyMemory<Byte>) info.Buffer);
+                Interceptor.Intercept(this, info, Core, this, (ReadOnlyMemory<Byte>) info.Buffer);
             }
             finally
             {

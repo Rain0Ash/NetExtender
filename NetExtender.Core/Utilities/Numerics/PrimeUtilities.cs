@@ -9,11 +9,109 @@ using System.Linq;
 
 namespace NetExtender.Utilities.Numerics
 {
+    public readonly struct PrimeCollection : IReadOnlyList<Int32>, IEquatableStruct<PrimeCollection>
+    {
+        public static Boolean operator ==(PrimeCollection first, PrimeCollection second)
+        {
+            return first.Equals(second);
+        }
+
+        public static Boolean operator !=(PrimeCollection first, PrimeCollection second)
+        {
+            return !(first == second);
+        }
+        
+        public static PrimeCollection Default
+        {
+            get
+            {
+                return new PrimeCollection(PrimeUtilities.Primes);
+            }
+        }
+
+        private readonly ImmutableArray<Int32> _array;
+        public ImmutableArray<Int32> Array
+        {
+            get
+            {
+                return _array.Length > 0 ? _array : PrimeUtilities.Primes;
+            }
+        }
+
+        public Int32 Count
+        {
+            get
+            {
+                return Array.Length;
+            }
+        }
+
+        public Boolean IsEmpty
+        {
+            get
+            {
+                return _array.IsEmpty;
+            }
+        }
+
+        internal PrimeCollection(IEnumerable<Int32>? source)
+            : this(source?.ToImmutableArray() ?? ImmutableArray<Int32>.Empty)
+        {
+        }
+
+        private PrimeCollection(ImmutableArray<Int32> array)
+        {
+            _array = array;
+        }
+
+        public override Int32 GetHashCode()
+        {
+            return Array.GetHashCode();
+        }
+
+        public override Boolean Equals(Object? other)
+        {
+            return other switch
+            {
+                null => IsEmpty,
+                PrimeCollection value => Equals(value),
+                _ => false
+            };
+        }
+
+        public Boolean Equals(PrimeCollection other)
+        {
+            return Array.Equals(other.Array);
+        }
+
+        public ImmutableArray<Int32>.Enumerator GetEnumerator()
+        {
+            return Array.GetEnumerator();
+        }
+
+        IEnumerator<Int32> IEnumerable<Int32>.GetEnumerator()
+        {
+            return ((IEnumerable<Int32>) Array).GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return ((IEnumerable) Array).GetEnumerator();
+        }
+
+        public Int32 this[Int32 index]
+        {
+            get
+            {
+                return Array[index];
+            }
+        }
+    }
+
     public static class PrimeUtilities
     {
         public const Int32 LargestPrime = Int32.MaxValue;
-
-        private static ImmutableArray<Int32> Primes { get; }
+        internal static ImmutableArray<Int32> Primes { get; }
 
         static PrimeUtilities()
         {

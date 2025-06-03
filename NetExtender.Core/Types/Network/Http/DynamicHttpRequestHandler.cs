@@ -1,3 +1,6 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 using System;
 using System.Collections;
 using System.Collections.Concurrent;
@@ -250,34 +253,34 @@ namespace NetExtender.Types.Network
             Handlers.Clear();
         }
         
-        public void CopyTo(HttpStatusCode[] array, Int32 arrayIndex)
+        public void CopyTo(HttpStatusCode[] array, Int32 index)
         {
             if (array is null)
             {
                 throw new ArgumentNullException(nameof(array));
             }
             
-            Handlers.Keys.CopyTo(array, arrayIndex);
+            Handlers.Keys.CopyTo(array, index);
         }
         
-        public void CopyTo(KeyValuePair<HttpStatusCode, HttpExceptionHandler>[] array, Int32 arrayIndex)
+        public void CopyTo(KeyValuePair<HttpStatusCode, HttpExceptionHandler>[] array, Int32 index)
         {
             if (array is null)
             {
                 throw new ArgumentNullException(nameof(array));
             }
             
-            ((ICollection<KeyValuePair<HttpStatusCode, HttpExceptionHandler>>) Handlers).CopyTo(array, arrayIndex);
+            ((ICollection<KeyValuePair<HttpStatusCode, HttpExceptionHandler>>) Handlers).CopyTo(array, index);
         }
         
-        void ICollection<KeyValuePair<HttpStatusCode, HttpExceptionHandler?>>.CopyTo(KeyValuePair<HttpStatusCode, HttpExceptionHandler?>[] array, Int32 arrayIndex)
+        void ICollection<KeyValuePair<HttpStatusCode, HttpExceptionHandler?>>.CopyTo(KeyValuePair<HttpStatusCode, HttpExceptionHandler?>[] array, Int32 index)
         {
             if (array is null)
             {
                 throw new ArgumentNullException(nameof(array));
             }
             
-            ((ICollection<KeyValuePair<HttpStatusCode, HttpExceptionHandler?>>) Handlers).CopyTo(array, arrayIndex);
+            ((ICollection<KeyValuePair<HttpStatusCode, HttpExceptionHandler?>>) Handlers).CopyTo(array, index);
         }
         
         public IEnumerator<KeyValuePair<HttpStatusCode, HttpExceptionHandler>> GetEnumerator()

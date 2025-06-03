@@ -7,7 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
-using NetExtender.IO.Interfaces;
+using NetExtender.FileSystems.Interfaces;
 using NetExtender.Types.Exceptions;
 using NetExtender.Utilities.Types;
 
@@ -44,16 +44,16 @@ namespace NetExtender.Utilities.IO
 
     public static class PathUtilities
     {
-        private static IUnsafeFileSystemHandler NetExtender
+        private static IFileSystem NetExtender
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
-                return IUnsafeFileSystemHandler.Default;
+                return IFileSystem.Default;
             }
         }
 
-        public static readonly Char[] Separators = {Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar};
+        public static readonly Char[] Separators = { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar };
 
         /// <summary>
         /// Gets the root directory information of the system drive. The system drive is considered the one on which the windows directory is located.
@@ -316,7 +316,7 @@ namespace NetExtender.Utilities.IO
             }
 
             path = path.Trim();
-            return path.Length > 0 && Separators.Any(chr => path.EndsWith(chr.ToString()));
+            return path.Length > 0 && Separators.Any(character => path.EndsWith(character.ToString()));
         }
 
         public static Char GetPathSeparator(String path)

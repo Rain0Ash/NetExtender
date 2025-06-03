@@ -555,7 +555,7 @@ namespace NetExtender.Utilities.Types
                 IReadOnlyList<T> collection => index >= 0 && index < collection.Count ? (collection[index], true) : (alternate, false),
                 ICollection<T> collection => index >= 0 && index < collection.Count ? (collection.ElementAt(index), true) : (alternate, false),
                 IReadOnlyCollection<T> collection => index >= 0 && index < collection.Count ? (collection.ElementAt(index), true) : (alternate, false),
-                _ => TryGetValueInternal(source, index, out value!) ? (value, true) : (alternate, false)
+                _ => TryGetValueCore(source, index, out value!) ? (value, true) : (alternate, false)
             };
 
             return result;
@@ -579,13 +579,13 @@ namespace NetExtender.Utilities.Types
                 IReadOnlyList<T> collection => index >= 0 && index < collection.Count ? (collection[index], true) : (alternate(), false),
                 ICollection<T> collection => index >= 0 && index < collection.Count ? (collection.ElementAt(index), true) : (alternate(), false),
                 IReadOnlyCollection<T> collection => index >= 0 && index < collection.Count ? (collection.ElementAt(index), true) : (alternate(), false),
-                _ => TryGetValueInternal(source, index, out value!) ? (value, true) : (alternate(), false)
+                _ => TryGetValueCore(source, index, out value!) ? (value, true) : (alternate(), false)
             };
 
             return result;
         }
 
-        private static Boolean TryGetValueInternal<T>(IEnumerable<T> source, Int32 index, [MaybeNullWhen(false)] out T value)
+        private static Boolean TryGetValueCore<T>(IEnumerable<T> source, Int32 index, [MaybeNullWhen(false)] out T value)
         {
             if (source is null)
             {
@@ -2409,7 +2409,6 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            // ReSharper disable once PossibleMultipleEnumeration
             if (source.CountIfMaterialized() >= count)
             {
                 return true;
@@ -2421,7 +2420,6 @@ namespace NetExtender.Utilities.Types
             }
 
             Int32 matches = 0;
-            // ReSharper disable once PossibleMultipleEnumeration
             return source.Any(_ => ++matches >= count);
         }
 
@@ -2503,7 +2501,6 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            // ReSharper disable once PossibleMultipleEnumeration
             if (source.CountIfMaterialized() <= count)
             {
                 return true;
@@ -2515,7 +2512,6 @@ namespace NetExtender.Utilities.Types
             }
 
             Int32 matches = 0;
-            // ReSharper disable once PossibleMultipleEnumeration
             return source.All(_ => ++matches <= count);
         }
 
@@ -2597,15 +2593,12 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            // ReSharper disable once PossibleMultipleEnumeration
             if (source.CountIfMaterialized() == count)
             {
                 return true;
             }
 
             Int32 matches = 0;
-
-            // ReSharper disable once PossibleMultipleEnumeration
             if (source.Any(_ => ++matches > count))
             {
                 return false;
@@ -3848,7 +3841,6 @@ namespace NetExtender.Utilities.Types
             }
         }
 
-        [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
         public static void Evaluate<T>(this IEnumerable<T> source)
         {
             if (source is null)

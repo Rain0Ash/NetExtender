@@ -1,10 +1,13 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
-using NetExtender.Types.Interception;
-using NetExtender.Types.Interception.Interfaces;
+using NetExtender.Types.Intercept;
+using NetExtender.Types.Intercept.Interfaces;
 
 namespace NetExtender.Utilities.Core
 {

@@ -3,6 +3,7 @@
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
         <Nullable>enable</Nullable>
+        <ImplicitUsings>disable</ImplicitUsings>
         <OutputType>Library</OutputType>
         <LangVersion>10</LangVersion>
         <Authors>Rain0Ash</Authors>
@@ -21,8 +22,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="protobuf-net" Version="3.2.30" />
-        <PackageReference Include="protobuf-net.Core" Version="3.2.30" />
+        <PackageReference Include="protobuf-net" Version="3.2.46" />
+        <PackageReference Include="protobuf-net.Core" Version="3.2.46" />
     </ItemGroup>
 
     <ItemGroup>

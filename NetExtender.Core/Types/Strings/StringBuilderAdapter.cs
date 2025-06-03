@@ -542,7 +542,7 @@ namespace NetExtender.Types.Strings
 
         public override Boolean Equals(Object? other)
         {
-            return ReferenceEquals(this, other) || other is StringBuilderAdapter adapter && Equals(adapter);
+            return ReferenceEquals(this, other) || other is StringBuilderAdapter adapter && Equals(adapter.Builder);
         }
 
         public Boolean Equals(StringBuilder? other)
@@ -552,7 +552,7 @@ namespace NetExtender.Types.Strings
 
         public override Int32 GetHashCode()
         {
-            return HashCode.Combine(base.GetHashCode(), Builder);
+            return Builder.GetHashCode();
         }
 
         public override String ToString()

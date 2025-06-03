@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Immutable;
 using NetExtender.Patch;
+using NetExtender.Types.Console.Interfaces;
 using NetExtender.Types.Middlewares.Interfaces;
 using NetExtender.Types.Monads.Interfaces;
 
@@ -18,6 +19,7 @@ namespace NetExtender.Domains.Builder.Interfaces
     
     public interface IApplicationBuilder : IScannable
     {
+        public IConsole Console { get; }
         public IMiddlewareManager? Manager { get; }
         public ReflectionPatchThrow Patch { get; }
     }

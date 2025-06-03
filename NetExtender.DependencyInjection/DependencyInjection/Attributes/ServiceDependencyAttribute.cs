@@ -1,3 +1,6 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 using System;
 using Microsoft.Extensions.DependencyInjection;
 using NetExtender.Types.Exceptions;
@@ -8,14 +11,26 @@ namespace NetExtender.DependencyInjection.Attributes
     public class ServiceDependencyAttribute : Attribute
     {
         public Type? Interface { get; }
+        public Object? Key { get; }
         public ServiceLifetime Lifetime { get; }
         
         public ServiceDependencyAttribute(ServiceLifetime lifetime)
+            : this((Object?) null, lifetime)
         {
-            Lifetime = lifetime;
         }
         
+        public ServiceDependencyAttribute(Object? key, ServiceLifetime lifetime)
+        {
+            Key = key;
+            Lifetime = lifetime;
+        }
+
         public ServiceDependencyAttribute(Type @interface, ServiceLifetime lifetime)
+            : this(@interface, null, lifetime)
+        {
+        }
+
+        public ServiceDependencyAttribute(Type @interface, Object? key, ServiceLifetime lifetime)
         {
             if (@interface is null)
             {
@@ -28,6 +43,7 @@ namespace NetExtender.DependencyInjection.Attributes
             }
             
             Interface = @interface;
+            Key = key;
             Lifetime = lifetime;
         }
     }

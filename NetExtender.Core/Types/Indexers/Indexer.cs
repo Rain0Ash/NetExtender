@@ -4,7 +4,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using NetExtender.Types.Indexers.Interfaces;
 using NetExtender.Utilities.Types;
 
@@ -47,7 +46,6 @@ namespace NetExtender.Types.Indexers
         {
         }
 
-        [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
         public Indexer(IEnumerable<T> source, IEqualityComparer<T>? comparer)
         {
             if (source is null)
@@ -55,7 +53,7 @@ namespace NetExtender.Types.Indexers
                 throw new ArgumentNullException(nameof(source));
             }
 
-            Index = new Dictionary<T, Int32>(source.CountIfMaterialized() ?? 0, comparer);
+            Index = new Dictionary<T, Int32>(source.CountIfMaterialized(0), comparer);
             AddRange(source);
         }
 
@@ -128,10 +126,9 @@ namespace NetExtender.Types.Indexers
                 throw new ArgumentOutOfRangeException(nameof(array), array.Length, null);
             }
 
-            Int32 i = 0;
             foreach (T item in this)
             {
-                array[index + i++] = item;
+                array[index++] = item;
             }
         }
 

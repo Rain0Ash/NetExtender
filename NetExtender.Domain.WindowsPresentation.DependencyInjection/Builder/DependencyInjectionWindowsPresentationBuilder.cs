@@ -62,7 +62,7 @@ namespace NetExtender.Domains.WindowsPresentation.Builder
 
                 } while (service is null && tries++ < 10);
                 
-                return service ?? throw new InitializeException($"Can't get instance of '{typeof(TType)}' for builder '{GetType()}'.", issue);
+                return service ?? throw new InitializeException($"Can't get instance of '{typeof(TType).Name}' for builder '{GetType().Name}'.", issue);
             }
             catch (InitializeException)
             {
@@ -70,7 +70,7 @@ namespace NetExtender.Domains.WindowsPresentation.Builder
             }
             catch (Exception exception)
             {
-                throw new InitializeException($"Can't get instance of '{typeof(TType)}' for builder '{GetType()}'.", exception);
+                throw new InitializeException($"Can't get instance of '{typeof(TType).Name}' for builder '{GetType().Name}'.", exception);
             }
             finally
             {

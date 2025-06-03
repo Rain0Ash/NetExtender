@@ -280,7 +280,5 @@ namespace NetExtender.Utilities.Numerics
         {
             return new GenericNumber<T>(value);
         }
-        
-        
     }
 }

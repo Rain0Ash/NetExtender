@@ -1,26 +1,32 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
+using System.Runtime.Serialization;
 using NetExtender.Interfaces;
 using NetExtender.Types.Monads.Interfaces;
+using NetExtender.Utilities.Serialization;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Monads
 {
-    public class NotifyState<T> : MutableState<T>
+    [Serializable]
+    public class NotifyState<T> : MutableState<T>, INotifyState<T>, ICloneable<NotifyState<T>>
     {
         public static implicit operator NotifyState<T>(T value)
         {
             return new NotifyState<T>(value);
         }
-        
+
         public static implicit operator NotifyState<T>(State<T> value)
         {
             return new NotifyState<T>(value);
         }
-        
+
         public new static NotifyState<T?> New
         {
             get
@@ -49,7 +55,7 @@ namespace NetExtender.Types.Monads
                 if (next)
                 {
                     OnPropertyChanging(nameof(Next));
-                    OnPropertyChanging(nameof(HasValue));
+                    OnPropertyChanging(nameof(HasNext));
                 }
 
                 if (current)
@@ -67,7 +73,7 @@ namespace NetExtender.Types.Monads
                 if (next)
                 {
                     OnPropertyChanged(nameof(Next));
-                    OnPropertyChanged(nameof(HasValue));
+                    OnPropertyChanged(nameof(HasNext));
                 }
 
                 if (current)
@@ -87,13 +93,39 @@ namespace NetExtender.Types.Monads
         {
         }
 
+        protected NotifyState(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
+        }
+
         public override NotifyState<T> Clone()
         {
             return new NotifyState<T>(Internal);
         }
+
+        INotifyState<T> INotifyState<T>.Clone()
+        {
+            return Clone();
+        }
+
+        INotifyState<T> ICloneable<INotifyState<T>>.Clone()
+        {
+            return Clone();
+        }
+
+        INotifyState INotifyState.Clone()
+        {
+            return Clone();
+        }
+
+        INotifyState ICloneable<INotifyState>.Clone()
+        {
+            return Clone();
+        }
     }
     
-    public class MutableState<T> : INotifyState<T>, IStateEquatable<T, State<T>>, IStateEquatable<T, MutableState<T>>, IStateComparable<T, State<T>>, IStateComparable<T, MutableState<T>>, ICloneable<State<T>>, ICloneable<MutableState<T>>
+    [Serializable]
+    public class MutableState<T> : IState<T>, IStateEquality<T, State<T>>, IStateEquality<T, MutableState<T>>, ICloneable<State<T>>, ICloneable<MutableState<T>>, ISerializable
     {
         [return: NotNullIfNotNull("value")]
         public static implicit operator T?(MutableState<T>? value)
@@ -276,6 +308,8 @@ namespace NetExtender.Types.Monads
         
         public event PropertyChangingEventHandler? PropertyChanging;
         public event PropertyChangedEventHandler? PropertyChanged;
+        
+        public Guid Id { get; } = Guid.NewGuid();
 
         private State<T> _internal;
         protected virtual State<T> Internal
@@ -294,7 +328,7 @@ namespace NetExtender.Types.Monads
         {
             get
             {
-                return Internal.Value;
+                return _internal.Value;
             }
             set
             {
@@ -306,7 +340,7 @@ namespace NetExtender.Types.Monads
         {
             get
             {
-                return Internal.Current;
+                return _internal.Current;
             }
             set
             {
@@ -318,7 +352,7 @@ namespace NetExtender.Types.Monads
         {
             get
             {
-                return Internal.Next;
+                return _internal.Next;
             }
             set
             {
@@ -326,11 +360,19 @@ namespace NetExtender.Types.Monads
             }
         }
 
-        public Boolean HasValue
+        public Boolean HasNext
         {
             get
             {
-                return Internal.HasValue;
+                return _internal.HasNext;
+            }
+        }
+
+        public Boolean IsEmpty
+        {
+            get
+            {
+                return _internal.IsEmpty;
             }
         }
 
@@ -341,12 +383,38 @@ namespace NetExtender.Types.Monads
 
         public MutableState(T value)
         {
-            _internal = value;
+            _internal = new State<T>(value);
+        }
+
+        public MutableState(T value, T next)
+        {
+            _internal = new State<T>(value, next);
+        }
+
+        public MutableState(T value, Maybe<T> next)
+        {
+            _internal = new State<T>(value, next);
         }
 
         public MutableState(State<T> value)
         {
             _internal = value;
+        }
+
+        protected MutableState(SerializationInfo info, StreamingContext context)
+        {
+            _internal = new State<T>(info.GetValue<T>(nameof(Value)), info.GetBoolean(nameof(HasNext)) ? info.GetValue<T>(nameof(Next)) : default(Maybe<T>));
+        }
+        
+        public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue(nameof(Value), _internal.Value);
+            info.AddValue(nameof(HasNext), _internal.Next.HasValue);
+
+            if (_internal.HasNext)
+            {
+                info.AddValue(nameof(Next), _internal.Next.Value);
+            }
         }
 
         protected void OnPropertyChanging([CallerMemberName] String? property = null)
@@ -361,27 +429,27 @@ namespace NetExtender.Types.Monads
 
         public Boolean HasDifference()
         {
-            return Internal.HasDifference();
+            return _internal.HasDifference();
         }
 
         public Boolean HasDifference(IEqualityComparer<T>? comparer)
         {
-            return Internal.HasDifference(comparer);
+            return _internal.HasDifference(comparer);
         }
 
         public T Get()
         {
-            return Internal.Get();
+            return _internal.Get();
         }
 
         public T Get(StateEquality equality)
         {
-            return Internal.Get(equality);
+            return _internal.Get(equality);
         }
 
         public virtual void Set(T value)
         {
-            Internal = Internal.Set(value);
+            Internal = _internal.Set(value);
         }
 
         IState<T> IState<T>.Set(T value)
@@ -392,7 +460,7 @@ namespace NetExtender.Types.Monads
         
         public virtual void Save()
         {
-            Internal = Internal.Save();
+            Internal = _internal.Save();
         }
 
         IState IState.Save()
@@ -409,7 +477,7 @@ namespace NetExtender.Types.Monads
 
         public virtual void Save(T value)
         {
-            Internal = Internal.Save(value);
+            Internal = _internal.Save(value);
         }
 
         IState<T> IState<T>.Save(T value)
@@ -420,7 +488,7 @@ namespace NetExtender.Types.Monads
 
         public virtual void Update(T value)
         {
-            Internal = Internal.Update(value);
+            Internal = _internal.Update(value);
         }
 
         IState<T> IState<T>.Update(T value)
@@ -431,7 +499,7 @@ namespace NetExtender.Types.Monads
 
         public virtual void Update(Maybe<T> value)
         {
-            Internal = Internal.Update(value);
+            Internal = _internal.Update(value);
         }
 
         IState<T> IState<T>.Update(Maybe<T> value)
@@ -453,7 +521,7 @@ namespace NetExtender.Types.Monads
         
         public virtual void Difference(IEqualityComparer<T>? comparer)
         {
-            if (Internal.Difference(comparer, out State<T> result) is false)
+            if (_internal.Difference(comparer, out State<T> result) is false)
             {
                 Internal = result;
             }
@@ -478,7 +546,7 @@ namespace NetExtender.Types.Monads
 
         public virtual void Difference(T value, IEqualityComparer<T>? comparer)
         {
-            if (Internal.Difference(value, comparer, out State<T> result) is not null)
+            if (_internal.Difference(value, comparer, out State<T> result) is not null)
             {
                 Internal = result;
             }
@@ -503,7 +571,7 @@ namespace NetExtender.Types.Monads
         
         public virtual void Difference(Maybe<T> value, IEqualityComparer<T>? comparer)
         {
-            if (Internal.Difference(value, comparer, out State<T> result) is not null)
+            if (_internal.Difference(value, comparer, out State<T> result) is not null)
             {
                 Internal = result;
             }
@@ -517,9 +585,9 @@ namespace NetExtender.Types.Monads
 
         public virtual void Swap()
         {
-            if (HasValue)
+            if (HasNext)
             {
-                Internal = Internal.Swap();
+                Internal = _internal.Swap();
             }
         }
 
@@ -537,7 +605,7 @@ namespace NetExtender.Types.Monads
 
         public virtual void Reset()
         {
-            Internal = Internal.Reset();
+            Internal = _internal.Reset();
         }
 
         IState IState.Reset()
@@ -554,87 +622,87 @@ namespace NetExtender.Types.Monads
 
         public Int32 CompareTo(T? other)
         {
-            return Internal.CompareTo(other);
+            return _internal.CompareTo(other);
         }
 
         public Int32 CompareTo(T? other, StateEquality equality)
         {
-            return Internal.CompareTo(other, equality);
+            return _internal.CompareTo(other, equality);
         }
         
         public Int32 CompareTo(T? other, IComparer<T>? comparer)
         {
-            return Internal.CompareTo(other, comparer);
+            return _internal.CompareTo(other, comparer);
         }
 
         public Int32 CompareTo(T? other, StateEquality equality, IComparer<T>? comparer)
         {
-            return Internal.CompareTo(other, equality, comparer);
+            return _internal.CompareTo(other, equality, comparer);
         }
 
         public Int32 CompareTo(State<T> other)
         {
-            return Internal.CompareTo(other);
+            return _internal.CompareTo(other);
         }
 
         public Int32 CompareTo(State<T> other, StateEquality equality)
         {
-            return Internal.CompareTo(other, equality);
+            return _internal.CompareTo(other, equality);
         }
 
         public Int32 CompareTo(State<T> other, IComparer<T>? comparer)
         {
-            return Internal.CompareTo(other, comparer);
+            return _internal.CompareTo(other, comparer);
         }
 
         public Int32 CompareTo(State<T> other, StateEquality equality, IComparer<T>? comparer)
         {
-            return Internal.CompareTo(other, equality, comparer);
+            return _internal.CompareTo(other, equality, comparer);
         }
 
         public Int32 CompareTo(MutableState<T>? other)
         {
-            return other is not null ? Internal.CompareTo(other.Internal) : 1;
+            return other is not null ? _internal.CompareTo(other._internal) : 1;
         }
 
         public Int32 CompareTo(MutableState<T>? other, StateEquality equality)
         {
-            return other is not null ? Internal.CompareTo(other.Internal, equality) : 1;
+            return other is not null ? _internal.CompareTo(other._internal, equality) : 1;
         }
 
         public Int32 CompareTo(MutableState<T>? other, IComparer<T>? comparer)
         {
-            return other is not null ? Internal.CompareTo(other.Internal, comparer) : 1;
+            return other is not null ? _internal.CompareTo(other._internal, comparer) : 1;
         }
 
         public Int32 CompareTo(MutableState<T>? other, StateEquality equality, IComparer<T>? comparer)
         {
-            return other is not null ? Internal.CompareTo(other.Internal, equality, comparer) : 1;
+            return other is not null ? _internal.CompareTo(other._internal, equality, comparer) : 1;
         }
 
         public Int32 CompareTo(IState<T>? other)
         {
-            return Internal.CompareTo(other);
+            return _internal.CompareTo(other);
         }
 
         public Int32 CompareTo(IState<T>? other, StateEquality equality)
         {
-            return Internal.CompareTo(other, equality);
+            return _internal.CompareTo(other, equality);
         }
 
         public Int32 CompareTo(IState<T>? other, IComparer<T>? comparer)
         {
-            return Internal.CompareTo(other, comparer);
+            return _internal.CompareTo(other, comparer);
         }
 
         public Int32 CompareTo(IState<T>? other, StateEquality equality, IComparer<T>? comparer)
         {
-            return Internal.CompareTo(other, equality, comparer);
+            return _internal.CompareTo(other, equality, comparer);
         }
 
         public sealed override Int32 GetHashCode()
         {
-            return Internal.GetHashCode();
+            return Id.GetHashCode();
         }
 
         public sealed override Boolean Equals(Object? other)
@@ -666,117 +734,257 @@ namespace NetExtender.Types.Monads
 
         public Boolean Equals(T? other)
         {
-            return Internal.Equals(other);
+            return _internal.Equals(other);
         }
 
         public Boolean Equals(T? other, StateEquality equality)
         {
-            return Internal.Equals(other, equality);
+            return _internal.Equals(other, equality);
         }
 
         public Boolean Equals(T? other, IEqualityComparer<T>? comparer)
         {
-            return Internal.Equals(other, comparer);
+            return _internal.Equals(other, comparer);
         }
 
         public Boolean Equals(T? other, StateEquality equality, IEqualityComparer<T>? comparer)
         {
-            return Internal.Equals(other, equality, comparer);
+            return _internal.Equals(other, equality, comparer);
         }
 
         public Boolean Equals(State<T> other)
         {
-            return Internal.Equals(other);
+            return _internal.Equals(other);
         }
 
         public Boolean Equals(State<T> other, StateEquality equality)
         {
-            return Internal.Equals(other, equality);
+            return _internal.Equals(other, equality);
         }
 
         public Boolean Equals(State<T> other, IEqualityComparer<T>? comparer)
         {
-            return Internal.Equals(other, comparer);
+            return _internal.Equals(other, comparer);
         }
 
         public Boolean Equals(State<T> other, StateEquality equality, IEqualityComparer<T>? comparer)
         {
-            return Internal.Equals(other, equality, comparer);
+            return _internal.Equals(other, equality, comparer);
         }
 
         public Boolean Equals(MutableState<T>? other)
         {
-            return other is not null && Equals(other.Internal);
+            return other is not null && Equals(other._internal);
         }
 
         public Boolean Equals(MutableState<T>? other, StateEquality equality)
         {
-            return other is not null && Equals(other.Internal, equality);
+            return other is not null && Equals(other._internal, equality);
         }
 
         public Boolean Equals(MutableState<T>? other, IEqualityComparer<T>? comparer)
         {
-            return other is not null && Equals(other.Internal, comparer);
+            return other is not null && Equals(other._internal, comparer);
         }
 
         public Boolean Equals(MutableState<T>? other, StateEquality equality, IEqualityComparer<T>? comparer)
         {
-            return other is not null && Equals(other.Internal, equality, comparer);
+            return other is not null && Equals(other._internal, equality, comparer);
         }
 
         public Boolean Equals(IState<T>? other)
         {
-            return Internal.Equals(other);
+            return _internal.Equals(other);
         }
 
         public Boolean Equals(IState<T>? other, StateEquality equality)
         {
-            return Internal.Equals(other, equality);
+            return _internal.Equals(other, equality);
         }
 
         public Boolean Equals(IState<T>? other, IEqualityComparer<T>? comparer)
         {
-            return Internal.Equals(other, comparer);
+            return _internal.Equals(other, comparer);
         }
 
         public Boolean Equals(IState<T>? other, StateEquality equality, IEqualityComparer<T>? comparer)
         {
-            return Internal.Equals(other, equality, comparer);
+            return _internal.Equals(other, equality, comparer);
         }
         
         public virtual MutableState<T> Clone()
         {
-            return new MutableState<T>(Internal);
+            return new MutableState<T>(_internal);
         }
-        
-        Object ICloneable.Clone()
-        {
-            return Clone();
-        }
-        
-        IState IState.Clone()
-        {
-            return Clone();
-        }
-        
-        IState<T> IState<T>.Clone()
-        {
-            return Clone();
-        }
-        
+
         State<T> ICloneable<State<T>>.Clone()
         {
             return Clone();
         }
-        
+
+        IState<T> IState<T>.Clone()
+        {
+            return Clone();
+        }
+
+        IState<T> ICloneable<IState<T>>.Clone()
+        {
+            return Clone();
+        }
+
+        IState IState.Clone()
+        {
+            return Clone();
+        }
+
+        IState ICloneable<IState>.Clone()
+        {
+            return Clone();
+        }
+
+        IMonad<T> IMonad<T>.Clone()
+        {
+            return Clone();
+        }
+
+        IMonad<T> ICloneable<IMonad<T>>.Clone()
+        {
+            return Clone();
+        }
+
+        IMonad IMonad.Clone()
+        {
+            return Clone();
+        }
+
+        IMonad ICloneable<IMonad>.Clone()
+        {
+            return Clone();
+        }
+
+        Object ICloneable.Clone()
+        {
+            return Clone();
+        }
+
         public sealed override String? ToString()
         {
-            return Internal.ToString();
+            return _internal.ToString();
+        }
+
+        public String ToString(String? format)
+        {
+            return _internal.ToString(format);
+        }
+
+        public String ToString(IFormatProvider? provider)
+        {
+            return _internal.ToString(provider);
+        }
+
+        public String ToString(String? format, IFormatProvider? provider)
+        {
+            return _internal.ToString(format, provider);
         }
         
         public String? ToString(StateEquality equality)
         {
-            return Internal.ToString(equality);
+            return _internal.ToString(equality);
+        }
+
+        public String ToString(StateEquality equality, String? format)
+        {
+            return _internal.ToString(equality, format);
+        }
+
+        public String ToString(StateEquality equality, IFormatProvider? provider)
+        {
+            return _internal.ToString(equality, provider);
+        }
+
+        public String ToString(StateEquality equality, String? format, IFormatProvider? provider)
+        {
+            return _internal.ToString(equality, format, provider);
+        }
+
+        public String? GetString()
+        {
+            return _internal.GetString();
+        }
+
+        public String? GetString(EscapeType escape)
+        {
+            return _internal.GetString(escape);
+        }
+
+        public String? GetString(String? format)
+        {
+            return _internal.GetString(format);
+        }
+
+        public String? GetString(EscapeType escape, String? format)
+        {
+            return _internal.GetString(escape, format);
+        }
+
+        public String? GetString(IFormatProvider? provider)
+        {
+            return _internal.GetString(provider);
+        }
+
+        public String? GetString(EscapeType escape, IFormatProvider? provider)
+        {
+            return _internal.GetString(escape, provider);
+        }
+
+        public String? GetString(String? format, IFormatProvider? provider)
+        {
+            return _internal.GetString(format, provider);
+        }
+
+        public String? GetString(EscapeType escape, String? format, IFormatProvider? provider)
+        {
+            return _internal.GetString(escape, format, provider);
+        }
+
+        public String? GetString(StateEquality equality)
+        {
+            return _internal.GetString(equality);
+        }
+
+        public String? GetString(StateEquality equality, EscapeType escape)
+        {
+            return _internal.GetString(equality, escape);
+        }
+
+        public String? GetString(StateEquality equality, String? format)
+        {
+            return _internal.GetString(equality, format);
+        }
+
+        public String? GetString(StateEquality equality, EscapeType escape, String? format)
+        {
+            return _internal.GetString(equality, escape, format);
+        }
+
+        public String? GetString(StateEquality equality, IFormatProvider? provider)
+        {
+            return _internal.GetString(equality, provider);
+        }
+
+        public String? GetString(StateEquality equality, EscapeType escape, IFormatProvider? provider)
+        {
+            return _internal.GetString(equality, escape, provider);
+        }
+
+        public String? GetString(StateEquality equality, String? format, IFormatProvider? provider)
+        {
+            return _internal.GetString(equality, format, provider);
+        }
+
+        public String? GetString(StateEquality equality, EscapeType escape, String? format, IFormatProvider? provider)
+        {
+            return _internal.GetString(equality, escape, format, provider);
         }
     }
 }

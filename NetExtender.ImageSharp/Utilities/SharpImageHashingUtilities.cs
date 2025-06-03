@@ -173,7 +173,7 @@ namespace NetExtender.ImageSharp.Utilities
 
                     if (coefficient == 0)
                     {
-                        array[coefficient] *= MathUtilities.Constants.Double.InvertedSqrt2;
+                        array[coefficient] *= MathUtilities.Constants.Double.ISqrt2;
                     }
                 }
 

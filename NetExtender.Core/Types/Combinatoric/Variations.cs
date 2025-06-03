@@ -21,9 +21,9 @@ namespace NetExtender.Types.Combinatoric
     /// 
     /// When given an input collect {A B C} and lower index of 2, the following sets are generated:
     /// MetaCollectionType.WithoutRepetition generates 6 sets: =>
-    ///     {A B}, {A B}, {B A}, {B C}, {C A}, {C B}
+    /// {A B}, {A B}, {B A}, {B C}, {C A}, {C B}
     /// MetaCollectionType.WithRepetition generates 9 sets:
-    ///     {A A}, {A B}, {A B}, {B A}, {B B }, {B C}, {C A}, {C B}, {C C}
+    /// {A A}, {A B}, {A B}, {B A}, {B B }, {B C}, {C A}, {C B}, {C C}
     /// 
     /// The equality of multiple inputs is not considered when generating variations.
     /// </remarks>

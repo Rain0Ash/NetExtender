@@ -3,6 +3,7 @@
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
         <Nullable>enable</Nullable>
+        <ImplicitUsings>disable</ImplicitUsings>
         <OutputType>Library</OutputType>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <LangVersion>10</LangVersion>
@@ -20,13 +21,16 @@
         <PackageTags>Extension</PackageTags>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <IsPackable>true</IsPackable>
+        <ImplicitUsings>disable</ImplicitUsings>
+        <IgnoresAccessChecksTo>System.Private.CoreLib</IgnoresAccessChecksTo>
     </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="AgileObjects.ReadableExpressions" Version="4.1.3" />
-        <PackageReference Include="Lib.Harmony.Thin" Version="2.3.3" />
-        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.2" />
-        <PackageReference Include="Microsoft.Extensions.ObjectPool" Version="6.0.35" />
+        <PackageReference Include="JetBrains.Annotations" Version="2024.3.0" />
+        <PackageReference Include="Lib.Harmony.Thin" Version="2.3.6" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.3" />
+        <PackageReference Include="Microsoft.Extensions.ObjectPool" Version="8.0.14" />
         <PackageReference Include="Microsoft.Extensions.Primitives" Version="8.0.0" />
         <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="3.0.1"/>
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3"/>
@@ -35,11 +39,10 @@
         <PackageReference Include="System.Reactive.Core" Version="6.0.1"/>
         <PackageReference Include="System.Reactive.Interfaces" Version="6.0.1"/>
         <PackageReference Include="System.Reactive.Linq" Version="6.0.1"/>
-        <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.5.4"/>
+        <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.6.3" />
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="IO\Shortcut"/>
         <Folder Include="NewtonSoft\Network\Http\"/>
         <Folder Include="Types\Enums\Converters\"/>
         <Folder Include="Types\Reflection\Operator\" />
@@ -145,11 +148,6 @@
         <Compile Update="Types\Region\Calling.cs">
             <DependentUpon>CountryInfo.cs</DependentUpon>
         </Compile>
-        <Compile Update="Types\Exceptions\GenericBusinessStatusException.cs">
-            <AutoGen>True</AutoGen>
-            <DesignTime>True</DesignTime>
-            <DependentUpon>GenericBusinessStatusException.tt</DependentUpon>
-        </Compile>
         <Compile Update="Utilities\Types\RectangleEnumerator.cs">
             <DependentUpon>RectangleUtilities.cs</DependentUpon>
         </Compile>
@@ -164,9 +162,6 @@
         </Compile>
         <Compile Update="Utilities\Types\SizeFEnumerator.cs">
             <DependentUpon>SizeUtilities.cs</DependentUpon>
-        </Compile>
-        <Compile Update="Types\Sizes\UnsafeSizeGenerics.cs">
-            <DependentUpon>UnsafeSizeGenerics.tt</DependentUpon>
         </Compile>
         <Compile Update="Utilities\Types\EnumUtilities.Cache.cs">
             <DependentUpon>EnumUtilities.cs</DependentUpon>
@@ -225,18 +220,6 @@
         <Compile Update="Types\Interception\Interfaces\IInterceptFileHandler.cs">
           <DependentUpon>IFileSystemIntercept.cs</DependentUpon>
         </Compile>
-        <Compile Update="IO\Interfaces\IFileSystemHandler.Directory.cs">
-          <DependentUpon>IFileSystemHandler.cs</DependentUpon>
-        </Compile>
-        <Compile Update="IO\Interfaces\IFileSystemHandler.File.cs">
-          <DependentUpon>IFileSystemHandler.cs</DependentUpon>
-        </Compile>
-        <Compile Update="IO\Interfaces\IFileSystemHandler.Path.cs">
-          <DependentUpon>IFileSystemHandler.cs</DependentUpon>
-        </Compile>
-        <Compile Update="IO\FileSystemHandler.Directory.cs">
-          <DependentUpon>FileSystemHandler.cs</DependentUpon>
-        </Compile>
         <Compile Update="Utilities\Core\ReflectionUtilities.Difference.cs">
           <DependentUpon>ReflectionUtilities.cs</DependentUpon>
         </Compile>
@@ -251,12 +234,6 @@
         </Compile>
         <Compile Update="Utilities\Core\CodeGeneratorUtilities.Inherit.cs">
           <DependentUpon>CodeGeneratorUtilities.cs</DependentUpon>
-        </Compile>
-        <Compile Update="IO\FileSystemHandler.File.cs">
-          <DependentUpon>FileSystemHandler.cs</DependentUpon>
-        </Compile>
-        <Compile Update="IO\FileSystemHandler.Path.cs">
-          <DependentUpon>FileSystemHandler.cs</DependentUpon>
         </Compile>
         <Compile Update="Types\Interception\Interfaces\IInterceptDirectoryHandler.cs">
           <DependentUpon>IFileSystemIntercept.cs</DependentUpon>
@@ -286,6 +263,208 @@
         </Compile>
         <Compile Update="Utilities\Core\HarmonyUtilities.StreamWriter.cs">
           <DependentUpon>HarmonyUtilities.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\Exceptions\GenericBusinessStatusException.cs">
+          <AutoGen>True</AutoGen>
+          <DesignTime>True</DesignTime>
+          <DependentUpon>GenericBusinessStatusException.tt</DependentUpon>
+        </Compile>
+        <Compile Update="Types\FileSystems\Interfaces\IFileSystemHandler.Directory.cs">
+          <DependentUpon>IFileSystemHandler.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\FileSystems\Interfaces\IFileSystemHandler.File.cs">
+          <DependentUpon>IFileSystemHandler.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\FileSystems\Interfaces\IFileSystemHandler.Path.cs">
+          <DependentUpon>IFileSystemHandler.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\FileSystems\FileSystemHandler.Directory.cs">
+          <DependentUpon>FileSystemHandler.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\FileSystems\FileSystemHandler.File.cs">
+          <DependentUpon>FileSystemHandler.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\FileSystems\FileSystemHandler.Path.cs">
+          <DependentUpon>FileSystemHandler.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\FileSystems\FileSystemHandlerWrapper.Directory.cs">
+          <DependentUpon>FileSystemHandlerWrapper.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\FileSystems\FileSystemHandlerWrapper.File.cs">
+          <DependentUpon>FileSystemHandlerWrapper.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\FileSystems\FileSystemHandlerWrapper.FileSystem.cs">
+          <DependentUpon>FileSystemHandlerWrapper.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\FileSystems\FileSystemHandlerWrapper.Path.cs">
+          <DependentUpon>FileSystemHandlerWrapper.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\FileSystems\FileSystemStorage.Directory.cs">
+          <DependentUpon>FileSystemStorage.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\FileSystems\FileSystemStorage.File.cs">
+          <DependentUpon>FileSystemStorage.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\FileSystems\FileSystemStorage.FileSystem.cs">
+          <DependentUpon>FileSystemStorage.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\FileSystems\FileSystemStorage.Path.cs">
+          <DependentUpon>FileSystemStorage.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\Intercept\FileSystems\FileSystemIntercept.Directory.cs">
+          <DependentUpon>FileSystemIntercept.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\Intercept\FileSystems\FileSystemIntercept.File.cs">
+          <DependentUpon>FileSystemIntercept.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\Intercept\FileSystems\FileSystemIntercept.Path.cs">
+          <DependentUpon>FileSystemIntercept.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\Intercept\FileSystems\Interfaces\IInterceptDirectoryHandler.cs">
+          <DependentUpon>IFileSystemIntercept.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\Intercept\FileSystems\Interfaces\IInterceptFileHandler.cs">
+          <DependentUpon>IFileSystemIntercept.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\Intercept\FileSystems\Interfaces\IInterceptFileSystem.cs">
+          <DependentUpon>IFileSystemIntercept.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\Intercept\FileSystems\Interfaces\IInterceptPathHandler.cs">
+          <DependentUpon>IFileSystemIntercept.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\FileSystems\Interfaces\IFileSystemHandler.Drive.cs">
+          <DependentUpon>IFileSystemHandler.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\FileSystems\Interfaces\IFileSystemInfo.cs">
+          <DependentUpon>IFileSystem.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\FileSystems\Interfaces\IFileInfo.cs">
+          <DependentUpon>IFileSystem.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\FileSystems\Interfaces\IDriveInfo.cs">
+          <DependentUpon>IFileSystem.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\FileSystems\Interfaces\IDirectoryInfo.cs">
+          <DependentUpon>IFileSystem.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\FileSystems\Interfaces\ILinkInfo.cs">
+          <DependentUpon>IFileSystem.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\FileSystems\Interfaces\IFileSystemHandler.Link.cs">
+          <DependentUpon>IFileSystemHandler.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\FileSystems\FileSystemHandler.Drive.cs">
+          <DependentUpon>FileSystemHandler.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\FileSystems\FileSystemHandler.Link.cs">
+          <DependentUpon>FileSystemHandler.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\FileSystems\FileSystemHandlerWrapper.Drive.cs">
+          <DependentUpon>FileSystemHandlerWrapper.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\FileSystems\FileSystemHandlerWrapper.Link.cs">
+          <DependentUpon>FileSystemHandlerWrapper.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\FileSystems\LinkInfoEntry.cs">
+          <DependentUpon>FileSystemInfoEntry.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\FileSystems\DirectoryInfoEntry.cs">
+          <DependentUpon>FileSystemInfoEntry.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\FileSystems\DriveInfoEntry.cs">
+          <DependentUpon>FileSystemInfoEntry.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\FileSystems\FileInfoEntry.cs">
+          <DependentUpon>FileSystemInfoEntry.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Utilities\Core\HarmonyUtilities.DriveInfo.cs">
+          <DependentUpon>HarmonyUtilities.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\Intercept\FileSystems\FileSystemIntercept.Drive.cs">
+          <DependentUpon>FileSystemIntercept.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\Intercept\FileSystems\FileSystemIntercept.Link.cs">
+          <DependentUpon>FileSystemIntercept.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\FileSystems\FileSystemStorage.Drive.cs">
+          <DependentUpon>FileSystemStorage.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\FileSystems\FileSystemStorage.Link.cs">
+          <DependentUpon>FileSystemStorage.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\History\Time\TimeHistoryCollection.Node.cs">
+          <DependentUpon>TimeHistoryCollection.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\Sizes\UnsafeSizeGenerics.cs">
+          <AutoGen>True</AutoGen>
+          <DesignTime>True</DesignTime>
+          <DependentUpon>UnsafeSizeGenerics.tt</DependentUpon>
+        </Compile>
+        <Compile Update="Types\FileSystems\Interfaces\IFileSystemStorage.Dynamic.cs">
+          <DependentUpon>IFileSystemStorage.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\FileSystems\FileSystemStorage.Dynamic.cs">
+          <DependentUpon>FileSystemStorage.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\FileSystems\FileSystemStorage.Environment.cs">
+          <DependentUpon>FileSystemStorage.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\FileSystems\FileSystemHandlerWrapper.Environment.cs">
+          <DependentUpon>FileSystemHandlerWrapper.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\FileSystems\FileSystemHandler.Environment.cs">
+          <DependentUpon>FileSystemHandler.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\FileSystems\Interfaces\IFileSystemHandler.Environment.cs">
+          <DependentUpon>IFileSystemHandler.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\Enums\Enum.Enumerator.cs">
+          <DependentUpon>Enum.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\Reflection\BinaryReflectionOperator.cs">
+          <DependentUpon>ReflectionOperator.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\FileSystems\MemoryFileSystemStorage.Directory.cs">
+          <DependentUpon>MemoryFileSystemStorage.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\FileSystems\MemoryFileSystemStorage.Drive.cs">
+          <DependentUpon>MemoryFileSystemStorage.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\FileSystems\MemoryFileSystemStorage.Environment.cs">
+          <DependentUpon>MemoryFileSystemStorage.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\FileSystems\MemoryFileSystemStorage.File.cs">
+          <DependentUpon>MemoryFileSystemStorage.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\FileSystems\MemoryFileSystemStorage.FileSystem.cs">
+          <DependentUpon>MemoryFileSystemStorage.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\FileSystems\MemoryFileSystemStorage.Link.cs">
+          <DependentUpon>MemoryFileSystemStorage.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\FileSystems\MemoryFileSystemStorage.Path.cs">
+          <DependentUpon>MemoryFileSystemStorage.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\FileSystems\MemoryFileSystem.Directory.cs">
+          <DependentUpon>MemoryFileSystem.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\FileSystems\MemoryFileSystem.Drive.cs">
+          <DependentUpon>MemoryFileSystem.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\FileSystems\MemoryFileSystem.Environment.cs">
+          <DependentUpon>MemoryFileSystem.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\FileSystems\MemoryFileSystem.File.cs">
+          <DependentUpon>MemoryFileSystem.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\FileSystems\MemoryFileSystem.FileSystem.cs">
+          <DependentUpon>MemoryFileSystem.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\FileSystems\MemoryFileSystem.Link.cs">
+          <DependentUpon>MemoryFileSystem.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\FileSystems\MemoryFileSystem.Path.cs">
+          <DependentUpon>MemoryFileSystem.cs</DependentUpon>
         </Compile>
     </ItemGroup>
 
@@ -323,6 +502,8 @@
           <Generator>TextTemplatingFileGenerator</Generator>
           <LastGenOutput>ValueDelegate.cs</LastGenOutput>
         </None>
+        <Compile Remove="Types\Numerics\FloatDecimal.cs" />
+        <None Include="Types\Numerics\FloatDecimal.cs" />
     </ItemGroup>
 
     <ItemGroup>

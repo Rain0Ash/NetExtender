@@ -3,6 +3,7 @@
 
 using System;
 using System.Text;
+using NetExtender.Types.Exceptions;
 
 namespace NetExtender.Types.Network
 {
@@ -51,7 +52,7 @@ namespace NetExtender.Types.Network
         {
             if (String.IsNullOrWhiteSpace(boundary))
             {
-                throw new ArgumentException("Value cannot be null or whitespace.", nameof(boundary));
+                throw new ArgumentNullOrWhiteSpaceStringException(boundary, nameof(boundary));
             }
 
             if (boundary.Length > 246)

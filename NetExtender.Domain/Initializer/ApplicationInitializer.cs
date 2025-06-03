@@ -17,7 +17,6 @@ using NetExtender.Types.Attributes;
 using NetExtender.Types.Tasks;
 using NetExtender.Types.Dispatchers.Interfaces;
 using NetExtender.Utilities.Application;
-using NetExtender.Utilities.Core;
 using NetExtender.Utilities.Threading;
 
 namespace NetExtender.Domains.Initializer
@@ -43,19 +42,20 @@ namespace NetExtender.Domains.Initializer
             }
         }
         
-        private static Type? _type;
+        private static Type? type;
         public static Type Type
         {
             get
             {
-                return _type ??= Instance.GetType();
+                return type ??= Instance.GetType();
             }
         }
         
         [NetExtenderException]
+        [SuppressMessage("ReSharper", "ParameterHidesMember")]
         static ApplicationInitializer()
         {
-            if (Assembly.GetEntryAssembly() is not { } assembly)
+            if (ReflectionUtilities.GetEntryAssembly(true) is not { } assembly)
             {
                 throw new EntryPointNotFoundException();
             }
@@ -77,7 +77,24 @@ namespace NetExtender.Domains.Initializer
                 }
             }
             
-            Instance = assembly.GetSafeTypes().Where(type => type.IsSubclassOf(typeof(ApplicationInitializer))).ToArray() switch
+            static Type[] GetSafeTypes(Assembly assembly)
+            {
+                if (assembly is null)
+                {
+                    throw new ArgumentNullException(nameof(assembly));
+                }
+
+                try
+                {
+                    return assembly.GetTypes();
+                }
+                catch (ReflectionTypeLoadException exception)
+                {
+                    return exception.Types.Where(static type => type is not null).ToArray()!;
+                }
+            }
+            
+            Instance = GetSafeTypes(assembly).Where(static type => type.IsSubclassOf(typeof(ApplicationInitializer))).ToArray() switch
             {
                 { Length: 0 } => throw new EntryPointNotFoundException($"Application initializer for assembly '{assembly}' not found."),
                 { Length: 1 } initializer => Initialize(initializer[0]),
@@ -100,7 +117,7 @@ namespace NetExtender.Domains.Initializer
         {
         }
 
-        private Int32 Internal(String[]? args)
+        private Int32 Invoke(String[]? args)
         {
             try
             {
@@ -115,12 +132,12 @@ namespace NetExtender.Domains.Initializer
             }
         }
 
-        private async Task<Int32> InternalAsync(String[]? args, CancellationToken token)
+        private async Task<Int32> InvokeAsync(String[]? args, CancellationToken token)
         {
             try
             {
                 Initialize();
-                await Domain.AutoStartAsync(token).ConfigureAwait(false);
+                await Domain.AutoStartAsync(args, token).ConfigureAwait(false);
                 return 0;
             }
             catch (Exception exception)
@@ -147,7 +164,7 @@ namespace NetExtender.Domains.Initializer
 
         protected Awaiter<Int32> Start(String[]? args)
         {
-            return new Awaiter<Int32>(ThreadUtilities.STA(Internal, args));
+            return new Awaiter<Int32>(ThreadUtilities.STA(Invoke, args));
         }
 
         protected Awaiter<Int32> StartAsync(String[]? args)
@@ -164,7 +181,7 @@ namespace NetExtender.Domains.Initializer
                     throw new ArgumentNullException(nameof(initializer));
                 }
 
-                return await ThreadUtilities.STA(initializer.InternalAsync, args, token).ConfigureAwait(false);
+                return await ThreadUtilities.STA(initializer.InvokeAsync, args, token).ConfigureAwait(false);
             }
             
             return new Awaiter<Int32>(Execute(this, args, token));
@@ -220,6 +237,11 @@ namespace NetExtender.Domains.Initializer
             {
                 return value.Internal;
             }
+
+            public static implicit operator Awaiter<T>(T value)
+            {
+                return new Awaiter<T>(value);
+            }
             
             public static Boolean operator true(Awaiter<T> value)
             {
@@ -244,6 +266,16 @@ namespace NetExtender.Domains.Initializer
             public static Awaiter<T> operator |(Awaiter<T> first, Awaiter<T> second)
             {
                 return first != default ? first : second;
+            }
+
+            public static Awaiter<T> operator |(T first, Awaiter<T> second)
+            {
+                return (Awaiter<T>) first | second;
+            }
+
+            public static Awaiter<T> operator |(Awaiter<T> first, T second)
+            {
+                return first | (Awaiter<T>) second;
             }
 
             private AsyncResult<T> Internal { get; }

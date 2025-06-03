@@ -4,6 +4,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows.Media.Imaging;
+using NetExtender.Types.Exceptions;
 using NetExtender.Utilities.Core;
 using NetExtender.Utilities.IO;
 
@@ -31,7 +32,7 @@ namespace NetExtender.WindowsPresentation.Types.Images
         {
             if (String.IsNullOrEmpty(path))
             {
-                throw new ArgumentException("Value cannot be null or empty.", nameof(path));
+                throw new ArgumentNullOrEmptyStringException(path, nameof(path));
             }
 
             String @namespace = ReflectionUtilities.GetEntryAssemblyNamespace();
@@ -42,12 +43,12 @@ namespace NetExtender.WindowsPresentation.Types.Images
         {
             if (String.IsNullOrEmpty(directory))
             {
-                throw new ArgumentException("Value cannot be null or empty.", nameof(directory));
+                throw new ArgumentNullOrEmptyStringException(directory, nameof(directory));
             }
 
             if (String.IsNullOrEmpty(filename))
             {
-                throw new ArgumentException("Value cannot be null or empty.", nameof(filename));
+                throw new ArgumentNullOrEmptyStringException(filename, nameof(filename));
             }
 
             String @namespace = ReflectionUtilities.GetEntryAssemblyNamespace();
@@ -58,17 +59,17 @@ namespace NetExtender.WindowsPresentation.Types.Images
         {
             if (String.IsNullOrEmpty(@namespace))
             {
-                throw new ArgumentException("Value cannot be null or empty.", nameof(@namespace));
+                throw new ArgumentNullOrEmptyStringException(@namespace, nameof(@namespace));
             }
 
             if (String.IsNullOrEmpty(directory))
             {
-                throw new ArgumentException("Value cannot be null or empty.", nameof(directory));
+                throw new ArgumentNullOrEmptyStringException(directory, nameof(directory));
             }
 
             if (String.IsNullOrEmpty(filename))
             {
-                throw new ArgumentException("Value cannot be null or empty.", nameof(filename));
+                throw new ArgumentNullOrEmptyStringException(filename, nameof(filename));
             }
 
             Internal = new Lazy<BitmapImage>(() => Initialize(@namespace, directory, filename), true);

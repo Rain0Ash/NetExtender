@@ -242,7 +242,7 @@ namespace NetExtender.Types.Tries
             Trie.Clear();
         }
 
-        public void CopyTo(KeyValuePair<String, TValue>[] array, Int32 arrayIndex)
+        public void CopyTo(KeyValuePair<String, TValue>[] array, Int32 index)
         {
             if (array is null)
             {
@@ -250,7 +250,7 @@ namespace NetExtender.Types.Tries
             }
 
             KeyValuePair<String, TValue>[] entries = Trie.Select(node => new KeyValuePair<String, TValue>(new String(node.Key.ToArray()), node.Value)).ToArray();
-            Array.Copy(entries, 0, array, arrayIndex, Count);
+            Array.Copy(entries, 0, array, index, Count);
         }
 
         /// <summary>

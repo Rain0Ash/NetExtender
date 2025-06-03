@@ -1,3 +1,6 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 using System;
 using System.Collections.Generic;
 using System.Windows.Input;
@@ -145,7 +148,7 @@ namespace NetExtender.WindowsPresentation.Types.Commands.History
         public abstract Boolean Execute();
         public abstract Boolean Revert();
         public abstract override Int32 GetHashCode();
-        public abstract override Boolean Equals(Object? obj);
+        public abstract override Boolean Equals(Object? other);
         public abstract Boolean Equals(ICommand? other);
         public abstract Boolean Equals(CommandHistoryEntry? other);
         public abstract Boolean Equals(ICommandHistoryEntry? other);

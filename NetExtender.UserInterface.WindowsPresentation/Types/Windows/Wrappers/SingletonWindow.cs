@@ -8,25 +8,23 @@ using NetExtender.Types.Exceptions;
 using NetExtender.Types.Times;
 using NetExtender.UserInterface.Utilities;
 using NetExtender.Utilities.Types;
-using NetExtender.WindowsPresentation.Types;
 using NetExtender.WindowsPresentation.Types.Interfaces;
-using NetExtender.WindowsPresentation.Utilities.Types;
 
 namespace NetExtender.UserInterface.WindowsPresentation
 {
     [SuppressMessage("ReSharper", "StaticMemberInGenericType")]
     public class SingletonWindow<T> : SingletonWindow where T : Window
     {
-        private static SingletonWindow<T>? _singleton;
+        private static SingletonWindow<T>? singleton;
         public static SingletonWindow<T> Singleton
         {
             get
             {
-                return _singleton ??= new SingletonWindow<T>();
+                return singleton ??= new SingletonWindow<T>();
             }
         }
 
-        protected static Object SyncRoot { get; } = ConcurrentUtilities.SyncRoot;
+        protected static SyncRoot SyncRoot { get; } = SyncRoot.Create();
 
         private T? _window;
         public T Window
@@ -97,12 +95,12 @@ namespace NetExtender.UserInterface.WindowsPresentation
         {
             lock (SyncRoot)
             {
-                if (_singleton is not null)
+                if (singleton is not null)
                 {
                     throw new AlreadyInitializedException("Singleton window is already initialized");
                 }
 
-                return _singleton = new SingletonWindow<T>(factory ?? Create) { IsExitOnFocusLost = exit };
+                return singleton = new SingletonWindow<T>(factory ?? Create) { IsExitOnFocusLost = exit };
             }
         }
         
@@ -115,13 +113,13 @@ namespace NetExtender.UserInterface.WindowsPresentation
         {
             lock (SyncRoot)
             {
-                if (_singleton is not null)
+                if (singleton is not null)
                 {
-                    result = _singleton;
+                    result = singleton;
                     return false;
                 }
 
-                result = _singleton = new SingletonWindow<T>(factory ?? Create) { IsExitOnFocusLost = exit };
+                result = singleton = new SingletonWindow<T>(factory ?? Create) { IsExitOnFocusLost = exit };
                 return true;
             }
         }
@@ -140,12 +138,12 @@ namespace NetExtender.UserInterface.WindowsPresentation
             
             lock (SyncRoot)
             {
-                if (_singleton is not null)
+                if (singleton is not null)
                 {
                     throw new AlreadyInitializedException("Singleton window is already initialized");
                 }
 
-                return _singleton = new SingletonWindow<T>(provider) { IsExitOnFocusLost = exit };
+                return singleton = new SingletonWindow<T>(provider) { IsExitOnFocusLost = exit };
             }
         }
         
@@ -163,13 +161,13 @@ namespace NetExtender.UserInterface.WindowsPresentation
             
             lock (SyncRoot)
             {
-                if (_singleton is not null)
+                if (singleton is not null)
                 {
-                    result = _singleton;
+                    result = singleton;
                     return false;
                 }
                 
-                result = _singleton = new SingletonWindow<T>(provider) { IsExitOnFocusLost = exit };
+                result = singleton = new SingletonWindow<T>(provider) { IsExitOnFocusLost = exit };
                 return true;
             }
         }

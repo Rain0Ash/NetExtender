@@ -1,3 +1,6 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
@@ -226,13 +229,13 @@ namespace NetExtender.WindowsPresentation.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         T IViewModelServiceProvider.Require<T>()
         {
-            return Models.Get<T>() ?? throw new InvalidOperationException($"Dependency view model '{typeof(T)}' not found.");
+            return Models.Get<T>() ?? throw new InvalidOperationException($"Dependency view model '{typeof(T).Name}' not found.");
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         T IWindowServiceProvider.Require<T>()
         {
-            return Windows.Get<T>() ?? throw new InvalidOperationException($"Dependency window '{typeof(T)}' not found.");
+            return Windows.Get<T>() ?? throw new InvalidOperationException($"Dependency window '{typeof(T).Name}' not found.");
         }
     }
 }

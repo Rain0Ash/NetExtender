@@ -4,6 +4,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using NetExtender.Types.Comparers;
 using NetExtender.Types.Sets.Interfaces;
@@ -11,8 +12,7 @@ using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Sets
 {
-    //TODO: SortedSetMethods
-    public class OrderedSortedSet<T> : ISet, ISet<T>, IReadOnlySet<T>
+    public class OrderedSortedSet<T> : ISortedSet, ISortedSet<T>, IReadOnlySortedSet<T>
     {
         private SortedSet<T> Set { get; }
         private OrderedComparer<T> Inner { get; }
@@ -35,6 +35,8 @@ namespace NetExtender.Types.Sets
             }
         }
 
+
+        /// <inheritdoc cref="SortedSet{T}.Min"/>
         public T? Min
         {
             get
@@ -43,11 +45,28 @@ namespace NetExtender.Types.Sets
             }
         }
 
+        Object? ISortedSet.Min
+        {
+            get
+            {
+                return Min;
+            }
+        }
+
+        /// <inheritdoc cref="SortedSet{T}.Max"/>
         public T? Max
         {
             get
             {
                 return Set.Max;
+            }
+        }
+
+        Object? ISortedSet.Max
+        {
+            get
+            {
+                return Max;
             }
         }
 
@@ -130,6 +149,12 @@ namespace NetExtender.Types.Sets
         public Boolean Contains(T item)
         {
             return item is not null && Set.Contains(item);
+        }
+
+        /// <inheritdoc cref="SortedSet{T}.TryGetValue"/>
+        public Boolean TryGetValue(T equalValue, [MaybeNullWhen(false)] out T actualValue)
+        {
+            return Set.TryGetValue(equalValue, out actualValue);
         }
 
         /// <inheritdoc cref="SortedSet{T}.Add"/>
@@ -349,6 +374,37 @@ namespace NetExtender.Types.Sets
             return true;
         }
 
+        /// <inheritdoc cref="SortedSet{T}.RemoveWhere"/>
+        [SuppressMessage("ReSharper", "ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator")]
+        public Int32 RemoveWhere(Predicate<T> match)
+        {
+            if (match is null)
+            {
+                throw new ArgumentNullException(nameof(match));
+            }
+
+            List<T> items = new List<T>();
+
+            foreach (T item in Set)
+            {
+                if (match(item))
+                {
+                    items.Add(item);
+                }
+            }
+
+            Int32 count = 0;
+            foreach (T item in items)
+            {
+                if (Remove(item))
+                {
+                    count++;
+                }
+            }
+
+            return count;
+        }
+
         /// <inheritdoc cref="SortedSet{T}.Clear"/>
         public void Clear()
         {
@@ -356,10 +412,42 @@ namespace NetExtender.Types.Sets
             Inner.Clear();
         }
 
+        /// <inheritdoc cref="SortedSet{T}.GetViewBetween"/>
+        public OrderedSortedSet<T> GetViewBetween(T? lower, T? upper)
+        {
+            return new OrderedSortedSet<T>(Set.GetViewBetween(lower, upper), Comparer.Clone());
+        }
+
+        ISortedSet<T> IReadOnlySortedSet<T>.GetViewBetween(T? lower, T? upper)
+        {
+            return GetViewBetween(lower, upper);
+        }
+
+        ISortedSet<T> ISortedSet<T>.GetViewBetween(T? lower, T? upper)
+        {
+            return GetViewBetween(lower, upper);
+        }
+
+        private IEnumerable<T> Enumerate()
+        {
+            return Set.OrderBy(Inner);
+        }
+
+        /// <inheritdoc cref="SortedSet{T}.Reverse"/>
+        public IEnumerable<T> Reverse()
+        {
+            return Enumerate().Reverse();
+        }
+
+        IEnumerable ISortedSet.Reverse()
+        {
+            return Reverse();
+        }
+
         /// <inheritdoc cref="SortedSet{T}.GetEnumerator"/>
         public IEnumerator<T> GetEnumerator()
         {
-            return Set.OrderBy(Inner).GetEnumerator();
+            return Enumerate().GetEnumerator();
         }
 
         /// <inheritdoc cref="SortedSet{T}.GetEnumerator"/>
@@ -380,14 +468,14 @@ namespace NetExtender.Types.Sets
         }
 
         /// <inheritdoc cref="SortedSet{T}.CopyTo(T[],Int32)"/>
-        public void CopyTo(T[] array, Int32 arrayIndex)
+        public void CopyTo(T[] array, Int32 index)
         {
             if (array is null)
             {
                 throw new ArgumentNullException(nameof(array));
             }
 
-            Set.CopyTo(array, arrayIndex);
+            Set.CopyTo(array, index);
         }
 
         public T this[Int32 index]

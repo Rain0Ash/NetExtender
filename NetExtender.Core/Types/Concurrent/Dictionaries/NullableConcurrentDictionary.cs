@@ -1,3 +1,6 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -200,9 +203,9 @@ namespace NetExtender.Types.Concurrent.Dictionaries
             return ((IDictionary<NullMaybe<TKey>, TValue>) this).Remove(key);
         }
         
-        public void CopyTo(KeyValuePair<TKey, TValue>[] array, Int32 arrayIndex)
+        public void CopyTo(KeyValuePair<TKey, TValue>[] array, Int32 index)
         {
-            CollectionUtilities.CopyTo(this, array, arrayIndex);
+            CollectionUtilities.CopyTo(this, array, index);
         }
         
         public new IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()

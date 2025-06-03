@@ -7,16 +7,15 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using NetExtender.Types.Enumerators.Interfaces;
-using NetExtender.Types.Sizes.Interfaces;
 
 namespace NetExtender.Types.Enumerators
 {
     [SuppressMessage("ReSharper", "StructCanBeMadeReadOnly")]
     [SuppressMessage("ReSharper", "StructMemberCanBeMadeReadOnly")]
-    public unsafe struct UnsafeEnumerator<T, TSize> : IUnsafeEnumerator<T> where T : struct where TSize : struct, IUnsafeSize<TSize>
+    public unsafe struct UnsafeEnumerator<T, TSize> : IUnsafeEnumerator<T>, IStruct<UnsafeEnumerator<T, TSize>> where T : struct where TSize : struct, IUnsafeSize<TSize>
     {
         private TSize Internal;
-        
+
         public Type Type
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
@@ -31,6 +30,7 @@ namespace NetExtender.Types.Enumerators
 
         public readonly Int32 Length
         {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
                 return Internal.Length;
@@ -39,10 +39,12 @@ namespace NetExtender.Types.Enumerators
 
         public Int32 Size
         {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             readonly get
             {
                 return Internal.Count;
             }
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             private init
             {
                 Internal.Count = value;
@@ -51,6 +53,7 @@ namespace NetExtender.Types.Enumerators
         
         public readonly Boolean IsEmpty
         {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
                 return Internal.IsEmpty;
@@ -71,6 +74,7 @@ namespace NetExtender.Types.Enumerators
 
         readonly Object IEnumerator.Current
         {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
                 return Current;

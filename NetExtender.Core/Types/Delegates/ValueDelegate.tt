@@ -32,7 +32,7 @@ namespace NetExtender.Utilities.Delegates
         "Sixteenth"
     };
 
-    void CreateInternal(Int32 argument, Boolean result)
+    void CreateCore(Int32 argument, Boolean result)
     {
         String name = !result ? "Action" : "Func";
         String fullname = "Value" + name;
@@ -261,13 +261,13 @@ namespace NetExtender.Utilities.Delegates
     {
         for (Int32 i = 0; i <= names.Count; i++)
         {
-            CreateInternal(i, false);
+            CreateCore(i, false);
             WriteLine(String.Empty);
         }
         
         for (Int32 i = 0; i <= names.Count; i++)
         {
-            CreateInternal(i, true);
+            CreateCore(i, true);
             
             if (i <= names.Count - 1)
             {

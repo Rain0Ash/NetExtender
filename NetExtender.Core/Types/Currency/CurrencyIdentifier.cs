@@ -373,7 +373,7 @@ namespace NetExtender.Types.Currency
         Mvr = 462,
 
         /// <summary>
-        ///     Mauritanian ouguiya
+        /// Mauritanian ouguiya
         /// </summary>
         Mro = 478,
 

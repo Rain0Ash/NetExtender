@@ -14,6 +14,13 @@ namespace NetExtender.Utilities.Numerics
     public static partial class BitUtilities
     {
         public const Int32 BitInByte = 8;
+        private static ImmutableArray<ImmutableArray<Byte>> SetBitTable { get; }
+
+        static BitUtilities()
+        {
+            const Byte range = BitInByte;
+            SetBitTable = MathUtilities.Range(Byte.MaxValue + 1).Select(static i => MathUtilities.Range(range).Where(bit => (i & (1 << bit)) != 0).ToImmutableArray()).ToImmutableArray();
+        }
 
         public static void Deconstruct(this Char value, out Byte high, out Byte low)
         {
@@ -144,19 +151,31 @@ namespace NetExtender.Utilities.Numerics
             return ((UInt64) high << (sizeof(UInt32) * BitInByte)) | low;
         }
 
-        private static ImmutableArray<ImmutableArray<Int32>> SetBitTable { get; } =
-            MathUtilities.Range(256)
-                .Select(i => MathUtilities.Range(8)
-                    .Where(bit => (i & (1 << bit)) != 0)
-                    .ToImmutableArray())
-                .ToImmutableArray();
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Boolean TryGetSetBits(Byte value, Span<Byte> destination, out Int32 written)
+        {
+            written = 0;
+            ImmutableArray<Byte> position = SetBitTable[value];
 
+            if (destination.Length < position.Length)
+            {
+                return false;
+            }
+
+            for (Int32 i = 0; i < position.Length; i++)
+            {
+                destination[i] = position[i];
+                written++;
+            }
+
+            return true;
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static Boolean TryGetSetBits(Byte value, Span<Int32> destination, out Int32 written)
         {
             written = 0;
-            ImmutableArray<Int32> position = SetBitTable[value];
+            ImmutableArray<Byte> position = SetBitTable[value];
 
             if (destination.Length < position.Length)
             {
@@ -176,7 +195,7 @@ namespace NetExtender.Utilities.Numerics
         public static Boolean TryGetSetBits(Byte value, Span<UInt32> destination, out Int32 written)
         {
             written = 0;
-            ImmutableArray<Int32> position = SetBitTable[value];
+            ImmutableArray<Byte> position = SetBitTable[value];
 
             if (destination.Length < position.Length)
             {
@@ -185,7 +204,7 @@ namespace NetExtender.Utilities.Numerics
 
             for (Int32 i = 0; i < position.Length; i++)
             {
-                destination[i] = (UInt32) position[i];
+                destination[i] = position[i];
                 written++;
             }
 

@@ -14,7 +14,7 @@ using Newtonsoft.Json;
 namespace NetExtender.Localization.Common
 {
     [Serializable]
-    public readonly struct LocalizationEntry : IComparable<LocalizationEntry>, IEquatable<LocalizationEntry>
+    public readonly struct LocalizationEntry : IEquality<LocalizationEntry>
     {
         public static implicit operator ConfigurationEntry(LocalizationEntry entry)
         {
@@ -161,7 +161,7 @@ namespace NetExtender.Localization.Common
     }
 
     [Serializable]
-    public readonly struct LocalizationMultiEntry : IComparable<LocalizationMultiEntry>, IEquatable<LocalizationMultiEntry>
+    public readonly struct LocalizationMultiEntry : IEquality<LocalizationMultiEntry>
     {
         public static Boolean operator ==(LocalizationMultiEntry first, LocalizationMultiEntry second)
         {

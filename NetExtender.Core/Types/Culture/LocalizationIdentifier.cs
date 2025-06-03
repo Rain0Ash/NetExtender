@@ -14,8 +14,7 @@ namespace NetExtender.Types.Culture
 {
     [Serializable]
     [JsonConverter(typeof(LocalizationIdentifierJsonConverter))]
-    public readonly struct LocalizationIdentifier : IEquatable<LocalizationIdentifier>, IEquatable<Int32>, IEquatable<UInt16>, IEquatable<CultureIdentifier>,
-        IComparable<LocalizationIdentifier>, IComparable<Int32>, IComparable<UInt16>, IComparable<CultureIdentifier>
+    public readonly struct LocalizationIdentifier : IEquality<LocalizationIdentifier>, IEquality<Int32>, IEquality<UInt16>, IEquality<CultureIdentifier>
     {
         public static Boolean operator ==(LocalizationIdentifier first, LocalizationIdentifier second)
         {
@@ -124,7 +123,7 @@ namespace NetExtender.Types.Culture
 
         public static implicit operator LocalizationIdentifier(CultureInfo? info)
         {
-            return info?.LCID ?? default;
+            return info?.LCID ?? 0;
         }
 
         public static implicit operator CountryIdentifier(LocalizationIdentifier identifier)

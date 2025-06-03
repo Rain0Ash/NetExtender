@@ -8,6 +8,8 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Security;
@@ -15,11 +17,13 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
+using NetExtender.Types.Comparers;
 using NetExtender.Types.Exceptions;
 using NetExtender.Types.Immutable.Maps.Interfaces;
 using NetExtender.Types.Maps.Interfaces;
 using NetExtender.Types.Strings;
 using NetExtender.Types.Strings.Interfaces;
+using NetExtender.Utilities.Core;
 
 namespace NetExtender.Utilities.Types
 {
@@ -42,7 +46,7 @@ namespace NetExtender.Utilities.Types
         NotWhiteSpace
     }
 
-    public static class StringUtilities
+    public static partial class StringUtilities
     {
         /// <summary>
         /// Null string task
@@ -78,24 +82,55 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String? ToString<T>(T value)
         {
+            return ToString(in value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String? ToString<T>(in T value)
+        {
             return value?.ToString();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [return: NotNullIfNotNull("value")]
+        public static String? ToString<T>(T value, String? format)
+        {
+            return ToString(in value, format);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [return: NotNullIfNotNull("value")]
+        public static String? ToString<T>(in T value, String? format)
+        {
+            return ToString(in value, format, null);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [return: NotNullIfNotNull("value")]
         public static String? ToString<T>(T value, IFormatProvider? provider)
         {
-            return ToString(value, null, provider);
+            return ToString(in value, provider);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [return: NotNullIfNotNull("value")]
+        public static String? ToString<T>(in T value, IFormatProvider? provider)
+        {
+            return ToString(in value, null, provider);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [return: NotNullIfNotNull("value")]
         public static String? ToString<T>(T value, String? format, IFormatProvider? provider)
         {
-            if (value is IFormattable formattable)
-            {
-                return formattable.ToString(format, provider);
-            }
+            return ToString(in value, format, provider);
+        }
 
-            return value?.ToString();
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [return: NotNullIfNotNull("value")]
+        public static String? ToString<T>(in T value, String? format, IFormatProvider? provider)
+        {
+            return Formattable.ToString(in value, format, provider);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1571,7 +1606,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(value));
             }
 
-            return value.Length <= 0 || value.All(chr => chr >= 0x20 && chr <= Byte.MaxValue);
+            return value.Length <= 0 || value.All(character => character >= 0x20 && character <= Byte.MaxValue);
         }
 
         public static Boolean IsAsciiCharacters(this IString value)
@@ -1821,7 +1856,7 @@ namespace NetExtender.Utilities.Types
 
         public static String[] SplitByUpperCase(String value, StringSplitOptions options)
         {
-            return SplitByUpperCaseInternal(value, options).ToArray();
+            return SplitByUpperCaseCore(value, options).ToArray();
         }
 
         public static String[] SplitByUpperCase(IString value)
@@ -1840,7 +1875,7 @@ namespace NetExtender.Utilities.Types
         }
 
         // ReSharper disable once CognitiveComplexity
-        private static IEnumerable<String> SplitByUpperCaseInternal(String value, StringSplitOptions options)
+        private static IEnumerable<String> SplitByUpperCaseCore(String value, StringSplitOptions options)
         {
             if (value is null)
             {
@@ -2673,7 +2708,7 @@ namespace NetExtender.Utilities.Types
 
             if (!enumerator.MoveNext())
             {
-                throw new ArgumentException(@"Value cannot be empty.", nameof(value));
+                throw new ArgumentException("Source cannot be empty.", nameof(value));
             }
 
             Int32 first = enumerator.Current?.RemoveAnsi().Length ?? 0;
@@ -2683,7 +2718,7 @@ namespace NetExtender.Utilities.Types
             {
                 if (!EqualityComparer<Int32>.Default.Equals(first, enumerator.Current?.RemoveAnsi().Length ?? 0))
                 {
-                    throw new InvalidOperationException(@"Different values length.");
+                    throw new InvalidOperationException("Different values length.");
                 }
             }
 
@@ -2851,7 +2886,7 @@ namespace NetExtender.Utilities.Types
             };
         }
 
-        private static String ToOppositeCaseInternal(this String value, Func<Char, Char> upper, Func<Char, Char> lower)
+        private static String ToOppositeCaseCore(this String value, Func<Char, Char> upper, Func<Char, Char> lower)
         {
             if (value is null)
             {
@@ -2875,21 +2910,21 @@ namespace NetExtender.Utilities.Types
 
             StringBuilder builder = new StringBuilder(value.Length);
 
-            foreach (Char chr in value)
+            foreach (Char character in value)
             {
-                if (!Char.IsLetter(chr))
+                if (!Char.IsLetter(character))
                 {
-                    builder.Append(chr);
+                    builder.Append(character);
                     continue;
                 }
 
-                if (Char.IsUpper(chr))
+                if (Char.IsUpper(character))
                 {
-                    builder.Append(lower(chr));
+                    builder.Append(lower(character));
                     continue;
                 }
 
-                builder.Append(upper(chr));
+                builder.Append(upper(character));
             }
 
             return builder.ToString();
@@ -2912,8 +2947,8 @@ namespace NetExtender.Utilities.Types
                 return value;
             }
 
-            return info is null ? ToOppositeCaseInternal(value, Char.ToUpper, Char.ToLower) :
-                ToOppositeCaseInternal(value, chr => Char.ToUpper(chr, info), chr => Char.ToLower(chr, info));
+            return info is null ? ToOppositeCaseCore(value, Char.ToUpper, Char.ToLower) :
+                ToOppositeCaseCore(value, character => Char.ToUpper(character, info), character => Char.ToLower(character, info));
         }
 
         public static String ToOppositeCaseInvariant(this String value)
@@ -2923,7 +2958,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(value));
             }
 
-            return value.Length <= 0 ? value : ToOppositeCaseInternal(value, Char.ToUpperInvariant, Char.ToLowerInvariant);
+            return value.Length <= 0 ? value : ToOppositeCaseCore(value, Char.ToUpperInvariant, Char.ToLowerInvariant);
         }
 
         /// <summary>
@@ -2974,29 +3009,26 @@ namespace NetExtender.Utilities.Types
             return indentation + value.Replace(Environment.NewLine, replacement);
         }
 
-        /// <inheritdoc cref="OccurrencesOf(String,Char,Boolean)"/>
-        public static Int32 OccurrencesOf(this String value, Char character)
+        /// <inheritdoc cref="Count(string,char,bool)"/>
+        public static Int32 Count(this String value, Char character)
         {
             if (value is null)
             {
                 throw new ArgumentNullException(nameof(value));
             }
 
-            return value.Count(chr => chr == character);
+            return SpanUtilities.Count(value, character);
         }
 
-        /// <inheritdoc cref="OccurrencesOf(String,Char,Boolean)"/>
-        public static Int32 OccurrencesInsensitiveOf(this String value, Char character)
+        /// <inheritdoc cref="Count(string,char,bool)"/>
+        public static Int32 CountInsensitive(this String value, Char character)
         {
             if (value is null)
             {
                 throw new ArgumentNullException(nameof(value));
             }
 
-            character = Char.ToLowerInvariant(character);
-            value = value.ToLowerInvariant();
-
-            return value.Count(chr => chr == character);
+            return SpanUtilities.Count(value, character, CharEqualityComparer.OrdinalIgnoreCase);
         }
 
         /// <summary>
@@ -3005,9 +3037,9 @@ namespace NetExtender.Utilities.Types
         /// <param name="value">The text.</param>
         /// <param name="character">The character to count occurrences for.</param>
         /// <param name="insensitive">Determines whether or not to compare in case sensitive or case insensitive way.</param>
-        public static Int32 OccurrencesOf(this String value, Char character, Boolean insensitive)
+        public static Int32 Count(this String value, Char character, Boolean insensitive)
         {
-            return insensitive ? OccurrencesInsensitiveOf(value, character) : OccurrencesOf(value, character);
+            return insensitive ? CountInsensitive(value, character) : Count(value, character);
         }
 
         /// <summary>
@@ -3743,9 +3775,9 @@ namespace NetExtender.Utilities.Types
 
             SecureString secure = new SecureString();
 
-            foreach (Char chr in source)
+            foreach (Char character in source)
             {
-                secure.AppendChar(chr);
+                secure.AppendChar(character);
             }
 
             secure.MakeReadOnly();
@@ -3788,6 +3820,79 @@ namespace NetExtender.Utilities.Types
             }
 
             return value.Length > 0 ? new StringAdapter(value) : IStringEmpty;
+        }
+    }
+
+    public static partial class StringUtilities
+    {
+        [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
+        private static class Formattable
+        {
+            private static class StructStorage<T> where T : struct
+            {
+                [SuppressMessage("ReSharper", "UnusedParameter.Local")]
+                public static String ToString(ref T value, String? format, IFormatProvider? provider)
+                {
+                    return value.ToString() ?? String.Empty;
+                }
+            }
+
+            private static class StructFormatStorage<T> where T : struct, IFormattable
+            {
+                public static String ToString(ref T value, String? format, IFormatProvider? provider)
+                {
+                    return value.ToString(format, provider);
+                }
+            }
+
+            [SuppressMessage("ReSharper", "HeapView.PossibleBoxingAllocation")]
+            private static class Storage<T>
+            {
+                private delegate String FormatDelegate(ref T value, String? format, IFormatProvider? provider);
+                private static FormatDelegate? Format { get; }
+
+                static Storage()
+                {
+                    if (!typeof(T).IsValueType)
+                    {
+                        Format = null;
+                        return;
+                    }
+
+                    ParameterExpression value = Expression.Parameter(typeof(T).MakeByRefType(), nameof(value));
+                    ParameterExpression format = Expression.Parameter(typeof(String), nameof(format));
+                    ParameterExpression provider = Expression.Parameter(typeof(IFormatProvider), nameof(provider));
+
+                    Type selector = typeof(T).HasInterface<IFormattable>() ? typeof(StructFormatStorage<>).MakeGenericType(typeof(T)) : typeof(StructStorage<>).MakeGenericType(typeof(T));
+                    MethodInfo method = selector.GetMethod(nameof(ToString), new[] { typeof(T).MakeByRefType(), typeof(String), typeof(IFormatProvider) }) ?? throw new NeverOperationException();
+                    MethodCallExpression call = Expression.Call(method, value, format, provider);
+                    Format = Expression.Lambda<FormatDelegate>(call, value, format, provider).Compile(false);
+                }
+
+                [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+                [return: NotNullIfNotNull("value")]
+                public static String? ToString(ref T? value, String? format, IFormatProvider? provider)
+                {
+                    if (value is null)
+                    {
+                        return null;
+                    }
+
+                    if (Format is null)
+                    {
+                        return value is IFormattable formattable ? formattable.ToString(format, provider) : value.ToString() ?? String.Empty;
+                    }
+
+                    return Format.Invoke(ref value, format, provider);
+                }
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            [return: NotNullIfNotNull("value")]
+            public static String? ToString<T>(in T? value, String? format, IFormatProvider? provider)
+            {
+                return Storage<T>.ToString(ref Unsafe.AsRef(in value), format, provider);
+            }
         }
     }
 }

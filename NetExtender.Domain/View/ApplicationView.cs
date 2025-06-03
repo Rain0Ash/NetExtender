@@ -86,6 +86,7 @@ namespace NetExtender.Domains.View
             return StartAsync(args, CancellationToken.None);
         }
 
+        // ReSharper disable once CognitiveComplexity
         public async Task<IApplicationView> StartAsync(IEnumerable<String>? args, CancellationToken token)
         {
             if (Started)
@@ -116,7 +117,24 @@ namespace NetExtender.Domains.View
                 HandleArguments(Arguments);
                 return await RunAsync(token).ConfigureAwait(false);
             }
+            catch (SuccessfulApplicationAbortException)
+            {
+                return this;
+            }
+            catch (ApplicationAbortException exception)
+            {
+                if (exception.InnerException is not null)
+                {
+                    throw exception.InnerException;
+                }
+                
+                throw;
+            }
             catch (OperationCanceledException)
+            {
+                throw;
+            }
+            catch (Exception exception) when (IsThrowException(exception))
             {
                 throw;
             }
@@ -129,6 +147,11 @@ namespace NetExtender.Domains.View
         public Task<IApplicationView> StartAsync(CancellationToken token, params String[]? args)
         {
             return StartAsync(args, token);
+        }
+
+        protected virtual Boolean IsThrowException(Exception? exception)
+        {
+            return false;
         }
 
         protected virtual void Initialize()
@@ -252,7 +275,7 @@ namespace NetExtender.Domains.View
 
         public void Dispose()
         {
-            DisposeInternal(true);
+            DisposeCore(true);
             GC.SuppressFinalize(this);
         }
 
@@ -260,7 +283,7 @@ namespace NetExtender.Domains.View
         {
         }
 
-        private void DisposeInternal(Boolean disposing)
+        private void DisposeCore(Boolean disposing)
         {
             if (_disposed)
             {

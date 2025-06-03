@@ -45,29 +45,29 @@ namespace NetExtender.AspNetCore.Windows.Services.Utilities
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IHost RunAsService(this IHost host)
         {
-            return RunAsServiceInternal(host, false);
+            return RunAsServiceCore(host, false);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IWebHost RunAsService(this IWebHost host)
         {
-            return RunAsServiceInternal(host, false);
+            return RunAsServiceCore(host, false);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IHost RunAsServiceQuiet(this IHost host)
         {
-            return RunAsServiceInternal(host, true);
+            return RunAsServiceCore(host, true);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IWebHost RunAsServiceQuiet(this IWebHost host)
         {
-            return RunAsServiceInternal(host, true);
+            return RunAsServiceCore(host, true);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static IHost RunAsServiceInternal(this IHost host, Boolean quiet)
+        private static IHost RunAsServiceCore(this IHost host, Boolean quiet)
         {
             if (host is null)
             {
@@ -79,7 +79,7 @@ namespace NetExtender.AspNetCore.Windows.Services.Utilities
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static IWebHost RunAsServiceInternal(this IWebHost host, Boolean quiet)
+        private static IWebHost RunAsServiceCore(this IWebHost host, Boolean quiet)
         {
             if (host is null)
             {
@@ -90,14 +90,14 @@ namespace NetExtender.AspNetCore.Windows.Services.Utilities
             return host;
         }
 
-        public static IServiceCollection AddWindowsServicePauseStateService(this IServiceCollection collection)
+        public static IServiceCollection AddWindowsServicePauseStateService(this IServiceCollection services)
         {
-            if (collection is null)
+            if (services is null)
             {
-                throw new ArgumentNullException(nameof(collection));
+                throw new ArgumentNullException(nameof(services));
             }
 
-            return collection.AddSingleton<IWindowsServicePauseStateService, WindowsServicePauseStateService>();
+            return services.AddSingleton<IWindowsServicePauseStateService, WindowsServicePauseStateService>();
         }
 
         private static Boolean UseExternalAccessRestrictionMiddlewareOnWindowsServicePauseStateCondition(HttpContext context)

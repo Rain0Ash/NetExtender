@@ -7,11 +7,11 @@ using NetExtender.Utilities.UserInterface;
 
 namespace NetExtender.Types.HotKeys.Interfaces
 {
-    public interface IHotKeyAction<T> : IHotKeyAction<T, Keys, HotKeyModifierKeys> where T : struct
+    public interface IHotKeyAction<T, out TId> : IHotKeyAction<T>, IHotKeyAction<T, TId, Keys, HotKeyModifierKeys> where T : struct, IStruct<T> where TId : unmanaged, IComparable<TId>, IConvertible
     {
     }
-    
-    public interface IHotKeyAction<T, out TId> : IHotKeyAction<T>, IHotKeyAction<T, TId, Keys, HotKeyModifierKeys> where T : struct where TId : unmanaged, IComparable<TId>, IConvertible
+
+    public interface IHotKeyAction<T> : IHotKeyAction<T, Keys, HotKeyModifierKeys> where T : struct, IStruct<T>
     {
     }
 }

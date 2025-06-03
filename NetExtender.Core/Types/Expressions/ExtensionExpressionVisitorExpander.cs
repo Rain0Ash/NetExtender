@@ -8,7 +8,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using NetExtender.Types.Expressions.Querying;
-using NetExtender.Utilities.Numerics;
+using NetExtender.Utilities.Core;
 
 namespace NetExtender.Types.Expressions
 {

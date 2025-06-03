@@ -471,32 +471,32 @@ namespace NetExtender.Utilities.Types
         /// <param name="v">Value (from 0 to 1).</param>
         public static void RGBToHSV(Double r, Double g, Double b, out Double h, out Double s, out Double v)
         {
-            Double rgbMin = Math.Min(r, Math.Min(g, b));
-            Double rgbMax = Math.Max(r, Math.Max(g, b));
-            Double rgbDelta = rgbMax - rgbMin;
+            Double minimum = Math.Min(r, Math.Min(g, b));
+            Double maximum = Math.Max(r, Math.Max(g, b));
+            Double ΔRGB = maximum - minimum;
 
-            v = rgbMax;
+            v = maximum;
 
-            if (Math.Abs(rgbDelta) < Double.Epsilon)
+            if (Math.Abs(ΔRGB) < Double.Epsilon)
             {
                 h = 0;
                 s = 0;
                 return;
             }
 
-            s = Math.Abs(rgbMax) < Double.Epsilon ? 0 : rgbDelta / rgbMax;
+            s = Math.Abs(maximum) < Double.Epsilon ? 0 : ΔRGB / maximum;
 
-            Double rgbDeltaHalf = rgbDelta / 2;
+            Double ΔHalf = ΔRGB / 2;
 
-            Double ΔR = ((rgbMax - r) / 6 + rgbDeltaHalf) / rgbDelta;
-            Double ΔG = ((rgbMax - g) / 6 + rgbDeltaHalf) / rgbDelta;
-            Double ΔB = ((rgbMax - b) / 6 + rgbDeltaHalf) / rgbDelta;
+            Double ΔR = ((maximum - r) / 6 + ΔHalf) / ΔRGB;
+            Double ΔG = ((maximum - g) / 6 + ΔHalf) / ΔRGB;
+            Double ΔB = ((maximum - b) / 6 + ΔHalf) / ΔRGB;
 
-            if (Math.Abs(r - rgbMax) < Double.Epsilon)
+            if (Math.Abs(r - maximum) < Double.Epsilon)
             {
                 h = ΔB - ΔG;
             }
-            else if (Math.Abs(g - rgbMax) < Double.Epsilon)
+            else if (Math.Abs(g - maximum) < Double.Epsilon)
             {
                 h = OneThird + ΔR - ΔB;
             }

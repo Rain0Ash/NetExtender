@@ -486,6 +486,48 @@ namespace NetExtender.Utilities.Core
                 throw exception;
             }
         }
+
+        private static class IgnoresAccessChecksToAttribute
+        {
+            public static ConstructorInfo Constructor { get; }
+
+            static IgnoresAccessChecksToAttribute()
+            {
+                Constructor = typeof(System.Runtime.CompilerServices.IgnoresAccessChecksToAttribute).GetConstructor(new[] { typeof(String) }) ?? throw new MissingMethodException(nameof(System.Runtime.CompilerServices.IgnoresAccessChecksToAttribute), ".ctor");
+            }
+        }
+        
+        public static void IgnoreAccessChecksTo(this AssemblyBuilder builder, Assembly assembly)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            if (assembly is null)
+            {
+                throw new ArgumentNullException(nameof(assembly));
+            }
+            
+            IgnoreAccessChecksTo(builder, assembly.Name());
+        }
+
+        public static void IgnoreAccessChecksTo(this AssemblyBuilder builder, String assembly)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            if (String.IsNullOrEmpty(assembly))
+            {
+                throw new ArgumentNullOrEmptyStringException(assembly, nameof(assembly));
+            }
+
+            ConstructorInfo constructor = IgnoresAccessChecksToAttribute.Constructor;
+            CustomAttributeBuilder attribute = new CustomAttributeBuilder(constructor, new Object[] { assembly });
+            builder.SetCustomAttribute(attribute);
+        }
         
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static ILGenerator DefineGetMethod(this ILGenerator generator, FieldBuilder field)
@@ -556,7 +598,7 @@ namespace NetExtender.Utilities.Core
 
             if (String.IsNullOrEmpty(name))
             {
-                throw new ArgumentException("Value cannot be null or empty.", nameof(name));
+                throw new ArgumentNullOrEmptyStringException(name, nameof(name));
             }
 
             if (type is null)
@@ -639,7 +681,7 @@ namespace NetExtender.Utilities.Core
 
             if (String.IsNullOrEmpty(name))
             {
-                throw new ArgumentException("Value cannot be null or empty.", nameof(name));
+                throw new ArgumentNullOrEmptyStringException(name, nameof(name));
             }
 
             if (type is null)

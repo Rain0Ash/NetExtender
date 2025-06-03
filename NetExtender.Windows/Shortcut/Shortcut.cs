@@ -4,7 +4,8 @@
 using System;
 using System.IO;
 using System.Reflection;
-using NetExtender.IO.Shortcut.Interfaces;
+using NetExtender.Types.Exceptions;
+using NetExtender.Types.FileSystems.Interfaces;
 using NetExtender.Utilities.IO;
 using NetExtender.Windows.Shortcut.Interfaces;
 
@@ -193,7 +194,7 @@ namespace NetExtender.Windows.Shortcut
 
                 if (!PathUtilities.IsValidPath(value))
                 {
-                    throw new ArgumentException(@"Path is not valid", nameof(value));
+                    throw new ArgumentException("Path is not valid", nameof(value));
                 }
 
                 _directory = value;
@@ -204,20 +205,20 @@ namespace NetExtender.Windows.Shortcut
 
         public Shortcut(String name)
         {
-            if (String.IsNullOrWhiteSpace(name))
+            if (String.IsNullOrEmpty(name))
             {
-                throw new ArgumentException(nameof(name));
+                throw new ArgumentNullOrEmptyStringException(name, nameof(name));
             }
 
-            String ext = Path.GetExtension(name);
+            String extension = Path.GetExtension(name);
 
-            if (String.IsNullOrEmpty(ext))
+            if (String.IsNullOrEmpty(extension))
             {
                 name += ".lnk";
             }
-            else if (ext != ShortcutExtension)
+            else if (extension != ShortcutExtension)
             {
-                throw new ArgumentException(@$"Name can contain only {ShortcutExtension} extension", nameof(name));
+                throw new ArgumentException($"Name can contain only {ShortcutExtension} extension", nameof(name));
             }
 
             Name = name;

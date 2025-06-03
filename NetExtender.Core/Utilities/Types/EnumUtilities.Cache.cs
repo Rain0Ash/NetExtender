@@ -1,3 +1,6 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 using System;
 using System.Collections;
 using System.Collections.Concurrent;
@@ -460,11 +463,11 @@ namespace NetExtender.Utilities.Types
 
             private static void Initialize(IEnumerable<T>? source)
             {
-                T[] values = source is not null ? source.ToArray() : Enum.GetValues(CacheType<T>.Type) as T[] ?? throw new ArgumentException(nameof(T));
+                T[] values = source is not null ? source.ToArray() : Enum.GetValues(CacheType<T>.Type) as T[] ?? throw new ArgumentException($"Can't get enum values of type '{typeof(T).Name}'.", nameof(source));
 
                 Int32 i = 0;
-                ImmutableDictionary<T, Int32> set = values.ToImmutableDictionary(value => value, _ => i++);
-                ImmutableDictionary<T, Decimal> @decimal = values.ToImmutableDictionary(value => value, value => ((IConvertible) value).ToDecimal());
+                ImmutableDictionary<T, Int32> set = values.ToImmutableDictionary(static value => value, _ => i++);
+                ImmutableDictionary<T, Decimal> @decimal = values.ToImmutableDictionary(static value => value, static value => ((IConvertible) value).ToDecimal());
                 (T? minimum, T? maximum) = values.Length > 0 ? values.MinMax() : (default(T?), default(T?));
 
                 Values = values.ToImmutableArray();
@@ -521,7 +524,7 @@ namespace NetExtender.Utilities.Types
 
                 try
                 {
-                    Initialize(member.Select(item => item.Id));
+                    Initialize(member.Select(static item => item.Id));
                     return true;
                 }
                 catch (Exception)
@@ -598,8 +601,8 @@ namespace NetExtender.Utilities.Types
                 ImmutableArray<T> values = source?.ToImmutableArray() ?? ValuesStorage<T>.Values.Where(GenericUtilities.IsNotDefault).ToImmutableArray();
                 
                 Int32 i = 0;
-                ImmutableDictionary<T, Int32> set = values.ToImmutableDictionary(value => value, _ => i++);
-                ImmutableDictionary<T, Decimal> @decimal = values.ToImmutableDictionary(value => value, value => ((IConvertible) value).ToDecimal());
+                ImmutableDictionary<T, Int32> set = values.ToImmutableDictionary(static value => value, _ => i++);
+                ImmutableDictionary<T, Decimal> @decimal = values.ToImmutableDictionary(static value => value, static value => ((IConvertible) value).ToDecimal());
                 (T? minimum, T? maximum) = values.Length > 0 ? values.MinMax() : (default(T?), default(T?));
 
                 Values = values;
@@ -717,7 +720,7 @@ namespace NetExtender.Utilities.Types
                     throw new ArgumentNullException(nameof(source));
                 }
                 
-                Initialize(source.Select(item => item.ToString()));
+                Initialize(source.Select(static item => item.ToString()));
             }
 
             private static void Initialize(IEnumerable<String> source)
@@ -750,7 +753,7 @@ namespace NetExtender.Utilities.Types
 
                 try
                 {
-                    Initialize(member.Where(item => item.HasIdentifier).Select(item => item.Title));
+                    Initialize(member.Where(static item => item.HasIdentifier).Select(static item => item.Title));
                     return true;
                 }
                 catch (Exception)
@@ -910,7 +913,7 @@ namespace NetExtender.Utilities.Types
 
                 private static KeyValuePair<T, ImmutableDictionary<LocalizationIdentifier, String>?> Convert(T value)
                 {
-                    static ImmutableDictionary<LocalizationIdentifier, String>? Internal(T value)
+                    static ImmutableDictionary<LocalizationIdentifier, String>? Core(T value)
                     {
                         if (Get(value) is not { Length: > 0 } array)
                         {
@@ -934,7 +937,7 @@ namespace NetExtender.Utilities.Types
                         return dictionary.Count == 1 ? dictionary.Add(LocalizationIdentifier.Invariant, dictionary.Values.First()) : dictionary;
                     }
 
-                    return new KeyValuePair<T, ImmutableDictionary<LocalizationIdentifier, String>?>(value, Internal(value));
+                    return new KeyValuePair<T, ImmutableDictionary<LocalizationIdentifier, String>?>(value, Core(value));
                 }
                 
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1002,7 +1005,7 @@ namespace NetExtender.Utilities.Types
 
                     try
                     {
-                        Initialize(member.Values.Select(item => item.Id));
+                        Initialize(member.Values.Select(static item => item.Id));
                         return true;
                     }
                     catch (Exception)
@@ -1260,7 +1263,7 @@ namespace NetExtender.Utilities.Types
                     }
                     
                     Values = source.ToImmutableDictionary();
-                    Identifiers = Values.Keys.Select(item => item.Identifier).ToImmutableSortedSet();
+                    Identifiers = Values.Keys.Select(static item => item.Identifier).ToImmutableSortedSet();
                 }
 
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1322,7 +1325,7 @@ namespace NetExtender.Utilities.Types
                     {
                         Dictionary<(LocalizationIdentifier, String), T> values = new Dictionary<(LocalizationIdentifier, String), T>(member.Values.Length);
                         
-                        foreach (IGrouping<LocalizationIdentifier?, Enum<T>> group in member.Values.GroupBy(item => item.Identifier))
+                        foreach (IGrouping<LocalizationIdentifier?, Enum<T>> group in member.Values.GroupBy(static item => item.Identifier))
                         {
                             foreach (Enum<T> @enum in group)
                             {
@@ -1428,7 +1431,7 @@ namespace NetExtender.Utilities.Types
                 {
                     Dictionary<String, T> values = new Dictionary<String, T>(member.Values.Length);
 
-                    foreach (Enum<T> @enum in member.Values.Where(item => item.Identifier is null || item.Identifier == LocalizationIdentifier.Invariant))
+                    foreach (Enum<T> @enum in member.Values.Where(static item => item.Identifier is null || item.Identifier == LocalizationIdentifier.Invariant))
                     {
                         values[@enum.Title] = @enum.Id;
                     }
@@ -1484,7 +1487,7 @@ namespace NetExtender.Utilities.Types
             private static void Initialize(IEnumerable<String>? source)
             {
                 source ??= NamesStorage<T>.Names;
-                Members = source.Select(value => new EnumMember<T>(value)).ToImmutableArray();
+                Members = source.Select(static value => new EnumMember<T>(value)).ToImmutableArray();
             }
 
             internal static ITransaction Transaction()
@@ -1549,12 +1552,12 @@ namespace NetExtender.Utilities.Types
                     return;
                 }
                 
-                Members = source.Where(member => member.Value.IsNotDefault()).ToImmutableArray();
+                Members = source.Where(static member => member.Value.IsNotDefault()).ToImmutableArray();
             }
             
             private static void Initialize(ImmutableArray<EnumMember<T>> source)
             {
-                Members = source.Where(member => member.Value.IsNotDefault()).ToImmutableArray();
+                Members = source.Where(static member => member.Value.IsNotDefault()).ToImmutableArray();
             }
 
             internal static ITransaction Transaction()
@@ -1608,7 +1611,7 @@ namespace NetExtender.Utilities.Types
 
             static AttributesStorage()
             {
-                Cache = GetValues<T>().ToImmutableDictionary(key => key, value => value.ToMember().FieldInfo!
+                Cache = GetValues<T>().ToImmutableDictionary(static key => key, static value => value.ToMember().FieldInfo!
                     .GetCustomAttributes(typeof(TAttribute), true).OfType<TAttribute>().ToImmutableArray());
             }
 
@@ -1708,7 +1711,7 @@ namespace NetExtender.Utilities.Types
             {
                 T minimum = Minimum<T>();
                 T maximum = Maximum<T>();
-                EnumMember<T>[] distinct = MembersStorage<T>.Members.OrderBy(member => member.Value).Distinct(new EnumMember<T>.ValueComparer()).ToArray();
+                ImmutableArray<EnumMember<T>> distinct = MembersStorage<T>.Members.OrderBy(static member => member.Value).Distinct(new EnumMember<T>.ValueComparer()).ToImmutableArray();
 
                 TypeCode type = Type.GetTypeCode(CacheType<T>.Type);
                 Operation = type switch
@@ -1786,7 +1789,7 @@ namespace NetExtender.Utilities.Types
             private static void Initialize(IEnumerable<T>? source)
             {
                 source ??= ValuesStorage<T>.Values;
-                Initialize(source.Select(value => Enum<T>.Create(value)));
+                Initialize(source.Select(static value => Enum<T>.Create(value)));
             }
 
             private static void Initialize(IEnumerable<Enum<T>>? source)
@@ -1798,11 +1801,11 @@ namespace NetExtender.Utilities.Types
                 }
                 
                 ImmutableSortedSet<Enum<T>> values = source.ToImmutableSortedSet();
-                ImmutableDictionary<T, Enum<T>> enums = values.ToImmutableDictionary(value => value.Id, value => value);
-                ImmutableDictionary<T, ImmutableDictionary<LocalizationIdentifier, Enum<T>>> identifiers = values.ToImmutableDictionary(value => value.Id, value => DescriptionToEnumStorage<T>.Get()
-                    .ToImmutableDictionary(identifier => identifier, identifier => Enum<T>.Create(value, identifier)));
-                ImmutableDictionary<LocalizationIdentifier, ImmutableSortedSet<Enum<T>>> grouping = identifiers.SelectMany(pair => pair.Value).GroupBy(pair => pair.Key, pair => pair.Value)
-                    .ToImmutableDictionary(group => group.Key, group => group.Select(x => x).ToImmutableSortedSet());
+                ImmutableDictionary<T, Enum<T>> enums = values.ToImmutableDictionary(static value => value.Id, static value => value);
+                ImmutableDictionary<T, ImmutableDictionary<LocalizationIdentifier, Enum<T>>> identifiers = values.ToImmutableDictionary(static value => value.Id,
+                    value => DescriptionToEnumStorage<T>.Get().ToImmutableDictionary(static identifier => identifier, identifier => Enum<T>.Create(value, identifier)));
+                ImmutableDictionary<LocalizationIdentifier, ImmutableSortedSet<Enum<T>>> grouping = identifiers.SelectMany(static pair => pair.Value).GroupBy(static pair => pair.Key, static pair => pair.Value)
+                    .ToImmutableDictionary(static group => group.Key, static group => group.Select(static value => value).ToImmutableSortedSet());
                 
                 Values = values;
                 Enums = enums;
@@ -1830,7 +1833,7 @@ namespace NetExtender.Utilities.Types
                 private static void Initialize(IEnumerable<T>? source)
                 {
                     source ??= ValuesStorage<T>.Values;
-                    Initialize(source.Select(value => Enum<T>.Create<TEnum>(value)));
+                    Initialize(source.Select(static value => Enum<T>.Create<TEnum>(value)));
                 }
 
                 private static void Initialize(IEnumerable<TEnum>? source)
@@ -1842,11 +1845,11 @@ namespace NetExtender.Utilities.Types
                     }
                     
                     ImmutableSortedSet<TEnum> values = source.ToImmutableSortedSet();
-                    ImmutableDictionary<T, TEnum> enums = values.ToImmutableDictionary(value => value.Id, value => value);
-                    ImmutableDictionary<T, ImmutableDictionary<LocalizationIdentifier, TEnum>> identifiers = values.ToImmutableDictionary(value => value.Id, value => DescriptionToEnumStorage<T>.Get()
-                        .ToImmutableDictionary(identifier => identifier, identifier => Enum<T>.Create<TEnum>(value, identifier)));
-                    ImmutableDictionary<LocalizationIdentifier, ImmutableSortedSet<TEnum>> grouping = identifiers.SelectMany(pair => pair.Value).GroupBy(pair => pair.Key, pair => pair.Value)
-                        .ToImmutableDictionary(group => group.Key, group => group.Select(x => x).ToImmutableSortedSet());
+                    ImmutableDictionary<T, TEnum> enums = values.ToImmutableDictionary(static value => value.Id, static value => value);
+                    ImmutableDictionary<T, ImmutableDictionary<LocalizationIdentifier, TEnum>> identifiers = values.ToImmutableDictionary(static value => value.Id,
+                        value => DescriptionToEnumStorage<T>.Get().ToImmutableDictionary(static identifier => identifier, identifier => Enum<T>.Create<TEnum>(value, identifier)));
+                    ImmutableDictionary<LocalizationIdentifier, ImmutableSortedSet<TEnum>> grouping = identifiers.SelectMany(static pair => pair.Value).GroupBy(static pair => pair.Key, static pair => pair.Value)
+                        .ToImmutableDictionary(static group => group.Key, static group => group.Select(static value => value).ToImmutableSortedSet());
 
                     Values = values;
                     Enums = enums;
@@ -2085,6 +2088,12 @@ namespace NetExtender.Utilities.Types
                 }
 
                 return (value.Identifier is { } identifier ? TryParse(identifier, value.Id, out Enum<T>? result) : TryParse(value.Id, out result)) && String.Equals(value.Title, result.Title, StringComparison.Ordinal);
+            }
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static Boolean IsFlags(Enum<T> value)
+            {
+                return value is not null ? EnumUtilities.IsFlags<T>() : throw new ArgumentNullException(nameof(value));
             }
             
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -2331,7 +2340,7 @@ namespace NetExtender.Utilities.Types
                 }
                 
                 Enums = new ConcurrentDictionary<Type, EnumSynchronizationMember>(ReflectionUtilities.Custom.Types.Where(Predicate).Select(Member).WhereValueNotNull());
-                Array = Enums.OrderByDescending(pair => pair.Value.Order).ToImmutableArray();
+                Array = Enums.OrderByDescending(static pair => pair.Value.Order).ToImmutableArray();
             }
 
             private static KeyValuePair<Type, EnumSynchronizationMember?> Member(Type type)
@@ -2430,7 +2439,7 @@ namespace NetExtender.Utilities.Types
                 try
                 {
                     Enums.AddOrUpdate(member.Type, _ => member, (_, _) => member);
-                    Array = Enums.OrderByDescending(pair => pair.Value.Order).ToImmutableArray();
+                    Array = Enums.OrderByDescending(static pair => pair.Value.Order).ToImmutableArray();
                     return true;
                 }
                 catch (Exception)
@@ -2461,7 +2470,7 @@ namespace NetExtender.Utilities.Types
 
                 if (successful)
                 {
-                    Array = Enums.OrderByDescending(pair => pair.Value.Order).ToImmutableArray();
+                    Array = Enums.OrderByDescending(static pair => pair.Value.Order).ToImmutableArray();
                 }
                 
                 return successful;
@@ -2481,7 +2490,7 @@ namespace NetExtender.Utilities.Types
 
                 if (Enums.TryRemove(type, out _))
                 {
-                    Array = Enums.OrderByDescending(pair => pair.Value.Order).ToImmutableArray();
+                    Array = Enums.OrderByDescending(static pair => pair.Value.Order).ToImmutableArray();
                 }
             }
 
@@ -2507,7 +2516,7 @@ namespace NetExtender.Utilities.Types
                 
                 if (successful)
                 {
-                    Array = Enums.OrderByDescending(pair => pair.Value.Order).ToImmutableArray();
+                    Array = Enums.OrderByDescending(static pair => pair.Value.Order).ToImmutableArray();
                 }
             }
             
@@ -2530,7 +2539,7 @@ namespace NetExtender.Utilities.Types
                     }
                     
                     Enums.AddOrUpdate(Member.Type, _ => Member, (_, member) => ReferenceEquals(member, Member) ? member : throw new InvalidOperationException());
-                    Array = Enums.OrderByDescending(pair => pair.Value.Order).ToImmutableArray();
+                    Array = Enums.OrderByDescending(static pair => pair.Value.Order).ToImmutableArray();
                 }
             }
             

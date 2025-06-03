@@ -93,12 +93,12 @@ namespace NetExtender.Utilities.Windows.IO
         
         public static Boolean ContainsRaw()
         {
-            static Boolean Internal()
+            static Boolean Core()
             {
                 return Clipboard.GetDataObject() is { } data && data.GetDataPresent("rawbinary");
             }
             
-            return ThreadUtilities.IsSTA ? Internal() : ThreadUtilities.STA(Internal);
+            return ThreadUtilities.IsSTA ? Core() : ThreadUtilities.STA(Core);
         }
 
         public static Boolean ContainsData()
@@ -206,7 +206,7 @@ namespace NetExtender.Utilities.Windows.IO
         
         public static Byte[]? GetRaw()
         {
-            static Byte[]? Internal()
+            static Byte[]? Core()
             {
                 if (Clipboard.GetDataObject() is not DataObject data || !data.GetDataPresent("rawbinary"))
                 {
@@ -217,7 +217,7 @@ namespace NetExtender.Utilities.Windows.IO
                 return raw?.ToArray();
             }
             
-            return ThreadUtilities.IsSTA ? Internal() : ThreadUtilities.STA(Internal);
+            return ThreadUtilities.IsSTA ? Core() : ThreadUtilities.STA(Core);
         }
 
         public static IDataObject? GetData()
@@ -915,7 +915,7 @@ namespace NetExtender.Utilities.Windows.IO
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static Boolean FlushInternal()
+        private static Boolean FlushCore()
         {
             try
             {
@@ -931,11 +931,11 @@ namespace NetExtender.Utilities.Windows.IO
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean Flush()
         {
-            return ThreadUtilities.IsSTA ? FlushInternal() : ThreadUtilities.STA(FlushInternal);
+            return ThreadUtilities.IsSTA ? FlushCore() : ThreadUtilities.STA(FlushCore);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static Boolean ClearInternal()
+        private static Boolean ClearCore()
         {
             try
             {
@@ -951,7 +951,7 @@ namespace NetExtender.Utilities.Windows.IO
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean Clear()
         {
-            return ThreadUtilities.IsSTA ? ClearInternal() : ThreadUtilities.STA(ClearInternal);
+            return ThreadUtilities.IsSTA ? ClearCore() : ThreadUtilities.STA(ClearCore);
         }
     }
 }

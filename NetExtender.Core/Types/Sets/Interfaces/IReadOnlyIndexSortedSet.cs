@@ -7,7 +7,7 @@ using NetExtender.Types.Indexers.Interfaces;
 
 namespace NetExtender.Types.Sets.Interfaces
 {
-    public interface IReadOnlyIndexSortedSet<T> : IReadOnlyMapIndexer<T>, IReadOnlySet<T>
+    public interface IReadOnlyIndexSortedSet<T> : IReadOnlyMapIndexer<T>, IReadOnlySortedSet<T>
     {
         public new IComparer<T> Comparer { get; }
         public new Boolean Contains(T item);

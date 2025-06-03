@@ -1,3 +1,6 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 using System;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -25,11 +28,16 @@ namespace NetExtender.Types.Assemblies
         
         public DynamicInitializerAssembly(String name, AssemblyBuilderAccess access)
         {
+            if (name is null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
             if (String.IsNullOrEmpty(name))
             {
-                throw new ArgumentException("Value cannot be null or empty.", nameof(name));
+                throw new ArgumentException("Value cannot be empty.", nameof(name));
             }
-            
+
             Name = new AssemblyName(name);
             Initialize(Name, access, out AssemblyBuilder assembly, out ModuleBuilder module);
             Assembly = assembly;

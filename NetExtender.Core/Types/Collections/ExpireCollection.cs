@@ -145,14 +145,14 @@ namespace NetExtender.Types.Collections
             Internal.Clear();
         }
 
-        public void CopyTo(KeyValuePair<DateTime, T>[] array, Int32 arrayIndex)
+        public void CopyTo(KeyValuePair<DateTime, T>[] array, Int32 index)
         {
-            ((ICollection<KeyValuePair<DateTime, T>>) Internal).CopyTo(array, arrayIndex);
+            ((ICollection<KeyValuePair<DateTime, T>>) Internal).CopyTo(array, index);
         }
 
-        public void CopyTo(T[] array, Int32 arrayIndex)
+        public void CopyTo(T[] array, Int32 index)
         {
-            Internal.Values.CopyTo(array, arrayIndex);
+            Internal.Values.CopyTo(array, index);
         }
 
         public IEnumerator<T> GetEnumerator()

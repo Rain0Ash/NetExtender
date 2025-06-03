@@ -6,7 +6,7 @@ using System.Collections.Concurrent;
 using System.Linq.Expressions;
 using System.Reflection;
 using NetExtender.Types.Reflection.Interfaces;
-using NetExtender.Utilities.Numerics;
+using NetExtender.Utilities.Core;
 
 namespace NetExtender.Types.Reflection
 {

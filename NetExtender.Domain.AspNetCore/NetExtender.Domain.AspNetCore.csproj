@@ -3,6 +3,7 @@
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
         <Nullable>enable</Nullable>
+        <ImplicitUsings>disable</ImplicitUsings>
         <OutputType>Library</OutputType>
         <LangVersion>10</LangVersion>
         <Authors>Rain0Ash</Authors>
@@ -23,6 +24,10 @@
     <ItemGroup>
         <ProjectReference Include="..\NetExtender.AspNetCore\NetExtender.AspNetCore.csproj"/>
         <ProjectReference Include="..\NetExtender.Domain\NetExtender.Domain.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="8.0.1" />
     </ItemGroup>
 
 </Project>

@@ -2,12 +2,71 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Numerics;
 using System.Runtime.CompilerServices;
+using NetExtender.Types.Exceptions;
+using NetExtender.Types.Numerics;
+using NetExtender.Types.Reflection;
+using NetExtender.Utilities.Core;
 
 namespace NetExtender.Utilities.Types
 {
     public static class BooleanUtilities
     {
+        private static class Storage<T> where T : struct, IEquatable<T>
+        {
+            private static T? one;
+            public static T One
+            {
+                get
+                {
+                    return one ??= ReflectionOperator.Get<T>(UnaryOperator.Increment) is { } @operator ? @operator.Invoke(default) : throw new NotInitializedException($"Use '{nameof(BooleanUtilities)}.{nameof(SetOne)}' method to set value that equivalent to 'one'.");
+                }
+                set
+                {
+                    one = value;
+                }
+            }
+        }
+
+        static BooleanUtilities()
+        {
+            SetOne(IntPtr.Add(IntPtr.Zero, 1));
+            SetOne(UIntPtr.Add(UIntPtr.Zero, 1));
+            SetOne(BigInteger.One);
+            SetOne(Complex.One);
+            SetOne(Time.Millisecond.One);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void SetOne<T>(T one) where T : struct, IEquatable<T>
+        {
+            Storage<T>.One = one;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T To<T>(this Boolean value) where T : struct, IEquatable<T>
+        {
+            return value ? Storage<T>.One : default;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T? To<T>(this Boolean? value) where T : struct, IEquatable<T>
+        {
+            return value switch
+            {
+                null => null,
+                true => Storage<T>.One,
+                false => default(T)
+            };
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T? To<T>(this Trilean value) where T : struct, IEquatable<T>
+        {
+            return To<T>((Boolean?) value);
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static void Then(this Boolean value, Action handler)
         {

@@ -11,6 +11,7 @@ using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Text.RegularExpressions;
+using NetExtender.Types.Exceptions;
 using NetExtender.Utilities.IO;
 using NetExtender.Utilities.Numerics;
 using NetExtender.Utilities.Types;
@@ -49,7 +50,6 @@ namespace NetExtender.Utilities.Windows.IO
                 }
 
                 info = Directory.CreateDirectory(path);
-
                 return Directory.Exists(path);
             }
             catch (Exception)
@@ -63,8 +63,7 @@ namespace NetExtender.Utilities.Windows.IO
                     switch (remove)
                     {
                         case PathAction.Standard:
-                            if (GetFiles(path).All(file => file.Equals("desktop.ini", StringComparison.OrdinalIgnoreCase)) &&
-                                !GetDirectories(path).Any())
+                            if (GetFiles(path).All(file => file.Equals("desktop.ini", StringComparison.OrdinalIgnoreCase)) && !GetDirectories(path).Any())
                             {
                                 Directory.Delete(path, true);
                             }
@@ -232,7 +231,7 @@ namespace NetExtender.Utilities.Windows.IO
         {
             if (String.IsNullOrEmpty(path))
             {
-                throw new ArgumentException(@"Value cannot be null or empty.", nameof(path));
+                throw new ArgumentNullOrEmptyStringException(path, nameof(path));
             }
 
             path = PathUtilities.ConvertToFolder(path);
@@ -372,7 +371,7 @@ namespace NetExtender.Utilities.Windows.IO
         {
             if (String.IsNullOrEmpty(path))
             {
-                throw new ArgumentException(@"Value cannot be null or empty.", nameof(path));
+                throw new ArgumentNullOrEmptyStringException(path, nameof(path));
             }
 
             if (type == PathType.None)
@@ -479,12 +478,12 @@ namespace NetExtender.Utilities.Windows.IO
         {
             if (String.IsNullOrEmpty(directory))
             {
-                throw new ArgumentException("Value cannot be null or empty.", nameof(directory));
+                throw new ArgumentNullOrEmptyStringException(directory, nameof(directory));
             }
 
             if (String.IsNullOrEmpty(icon))
             {
-                throw new ArgumentException("Value cannot be null or empty.", nameof(icon));
+                throw new ArgumentNullOrEmptyStringException(icon, nameof(icon));
             }
 
             if (index < 0)

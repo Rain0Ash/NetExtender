@@ -4,6 +4,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Xml;
 using NetExtender.NewtonSoft;
 using NetExtender.Types.Exceptions;
@@ -16,6 +18,32 @@ namespace NetExtender.Utilities.Serialization
 {
     public static class JsonUtilities
     {
+        private sealed class UnspecifiedJsonNamingPolicy : JsonNamingPolicy
+        {
+            public static JsonNamingPolicy Instance { get; } = new UnspecifiedJsonNamingPolicy();
+            
+            public override String ConvertName(String name)
+            {
+                return name;
+            }
+        }
+        
+        public static JsonNamingPolicy ToNamingPolicy(this JsonKnownNamingPolicy value)
+        {
+            return value switch
+            {
+                JsonKnownNamingPolicy.Unspecified => UnspecifiedJsonNamingPolicy.Instance,
+                JsonKnownNamingPolicy.CamelCase => JsonNamingPolicy.CamelCase,
+#if NET8_0_OR_GREATER
+                JsonKnownNamingPolicy.SnakeCaseLower => JsonNamingPolicy.SnakeCaseLower,
+                JsonKnownNamingPolicy.SnakeCaseUpper => JsonNamingPolicy.SnakeCaseUpper,
+                JsonKnownNamingPolicy.KebabCaseLower => JsonNamingPolicy.KebabCaseLower,
+                JsonKnownNamingPolicy.KebabCaseUpper => JsonNamingPolicy.KebabCaseUpper,
+#endif
+                _ => throw new EnumUndefinedOrNotSupportedException<JsonKnownNamingPolicy>(value, nameof(value), null)
+            };
+        }
+
         public static Boolean IsValidJson(String? json)
         {
             if (String.IsNullOrEmpty(json))
@@ -51,12 +79,12 @@ namespace NetExtender.Utilities.Serialization
             return JsonConvert.SerializeObject(value, formatting);
         }
 
-        public static String JsonSerializeObject(this Object? value, params JsonConverter[] converters)
+        public static String JsonSerializeObject(this Object? value, params Newtonsoft.Json.JsonConverter[] converters)
         {
             return JsonConvert.SerializeObject(value, converters);
         }
 
-        public static String JsonSerializeObject(this Object? value, Newtonsoft.Json.Formatting formatting, params JsonConverter[] converters)
+        public static String JsonSerializeObject(this Object? value, Newtonsoft.Json.Formatting formatting, params Newtonsoft.Json.JsonConverter[] converters)
         {
             return JsonConvert.SerializeObject(value, formatting, converters);
         }
@@ -246,13 +274,13 @@ namespace NetExtender.Utilities.Serialization
             }
         }
 
-        public static TSettings ConverterOverride<TSettings>(this TSettings settings, Type type, JsonConverter? converter) where TSettings : JsonSerializerSettings
+        public static TSettings ConverterOverride<TSettings>(this TSettings settings, Type type, Newtonsoft.Json.JsonConverter? converter) where TSettings : JsonSerializerSettings
         {
             InitializeOverrideContractResolver(settings).Add(type, converter);
             return settings;
         }
 
-        public static TSettings ConverterOverride<T, TSettings>(this TSettings settings, JsonConverter? converter) where TSettings : JsonSerializerSettings
+        public static TSettings ConverterOverride<T, TSettings>(this TSettings settings, Newtonsoft.Json.JsonConverter? converter) where TSettings : JsonSerializerSettings
         {
             InitializeOverrideContractResolver(settings).Add<T>(converter);
             return settings;
@@ -275,7 +303,7 @@ namespace NetExtender.Utilities.Serialization
             return ConverterOverrideRemove(settings, type, out _);
         }
 
-        public static TSettings ConverterOverrideRemove<TSettings>(this TSettings settings, Type type, out JsonConverter? converter) where TSettings : JsonSerializerSettings
+        public static TSettings ConverterOverrideRemove<TSettings>(this TSettings settings, Type type, out Newtonsoft.Json.JsonConverter? converter) where TSettings : JsonSerializerSettings
         {
             InitializeOverrideContractResolver(settings).Remove(type, out converter);
             return settings;
@@ -286,7 +314,7 @@ namespace NetExtender.Utilities.Serialization
             return ConverterOverrideRemove<T, TSettings>(settings, out _);
         }
 
-        public static TSettings ConverterOverrideRemove<T, TSettings>(this TSettings settings, out JsonConverter? converter) where TSettings : JsonSerializerSettings
+        public static TSettings ConverterOverrideRemove<T, TSettings>(this TSettings settings, out Newtonsoft.Json.JsonConverter? converter) where TSettings : JsonSerializerSettings
         {
             InitializeOverrideContractResolver(settings).Remove<T>(out converter);
             return settings;

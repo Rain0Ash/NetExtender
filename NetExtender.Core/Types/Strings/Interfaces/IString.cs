@@ -12,7 +12,7 @@ using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Strings.Interfaces
 {
-    public interface IString : IComparable, IConvertible, IFormattable, IEnumerable<Char>, IComparable<String?>, IEquatable<String?>, IComparable<IString?>, IEquatable<IString?>, ICloneable
+    public interface IString : IEnumerable<Char>, IEquality<String?>, IEquality<IString?>, IAnyEquality, IConvertible, IFormattable, ICloneable
     {
         /// <summary>
         /// Is immutable (ex. String) or mutable (ex. StringBuilder)
@@ -562,9 +562,9 @@ namespace NetExtender.Types.Strings.Interfaces
             }
         }
 
-        Int32 IComparable.CompareTo(Object? obj)
+        Int32 IComparable.CompareTo(Object? other)
         {
-            return ToString().CompareTo(obj);
+            return ToString().CompareTo(other);
         }
 
         TypeCode IConvertible.GetTypeCode()

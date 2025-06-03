@@ -1,3 +1,6 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 using System;
 using System.Reactive.Disposables;
 using System.Runtime.CompilerServices;
@@ -41,13 +44,13 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(value));
             }
             
-            static async Task<IDisposable> Internal(SemaphoreSlim value, CancellationToken cancellationToken)
+            static async Task<IDisposable> Core(SemaphoreSlim value, CancellationToken cancellationToken)
             {
                 await value.WaitAsync(cancellationToken).ConfigureAwait(false);
                 return Disposable.Create(value, static value => value.Release());
             }
 
-            return new AwaitableDisposable<IDisposable>(Internal(value, cancellationToken));
+            return new AwaitableDisposable<IDisposable>(Core(value, cancellationToken));
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

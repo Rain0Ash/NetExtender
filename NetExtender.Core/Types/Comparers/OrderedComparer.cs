@@ -11,7 +11,7 @@ using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Comparers
 {
-    public class OrderedComparer<T> : IOrderedComparer<T>, IReadOnlyOrderedComparer<T>
+    public class OrderedComparer<T> : IOrderedComparer<T>, IReadOnlyOrderedComparer<T>, ICloneable
     {
         protected IList<T> Order { get; }
         protected IIndexer<T>? Indexer { get; set; }
@@ -155,8 +155,17 @@ namespace NetExtender.Types.Comparers
             }
 
             Int32 compare = Compare(GetOrder(x!), GetOrder(y!));
-
             return compare == 0 ? Comparer.Compare(x, y) : compare;
+        }
+
+        public virtual OrderedComparer<T> Clone()
+        {
+            return new OrderedComparer<T>(Order, Comparer);
+        }
+
+        Object ICloneable.Clone()
+        {
+            return Clone();
         }
 
         public IEnumerator<T> GetEnumerator()

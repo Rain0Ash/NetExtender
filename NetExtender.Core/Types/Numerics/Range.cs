@@ -10,7 +10,7 @@ using NetExtender.Utilities.Types;
 namespace NetExtender.Types.Numerics
 {
     [Serializable]
-    public readonly struct Range<T> : IComparable<Range<T>>, IEquatable<Range<T>> where T : IComparable<T>
+    public readonly struct Range<T> : IEquality<Range<T>> where T : IComparable<T>
     {
         public static implicit operator (T Min, T Max)(Range<T> value)
         {

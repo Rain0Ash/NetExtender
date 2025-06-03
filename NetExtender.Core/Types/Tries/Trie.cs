@@ -193,7 +193,7 @@ namespace NetExtender.Types.Tries
             Set.Clear();
         }
 
-        public void CopyTo(KeyValuePair<IEnumerable<TKey>, TValue>[] array, Int32 arrayIndex)
+        public void CopyTo(KeyValuePair<IEnumerable<TKey>, TValue>[] array, Int32 index)
         {
             if (array is null)
             {
@@ -201,7 +201,7 @@ namespace NetExtender.Types.Tries
             }
 
             KeyValuePair<IEnumerable<TKey>, TValue>[] entries = Set.Cast<Entry>().Select(entry => new KeyValuePair<IEnumerable<TKey>, TValue>(entry, entry.Value)).ToArray();
-            Array.Copy(entries, 0, array, arrayIndex, Count);
+            Array.Copy(entries, 0, array, index, Count);
         }
 
         public IEnumerator<KeyValuePair<IEnumerable<TKey>, TValue>> GetEnumerator()

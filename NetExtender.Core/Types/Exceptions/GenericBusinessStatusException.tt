@@ -56,6 +56,26 @@ namespace NetExtender.Types.Exceptions
         WriteLine("\t\t{");
         WriteLine("\t\t}");
         WriteLine(String.Empty);
+        WriteLine($"\t\tpublic {name}({nameof(String)}? message, Business{nameof(Exception)}? exception)");
+        WriteLine("\t\t\t: base(message, Generic, exception)");
+        WriteLine("\t\t{");
+        WriteLine("\t\t}");
+        WriteLine(String.Empty);
+        WriteLine($"\t\tpublic {name}({nameof(String)}? message, params Business{nameof(Exception)}?[]? reason)");
+        WriteLine("\t\t\t: base(message, Generic, reason)");
+        WriteLine("\t\t{");
+        WriteLine("\t\t}");
+        WriteLine(String.Empty);
+        WriteLine($"\t\tpublic {name}({nameof(String)}? message, {nameof(Exception)}? exception, params Business{nameof(Exception)}?[]? reason)");
+        WriteLine("\t\t\t: base(message, Generic, exception, reason)");
+        WriteLine("\t\t{");
+        WriteLine("\t\t}");
+        WriteLine(String.Empty);
+        WriteLine($"\t\tpublic {name}({nameof(String)}? message, Business{nameof(Exception)}? exception, params Business{nameof(Exception)}?[]? reason)");
+        WriteLine("\t\t\t: base(message, Generic, exception, reason)");
+        WriteLine("\t\t{");
+        WriteLine("\t\t}");
+        WriteLine(String.Empty);
         WriteLine($"\t\tprotected {name}({nameof(SerializationInfo)} info, {nameof(StreamingContext)} context)");
         WriteLine("\t\t\t: base(info, context)");
         WriteLine("\t\t{");
@@ -70,17 +90,32 @@ namespace NetExtender.Types.Exceptions
         WriteLine($"\t\tprivate const {nameof(HttpStatusCode)} Generic = {generic};");
         WriteLine(String.Empty);
         WriteLine($"\t\tpublic {name}(T code)");
-        WriteLine("\t\t\t: base(code, Generic)");
+        WriteLine("\t\t\t: base(Generic, code)");
         WriteLine("\t\t{");
         WriteLine("\t\t}");
         WriteLine(String.Empty);
         WriteLine($"\t\tpublic {name}({nameof(String)}? message, T code)");
-        WriteLine("\t\t\t: base(message, code, Generic)");
+        WriteLine("\t\t\t: base(message, Generic, code)");
         WriteLine("\t\t{");
         WriteLine("\t\t}");
         WriteLine(String.Empty);
         WriteLine($"\t\tpublic {name}({nameof(String)}? message, T code, {nameof(Exception)}? exception)");
-        WriteLine("\t\t\t: base(message, code, Generic, exception)");
+        WriteLine("\t\t\t: base(message, Generic, code, exception)");
+        WriteLine("\t\t{");
+        WriteLine("\t\t}");
+        WriteLine(String.Empty);
+        WriteLine($"\t\tpublic {name}({nameof(String)}? message, T code, params Business{nameof(Exception)}?[]? reason)");
+        WriteLine("\t\t\t: base(message, Generic, code, reason)");
+        WriteLine("\t\t{");
+        WriteLine("\t\t}");
+        WriteLine(String.Empty);
+        WriteLine($"\t\tpublic {name}({nameof(String)}? message, T code, {nameof(Exception)}? exception, params Business{nameof(Exception)}?[]? reason)");
+        WriteLine("\t\t\t: base(message, Generic, code, exception, reason)");
+        WriteLine("\t\t{");
+        WriteLine("\t\t}");
+        WriteLine(String.Empty);
+        WriteLine($"\t\tpublic {name}({nameof(String)}? message, T code, Business{nameof(Exception)}? exception, params Business{nameof(Exception)}?[]? reason)");
+        WriteLine("\t\t\t: base(message, Generic, code, exception, reason)");
         WriteLine("\t\t{");
         WriteLine("\t\t}");
         WriteLine(String.Empty);
@@ -93,18 +128,37 @@ namespace NetExtender.Types.Exceptions
 
     void Generator()
     {
-        KeyValuePair<String, Int32> Internal(String name)
+        KeyValuePair<String, Int32> Core(String name)
         {
             return new KeyValuePair<String, Int32>(name, Convert.ToInt32(Enum.Parse(typeof(HttpStatusCode), name)));
         }
 
         Dictionary<String, Int32> special = new Dictionary<String, Int32>
         {
-            { "IamATeapot", 418 }
+            { "Processing", 102 },
+            { "EarlyHints", 103 },
+            { "MultiStatus", 207 },
+            { "AlreadyReported", 208 },
+            { "IMUsed", 226 },
+            { "PermanentRedirect", 308 },
+            { "IamATeapot", 418 },
+            { "MisdirectedRequest", 421 },
+            { "UnprocessableEntity", 422 },
+            { "Locked", 423 },
+            { "FailedDependency", 424 },
+            { "PreconditionRequired", 428 },
+            { "TooManyRequests", 429 },
+            { "RequestHeaderFieldsTooLarge", 431 },
+            { "UnavailableForLegalReasons", 451 },
+            { "VariantAlsoNegotiates", 506 },
+            { "InsufficientStorage", 507 },
+            { "LoopDetected", 508 },
+            { "NotExtended", 510 },
+            { "NetworkAuthenticationRequired", 511 }
         };
         
         String[] names = Enum.GetNames(typeof(HttpStatusCode));
-        KeyValuePair<String, Int32>[] values = names.Select(Internal).Union(special).OrderBy(value => value.Value).ToArray();
+        KeyValuePair<String, Int32>[] values = names.Select(Core).Union(special).OrderBy(value => value.Value).ToArray();
         ForEach(values, GeneratorImplementation);
     }
 #>

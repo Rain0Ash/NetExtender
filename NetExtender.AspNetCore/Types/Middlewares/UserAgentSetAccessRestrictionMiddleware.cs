@@ -61,9 +61,9 @@ namespace NetExtender.AspNetCore.Types.Middlewares
             UserAgentWhitelist.Clear();
         }
 
-        public void CopyTo(String?[] array, Int32 arrayIndex)
+        public void CopyTo(String?[] array, Int32 index)
         {
-            UserAgentWhitelist.CopyTo(array, arrayIndex);
+            UserAgentWhitelist.CopyTo(array, index);
         }
     }
 }

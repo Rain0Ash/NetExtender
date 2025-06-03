@@ -42,7 +42,7 @@ namespace NetExtender.NewtonSoft.Types.Trees
                 throw new ArgumentNullException(nameof(type));
             }
 
-            static Type Internal(Type type)
+            static Type Core(Type type)
             {
                 if (type is null)
                 {
@@ -77,7 +77,7 @@ namespace NetExtender.NewtonSoft.Types.Trees
                 }
             }
 
-            return Cache.GetOrAdd(type, Internal);
+            return Cache.GetOrAdd(type, Core);
         }
 
         public override Object? ReadJson(JsonReader reader, Type type, Object? existingValue, JsonSerializer serializer)

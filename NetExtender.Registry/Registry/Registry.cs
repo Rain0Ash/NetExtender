@@ -1035,7 +1035,7 @@ namespace NetExtender.Registry
             return GetSubKeyNames();
         }
 
-        private IEnumerable<RegistryEntry> DumpInternal()
+        private IEnumerable<RegistryEntry> DumpCore()
         {
             RegistryEntry[]? entries = GetValues();
 
@@ -1076,7 +1076,7 @@ namespace NetExtender.Registry
         {
             try
             {
-                return DumpInternal().ToArray();
+                return DumpCore().ToArray();
             }
             catch (Exception)
             {

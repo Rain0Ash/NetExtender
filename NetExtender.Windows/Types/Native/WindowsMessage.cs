@@ -10,7 +10,7 @@ namespace NetExtender.Windows.Types
     /// <summary>
     ///  Implements a Windows message.
     /// </summary>
-    public readonly struct WindowsMessage : IEquatable<Int32>, IEquatable<WM>, IEquatable<WindowsMessage>, IComparable<Int32>, IComparable<WM>, IComparable<WindowsMessage>, IFormattable
+    public readonly struct WindowsMessage : IEquality<WindowsMessage>, IEquality<WM>, IEquality<Int32>, IFormattable
     {
         public static implicit operator WM(WindowsMessage message)
         {
@@ -81,9 +81,9 @@ namespace NetExtender.Windows.Types
             return Marshal.PtrToStructure(LParam, cls);
         }
 
-        public Int32 CompareTo(Int32 other)
+        public Int32 CompareTo(WindowsMessage other)
         {
-            return CompareTo((WM) other);
+            return CompareTo(other.Message);
         }
 
         public Int32 CompareTo(WM other)
@@ -91,9 +91,9 @@ namespace NetExtender.Windows.Types
             return Comparer<WM>.Default.Compare(Message, other);
         }
 
-        public Int32 CompareTo(WindowsMessage other)
+        public Int32 CompareTo(Int32 other)
         {
-            return CompareTo(other.Message);
+            return CompareTo((WM) other);
         }
 
         public override Int32 GetHashCode()
@@ -103,12 +103,18 @@ namespace NetExtender.Windows.Types
 
         public override Boolean Equals(Object? other)
         {
-            return other is WindowsMessage message && Equals(message);
+            return other switch
+            {
+                WindowsMessage value => Equals(value),
+                WM value => Equals(value),
+                Int32 value => Equals(value),
+                _ => false
+            };
         }
 
-        public Boolean Equals(Int32 other)
+        public Boolean Equals(WindowsMessage other)
         {
-            return Equals((WM) other);
+            return Handle == other.Handle && Message == other.Message && WParam == other.WParam && LParam == other.LParam && Result == other.Result;
         }
 
         public Boolean Equals(WM other)
@@ -116,11 +122,11 @@ namespace NetExtender.Windows.Types
             return EqualityComparer<WM>.Default.Equals(Message, other);
         }
 
-        public Boolean Equals(WindowsMessage other)
+        public Boolean Equals(Int32 other)
         {
-            return Handle == other.Handle && Message == other.Message && WParam == other.WParam && LParam == other.LParam && Result == other.Result;
+            return Equals((WM) other);
         }
-        
+
         public override String ToString()
         {
             return ToString((IFormatProvider?) null);

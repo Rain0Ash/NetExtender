@@ -26,7 +26,7 @@ namespace NetExtender.Types.Collections
         {
             get
             {
-                return Internal.IsReadOnly && typeof(T) == typeof(TKey);
+                return typeof(T) != typeof(TKey) || Internal.IsReadOnly;
             }
         }
 
@@ -47,6 +47,8 @@ namespace NetExtender.Types.Collections
             {
                 throw new NotSupportedException();
             }
+
+            Internal.Add((T) (Object) item!);
         }
 
         public Boolean Remove(TKey item)
@@ -69,9 +71,9 @@ namespace NetExtender.Types.Collections
             Internal.Clear();
         }
 
-        public void CopyTo(TKey[] array, Int32 arrayIndex)
+        public void CopyTo(TKey[] array, Int32 index)
         {
-            Internal.Select(Selector).CopyTo(array, arrayIndex);
+            Internal.Select(Selector).CopyTo(array, index);
         }
 
         public IEnumerator<TKey> GetEnumerator()

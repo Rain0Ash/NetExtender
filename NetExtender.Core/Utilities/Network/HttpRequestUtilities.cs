@@ -18,7 +18,6 @@ namespace NetExtender.Utilities.Network
 {
     public static class HttpRequestUtilities
     {
-        [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
         public static CookieHeaderValue[] GetCookies(this HttpRequestHeaders source)
         {
             if (source is null)
@@ -31,7 +30,7 @@ namespace NetExtender.Utilities.Network
                 return Array.Empty<CookieHeaderValue>();
             }
 
-            List<CookieHeaderValue> cookies = new List<CookieHeaderValue>(values.CountIfMaterialized() ?? 16);
+            List<CookieHeaderValue> cookies = new List<CookieHeaderValue>(values.CountIfMaterialized(16));
             foreach (String input in values)
             {
                 if (CookieHeaderValue.TryParse(input, out CookieHeaderValue? result))

@@ -10,11 +10,11 @@ namespace NetExtender.Utilities.AspNetCore.Types
 {
     public static class SinglePageApplicationUtilities
     {
-        public static IServiceCollection AddSpaStaticFiles(this IServiceCollection collection, DirectoryInfo directory)
+        public static IServiceCollection AddSpaStaticFiles(this IServiceCollection services, DirectoryInfo directory)
         {
-            if (collection is null)
+            if (services is null)
             {
-                throw new ArgumentNullException(nameof(collection));
+                throw new ArgumentNullException(nameof(services));
             }
 
             if (directory is null)
@@ -27,15 +27,15 @@ namespace NetExtender.Utilities.AspNetCore.Types
                 configuration.RootPath = directory.FullName;
             }
 
-            collection.AddSpaStaticFiles(Configuration);
-            return collection;
+            services.AddSpaStaticFiles(Configuration);
+            return services;
         }
 
-        public static IServiceCollection AddSpaStaticFiles(this IServiceCollection collection, String path)
+        public static IServiceCollection AddSpaStaticFiles(this IServiceCollection services, String path)
         {
-            if (collection is null)
+            if (services is null)
             {
-                throw new ArgumentNullException(nameof(collection));
+                throw new ArgumentNullException(nameof(services));
             }
 
             if (path is null)
@@ -53,8 +53,8 @@ namespace NetExtender.Utilities.AspNetCore.Types
                 configuration.RootPath = path;
             }
 
-            collection.AddSpaStaticFiles(Configuration);
-            return collection;
+            services.AddSpaStaticFiles(Configuration);
+            return services;
         }
     }
 }

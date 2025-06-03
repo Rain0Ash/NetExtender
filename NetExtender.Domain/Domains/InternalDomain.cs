@@ -465,7 +465,7 @@ namespace NetExtender.Domains
 
             public void Dispose()
             {
-                DisposeInternal(true);
+                DisposeCore(true);
                 GC.SuppressFinalize(this);
             }
 
@@ -474,7 +474,7 @@ namespace NetExtender.Domains
                 Shutdown();
             }
 
-            private void DisposeInternal(Boolean disposing)
+            private void DisposeCore(Boolean disposing)
             {
                 if (_disposed)
                 {

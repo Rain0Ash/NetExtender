@@ -3,6 +3,7 @@
 
 using System;
 using System.Linq.Expressions;
+using NetExtender.Utilities.Core;
 
 namespace NetExtender.Utilities.Numerics
 {
@@ -133,71 +134,71 @@ namespace NetExtender.Utilities.Numerics
     {
         static MathGeneric()
         {
-            ConvertInternal = new Lazy<Func<T, TResult>>(() => ExpressionUtilities.CreateExpression<T, TResult>(body => Expression.Convert(body, typeof(TResult))), true);
-            AddInternal = new Lazy<Func<TResult, T, TResult>>(() => ExpressionUtilities.CreateExpression<TResult, T, TResult>(Expression.Add, true), true);
-            SubtractInternal = new Lazy<Func<TResult, T, TResult>>(() => ExpressionUtilities.CreateExpression<TResult, T, TResult>(Expression.Subtract, true), true);
-            MultiplyInternal = new Lazy<Func<TResult, T, TResult>>(() => ExpressionUtilities.CreateExpression<TResult, T, TResult>(Expression.Multiply, true), true);
-            DivideInternal = new Lazy<Func<TResult, T, TResult>>(() => ExpressionUtilities.CreateExpression<TResult, T, TResult>(Expression.Divide, true), true);
-            ModuloInternal = new Lazy<Func<TResult, T, TResult>>(() => ExpressionUtilities.CreateExpression<TResult, T, TResult>(Expression.Modulo, true), true);
+            ConvertLazy = new Lazy<Func<T, TResult>>(() => ExpressionUtilities.CreateExpression<T, TResult>(body => Expression.Convert(body, typeof(TResult))), true);
+            AddLazy = new Lazy<Func<TResult, T, TResult>>(() => ExpressionUtilities.CreateExpression<TResult, T, TResult>(Expression.Add, true), true);
+            SubtractLazy = new Lazy<Func<TResult, T, TResult>>(() => ExpressionUtilities.CreateExpression<TResult, T, TResult>(Expression.Subtract, true), true);
+            MultiplyLazy = new Lazy<Func<TResult, T, TResult>>(() => ExpressionUtilities.CreateExpression<TResult, T, TResult>(Expression.Multiply, true), true);
+            DivideLazy = new Lazy<Func<TResult, T, TResult>>(() => ExpressionUtilities.CreateExpression<TResult, T, TResult>(Expression.Divide, true), true);
+            ModuloLazy = new Lazy<Func<TResult, T, TResult>>(() => ExpressionUtilities.CreateExpression<TResult, T, TResult>(Expression.Modulo, true), true);
         }
 
-        private static Lazy<Func<T, TResult>> ConvertInternal { get; }
+        private static Lazy<Func<T, TResult>> ConvertLazy { get; }
 
         public static Func<T, TResult> Convert
         {
             get
             {
-                return ConvertInternal.Value;
+                return ConvertLazy.Value;
             }
         }
 
-        private static Lazy<Func<TResult, T, TResult>> AddInternal { get; }
+        private static Lazy<Func<TResult, T, TResult>> AddLazy { get; }
 
         public static Func<TResult, T, TResult> Add
         {
             get
             {
-                return AddInternal.Value;
+                return AddLazy.Value;
             }
         }
 
-        private static Lazy<Func<TResult, T, TResult>> SubtractInternal { get; }
+        private static Lazy<Func<TResult, T, TResult>> SubtractLazy { get; }
 
         public static Func<TResult, T, TResult> Subtract
         {
             get
             {
-                return SubtractInternal.Value;
+                return SubtractLazy.Value;
             }
         }
 
-        private static Lazy<Func<TResult, T, TResult>> MultiplyInternal { get; }
+        private static Lazy<Func<TResult, T, TResult>> MultiplyLazy { get; }
 
         public static Func<TResult, T, TResult> Multiply
         {
             get
             {
-                return MultiplyInternal.Value;
+                return MultiplyLazy.Value;
             }
         }
 
-        private static Lazy<Func<TResult, T, TResult>> DivideInternal { get; }
+        private static Lazy<Func<TResult, T, TResult>> DivideLazy { get; }
 
         public static Func<TResult, T, TResult> Divide
         {
             get
             {
-                return DivideInternal.Value;
+                return DivideLazy.Value;
             }
         }
 
-        private static Lazy<Func<TResult, T, TResult>> ModuloInternal { get; }
+        private static Lazy<Func<TResult, T, TResult>> ModuloLazy { get; }
 
         public static Func<TResult, T, TResult> Modulo
         {
             get
             {
-                return ModuloInternal.Value;
+                return ModuloLazy.Value;
             }
         }
     }
@@ -213,24 +214,24 @@ namespace NetExtender.Utilities.Numerics
                 throw new InvalidOperationException($"Generic math between {nameof(Nullable)} types is NotFunc implemented. Type: {typeof(T).FullName} is nullable.");
             }
 
-            AddInternal = new Lazy<Func<T, T, T>>(() => ExpressionUtilities.CreateExpression<T, T, T>(Expression.Add), true);
-            SubtractInternal = new Lazy<Func<T, T, T>>(() => ExpressionUtilities.CreateExpression<T, T, T>(Expression.Subtract), true);
-            MultiplyInternal = new Lazy<Func<T, T, T>>(() => ExpressionUtilities.CreateExpression<T, T, T>(Expression.Multiply), true);
-            DivideInternal = new Lazy<Func<T, T, T>>(() => ExpressionUtilities.CreateExpression<T, T, T>(Expression.Divide), true);
-            ModuloInternal = new Lazy<Func<T, T, T>>(() => ExpressionUtilities.CreateExpression<T, T, T>(Expression.Modulo), true);
+            AddLazy = new Lazy<Func<T, T, T>>(() => ExpressionUtilities.CreateExpression<T, T, T>(Expression.Add), true);
+            SubtractLazy = new Lazy<Func<T, T, T>>(() => ExpressionUtilities.CreateExpression<T, T, T>(Expression.Subtract), true);
+            MultiplyLazy = new Lazy<Func<T, T, T>>(() => ExpressionUtilities.CreateExpression<T, T, T>(Expression.Multiply), true);
+            DivideLazy = new Lazy<Func<T, T, T>>(() => ExpressionUtilities.CreateExpression<T, T, T>(Expression.Divide), true);
+            ModuloLazy = new Lazy<Func<T, T, T>>(() => ExpressionUtilities.CreateExpression<T, T, T>(Expression.Modulo), true);
 
-            EqualsInternal = new Lazy<Func<T, T, Boolean>>(() => ExpressionUtilities.CreateExpression<T, T, Boolean>(Expression.Equal), true);
-            NotEqualsInternal = new Lazy<Func<T, T, Boolean>>(() => ExpressionUtilities.CreateExpression<T, T, Boolean>(Expression.NotEqual), true);
-            GreaterInternal = new Lazy<Func<T, T, Boolean>>(() => ExpressionUtilities.CreateExpression<T, T, Boolean>(Expression.GreaterThan), true);
-            GreaterOrEqualsInternal = new Lazy<Func<T, T, Boolean>>(() => ExpressionUtilities.CreateExpression<T, T, Boolean>(Expression.GreaterThanOrEqual), true);
-            LessInternal = new Lazy<Func<T, T, Boolean>>(() => ExpressionUtilities.CreateExpression<T, T, Boolean>(Expression.LessThan), true);
-            LessOrEqualsInternal = new Lazy<Func<T, T, Boolean>>(() => ExpressionUtilities.CreateExpression<T, T, Boolean>(Expression.LessThanOrEqual), true);
+            EqualsLazy = new Lazy<Func<T, T, Boolean>>(() => ExpressionUtilities.CreateExpression<T, T, Boolean>(Expression.Equal), true);
+            NotEqualsLazy = new Lazy<Func<T, T, Boolean>>(() => ExpressionUtilities.CreateExpression<T, T, Boolean>(Expression.NotEqual), true);
+            GreaterLazy = new Lazy<Func<T, T, Boolean>>(() => ExpressionUtilities.CreateExpression<T, T, Boolean>(Expression.GreaterThan), true);
+            GreaterOrEqualsLazy = new Lazy<Func<T, T, Boolean>>(() => ExpressionUtilities.CreateExpression<T, T, Boolean>(Expression.GreaterThanOrEqual), true);
+            LessLazy = new Lazy<Func<T, T, Boolean>>(() => ExpressionUtilities.CreateExpression<T, T, Boolean>(Expression.LessThan), true);
+            LessOrEqualsLazy = new Lazy<Func<T, T, Boolean>>(() => ExpressionUtilities.CreateExpression<T, T, Boolean>(Expression.LessThanOrEqual), true);
 
-            NegateInternal = new Lazy<Func<T, T>>(() => ExpressionUtilities.CreateExpression<T, T>(Expression.Negate), true);
-            AndInternal = new Lazy<Func<T, T, T>>(() => ExpressionUtilities.CreateExpression<T, T, T>(Expression.And), true);
-            OrInternal = new Lazy<Func<T, T, T>>(() => ExpressionUtilities.CreateExpression<T, T, T>(Expression.Or), true);
-            NotInternal = new Lazy<Func<T, T>>(() => ExpressionUtilities.CreateExpression<T, T>(Expression.Not), true);
-            XorInternal = new Lazy<Func<T, T, T>>(() => ExpressionUtilities.CreateExpression<T, T, T>(Expression.ExclusiveOr), true);
+            NegateLazy = new Lazy<Func<T, T>>(() => ExpressionUtilities.CreateExpression<T, T>(Expression.Negate), true);
+            AndLazy = new Lazy<Func<T, T, T>>(() => ExpressionUtilities.CreateExpression<T, T, T>(Expression.And), true);
+            OrLazy = new Lazy<Func<T, T, T>>(() => ExpressionUtilities.CreateExpression<T, T, T>(Expression.Or), true);
+            NotLazy = new Lazy<Func<T, T>>(() => ExpressionUtilities.CreateExpression<T, T>(Expression.Not), true);
+            XorLazy = new Lazy<Func<T, T, T>>(() => ExpressionUtilities.CreateExpression<T, T, T>(Expression.ExclusiveOr), true);
         }
 
         public static T? Zero
@@ -241,163 +242,163 @@ namespace NetExtender.Utilities.Numerics
             }
         }
 
-        private static Lazy<Func<T, T>> NegateInternal { get; }
+        private static Lazy<Func<T, T>> NegateLazy { get; }
 
         public static Func<T, T> Negate
         {
             get
             {
-                return NegateInternal.Value;
+                return NegateLazy.Value;
             }
         }
 
-        private static Lazy<Func<T, T>> NotInternal { get; }
+        private static Lazy<Func<T, T>> NotLazy { get; }
 
         public static Func<T, T> Not
         {
             get
             {
-                return NotInternal.Value;
+                return NotLazy.Value;
             }
         }
 
-        private static Lazy<Func<T, T, T>> OrInternal { get; }
+        private static Lazy<Func<T, T, T>> OrLazy { get; }
 
         public static Func<T, T, T> Or
         {
             get
             {
-                return OrInternal.Value;
+                return OrLazy.Value;
             }
         }
 
-        private static Lazy<Func<T, T, T>> AndInternal { get; }
+        private static Lazy<Func<T, T, T>> AndLazy { get; }
 
         public static Func<T, T, T> And
         {
             get
             {
-                return AndInternal.Value;
+                return AndLazy.Value;
             }
         }
 
-        private static Lazy<Func<T, T, T>> XorInternal { get; }
+        private static Lazy<Func<T, T, T>> XorLazy { get; }
 
         public static Func<T, T, T> Xor
         {
             get
             {
-                return XorInternal.Value;
+                return XorLazy.Value;
             }
         }
 
-        private static Lazy<Func<T, T, T>> AddInternal { get; }
+        private static Lazy<Func<T, T, T>> AddLazy { get; }
 
         public static Func<T, T, T> Add
         {
             get
             {
-                return AddInternal.Value;
+                return AddLazy.Value;
             }
         }
 
-        private static Lazy<Func<T, T, T>> SubtractInternal { get; }
+        private static Lazy<Func<T, T, T>> SubtractLazy { get; }
 
         public static Func<T, T, T> Subtract
         {
             get
             {
-                return SubtractInternal.Value;
+                return SubtractLazy.Value;
             }
         }
 
-        private static Lazy<Func<T, T, T>> MultiplyInternal { get; }
+        private static Lazy<Func<T, T, T>> MultiplyLazy { get; }
 
         public static Func<T, T, T> Multiply
         {
             get
             {
-                return MultiplyInternal.Value;
+                return MultiplyLazy.Value;
             }
         }
 
-        private static Lazy<Func<T, T, T>> DivideInternal { get; }
+        private static Lazy<Func<T, T, T>> DivideLazy { get; }
 
         public static Func<T, T, T> Divide
         {
             get
             {
-                return DivideInternal.Value;
+                return DivideLazy.Value;
             }
         }
 
-        private static Lazy<Func<T, T, T>> ModuloInternal { get; }
+        private static Lazy<Func<T, T, T>> ModuloLazy { get; }
 
         public static Func<T, T, T> Modulo
         {
             get
             {
-                return ModuloInternal.Value;
+                return ModuloLazy.Value;
             }
         }
 
-        private static Lazy<Func<T, T, Boolean>> EqualsInternal { get; }
+        private static Lazy<Func<T, T, Boolean>> EqualsLazy { get; }
 
         public new static Func<T, T, Boolean> Equals
         {
             get
             {
-                return EqualsInternal.Value;
+                return EqualsLazy.Value;
             }
         }
 
-        private static Lazy<Func<T, T, Boolean>> NotEqualsInternal { get; }
+        private static Lazy<Func<T, T, Boolean>> NotEqualsLazy { get; }
 
         public static Func<T, T, Boolean> NotEquals
         {
             get
             {
-                return NotEqualsInternal.Value;
+                return NotEqualsLazy.Value;
             }
         }
 
-        private static Lazy<Func<T, T, Boolean>> LessInternal { get; }
+        private static Lazy<Func<T, T, Boolean>> LessLazy { get; }
 
         public static Func<T, T, Boolean> Less
         {
             get
             {
-                return LessInternal.Value;
+                return LessLazy.Value;
             }
         }
 
-        private static Lazy<Func<T, T, Boolean>> LessOrEqualsInternal { get; }
+        private static Lazy<Func<T, T, Boolean>> LessOrEqualsLazy { get; }
 
         public static Func<T, T, Boolean> LessOrEquals
         {
             get
             {
-                return LessOrEqualsInternal.Value;
+                return LessOrEqualsLazy.Value;
             }
         }
 
-        private static Lazy<Func<T, T, Boolean>> GreaterInternal { get; }
+        private static Lazy<Func<T, T, Boolean>> GreaterLazy { get; }
 
         public static Func<T, T, Boolean> Greater
         {
             get
             {
-                return GreaterInternal.Value;
+                return GreaterLazy.Value;
             }
         }
         
-        private static Lazy<Func<T, T, Boolean>> GreaterOrEqualsInternal { get; }
+        private static Lazy<Func<T, T, Boolean>> GreaterOrEqualsLazy { get; }
 
         public static Func<T, T, Boolean> GreaterOrEquals
         {
             get
             {
-                return GreaterOrEqualsInternal.Value;
+                return GreaterOrEqualsLazy.Value;
             }
         }
     }

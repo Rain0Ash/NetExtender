@@ -2,37 +2,46 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
-using System.Collections.Generic;
+using NetExtender.Interfaces;
 
 namespace NetExtender.Types.Monads.Interfaces
 {
-    public interface IMaybe<T> : IMaybe, IMaybeEquatable<T, T>, IMaybeEquatable<T, IMaybe<T>>, IMaybeEquatable<T, INullMaybe<T>>, IMaybeComparable<T, T>, IMaybeComparable<T, IMaybe<T>>, IMaybeComparable<T, INullMaybe<T>>
+    public interface IMaybe<T> : IMaybe, IMonad<T>, IMaybeEquality<T, T>, IMaybeEquality<T, IMaybe<T>>, IMaybeEquality<T, INullMaybe<T>>, ICloneable<IMaybe<T>>
     {
         public new T Value { get; }
-        public Boolean Equals(Object? other, IEqualityComparer<T>? comparer);
+
+        public new IMaybe<T> Clone();
     }
     
-    public interface IMaybe
+    public interface IMaybe : IMonad, ICloneable<IMaybe>
     {
         public Boolean HasValue { get; }
         public Object? Value { get; }
+
+        public new IMaybe Clone();
     }
     
-    public interface IMaybeEquatable<out T, TMaybe> : IMaybeEquatable<TMaybe>
-    {
-        public Boolean Equals(TMaybe? other, IEqualityComparer<T>? comparer);
-    }
-    
-    public interface IMaybeEquatable<T> : IEquatable<T>
+    public interface IMaybeEquality<out T, TMaybe> : IMaybeEquality<TMaybe>, IMaybeComparable<T, TMaybe>, IMaybeEquatable<T, TMaybe>, IMonadEquality<T, TMaybe>
     {
     }
     
-    public interface IMaybeComparable<out T, in TMaybe> : IMaybeComparable<TMaybe>
+    public interface IMaybeEquality<T> : IMaybeComparable<T>, IMaybeEquatable<T>, IMonadEquality<T>
     {
-        public Int32 CompareTo(TMaybe? other, IComparer<T>? comparer);
     }
     
-    public interface IMaybeComparable<in T> : IComparable<T>
+    public interface IMaybeEquatable<out T, TMaybe> : IMaybeEquatable<TMaybe>, IMonadEquatable<T, TMaybe>
+    {
+    }
+    
+    public interface IMaybeEquatable<T> : IMonadEquatable<T>
+    {
+    }
+    
+    public interface IMaybeComparable<out T, in TMaybe> : IMaybeComparable<TMaybe>, IMonadComparable<T, TMaybe>
+    {
+    }
+    
+    public interface IMaybeComparable<in T> : IMonadComparable<T>
     {
     }
 }

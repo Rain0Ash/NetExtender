@@ -14,6 +14,7 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using NetExtender.Types.Exceptions;
 using NetExtender.Types.Network;
 using NetExtender.Types.Network.Exceptions;
 using NetExtender.Types.Network.Formatters;
@@ -895,7 +896,7 @@ namespace NetExtender.Utilities.Network
         {
             if (String.IsNullOrWhiteSpace(subtype))
             {
-                throw new ArgumentException("Value cannot be null or whitespace.", nameof(subtype));
+                throw new ArgumentNullOrWhiteSpaceStringException(subtype, nameof(subtype));
             }
 
             return IsMimeMultipartContent(content) && content.Headers.ContentType?.MediaType?.Equals("multipart/" + subtype, StringComparison.OrdinalIgnoreCase) is true;

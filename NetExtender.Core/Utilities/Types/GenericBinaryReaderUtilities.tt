@@ -15,7 +15,7 @@ using System.Runtime.CompilerServices;
 namespace NetExtender.Utilities.Types
 {
 <#
-    List<String> types = new List<String>
+    List<String> Types = new List<String>
     {
         nameof(SByte),
         nameof(Byte),
@@ -29,51 +29,6 @@ namespace NetExtender.Utilities.Types
         nameof(Double),
         nameof(Decimal)
     };
-
-    static Boolean IsSmallType(String type)
-    {
-        return type == nameof(Char) || type == nameof(Byte) || type == nameof(SByte) || type == nameof(Int16) || type == nameof(UInt16);
-    }
-
-    static Boolean IsUnsignedType(String type)
-    {
-        return type == nameof(Char) || type == nameof(Byte) || type == nameof(UInt16) || type == nameof(UInt32) || type == nameof(UInt64);
-    }
-
-    static Boolean IsIntType(String type)
-    {
-        return type == nameof(Char) || type == nameof(SByte) || type == nameof(Byte) || type == nameof(Int16) || type == nameof(UInt16) || type == nameof(Int32) ||
-               type == nameof(UInt32) || type == nameof(Int64) || type == nameof(UInt64);
-    }
-
-    static Boolean IsFloatType(String type)
-    {
-        return type == nameof(Single) || type == nameof(Double);
-    }
-
-    static String ToSignedType(String type)
-    {
-        return type switch
-        {
-            nameof(Byte) => nameof(SByte),
-            nameof(UInt16) => nameof(Int16),
-            nameof(UInt32) => nameof(Int32),
-            nameof(UInt64) => nameof(Int64),
-            _ => type
-        };
-    }
-
-    static String ToUnsignedType(String type)
-    {
-        return type switch
-        {
-            nameof(SByte) => nameof(Byte),
-            nameof(Int16) => nameof(UInt16),
-            nameof(Int32) => nameof(UInt32),
-            nameof(Int64) => nameof(UInt64),
-            _ => type
-        };
-    }
 
     void ForEach(IEnumerable<String> types, Action<String> action, Boolean line = true)
     {
@@ -123,7 +78,7 @@ namespace NetExtender.Utilities.Types
 
     void TryRead()
     {
-        ForEach(types.Prepend(nameof(Boolean)).Append(nameof(String)), TryReadImplementation);
+        ForEach(Types.Prepend(nameof(Boolean)).Append(nameof(String)), TryReadImplementation);
     }
 #>
     public static partial class BinaryReaderUtilities

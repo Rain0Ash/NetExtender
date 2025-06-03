@@ -452,9 +452,9 @@ namespace NetExtender.Types.TextWriters
             Filter.Clear();
         }
 
-        public void CopyTo(String[] array, Int32 arrayIndex)
+        public void CopyTo(String[] array, Int32 index)
         {
-            Filter.CopyTo(array, arrayIndex);
+            Filter.CopyTo(array, index);
         }
 
         public IEnumerator<String> GetEnumerator()

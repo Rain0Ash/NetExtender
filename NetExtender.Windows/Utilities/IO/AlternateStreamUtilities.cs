@@ -11,7 +11,7 @@ using System.Runtime.InteropServices;
 using System.Security;
 using System.Threading.Tasks;
 using Microsoft.Win32.SafeHandles;
-using NetExtender.IO.FileSystem.NTFS.DataStreams;
+using NetExtender.FileSystems.NTFS.DataStreams;
 using NetExtender.Windows;
 using NetExtender.Windows.IO;
 

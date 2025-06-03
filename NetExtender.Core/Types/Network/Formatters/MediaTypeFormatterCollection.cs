@@ -25,7 +25,7 @@ namespace NetExtender.Types.Network.Formatters
         {
             get
             {
-                return _formatters ??= Items.WhereNotNull(formatter => formatter.CanWriteAnyTypes).ToArray();
+                return _formatters ??= Items.WhereNotNull(static formatter => formatter.CanWriteAnyTypes).ToArray();
             }
         }
 

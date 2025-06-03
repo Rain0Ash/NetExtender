@@ -1,3 +1,6 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 using System;
 using System.Collections;
 using System.Collections.Concurrent;
@@ -18,7 +21,7 @@ namespace NetExtender.Utilities.Core
 {
     public sealed class HarmonyTranspiler : IDisposable, IList<CodeInstruction>
     {
-        private SyncRoot SyncRoot { get; } = ConcurrentUtilities.SyncRoot;
+        private SyncRoot SyncRoot { get; } = SyncRoot.Create();
         private static volatile HarmonyTranspiler? Instance;
 
         private HarmonyLib.Harmony? Harmony { get; set; }
@@ -95,7 +98,7 @@ namespace NetExtender.Utilities.Core
         {
             if (String.IsNullOrEmpty(harmony))
             {
-                throw new ArgumentException("Value cannot be null or empty.", nameof(harmony));
+                throw new ArgumentNullOrEmptyStringException(harmony, nameof(harmony));
             }
 
             Harmony = new HarmonyLib.Harmony(harmony);
@@ -204,9 +207,9 @@ namespace NetExtender.Utilities.Core
             Memory.Clear();
         }
 
-        public void CopyTo(CodeInstruction[] array, Int32 arrayIndex)
+        public void CopyTo(CodeInstruction[] array, Int32 index)
         {
-            Memory.CopyTo(array, arrayIndex);
+            Memory.CopyTo(array, index);
         }
 
         public CodeInstruction this[Int32 index]

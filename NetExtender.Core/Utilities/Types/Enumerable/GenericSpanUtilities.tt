@@ -14,7 +14,7 @@ using NetExtender.Utilities.Numerics;
 namespace NetExtender.Utilities.Types
 {
 <#
-    List<String> types = new List<String>
+    List<String> Types = new List<String>
     {
         nameof(Char),
         nameof(SByte),
@@ -234,7 +234,7 @@ namespace NetExtender.Utilities.Types
 
     void Sum()
     {
-        ForEach(types.Where(NotChar).Append(biginteger).Append(complex), SumImplementation);
+        ForEach(Types.Where(NotChar).Append(biginteger).Append(complex), SumImplementation);
     }
 
     void MultiplyImplementation(String type)
@@ -342,7 +342,7 @@ namespace NetExtender.Utilities.Types
 
     void Multiply()
     {
-        ForEach(types.Where(NotChar), MultiplyImplementation);
+        ForEach(Types.Where(NotChar), MultiplyImplementation);
     }
 
     void AverageImplementation(String type)
@@ -372,7 +372,7 @@ namespace NetExtender.Utilities.Types
 
     void Average()
     {
-        ForEach(types.Where(NotChar).Append(complex), AverageImplementation);
+        ForEach(Types.Where(NotChar).Append(complex), AverageImplementation);
     }
 
     void VarianceImplementation(String type)
@@ -420,7 +420,7 @@ namespace NetExtender.Utilities.Types
 
     void Variance()
     {
-        ForEach(types.Where(NotChar), VarianceImplementation);
+        ForEach(Types.Where(NotChar), VarianceImplementation);
     }
 
     void StandardDeviationImplementation(String type)
@@ -458,7 +458,7 @@ namespace NetExtender.Utilities.Types
 
     void StandardDeviation()
     {
-        ForEach(types.Where(NotChar), StandardDeviationImplementation, false);
+        ForEach(Types.Where(NotChar), StandardDeviationImplementation, false);
     }
 #>
     [SuppressMessage("ReSharper", "RedundantOverflowCheckingContext")]

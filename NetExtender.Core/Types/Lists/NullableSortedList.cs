@@ -124,9 +124,9 @@ namespace NetExtender.Types.Lists
             return base.Remove(key);
         }
 
-        public void CopyTo(KeyValuePair<TKey, TValue>[] array, Int32 arrayIndex)
+        public void CopyTo(KeyValuePair<TKey, TValue>[] array, Int32 index)
         {
-            CollectionUtilities.CopyTo(this, array, arrayIndex);
+            CollectionUtilities.CopyTo(this, array, index);
         }
 
         public new IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()

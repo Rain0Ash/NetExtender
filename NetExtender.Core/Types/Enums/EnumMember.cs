@@ -16,17 +16,17 @@ namespace NetExtender.Types.Enums
     /// Represents the member information of the constant in the specified enumeration.
     /// </summary>
     /// <typeparam name="T">Enum type</typeparam>
-    public sealed class EnumMember<T> where T : unmanaged, Enum
+    public sealed record EnumMember<T> where T : unmanaged, Enum
     {
-        /// <summary>
-        /// Gets the value of specified enumration member.
-        /// </summary>
-        public T Value { get; }
-
         /// <summary>
         /// Gets the name of specified enumration member.
         /// </summary>
         public String Name { get; }
+
+        /// <summary>
+        /// Gets the value of specified enumration member.
+        /// </summary>
+        public T Value { get; }
 
         /// <summary>
         /// Gets the <see cref="System.Reflection.FieldInfo"/> of specified enumration member.
@@ -49,11 +49,11 @@ namespace NetExtender.Types.Enums
         /// <param name="name"></param>
         public EnumMember(String name)
         {
-            Value = Enum.TryParse(name, out T value) ? value : throw new ArgumentException(nameof(name));
-            Name = name;
+            Name = name ?? throw new ArgumentNullException(nameof(name));
+            Value = Enum.TryParse(name, out T value) ? value : throw new ArgumentException($"Can't parse enum name '{name}' of type '{typeof(T).Name}'.", nameof(name));
             FieldInfo = typeof(T).GetField(name);
             EnumMemberAttribute = FieldInfo?.GetCustomAttribute<EnumMemberAttribute>();
-            Labels = FieldInfo?.GetCustomAttributes<EnumLabelAttribute>().ToImmutableDictionary(x => x.Index, x => x.Value);
+            Labels = FieldInfo?.GetCustomAttributes<EnumLabelAttribute>().ToImmutableDictionary(static attribute => attribute.Index, static attribute => attribute.Value);
         }
 
         /// <summary>
@@ -87,9 +87,9 @@ namespace NetExtender.Types.Enums
                 return EqualityComparer<T?>.Default.Equals(x?.Value, y?.Value);
             }
 
-            public Int32 GetHashCode(EnumMember<T> obj)
+            public Int32 GetHashCode(EnumMember<T> value)
             {
-                return EqualityComparer<T>.Default.GetHashCode(obj.Value);
+                return EqualityComparer<T>.Default.GetHashCode(value.Value);
             }
         }
     }

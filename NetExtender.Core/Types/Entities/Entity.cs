@@ -26,7 +26,7 @@ namespace NetExtender.Types.Entities
         }
     }
     
-    public class EntityId<T> : Entity<T>, IEntityId<T>, IEquatable<EntityId<T>>, IComparable<EntityId<T>>
+    public class EntityId<T> : Entity<T>, IEntityId<T>, IEquality<EntityId<T>>
     {
         [return: NotNullIfNotNull("value")]
         public static implicit operator T?(EntityId<T>? value)
@@ -107,23 +107,23 @@ namespace NetExtender.Types.Entities
             return Id;
         }
 
-        public override Int32 CompareTo(Object? obj)
+        public override Int32 CompareTo(Object? other)
         {
-            return obj switch
+            return other switch
             {
-                EntityId<T> other => CompareTo(other),
-                Entity<T> other => CompareTo(other),
-                T other => CompareToInternal(other),
+                EntityId<T> value => CompareTo(value),
+                Entity<T> value => CompareTo(value),
+                T value => CompareToCore(value),
                 _ => 1
             };
         }
 
         public Int32 CompareTo(EntityId<T>? other)
         {
-            return other is not null ? CompareToInternal(other.Id) : 1;
+            return other is not null ? CompareToCore(other.Id) : 1;
         }
 
-        protected override Int32 CompareToInternal(T? other)
+        protected override Int32 CompareToCore(T? other)
         {
             return Comparer<T>.Default.Compare(Id, other);
         }
@@ -139,17 +139,17 @@ namespace NetExtender.Types.Entities
             {
                 EntityId<T> value => Equals(value),
                 Entity<T> value => Equals(value),
-                T value => EqualsInternal(value),
+                T value => EqualsCore(value),
                 _ => false
             };
         }
 
         public Boolean Equals(EntityId<T>? other)
         {
-            return other is not null && EqualsInternal(other.Id);
+            return other is not null && EqualsCore(other.Id);
         }
 
-        protected override Boolean EqualsInternal(T? other)
+        protected override Boolean EqualsCore(T? other)
         {
             return EqualityComparer<T>.Default.Equals(Id, other);
         }
@@ -165,7 +165,7 @@ namespace NetExtender.Types.Entities
         }
     }
 
-    public class EntityValue<T> : Entity<T>, IEntityValue<T>, IEquatable<EntityValue<T>>, IComparable<EntityValue<T>>
+    public class EntityValue<T> : Entity<T>, IEntityValue<T>, IEquality<EntityValue<T>>
     {
         [return: NotNullIfNotNull("value")]
         public static implicit operator T?(EntityValue<T>? value)
@@ -241,23 +241,23 @@ namespace NetExtender.Types.Entities
             return Value;
         }
 
-        public override Int32 CompareTo(Object? obj)
+        public override Int32 CompareTo(Object? other)
         {
-            return obj switch
+            return other switch
             {
-                EntityValue<T> other => CompareTo(other),
-                Entity<T> other => CompareTo(other),
-                T other => CompareToInternal(other),
+                EntityValue<T> value => CompareTo(value),
+                Entity<T> value => CompareTo(value),
+                T value => CompareToCore(value),
                 _ => 1
             };
         }
 
         public Int32 CompareTo(EntityValue<T>? other)
         {
-            return other is not null ? CompareToInternal(other.Value) : 1;
+            return other is not null ? CompareToCore(other.Value) : 1;
         }
 
-        protected override Int32 CompareToInternal(T? other)
+        protected override Int32 CompareToCore(T? other)
         {
             return Comparer<T>.Default.Compare(Value, other);
         }
@@ -273,17 +273,17 @@ namespace NetExtender.Types.Entities
             {
                 EntityValue<T> value => Equals(value),
                 Entity<T> value => Equals(value),
-                T value => EqualsInternal(value),
+                T value => EqualsCore(value),
                 _ => false
             };
         }
 
         public Boolean Equals(EntityValue<T>? other)
         {
-            return other is not null && EqualsInternal(other.Value);
+            return other is not null && EqualsCore(other.Value);
         }
 
-        protected override Boolean EqualsInternal(T? other)
+        protected override Boolean EqualsCore(T? other)
         {
             return EqualityComparer<T>.Default.Equals(Value, other);
         }
@@ -299,7 +299,7 @@ namespace NetExtender.Types.Entities
         }
     }
     
-    public abstract class Entity<T> : IEntity<T>, IEquatable<T>, IEquatable<Entity<T>>, IComparable, IComparable<T>, IComparable<Entity<T>>, IFormattable
+    public abstract class Entity<T> : IEntity<T>, IEquality<T>, IEquality<Entity<T>>, IAnyEquality, IFormattable
     {
         [return: NotNullIfNotNull("value")]
         public static implicit operator T?(Entity<T>? value)
@@ -359,19 +359,19 @@ namespace NetExtender.Types.Entities
 
         public abstract T Get();
         
-        public virtual Int32 CompareTo(Object? obj)
+        public virtual Int32 CompareTo(Object? other)
         {
-            return obj switch
+            return other switch
             {
-                Entity<T> other => CompareTo(other),
-                T other => CompareToInternal(other),
+                Entity<T> value => CompareTo(value),
+                T value => CompareToCore(value),
                 _ => 1
             };
         }
 
         public Int32 CompareTo(T? other)
         {
-            return CompareToInternal(other);
+            return CompareToCore(other);
         }
 
         public Int32 CompareTo(Entity<T>? other)
@@ -379,7 +379,7 @@ namespace NetExtender.Types.Entities
             return other is not null ? CompareTo(other.Get()) : 1;
         }
 
-        protected virtual Int32 CompareToInternal(T? other)
+        protected virtual Int32 CompareToCore(T? other)
         {
             return Comparer<T>.Default.Compare(Get(), other);
         }
@@ -394,22 +394,22 @@ namespace NetExtender.Types.Entities
             return other switch
             {
                 Entity<T> value => Equals(value),
-                T value => EqualsInternal(value),
+                T value => EqualsCore(value),
                 _ => false
             };
         }
 
         public Boolean Equals(T? other)
         {
-            return EqualsInternal(other);
+            return EqualsCore(other);
         }
 
         public Boolean Equals(Entity<T>? other)
         {
-            return other is not null && EqualsInternal(other.Get());
+            return other is not null && EqualsCore(other.Get());
         }
 
-        protected virtual Boolean EqualsInternal(T? other)
+        protected virtual Boolean EqualsCore(T? other)
         {
             return EqualityComparer<T>.Default.Equals(Get(), other);
         }

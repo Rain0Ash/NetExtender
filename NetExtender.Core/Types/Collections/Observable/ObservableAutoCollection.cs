@@ -1,3 +1,6 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,7 +12,7 @@ using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Collections
 {
-    public class ItemObservableAutoCollection<T> : ItemObservableAutoCollection<T, ItemObservableCollection<T>>
+    public class ItemObservableAutoCollection<T> : ItemObservableAutoCollection<T, ItemObservableCollection<T>> where T : class
     {
         public ItemObservableAutoCollection(Func<Int32, T> generator)
             : base(new ItemObservableCollection<T>(), generator)
@@ -233,9 +236,9 @@ namespace NetExtender.Types.Collections
             Internal.Reload(Factory(0, count));
         }
         
-        public void CopyTo(T[] array, Int32 arrayIndex)
+        public void CopyTo(T[] array, Int32 index)
         {
-            Internal.CopyTo(array, arrayIndex);
+            Internal.CopyTo(array, index);
         }
         
         public IEnumerator<T> GetEnumerator()

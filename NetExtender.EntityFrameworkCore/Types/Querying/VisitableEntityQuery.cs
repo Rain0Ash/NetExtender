@@ -9,9 +9,9 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading;
 using Microsoft.EntityFrameworkCore.Query;
-using NetExtender.Utilities.EntityFrameworkCore.Types;
-using NetExtender.Utilities.Numerics;
+using NetExtender.Utilities.Core;
 using NetExtender.Utilities.Types;
+using NetExtender.Utilities.EntityFrameworkCore.Types;
 
 namespace NetExtender.EntityFrameworkCore.Expressions.Querying
 {

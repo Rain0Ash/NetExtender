@@ -12,7 +12,7 @@ using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Collections
 {
-    public class PaginationItemObservableCollection<T> : PaginationItemObservableCollection<T, ItemObservableCollection<T>>
+    public class PaginationItemObservableCollection<T> : PaginationItemObservableCollection<T, ItemObservableCollection<T>> where T : class
     {
         public PaginationItemObservableCollection(Int32 size)
             : this(0, size)
@@ -552,9 +552,9 @@ namespace NetExtender.Types.Collections
             }
         }
         
-        public void CopyTo(T[] array, Int32 arrayIndex)
+        public void CopyTo(T[] array, Int32 index)
         {
-            Internal.CopyTo(array, arrayIndex);
+            Internal.CopyTo(array, index);
         }
         
         public override IEnumerator<T> GetEnumerator()

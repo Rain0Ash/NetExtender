@@ -3,6 +3,7 @@
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
         <Nullable>enable</Nullable>
+        <ImplicitUsings>disable</ImplicitUsings>
         <OutputType>Library</OutputType>
         <LangVersion>10</LangVersion>
         <Authors>Rain0Ash</Authors>
@@ -21,7 +22,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.JSInterop" Version="6.0.35" />
+        <PackageReference Include="Microsoft.JSInterop" Version="6.0.36" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\NetExtender.Core\NetExtender.Core.csproj" />
     </ItemGroup>
 
 </Project>

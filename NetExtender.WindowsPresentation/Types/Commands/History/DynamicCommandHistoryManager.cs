@@ -1,4 +1,8 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows.Input;
 using NetExtender.Types.Concurrent.Dictionaries;
 using NetExtender.Types.Entities;
@@ -22,13 +26,14 @@ namespace NetExtender.WindowsPresentation.Types.Commands.History
         protected NullableConcurrentDictionary<Object?, NullableConcurrentDictionary<Object?, TContainer>> Entries { get; } = new NullableConcurrentDictionary<Object?, NullableConcurrentDictionary<Object?, TContainer>>();
         protected WeakStorage<TNode, TContainer> Storage { get; } = new WeakStorage<TNode, TContainer>();
         
+        [SuppressMessage("ReSharper", "LocalVariableHidesMember")]
         protected static class Factory<T>
         {
-            private static Func<ICommand<T>, T, CommandHistoryEntryOptions, TNode>? _factory;
+            private static Func<ICommand<T>, T, CommandHistoryEntryOptions, TNode>? factory;
 
             public static TNode Create(ICommand<T> command, T parameter, CommandHistoryEntryOptions options)
             {
-                Func<ICommand<T>, T, CommandHistoryEntryOptions, TNode> factory = _factory ??= ReflectionUtilities.New<TNode, ICommand<T>, T, CommandHistoryEntryOptions>();
+                factory ??= ReflectionUtilities.New<TNode, ICommand<T>, T, CommandHistoryEntryOptions>();
                 return factory(command, parameter, options);
             }
         }

@@ -2,7 +2,6 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System.Collections.Generic;
-using NetExtender.Types.Sizes.Interfaces;
 
 namespace NetExtender.Types.Enumerators.Interfaces
 {

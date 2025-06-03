@@ -320,11 +320,11 @@ namespace NetExtender.NAudio.Types.Playlist
             }
         }
 
-        public virtual void CopyTo(T[] array, Int32 arrayIndex)
+        public virtual void CopyTo(T[] array, Int32 index)
         {
             lock (Queue)
             {
-                Queue.CopyTo(array, arrayIndex);
+                Queue.CopyTo(array, index);
             }
         }
 

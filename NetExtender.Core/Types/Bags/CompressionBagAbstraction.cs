@@ -1,3 +1,6 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 namespace NetExtender.Types.Bags
 {
     /*public abstract class CompressionBagAbstraction<T> : ICompressionBag<T>, IReadOnlyCompressionBag<T>, INotifyCollectionChanged where T : notnull
@@ -367,9 +370,9 @@ namespace NetExtender.Types.Bags
                 return true;
             }
 
-            public void CopyTo(KeyValuePair<T, Int64>[] array, Int32 arrayIndex)
+            public void CopyTo(KeyValuePair<T, Int64>[] array, Int32 index)
             {
-                Internal.CopyTo(array, arrayIndex);
+                Internal.CopyTo(array, index);
             }
 
             public KeyValuePair<T, Int64>[] ToArray()

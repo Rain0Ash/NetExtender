@@ -3,6 +3,7 @@
     <PropertyGroup>
         <TargetFramework>net6.0-windows</TargetFramework>
         <Nullable>enable</Nullable>
+        <ImplicitUsings>disable</ImplicitUsings>
         <OutputType>Library</OutputType>
         <UseWpf>true</UseWpf>
         <LangVersion>10</LangVersion>
@@ -22,7 +23,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="System.Drawing.Common" Version="8.0.10" />
+        <PackageReference Include="System.Drawing.Common" Version="8.0.14" />
     </ItemGroup>
 
     <ItemGroup>

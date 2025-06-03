@@ -3,19 +3,9 @@
 
 using System;
 
-namespace NetExtender.Types.Sizes.Interfaces
+namespace NetExtender
 {
-    public interface IUnsafeSize
-    {
-        public Type Type { get; }
-        public Int32 Length { get; }
-        public Int32 Size { get; }
-        public Boolean IsEmpty { get; }
-        
-        public ref Byte GetPinnableReference();
-    }
-
-    public interface IUnsafeSize<T> : IUnsafeSize where T : struct, IUnsafeSize<T>
+    public interface IUnsafeSize<T> : IUnsafeSize, IStruct<T> where T : struct, IUnsafeSize<T>
     {
         public ref T Self { get; }
         public Int32 Count { get; set; }
@@ -24,5 +14,14 @@ namespace NetExtender.Types.Sizes.Interfaces
         
         public ReadOnlySpan<Byte> AsReadOnlySpan();
         public Span<Byte> AsSpan();
+    }
+
+    public interface IUnsafeSize : IStruct
+    {
+        public Type Type { get; }
+        public Int32 Length { get; }
+        public Int32 Size { get; }
+        
+        public ref Byte GetPinnableReference();
     }
 }

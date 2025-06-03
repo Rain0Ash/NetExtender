@@ -196,6 +196,17 @@ namespace NetExtender.Types.Numerics
             Value = GenericStorage.Create(value);
         }
 
+        public Boolean TryFormat(Span<Char> destination, out Int32 written, ReadOnlySpan<Char> format, IFormatProvider? provider)
+        {
+            if (Value is ISpanFormattable formattable)
+            {
+                return formattable.TryFormat(destination, out written, format, provider);
+            }
+
+            written = 0;
+            return false;
+        }
+
         public TypeCode GetTypeCode()
         {
             return Value.GetTypeCode();
@@ -291,6 +302,23 @@ namespace NetExtender.Types.Numerics
             return Value.ToType(conversionType, provider);
         }
 
+        public Int32 CompareTo(Object? other)
+        {
+            return Value.CompareTo(other);
+        }
+
+        public Int32 CompareTo(ValueType? other)
+        {
+            return Value.CompareTo(other);
+        }
+
+        public Int32 CompareTo(GenericNumber other)
+        {
+            Decimal first = Value.ToDecimal(CultureInfo.InvariantCulture);
+            Decimal second = other.Value.ToDecimal(CultureInfo.InvariantCulture);
+            return first.CompareTo(second);
+        }
+
         public override Int32 GetHashCode()
         {
             return Value.GetHashCode();
@@ -311,34 +339,6 @@ namespace NetExtender.Types.Numerics
             Decimal first = Value.ToDecimal(CultureInfo.InvariantCulture);
             Decimal second = other.Value.ToDecimal(CultureInfo.InvariantCulture);
             return first == second;
-        }
-
-        public Int32 CompareTo(Object? obj)
-        {
-            return Value.CompareTo(obj);
-        }
-
-        public Int32 CompareTo(ValueType? other)
-        {
-            return Value.CompareTo(other);
-        }
-
-        public Int32 CompareTo(GenericNumber other)
-        {
-            Decimal first = Value.ToDecimal(CultureInfo.InvariantCulture);
-            Decimal second = other.Value.ToDecimal(CultureInfo.InvariantCulture);
-            return first.CompareTo(second);
-        }
-
-        public Boolean TryFormat(Span<Char> destination, out Int32 written, ReadOnlySpan<Char> format, IFormatProvider? provider)
-        {
-            if (Value is ISpanFormattable formattable)
-            {
-                return formattable.TryFormat(destination, out written, format, provider);
-            }
-
-            written = 0;
-            return false;
         }
     }
 
@@ -437,14 +437,28 @@ namespace NetExtender.Types.Numerics
 
         public T Value { get; }
 
+        public GenericNumber Number
+        {
+            get
+            {
+                return this;
+            }
+        }
+
         public GenericNumber(T value)
         {
             Value = value;
         }
 
-        public GenericNumber Generic()
+        public Boolean TryFormat(Span<Char> destination, out Int32 written, ReadOnlySpan<Char> format, IFormatProvider? provider)
         {
-            return this;
+            if (Value is ISpanFormattable formattable)
+            {
+                return formattable.TryFormat(destination, out written, format, provider);
+            }
+
+            written = 0;
+            return false;
         }
 
         public TypeCode GetTypeCode()
@@ -547,31 +561,6 @@ namespace NetExtender.Types.Numerics
             return Value.ToType(conversionType, provider);
         }
 
-        public override Int32 GetHashCode()
-        {
-            return Value.GetHashCode();
-        }
-
-        public override Boolean Equals(Object? other)
-        {
-            return Value.Equals(other);
-        }
-
-        public Boolean Equals(ValueType? other)
-        {
-            return Equals((Object?) other);
-        }
-
-        public Boolean Equals(T other)
-        {
-            return Value.Equals(other);
-        }
-
-        public Boolean Equals(GenericNumber other)
-        {
-            return new GenericNumberWrapper<T>(this).Equals(other);
-        }
-
         public Int32 CompareTo(Object? other)
         {
             if (Value is IComparable comparable)
@@ -604,15 +593,29 @@ namespace NetExtender.Types.Numerics
             return new GenericNumberWrapper<T>(this).CompareTo(other);
         }
 
-        public Boolean TryFormat(Span<Char> destination, out Int32 written, ReadOnlySpan<Char> format, IFormatProvider? provider)
+        public override Int32 GetHashCode()
         {
-            if (Value is ISpanFormattable formattable)
-            {
-                return formattable.TryFormat(destination, out written, format, provider);
-            }
+            return Value.GetHashCode();
+        }
 
-            written = 0;
-            return false;
+        public override Boolean Equals(Object? other)
+        {
+            return Value.Equals(other);
+        }
+
+        public Boolean Equals(ValueType? other)
+        {
+            return Equals((Object?) other);
+        }
+
+        public Boolean Equals(T other)
+        {
+            return Value.Equals(other);
+        }
+
+        public Boolean Equals(GenericNumber other)
+        {
+            return new GenericNumberWrapper<T>(this).Equals(other);
         }
     }
 
@@ -769,9 +772,9 @@ namespace NetExtender.Types.Numerics
             return new GenericNumber((IGenericNumber) this).Equals(other);
         }
 
-        public Int32 CompareTo(Object? obj)
+        public Int32 CompareTo(Object? other)
         {
-            return Internal.CompareTo(obj);
+            return Internal.CompareTo(other);
         }
 
         public Int32 CompareTo(ValueType? other)

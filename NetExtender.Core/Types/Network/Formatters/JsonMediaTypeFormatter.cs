@@ -565,7 +565,7 @@ namespace NetExtender.Types.Network.Formatters
 
             if (UseJsonSerializer && Indent)
             {
-                throw new MediaTypeFormatterOperationNotSupportedException($"Indentation is not supported by '{typeof(DataContractJsonSerializer)}'.");
+                throw new MediaTypeFormatterOperationNotSupportedException($"Indentation is not supported by '{nameof(DataContractJsonSerializer)}'.");
             }
 
             return base.WriteToStreamAsync(type, value, stream, content, context, token);

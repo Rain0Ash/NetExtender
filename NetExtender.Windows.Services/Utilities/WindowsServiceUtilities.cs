@@ -317,6 +317,7 @@ namespace NetExtender.Windows.Services.Utilities
                 return service;
             }
 
+            // ReSharper disable once CollectionNeverQueried.Local
             using FilterTextWriterWrapper filter = new ConsoleOutLockedFilterTextWriter();
             filter.Add(ServiceRunMessage);
             
@@ -389,9 +390,10 @@ namespace NetExtender.Windows.Services.Utilities
                 return;
             }
 
+            // ReSharper disable once CollectionNeverQueried.Local
             using ConsoleOutLockedFilterTextWriter filter = new ConsoleOutLockedFilterTextWriter();
             filter.Add(ServiceRunMessage);
-            
+
             ServiceBase.Run(services);
         }
 
@@ -625,13 +627,13 @@ namespace NetExtender.Windows.Services.Utilities
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean StartService(this ServiceController controller, IEnumerable<String>? arguments, Int32 milliseconds)
         {
-            return StartServiceInternal(controller, arguments, milliseconds, true);
+            return StartServiceCore(controller, arguments, milliseconds, true);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean StartService(this ServiceController controller, IEnumerable<String>? arguments, TimeSpan timeout)
         {
-            return StartServiceInternal(controller, arguments, timeout, true);
+            return StartServiceCore(controller, arguments, timeout, true);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -661,27 +663,27 @@ namespace NetExtender.Windows.Services.Utilities
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryStartService(this ServiceController controller, IEnumerable<String>? arguments, Int32 milliseconds)
         {
-            return StartServiceInternal(controller, arguments, milliseconds, false);
+            return StartServiceCore(controller, arguments, milliseconds, false);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryStartService(this ServiceController controller, IEnumerable<String>? arguments, TimeSpan timeout)
         {
-            return StartServiceInternal(controller, arguments, timeout, false);
+            return StartServiceCore(controller, arguments, timeout, false);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static Boolean StartServiceInternal(ServiceController controller, IEnumerable<String>? arguments, Int32 milliseconds, Boolean isThrow)
+        private static Boolean StartServiceCore(ServiceController controller, IEnumerable<String>? arguments, Int32 milliseconds, Boolean isThrow)
         {
             if (controller is null)
             {
                 throw new ArgumentNullException(nameof(controller));
             }
 
-            return StartServiceInternal(controller, arguments, TimeSpan.FromMilliseconds(milliseconds), isThrow);
+            return StartServiceCore(controller, arguments, TimeSpan.FromMilliseconds(milliseconds), isThrow);
         }
 
-        private static Boolean StartServiceInternal(ServiceController controller, IEnumerable<String>? arguments, TimeSpan timeout, Boolean isThrow)
+        private static Boolean StartServiceCore(ServiceController controller, IEnumerable<String>? arguments, TimeSpan timeout, Boolean isThrow)
         {
             if (controller is null)
             {
@@ -1113,7 +1115,7 @@ namespace NetExtender.Windows.Services.Utilities
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<Boolean> StartServiceAsync(this ServiceController controller, IEnumerable<String>? arguments, Int32 milliseconds, CancellationToken token)
         {
-            return StartServiceInternalAsync(controller, arguments, milliseconds, true, token);
+            return StartServiceCoreAsync(controller, arguments, milliseconds, true, token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1125,7 +1127,7 @@ namespace NetExtender.Windows.Services.Utilities
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<Boolean> StartServiceAsync(this ServiceController controller, IEnumerable<String>? arguments, TimeSpan timeout, CancellationToken token)
         {
-            return StartServiceInternalAsync(controller, arguments, timeout, true, token);
+            return StartServiceCoreAsync(controller, arguments, timeout, true, token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1185,7 +1187,7 @@ namespace NetExtender.Windows.Services.Utilities
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<Boolean> TryStartServiceAsync(this ServiceController controller, IEnumerable<String>? arguments, Int32 milliseconds, CancellationToken token)
         {
-            return StartServiceInternalAsync(controller, arguments, milliseconds, false, token);
+            return StartServiceCoreAsync(controller, arguments, milliseconds, false, token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1197,11 +1199,11 @@ namespace NetExtender.Windows.Services.Utilities
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<Boolean> TryStartServiceAsync(this ServiceController controller, IEnumerable<String>? arguments, TimeSpan timeout, CancellationToken token)
         {
-            return StartServiceInternalAsync(controller, arguments, timeout, false, token);
+            return StartServiceCoreAsync(controller, arguments, timeout, false, token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static Task<Boolean> StartServiceInternalAsync(ServiceController controller, IEnumerable<String>? arguments, Int32 milliseconds, Boolean isThrow,
+        private static Task<Boolean> StartServiceCoreAsync(ServiceController controller, IEnumerable<String>? arguments, Int32 milliseconds, Boolean isThrow,
             CancellationToken token)
         {
             if (controller is null)
@@ -1209,10 +1211,10 @@ namespace NetExtender.Windows.Services.Utilities
                 throw new ArgumentNullException(nameof(controller));
             }
 
-            return StartServiceInternalAsync(controller, arguments, TimeSpan.FromMilliseconds(milliseconds), isThrow, token);
+            return StartServiceCoreAsync(controller, arguments, TimeSpan.FromMilliseconds(milliseconds), isThrow, token);
         }
 
-        private static async Task<Boolean> StartServiceInternalAsync(ServiceController controller, IEnumerable<String>? arguments, TimeSpan timeout, Boolean isThrow,
+        private static async Task<Boolean> StartServiceCoreAsync(ServiceController controller, IEnumerable<String>? arguments, TimeSpan timeout, Boolean isThrow,
             CancellationToken token)
         {
             if (controller is null)
@@ -1363,13 +1365,13 @@ namespace NetExtender.Windows.Services.Utilities
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean StopService(this ServiceController controller, Int32 milliseconds)
         {
-            return StopServiceInternal(controller, milliseconds, true);
+            return StopServiceCore(controller, milliseconds, true);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean StopService(this ServiceController controller, TimeSpan timeout)
         {
-            return StopServiceInternal(controller, timeout, true);
+            return StopServiceCore(controller, timeout, true);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1381,26 +1383,26 @@ namespace NetExtender.Windows.Services.Utilities
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryStopService(this ServiceController controller, Int32 milliseconds)
         {
-            return StopServiceInternal(controller, milliseconds, false);
+            return StopServiceCore(controller, milliseconds, false);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryStopService(this ServiceController controller, TimeSpan timeout)
         {
-            return StopServiceInternal(controller, timeout, false);
+            return StopServiceCore(controller, timeout, false);
         }
 
-        private static Boolean StopServiceInternal(ServiceController controller, Int32 milliseconds, Boolean isThrow)
+        private static Boolean StopServiceCore(ServiceController controller, Int32 milliseconds, Boolean isThrow)
         {
             if (controller is null)
             {
                 throw new ArgumentNullException(nameof(controller));
             }
 
-            return StopServiceInternal(controller, TimeSpan.FromMilliseconds(milliseconds), isThrow);
+            return StopServiceCore(controller, TimeSpan.FromMilliseconds(milliseconds), isThrow);
         }
 
-        private static Boolean StopServiceInternal(ServiceController controller, TimeSpan timeout, Boolean isThrow)
+        private static Boolean StopServiceCore(ServiceController controller, TimeSpan timeout, Boolean isThrow)
         {
             if (controller is null)
             {
@@ -1644,7 +1646,7 @@ namespace NetExtender.Windows.Services.Utilities
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<Boolean> StopServiceAsync(this ServiceController controller, Int32 milliseconds, CancellationToken token)
         {
-            return StopServiceInternalAsync(controller, milliseconds, true, token);
+            return StopServiceCoreAsync(controller, milliseconds, true, token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1656,7 +1658,7 @@ namespace NetExtender.Windows.Services.Utilities
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<Boolean> StopServiceAsync(this ServiceController controller, TimeSpan timeout, CancellationToken token)
         {
-            return StopServiceInternalAsync(controller, timeout, true, token);
+            return StopServiceCoreAsync(controller, timeout, true, token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1680,7 +1682,7 @@ namespace NetExtender.Windows.Services.Utilities
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<Boolean> TryStopServiceAsync(this ServiceController controller, Int32 milliseconds, CancellationToken token)
         {
-            return StopServiceInternalAsync(controller, milliseconds, false, token);
+            return StopServiceCoreAsync(controller, milliseconds, false, token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1692,20 +1694,20 @@ namespace NetExtender.Windows.Services.Utilities
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<Boolean> TryStopServiceAsync(this ServiceController controller, TimeSpan timeout, CancellationToken token)
         {
-            return StopServiceInternalAsync(controller, timeout, false, token);
+            return StopServiceCoreAsync(controller, timeout, false, token);
         }
 
-        private static Task<Boolean> StopServiceInternalAsync(ServiceController controller, Int32 milliseconds, Boolean isThrow, CancellationToken token)
+        private static Task<Boolean> StopServiceCoreAsync(ServiceController controller, Int32 milliseconds, Boolean isThrow, CancellationToken token)
         {
             if (controller is null)
             {
                 throw new ArgumentNullException(nameof(controller));
             }
 
-            return StopServiceInternalAsync(controller, TimeSpan.FromMilliseconds(milliseconds), isThrow, token);
+            return StopServiceCoreAsync(controller, TimeSpan.FromMilliseconds(milliseconds), isThrow, token);
         }
 
-        private static async Task<Boolean> StopServiceInternalAsync(ServiceController controller, TimeSpan timeout, Boolean isThrow, CancellationToken token)
+        private static async Task<Boolean> StopServiceCoreAsync(ServiceController controller, TimeSpan timeout, Boolean isThrow, CancellationToken token)
         {
             if (controller is null)
             {
@@ -1955,13 +1957,13 @@ namespace NetExtender.Windows.Services.Utilities
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean ContinueService(this ServiceController controller, IEnumerable<String>? arguments, Int32 milliseconds)
         {
-            return ContinueServiceInternal(controller, arguments, milliseconds, true);
+            return ContinueServiceCore(controller, arguments, milliseconds, true);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean ContinueService(this ServiceController controller, IEnumerable<String>? arguments, TimeSpan timeout)
         {
-            return ContinueServiceInternal(controller, arguments, timeout, true);
+            return ContinueServiceCore(controller, arguments, timeout, true);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1991,27 +1993,27 @@ namespace NetExtender.Windows.Services.Utilities
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryContinueService(this ServiceController controller, IEnumerable<String>? arguments, Int32 milliseconds)
         {
-            return ContinueServiceInternal(controller, arguments, milliseconds, false);
+            return ContinueServiceCore(controller, arguments, milliseconds, false);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryContinueService(this ServiceController controller, IEnumerable<String>? arguments, TimeSpan timeout)
         {
-            return ContinueServiceInternal(controller, arguments, timeout, false);
+            return ContinueServiceCore(controller, arguments, timeout, false);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static Boolean ContinueServiceInternal(ServiceController controller, IEnumerable<String>? arguments, Int32 milliseconds, Boolean isThrow)
+        private static Boolean ContinueServiceCore(ServiceController controller, IEnumerable<String>? arguments, Int32 milliseconds, Boolean isThrow)
         {
             if (controller is null)
             {
                 throw new ArgumentNullException(nameof(controller));
             }
 
-            return ContinueServiceInternal(controller, arguments, TimeSpan.FromMilliseconds(milliseconds), isThrow);
+            return ContinueServiceCore(controller, arguments, TimeSpan.FromMilliseconds(milliseconds), isThrow);
         }
 
-        private static Boolean ContinueServiceInternal(ServiceController controller, IEnumerable<String>? arguments, TimeSpan timeout, Boolean isThrow)
+        private static Boolean ContinueServiceCore(ServiceController controller, IEnumerable<String>? arguments, TimeSpan timeout, Boolean isThrow)
         {
             if (controller is null)
             {
@@ -2443,7 +2445,7 @@ namespace NetExtender.Windows.Services.Utilities
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<Boolean> ContinueServiceAsync(this ServiceController controller, IEnumerable<String>? arguments, Int32 milliseconds, CancellationToken token)
         {
-            return ContinueServiceInternalAsync(controller, arguments, milliseconds, true, token);
+            return ContinueServiceCoreAsync(controller, arguments, milliseconds, true, token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -2455,7 +2457,7 @@ namespace NetExtender.Windows.Services.Utilities
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<Boolean> ContinueServiceAsync(this ServiceController controller, IEnumerable<String>? arguments, TimeSpan timeout, CancellationToken token)
         {
-            return ContinueServiceInternalAsync(controller, arguments, timeout, true, token);
+            return ContinueServiceCoreAsync(controller, arguments, timeout, true, token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -2515,7 +2517,7 @@ namespace NetExtender.Windows.Services.Utilities
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<Boolean> TryContinueServiceAsync(this ServiceController controller, IEnumerable<String>? arguments, Int32 milliseconds, CancellationToken token)
         {
-            return ContinueServiceInternalAsync(controller, arguments, milliseconds, false, token);
+            return ContinueServiceCoreAsync(controller, arguments, milliseconds, false, token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -2527,11 +2529,11 @@ namespace NetExtender.Windows.Services.Utilities
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<Boolean> TryContinueServiceAsync(this ServiceController controller, IEnumerable<String>? arguments, TimeSpan timeout, CancellationToken token)
         {
-            return ContinueServiceInternalAsync(controller, arguments, timeout, false, token);
+            return ContinueServiceCoreAsync(controller, arguments, timeout, false, token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static Task<Boolean> ContinueServiceInternalAsync(ServiceController controller, IEnumerable<String>? arguments, Int32 milliseconds, Boolean isThrow,
+        private static Task<Boolean> ContinueServiceCoreAsync(ServiceController controller, IEnumerable<String>? arguments, Int32 milliseconds, Boolean isThrow,
             CancellationToken token)
         {
             if (controller is null)
@@ -2539,10 +2541,10 @@ namespace NetExtender.Windows.Services.Utilities
                 throw new ArgumentNullException(nameof(controller));
             }
 
-            return ContinueServiceInternalAsync(controller, arguments, TimeSpan.FromMilliseconds(milliseconds), isThrow, token);
+            return ContinueServiceCoreAsync(controller, arguments, TimeSpan.FromMilliseconds(milliseconds), isThrow, token);
         }
 
-        private static async Task<Boolean> ContinueServiceInternalAsync(ServiceController controller, IEnumerable<String>? arguments, TimeSpan timeout, Boolean isThrow,
+        private static async Task<Boolean> ContinueServiceCoreAsync(ServiceController controller, IEnumerable<String>? arguments, TimeSpan timeout, Boolean isThrow,
             CancellationToken token)
         {
             if (controller is null)
@@ -2693,13 +2695,13 @@ namespace NetExtender.Windows.Services.Utilities
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean PauseService(this ServiceController controller, Int32 milliseconds)
         {
-            return PauseServiceInternal(controller, milliseconds, true);
+            return PauseServiceCore(controller, milliseconds, true);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean PauseService(this ServiceController controller, TimeSpan timeout)
         {
-            return PauseServiceInternal(controller, timeout, true);
+            return PauseServiceCore(controller, timeout, true);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -2711,26 +2713,26 @@ namespace NetExtender.Windows.Services.Utilities
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryPauseService(this ServiceController controller, Int32 milliseconds)
         {
-            return PauseServiceInternal(controller, milliseconds, false);
+            return PauseServiceCore(controller, milliseconds, false);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryPauseService(this ServiceController controller, TimeSpan timeout)
         {
-            return PauseServiceInternal(controller, timeout, false);
+            return PauseServiceCore(controller, timeout, false);
         }
 
-        private static Boolean PauseServiceInternal(ServiceController controller, Int32 milliseconds, Boolean isThrow)
+        private static Boolean PauseServiceCore(ServiceController controller, Int32 milliseconds, Boolean isThrow)
         {
             if (controller is null)
             {
                 throw new ArgumentNullException(nameof(controller));
             }
 
-            return PauseServiceInternal(controller, TimeSpan.FromMilliseconds(milliseconds), isThrow);
+            return PauseServiceCore(controller, TimeSpan.FromMilliseconds(milliseconds), isThrow);
         }
 
-        private static Boolean PauseServiceInternal(ServiceController controller, TimeSpan timeout, Boolean isThrow)
+        private static Boolean PauseServiceCore(ServiceController controller, TimeSpan timeout, Boolean isThrow)
         {
             if (controller is null)
             {
@@ -2970,7 +2972,7 @@ namespace NetExtender.Windows.Services.Utilities
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<Boolean> PauseServiceAsync(this ServiceController controller, Int32 milliseconds, CancellationToken token)
         {
-            return PauseServiceInternalAsync(controller, milliseconds, true, token);
+            return PauseServiceCoreAsync(controller, milliseconds, true, token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -2982,7 +2984,7 @@ namespace NetExtender.Windows.Services.Utilities
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<Boolean> PauseServiceAsync(this ServiceController controller, TimeSpan timeout, CancellationToken token)
         {
-            return PauseServiceInternalAsync(controller, timeout, true, token);
+            return PauseServiceCoreAsync(controller, timeout, true, token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -3006,7 +3008,7 @@ namespace NetExtender.Windows.Services.Utilities
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<Boolean> TryPauseServiceAsync(this ServiceController controller, Int32 milliseconds, CancellationToken token)
         {
-            return PauseServiceInternalAsync(controller, milliseconds, false, token);
+            return PauseServiceCoreAsync(controller, milliseconds, false, token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -3018,20 +3020,20 @@ namespace NetExtender.Windows.Services.Utilities
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<Boolean> TryPauseServiceAsync(this ServiceController controller, TimeSpan timeout, CancellationToken token)
         {
-            return PauseServiceInternalAsync(controller, timeout, false, token);
+            return PauseServiceCoreAsync(controller, timeout, false, token);
         }
 
-        private static Task<Boolean> PauseServiceInternalAsync(ServiceController controller, Int32 milliseconds, Boolean isThrow, CancellationToken token)
+        private static Task<Boolean> PauseServiceCoreAsync(ServiceController controller, Int32 milliseconds, Boolean isThrow, CancellationToken token)
         {
             if (controller is null)
             {
                 throw new ArgumentNullException(nameof(controller));
             }
 
-            return PauseServiceInternalAsync(controller, TimeSpan.FromMilliseconds(milliseconds), isThrow, token);
+            return PauseServiceCoreAsync(controller, TimeSpan.FromMilliseconds(milliseconds), isThrow, token);
         }
 
-        private static async Task<Boolean> PauseServiceInternalAsync(ServiceController controller, TimeSpan timeout, Boolean isThrow, CancellationToken token)
+        private static async Task<Boolean> PauseServiceCoreAsync(ServiceController controller, TimeSpan timeout, Boolean isThrow, CancellationToken token)
         {
             if (controller is null)
             {
@@ -3096,12 +3098,12 @@ namespace NetExtender.Windows.Services.Utilities
 
         public static Boolean CheckServiceExist(String name)
         {
-            return IsServiceExistInternal(name, true);
+            return IsServiceExistCore(name, true);
         }
 
         public static Boolean IsServiceExist(String name)
         {
-            return IsServiceExistInternal(name, false);
+            return IsServiceExistCore(name, false);
         }
 
         public static Boolean CheckServiceExist(this WindowsServiceInstaller installer)
@@ -3111,7 +3113,7 @@ namespace NetExtender.Windows.Services.Utilities
                 throw new ArgumentNullException(nameof(installer));
             }
 
-            return IsServiceExistInternal(installer.Name, true);
+            return IsServiceExistCore(installer.Name, true);
         }
 
         public static Boolean IsServiceExist(this WindowsServiceInstaller installer)
@@ -3121,10 +3123,10 @@ namespace NetExtender.Windows.Services.Utilities
                 throw new ArgumentNullException(nameof(installer));
             }
 
-            return IsServiceExistInternal(installer.Name, false);
+            return IsServiceExistCore(installer.Name, false);
         }
 
-        private static Boolean IsServiceExistInternal(String name, Boolean isThrow)
+        private static Boolean IsServiceExistCore(String name, Boolean isThrow)
         {
             if (name is null)
             {
@@ -3149,16 +3151,16 @@ namespace NetExtender.Windows.Services.Utilities
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String? GetServiceDescription(String name)
         {
-            return GetServiceDescriptionInternal(name, true);
+            return GetServiceDescriptionCore(name, true);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String? TryGetServiceDescription(String name)
         {
-            return GetServiceDescriptionInternal(name, false);
+            return GetServiceDescriptionCore(name, false);
         }
 
-        private static String? GetServiceDescriptionInternal(String name, Boolean isThrow)
+        private static String? GetServiceDescriptionCore(String name, Boolean isThrow)
         {
             if (name is null)
             {
@@ -3170,7 +3172,7 @@ namespace NetExtender.Windows.Services.Utilities
                 throw new ArgumentException("Service name is invalid.", nameof(name));
             }
 
-            if (!IsServiceExistInternal(name, isThrow))
+            if (!IsServiceExistCore(name, isThrow))
             {
                 throw new WindowsServiceNotFoundException($"Windows service with name '{name}' not exist.", name);
             }
@@ -3197,16 +3199,16 @@ namespace NetExtender.Windows.Services.Utilities
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String? GetServiceDescription(this ServiceController controller)
         {
-            return GetServiceDescriptionInternal(controller, true);
+            return GetServiceDescriptionCore(controller, true);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String? TryGetServiceDescription(this ServiceController controller)
         {
-            return GetServiceDescriptionInternal(controller, false);
+            return GetServiceDescriptionCore(controller, false);
         }
 
-        private static String? GetServiceDescriptionInternal(this ServiceController controller, Boolean isThrow)
+        private static String? GetServiceDescriptionCore(this ServiceController controller, Boolean isThrow)
         {
             if (controller is null)
             {
@@ -3215,7 +3217,7 @@ namespace NetExtender.Windows.Services.Utilities
 
             try
             {
-                return GetServiceDescriptionInternal(controller.ServiceName, isThrow);
+                return GetServiceDescriptionCore(controller.ServiceName, isThrow);
             }
             catch (Exception)
             {
@@ -3231,16 +3233,16 @@ namespace NetExtender.Windows.Services.Utilities
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String? GetServicePath(String name)
         {
-            return GetServicePathInternal(name, true);
+            return GetServicePathCore(name, true);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String? TryGetServicePath(String name)
         {
-            return GetServicePathInternal(name, false);
+            return GetServicePathCore(name, false);
         }
 
-        private static String? GetServicePathInternal(String name, Boolean isThrow)
+        private static String? GetServicePathCore(String name, Boolean isThrow)
         {
             if (name is null)
             {
@@ -3252,7 +3254,7 @@ namespace NetExtender.Windows.Services.Utilities
                 throw new ArgumentException("Service name is invalid.", nameof(name));
             }
 
-            if (!IsServiceExistInternal(name, isThrow))
+            if (!IsServiceExistCore(name, isThrow))
             {
                 throw new WindowsServiceNotFoundException($"Windows service with name '{name}' not exist.", name);
             }
@@ -3285,16 +3287,16 @@ namespace NetExtender.Windows.Services.Utilities
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String? GetServicePath(this ServiceController controller)
         {
-            return GetServicePathInternal(controller, true);
+            return GetServicePathCore(controller, true);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String? TryGetServicePath(this ServiceController controller)
         {
-            return GetServicePathInternal(controller, false);
+            return GetServicePathCore(controller, false);
         }
 
-        private static String? GetServicePathInternal(this ServiceController controller, Boolean isThrow)
+        private static String? GetServicePathCore(this ServiceController controller, Boolean isThrow)
         {
             if (controller is null)
             {
@@ -3303,7 +3305,7 @@ namespace NetExtender.Windows.Services.Utilities
 
             try
             {
-                return GetServicePathInternal(controller.ServiceName, isThrow);
+                return GetServicePathCore(controller.ServiceName, isThrow);
             }
             catch (Exception)
             {
@@ -3319,16 +3321,16 @@ namespace NetExtender.Windows.Services.Utilities
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String? GetServiceUsername(String name)
         {
-            return GetServiceUsernameInternal(name, true);
+            return GetServiceUsernameCore(name, true);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String? TryGetServiceUsername(String name)
         {
-            return GetServiceUsernameInternal(name, false);
+            return GetServiceUsernameCore(name, false);
         }
 
-        private static String? GetServiceUsernameInternal(String name, Boolean isThrow)
+        private static String? GetServiceUsernameCore(String name, Boolean isThrow)
         {
             if (name is null)
             {
@@ -3340,7 +3342,7 @@ namespace NetExtender.Windows.Services.Utilities
                 throw new ArgumentException("Service name is invalid.", nameof(name));
             }
 
-            if (!IsServiceExistInternal(name, isThrow))
+            if (!IsServiceExistCore(name, isThrow))
             {
                 throw new WindowsServiceNotFoundException($"Windows service with name '{name}' not exist.", name);
             }
@@ -3367,16 +3369,16 @@ namespace NetExtender.Windows.Services.Utilities
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String? GetServiceUsername(this ServiceController controller)
         {
-            return GetServiceUsernameInternal(controller, true);
+            return GetServiceUsernameCore(controller, true);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String? TryGetServiceUsername(this ServiceController controller)
         {
-            return GetServiceUsernameInternal(controller, false);
+            return GetServiceUsernameCore(controller, false);
         }
 
-        private static String? GetServiceUsernameInternal(this ServiceController controller, Boolean isThrow)
+        private static String? GetServiceUsernameCore(this ServiceController controller, Boolean isThrow)
         {
             if (controller is null)
             {
@@ -3385,7 +3387,7 @@ namespace NetExtender.Windows.Services.Utilities
 
             try
             {
-                return GetServiceUsernameInternal(controller.ServiceName, isThrow);
+                return GetServiceUsernameCore(controller.ServiceName, isThrow);
             }
             catch (Exception)
             {
@@ -3401,16 +3403,16 @@ namespace NetExtender.Windows.Services.Utilities
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean CheckServiceDelayedAutostart(String name)
         {
-            return IsServiceDelayedAutostartInternal(name, true);
+            return IsServiceDelayedAutostartCore(name, true);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsServiceDelayedAutostart(String name)
         {
-            return IsServiceDelayedAutostartInternal(name, false);
+            return IsServiceDelayedAutostartCore(name, false);
         }
 
-        private static Boolean IsServiceDelayedAutostartInternal(String name, Boolean isThrow)
+        private static Boolean IsServiceDelayedAutostartCore(String name, Boolean isThrow)
         {
             if (name is null)
             {
@@ -3422,7 +3424,7 @@ namespace NetExtender.Windows.Services.Utilities
                 throw new ArgumentException("Service name is invalid.", nameof(name));
             }
 
-            if (!IsServiceExistInternal(name, isThrow))
+            if (!IsServiceExistCore(name, isThrow))
             {
                 throw new WindowsServiceNotFoundException($"Windows service with name '{name}' not exist.", name);
             }
@@ -3452,16 +3454,16 @@ namespace NetExtender.Windows.Services.Utilities
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean CheckServiceDelayedAutostart(this ServiceController controller)
         {
-            return IsServiceDelayedAutostartInternal(controller, true);
+            return IsServiceDelayedAutostartCore(controller, true);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsServiceDelayedAutostart(this ServiceController controller)
         {
-            return IsServiceDelayedAutostartInternal(controller, false);
+            return IsServiceDelayedAutostartCore(controller, false);
         }
 
-        private static Boolean IsServiceDelayedAutostartInternal(this ServiceController controller, Boolean isThrow)
+        private static Boolean IsServiceDelayedAutostartCore(this ServiceController controller, Boolean isThrow)
         {
             if (controller is null)
             {
@@ -3470,7 +3472,7 @@ namespace NetExtender.Windows.Services.Utilities
 
             try
             {
-                return IsServiceDelayedAutostartInternal(controller.ServiceName, isThrow);
+                return IsServiceDelayedAutostartCore(controller.ServiceName, isThrow);
             }
             catch (Exception)
             {
@@ -3486,7 +3488,7 @@ namespace NetExtender.Windows.Services.Utilities
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ServiceErrorControl GetServiceErrorControl(String name)
         {
-            return GetServiceErrorControlInternal(name, ServiceErrorControl.Normal, true);
+            return GetServiceErrorControlCore(name, ServiceErrorControl.Normal, true);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -3498,10 +3500,10 @@ namespace NetExtender.Windows.Services.Utilities
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ServiceErrorControl TryGetServiceErrorControl(String name, ServiceErrorControl alternate)
         {
-            return GetServiceErrorControlInternal(name, alternate, false);
+            return GetServiceErrorControlCore(name, alternate, false);
         }
 
-        private static ServiceErrorControl GetServiceErrorControlInternal(String name, ServiceErrorControl alternate, Boolean isThrow)
+        private static ServiceErrorControl GetServiceErrorControlCore(String name, ServiceErrorControl alternate, Boolean isThrow)
         {
             if (name is null)
             {
@@ -3513,7 +3515,7 @@ namespace NetExtender.Windows.Services.Utilities
                 throw new ArgumentException("Service name is invalid.", nameof(name));
             }
 
-            if (!IsServiceExistInternal(name, isThrow))
+            if (!IsServiceExistCore(name, isThrow))
             {
                 throw new WindowsServiceNotFoundException($"Windows service with name '{name}' not exist.", name);
             }
@@ -3552,7 +3554,7 @@ namespace NetExtender.Windows.Services.Utilities
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ServiceErrorControl GetServiceErrorControl(this ServiceController controller)
         {
-            return GetServiceErrorControlInternal(controller, ServiceErrorControl.Normal, true);
+            return GetServiceErrorControlCore(controller, ServiceErrorControl.Normal, true);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -3564,10 +3566,10 @@ namespace NetExtender.Windows.Services.Utilities
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ServiceErrorControl TryGetServiceErrorControl(this ServiceController controller, ServiceErrorControl alternate)
         {
-            return GetServiceErrorControlInternal(controller, alternate, false);
+            return GetServiceErrorControlCore(controller, alternate, false);
         }
 
-        private static ServiceErrorControl GetServiceErrorControlInternal(this ServiceController controller, ServiceErrorControl alternate, Boolean isThrow)
+        private static ServiceErrorControl GetServiceErrorControlCore(this ServiceController controller, ServiceErrorControl alternate, Boolean isThrow)
         {
             if (controller is null)
             {
@@ -3576,7 +3578,7 @@ namespace NetExtender.Windows.Services.Utilities
 
             try
             {
-                return GetServiceErrorControlInternal(controller.ServiceName, alternate, isThrow);
+                return GetServiceErrorControlCore(controller.ServiceName, alternate, isThrow);
             }
             catch (Exception)
             {
@@ -3596,7 +3598,7 @@ namespace NetExtender.Windows.Services.Utilities
                 throw new ArgumentNullException(nameof(installer));
             }
 
-            return InstallServiceInternal(installer.Path, installer.Name, installer.DisplayName, installer.Description, installer.ServiceType, installer.StartMode, installer.ErrorControl,
+            return InstallServiceCore(installer.Path, installer.Name, installer.DisplayName, installer.Description, installer.ServiceType, installer.StartMode, installer.ErrorControl,
                 installer.AutoStart, installer.Dependency, installer.Username, installer.Password, true);
         }
 
@@ -3607,12 +3609,12 @@ namespace NetExtender.Windows.Services.Utilities
                 throw new ArgumentNullException(nameof(installer));
             }
 
-            return InstallServiceInternal(installer.Path, installer.Name, installer.DisplayName, installer.Description, installer.ServiceType, installer.StartMode, installer.ErrorControl,
+            return InstallServiceCore(installer.Path, installer.Name, installer.DisplayName, installer.Description, installer.ServiceType, installer.StartMode, installer.ErrorControl,
                 installer.AutoStart, installer.Dependency, installer.Username, installer.Password, false);
         }
 
         // ReSharper disable once CognitiveComplexity
-        private static Boolean InstallServiceInternal(FileInfo info, String name, String? displayname, String? description, ServiceType type, ServiceStartMode mode, ServiceErrorControl error, Boolean autostart,
+        private static Boolean InstallServiceCore(FileInfo info, String name, String? displayname, String? description, ServiceType type, ServiceStartMode mode, ServiceErrorControl error, Boolean autostart,
             IEnumerable<ServiceController?>? dependency, String? username, String? password, Boolean isThrow)
         {
             if (info is null)
@@ -3750,7 +3752,7 @@ namespace NetExtender.Windows.Services.Utilities
         /// <param name="name">Name of the service to uninstall.</param>
         public static Boolean UninstallService(String name)
         {
-            return UninstallServiceInternal(name, true);
+            return UninstallServiceCore(name, true);
         }
 
         /// <summary>
@@ -3759,7 +3761,7 @@ namespace NetExtender.Windows.Services.Utilities
         /// <param name="name">Name of the service to uninstall.</param>
         public static Boolean TryUninstallService(String name)
         {
-            return UninstallServiceInternal(name, false);
+            return UninstallServiceCore(name, false);
         }
 
         /// <summary>
@@ -3773,7 +3775,7 @@ namespace NetExtender.Windows.Services.Utilities
                 throw new ArgumentNullException(nameof(installer));
             }
 
-            return UninstallServiceInternal(installer.Name, true);
+            return UninstallServiceCore(installer.Name, true);
         }
 
         /// <summary>
@@ -3787,10 +3789,10 @@ namespace NetExtender.Windows.Services.Utilities
                 throw new ArgumentNullException(nameof(installer));
             }
 
-            return UninstallServiceInternal(installer.Name, false);
+            return UninstallServiceCore(installer.Name, false);
         }
 
-        private static Boolean UninstallServiceInternal(String name, Boolean isThrow)
+        private static Boolean UninstallServiceCore(String name, Boolean isThrow)
         {
             if (name is null)
             {
@@ -3839,7 +3841,7 @@ namespace NetExtender.Windows.Services.Utilities
                 throw new ArgumentNullException(nameof(installer));
             }
 
-            return ReinstallServiceInternal(installer.Path, installer.Name, installer.DisplayName, installer.Description, installer.ServiceType, installer.StartMode,
+            return ReinstallServiceCore(installer.Path, installer.Name, installer.DisplayName, installer.Description, installer.ServiceType, installer.StartMode,
                 installer.ErrorControl, installer.AutoStart, installer.Dependency, installer.Username, installer.Password, true);
         }
 
@@ -3850,11 +3852,11 @@ namespace NetExtender.Windows.Services.Utilities
                 throw new ArgumentNullException(nameof(installer));
             }
 
-            return ReinstallServiceInternal(installer.Path, installer.Name, installer.DisplayName, installer.Description, installer.ServiceType, installer.StartMode,
+            return ReinstallServiceCore(installer.Path, installer.Name, installer.DisplayName, installer.Description, installer.ServiceType, installer.StartMode,
                 installer.ErrorControl, installer.AutoStart, installer.Dependency, installer.Username, installer.Password, false);
         }
 
-        private static Boolean ReinstallServiceInternal(FileInfo info, String name, String? displayname, String? description, ServiceType type, ServiceStartMode mode, ServiceErrorControl error, Boolean autostart,
+        private static Boolean ReinstallServiceCore(FileInfo info, String name, String? displayname, String? description, ServiceType type, ServiceStartMode mode, ServiceErrorControl error, Boolean autostart,
             IEnumerable<ServiceController?>? dependency, String? username, String? password, Boolean isThrow)
         {
             if (info is null)
@@ -3887,7 +3889,7 @@ namespace NetExtender.Windows.Services.Utilities
                 TryUninstallService(name);
             }
 
-            return InstallServiceInternal(info, name, displayname, description, type, mode, error, autostart, dependency, username, password, isThrow);
+            return InstallServiceCore(info, name, displayname, description, type, mode, error, autostart, dependency, username, password, isThrow);
         }
 
         public static Boolean InstallServiceIfNotExist(this WindowsServiceInstaller installer)
@@ -3897,7 +3899,7 @@ namespace NetExtender.Windows.Services.Utilities
                 throw new ArgumentNullException(nameof(installer));
             }
 
-            return InstallServiceIfNotExistInternal(installer.Path, installer.Name, installer.DisplayName, installer.Description, installer.ServiceType, installer.StartMode,
+            return InstallServiceIfNotExistCore(installer.Path, installer.Name, installer.DisplayName, installer.Description, installer.ServiceType, installer.StartMode,
                 installer.ErrorControl, installer.AutoStart, installer.Dependency, installer.Username, installer.Password, true);
         }
 
@@ -3908,11 +3910,11 @@ namespace NetExtender.Windows.Services.Utilities
                 throw new ArgumentNullException(nameof(installer));
             }
 
-            return InstallServiceIfNotExistInternal(installer.Path, installer.Name, installer.DisplayName, installer.Description, installer.ServiceType, installer.StartMode,
+            return InstallServiceIfNotExistCore(installer.Path, installer.Name, installer.DisplayName, installer.Description, installer.ServiceType, installer.StartMode,
                 installer.ErrorControl, installer.AutoStart, installer.Dependency, installer.Username, installer.Password, false);
         }
 
-        private static Boolean InstallServiceIfNotExistInternal(FileInfo info, String name, String? displayname, String? description, ServiceType type, ServiceStartMode mode,
+        private static Boolean InstallServiceIfNotExistCore(FileInfo info, String name, String? displayname, String? description, ServiceType type, ServiceStartMode mode,
             ServiceErrorControl error, Boolean autostart, IEnumerable<ServiceController?>? dependency, String? username, String? password, Boolean isThrow)
         {
             if (info is null)
@@ -3932,7 +3934,7 @@ namespace NetExtender.Windows.Services.Utilities
 
             if (info.Exists)
             {
-                return IsServiceExist(name) || InstallServiceInternal(info, name, displayname, description, type, mode, error, autostart, dependency, username, password, isThrow);
+                return IsServiceExist(name) || InstallServiceCore(info, name, displayname, description, type, mode, error, autostart, dependency, username, password, isThrow);
             }
 
             if (isThrow)
@@ -3950,7 +3952,7 @@ namespace NetExtender.Windows.Services.Utilities
                 throw new ArgumentNullException(nameof(installer));
             }
 
-            return ChangeServiceConfigInternal(installer.Path, installer.Name, installer.DisplayName, installer.Description, installer.ServiceType, installer.StartMode,
+            return ChangeServiceConfigCore(installer.Path, installer.Name, installer.DisplayName, installer.Description, installer.ServiceType, installer.StartMode,
                 installer.ErrorControl, installer.AutoStart, installer.Dependency, installer.Username, installer.Password, false, true);
         }
 
@@ -3961,7 +3963,7 @@ namespace NetExtender.Windows.Services.Utilities
                 throw new ArgumentNullException(nameof(installer));
             }
 
-            return ChangeServiceConfigInternal(installer.Path, installer.Name, installer.DisplayName, installer.Description, installer.ServiceType, installer.StartMode,
+            return ChangeServiceConfigCore(installer.Path, installer.Name, installer.DisplayName, installer.Description, installer.ServiceType, installer.StartMode,
                 installer.ErrorControl, installer.AutoStart, installer.Dependency, installer.Username, installer.Password, false, false);
         }
 
@@ -3972,7 +3974,7 @@ namespace NetExtender.Windows.Services.Utilities
                 throw new ArgumentNullException(nameof(installer));
             }
 
-            return ChangeServiceConfigInternal(installer.Path, installer.Name, installer.DisplayName, installer.Description, installer.ServiceType, installer.StartMode,
+            return ChangeServiceConfigCore(installer.Path, installer.Name, installer.DisplayName, installer.Description, installer.ServiceType, installer.StartMode,
                 installer.ErrorControl, installer.AutoStart, installer.Dependency, installer.Username, installer.Password, true, true);
         }
 
@@ -3983,12 +3985,12 @@ namespace NetExtender.Windows.Services.Utilities
                 throw new ArgumentNullException(nameof(installer));
             }
 
-            return ChangeServiceConfigInternal(installer.Path, installer.Name, installer.DisplayName, installer.Description, installer.ServiceType, installer.StartMode,
+            return ChangeServiceConfigCore(installer.Path, installer.Name, installer.DisplayName, installer.Description, installer.ServiceType, installer.StartMode,
                 installer.ErrorControl, installer.AutoStart, installer.Dependency, installer.Username, installer.Password, true, false);
         }
 
         // ReSharper disable once CognitiveComplexity
-        private static Boolean ChangeServiceConfigInternal(FileInfo info, String name, String? displayname, String? description, ServiceType type, ServiceStartMode mode,
+        private static Boolean ChangeServiceConfigCore(FileInfo info, String name, String? displayname, String? description, ServiceType type, ServiceStartMode mode,
             ServiceErrorControl error, Boolean autostart, IEnumerable<ServiceController?>? dependency, String? username, String? password, Boolean isInstall, Boolean isThrow)
         {
             if (info is null)
@@ -4231,7 +4233,7 @@ namespace NetExtender.Windows.Services.Utilities
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<Boolean> WaitForTimeoutAsync(this ServiceController controller, ServiceControllerStatus status, TimeSpan timeout, CancellationToken token)
         {
-            return WaitForTimeoutInternalAsync(controller, status, timeout, true, token);
+            return WaitForTimeoutCoreAsync(controller, status, timeout, true, token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -4267,10 +4269,10 @@ namespace NetExtender.Windows.Services.Utilities
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<Boolean> TryWaitForTimeoutAsync(this ServiceController controller, ServiceControllerStatus status, TimeSpan timeout, CancellationToken token)
         {
-            return WaitForTimeoutInternalAsync(controller, status, timeout, false, token);
+            return WaitForTimeoutCoreAsync(controller, status, timeout, false, token);
         }
 
-        private static async Task<Boolean> WaitForTimeoutInternalAsync(this ServiceController controller, ServiceControllerStatus status, TimeSpan timeout, Boolean isThrow,
+        private static async Task<Boolean> WaitForTimeoutCoreAsync(this ServiceController controller, ServiceControllerStatus status, TimeSpan timeout, Boolean isThrow,
             CancellationToken token)
         {
             if (controller is null)

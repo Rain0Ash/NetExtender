@@ -1,3 +1,6 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,13 +13,13 @@ namespace NetExtender.DependencyInjection
 {
     public class FinalServiceCollection : IFinalServiceCollection
     {
-        protected IServiceCollection Collection { get; }
+        protected IServiceCollection Services { get; }
         
         public Int32 Count
         {
             get
             {
-                return Collection.Count;
+                return Services.Count;
             }
         }
         
@@ -25,16 +28,16 @@ namespace NetExtender.DependencyInjection
         {
             get
             {
-                return _final() || Collection is IFinalServiceCollection { IsFinal: true } || Collection is IChangeableServiceProvider { IsFinal: true };
+                return _final() || Services is IFinalServiceCollection { IsFinal: true } || Services is IChangeableServiceProvider { IsFinal: true };
             }
         }
         
-        private readonly Object _sync = ConcurrentUtilities.SyncRoot;
+        private readonly SyncRoot _sync = Utilities.Types.SyncRoot.Create();
         public Object SyncRoot
         {
             get
             {
-                return (Collection as ICollection)?.SyncRoot ?? _sync;
+                return (Services as ICollection)?.SyncRoot ?? _sync;
             }
         }
         
@@ -42,7 +45,7 @@ namespace NetExtender.DependencyInjection
         {
             get
             {
-                return (Collection as ICollection)?.IsSynchronized ?? false;
+                return (Services as ICollection)?.IsSynchronized ?? false;
             }
         }
         
@@ -50,7 +53,7 @@ namespace NetExtender.DependencyInjection
         {
             get
             {
-                return IsFinal || Collection.IsReadOnly;
+                return IsFinal || Services.IsReadOnly;
             }
         }
         
@@ -62,7 +65,7 @@ namespace NetExtender.DependencyInjection
         public FinalServiceCollection(Func<Boolean> final)
         {
             _final = final ?? throw new ArgumentNullException(nameof(final));
-            Collection = new ServiceCollection();
+            Services = new ServiceCollection();
         }
         
         public FinalServiceCollection(IEnumerable<ServiceDescriptor> source)
@@ -83,23 +86,23 @@ namespace NetExtender.DependencyInjection
             }
             
             _final = final;
-            Collection = new ServiceCollection();
-            Collection.AddRange(source.WhereNotNull());
+            Services = new ServiceCollection();
+            Services.AddRange(source.WhereNotNull());
         }
         
-        public FinalServiceCollection(IServiceCollection collection)
-            : this(collection, false)
+        public FinalServiceCollection(IServiceCollection services)
+            : this(services, false)
         {
         }
         
-        public FinalServiceCollection(IServiceCollection collection, Boolean final)
-            : this(collection is not null ? collection : throw new ArgumentNullException(nameof(collection)), final ? static () => true : static () => false)
+        public FinalServiceCollection(IServiceCollection services, Boolean final)
+            : this(services is not null ? services : throw new ArgumentNullException(nameof(services)), final ? static () => true : static () => false)
         {
         }
         
-        public FinalServiceCollection(IServiceCollection collection, Func<Boolean> final)
+        public FinalServiceCollection(IServiceCollection services, Func<Boolean> final)
         {
-            Collection = collection ?? throw new ArgumentNullException(nameof(collection));
+            Services = services ?? throw new ArgumentNullException(nameof(services));
             _final = final ?? throw new ArgumentNullException(nameof(final));
         }
         
@@ -110,7 +113,7 @@ namespace NetExtender.DependencyInjection
                 throw new ArgumentNullException(nameof(item));
             }
             
-            return Collection.Contains(item);
+            return Services.Contains(item);
         }
         
         public Int32 IndexOf(ServiceDescriptor item)
@@ -120,7 +123,7 @@ namespace NetExtender.DependencyInjection
                 throw new ArgumentNullException(nameof(item));
             }
             
-            return Collection.IndexOf(item);
+            return Services.IndexOf(item);
         }
         
         public void Add(ServiceDescriptor item)
@@ -135,7 +138,7 @@ namespace NetExtender.DependencyInjection
                 throw new ServiceCollectionFinalException();
             }
             
-            Collection.Add(item);
+            Services.Add(item);
         }
         
         public void Insert(Int32 index, ServiceDescriptor item)
@@ -150,7 +153,7 @@ namespace NetExtender.DependencyInjection
                 throw new ServiceCollectionFinalException();
             }
             
-            Collection.Insert(index, item);
+            Services.Insert(index, item);
         }
         
         public Boolean Remove(ServiceDescriptor item)
@@ -165,7 +168,7 @@ namespace NetExtender.DependencyInjection
                 throw new ServiceCollectionFinalException();
             }
             
-            return Collection.Remove(item);
+            return Services.Remove(item);
         }
         
         public void RemoveAt(Int32 index)
@@ -175,7 +178,7 @@ namespace NetExtender.DependencyInjection
                 throw new ServiceCollectionFinalException();
             }
             
-            Collection.RemoveAt(index);
+            Services.RemoveAt(index);
         }
         
         public void Clear()
@@ -185,7 +188,7 @@ namespace NetExtender.DependencyInjection
                 throw new ServiceCollectionFinalException();
             }
             
-            Collection.Clear();
+            Services.Clear();
         }
         
         public void CopyTo(Array array, Int32 index)
@@ -200,7 +203,7 @@ namespace NetExtender.DependencyInjection
         
         public void CopyTo(ServiceDescriptor[] array, Int32 index)
         {
-            Collection.CopyTo(array, index);
+            Services.CopyTo(array, index);
         }
         
         public void Final()
@@ -210,7 +213,7 @@ namespace NetExtender.DependencyInjection
         
         public IEnumerator<ServiceDescriptor> GetEnumerator()
         {
-            return Collection.GetEnumerator();
+            return Services.GetEnumerator();
         }
         
         IEnumerator IEnumerable.GetEnumerator()
@@ -222,7 +225,7 @@ namespace NetExtender.DependencyInjection
         {
             get
             {
-                return Collection[index];
+                return Services[index];
             }
             set
             {
@@ -237,7 +240,7 @@ namespace NetExtender.DependencyInjection
                     throw new ServiceCollectionFinalException();
                 }
                 
-                Collection[index] = value;
+                Services[index] = value;
             }
         }
     }

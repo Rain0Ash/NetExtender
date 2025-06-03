@@ -5,6 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Runtime.CompilerServices;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Immutable.Stacks
@@ -15,6 +16,7 @@ namespace NetExtender.Types.Immutable.Stacks
 
         public Boolean IsEmpty
         {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
                 return Stack.IsEmpty;

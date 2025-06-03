@@ -58,9 +58,9 @@ namespace NetExtender.Types.Comparers
             return y is not null && Comparison.Invoke(x, y);
         }
 
-        public Int32 GetHashCode(T? obj)
+        public Int32 GetHashCode(T? value)
         {
-            return Nullable || obj is not null ? Hash.Invoke(obj!) : 0;
+            return Nullable || value is not null ? Hash.Invoke(value!) : 0;
         }
     }
 
@@ -109,14 +109,14 @@ namespace NetExtender.Types.Comparers
             return y is not null && Comparison.Invoke(x, y);
         }
 
-        public Int32 GetHashCode(T1? obj)
+        public Int32 GetHashCode(T1? value)
         {
-            return Nullable || obj is not null ? Hash1.Invoke(obj!) : 0;
+            return Nullable || value is not null ? Hash1.Invoke(value!) : 0;
         }
 
-        public Int32 GetHashCode(T2? obj)
+        public Int32 GetHashCode(T2? value)
         {
-            return Nullable || obj is not null ? Hash2.Invoke(obj!) : 0;
+            return Nullable || value is not null ? Hash2.Invoke(value!) : 0;
         }
     }
 }

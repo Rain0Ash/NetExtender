@@ -282,14 +282,14 @@ namespace NetExtender.Types.Sets
             CopyTo(generic, index);
         }
 
-        public void CopyTo(T[] array, Int32 arrayIndex)
+        public void CopyTo(T[] array, Int32 index)
         {
             if (array is null)
             {
                 throw new ArgumentNullException(nameof(array));
             }
 
-            Internal.CopyTo(array, arrayIndex);
+            Internal.CopyTo(array, index);
         }
 
         public IEnumerator<T> GetEnumerator()

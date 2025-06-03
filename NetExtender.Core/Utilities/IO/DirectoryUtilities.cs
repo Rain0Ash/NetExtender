@@ -7,7 +7,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using NetExtender.IO.Interfaces;
+using NetExtender.FileSystems.Interfaces;
 using NetExtender.Types.Exceptions;
 using NetExtender.Utilities.Application;
 using NetExtender.Utilities.Types;
@@ -16,12 +16,12 @@ namespace NetExtender.Utilities.IO
 {
     public static class DirectoryUtilities
     {
-        private static IUnsafeFileSystemHandler NetExtender
+        private static IFileSystem NetExtender
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
-                return IUnsafeFileSystemHandler.Default;
+                return IFileSystem.Default;
             }
         }
 
@@ -110,6 +110,24 @@ namespace NetExtender.Utilities.IO
                 return !String.IsNullOrEmpty(directory) ? directory : null;
             }
             catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DriveInfo? GetDrive(this DirectoryInfo info)
+        {
+            if (info is null)
+            {
+                throw new ArgumentNullException(nameof(info));
+            }
+
+            try
+            {
+                return new DriveInfo(info.Root.FullName);
+            }
+            catch (ArgumentException)
             {
                 return null;
             }
@@ -221,7 +239,7 @@ namespace NetExtender.Utilities.IO
         /// <param name="suffix">The suffix to add to the directory.</param>
         public static Boolean AddSuffix(this DirectoryInfo directory, String suffix)
         {
-            return AddSuffixInternal(directory, suffix, true);
+            return AddSuffixCore(directory, suffix, true);
         }
 
         /// <summary>
@@ -231,7 +249,7 @@ namespace NetExtender.Utilities.IO
         /// <param name="suffix">The suffix to add to the directory.</param>
         public static Boolean TryAddSuffix(this DirectoryInfo directory, String suffix)
         {
-            return AddSuffixInternal(directory, suffix, false);
+            return AddSuffixCore(directory, suffix, false);
         }
 
         /// <summary>
@@ -241,7 +259,7 @@ namespace NetExtender.Utilities.IO
         /// <param name="suffix">The suffix to add to the directory.</param>
         /// <param name="isThrow">Is throw or return successful result.</param>
         // ReSharper disable once ParameterOnlyUsedForPreconditionCheck.Local
-        private static Boolean AddSuffixInternal(this DirectoryInfo directory, String suffix, Boolean isThrow)
+        private static Boolean AddSuffixCore(this DirectoryInfo directory, String suffix, Boolean isThrow)
         {
             if (directory is null)
             {
@@ -582,7 +600,7 @@ namespace NetExtender.Utilities.IO
 
             if (String.IsNullOrEmpty(destination))
             {
-                throw new ArgumentException(@"Value cannot be null or empty.", nameof(destination));
+                throw new ArgumentNullOrEmptyStringException(destination, nameof(destination));
             }
 
             if (!source.Exists)
@@ -752,7 +770,7 @@ namespace NetExtender.Utilities.IO
 
             if (String.IsNullOrEmpty(destination))
             {
-                throw new ArgumentException(@"Value cannot be null or empty.", nameof(destination));
+                throw new ArgumentNullOrEmptyStringException(destination, nameof(destination));
             }
 
             Boolean successful = false;
@@ -1174,7 +1192,7 @@ namespace NetExtender.Utilities.IO
         /// <param name="suffix">The suffix to remove from the directory.</param>
         public static Boolean RemoveSuffix(this DirectoryInfo directory, String suffix)
         {
-            return RemoveSuffixInternal(directory, suffix, true);
+            return RemoveSuffixCore(directory, suffix, true);
         }
 
         /// <summary>
@@ -1184,7 +1202,7 @@ namespace NetExtender.Utilities.IO
         /// <param name="suffix">The suffix to remove from the directory.</param>
         public static Boolean TryRemoveSuffix(this DirectoryInfo directory, String suffix)
         {
-            return RemoveSuffixInternal(directory, suffix, false);
+            return RemoveSuffixCore(directory, suffix, false);
         }
 
         /// <summary>
@@ -1194,7 +1212,7 @@ namespace NetExtender.Utilities.IO
         /// <param name="suffix">The suffix to remove from the directory.</param>
         /// <param name="isThrow">Is throw or return successful result.</param>
         // ReSharper disable once ParameterOnlyUsedForPreconditionCheck.Local
-        private static Boolean RemoveSuffixInternal(this DirectoryInfo directory, String suffix, Boolean isThrow)
+        private static Boolean RemoveSuffixCore(this DirectoryInfo directory, String suffix, Boolean isThrow)
         {
             if (directory is null)
             {
@@ -1367,10 +1385,19 @@ namespace NetExtender.Utilities.IO
         {
             return Environment.GetFolderPath(folder);
         }
-
-        public static DirectoryInfo ToDirectoryInfo(this Environment.SpecialFolder folder)
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DirectoryInfo? ToDirectoryInfo(this Environment.SpecialFolder folder)
         {
-            return new DirectoryInfo(GetPath(folder));
+            String directory = Environment.GetFolderPath(folder);
+            return !String.IsNullOrEmpty(directory) ? new DirectoryInfo(directory) : null;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DirectoryInfo? ToDirectoryInfo(this Environment.SpecialFolder folder, Environment.SpecialFolderOption option)
+        {
+            String directory = Environment.GetFolderPath(folder, option);
+            return !String.IsNullOrEmpty(directory) ? new DirectoryInfo(directory) : null;
         }
     }
 }

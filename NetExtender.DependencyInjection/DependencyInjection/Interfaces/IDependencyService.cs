@@ -41,7 +41,7 @@ namespace NetExtender.DependencyInjection.Interfaces
                 
                 return interfaces.Count switch
                 {
-                    0 => throw new InvalidOperationException($"Can't find any of '{typeof(ITransient)}; {typeof(IScoped)}; {typeof(ISingleton)}' interface implementations for type '{type}'."),
+                    0 => throw new InvalidOperationException($"Can't find any of '{nameof(ITransient)}; {nameof(IScoped)}; {nameof(ISingleton)}' interface implementations for type '{type}'."),
                     1 => Services[interfaces.First()],
                     _ => throw new AmbiguousMatchException($"Can't match {nameof(ServiceLifetime)} for type '{type}'.")
                 };

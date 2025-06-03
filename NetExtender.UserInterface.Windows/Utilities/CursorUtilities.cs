@@ -10,7 +10,7 @@ namespace NetExtender.Utilities.UserInterface
     public class CursorUtilities
     {
         [DllImport("user32.dll", ExactSpelling = true)]
-        private static extern Boolean GetCursorPos(out Point pt);
+        private static extern Boolean GetCursorPos(out Point point);
         
         [DllImport("user32.dll", ExactSpelling = true)]
         private static extern Boolean SetCursorPos(Int32 x, Int32 y);

@@ -10,20 +10,27 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Win32.SafeHandles;
-using NetExtender.IO.Interfaces;
+using NetExtender.FileSystems.Interfaces;
+using NetExtender.Types.Streams;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Utilities.IO
 {
     public static class FileUtilities
     {
-        private static IUnsafeFileSystemHandler NetExtender
+        private static IFileSystem NetExtender
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
-                return IUnsafeFileSystemHandler.Default;
+                return IFileSystem.Default;
             }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean HasAttribute(this FileAttributes current, FileAttributes attributes)
+        {
+            return (current & attributes) == attributes;
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -41,12 +48,6 @@ namespace NetExtender.Utilities.IO
 
             current = File.GetAttributes(path);
             return HasAttribute(current, attributes);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean HasAttribute(this FileAttributes current, FileAttributes attributes)
-        {
-            return (current & attributes) == attributes;
         }
 
         /// <summary>
@@ -75,6 +76,17 @@ namespace NetExtender.Utilities.IO
             {
                 return false;
             }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DriveInfo? GetDrive(this FileInfo info)
+        {
+            if (info is null)
+            {
+                throw new ArgumentNullException(nameof(info));
+            }
+
+            return info.Directory?.GetDrive();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -905,7 +917,7 @@ namespace NetExtender.Utilities.IO
 
             if (!stream.CanRead)
             {
-                throw new NotSupportedException();
+                throw new StreamArgumentNotSupportReadException(stream, nameof(stream));
             }
 
             if (!PathUtilities.IsValidFilePath(path))
@@ -916,7 +928,7 @@ namespace NetExtender.Utilities.IO
             Boolean exist = PathUtilities.IsExistAsFile(path);
             if (!overwrite && exist)
             {
-                throw new IOException($"File {path} already exist");
+                throw new IOException($"File '{path}' already exist.");
             }
 
             String partname = path + ".part";
@@ -924,7 +936,6 @@ namespace NetExtender.Utilities.IO
             const FileOptions options = FileOptions.Asynchronous | FileOptions.SequentialScan;
 
             await using FileStream original = new FileStream(path, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None, 4096, options);
-
             await using FileStream part = new FileStream(partname, FileMode.Create, FileAccess.Write, FileShare.None, buffer, options);
 
             await stream.CopyToAsync(part, buffer, token).ConfigureAwait(false);
@@ -965,12 +976,12 @@ namespace NetExtender.Utilities.IO
 
         public static Boolean AddSuffix(FileInfo info, String suffix)
         {
-            return AddSuffixInternal(info, suffix, true);
+            return AddSuffixCore(info, suffix, true);
         }
 
         public static Boolean TryAddSuffix(FileInfo info, String suffix)
         {
-            return AddSuffixInternal(info, suffix, false);
+            return AddSuffixCore(info, suffix, false);
         }
 
         /// <summary>
@@ -980,7 +991,7 @@ namespace NetExtender.Utilities.IO
         /// <param name="suffix">The suffix to add to the file.</param>
         /// <param name="isThrow">Is throw or return successful result.</param>
         // ReSharper disable once ParameterOnlyUsedForPreconditionCheck.Local
-        private static Boolean AddSuffixInternal(FileInfo info, String suffix, Boolean isThrow)
+        private static Boolean AddSuffixCore(FileInfo info, String suffix, Boolean isThrow)
         {
             if (info is null)
             {
@@ -1036,7 +1047,7 @@ namespace NetExtender.Utilities.IO
         /// <param name="suffix">The suffix to remove from the file.</param>
         public static Boolean RemoveSuffix(FileInfo info, String suffix)
         {
-            return RemoveSuffixInternal(info, suffix, true);
+            return RemoveSuffixCore(info, suffix, true);
         }
 
         /// <summary>
@@ -1046,7 +1057,7 @@ namespace NetExtender.Utilities.IO
         /// <param name="suffix">The suffix to remove from the file.</param>
         public static Boolean TryRemoveSuffix(FileInfo info, String suffix)
         {
-            return RemoveSuffixInternal(info, suffix, false);
+            return RemoveSuffixCore(info, suffix, false);
         }
 
         /// <summary>
@@ -1056,7 +1067,7 @@ namespace NetExtender.Utilities.IO
         /// <param name="suffix">The suffix to remove from the file.</param>
         /// <param name="isThrow">Is throw or return successful result.</param>
         // ReSharper disable once ParameterOnlyUsedForPreconditionCheck.Local
-        private static Boolean RemoveSuffixInternal(FileInfo info, String suffix, Boolean isThrow)
+        private static Boolean RemoveSuffixCore(FileInfo info, String suffix, Boolean isThrow)
         {
             if (info is null)
             {

@@ -248,7 +248,7 @@ namespace NetExtender.Configuration.Cryptography.Behavior
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            IEnumerable<ConfigurationValueEntry> Internal()
+            IEnumerable<ConfigurationValueEntry> Core()
             {
                 IConfigurationCryptor? configuration = cryptor?.AsCryptor(Cryptor.CryptographyOptions);
 
@@ -276,7 +276,7 @@ namespace NetExtender.Configuration.Cryptography.Behavior
                 }
             }
 
-            return Internal();
+            return Core();
         }
 
         [return: NotNullIfNotNull("entries")]
@@ -289,7 +289,7 @@ namespace NetExtender.Configuration.Cryptography.Behavior
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            IEnumerable<ConfigurationValueEntry> Internal()
+            IEnumerable<ConfigurationValueEntry> Core()
             {
                 IConfigurationCryptor? configuration = cryptor?.AsCryptor(Cryptor.CryptographyOptions);
 
@@ -317,7 +317,7 @@ namespace NetExtender.Configuration.Cryptography.Behavior
                 }
             }
 
-            return Internal();
+            return Core();
         }
 
         public Boolean Contains(String? key, IEnumerable<String>? sections)

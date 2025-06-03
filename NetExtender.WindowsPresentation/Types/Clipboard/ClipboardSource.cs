@@ -1,3 +1,6 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
@@ -5,7 +8,7 @@ using System.Runtime.InteropServices;
 namespace NetExtender.WindowsPresentation.Types.Clipboard
 {
     [StructLayout(LayoutKind.Sequential)]
-    public readonly struct ClipboardSource : IEquatable<ClipboardSource>
+    public readonly struct ClipboardSource : IEquatableStruct<ClipboardSource>
     {
         public static Boolean operator ==(ClipboardSource first, ClipboardSource second)
         {

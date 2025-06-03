@@ -213,11 +213,11 @@ namespace NetExtender.NAudio.Types.Playlist
             }
         }
 
-        public void CopyTo(T[] array, Int32 arrayIndex)
+        public void CopyTo(T[] array, Int32 index)
         {
             lock (Queue)
             {
-                Queue.CopyTo(array, arrayIndex);
+                Queue.CopyTo(array, index);
             }
         }
 

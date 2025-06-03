@@ -102,6 +102,11 @@ namespace NetExtender.Types.Timers
             return false;
         }
 
+        public Boolean Change(TimeSpan dueTime, TimeSpan period)
+        {
+            return false;
+        }
+
         public void Start()
         {
             Timer.Start();

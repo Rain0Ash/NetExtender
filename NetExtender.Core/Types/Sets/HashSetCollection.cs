@@ -10,7 +10,7 @@ using NetExtender.Types.Sets.Interfaces;
 namespace NetExtender.Types.Sets
 {
     [Serializable]
-    public class HashSetCollection<T> : HashSet<T>, ISet
+    public class HashSetCollection<T> : HashSet<T>, IHashSet<T>, IReadOnlyHashSet<T>, ISet
     {
         Boolean ICollection.IsSynchronized
         {

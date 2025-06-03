@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Text;
 using NetExtender.Types.TextReaders;
 
@@ -11,25 +12,35 @@ namespace NetExtender.Utilities.Types
 {
     public static class TextReaderUtilities
     {
+        private static Type NullReaderType { get; } = TextReader.Null.GetType();
         private static Type SynchronizedReaderType { get; } = TextReader.Synchronized(TextReader.Null).GetType();
 
-        public static Boolean IsSynchronized(this TextReader reader)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsNull(this TextWriter? reader)
+        {
+            return reader is null || reader.GetType() == NullReaderType;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsSynchronized(this TextReader? reader)
+        {
+            return reader is not null && reader.GetType() == SynchronizedReaderType;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<String> ReadLines(this TextReader reader)
+        {
+            return ReadLines(reader, false);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<String> ReadLines(this TextReader reader, Boolean disposing)
         {
             if (reader is null)
             {
                 throw new ArgumentNullException(nameof(reader));
             }
 
-            return reader.GetType() == SynchronizedReaderType;
-        }
-
-        public static IEnumerable<String> ReadLines(this TextReader reader)
-        {
-            return ReadLines(reader, false);
-        }
-
-        public static IEnumerable<String> ReadLines(this TextReader reader, Boolean disposing)
-        {
             return new TextLineEnumerator(reader, disposing);
         }
 
@@ -40,6 +51,11 @@ namespace NetExtender.Utilities.Types
 
         public static IAsyncEnumerable<String> ReadLineAsync(this TextReader reader, Boolean disposing)
         {
+            if (reader is null)
+            {
+                throw new ArgumentNullException(nameof(reader));
+            }
+
             return new TextLineEnumerator(reader, disposing);
         }
 

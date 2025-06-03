@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text.RegularExpressions;
+using NetExtender.Types.Exceptions;
 using NetExtender.Utilities.Application;
 using NetExtender.Utilities.Types;
 
@@ -22,7 +23,7 @@ namespace NetExtender.Domains
         {
             if (String.IsNullOrWhiteSpace(value))
             {
-                throw new ArgumentException(@"Value cannot be null or whitespace.", nameof(value));
+                throw new ArgumentNullOrWhiteSpaceStringException(value, nameof(value));
             }
 
             CultureInfo info = CultureInfo.InvariantCulture;

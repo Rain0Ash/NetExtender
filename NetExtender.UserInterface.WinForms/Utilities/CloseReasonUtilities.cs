@@ -21,7 +21,7 @@ namespace NetExtender.Utilities.UserInterface
                 InterfaceCloseReason.TaskManagerClosing => CloseReason.TaskManagerClosing,
                 InterfaceCloseReason.OwnerClosing => CloseReason.FormOwnerClosing,
                 InterfaceCloseReason.ApplicationExitCall => CloseReason.ApplicationExitCall,
-                _ => throw new EnumUndefinedOrNotSupportedThrowableException<InterfaceCloseReason>(value, nameof(value), null)
+                _ => throw new EnumUndefinedOrNotSupportedException<InterfaceCloseReason>(value, nameof(value), null)
             };
         }
         
@@ -36,7 +36,7 @@ namespace NetExtender.Utilities.UserInterface
                 CloseReason.TaskManagerClosing => InterfaceCloseReason.TaskManagerClosing,
                 CloseReason.FormOwnerClosing => InterfaceCloseReason.OwnerClosing,
                 CloseReason.ApplicationExitCall => InterfaceCloseReason.ApplicationExitCall,
-                _ => throw new ArgumentOutOfRangeException(nameof(value), value, null)
+                _ => throw new EnumUndefinedOrNotSupportedException<CloseReason>(value, nameof(value), null)
             };
         }
     }

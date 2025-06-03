@@ -9,14 +9,14 @@ namespace NetExtender.Utilities.Types
 {
     public static class PointerUtilities
     {
-        public static GCHandle ToGCHandle(this Object obj)
+        public static GCHandle ToGCHandle(this Object value)
         {
-            if (obj is GCHandle handle)
+            return value switch
             {
-                return ToGCHandle(handle);
-            }
-
-            return GCHandle.Alloc(obj);
+                null => throw new ArgumentNullException(nameof(value)),
+                GCHandle handle => ToGCHandle(handle),
+                _ => GCHandle.Alloc(value)
+            };
         }
 
         public static GCHandle ToGCHandle(this GCHandle handle)
@@ -24,24 +24,29 @@ namespace NetExtender.Utilities.Types
             return handle;
         }
 
-        public static IntPtr ToIntPtr(this Object obj)
+        public static IntPtr ToIntPtr(this Object value)
         {
-            return ToGCHandle(obj).ToIntPtr();
-        }
-
-        public static IntPtr ToIntPtr(this GCHandle obj)
-        {
-            return GCHandle.ToIntPtr(obj);
-        }
-
-        public static GCHandleProvider ToGCHandleProvider(this Object obj)
-        {
-            if (obj is GCHandle handle)
+            if (value is null)
             {
-                return ToGCHandleProvider(handle);
+                throw new ArgumentNullException(nameof(value));
             }
 
-            return new GCHandleProvider(obj);
+            return ToGCHandle(value).ToIntPtr();
+        }
+
+        public static IntPtr ToIntPtr(this GCHandle value)
+        {
+            return GCHandle.ToIntPtr(value);
+        }
+
+        public static GCHandleProvider ToGCHandleProvider(this Object value)
+        {
+            return value switch
+            {
+                null => throw new ArgumentNullException(nameof(value)),
+                GCHandle handle => ToGCHandleProvider(handle),
+                _ => new GCHandleProvider(value)
+            };
         }
 
         public static GCHandleProvider ToGCHandleProvider(this GCHandle handle)

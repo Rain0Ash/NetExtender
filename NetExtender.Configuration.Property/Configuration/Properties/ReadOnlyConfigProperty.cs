@@ -251,6 +251,11 @@ namespace NetExtender.Configuration.Properties
             return GetValue(Validate);
         }
 
+        T IGetter<T>.Get()
+        {
+            return GetValue();
+        }
+
         public virtual T GetValue(Func<T, Boolean>? predicate)
         {
             if (IsAlwaysDefault)
@@ -267,9 +272,19 @@ namespace NetExtender.Configuration.Properties
             return GetValueAsync(CancellationToken.None);
         }
 
+        async ValueTask<T> IAsyncGetter<T>.GetAsync()
+        {
+            return await GetValueAsync();
+        }
+
         public virtual Task<T> GetValueAsync(CancellationToken token)
         {
             return GetValueAsync(Validate, token);
+        }
+
+        async ValueTask<T> IAsyncGetter<T>.GetAsync(CancellationToken token)
+        {
+            return await GetValueAsync(token);
         }
 
         public Task<T> GetValueAsync(Func<T, Boolean>? predicate)
@@ -445,25 +460,25 @@ namespace NetExtender.Configuration.Properties
 
         protected override String? Initialize()
         {
-            return !IsAlwaysDefault ? GetValueInternal() : Alternate;
+            return !IsAlwaysDefault ? GetValueCore() : Alternate;
         }
 
-        protected virtual String? GetValueInternal()
+        protected virtual String? GetValueCore()
         {
             return Config.GetValue(Key, Alternate, Sections);
         }
 
-        protected virtual Task<String?> GetValueInternalAsync(CancellationToken token)
+        protected virtual Task<String?> GetValueCoreAsync(CancellationToken token)
         {
             return Config.GetValueAsync(Key, Alternate, Sections, token);
         }
 
-        protected virtual Boolean KeyExistInternal()
+        protected virtual Boolean KeyExistCore()
         {
             return Config.KeyExist(Key, Sections);
         }
 
-        protected virtual Task<Boolean> KeyExistInternalAsync(CancellationToken token)
+        protected virtual Task<Boolean> KeyExistCoreAsync(CancellationToken token)
         {
             return Config.KeyExistAsync(Key, Sections, token);
         }
@@ -505,7 +520,7 @@ namespace NetExtender.Configuration.Properties
 
         public virtual Boolean KeyExist()
         {
-            return KeyExistInternal();
+            return KeyExistCore();
         }
 
         public Task<Boolean> KeyExistAsync()
@@ -515,7 +530,7 @@ namespace NetExtender.Configuration.Properties
 
         public virtual Task<Boolean> KeyExistAsync(CancellationToken token)
         {
-            return KeyExistInternalAsync(token);
+            return KeyExistCoreAsync(token);
         }
 
         public virtual Boolean Read()
@@ -525,7 +540,7 @@ namespace NetExtender.Configuration.Properties
                 return false;
             }
 
-            String? value = GetValueInternal() ?? Alternate;
+            String? value = GetValueCore() ?? Alternate;
 
             if (Internal.IsValueCreated && value == Internal.Value)
             {
@@ -549,7 +564,7 @@ namespace NetExtender.Configuration.Properties
                 return false;
             }
 
-            String? value = await GetValueInternalAsync(token).ConfigureAwait(false) ?? Alternate;
+            String? value = await GetValueCoreAsync(token).ConfigureAwait(false) ?? Alternate;
 
             if (Internal.IsValueCreated && value == Internal.Value)
             {

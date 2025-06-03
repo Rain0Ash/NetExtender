@@ -120,9 +120,9 @@ namespace NetExtender.AspNetCore.Types.Initializers
             return this;
         }
 
-        public void ConfigureServices(IServiceCollection collection)
+        public void ConfigureServices(IServiceCollection services)
         {
-            Collection?.Invoke(collection);
+            Collection?.Invoke(services);
         }
 
         public void Configure(IApplicationBuilder application, IServiceProvider provider)

@@ -23,6 +23,24 @@ namespace NetExtender.Utilities.Types
 {
     public static partial class EnumerableUtilities
     {
+        internal static IEnumerable<TOutput> ConvertAll<T, TOutput>(this IEnumerable<T> source, Converter<T, TOutput> converter)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (converter is null)
+            {
+                throw new ArgumentNullException(nameof(converter));
+            }
+
+            foreach (T item in source)
+            {
+                yield return converter(item);
+            }
+        }
+        
         public static IEnumerable<TTo?> SelectAs<TFrom, TTo>(this IEnumerable<TFrom> source) where TTo : class
         {
             if (source is null)

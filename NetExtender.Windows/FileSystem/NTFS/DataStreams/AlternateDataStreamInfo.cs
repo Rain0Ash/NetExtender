@@ -10,7 +10,7 @@ using NetExtender.Utilities.Types;
 using NetExtender.Utilities.Windows.IO;
 using NetExtender.Windows.IO;
 
-namespace NetExtender.IO.FileSystem.NTFS.DataStreams
+namespace NetExtender.FileSystems.NTFS.DataStreams
 {
     /// <summary>
     /// Represents the details of an alternative data stream.

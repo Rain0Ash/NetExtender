@@ -3,6 +3,7 @@
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
         <Nullable>enable</Nullable>
+        <ImplicitUsings>disable</ImplicitUsings>
         <OutputType>Library</OutputType>
         <LangVersion>10</LangVersion>
         <Authors>Rain0Ash</Authors>
@@ -21,7 +22,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="DynamicData" Version="9.0.4" />
+        <PackageReference Include="DynamicData" Version="9.3.1" />
     </ItemGroup>
 
     <ItemGroup>

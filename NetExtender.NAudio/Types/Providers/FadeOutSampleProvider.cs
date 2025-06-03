@@ -19,8 +19,7 @@ namespace NetExtender.NAudio.Types.Providers
 
         private const Boolean Silence = false;
 
-        private Object SyncRoot { get; } = ConcurrentUtilities.SyncRoot;
-        
+        private SyncRoot SyncRoot { get; } = SyncRoot.Create();
         private ISampleProvider Provider { get; }
         private Int32 FadePosition { get; set; }
         private Int32 FadeCount { get; set; }

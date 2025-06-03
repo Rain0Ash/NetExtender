@@ -9,8 +9,7 @@ using BounceBigInteger = Org.BouncyCastle.Math.BigInteger;
 
 namespace NetExtender.BouncyCastle.Types.Numerics
 {
-    public readonly struct BouncyBigIntegerWrapper : IEquatable<BigInteger>, IEquatable<BounceBigInteger>, IEquatable<BouncyBigIntegerWrapper>,
-        IComparable<BigInteger>, IComparable<BounceBigInteger>, IComparable<BouncyBigIntegerWrapper>
+    public readonly struct BouncyBigIntegerWrapper : IEquality<BigInteger>, IEquality<BounceBigInteger>, IEquality<BouncyBigIntegerWrapper>
     {
         public static implicit operator BouncyBigIntegerWrapper(Int64 value)
         {

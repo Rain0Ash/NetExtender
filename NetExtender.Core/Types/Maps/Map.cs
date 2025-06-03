@@ -199,13 +199,18 @@ namespace NetExtender.Types.Maps
             Reversed = new Dictionary<TValue, TKey>(capacity);
         }
 
+        public Map(Int32 capacity, IEqualityComparer<TKey>? comparer)
+        {
+            Base = new Dictionary<TKey, TValue>(capacity, comparer);
+            Reversed = new Dictionary<TValue, TKey>(capacity);
+        }
+
         public Map(Int32 capacity, IEqualityComparer<TKey>? keyComparer, IEqualityComparer<TValue>? valueComparer)
         {
             Base = new Dictionary<TKey, TValue>(capacity, keyComparer);
             Reversed = new Dictionary<TValue, TKey>(capacity, valueComparer);
         }
 
-        [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
         private void AddRangeConstructor(IEnumerable<KeyValuePair<TKey, TValue>> source)
         {
             Int32? capacity = source is IDictionary<TKey, TValue> dictionary ? dictionary.Count : source.CountIfMaterialized();
@@ -226,7 +231,6 @@ namespace NetExtender.Types.Maps
             }
         }
 
-        [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
         private void AddRangeConstructor(IEnumerable<KeyValuePair<TValue, TKey>> source)
         {
             Int32? capacity = source is IDictionary<TValue, TKey> dictionary ? dictionary.Count : source.CountIfMaterialized();

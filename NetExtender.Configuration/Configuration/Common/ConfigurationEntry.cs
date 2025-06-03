@@ -12,7 +12,7 @@ using Newtonsoft.Json;
 namespace NetExtender.Configuration.Common
 {
     [Serializable]
-    public readonly struct ConfigurationEntry : IComparable<ConfigurationEntry>, IEquatable<ConfigurationEntry>
+    public readonly struct ConfigurationEntry : IEquality<ConfigurationEntry>
     {
         public static Boolean operator ==(ConfigurationEntry first, ConfigurationEntry second)
         {

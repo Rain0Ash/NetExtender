@@ -7,7 +7,7 @@ using System.Drawing;
 using System.Windows;
 using System.Windows.Media.Imaging;
 using NetExtender.Utilities.Types;
-using NetExtender.Utilities.Windows;
+using NetExtender.Windows.Utilities;
 
 namespace NetExtender.Utilities.UserInterface
 {
@@ -20,7 +20,7 @@ namespace NetExtender.Utilities.UserInterface
                 throw new ArgumentNullException(nameof(window));
             }
 
-            return ScreenshotUtilities.MakeScreenshot(window.GetHandle());
+            return WindowsScreenshotUtilities.MakeScreenshot(window.GetHandle());
         }
         
         public static Bitmap? MakeScreenshot(this Window window, ScreenshotType type)
@@ -30,7 +30,7 @@ namespace NetExtender.Utilities.UserInterface
                 throw new ArgumentNullException(nameof(window));
             }
 
-            return ScreenshotUtilities.MakeScreenshot(window.GetHandle(), type);
+            return WindowsScreenshotUtilities.MakeScreenshot(window.GetHandle(), type);
         }
         
         public static Boolean TryMakeScreenshot(this Window window, [MaybeNullWhen(false)] out Bitmap screenshot)
@@ -40,7 +40,7 @@ namespace NetExtender.Utilities.UserInterface
                 throw new ArgumentNullException(nameof(window));
             }
 
-            return ScreenshotUtilities.TryMakeScreenshot(window.GetHandle(), out screenshot);
+            return WindowsScreenshotUtilities.TryMakeScreenshot(window.GetHandle(), out screenshot);
         }
         
         public static Boolean TryMakeScreenshot(this Window window, ScreenshotType type, [MaybeNullWhen(false)] out Bitmap screenshot)
@@ -50,7 +50,7 @@ namespace NetExtender.Utilities.UserInterface
                 throw new ArgumentNullException(nameof(window));
             }
 
-            return ScreenshotUtilities.TryMakeScreenshot(window.GetHandle(), type, out screenshot);
+            return WindowsScreenshotUtilities.TryMakeScreenshot(window.GetHandle(), type, out screenshot);
         }
 
         public static Boolean TryMakeScreenshot(this Window window, [MaybeNullWhen(false)] out BitmapSource screenshot)

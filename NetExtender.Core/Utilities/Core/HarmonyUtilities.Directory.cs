@@ -1,8 +1,13 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using NetExtender.Types.Interception.Interfaces;
+using NetExtender.FileSystems;
+using NetExtender.FileSystems.Interfaces;
+using NetExtender.Types.Intercept.Interfaces;
 
 namespace NetExtender.Utilities.Core
 {
@@ -45,19 +50,22 @@ namespace NetExtender.Utilities.Core
             /// <inheritdoc cref="IInterceptDirectoryHandler.CreateDirectory(System.String)" />
             public static DirectoryInfo CreateDirectory(String path)
             {
-                return Interceptor.CreateDirectory(path);
+                IDirectoryInfo info = Interceptor.CreateDirectory(path);
+                return info.Info ?? throw new FileSystemIsNotRealException(info);
             }
 
             /// <inheritdoc cref="IInterceptDirectoryHandler.CreateSymbolicLink(System.String, System.String)" />
             public static FileSystemInfo CreateSymbolicLink(String path, String pathToTarget)
             {
-                return Interceptor.CreateSymbolicLink(path, pathToTarget);
+                IFileSystemInfo info = Interceptor.CreateSymbolicLink(path, pathToTarget);
+                return info.Info ?? throw new FileSystemIsNotRealException(info);
             }
 
             /// <inheritdoc cref="IInterceptDirectoryHandler.ResolveLinkTarget(System.String, System.Boolean)" />
             public static FileSystemInfo? ResolveLinkTarget(String linkPath, Boolean returnFinalTarget)
             {
-                return Interceptor.ResolveLinkTarget(linkPath, returnFinalTarget);
+                IFileSystemInfo? info = Interceptor.ResolveLinkTarget(linkPath, returnFinalTarget);
+                return info is not null ? info.Info ?? throw new FileSystemIsNotRealException(info) : null;
             }
 
             /// <inheritdoc cref="IInterceptDirectoryHandler.Exists(System.String)" />
@@ -69,7 +77,8 @@ namespace NetExtender.Utilities.Core
             /// <inheritdoc cref="IInterceptDirectoryHandler.GetParent(System.String)" />
             public static DirectoryInfo? GetParent(String path)
             {
-                return Interceptor.GetParent(path);
+                IDirectoryInfo? info = Interceptor.GetParent(path);
+                return info is not null ? info.Info ?? throw new FileSystemIsNotRealException(info) : null;
             }
 
             /// <inheritdoc cref="IInterceptDirectoryHandler.GetCreationTime(System.String)" />

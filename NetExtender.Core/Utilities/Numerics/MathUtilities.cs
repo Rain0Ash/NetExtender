@@ -9,7 +9,9 @@ using System.Globalization;
 using System.Linq;
 using System.Numerics;
 using System.Runtime.CompilerServices;
+using System.Runtime.Serialization;
 using NetExtender.Types.Exceptions;
+using NetExtender.Types.Numerics;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Utilities.Numerics
@@ -93,6 +95,7 @@ namespace NetExtender.Utilities.Numerics
 
     public static partial class MathUtilities
     {
+        [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
         public static class Constants
         {
             public static class Single
@@ -103,21 +106,27 @@ namespace NetExtender.Utilities.Numerics
                 public const System.Single Half = 0.5F;
                 public const System.Single One = 1F;
                 
+                public const System.Single Tau = PIx2;
                 public const System.Single PI = MathF.PI;
                 public const System.Single PIx2 = PI * 2;
                 public const System.Single E = MathF.E;
                 public const System.Single Radian = PI / AngleUtilities.Degree.Single.Straight;
                 
                 public const System.Single Sqrt2 = (System.Single) Decimal.Sqrt2;
-                public const System.Single InvertedSqrt2 = (System.Single) Decimal.InvertedSqrt2;
+                public const System.Single ISqrt2 = (System.Single) Decimal.ISqrt2;
                 public const System.Single Sqrt3 = (System.Single) Decimal.Sqrt3;
-                public const System.Single InvertedSqrt3 = (System.Single) Decimal.InvertedSqrt3;
+                public const System.Single ISqrt3 = (System.Single) Decimal.ISqrt3;
                 public const System.Single Sqrt5 = (System.Single) Decimal.Sqrt5;
-                public const System.Single InvertedSqrt5 = (System.Single) Decimal.InvertedSqrt5;
+                public const System.Single ISqrt5 = (System.Single) Decimal.ISqrt5;
                 public const System.Single Sqrt7 = (System.Single) Decimal.Sqrt7;
-                public const System.Single InvertedSqrt7 = (System.Single) Decimal.InvertedSqrt7;
+                public const System.Single ISqrt7 = (System.Single) Decimal.ISqrt7;
                 public const System.Single Sqrt17 = (System.Single) Decimal.Sqrt17;
-                public const System.Single InvertedSqrt17 = (System.Single) Decimal.InvertedSqrt17;
+                public const System.Single ISqrt17 = (System.Single) Decimal.ISqrt17;
+
+                public const System.Single Log2 = (System.Single) Decimal.Log2;
+                public const System.Single ILog2 = (System.Single) Decimal.ILog2;
+                public const System.Single Log3 = (System.Single) Decimal.Log3;
+                public const System.Single ILog3 = (System.Single) Decimal.ILog3;
             }
             
             public static class Double
@@ -128,21 +137,27 @@ namespace NetExtender.Utilities.Numerics
                 public const System.Double Half = 0.5D;
                 public const System.Double One = 1D;
                 
+                public const System.Double Tau = PIx2;
                 public const System.Double PI = Math.PI;
                 public const System.Double PIx2 = PI * 2;
                 public const System.Double E = Math.E;
                 public const System.Double Radian = PI / AngleUtilities.Degree.Double.Straight;
                 
                 public const System.Double Sqrt2 = (System.Double) Decimal.Sqrt2;
-                public const System.Double InvertedSqrt2 = (System.Double) Decimal.InvertedSqrt3;
+                public const System.Double ISqrt2 = (System.Double) Decimal.ISqrt3;
                 public const System.Double Sqrt3 = (System.Double) Decimal.Sqrt3;
-                public const System.Double InvertedSqrt3 = (System.Double) Decimal.InvertedSqrt3;
+                public const System.Double ISqrt3 = (System.Double) Decimal.ISqrt3;
                 public const System.Double Sqrt5 = (System.Double) Decimal.Sqrt5;
-                public const System.Double InvertedSqrt5 = (System.Double) Decimal.InvertedSqrt5;
+                public const System.Double ISqrt5 = (System.Double) Decimal.ISqrt5;
                 public const System.Double Sqrt7 = (System.Double) Decimal.Sqrt7;
-                public const System.Double InvertedSqrt7 = (System.Double) Decimal.InvertedSqrt7;
+                public const System.Double ISqrt7 = (System.Double) Decimal.ISqrt7;
                 public const System.Double Sqrt17 = (System.Double) Decimal.Sqrt17;
-                public const System.Double InvertedSqrt17 = (System.Double) Decimal.InvertedSqrt17;
+                public const System.Double ISqrt17 = (System.Double) Decimal.ISqrt17;
+
+                public const System.Double Log2 = (System.Double) Decimal.Log2;
+                public const System.Double ILog2 = (System.Double) Decimal.ILog2;
+                public const System.Double Log3 = (System.Double) Decimal.Log3;
+                public const System.Double ILog3 = (System.Double) Decimal.ILog3;
             }
             
             public static class Decimal
@@ -159,16 +174,21 @@ namespace NetExtender.Utilities.Numerics
                 public const System.Decimal MaxPlaces = 1.000000000000000000000000000000000M;
 
                 public const System.Decimal Sqrt2 = 1.41421356237309504880168872420969807856967187537694807317667973799073247846210703M;
-                public const System.Decimal InvertedSqrt2 = 1M / Sqrt2;
+                public const System.Decimal ISqrt2 = One / Sqrt2;
                 public const System.Decimal Sqrt3 = 1.73205080756887729352744634150587236694280525381038062805580697945193301690880003M;
-                public const System.Decimal InvertedSqrt3 = 1M / Sqrt3;
+                public const System.Decimal ISqrt3 = One / Sqrt3;
                 public const System.Decimal Sqrt5 = 2.23606797749978969640917366873127623544061835961152572427089724541052092563780489M;
-                public const System.Decimal InvertedSqrt5 = 1M / Sqrt5;
+                public const System.Decimal ISqrt5 = One / Sqrt5;
                 public const System.Decimal Sqrt7 = 2.64575131106459059050161575363926042571025918308245018036833445920106882323028362M;
-                public const System.Decimal InvertedSqrt7 = 1M / Sqrt7;
+                public const System.Decimal ISqrt7 = One / Sqrt7;
                 public const System.Decimal Sqrt17 = 4.12310562561766054982140985597407702514719922537362043439863357309495434633762159M;
-                public const System.Decimal InvertedSqrt17 = 1M / Sqrt17;
+                public const System.Decimal ISqrt17 = One / Sqrt17;
+                public const System.Decimal SqrtMax = 281474976710656M;
+                public const System.Decimal ISqrtMax = One / SqrtMax;
+                public const System.Decimal SqrtRescaleThreshold = System.Decimal.MaxValue / (Sqrt2 + One);
 
+                public const System.Decimal Tau = PIx2;
+                
                 /// <summary>
                 /// Represents PI
                 /// </summary>
@@ -205,14 +225,22 @@ namespace NetExtender.Utilities.Numerics
                 public const System.Decimal Radian = PI / AngleUtilities.Degree.Decimal.Straight;
 
                 /// <summary>
-                /// Represents log(2,E) factor
-                /// </summary>
-                public const System.Decimal InvertedLog2 = 1.442695040888963407359924681001892137426645954152985934135M;
-
-                /// <summary>
                 /// Represents log(10,E) factor
                 /// </summary>
-                public const System.Decimal InvertedLog10 = 0.434294481903251827651128918916605082294397005803666566114M;
+                public const System.Decimal ILog10 = 0.434294481903251827651128918916605082294397005803666566114M;
+
+                public const System.Decimal Log2 = 0.693147180559945309417232121458176568075500134360255254121M;
+
+                /// <summary>
+                /// Represents log(2,E) factor
+                /// </summary>
+                public const System.Decimal ILog2 = 1.442695040888963407359924681001892137426645954152985934135M;
+
+                public const System.Decimal Log3 = 1.098612288668109691395245236922525704647490557822749451735M;
+                public const System.Decimal ILog3 = One / Log3;
+                public const System.Decimal LogMax = 66.542129333754749704054283659972328760764476709697916738541M;
+
+                public const System.Decimal AsinOverflowThreshold = SqrtMax / 2M;
             }
         }
 
@@ -313,9 +341,27 @@ namespace NetExtender.Utilities.Numerics
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Single AsNaN(this MathResult<Single> value, Single alternate)
+        {
+            return value.IsNaN ? value : alternate;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double AsNaN(this Double value, Double alternate)
         {
             return Double.IsNaN(value) ? value : alternate;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Double AsNaN(this MathResult<Double> value, Double alternate)
+        {
+            return value.IsNaN ? value : alternate;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Decimal AsNaN(this MathResult<Decimal> value, Decimal alternate)
+        {
+            return value.IsNaN ? value : alternate;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -325,9 +371,27 @@ namespace NetExtender.Utilities.Numerics
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Single AsInfinity(this MathResult<Single> value, Single alternate)
+        {
+            return value.IsInfinity ? value : alternate;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double AsInfinity(this Double value, Double alternate)
         {
             return Double.IsInfinity(value) ? value : alternate;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Double AsInfinity(this MathResult<Double> value, Double alternate)
+        {
+            return value.IsInfinity ? value : alternate;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Decimal AsInfinity(this MathResult<Decimal> value, Decimal alternate)
+        {
+            return value.IsInfinity ? value : alternate;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -337,9 +401,27 @@ namespace NetExtender.Utilities.Numerics
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Single AsPositiveInfinity(this MathResult<Single> value, Single alternate)
+        {
+            return value.IsPositiveInfinity ? value : alternate;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double AsPositiveInfinity(this Double value, Double alternate)
         {
             return Double.IsPositiveInfinity(value) ? value : alternate;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Double AsPositiveInfinity(this MathResult<Double> value, Double alternate)
+        {
+            return value.IsPositiveInfinity ? value : alternate;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Decimal AsPositiveInfinity(this MathResult<Decimal> value, Decimal alternate)
+        {
+            return value.IsPositiveInfinity ? value : alternate;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -349,9 +431,27 @@ namespace NetExtender.Utilities.Numerics
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Single AsNegativeInfinity(this MathResult<Single> value, Single alternate)
+        {
+            return value.IsNegativeInfinity ? value : alternate;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double AsNegativeInfinity(this Double value, Double alternate)
         {
             return Double.IsNegativeInfinity(value) ? value : alternate;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Double AsNegativeInfinity(this MathResult<Double> value, Double alternate)
+        {
+            return value.IsNegativeInfinity ? value : alternate;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Decimal AsNegativeInfinity(this MathResult<Decimal> value, Decimal alternate)
+        {
+            return value.IsNegativeInfinity ? value : alternate;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -396,6 +496,34 @@ namespace NetExtender.Utilities.Numerics
             return (Single) value;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static Boolean Equal(this Single value, Single other)
+        {
+            return Equals(value, other);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        public static Boolean Equals(Single value, Single other)
+        {
+            if (Single.IsNaN(value) || Single.IsNaN(other))
+            {
+                return false;
+            }
+
+            if (Single.IsPositiveInfinity(value) && Single.IsPositiveInfinity(other) || Single.IsNegativeInfinity(value) && Single.IsNegativeInfinity(other))
+            {
+                return true;
+            }
+
+            return Math.Abs(value - other) < Constants.Single.Epsilon;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static Boolean Equal(this Single value, Single other, Single epsilon)
+        {
+            return Equals(value, other, epsilon);
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static Boolean Equals(this Single value, Single other, Single epsilon)
         {
@@ -410,6 +538,34 @@ namespace NetExtender.Utilities.Numerics
             }
 
             return Math.Abs(value - other) < epsilon;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static Boolean Equal(this Double value, Double other)
+        {
+            return Equals(value, other);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        public static Boolean Equals(Double value, Double other)
+        {
+            if (Double.IsNaN(value) || Double.IsNaN(other))
+            {
+                return false;
+            }
+
+            if (Double.IsPositiveInfinity(value) && Double.IsPositiveInfinity(other) || Double.IsNegativeInfinity(value) && Double.IsNegativeInfinity(other))
+            {
+                return true;
+            }
+
+            return Math.Abs(value - other) < Constants.Double.Epsilon;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static Boolean Equal(this Double value, Double other, Double epsilon)
+        {
+            return Equals(value, other, epsilon);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
@@ -428,10 +584,140 @@ namespace NetExtender.Utilities.Numerics
             return Math.Abs(value - other) < epsilon;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static Boolean Equal(Decimal value, Decimal other)
+        {
+            return Equals(value, other);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        public static Boolean Equals(Decimal value, Decimal other)
+        {
+            return Math.Abs(value - other) < Constants.Decimal.Epsilon;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static Boolean Equal(this Decimal value, Decimal other, Decimal epsilon)
+        {
+            return Equals(value, other, epsilon);
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static Boolean Equals(this Decimal value, Decimal other, Decimal epsilon)
         {
             return Math.Abs(value - other) < epsilon;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static Boolean NotEqual(this Single value, Single other)
+        {
+            return NotEquals(value, other);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        public static Boolean NotEquals(Single value, Single other)
+        {
+            if (Single.IsNaN(value) || Single.IsNaN(other))
+            {
+                return true;
+            }
+
+            if (Single.IsPositiveInfinity(value) && Single.IsPositiveInfinity(other) || Single.IsNegativeInfinity(value) && Single.IsNegativeInfinity(other))
+            {
+                return false;
+            }
+
+            return Math.Abs(value - other) >= Constants.Single.Epsilon;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static Boolean NotEqual(this Single value, Single other, Single epsilon)
+        {
+            return NotEquals(value, other, epsilon);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        public static Boolean NotEquals(this Single value, Single other, Single epsilon)
+        {
+            if (Single.IsNaN(value) || Single.IsNaN(other))
+            {
+                return true;
+            }
+
+            if (Single.IsPositiveInfinity(value) && Single.IsPositiveInfinity(other) || Single.IsNegativeInfinity(value) && Single.IsNegativeInfinity(other))
+            {
+                return false;
+            }
+
+            return Math.Abs(value - other) >= epsilon;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static Boolean NotEqual(this Double value, Double other)
+        {
+            return NotEquals(value, other);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        public static Boolean NotEquals(Double value, Double other)
+        {
+            if (Double.IsNaN(value) || Double.IsNaN(other))
+            {
+                return true;
+            }
+
+            if (Double.IsPositiveInfinity(value) && Double.IsPositiveInfinity(other) || Double.IsNegativeInfinity(value) && Double.IsNegativeInfinity(other))
+            {
+                return false;
+            }
+
+            return Math.Abs(value - other) >= Constants.Double.Epsilon;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static Boolean NotEqual(this Double value, Double other, Double epsilon)
+        {
+            return NotEquals(value, other, epsilon);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        public static Boolean NotEquals(this Double value, Double other, Double epsilon)
+        {
+            if (Double.IsNaN(value) || Double.IsNaN(other))
+            {
+                return true;
+            }
+
+            if (Double.IsPositiveInfinity(value) && Double.IsPositiveInfinity(other) || Double.IsNegativeInfinity(value) && Double.IsNegativeInfinity(other))
+            {
+                return false;
+            }
+
+            return Math.Abs(value - other) >= epsilon;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static Boolean NotEqual(this Decimal value, Decimal other)
+        {
+            return NotEquals(value, other);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        public static Boolean NotEquals(Decimal value, Decimal other)
+        {
+            return Math.Abs(value - other) >= Constants.Decimal.Epsilon;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static Boolean NotEqual(this Decimal value, Decimal other, Decimal epsilon)
+        {
+            return NotEquals(value, other, epsilon);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        public static Boolean NotEquals(this Decimal value, Decimal other, Decimal epsilon)
+        {
+            return Math.Abs(value - other) >= epsilon;
         }
 
         /// <summary>
@@ -561,6 +847,24 @@ namespace NetExtender.Utilities.Numerics
             return Math.Floor(value);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Single FloorDivision(this Single first, Single second)
+        {
+            return Floor(first / second);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Double FloorDivision(this Double first, Double second)
+        {
+            return Floor(first / second);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Decimal FloorDivision(this Decimal first, Decimal second)
+        {
+            return Floor(first / second);
+        }
+
         /// <inheritdoc cref="MathF.Ceiling(Single)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Single Ceiling(this Single value)
@@ -582,6 +886,24 @@ namespace NetExtender.Utilities.Numerics
             return Math.Ceiling(value);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Single CeilingDivision(this Single first, Single second)
+        {
+            return -FloorDivision(first, -second);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Double CeilingDivision(this Double first, Double second)
+        {
+            return -FloorDivision(first, -second);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Decimal CeilingDivision(this Decimal first, Decimal second)
+        {
+            return -FloorDivision(first, -second);
+        }
+
         /// <inheritdoc cref="MathF.Truncate(Single)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Single Truncate(this Single value)
@@ -596,11 +918,29 @@ namespace NetExtender.Utilities.Numerics
             return Math.Truncate(value);
         }
 
-        /// <inheritdoc cref="Math.Ceiling(Decimal)"/>
+        /// <inheritdoc cref="Math.Truncate(Decimal)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Decimal Truncate(this Decimal value)
         {
             return Math.Truncate(value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Single TruncateDivision(this Single first, Single second)
+        {
+            return Truncate(first / second);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Double TruncateDivision(this Double first, Double second)
+        {
+            return Truncate(first / second);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Decimal TruncateDivision(this Decimal first, Decimal second)
+        {
+            return Truncate(first / second);
         }
 
         /// <inheritdoc cref="MathF.Exp"/>
@@ -766,8 +1106,7 @@ namespace NetExtender.Utilities.Numerics
                 return Exp(pow * Log(value));
             }
 
-            Int32 powerInt = (Int32) pow;
-            if (powerInt % 2 == 0)
+            if ((Int32) pow % 2 == 0)
             {
                 return Exp(pow * Log(-value));
             }
@@ -1018,6 +1357,96 @@ namespace NetExtender.Utilities.Numerics
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        public static Decimal Pow8M(Int32 value)
+        {
+            return value switch
+            {
+                -31 => 0.0000000000000000000000000001M,
+                -30 => 0.0000000000000000000000000008M,
+                -29 => 0.0000000000000000000000000065M,
+                -28 => 0.0000000000000000000000000517M,
+                -27 => 0.0000000000000000000000004136M,
+                -26 => 0.0000000000000000000000033087M,
+                -25 => 0.0000000000000000000000264698M,
+                -24 => 0.0000000000000000000002117582M,
+                -23 => 0.0000000000000000000016940659M,
+                -22 => 0.0000000000000000000135525272M,
+                -21 => 0.0000000000000000001084202172M,
+                -20 => 0.000000000000000000867361738M,
+                -19 => 0.0000000000000000069388939039M,
+                -18 => 0.0000000000000000555111512313M,
+                -17 => 0.0000000000000004440892098501M,
+                -16 => 0.0000000000000035527136788005M,
+                -15 => 0.000000000000028421709430404M,
+                -14 => 0.0000000000002273736754432321M,
+                -13 => 0.0000000000018189894035458565M,
+                -12 => 0.0000000000145519152283668518M,
+                -11 => 0.0000000001164153218269348144M,
+                -10 => 0.0000000009313225746154785156M,
+                -9 => 0.000000007450580596923828125M,
+                -8 => 0.000000059604644775390625M,
+                -7 => 0.000000476837158203125M,
+                -6 => 0.000003814697265625M,
+                -5 => 0.000030517578125M,
+                -4 => 0.000244140625M,
+                -3 => 0.001953125M,
+                -2 => 0.015625M,
+                -1 => 0.125M,
+                0 => 1M,
+                1 => 8M,
+                2 => 64M,
+                3 => 512M,
+                4 => 4096M,
+                5 => 32768M,
+                6 => 262144M,
+                7 => 2097152M,
+                8 => 16777216M,
+                9 => 134217728M,
+                10 => 1073741824M,
+                11 => 8589934592M,
+                12 => 68719476736M,
+                13 => 549755813888M,
+                14 => 4398046511104M,
+                15 => 35184372088832M,
+                16 => 281474976710656M,
+                17 => 2251799813685248M,
+                18 => 18014398509481984M,
+                19 => 144115188075855872M,
+                20 => 1152921504606846976M,
+                21 => 9223372036854775808M,
+                22 => 73786976294838206464M,
+                23 => 590295810358705651712M,
+                24 => 4722366482869645213696M,
+                25 => 37778931862957161709568M,
+                26 => 302231454903657293676544M,
+                27 => 2417851639229258349412352M,
+                28 => 19342813113834066795298816M,
+                29 => 154742504910672534362390528M,
+                30 => 1237940039285380274899124224M,
+                31 => 9903520314283042199192993792M,
+                _ => value < 0 ? 0 : throw new OverflowException()
+            };
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        public static Decimal Pow8M(UInt32 value)
+        {
+            return value <= Int32.MaxValue ? Pow8M((Int32) value) : throw new OverflowException();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        public static Decimal Pow8M(Int64 value)
+        {
+            return value < Int32.MinValue ? 0 : value <= Int32.MaxValue ? Pow8M((Int32) value) : throw new OverflowException();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        public static Decimal Pow8M(UInt64 value)
+        {
+            return value <= Int32.MaxValue ? Pow8M((Int32) value) : throw new OverflowException();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static Int32 Pow10(Int32 value)
         {
             return value switch
@@ -1243,6 +1672,90 @@ namespace NetExtender.Utilities.Numerics
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        public static Decimal Pow10M(Int32 value)
+        {
+            return value switch
+            {
+                -28 => 0.0000000000000000000000000001M,
+                -27 => 0.000000000000000000000000001M,
+                -26 => 0.00000000000000000000000001M,
+                -25 => 0.0000000000000000000000001M,
+                -24 => 0.000000000000000000000001M,
+                -23 => 0.00000000000000000000001M,
+                -22 => 0.0000000000000000000001M,
+                -21 => 0.000000000000000000001M,
+                -20 => 0.00000000000000000001M,
+                -19 => 0.0000000000000000001M,
+                -18 => 0.000000000000000001M,
+                -17 => 0.00000000000000001M,
+                -16 => 0.0000000000000001M,
+                -15 => 0.000000000000001M,
+                -14 => 0.00000000000001M,
+                -13 => 0.0000000000001M,
+                -12 => 0.000000000001M,
+                -11 => 0.00000000001M,
+                -10 => 0.0000000001M,
+                -9 => 0.000000001M,
+                -8 => 0.00000001M,
+                -7 => 0.0000001M,
+                -6 => 0.000001M,
+                -5 => 0.00001M,
+                -4 => 0.0001M,
+                -3 => 0.001M,
+                -2 => 0.01M,
+                -1 => 0.1M,
+                0 => 1M,
+                1 => 10M,
+                2 => 100M,
+                3 => 1000M,
+                4 => 10000M,
+                5 => 100000M,
+                6 => 1000000M,
+                7 => 10000000M,
+                8 => 100000000M,
+                9 => 1000000000M,
+                10 => 10000000000M,
+                11 => 100000000000M,
+                12 => 1000000000000M,
+                13 => 10000000000000M,
+                14 => 100000000000000M,
+                15 => 1000000000000000M,
+                16 => 10000000000000000M,
+                17 => 100000000000000000M,
+                18 => 1000000000000000000M,
+                19 => 10000000000000000000M,
+                20 => 100000000000000000000M,
+                21 => 1000000000000000000000M,
+                22 => 10000000000000000000000M,
+                23 => 100000000000000000000000M,
+                24 => 1000000000000000000000000M,
+                25 => 10000000000000000000000000M,
+                26 => 100000000000000000000000000M,
+                27 => 1000000000000000000000000000M,
+                28 => 10000000000000000000000000000M,
+                _ => value < 0 ? 0 : throw new OverflowException()
+            };
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        public static Decimal Pow10M(UInt32 value)
+        {
+            return value <= Int32.MaxValue ? Pow10M((Int32) value) : throw new OverflowException();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        public static Decimal Pow10M(Int64 value)
+        {
+            return value < Int32.MinValue ? 0 : value <= Int32.MaxValue ? Pow10M((Int32) value) : throw new OverflowException();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        public static Decimal Pow10M(UInt64 value)
+        {
+            return value <= Int32.MaxValue ? Pow10M((Int32) value) : throw new OverflowException();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static Int32 Pow16(Int32 value)
         {
             return value switch
@@ -1443,7 +1956,398 @@ namespace NetExtender.Utilities.Numerics
             };
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        public static Decimal Pow16M(Int32 value)
+        {
+            return value switch
+            {
+                -23 => 0.0000000000000000000000000002M,
+                -22 => 0.0000000000000000000000000032M,
+                -21 => 0.0000000000000000000000000517M,
+                -20 => 0.0000000000000000000000008272M,
+                -19 => 0.0000000000000000000000132349M,
+                -18 => 0.0000000000000000000002117582M,
+                -17 => 0.0000000000000000000033881318M,
+                -16 => 0.0000000000000000000542101086M,
+                -15 => 0.000000000000000000867361738M,
+                -14 => 0.0000000000000000138777878078M,
+                -13 => 0.000000000000000222044604925M,
+                -12 => 0.0000000000000035527136788005M,
+                -11 => 0.000000000000056843418860808M,
+                -10 => 0.0000000000009094947017729282M,
+                -9 => 0.0000000000145519152283668518M,
+                -8 => 0.0000000002328306436538696289M,
+                -7 => 0.0000000037252902984619140625M,
+                -6 => 0.000000059604644775390625M,
+                -5 => 0.00000095367431640625M,
+                -4 => 0.0000152587890625M,
+                -3 => 0.000244140625M,
+                -2 => 0.00390625M,
+                -1 => 0.0625M,
+                0 => 1M,
+                1 => 16M,
+                2 => 256M,
+                3 => 4096M,
+                4 => 65536M,
+                5 => 1048576M,
+                6 => 16777216M,
+                7 => 268435456M,
+                8 => 4294967296M,
+                9 => 68719476736M,
+                10 => 1099511627776M,
+                11 => 17592186044416M,
+                12 => 281474976710656M,
+                13 => 4503599627370496M,
+                14 => 72057594037927936M,
+                15 => 1152921504606846976M,
+                16 => 18446744073709551616M,
+                17 => 295147905179352825856M,
+                18 => 4722366482869645213696M,
+                19 => 75557863725914323419136M,
+                20 => 1208925819614629174706176M,
+                21 => 19342813113834066795298816M,
+                22 => 309485009821345068724781056M,
+                23 => 4951760157141521099596496896M,
+                _ => value < 0 ? 0 : throw new OverflowException()
+            };
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        public static Decimal Pow16M(UInt32 value)
+        {
+            return value <= Int32.MaxValue ? Pow16M((Int32) value) : throw new OverflowException();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        public static Decimal Pow16M(Int64 value)
+        {
+            return value < Int32.MinValue ? 0 : value <= Int32.MaxValue ? Pow16M((Int32) value) : throw new OverflowException();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        public static Decimal Pow16M(UInt64 value)
+        {
+            return value <= Int32.MaxValue ? Pow16M((Int32) value) : throw new OverflowException();
+        }
+
         #endregion
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Single Root(this Single value)
+        {
+            if (Single.IsNaN(value) || Single.IsInfinity(value))
+            {
+                return value;
+            }
+
+            if (MathF.Abs(value) - 1 < Single.Epsilon)
+            {
+                return MathF.CopySign(1, value);
+            }
+
+            if (value >= 0)
+            {
+                return value < Single.Epsilon ? 0 : MathF.Sqrt(value);
+            }
+
+            value = MathF.Abs(value);
+            return value < Single.Epsilon ? 0 : -MathF.Sqrt(value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Single CubicRoot(this Single value)
+        {
+            if (Single.IsNaN(value) || Single.IsInfinity(value))
+            {
+                return value;
+            }
+
+            if (MathF.Abs(value) - 1 < Single.Epsilon)
+            {
+                return MathF.CopySign(1, value);
+            }
+
+            return MathF.Abs(value) < Single.Epsilon ? 0 : MathF.Cbrt(value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Single FourthRoot(this Single value)
+        {
+            if (Single.IsNaN(value) || Single.IsInfinity(value))
+            {
+                return value;
+            }
+
+            if (MathF.Abs(value) - 1 < Single.Epsilon)
+            {
+                return MathF.CopySign(1, value);
+            }
+
+            if (value >= 0)
+            {
+                return value < Single.Epsilon ? 0 : MathF.Pow(value, 0.25F);
+            }
+
+            value = MathF.Abs(value);
+            return value < Single.Epsilon ? 0 : -MathF.Pow(value, 0.25F);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        [SuppressMessage("ReSharper", "CognitiveComplexity")]
+        public static Single Root(this Single value, Single @base)
+        {
+            if (Single.IsNaN(@base) || Single.IsInfinity(@base) || @base <= 0)
+            {
+                return Single.NaN;
+            }
+
+            if (Single.IsNaN(value) || Single.IsInfinity(value) || MathF.Abs(@base) - 1 < Single.Epsilon)
+            {
+                return value;
+            }
+
+            if (MathF.Abs(value) - 1 < Single.Epsilon)
+            {
+                return MathF.CopySign(1, value);
+            }
+
+            if (value >= 0)
+            {
+                if (value < Single.Epsilon)
+                {
+                    return 0;
+                }
+
+                if (MathF.Abs(@base) - 2 < Single.Epsilon)
+                {
+                    return MathF.Sqrt(value);
+                }
+
+                if (MathF.Abs(@base) - 3 < Single.Epsilon)
+                {
+                    return MathF.Cbrt(value);
+                }
+                
+                return MathF.Pow(value, 1 / @base);
+            }
+
+            value = MathF.Abs(value);
+            
+            if (value < Single.Epsilon)
+            {
+                return 0;
+            }
+
+            if (MathF.Abs(@base) - 2 < Single.Epsilon)
+            {
+                return -MathF.Sqrt(value);
+            }
+
+            if (MathF.Abs(@base) - 3 < Single.Epsilon)
+            {
+                return -MathF.Cbrt(value);
+            }
+
+            return -MathF.Pow(value, 1 / @base);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Double Root(this Double value)
+        {
+            if (Double.IsNaN(value) || Double.IsInfinity(value))
+            {
+                return value;
+            }
+
+            if (Math.Abs(value) - 1 < Double.Epsilon)
+            {
+                return Math.CopySign(1, value);
+            }
+
+            if (value >= 0)
+            {
+                return value < Double.Epsilon ? 0 : Math.Sqrt(value);
+            }
+
+            value = Math.Abs(value);
+            return value < Double.Epsilon ? 0 : -Math.Sqrt(value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Double CubicRoot(this Double value)
+        {
+            if (Double.IsNaN(value) || Double.IsInfinity(value))
+            {
+                return value;
+            }
+
+            if (Math.Abs(value) - 1 < Double.Epsilon)
+            {
+                return Math.CopySign(1, value);
+            }
+
+            return Math.Abs(value) < Double.Epsilon ? 0 : Math.Cbrt(value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Double FourthRoot(this Double value)
+        {
+            if (Double.IsNaN(value) || Double.IsInfinity(value))
+            {
+                return value;
+            }
+
+            if (Math.Abs(value) - 1 < Double.Epsilon)
+            {
+                return Math.CopySign(1, value);
+            }
+
+            if (value >= 0)
+            {
+                return value < Double.Epsilon ? 0 : Math.Pow(value, 0.25F);
+            }
+
+            value = Math.Abs(value);
+            return value < Double.Epsilon ? 0 : -Math.Pow(value, 0.25F);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        [SuppressMessage("ReSharper", "CognitiveComplexity")]
+        public static Double Root(this Double value, Double @base)
+        {
+            if (Double.IsNaN(@base) || Double.IsInfinity(@base) || @base <= 0)
+            {
+                return Double.NaN;
+            }
+
+            if (Double.IsNaN(value) || Double.IsInfinity(value) || Math.Abs(@base) - 1 < Double.Epsilon)
+            {
+                return value;
+            }
+
+            if (Math.Abs(value) - 1 < Double.Epsilon)
+            {
+                return Math.CopySign(1, value);
+            }
+
+            if (value >= 0)
+            {
+                if (value < Double.Epsilon)
+                {
+                    return 0;
+                }
+
+                if (Math.Abs(@base) - 2 < Double.Epsilon)
+                {
+                    return Math.Sqrt(value);
+                }
+
+                if (Math.Abs(@base) - 3 < Double.Epsilon)
+                {
+                    return Math.Cbrt(value);
+                }
+                
+                return Math.Pow(value, 1 / @base);
+            }
+
+            value = Math.Abs(value);
+            
+            if (value < Double.Epsilon)
+            {
+                return 0;
+            }
+
+            if (Math.Abs(@base) - 2 < Double.Epsilon)
+            {
+                return -Math.Sqrt(value);
+            }
+
+            if (Math.Abs(@base) - 3 < Double.Epsilon)
+            {
+                return -Math.Cbrt(value);
+            }
+
+            return -Math.Pow(value, 1 / @base);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Decimal Root(this Decimal value)
+        {
+            switch (value)
+            {
+                case Decimal.Zero or Decimal.One or Decimal.MinusOne:
+                    return value;
+                case >= Decimal.Zero:
+                    return value < Constants.Decimal.Epsilon ? Decimal.Zero : Sqrt(value);
+                default:
+                    value = Math.Abs(value);
+                    return value < Constants.Decimal.Epsilon ? Decimal.Zero : -Sqrt(value);
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Decimal CubicRoot(this Decimal value)
+        {
+            switch (value)
+            {
+                case Decimal.Zero or Decimal.One or Decimal.MinusOne:
+                    return value;
+                case >= Decimal.Zero:
+                    return value < Constants.Decimal.Epsilon ? Decimal.Zero : Pow(value, 1M / 3M);
+                default:
+                    value = Math.Abs(value);
+                    return value < Constants.Decimal.Epsilon ? Decimal.Zero : -Pow(value, 1M / 3M);
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Decimal FourthRoot(this Decimal value)
+        {
+            switch (value)
+            {
+                case Decimal.Zero or Decimal.One or Decimal.MinusOne:
+                    return value;
+                case >= Decimal.Zero:
+                    return value < Constants.Decimal.Epsilon ? Decimal.Zero : Pow(value, 0.25M);
+                default:
+                    value = Math.Abs(value);
+                    return value < Constants.Decimal.Epsilon ? Decimal.Zero : -Pow(value, 0.25M);
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Decimal Root(this Decimal value, Decimal @base)
+        {
+            if (@base <= Decimal.Zero)
+            {
+                throw new ArgumentOutOfRangeException(nameof(@base), @base, "Root base must be greater than zero.");
+            }
+
+            if (value >= Decimal.Zero)
+            {
+                if (value - Decimal.One < Constants.Decimal.Epsilon)
+                {
+                    return Decimal.One;
+                }
+                
+                return value < Constants.Decimal.Epsilon ? Decimal.Zero : Pow(value, Decimal.One / @base);
+            }
+
+            value = Math.Abs(value);
+            
+            if (value - Decimal.One < Constants.Decimal.Epsilon)
+            {
+                return -Decimal.One;
+            }
+            
+            return value < Constants.Decimal.Epsilon ? Decimal.Zero : -Pow(value, Decimal.One / @base);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Decimal? SafeRoot(this Decimal value, Decimal @base)
+        {
+            return @base > Decimal.Zero ? Root(value, @base) : null;
+        }
 
         /// <inheritdoc cref="MathF.Log(Single)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1489,7 +2393,7 @@ namespace NetExtender.Utilities.Numerics
         {
             if (value <= Decimal.Zero)
             {
-                throw new ArgumentException("x must be greater than zero");
+                throw new ArgumentOutOfRangeException(nameof(value), value, "Value must be greater than zero.");
             }
 
             Int32 count = 0;
@@ -1559,7 +2463,7 @@ namespace NetExtender.Utilities.Numerics
         /// <returns></returns>
         public static Decimal Log2(this Decimal value)
         {
-            return Log(value) * Constants.Decimal.InvertedLog2;
+            return Log(value) * Constants.Decimal.ILog2;
         }
 
         /// <inheritdoc cref="Math.Log10"/>
@@ -1584,7 +2488,7 @@ namespace NetExtender.Utilities.Numerics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Decimal Log10(this Decimal value)
         {
-            return Log(value) * Constants.Decimal.InvertedLog10;
+            return Log(value) * Constants.Decimal.ILog10;
         }
 
         #region DigitsCount
@@ -3484,7 +4388,7 @@ namespace NetExtender.Utilities.Numerics
 
             if (cos == Decimal.Zero)
             {
-                throw new ArgumentException(nameof(value));
+                throw new ArgumentException(null, nameof(value));
             }
 
             return SinFromCos(value, cos) / cos;
@@ -3550,7 +4454,7 @@ namespace NetExtender.Utilities.Numerics
 
             if (sin == Decimal.Zero)
             {
-                throw new ArgumentException(nameof(value));
+                throw new ArgumentException(null, nameof(value));
             }
 
             return cos / sin;
@@ -3801,43 +4705,99 @@ namespace NetExtender.Utilities.Numerics
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Single GetDigitsAfterPoint(this Single value)
+        public static Boolean HasDigitsAfterPoint(this Single value)
+        {
+            return DigitsAfterPoint(value) != 0;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean HasDigitsAfterPoint(this Double value)
+        {
+            return DigitsAfterPoint(value) != 0;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean HasDigitsAfterPoint(this Decimal value)
+        {
+            return DigitsAfterPoint(value) != 0;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Single DigitsAfterPoint(this Single value)
         {
             return value % 1;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Double GetDigitsAfterPoint(this Double value)
+        public static Double DigitsAfterPoint(this Double value)
         {
             return value % 1;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Decimal GetDigitsAfterPoint(this Decimal value)
+        public static Decimal DigitsAfterPoint(this Decimal value)
         {
             return value % 1;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Int32 GetDigitsCountAfterPoint(this Single value)
+        public static Int32 CountDigitsAfterPoint(this Single value)
         {
-            String[] splitted = value.ToString(CultureInfo.InvariantCulture).Split('.');
-
-            return splitted.Length <= 1 ? 0 : splitted[1].Length;
+            String[] split = value.ToString(CultureInfo.InvariantCulture).Split('.');
+            return split.Length <= 1 ? 0 : split[1].Length;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Int32 GetDigitsCountAfterPoint(this Double value)
+        public static Int32 CountDigitsAfterPoint(this Double value)
         {
-            String[] splitted = value.ToString(CultureInfo.InvariantCulture).Split('.');
-
-            return splitted.Length <= 1 ? 0 : splitted[1].Length;
+            String[] split = value.ToString(CultureInfo.InvariantCulture).Split('.');
+            return split.Length <= 1 ? 0 : split[1].Length;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Int32 GetDigitsCountAfterPoint(this Decimal value)
+        public static unsafe Int32 CountDigitsAfterPoint(this Decimal value)
         {
-            return BitConverter.GetBytes(Decimal.GetBits(value)[3])[2];
+            Span<Int32> bits = stackalloc Int32[4];
+            Decimal.GetBits(value, bits);
+
+            Int32 result = bits[3];
+            return new ReadOnlySpan<Byte>(&result, sizeof(Int32))[2];
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Single ThrowIfDigitsAfterPoint(this Single value)
+        {
+            return !HasDigitsAfterPoint(value) ? value : throw new ValueHasDigitsAfterPointException<Single> { Value = value };
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Double ThrowIfDigitsAfterPoint(this Double value)
+        {
+            return !HasDigitsAfterPoint(value) ? value : throw new ValueHasDigitsAfterPointException<Double> { Value = value };
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Decimal ThrowIfDigitsAfterPoint(this Decimal value)
+        {
+            return !HasDigitsAfterPoint(value) ? value : throw new ValueHasDigitsAfterPointException<Decimal> { Value = value };
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Single ThrowIfDigitsAfterPoint<TException>(this Single value) where TException : Exception, new()
+        {
+            return !HasDigitsAfterPoint(value) ? value : throw new TException { Data = { { "Value", value } }};
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Double ThrowIfDigitsAfterPoint<TException>(this Double value) where TException : Exception, new()
+        {
+            return !HasDigitsAfterPoint(value) ? value : throw new TException { Data = { { "Value", value } }};
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Decimal ThrowIfDigitsAfterPoint<TException>(this Decimal value) where TException : Exception, new()
+        {
+            return !HasDigitsAfterPoint(value) ? value : throw new TException { Data = { { "Value", value } } };
         }
 
         private static class Factorials
@@ -4094,6 +5054,48 @@ namespace NetExtender.Utilities.Numerics
         public static Decimal DecimalFactorial(this UInt64 value)
         {
             return value switch
+            {
+                0 => 1M,
+                1 => 1M,
+                2 => 2M,
+                3 => 6M,
+                4 => 24M,
+                5 => 120M,
+                6 => 720M,
+                7 => 5040M,
+                8 => 40320M,
+                9 => 362880M,
+                10 => 3628800M,
+                11 => 39916800M,
+                12 => 479001600M,
+                13 => 6227020800M,
+                14 => 87178291200M,
+                15 => 1307674368000M,
+                16 => 20922789888000M,
+                17 => 355687428096000M,
+                18 => 6402373705728000M,
+                19 => 121645100408832000M,
+                20 => 2432902008176640000M,
+                21 => 51090942171709440000M,
+                22 => 1124000727777607680000M,
+                23 => 25852016738884976640000M,
+                24 => 620448401733239439360000M,
+                25 => 15511210043330985984000000M,
+                26 => 403291461126605635584000000M,
+                27 => 10888869450418352160768000000M,
+                _ => throw new OverflowException()
+            };
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Decimal Factorial(this Decimal value)
+        {
+            if (value < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(value), value, null);
+            }
+            
+            return value.ThrowIfDigitsAfterPoint() switch
             {
                 0 => 1M,
                 1 => 1M,
@@ -4539,7 +5541,7 @@ namespace NetExtender.Utilities.Numerics
         {
             const Single plus = (1 + Constants.Single.Sqrt5) / 2;
             const Single minus = (1 - Constants.Single.Sqrt5) / 2;
-            return Constants.Single.InvertedSqrt5 * (Pow(plus, value) - Pow(minus, value));
+            return Constants.Single.ISqrt5 * (Pow(plus, value) - Pow(minus, value));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
@@ -4547,7 +5549,7 @@ namespace NetExtender.Utilities.Numerics
         {
             const Double plus = (1 + Constants.Double.Sqrt5) / 2;
             const Double minus = (1 - Constants.Double.Sqrt5) / 2;
-            return Constants.Double.InvertedSqrt5 * (Pow(plus, value) - Pow(minus, value));
+            return Constants.Double.ISqrt5 * (Pow(plus, value) - Pow(minus, value));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
@@ -4555,7 +5557,7 @@ namespace NetExtender.Utilities.Numerics
         {
             const Decimal plus = (1 + Constants.Decimal.Sqrt5) / 2;
             const Decimal minus = (1 - Constants.Decimal.Sqrt5) / 2;
-            return Constants.Decimal.InvertedSqrt5 * (Pow(plus, value) - Pow(minus, value));
+            return Constants.Decimal.ISqrt5 * (Pow(plus, value) - Pow(minus, value));
         }
 
         public static Decimal DiscreteDifference(this Single value, Single between, Byte digits)
@@ -4984,6 +5986,12 @@ namespace NetExtender.Utilities.Numerics
         public static Decimal Normalize(this Decimal value)
         {
             return value / Constants.Decimal.MaxPlaces;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static MathResult<Decimal> Normalize(this MathResult<Decimal> value)
+        {
+            return value ? Normalize(value.Internal) : value;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -6000,7 +7008,7 @@ namespace NetExtender.Utilities.Numerics
                 whole /= @base;
             } while (whole > 0 && i > 0);
 
-            Double remainder = value.GetDigitsAfterPoint();
+            Double remainder = value.DigitsAfterPoint();
 
             if (IsEpsilon(remainder))
             {
@@ -6028,7 +7036,7 @@ namespace NetExtender.Utilities.Numerics
                 Int64 number = (Int64) nv;
                 buffer[i++] = (Char) (number < 10 ? ZeroChar + number : AlphabetStart + number);
                 position = number > 0 ? i : position;
-                remainder = nv.GetDigitsAfterPoint();
+                remainder = nv.DigitsAfterPoint();
             } while (!IsEpsilon(remainder) && i < precise && i < buffer.Length);
 
             return new String(buffer.Slice(0, position)).Negative(negative);
@@ -6071,7 +7079,7 @@ namespace NetExtender.Utilities.Numerics
                 whole /= @base;
             } while (whole > 0 && i > 0);
 
-            Decimal remainder = value.GetDigitsAfterPoint();
+            Decimal remainder = value.DigitsAfterPoint();
 
             if (remainder == 0)
             {
@@ -6099,7 +7107,7 @@ namespace NetExtender.Utilities.Numerics
                 Int64 number = (Int64) nv;
                 buffer[i++] = (Char) (number < 10 ? ZeroChar + number : AlphabetStart + number);
                 position = number > 0 ? i : position;
-                remainder = nv.GetDigitsAfterPoint();
+                remainder = nv.DigitsAfterPoint();
             } while (remainder != 0 && i < precise && i < buffer.Length);
 
             return new String(buffer.Slice(0, position)).Negative(negative);
@@ -6580,74 +7588,74 @@ namespace NetExtender.Utilities.Numerics
         {
             if (typeof(T) == typeof(Char))
             {
-                Char val = (Char) unchecked(Unsafe.As<T, Char>(ref value) + 1);
-                return Unsafe.As<Char, T>(ref val);
+                Char result = (Char) unchecked(Unsafe.As<T, Char>(ref value) + 1);
+                return Unsafe.As<Char, T>(ref result);
             }
 
             if (typeof(T) == typeof(SByte))
             {
-                SByte val = (SByte) unchecked(Unsafe.As<T, SByte>(ref value) + 1);
-                return Unsafe.As<SByte, T>(ref val);
+                SByte result = (SByte) unchecked(Unsafe.As<T, SByte>(ref value) + 1);
+                return Unsafe.As<SByte, T>(ref result);
             }
 
             if (typeof(T) == typeof(Byte))
             {
-                Byte val = (Byte) unchecked(Unsafe.As<T, Byte>(ref value) + 1);
-                return Unsafe.As<Byte, T>(ref val);
+                Byte result = (Byte) unchecked(Unsafe.As<T, Byte>(ref value) + 1);
+                return Unsafe.As<Byte, T>(ref result);
             }
 
             if (typeof(T) == typeof(Int16))
             {
-                Int16 val = (Int16) unchecked(Unsafe.As<T, Int16>(ref value) + 1);
-                return Unsafe.As<Int16, T>(ref val);
+                Int16 result = (Int16) unchecked(Unsafe.As<T, Int16>(ref value) + 1);
+                return Unsafe.As<Int16, T>(ref result);
             }
 
             if (typeof(T) == typeof(UInt16))
             {
-                UInt16 val = (UInt16) unchecked(Unsafe.As<T, UInt16>(ref value) + 1);
-                return Unsafe.As<UInt16, T>(ref val);
+                UInt16 result = (UInt16) unchecked(Unsafe.As<T, UInt16>(ref value) + 1);
+                return Unsafe.As<UInt16, T>(ref result);
             }
 
             if (typeof(T) == typeof(Int32))
             {
-                Int32 val = unchecked(Unsafe.As<T, Int32>(ref value) + 1);
-                return Unsafe.As<Int32, T>(ref val);
+                Int32 result = unchecked(Unsafe.As<T, Int32>(ref value) + 1);
+                return Unsafe.As<Int32, T>(ref result);
             }
 
             if (typeof(T) == typeof(UInt32))
             {
-                UInt32 val = unchecked(Unsafe.As<T, UInt32>(ref value) + 1);
-                return Unsafe.As<UInt32, T>(ref val);
+                UInt32 result = unchecked(Unsafe.As<T, UInt32>(ref value) + 1);
+                return Unsafe.As<UInt32, T>(ref result);
             }
 
             if (typeof(T) == typeof(Int64))
             {
-                Int64 val = unchecked(Unsafe.As<T, Int64>(ref value) + 1);
-                return Unsafe.As<Int64, T>(ref val);
+                Int64 result = unchecked(Unsafe.As<T, Int64>(ref value) + 1);
+                return Unsafe.As<Int64, T>(ref result);
             }
 
             if (typeof(T) == typeof(UInt64))
             {
-                UInt64 val = unchecked(Unsafe.As<T, UInt64>(ref value) + 1);
-                return Unsafe.As<UInt64, T>(ref val);
+                UInt64 result = unchecked(Unsafe.As<T, UInt64>(ref value) + 1);
+                return Unsafe.As<UInt64, T>(ref result);
             }
 
             if (typeof(T) == typeof(Single))
             {
-                Single val = Unsafe.As<T, Single>(ref value) + 1;
-                return Unsafe.As<Single, T>(ref val);
+                Single result = Unsafe.As<T, Single>(ref value) + 1;
+                return Unsafe.As<Single, T>(ref result);
             }
 
             if (typeof(T) == typeof(Double))
             {
-                Double val = Unsafe.As<T, Double>(ref value) + 1;
-                return Unsafe.As<Double, T>(ref val);
+                Double result = Unsafe.As<T, Double>(ref value) + 1;
+                return Unsafe.As<Double, T>(ref result);
             }
 
             if (typeof(T) == typeof(Decimal))
             {
-                Decimal val = Unsafe.As<T, Decimal>(ref value) + 1;
-                return Unsafe.As<Decimal, T>(ref val);
+                Decimal result = Unsafe.As<T, Decimal>(ref value) + 1;
+                return Unsafe.As<Decimal, T>(ref result);
             }
 
             throw new NotSupportedException($"Operator + is not supported for {typeof(T)} type");
@@ -6658,77 +7666,140 @@ namespace NetExtender.Utilities.Numerics
         {
             if (typeof(T) == typeof(Char))
             {
-                Char val = (Char) unchecked(Unsafe.As<T, Char>(ref value) - 1);
-                return Unsafe.As<Char, T>(ref val);
+                Char result = (Char) unchecked(Unsafe.As<T, Char>(ref value) - 1);
+                return Unsafe.As<Char, T>(ref result);
             }
 
             if (typeof(T) == typeof(SByte))
             {
-                SByte val = (SByte) unchecked(Unsafe.As<T, SByte>(ref value) - 1);
-                return Unsafe.As<SByte, T>(ref val);
+                SByte result = (SByte) unchecked(Unsafe.As<T, SByte>(ref value) - 1);
+                return Unsafe.As<SByte, T>(ref result);
             }
 
             if (typeof(T) == typeof(Byte))
             {
-                Byte val = (Byte) unchecked(Unsafe.As<T, Byte>(ref value) - 1);
-                return Unsafe.As<Byte, T>(ref val);
+                Byte result = (Byte) unchecked(Unsafe.As<T, Byte>(ref value) - 1);
+                return Unsafe.As<Byte, T>(ref result);
             }
 
             if (typeof(T) == typeof(Int16))
             {
-                Int16 val = (Int16) unchecked(Unsafe.As<T, Int16>(ref value) - 1);
-                return Unsafe.As<Int16, T>(ref val);
+                Int16 result = (Int16) unchecked(Unsafe.As<T, Int16>(ref value) - 1);
+                return Unsafe.As<Int16, T>(ref result);
             }
 
             if (typeof(T) == typeof(UInt16))
             {
-                UInt16 val = (UInt16) unchecked(Unsafe.As<T, UInt16>(ref value) - 1);
-                return Unsafe.As<UInt16, T>(ref val);
+                UInt16 result = (UInt16) unchecked(Unsafe.As<T, UInt16>(ref value) - 1);
+                return Unsafe.As<UInt16, T>(ref result);
             }
 
             if (typeof(T) == typeof(Int32))
             {
-                Int32 val = unchecked(Unsafe.As<T, Int32>(ref value) - 1);
-                return Unsafe.As<Int32, T>(ref val);
+                Int32 result = unchecked(Unsafe.As<T, Int32>(ref value) - 1);
+                return Unsafe.As<Int32, T>(ref result);
             }
 
             if (typeof(T) == typeof(UInt32))
             {
-                UInt32 val = unchecked(Unsafe.As<T, UInt32>(ref value) - 1);
-                return Unsafe.As<UInt32, T>(ref val);
+                UInt32 result = unchecked(Unsafe.As<T, UInt32>(ref value) - 1);
+                return Unsafe.As<UInt32, T>(ref result);
             }
 
             if (typeof(T) == typeof(Int64))
             {
-                Int64 val = unchecked(Unsafe.As<T, Int64>(ref value) - 1);
-                return Unsafe.As<Int64, T>(ref val);
+                Int64 result = unchecked(Unsafe.As<T, Int64>(ref value) - 1);
+                return Unsafe.As<Int64, T>(ref result);
             }
 
             if (typeof(T) == typeof(UInt64))
             {
-                UInt64 val = unchecked(Unsafe.As<T, UInt64>(ref value) - 1);
-                return Unsafe.As<UInt64, T>(ref val);
+                UInt64 result = unchecked(Unsafe.As<T, UInt64>(ref value) - 1);
+                return Unsafe.As<UInt64, T>(ref result);
             }
 
             if (typeof(T) == typeof(Single))
             {
-                Single val = Unsafe.As<T, Single>(ref value) - 1;
-                return Unsafe.As<Single, T>(ref val);
+                Single result = Unsafe.As<T, Single>(ref value) - 1;
+                return Unsafe.As<Single, T>(ref result);
             }
 
             if (typeof(T) == typeof(Double))
             {
-                Double val = Unsafe.As<T, Double>(ref value) - 1;
-                return Unsafe.As<Double, T>(ref val);
+                Double result = Unsafe.As<T, Double>(ref value) - 1;
+                return Unsafe.As<Double, T>(ref result);
             }
 
             if (typeof(T) == typeof(Decimal))
             {
-                Decimal val = Unsafe.As<T, Decimal>(ref value) - 1;
-                return Unsafe.As<Decimal, T>(ref val);
+                Decimal result = Unsafe.As<T, Decimal>(ref value) - 1;
+                return Unsafe.As<Decimal, T>(ref result);
             }
 
             throw new NotSupportedException($"Operator - is not supported for {typeof(T)} type");
         }
+    }
+
+    [Serializable]
+    public sealed class ValueHasDigitsAfterPointException<T> : ValueHasDigitsAfterPointException where T : struct
+    {
+        public new T? Value { get; init; }
+
+        public ValueHasDigitsAfterPointException()
+        {
+        }
+
+        public ValueHasDigitsAfterPointException(String? message)
+            : base(message)
+        {
+        }
+
+        public ValueHasDigitsAfterPointException(String? message, Exception? exception)
+            : base(message, exception)
+        {
+        }
+
+        private ValueHasDigitsAfterPointException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
+        }
+        
+        private protected override Object? GetValue()
+        {
+            return Value;
+        }
+    }
+
+    [Serializable]
+    public abstract class ValueHasDigitsAfterPointException : InvalidOperationException
+    {
+        public Object? Value
+        {
+            get
+            {
+                return GetValue();
+            }
+        }
+        
+        private protected ValueHasDigitsAfterPointException()
+        {
+        }
+
+        private protected ValueHasDigitsAfterPointException(String? message)
+            : base(message)
+        {
+        }
+
+        private protected ValueHasDigitsAfterPointException(String? message, Exception? exception)
+            : base(message, exception)
+        {
+        }
+
+        private protected ValueHasDigitsAfterPointException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
+        }
+
+        private protected abstract Object? GetValue();
     }
 }

@@ -1,3 +1,6 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 using System;
 using System.Windows;
 using System.Windows.Controls;
@@ -8,7 +11,7 @@ namespace NetExtender.UserInterface.WindowsPresentation
 {
     public class ParameterMenuItem : MenuItem
     {
-        public static readonly DependencyProperty AllowRightClickProperty = DependencyProperty.Register(nameof(AllowRightClick), typeof(Boolean), typeof(AutoHideMenuItem), new PropertyMetadata(false));
+        public static readonly DependencyProperty AllowRightClickProperty = DependencyProperty.Register(nameof(AllowRightClick), typeof(Boolean), typeof(ParameterMenuItem), new PropertyMetadata(false));
         
         public Boolean AllowRightClick
         {

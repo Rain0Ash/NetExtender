@@ -1,8 +1,12 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Reflection.Emit;
+using System.Runtime.CompilerServices;
 using HarmonyLib;
 using Microsoft.Extensions.DependencyInjection;
 using NetExtender.Types.Exceptions;
@@ -17,12 +21,18 @@ namespace NetExtender.Patch
         {
             [ReflectionSignature(typeof(ActivatorUtilities))]
             public delegate Object CreateInstance(IServiceProvider provider, Type instanceType, params Object[] parameters);
-            
+
+            [ReflectionSignature(typeof(ActivatorUtilities))]
+            public delegate Object?[] CreateConstructorInfoExs(Type type);
+
             [ReflectionSignature(typeof(ActivatorUtilities))]
             public delegate Boolean TryFindPreferredConstructor(Type instanceType, Type[] argumentTypes, [NotNullWhen(true)] ref ConstructorInfo? matchingConstructor, [NotNullWhen(true)] ref Int32?[]? parameterMap);
-            
+
             [ReflectionSignature(typeof(ActivatorUtilities))]
             public delegate Object CreateConstructorCallSite(Object lifetime, Type serviceType, Type implementationType, Object callSiteChain);
+            
+            [ReflectionSignature(typeof(Type))]
+            public delegate ConstructorInfo[] GetConstructor(Type type);
         }
         
         [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
@@ -47,17 +57,7 @@ namespace NetExtender.Patch
                     return typeof(ActivatorUtilities);
                 }
             }
-            
-            protected virtual Signature.TryFindPreferredConstructor? TryFindPreferredConstructor
-            {
-                get
-                {
-                    const BindingFlags binding = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
-                    ParameterInfo[]? parameters = typeof(Signature.TryFindPreferredConstructor).GetMethod(nameof(Action.Invoke))?.GetSafeParameters();
-                    return parameters is not null ? ActivatorUtilities.GetMethod(nameof(Signature.TryFindPreferredConstructor), binding, parameters)?.CreateDelegate<Signature.TryFindPreferredConstructor>() : null;
-                }
-            }
-            
+
             protected virtual Signature.CreateInstance? CreateInstance
             {
                 get
@@ -67,7 +67,27 @@ namespace NetExtender.Patch
                     return parameters is not null ? ActivatorUtilities.GetMethod(nameof(Signature.CreateInstance), binding, parameters)?.CreateDelegate<Signature.CreateInstance>() : null;
                 }
             }
-            
+
+            protected virtual Signature.CreateConstructorInfoExs? CreateConstructorInfoExs
+            {
+                get
+                {
+                    const BindingFlags binding = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
+                    ParameterInfo[]? parameters = typeof(Signature.CreateConstructorInfoExs).GetMethod(nameof(Action.Invoke))?.GetSafeParameters();
+                    return parameters is not null ? ActivatorUtilities.GetMethod(nameof(Signature.CreateConstructorInfoExs), binding, parameters)?.CreateDelegate<Signature.CreateConstructorInfoExs>() : null;
+                }
+            }
+
+            protected virtual Signature.TryFindPreferredConstructor? TryFindPreferredConstructor
+            {
+                get
+                {
+                    const BindingFlags binding = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
+                    ParameterInfo[]? parameters = typeof(Signature.TryFindPreferredConstructor).GetMethod(nameof(Action.Invoke))?.GetSafeParameters();
+                    return parameters is not null ? ActivatorUtilities.GetMethod(nameof(Signature.TryFindPreferredConstructor), binding, parameters)?.CreateDelegate<Signature.TryFindPreferredConstructor>() : null;
+                }
+            }
+
             protected virtual MethodInfo? CreateConstructorCallSite
             {
                 get
@@ -89,7 +109,7 @@ namespace NetExtender.Patch
                         }
                         
                         MethodInfo? original = typeof(Type).GetMethod(nameof(Type.GetConstructors), Type.EmptyTypes);
-                        MethodInfo? @new = typeof(Type).GetMethod(nameof(Type.GetConstructors), new[] { typeof(BindingFlags) });
+                        Signature.GetConstructor signature = GetConstructors;
                         
                         Boolean successful = false;
                         foreach (CodeInstruction instruction in instructions)
@@ -99,10 +119,8 @@ namespace NetExtender.Patch
                                 yield return instruction;
                                 continue;
                             }
-                            
-                            const BindingFlags binding = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.CreateInstance;
-                            yield return new CodeInstruction(OpCodes.Ldc_I4, (Int32) binding);
-                            yield return new CodeInstruction(OpCodes.Callvirt, @new);
+
+                            yield return new CodeInstruction(OpCodes.Call, signature.Method);
                             successful = true;
                         }
                         
@@ -144,24 +162,72 @@ namespace NetExtender.Patch
 
             protected override ReflectionPatchState Make()
             {
-                if (TryFindPreferredConstructor is not { } constructor || CreateInstance is not { } instance || CreateConstructorCallSite is not { } callsite)
+                if (CreateInstance is not { } instance || CreateConstructorCallSite is not { } callsite)
                 {
                     return ReflectionPatchState.Failed;
                 }
-
+                
                 Harmony harmony = new Harmony($"{nameof(NetExtender)}.{nameof(DependencyInjection)}.{nameof(DependencyInjectionPatch)}");
                 HarmonyMethod transpiler = new HarmonyMethod(Transpiler);
-
-                harmony.Transpiler(transpiler, constructor.Method);
                 
-                if (instance.Method.DeclaringType?.Assembly.GetName().Version?.Major <= 7)
+                if (instance.Method.DeclaringType?.Assembly.GetName().Version?.Major >= 9)
                 {
-                    harmony.Transpiler(transpiler, instance.Method);
+                    if (CreateConstructorInfoExs is not { } constructor)
+                    {
+                        return ReflectionPatchState.Failed;
+                    }
+                    
+                    harmony.Transpiler(transpiler, constructor.Method);
+                }
+                else if (TryFindPreferredConstructor is not { } constructor)
+                {
+                    return ReflectionPatchState.Failed;
+                }
+                else
+                {
+                    harmony.Transpiler(transpiler, constructor.Method);
+                
+                    if (instance.Method.DeclaringType?.Assembly.GetName().Version?.Major <= 7)
+                    {
+                        harmony.Transpiler(transpiler, instance.Method);
+                    }
                 }
                 
                 harmony.Transpiler(transpiler, callsite);
-
                 return ReflectionPatchState.Apply;
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+            private static ConstructorInfo[] GetConstructors(Type type)
+            {
+                const BindingFlags binding = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.CreateInstance;
+
+                if (ExcludeType.Contains(type))
+                {
+                    return type.GetConstructors();
+                }
+
+                if (IncludeType.Contains(type))
+                {
+                    return type.GetConstructors(binding);
+                }
+
+                if (Exclude.Contains(type.Assembly))
+                {
+                    return type.GetConstructors();
+                }
+
+                if (Include.Count > 0 && !Include.Contains(type.Assembly))
+                {
+                    return type.GetConstructors();
+                }
+
+                if (IgnoreSystem && type.Assembly.IsSystemAssembly())
+                {
+                    return type.GetConstructors();
+                }
+
+                return type.GetConstructors(binding);
             }
             
             protected override void Dispose(Boolean disposing)

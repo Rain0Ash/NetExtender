@@ -5,7 +5,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using NetExtender.Types.Dictionaries;
 using NetExtender.Types.Monads;
@@ -17,7 +16,7 @@ namespace NetExtender.Types.Sets
     public class OrderedSet<T> : ISet, ISet<T>, IReadOnlySet<T>
     {
         private NullableDictionary<T, LinkedListNode<T>> Node { get; }
-        private LinkedList<T> Linked { get; }
+        private LinkedList<T> Link { get; }
 
         public IEqualityComparer<NullMaybe<T>> Comparer
         {
@@ -39,7 +38,7 @@ namespace NetExtender.Types.Sets
         {
             get
             {
-                return Linked.First is { } node ? node.ValueRef : throw new InvalidOperationException();
+                return Link.First is { } node ? node.ValueRef : throw new InvalidOperationException();
             }
         }
         
@@ -47,7 +46,7 @@ namespace NetExtender.Types.Sets
         {
             get
             {
-                return Linked.Last is { } node ? node.ValueRef : throw new InvalidOperationException();
+                return Link.Last is { } node ? node.ValueRef : throw new InvalidOperationException();
             }
         }
 
@@ -63,7 +62,7 @@ namespace NetExtender.Types.Sets
         {
             get
             {
-                return ((ICollection) Linked).IsSynchronized;
+                return ((ICollection) Link).IsSynchronized;
             }
         }
 
@@ -71,7 +70,7 @@ namespace NetExtender.Types.Sets
         {
             get
             {
-                return ((ICollection) Linked).SyncRoot;
+                return ((ICollection) Link).SyncRoot;
             }
         }
 
@@ -88,7 +87,7 @@ namespace NetExtender.Types.Sets
         public OrderedSet(IEqualityComparer<NullMaybe<T>>? comparer)
         {
             Node = new NullableDictionary<T, LinkedListNode<T>>(comparer);
-            Linked = new LinkedList<T>();
+            Link = new LinkedList<T>();
         }
 
         public OrderedSet(IEnumerable<T> collection)
@@ -101,7 +100,6 @@ namespace NetExtender.Types.Sets
         {
         }
 
-        [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
         public OrderedSet(IEnumerable<T> collection, IEqualityComparer<NullMaybe<T>>? comparer)
         {
             if (collection is null)
@@ -109,8 +107,8 @@ namespace NetExtender.Types.Sets
                 throw new ArgumentNullException(nameof(collection));
             }
             
-            Node = new NullableDictionary<T, LinkedListNode<T>>(collection.CountIfMaterialized() ?? 16, comparer);
-            Linked = new LinkedList<T>();
+            Node = new NullableDictionary<T, LinkedListNode<T>>(collection.CountIfMaterialized(16), comparer);
+            Link = new LinkedList<T>();
 
             foreach (T item in collection)
             {
@@ -126,7 +124,7 @@ namespace NetExtender.Types.Sets
         public OrderedSet(Int32 capacity, IEqualityComparer<NullMaybe<T>>? comparer)
         {
             Node = new NullableDictionary<T, LinkedListNode<T>>(capacity, comparer);
-            Linked = new LinkedList<T>();
+            Link = new LinkedList<T>();
         }
 
         public Boolean Contains(T item)
@@ -231,7 +229,7 @@ namespace NetExtender.Types.Sets
                 return false;
             }
 
-            LinkedListNode<T> node = Linked.AddLast(item);
+            LinkedListNode<T> node = Link.AddLast(item);
             Node.Add(item, node);
 
             return true;
@@ -259,7 +257,7 @@ namespace NetExtender.Types.Sets
                 return false;
             }
 
-            LinkedListNode<T> node = Linked.Insert(index, item);
+            LinkedListNode<T> node = Link.Insert(index, item);
             Node.Add(item, node);
             return true;
         }
@@ -371,13 +369,41 @@ namespace NetExtender.Types.Sets
                 return false;
             }
             
-            Linked.Remove(node);
+            Link.Remove(node);
             return true;
+        }
+
+        public Int32 RemoveWhere(Predicate<T> match)
+        {
+            if (match is null)
+            {
+                throw new ArgumentNullException(nameof(match));
+            }
+
+            LinkedListNode<T>? node = Link.First;
+
+            if (node is null)
+            {
+                return 0;
+            }
+
+            Int32 count = 0;
+            
+            do
+            {
+                ref T value = ref node.ValueRef;
+                if (match(value) && Remove(value))
+                {
+                    count++;
+                }
+            } while ((node = node.Next) is not null);
+
+            return count;
         }
 
         public void Clear()
         {
-            Linked.Clear();
+            Link.Clear();
             Node.Clear();
         }
 
@@ -388,7 +414,7 @@ namespace NetExtender.Types.Sets
                 throw new ArgumentNullException(nameof(array));
             }
 
-            if (Linked is ICollection collection)
+            if (Link is ICollection collection)
             {
                 collection.CopyTo(array, index);
                 return;
@@ -402,24 +428,24 @@ namespace NetExtender.Types.Sets
             CopyTo(generic, index);
         }
 
-        public void CopyTo(T[] array, Int32 arrayIndex)
+        public void CopyTo(T[] array, Int32 index)
         {
             if (array is null)
             {
                 throw new ArgumentNullException(nameof(array));
             }
 
-            Linked.CopyTo(array, arrayIndex);
+            Link.CopyTo(array, index);
         }
         
         public LinkedList<T>.Enumerator GetEnumerator()
         {
-            return Linked.GetEnumerator();
+            return Link.GetEnumerator();
         }
         
         IEnumerator<T> IEnumerable<T>.GetEnumerator()
         {
-            return Linked.GetEnumerator();
+            return Link.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()

@@ -112,7 +112,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(keySelector));
             }
             
-            if (source.TryGetNonEnumeratedCount(out Int32 capacity) && capacity <= 0)
+            if (source.CountIfMaterialized(out Int32 capacity) && capacity <= 0)
             {
                 return new NullableDictionary<TKey, TSource>(comparer);
             }
@@ -214,7 +214,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(elementSelector));
             }
             
-            if (source.TryGetNonEnumeratedCount(out Int32 capacity) && capacity <= 0)
+            if (source.CountIfMaterialized(out Int32 capacity) && capacity <= 0)
             {
                 return new NullableDictionary<TKey, TElement>(comparer);
             }
@@ -305,7 +305,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(source));
             }
             
-            if (!source.TryGetNonEnumeratedCount(out Int32 capacity))
+            if (!source.CountIfMaterialized(out Int32 capacity))
             {
                 return new NullableDictionary<TKey, TValue>(source.Select(static pair => new KeyValuePair<NullMaybe<TKey>, TValue>(pair.Key, pair.Value)));
             }
@@ -339,7 +339,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(source));
             }
             
-            if (!source.TryGetNonEnumeratedCount(out Int32 capacity))
+            if (!source.CountIfMaterialized(out Int32 capacity))
             {
                 return new NullableDictionary<TKey, TValue>(source.Select(static pair => new KeyValuePair<NullMaybe<TKey>, TValue>(pair.Key, pair.Value)), comparer);
             }

@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.JSInterop;
+using NetExtender.Types.Exceptions;
 
 namespace NetExtender.JavaScript.Utilities.Interop.JavaScript
 {
@@ -39,7 +40,7 @@ namespace NetExtender.JavaScript.Utilities.Interop.JavaScript
 
             if (String.IsNullOrEmpty(javascript))
             {
-                throw new ArgumentException("Value cannot be null or empty.", nameof(javascript));
+                throw new ArgumentNullOrEmptyStringException(javascript, nameof(javascript));
             }
 
             return runtime.InvokeAsync<T>("eval", token, javascript);
@@ -95,7 +96,7 @@ namespace NetExtender.JavaScript.Utilities.Interop.JavaScript
 
             if (String.IsNullOrEmpty(message))
             {
-                throw new ArgumentException("Value cannot be null or empty.", nameof(message));
+                throw new ArgumentNullOrEmptyStringException(message, nameof(message));
             }
 
             return runtime.InvokeVoidAsync("alert", token, message);
@@ -139,7 +140,7 @@ namespace NetExtender.JavaScript.Utilities.Interop.JavaScript
 
             if (String.IsNullOrEmpty(message))
             {
-                throw new ArgumentException("Value cannot be null or empty.", nameof(message));
+                throw new ArgumentNullOrEmptyStringException(message, nameof(message));
             }
 
             return runtime.InvokeAsync<Boolean>("confirm", token, message);

@@ -117,12 +117,12 @@ namespace NetExtender.Windows.Protocols
         {
             if (String.IsNullOrEmpty(path))
             {
-                throw new ArgumentException("Value cannot be null or empty.", nameof(path));
+                throw new ArgumentNullOrEmptyStringException(path, nameof(path));
             }
 
             if (String.IsNullOrWhiteSpace(name))
             {
-                throw new ArgumentException(@"Value cannot be null or whitespace.", nameof(name));
+                throw new ArgumentNullOrWhiteSpaceStringException(name, nameof(name));
             }
 
             if (!PathUtilities.IsExistAsFile(path))

@@ -3,13 +3,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 
 namespace NetExtender.Utilities.Types
 {
-    [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
     public static class SortedListUtilities
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -25,7 +23,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            SortedList<TKey, TValue> sorted = source.CountIfMaterialized() is Int32 count ? new SortedList<TKey, TValue>(count, comparer) : new SortedList<TKey, TValue>(comparer);
+            SortedList<TKey, TValue> sorted = source.CountIfMaterialized(out Int32 count) ? new SortedList<TKey, TValue>(count, comparer) : new SortedList<TKey, TValue>(comparer);
             sorted.AddRange(source);
             sorted.TrimExcess();
 
@@ -72,7 +70,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(keySelector));
             }
 
-            SortedList<TKey, TSource> sorted = source.CountIfMaterialized() is Int32 count ? new SortedList<TKey, TSource>(count, comparer) : new SortedList<TKey, TSource>(comparer);
+            SortedList<TKey, TSource> sorted = source.CountIfMaterialized(out Int32 count) ? new SortedList<TKey, TSource>(count, comparer) : new SortedList<TKey, TSource>(comparer);
             foreach (TSource item in source)
             {
                 sorted.Add(keySelector(item), item);
@@ -105,7 +103,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(elementSelector));
             }
 
-            SortedList<TKey, TElement> sorted = source.CountIfMaterialized() is Int32 count ? new SortedList<TKey, TElement>(count, comparer) : new SortedList<TKey, TElement>(comparer);
+            SortedList<TKey, TElement> sorted = source.CountIfMaterialized(out Int32 count) ? new SortedList<TKey, TElement>(count, comparer) : new SortedList<TKey, TElement>(comparer);
             foreach (TSource item in source)
             {
                 sorted.Add(keySelector(item), elementSelector(item));

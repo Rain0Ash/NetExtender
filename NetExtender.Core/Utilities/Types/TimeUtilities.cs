@@ -2,6 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Runtime.CompilerServices;
 using NetExtender.Types.Exceptions;
 
 namespace NetExtender.Utilities.Types
@@ -17,28 +18,44 @@ namespace NetExtender.Utilities.Types
 
     public static class TimeUtilities
     {
-        private static readonly DateTime UnixDate = new DateTime(1970, 1, 1, 0, 0, 0);
+        public static readonly DateTime Epoch = DateTimeUtilities.Epoch;
+        public static readonly DateTimeOffset OffsetEpoch = Epoch;
 
-        /// <summary>
-        /// Return unix time in seconds
-        /// </summary>
-        public static Int64 UnixTime()
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static TimeSpan SinceEpoch(this DateTime time)
         {
-            return (Int64) (DateTime.Now - UnixDate).TotalSeconds;
+            return time - Epoch;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static TimeSpan SinceEpoch(this DateTimeOffset time)
+        {
+            return time - OffsetEpoch;
         }
         
         /// <summary>
         /// Return unix time in seconds
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int64 UnixTime()
+        {
+            return (Int64) (DateTime.Now - Epoch).TotalSeconds;
+        }
+        
+        /// <summary>
+        /// Return unix time in seconds
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Int64 UnixUtcTime()
         {
-            return (Int64) (DateTime.UtcNow - UnixDate).TotalSeconds;
+            return (Int64) (DateTime.UtcNow - Epoch).TotalSeconds;
         }
 
         /// <summary>
         /// Return unix time in seconds
         /// </summary>
         /// <param name="type">Return unix time in this date type</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Int64 UnixTime(TimeType type)
         {
             return (Int64) GetTime(type);
@@ -46,7 +63,7 @@ namespace NetExtender.Utilities.Types
 
         public static Double GetTime(TimeType type)
         {
-            TimeSpan time = DateTime.Now - UnixDate;
+            TimeSpan time = DateTime.Now - Epoch;
 
             return type switch
             {
@@ -61,7 +78,7 @@ namespace NetExtender.Utilities.Types
 
         public static Double GetUtcTime(TimeType type)
         {
-            TimeSpan time = DateTime.UtcNow - UnixDate;
+            TimeSpan time = DateTime.UtcNow - Epoch;
 
             return type switch
             {
@@ -74,6 +91,12 @@ namespace NetExtender.Utilities.Types
             };
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DateTime UnixTime(Int64 time)
+        {
+            return time <= 0 ? DateTime.MinValue : Epoch.AddSeconds(time);
+        }
+
         public static Int64 UnixTime(this DateTime time)
         {
             if (time <= DateTime.MinValue)
@@ -81,18 +104,13 @@ namespace NetExtender.Utilities.Types
                 return 0;
             }
 
-            if (time < UnixDate)
+            if (time < Epoch)
             {
                 return 0;
             }
 
-            TimeSpan timeSpan = time - UnixDate;
+            TimeSpan timeSpan = time - Epoch;
             return (Int64) timeSpan.TotalSeconds;
-        }
-
-        public static DateTime UnixTime(Int64 time)
-        {
-            return time <= 0 ? DateTime.MinValue : UnixDate.AddSeconds(time);
         }
     }
 }

@@ -31,10 +31,10 @@ namespace NetExtender.Types.Comparers
         /// <summary>
         /// Returns the hash code of the provided object.
         /// </summary>
-        /// <param name="obj">The object.</param>
-        public override Int32 GetHashCode(T obj)
+        /// <param name="value">The object.</param>
+        public override Int32 GetHashCode(T value)
         {
-            return obj?.GetHashCode() ?? 0;
+            return value?.GetHashCode() ?? 0;
         }
     }
 }

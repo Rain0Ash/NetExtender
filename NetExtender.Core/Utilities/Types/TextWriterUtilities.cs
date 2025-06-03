@@ -4,25 +4,29 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 namespace NetExtender.Utilities.Types
 {
     public static class TextWriterUtilities
     {
+        private static Type NullWriterType { get; } = TextWriter.Null.GetType();
         private static Type SynchronizedWriterType { get; } = TextWriter.Synchronized(TextWriter.Null).GetType();
 
-        internal static Boolean IsSynchronized(this TextWriter writer)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsNull(this TextWriter? writer)
         {
-            if (writer is null)
-            {
-                throw new ArgumentNullException(nameof(writer));
-            }
-
-            return writer.GetType() == SynchronizedWriterType;
+            return writer is null || writer.GetType() == NullWriterType;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsSynchronized(this TextWriter? writer)
+        {
+            return writer is not null && writer.GetType() == SynchronizedWriterType;
         }
 
-        public static void WriteLine(this TextWriter writer, params String?[] values)
+        public static void WriteLine(this TextWriter writer, params String?[]? values)
         {
             if (writer is null)
             {
@@ -31,13 +35,13 @@ namespace NetExtender.Utilities.Types
 
             if (values is null)
             {
-                throw new ArgumentNullException(nameof(values));
+                return;
             }
 
             writer.WriteLine(String.Join(writer.NewLine, values));
         }
 
-        public static void WriteLine(this TextWriter writer, params Object?[] values)
+        public static void WriteLine(this TextWriter writer, params Object?[]? values)
         {
             if (writer is null)
             {
@@ -46,13 +50,13 @@ namespace NetExtender.Utilities.Types
 
             if (values is null)
             {
-                throw new ArgumentNullException(nameof(values));
+                return;
             }
 
             writer.WriteLine(String.Join(writer.NewLine, values));
         }
 
-        public static void WriteLine(this TextWriter writer, IEnumerable<String?> values)
+        public static void WriteLine(this TextWriter writer, IEnumerable<String?>? values)
         {
             if (writer is null)
             {
@@ -61,7 +65,7 @@ namespace NetExtender.Utilities.Types
 
             if (values is null)
             {
-                throw new ArgumentNullException(nameof(values));
+                return;
             }
 
             foreach (String? value in values)
@@ -70,7 +74,7 @@ namespace NetExtender.Utilities.Types
             }
         }
 
-        public static void WriteLine(this TextWriter writer, IEnumerable<Object?> values)
+        public static void WriteLine(this TextWriter writer, IEnumerable<Object?>? values)
         {
             if (writer is null)
             {
@@ -79,7 +83,7 @@ namespace NetExtender.Utilities.Types
 
             if (values is null)
             {
-                throw new ArgumentNullException(nameof(values));
+                return;
             }
 
             foreach (Object? value in values)
@@ -88,7 +92,7 @@ namespace NetExtender.Utilities.Types
             }
         }
 
-        public static async Task WriteLineAsync(this TextWriter writer, IEnumerable<String?> values)
+        public static async Task WriteLineAsync(this TextWriter writer, IEnumerable<String?>? values)
         {
             if (writer is null)
             {
@@ -97,7 +101,7 @@ namespace NetExtender.Utilities.Types
 
             if (values is null)
             {
-                throw new ArgumentNullException(nameof(values));
+                return;
             }
 
             foreach (String? value in values)
@@ -106,7 +110,7 @@ namespace NetExtender.Utilities.Types
             }
         }
 
-        public static async ValueTask WriteLineAsync(this TextWriter writer, IAsyncEnumerable<String?> values)
+        public static async ValueTask WriteLineAsync(this TextWriter writer, IAsyncEnumerable<String?>? values)
         {
             if (writer is null)
             {
@@ -115,7 +119,7 @@ namespace NetExtender.Utilities.Types
 
             if (values is null)
             {
-                throw new ArgumentNullException(nameof(values));
+                return;
             }
 
             await foreach (String? value in values)
@@ -124,7 +128,7 @@ namespace NetExtender.Utilities.Types
             }
         }
 
-        public static void WriteLineTokens(this TextWriter writer, params String?[] values)
+        public static void WriteLineTokens(this TextWriter writer, params String?[]? values)
         {
             if (writer is null)
             {
@@ -133,13 +137,13 @@ namespace NetExtender.Utilities.Types
 
             if (values is null)
             {
-                throw new ArgumentNullException(nameof(values));
+                return;
             }
 
-            writer.WriteLine(String.Join(" ", values));
+            writer.WriteLine(String.Join(' ', values));
         }
 
-        public static void WriteLineTokens(this TextWriter writer, params Object?[] values)
+        public static void WriteLineTokens(this TextWriter writer, params Object?[]? values)
         {
             if (writer is null)
             {
@@ -148,13 +152,13 @@ namespace NetExtender.Utilities.Types
 
             if (values is null)
             {
-                throw new ArgumentNullException(nameof(values));
+                return;
             }
 
-            writer.WriteLine(String.Join(" ", values));
+            writer.WriteLine(String.Join(' ', values));
         }
 
-        public static async Task WriteLineTokensAsync(this TextWriter writer, params String?[] values)
+        public static async Task WriteLineTokensAsync(this TextWriter writer, params String?[]? values)
         {
             if (writer is null)
             {
@@ -163,11 +167,11 @@ namespace NetExtender.Utilities.Types
 
             if (values is null)
             {
-                throw new ArgumentNullException(nameof(values));
+                return;
             }
 
             // ReSharper disable once AsyncConverter.AsyncAwaitMayBeElidedHighlighting
-            await writer.WriteLineAsync(String.Join(" ", values)).ConfigureAwait(false);
+            await writer.WriteLineAsync(String.Join(' ', values)).ConfigureAwait(false);
         }
     }
 }

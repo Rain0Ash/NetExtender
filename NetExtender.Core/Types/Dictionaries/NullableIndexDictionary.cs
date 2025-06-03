@@ -38,12 +38,12 @@ namespace NetExtender.Types.Dictionaries
             }
         }
 
-        public ICollection<TKey>? _keys { get; private set; }
+        private ICollection<TKey>? _keys;
         public new ICollection<TKey> Keys
         {
             get
             {
-                return _keys ??= new SelectorCollectionWrapper<NullMaybe<TKey>, TKey>(base.Keys, nullable => nullable);
+                return _keys ??= new SelectorCollectionWrapper<NullMaybe<TKey>, TKey>(base.Keys, static nullable => nullable);
             }
         }
 
@@ -245,9 +245,9 @@ namespace NetExtender.Types.Dictionaries
             base.Sort(index, count, comparer?.ToNullMaybeComparer());
         }
 
-        public void CopyTo(KeyValuePair<TKey, TValue>[] array, Int32 arrayIndex)
+        public void CopyTo(KeyValuePair<TKey, TValue>[] array, Int32 index)
         {
-            CollectionUtilities.CopyTo(this, array, arrayIndex);
+            CollectionUtilities.CopyTo(this, array, index);
         }
 
         public new IEnumerator<TKey> GetKeyEnumerator()

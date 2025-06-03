@@ -20,21 +20,28 @@ namespace NetExtender.Utilities.Types
     {
         private static class ArrayAccessor<T>
         {
-            public static readonly Func<List<T>, T[]> Getter;
+            public static Func<List<T>, T[]> Getter { get; }
 
             static ArrayAccessor()
             {
-                const MethodAttributes attributes = MethodAttributes.Static | MethodAttributes.Public;
+                const MethodAttributes attributes = MethodAttributes.Public | MethodAttributes.Static;
                 DynamicMethod method = new DynamicMethod("get", attributes, CallingConventions.Standard, typeof(T[]), new[] { typeof(List<T>) }, typeof(ArrayAccessor<T>), true);
                 ILGenerator il = method.GetILGenerator();
                 il.Emit(OpCodes.Ldarg_0);
-                il.Emit(OpCodes.Ldfld, typeof(List<T>).GetField("_items", BindingFlags.NonPublic | BindingFlags.Instance)!);
+                il.Emit(OpCodes.Ldfld, typeof(List<T>).GetField("_items", BindingFlags.NonPublic | BindingFlags.Instance) ?? throw new NeverOperationException());
                 il.Emit(OpCodes.Ret);
-                Getter = (Func<List<T>, T[]>)method.CreateDelegate(typeof(Func<List<T>, T[]>));
+                Getter = (Func<List<T>, T[]>) method.CreateDelegate(typeof(Func<List<T>, T[]>));
             }
         }
 
-        public static T[] GetInternalArray<T>(this List<T> list)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T[] Internal<T>(this List<T> list)
+        {
+            return InternalArray(list);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T[] InternalArray<T>(this List<T> list)
         {
             if (list is null)
             {
@@ -75,6 +82,29 @@ namespace NetExtender.Utilities.Types
             }
 
             return new ReadOnlyCollection<T>(collection);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean EnsureCapacity<T>(this List<T> collection, ref Int32 capacity)
+        {
+            return EnsureCapacity(collection, capacity, out capacity);
+        }
+
+        public static Boolean EnsureCapacity<T>(this List<T> collection, Int32 capacity, out Int32 result)
+        {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
+            if (capacity < 0)
+            {
+                result = collection.Capacity;
+                return false;
+            }
+            
+            result = collection.EnsureCapacity(capacity);
+            return result > capacity;
         }
 
         public static T GetRandom<T>(this IList<T> collection)

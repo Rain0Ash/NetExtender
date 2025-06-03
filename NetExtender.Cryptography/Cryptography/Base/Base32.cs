@@ -102,7 +102,7 @@ namespace NetExtender.Cryptography.Base
                 fixed (Byte* pinput = value)
                 fixed (Char* poutput = output)
                 {
-                    if (!InternalEncode(pinput, value.Length, poutput, length, padding, out Int32 written))
+                    if (!EncodeCore(pinput, value.Length, poutput, length, padding, out Int32 written))
                     {
                         throw new InvalidOperationException("Internal error: couldn't calculate proper output buffer size for input");
                     }
@@ -203,13 +203,13 @@ namespace NetExtender.Cryptography.Base
                 fixed (Byte* pinput = value)
                 fixed (Char* poutput = output)
                 {
-                    return InternalEncode(pinput, value.Length, poutput, output.Length, padding, out written);
+                    return EncodeCore(pinput, value.Length, poutput, output.Length, padding, out written);
                 }
             }
         }
 
         // ReSharper disable once CognitiveComplexity
-        private unsafe Boolean InternalEncode(Byte* pinput, Int32 length, Char* poutput, Int32 outputlength, Boolean padding, out Int32 written)
+        private unsafe Boolean EncodeCore(Byte* pinput, Int32 length, Char* poutput, Int32 outputlength, Boolean padding, out Int32 written)
         {
             unchecked
             {
@@ -291,7 +291,7 @@ namespace NetExtender.Cryptography.Base
                 fixed (Byte* poutput = buffer)
                 fixed (Char* pinput = value)
                 {
-                    if (!InternalDecode(pinput, length, poutput, out _))
+                    if (!DecodeCore(pinput, length, poutput, out _))
                     {
                         throw new ArgumentException(@"Invalid input or output", nameof(value));
                     }
@@ -357,12 +357,12 @@ namespace NetExtender.Cryptography.Base
                 fixed (Char* pinput = input)
                 fixed (Byte* poutput = output)
                 {
-                    return InternalDecode(pinput, length, poutput, out written);
+                    return DecodeCore(pinput, length, poutput, out written);
                 }
             }
         }
 
-        private unsafe Boolean InternalDecode(Char* pinput, Int32 length, Byte* poutput, out Int32 written)
+        private unsafe Boolean DecodeCore(Char* pinput, Int32 length, Byte* poutput, out Int32 written)
         {
             unchecked
             {

@@ -14,7 +14,7 @@ namespace NetExtender.Types.Sets
 {
     public class IndexSortedSet<T> : ISet, IIndexSortedSet<T>, IReadOnlyIndexSortedSet<T>
     {
-        protected const Int32 MinimalIndexer = 4;
+        protected const Int32 IndexerBound = 4;
 
         protected SortedSet<T> Internal { get; }
         protected MapIndexer<T> Indexer { get; }
@@ -101,13 +101,13 @@ namespace NetExtender.Types.Sets
         public IndexSortedSet()
         {
             Internal = new SortedSet<T>();
-            Indexer = new MapIndexer<T>();
+            Indexer = new MapIndexer<T>(Internal.Comparer.ToEqualityComparer());
         }
 
         public IndexSortedSet(IComparer<T>? comparer)
         {
             Internal = new SortedSet<T>(comparer);
-            Indexer = new MapIndexer<T>(comparer?.ToEqualityComparer());
+            Indexer = new MapIndexer<T>(Internal.Comparer.ToEqualityComparer());
         }
 
         public IndexSortedSet(IEnumerable<T> collection)
@@ -122,14 +122,14 @@ namespace NetExtender.Types.Sets
                 throw new ArgumentNullException(nameof(collection));
             }
 
-            Internal = new SortedSet<T>(collection);
-            Indexer = new MapIndexer<T>(comparer?.ToEqualityComparer());
+            Internal = new SortedSet<T>(collection, comparer);
+            Indexer = new MapIndexer<T>(Internal.Comparer.ToEqualityComparer());
         }
 
         protected IndexSortedSet(SortedSet<T> collection)
         {
             Internal = collection ?? throw new ArgumentNullException(nameof(collection));
-            Indexer = new MapIndexer<T>(collection.Comparer.ToEqualityComparer());
+            Indexer = new MapIndexer<T>(Internal.Comparer.ToEqualityComparer());
         }
 
         public Boolean Contains(T item)
@@ -149,7 +149,7 @@ namespace NetExtender.Types.Sets
                 return Indexer.IndexOf(item);
             }
 
-            if (Internal.Count <= MinimalIndexer)
+            if (Internal.Count <= IndexerBound)
             {
                 return Internal.IndexOf(item);
             }
@@ -184,6 +184,21 @@ namespace NetExtender.Types.Sets
         public virtual IndexSortedSet<T> GetViewBetween(T? lower, T? upper)
         {
             return new IndexSortedSet<T>(Internal.GetViewBetween(lower, upper));
+        }
+
+        IIndexSortedSet<T> IIndexSortedSet<T>.GetViewBetween(T? lower, T? upper)
+        {
+            return GetViewBetween(lower, upper);
+        }
+
+        ISortedSet<T> ISortedSet<T>.GetViewBetween(T? lower, T? upper)
+        {
+            return GetViewBetween(lower, upper);
+        }
+
+        ISortedSet<T> IReadOnlySortedSet<T>.GetViewBetween(T? lower, T? upper)
+        {
+            return GetViewBetween(lower, upper);
         }
 
         public Boolean IsSubsetOf(IEnumerable<T> other)
@@ -370,14 +385,14 @@ namespace NetExtender.Types.Sets
             Internal.CopyTo(array, index);
         }
 
-        public virtual void CopyTo(T[] array, Int32 arrayIndex, Int32 count)
+        public virtual void CopyTo(T[] array, Int32 index, Int32 count)
         {
             if (array is null)
             {
                 throw new ArgumentNullException(nameof(array));
             }
 
-            Internal.CopyTo(array, arrayIndex, count);
+            Internal.CopyTo(array, index, count);
         }
 
         public IEnumerator<T> GetEnumerator()

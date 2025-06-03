@@ -1,3 +1,6 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 using System;
 using System.Collections.Concurrent;
 using System.Diagnostics.CodeAnalysis;
@@ -115,7 +118,7 @@ namespace NetExtender.Utilities.Core
             
             if (String.IsNullOrEmpty(name))
             {
-                throw new ArgumentException("Value cannot be null or empty.", nameof(name));
+                throw new ArgumentNullOrEmptyStringException(name, nameof(name));
             }
             
             return Get(SRType(assembly), name);
@@ -130,12 +133,12 @@ namespace NetExtender.Utilities.Core
             
             if (String.IsNullOrEmpty(@namespace))
             {
-                throw new ArgumentException("Value cannot be null or empty.", nameof(@namespace));
+                throw new ArgumentNullOrEmptyStringException(@namespace, nameof(@namespace));
             }
             
             if (String.IsNullOrEmpty(name))
             {
-                throw new ArgumentException("Value cannot be null or empty.", nameof(name));
+                throw new ArgumentNullOrEmptyStringException(name, nameof(name));
             }
             
             return Get(SRType(assembly, @namespace), name);
@@ -151,7 +154,7 @@ namespace NetExtender.Utilities.Core
             
             if (String.IsNullOrEmpty(name))
             {
-                throw new ArgumentException("Value cannot be null or empty.", nameof(name));
+                throw new ArgumentNullOrEmptyStringException(name, nameof(name));
             }
             
             if (SR.Name != "SR")
@@ -164,7 +167,7 @@ namespace NetExtender.Utilities.Core
             
             if (property.PropertyType != typeof(String))
             {
-                throw new NotSupportedException($"Property '{property}' must be of type '{typeof(String)}'.");
+                throw new NotSupportedException($"Property '{property}' must be of type '{nameof(String)}'.");
             }
             
             if (!property.CanRead)
@@ -184,7 +187,7 @@ namespace NetExtender.Utilities.Core
             
             if (String.IsNullOrEmpty(name))
             {
-                throw new ArgumentException("Value cannot be null or empty.", nameof(name));
+                throw new ArgumentNullOrEmptyStringException(name, nameof(name));
             }
             
             return Property(SRType(assembly), name);
@@ -199,12 +202,12 @@ namespace NetExtender.Utilities.Core
             
             if (String.IsNullOrEmpty(@namespace))
             {
-                throw new ArgumentException("Value cannot be null or empty.", nameof(@namespace));
+                throw new ArgumentNullOrEmptyStringException(@namespace, nameof(@namespace));
             }
             
             if (String.IsNullOrEmpty(name))
             {
-                throw new ArgumentException("Value cannot be null or empty.", nameof(name));
+                throw new ArgumentNullOrEmptyStringException(name, nameof(name));
             }
             
             return Property(SRType(assembly, @namespace), name);
@@ -219,7 +222,7 @@ namespace NetExtender.Utilities.Core
             
             if (property.PropertyType != typeof(String))
             {
-                throw new NotSupportedException($"Property '{property}' must be of type '{typeof(String)}'.");
+                throw new NotSupportedException($"Property '{property}' must be of type '{nameof(String)}'.");
             }
             
             if (!property.CanRead)
@@ -261,12 +264,12 @@ namespace NetExtender.Utilities.Core
             
             if (String.IsNullOrEmpty(@namespace))
             {
-                throw new ArgumentException("Value cannot be null or empty.", nameof(@namespace));
+                throw new ArgumentNullOrEmptyStringException(@namespace, nameof(@namespace));
             }
             
             if (String.IsNullOrEmpty(name))
             {
-                throw new ArgumentException("Value cannot be null or empty.", nameof(name));
+                throw new ArgumentNullOrEmptyStringException(name, nameof(name));
             }
 
             return Expression(SRType(assembly, @namespace), name);

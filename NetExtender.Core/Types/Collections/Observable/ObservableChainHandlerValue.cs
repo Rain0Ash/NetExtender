@@ -1,3 +1,6 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -43,8 +46,8 @@ namespace NetExtender.Types.Collections
         {
         }
     }
-    
-    public class ItemObservableChainHandlerValue<T, THandler> : ItemObservableChainHandlerValue<T, THandler, ItemObservableCollection<THandler>> where THandler : IChainHandler<T>
+
+    public class ItemObservableChainHandlerValue<T, THandler> : ItemObservableChainHandlerValue<T, THandler, ItemObservableCollection<THandler>> where THandler : class, IChainHandler<T>
     {
         public ItemObservableChainHandlerValue(T value)
             : base(value, new ItemObservableCollection<THandler>())

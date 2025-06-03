@@ -330,7 +330,7 @@ namespace NetExtender.Utilities.UserInterface
             return GetMenuItemInfoByPosition(menu, index, info);
         }
 
-        private static IEnumerable<MenuItemInfo> GetSystemMenuItemsInternal(IntPtr handle)
+        private static IEnumerable<MenuItemInfo> GetSystemMenuItemsCore(IntPtr handle)
         {
             if (handle == IntPtr.Zero)
             {
@@ -371,7 +371,7 @@ namespace NetExtender.Utilities.UserInterface
                 throw new ArgumentNullException(nameof(title));
             }
 
-            return GetSystemMenuItemsInternal(handle).Any(item => item.TypeData == title);
+            return GetSystemMenuItemsCore(handle).Any(item => item.TypeData == title);
         }
 
         public static Boolean AppendMenuSeparator(IntPtr handle)

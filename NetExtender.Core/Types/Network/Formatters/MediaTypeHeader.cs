@@ -1,10 +1,14 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 using System;
 using System.Net.Http.Headers;
+using System.Runtime.CompilerServices;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Network.Formatters
 {
-    public readonly struct MediaTypeHeader : IEquatable<MediaTypeHeader>, IEquatable<MediaTypeHeaderValue>, IComparable<MediaTypeHeader>, IComparable<MediaTypeHeaderValue>
+    public readonly struct MediaTypeHeader : IEqualityStruct<MediaTypeHeader>, IEquality<MediaTypeHeaderValue>
     {
         public static implicit operator MediaTypeHeader(MediaTypeHeaderValue? value)
         {
@@ -41,6 +45,7 @@ namespace NetExtender.Types.Network.Formatters
         
         public Boolean IsEmpty
         {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
                 return Value is null;

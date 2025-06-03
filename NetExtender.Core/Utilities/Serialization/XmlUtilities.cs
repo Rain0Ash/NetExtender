@@ -9,6 +9,7 @@ using System.Text;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
+using NetExtender.Types.Exceptions;
 using NetExtender.Utilities.Types;
 using Newtonsoft.Json;
 
@@ -495,7 +496,7 @@ namespace NetExtender.Utilities.Serialization
         {
             if (String.IsNullOrEmpty(xml))
             {
-                throw new ArgumentException(@"Value cannot be null or empty.", nameof(xml));
+                throw new ArgumentNullOrEmptyStringException(xml, nameof(xml));
             }
 
             using MemoryStream stream = new MemoryStream(Encoding.UTF8.GetBytes(xml));
@@ -538,7 +539,7 @@ namespace NetExtender.Utilities.Serialization
         {
             if (String.IsNullOrEmpty(xml))
             {
-                throw new ArgumentException(@"Value cannot be null or empty.", nameof(xml));
+                throw new ArgumentNullOrEmptyStringException(xml, nameof(xml));
             }
 
             if (type is null)

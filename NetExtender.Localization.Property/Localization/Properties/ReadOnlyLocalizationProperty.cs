@@ -211,25 +211,25 @@ namespace NetExtender.Localization.Properties
 
         protected override ILocalizationString? Initialize()
         {
-            return !IsAlwaysDefault ? GetValueInternal() : Alternate;
+            return !IsAlwaysDefault ? GetValueCore() : Alternate;
         }
 
-        protected virtual ILocalizationString? GetValueInternal()
+        protected virtual ILocalizationString? GetValueCore()
         {
             return Config.GetValue(Key, Alternate, Sections);
         }
 
-        protected virtual Task<ILocalizationString?> GetValueInternalAsync(CancellationToken token)
+        protected virtual Task<ILocalizationString?> GetValueCoreAsync(CancellationToken token)
         {
             return Config.GetValueAsync(Key, Alternate, Sections, token);
         }
 
-        protected virtual Boolean KeyExistInternal()
+        protected virtual Boolean KeyExistCore()
         {
             return Config.KeyExist(Key, Sections);
         }
 
-        protected virtual Task<Boolean> KeyExistInternalAsync(CancellationToken token)
+        protected virtual Task<Boolean> KeyExistCoreAsync(CancellationToken token)
         {
             return Config.KeyExistAsync(Key, Sections, token);
         }
@@ -248,6 +248,11 @@ namespace NetExtender.Localization.Properties
 
             return Internal.Value;
         }
+        
+        ILocalizationString? IGetter<ILocalizationString?>.Get()
+        {
+            return GetValue();
+        }
 
         public virtual ILocalizationString? GetValue(Func<ILocalizationString?, Boolean>? predicate)
         {
@@ -264,6 +269,11 @@ namespace NetExtender.Localization.Properties
         {
             return GetValueAsync(CancellationToken.None);
         }
+        
+        async ValueTask<ILocalizationString?> IAsyncGetter<ILocalizationString?>.GetAsync()
+        {
+            return await GetValueAsync();
+        }
 
         public virtual async Task<ILocalizationString?> GetValueAsync(CancellationToken token)
         {
@@ -278,6 +288,11 @@ namespace NetExtender.Localization.Properties
             }
 
             return Internal.Value;
+        }
+        
+        async ValueTask<ILocalizationString?> IAsyncGetter<ILocalizationString?>.GetAsync(CancellationToken token)
+        {
+            return await GetValueAsync(token);
         }
 
         public Task<ILocalizationString?> GetValueAsync(Func<ILocalizationString?, Boolean>? predicate)
@@ -298,7 +313,7 @@ namespace NetExtender.Localization.Properties
 
         public virtual Boolean KeyExist()
         {
-            return KeyExistInternal();
+            return KeyExistCore();
         }
 
         public Task<Boolean> KeyExistAsync()
@@ -308,7 +323,7 @@ namespace NetExtender.Localization.Properties
 
         public virtual Task<Boolean> KeyExistAsync(CancellationToken token)
         {
-            return KeyExistInternalAsync(token);
+            return KeyExistCoreAsync(token);
         }
 
         public virtual Boolean Read()
@@ -318,7 +333,7 @@ namespace NetExtender.Localization.Properties
                 return false;
             }
 
-            ILocalizationString? value = GetValueInternal() ?? Alternate;
+            ILocalizationString? value = GetValueCore() ?? Alternate;
 
             Internal.Reset(value);
             OnChanged(value);
@@ -337,7 +352,7 @@ namespace NetExtender.Localization.Properties
                 return false;
             }
 
-            ILocalizationString? value = await GetValueInternalAsync(token).ConfigureAwait(false) ?? Alternate;
+            ILocalizationString? value = await GetValueCoreAsync(token).ConfigureAwait(false) ?? Alternate;
 
             Internal.Reset(value);
             OnChanged(value);
@@ -498,25 +513,25 @@ namespace NetExtender.Localization.Properties
 
         protected override String? Initialize()
         {
-            return !IsAlwaysDefault ? GetValueInternal() : Alternate;
+            return !IsAlwaysDefault ? GetValueCore() : Alternate;
         }
 
-        protected virtual String? GetValueInternal()
+        protected virtual String? GetValueCore()
         {
             return Config.GetValue(Key, Identifier, Alternate, Sections);
         }
 
-        protected virtual Task<String?> GetValueInternalAsync(CancellationToken token)
+        protected virtual Task<String?> GetValueCoreAsync(CancellationToken token)
         {
             return Config.GetValueAsync(Key, Identifier, Alternate, Sections, token);
         }
 
-        protected virtual Boolean KeyExistInternal()
+        protected virtual Boolean KeyExistCore()
         {
             return Config.KeyExist(Key, Identifier, Sections);
         }
 
-        protected virtual Task<Boolean> KeyExistInternalAsync(CancellationToken token)
+        protected virtual Task<Boolean> KeyExistCoreAsync(CancellationToken token)
         {
             return Config.KeyExistAsync(Key, Identifier, Sections, token);
         }
@@ -558,7 +573,7 @@ namespace NetExtender.Localization.Properties
 
         public virtual Boolean KeyExist()
         {
-            return KeyExistInternal();
+            return KeyExistCore();
         }
 
         public Task<Boolean> KeyExistAsync()
@@ -568,7 +583,7 @@ namespace NetExtender.Localization.Properties
 
         public virtual Task<Boolean> KeyExistAsync(CancellationToken token)
         {
-            return KeyExistInternalAsync(token);
+            return KeyExistCoreAsync(token);
         }
 
         public virtual Boolean Read()
@@ -578,7 +593,7 @@ namespace NetExtender.Localization.Properties
                 return false;
             }
 
-            String? value = GetValueInternal() ?? Alternate;
+            String? value = GetValueCore() ?? Alternate;
 
             if (Internal.IsValueCreated && value == Internal.Value)
             {
@@ -602,7 +617,7 @@ namespace NetExtender.Localization.Properties
                 return false;
             }
 
-            String? value = await GetValueInternalAsync(token).ConfigureAwait(false) ?? Alternate;
+            String? value = await GetValueCoreAsync(token).ConfigureAwait(false) ?? Alternate;
 
             if (Internal.IsValueCreated && value == Internal.Value)
             {

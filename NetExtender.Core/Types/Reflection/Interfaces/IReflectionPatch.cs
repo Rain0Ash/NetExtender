@@ -1,5 +1,9 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 using System;
 using NetExtender.Patch;
+using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Reflection.Interfaces
 {
@@ -18,7 +22,7 @@ namespace NetExtender.Types.Reflection.Interfaces
             }
         }
         
-        public Object SyncRoot { get; }
+        public SyncRoot SyncRoot { get; }
         public Boolean IsAutoInit { get; }
         
         public Boolean Apply();
@@ -37,11 +41,19 @@ namespace NetExtender.Types.Reflection.Interfaces
                 }
             }
             
-            public Object SyncRoot
+            public SyncRoot SyncRoot
             {
                 get
                 {
                     return Patch.SyncRoot;
+                }
+            }
+            
+            Object IPatch.SyncRoot
+            {
+                get
+                {
+                    return SyncRoot;
                 }
             }
 

@@ -187,30 +187,29 @@ namespace NetExtender.Types.SpanCollections
             return FindIndex(0, Count, match);
         }
 
-        public readonly Int32 FindIndex(Int32 start, Predicate<T> match)
+        public readonly Int32 FindIndex(Int32 index, Predicate<T> match)
         {
-            return FindIndex(start, Count - start, match);
+            return FindIndex(index, Count - index, match);
         }
 
-        public readonly Int32 FindIndex(Int32 start, Int32 count, Predicate<T> match)
+        public readonly Int32 FindIndex(Int32 index, Int32 count, Predicate<T> match)
         {
             if (match is null)
             {
                 throw new ArgumentNullException(nameof(match));
             }
 
-            if (start < 0 || start >= Count)
+            if (index < 0 || index >= Count)
             {
-                throw new ArgumentOutOfRangeException(nameof(start), start, null);
+                throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
 
-            if (count < 0 || start > Count - count)
+            if (count < 0 || index > Count - count)
             {
                 throw new ArgumentOutOfRangeException(nameof(count), count, null);
             }
 
-            Int32 index = start + count;
-            for (Int32 i = start; i < index; i++)
+            for (Int32 i = index; i < index + count; i++)
             {
                 if (match(Internal[i]))
                 {
@@ -237,30 +236,29 @@ namespace NetExtender.Types.SpanCollections
             return FindLastIndex(Count - 1, Count, match);
         }
 
-        public readonly Int32 FindLastIndex(Int32 start, Predicate<T> match)
+        public readonly Int32 FindLastIndex(Int32 index, Predicate<T> match)
         {
-            return FindLastIndex(start, start + 1, match);
+            return FindLastIndex(index, index + 1, match);
         }
 
-        public readonly Int32 FindLastIndex(Int32 start, Int32 count, Predicate<T> match)
+        public readonly Int32 FindLastIndex(Int32 index, Int32 count, Predicate<T> match)
         {
             if (match is null)
             {
                 throw new ArgumentNullException(nameof(match));
             }
 
-            if (start < 0 || start >= Count)
+            if (index < 0 || index >= Count)
             {
-                throw new ArgumentOutOfRangeException(nameof(start), start, null);
+                throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
 
-            if (count < 0 || start - count + 1 < 0)
+            if (count < 0 || index - count + 1 < 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(count), count, null);
             }
 
-            Int32 index = start - count;
-            for (Int32 i = start; i > index; i--)
+            for (Int32 i = index; i > index - count; i--)
             {
                 if (match(Internal[i]))
                 {

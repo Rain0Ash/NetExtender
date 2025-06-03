@@ -1,9 +1,12 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 using System;
 using System.Runtime.CompilerServices;
 
 namespace NetExtender.Types.Numerics
 {
-    public readonly struct Percent : IEquatable<Percent>, IComparable<Percent>, IConvertible, IFormattable
+    public readonly struct Percent : IEquality<Percent>, IConvertible, IFormattable
     {
         public static implicit operator Percent(SByte value)
         {

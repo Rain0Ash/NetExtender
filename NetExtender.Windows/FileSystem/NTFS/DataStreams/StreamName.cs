@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 using NetExtender.Utilities.Windows.IO;
 using NetExtender.Windows;
 
-namespace NetExtender.IO.FileSystem.NTFS.DataStreams
+namespace NetExtender.FileSystems.NTFS.DataStreams
 {
     internal sealed class StreamName : IDisposable
     {

@@ -1,9 +1,13 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Utilities.Core
@@ -86,8 +90,18 @@ namespace NetExtender.Utilities.Core
         
         public abstract Expression<TDelegate> Build(String? name);
 
-        protected readonly struct Member<TAttribute> : IEquatable<Member<TAttribute>>, IComparable<Member<TAttribute>> where TAttribute : ComparisonAttribute
+        protected readonly struct Member<TAttribute> : IEqualityStruct<Member<TAttribute>> where TAttribute : ComparisonAttribute
         {
+            public static Boolean operator ==(Member<TAttribute> first, Member<TAttribute> second)
+            {
+                return first.Equals(second);
+            }
+
+            public static Boolean operator !=(Member<TAttribute> first, Member<TAttribute> second)
+            {
+                return !(first == second);
+            }
+            
             public MemberInfo MemberInfo { get; }
             public TAttribute? Attribute { get; }
 
@@ -136,6 +150,7 @@ namespace NetExtender.Utilities.Core
 
             public Boolean IsEmpty
             {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 get
                 {
                     return Attribute is null;

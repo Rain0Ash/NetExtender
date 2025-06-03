@@ -6,6 +6,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using NetExtender.Types.Attributes;
+using NetExtender.Types.Console.Interfaces;
 using NetExtender.Types.Events;
 using NetExtender.Types.Exceptions;
 using NetExtender.UserInterface;
@@ -61,7 +63,7 @@ namespace NetExtender.Utilities.UserInterface
         private static extern Boolean SetConsoleTitle(String lpConsoleTitle);
 
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
-        public readonly struct ConsoleFont
+        public readonly struct FontIndex
         {
             public readonly UInt32 Index;
             public readonly Int16 SizeX;
@@ -78,13 +80,12 @@ namespace NetExtender.Utilities.UserInterface
         private static extern UInt32 GetNumberOfConsoleFonts();
 
         [DllImport("kernel32")]
-        private static extern Boolean GetConsoleFontInfo(IntPtr hOutput, [MarshalAs(UnmanagedType.Bool)] Boolean bMaximize, UInt32 count,
-            [MarshalAs(UnmanagedType.LPArray), Out] ConsoleFont[] fonts);
+        private static extern Boolean GetConsoleFontInfo(IntPtr hOutput, [MarshalAs(UnmanagedType.Bool)] Boolean bMaximize, UInt32 count, [MarshalAs(UnmanagedType.LPArray), Out] FontIndex[] fonts);
 
         [SuppressMessage("ReSharper", "AutoPropertyCanBeMadeGetOnly.Global")]
         [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-        public readonly struct FontInfo
+        internal readonly struct FontInfo
         {
             public static FontInfo Create()
             {
@@ -123,11 +124,11 @@ namespace NetExtender.Utilities.UserInterface
 
         [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern Boolean SetCurrentConsoleFontEx(IntPtr hConsoleOutput, Boolean MaximumWindow, ref FontInfo ConsoleCurrentFontEx);
+        private static extern Boolean GetCurrentConsoleFontEx(IntPtr hConsoleOutput, Boolean MaximumWindow, ref FontInfo ConsoleCurrentFontEx);
 
         [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern Boolean GetCurrentConsoleFontEx(IntPtr hConsoleOutput, Boolean MaximumWindow, ref FontInfo ConsoleCurrentFontEx);
+        private static extern Boolean SetCurrentConsoleFontEx(IntPtr hConsoleOutput, Boolean MaximumWindow, ref FontInfo ConsoleCurrentFontEx);
 
         [DllImport("kernel32.dll")]
         private static extern UInt32 GetLastError();
@@ -211,7 +212,7 @@ namespace NetExtender.Utilities.UserInterface
             }
             catch (Exception)
             {
-                result = default;
+                result = null;
                 return false;
             }
         }
@@ -250,7 +251,7 @@ namespace NetExtender.Utilities.UserInterface
             }
         }
 
-        public static ConsoleFont[]? ConsoleFonts
+        public static FontIndex[]? ConsoleFonts
         {
             get
             {
@@ -259,7 +260,7 @@ namespace NetExtender.Utilities.UserInterface
                     return null;
                 }
 
-                ConsoleFont[] fonts = new ConsoleFont[GetNumberOfConsoleFonts()];
+                FontIndex[] fonts = new FontIndex[GetNumberOfConsoleFonts()];
 
                 if (fonts.Length <= 0)
                 {
@@ -272,6 +273,16 @@ namespace NetExtender.Utilities.UserInterface
 
         public static UInt32 ConsoleFontIndex
         {
+            get
+            {
+                if (ConsoleWindow == IntPtr.Zero)
+                {
+                    throw new InvalidOperationException();
+                }
+
+                FontInfo result = ConsoleFont;
+                return result.Index >= 0 ? (UInt32) result.Index : throw new InvalidOperationException();
+            }
             set
             {
                 if (ConsoleWindow == IntPtr.Zero)
@@ -279,7 +290,7 @@ namespace NetExtender.Utilities.UserInterface
                     return;
                 }
 
-                ConsoleFont[]? fonts = ConsoleFonts;
+                FontIndex[]? fonts = ConsoleFonts;
 
                 if (fonts is null)
                 {
@@ -295,7 +306,7 @@ namespace NetExtender.Utilities.UserInterface
             }
         }
 
-        public static FontInfo Font
+        private static FontInfo ConsoleFont
         {
             get
             {
@@ -317,36 +328,86 @@ namespace NetExtender.Utilities.UserInterface
             }
         }
 
+        public static IConsoleFontInfo? Font
+        {
+            get
+            {
+                FontInfo font;
+                
+                try
+                {
+                    font = ConsoleFont;
+                }
+                catch (Exception)
+                {
+                    return null;
+                }
+                
+                IConsoleFont result = ConsoleFontInfo.New;
+                result.FontName = font.FontName;
+                result.Index = font.Index;
+                result.Width = font.Width;
+                result.Size = font.Size;
+                result.Family = font.Family;
+                result.Weight = font.Weight;
+                return result;
+            }
+            set
+            {
+                if (value is null)
+                {
+                    return;
+                }
+
+                FontInfo font = new FontInfo(value.FontName, value.Size)
+                {
+                    Index = value.Index,
+                    Width = value.Width,
+                    Family = value.Family,
+                    Weight = value.Weight
+                };
+
+                try
+                {
+                    ConsoleFont = font;
+                }
+                catch (Exception exception)
+                {
+                    throw new InvalidOperationException("Cannot set console font.", exception);
+                }
+            }
+        }
+
         public static Int16 FontSize
         {
             get
             {
-                return Font.Size;
+                return ConsoleFont.Size;
             }
             set
             {
-                SetCurrentFont(value);
+                SetFont(value);
             }
         }
 
-        public static void SetCurrentFont()
+        public static void SetFont()
         {
-            SetCurrentFont(0);
+            SetFont(0);
         }
 
-        public static void SetCurrentFont(Int16 size)
+        public static void SetFont(Int16 size)
         {
-            SetCurrentFont(null, size);
+            SetFont(null, size);
         }
 
-        public static void SetCurrentFont(String? font)
+        public static void SetFont(String? font)
         {
-            SetCurrentFont(font, 0);
+            SetFont(font, 0);
         }
 
-        public static void SetCurrentFont(String? font, Int16 size)
+        public static void SetFont(String? font, Int16 size)
         {
-            Font = new FontInfo(font ?? Font.FontName, size > 0 ? size : Font.Size);
+            ConsoleFont = new FontInfo(font ?? ConsoleFont.FontName, size > 0 ? size : ConsoleFont.Size);
         }
 
         public static Point Cursor
@@ -354,7 +415,6 @@ namespace NetExtender.Utilities.UserInterface
             get
             {
                 (Int32 x, Int32 y) = GetCursorPosition();
-
                 return new Point(x, y);
             }
             set
@@ -364,21 +424,9 @@ namespace NetExtender.Utilities.UserInterface
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static (Int32 x, Int32 y) GetCursorPosition()
+        public static (Int32 X, Int32 Y) GetCursorPosition()
         {
             return Console.GetCursorPosition();
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void SetCursorPosition()
-        {
-            ResetCursorPosition();
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void ResetCursorPosition()
-        {
-            SetCursorPosition(0, 0);
         }
 
         /// <inheritdoc cref="Console.SetCursorPosition"/>
@@ -388,8 +436,21 @@ namespace NetExtender.Utilities.UserInterface
             Console.SetCursorPosition(x, y);
         }
 
+        /// <inheritdoc cref="Console.SetCursorPosition"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void SetCursorPosition(Point position)
+        {
+            Console.SetCursorPosition(position.X, position.Y);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void ResetCursorPosition()
+        {
+            SetCursorPosition(0, 0);
+        }
+
         /// <inheritdoc cref="Console.SetBufferSize"/>
-        public static Size Buffer
+        public static Size BufferSize
         {
             get
             {
@@ -539,7 +600,7 @@ namespace NetExtender.Utilities.UserInterface
         /// <summary>
         /// Return new <see cref="IDisposable"/> <see cref="System.Drawing.Graphics"/> for console window.
         /// </summary>
-        public static Graphics GetConsoleGraphics()
+        public static Graphics CreateConsoleGraphics()
         {
             return Graphics.FromHwnd(ConsoleWindow);
         }
@@ -665,6 +726,11 @@ namespace NetExtender.Utilities.UserInterface
             return SetWindowPos(ConsoleWindow, IntPtr.Zero, x, y, size.Width, size.Height, 0x4 | 0x10);
         }
 
+        public static void CenterToScreen()
+        {
+            CenterToScreen(DefaultMonitorType.Primary);
+        }
+
         public static void CenterToScreen(IScreen screen)
         {
             if (screen is null)
@@ -674,11 +740,6 @@ namespace NetExtender.Utilities.UserInterface
 
             Rectangle rectangle = Rectangle;
             SetWindowPosition(screen.WorkingArea.Width / 2 - rectangle.Width / 2, screen.WorkingArea.Height / 2 - rectangle.Height / 2, rectangle.Size);
-        }
-
-        public static void CenterToScreen()
-        {
-            CenterToScreen(DefaultMonitorType.Primary);
         }
 
         public static void CenterToScreen(DefaultMonitorType type)
@@ -781,7 +842,7 @@ namespace NetExtender.Utilities.UserInterface
 
         private const UInt32 VTProcessing = 0x0004;
 
-        public static Boolean? VTCode
+        public static Boolean? IsVTCode
         {
             get
             {
@@ -904,6 +965,45 @@ namespace NetExtender.Utilities.UserInterface
             CancelEventArgs<ConsoleCtrlType> handler = new CancelEventArgs<ConsoleCtrlType>(type);
             ConsoleExit?.Invoke(handler);
             return handler.Cancel;
+        }
+    }
+
+    [StaticInitializerRequired]
+    internal sealed class ConsoleFontInfo : NetExtender.Types.Console.ConsoleFontInfo
+    {
+        internal static IConsoleFont New
+        {
+            get
+            {
+                return new Font();
+            }
+        }
+        
+        static ConsoleFontInfo()
+        {
+            Font? Current()
+            {
+                if (ConsoleWindowUtilities.Font is not { } info)
+                {
+                    return null;
+                }
+
+                return new Font
+                {
+                    FontName = info.FontName,
+                    Index = info.Index,
+                    Width = info.Width,
+                    Size = info.Size,
+                    Family = info.Family,
+                    Weight = info.Weight
+                };
+            }
+
+            NetExtender.Types.Console.ConsoleFontInfo.Current = Current;
+        }
+
+        private ConsoleFontInfo()
+        {
         }
     }
 }

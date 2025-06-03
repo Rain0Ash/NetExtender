@@ -5,12 +5,13 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using NetExtender.Types.Collections;
+using NetExtender.Types.Dictionaries.Interfaces;
 using NetExtender.Types.Monads;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Dictionaries
 {
-    public class NullableSortedDictionary<TKey, TValue> : SortedDictionary<NullMaybe<TKey>, TValue>, IDictionary<TKey, TValue>, IReadOnlyDictionary<TKey, TValue>
+    public class NullableSortedDictionary<TKey, TValue> : SortedDictionary<NullMaybe<TKey>, TValue>, ISortedDictionary<TKey, TValue>, IReadOnlySortedDictionary<TKey, TValue>
     {
         Boolean ICollection<KeyValuePair<TKey, TValue>>.IsReadOnly
         {
@@ -20,7 +21,7 @@ namespace NetExtender.Types.Dictionaries
             }
         }
 
-        private ICollection<TKey>? _keys { get; set; }
+        private ICollection<TKey>? _keys;
         public new ICollection<TKey> Keys
         {
             get
@@ -59,6 +60,22 @@ namespace NetExtender.Types.Dictionaries
             get
             {
                 return _comparer ??= Comparer.ToComparer();
+            }
+        }
+
+        IComparer<TKey> ISortedDictionary<TKey, TValue>.Comparer
+        {
+            get
+            {
+                return KeyComparer;
+            }
+        }
+
+        IComparer<TKey> IReadOnlySortedDictionary<TKey, TValue>.Comparer
+        {
+            get
+            {
+                return KeyComparer;
             }
         }
 
@@ -126,9 +143,9 @@ namespace NetExtender.Types.Dictionaries
             return base.Remove(key);
         }
 
-        public void CopyTo(KeyValuePair<TKey, TValue>[] array, Int32 arrayIndex)
+        public void CopyTo(KeyValuePair<TKey, TValue>[] array, Int32 index)
         {
-            CollectionUtilities.CopyTo(this, array, arrayIndex);
+            CollectionUtilities.CopyTo(this, array, index);
         }
 
         public new IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()

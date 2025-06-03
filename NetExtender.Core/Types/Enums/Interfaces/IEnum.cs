@@ -3,24 +3,30 @@
 
 using System;
 using NetExtender.Types.Culture;
+using NetExtender.Types.Lists.Interfaces;
 
 namespace NetExtender.Types.Enums.Interfaces
 {
-    public interface IEnum<T, TEnum> : IEnum<T>, IEquatable<IEnum<T, TEnum>>, IComparable<IEnum<T, TEnum>> where T : unmanaged, Enum where TEnum : Enum<T, TEnum>, new()
+    public interface IEnum<T, TEnum> : IEnum<T>, IEquality<IEnum<T, TEnum>> where T : unmanaged, Enum where TEnum : Enum<T, TEnum>, new()
     {
+        public new IReadOnlySortedList<TEnum> Flags { get; }
     }
-    
-    public interface IEnum<T> : IEnum, IEquatable<T>, IEquatable<IEnum<T>>, IComparable<T>, IComparable<IEnum<T>> where T : unmanaged, Enum
+
+    public interface IEnum<T> : IEnum, IEquality<T>, IEquality<IEnum<T>> where T : unmanaged, Enum
     {
-        public T Id { get; }
+        public new T Id { get; }
+        public new IReadOnlySortedList<IEnum<T>> Flags { get; }
     }
-    
+
     public interface IEnum : IComparable, IFormattable
     {
         public Type Underlying { get; }
+        public Enum Id { get; }
         public String Title { get; }
-        public LocalizationIdentifier? Identifier { get; }
         public Boolean HasIdentifier { get; }
+        public LocalizationIdentifier? Identifier { get; }
+        public Boolean IsFlags { get; }
+        public IReadOnlySortedList<IEnum>? Flags { get; }
         public Boolean IsIntern { get; }
     }
 }

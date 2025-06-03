@@ -459,7 +459,7 @@ namespace NetExtender.Localization.Behavior
             return Behavior.GetOrSetAsync(Converter.Convert(key, identifier, ref sections, LocalizationOptions), value, sections, token);
         }
 
-        protected virtual IEnumerable<LocalizationMultiEntry> GetExistsInternal(IEnumerable<ConfigurationEntry> values)
+        protected virtual IEnumerable<LocalizationMultiEntry> GetExistsCore(IEnumerable<ConfigurationEntry> values)
         {
             foreach (IGrouping<ImmutableArray<String>, ConfigurationEntry> group in values.GroupBy(entry => entry.Sections))
             {
@@ -477,13 +477,13 @@ namespace NetExtender.Localization.Behavior
         public virtual LocalizationMultiEntry[]? GetExists(IEnumerable<String>? sections)
         {
             ConfigurationEntry[]? entries = Behavior.GetExists(sections);
-            return entries is not null ? GetExistsInternal(entries).ToArray() : null;
+            return entries is not null ? GetExistsCore(entries).ToArray() : null;
         }
 
         public virtual async Task<LocalizationMultiEntry[]?> GetExistsAsync(IEnumerable<String>? sections, CancellationToken token)
         {
             ConfigurationEntry[]? entries = await Behavior.GetExistsAsync(sections, token).ConfigureAwait(false);
-            return entries is not null ? GetExistsInternal(entries).ToArray() : null;
+            return entries is not null ? GetExistsCore(entries).ToArray() : null;
         }
 
         ConfigurationEntry[]? IConfigBehavior.GetExists(IEnumerable<String>? sections)
@@ -496,7 +496,7 @@ namespace NetExtender.Localization.Behavior
             return Behavior.GetExistsAsync(sections, token);
         }
 
-        protected virtual IEnumerable<LocalizationEntry> GetExistsInternal(LocalizationIdentifier identifier, IEnumerable<ConfigurationEntry> values)
+        protected virtual IEnumerable<LocalizationEntry> GetExistsCore(LocalizationIdentifier identifier, IEnumerable<ConfigurationEntry> values)
         {
             return values.GroupBy(entry => entry.Sections).SelectMany(group => Converter.Extract(group).Where(entry => entry.Identifier == identifier));
         }
@@ -504,16 +504,16 @@ namespace NetExtender.Localization.Behavior
         public virtual LocalizationEntry[]? GetExists(LocalizationIdentifier identifier, IEnumerable<String>? sections)
         {
             ConfigurationEntry[]? entries = Behavior.GetExists(sections);
-            return entries is not null ? GetExistsInternal(identifier, entries).ToArray() : null;
+            return entries is not null ? GetExistsCore(identifier, entries).ToArray() : null;
         }
 
         public virtual async Task<LocalizationEntry[]?> GetExistsAsync(LocalizationIdentifier identifier, IEnumerable<String>? sections, CancellationToken token)
         {
             ConfigurationEntry[]? entries = await Behavior.GetExistsAsync(sections, token).ConfigureAwait(false);
-            return entries is not null ? GetExistsInternal(identifier, entries).ToArray() : null;
+            return entries is not null ? GetExistsCore(identifier, entries).ToArray() : null;
         }
 
-        protected virtual IEnumerable<LocalizationValueEntry> GetExistsValuesInternal(IEnumerable<ConfigurationValueEntry> values)
+        protected virtual IEnumerable<LocalizationValueEntry> GetExistsValuesCore(IEnumerable<ConfigurationValueEntry> values)
         {
             return Converter.Extract(values);
         }
@@ -521,16 +521,16 @@ namespace NetExtender.Localization.Behavior
         public virtual LocalizationValueEntry[]? GetExistsValues(IEnumerable<String>? sections)
         {
             ConfigurationValueEntry[]? entries = Behavior.GetExistsValues(sections);
-            return entries is not null ? GetExistsValuesInternal(entries).ToArray() : null;
+            return entries is not null ? GetExistsValuesCore(entries).ToArray() : null;
         }
 
         public virtual async Task<LocalizationValueEntry[]?> GetExistsValuesAsync(IEnumerable<String>? sections, CancellationToken token)
         {
             ConfigurationValueEntry[]? entries = await Behavior.GetExistsValuesAsync(sections, token).ConfigureAwait(false);
-            return entries is not null ? GetExistsValuesInternal(entries).ToArray() : null;
+            return entries is not null ? GetExistsValuesCore(entries).ToArray() : null;
         }
 
-        protected virtual IEnumerable<LocalizationMultiValueEntry> GetExistsMultiValuesInternal(IEnumerable<ConfigurationValueEntry> values)
+        protected virtual IEnumerable<LocalizationMultiValueEntry> GetExistsMultiValuesCore(IEnumerable<ConfigurationValueEntry> values)
         {
             foreach (IGrouping<ImmutableArray<String>, ConfigurationValueEntry> group in values.GroupBy(entry => entry.Sections))
             {
@@ -550,13 +550,13 @@ namespace NetExtender.Localization.Behavior
         public virtual LocalizationMultiValueEntry[]? GetExistsMultiValues(IEnumerable<String>? sections)
         {
             ConfigurationValueEntry[]? entries = Behavior.GetExistsValues(sections);
-            return entries is not null ? GetExistsMultiValuesInternal(entries).ToArray() : null;
+            return entries is not null ? GetExistsMultiValuesCore(entries).ToArray() : null;
         }
 
         public virtual async Task<LocalizationMultiValueEntry[]?> GetExistsMultiValuesAsync(IEnumerable<String>? sections, CancellationToken token)
         {
             ConfigurationValueEntry[]? entries = await Behavior.GetExistsValuesAsync(sections, token).ConfigureAwait(false);
-            return entries is not null ? GetExistsMultiValuesInternal(entries).ToArray() : null;
+            return entries is not null ? GetExistsMultiValuesCore(entries).ToArray() : null;
         }
 
         ConfigurationValueEntry[]? IConfigBehavior.GetExistsValues(IEnumerable<String>? sections)
@@ -569,7 +569,7 @@ namespace NetExtender.Localization.Behavior
             return Behavior.GetExistsValuesAsync(sections, token);
         }
 
-        protected virtual IEnumerable<LocalizationValueEntry> GetExistsValuesInternal(LocalizationIdentifier identifier, IEnumerable<ConfigurationValueEntry> values)
+        protected virtual IEnumerable<LocalizationValueEntry> GetExistsValuesCore(LocalizationIdentifier identifier, IEnumerable<ConfigurationValueEntry> values)
         {
             return values.GroupBy(entry => entry.Sections).SelectMany(group => Converter.Extract(group).Where(entry => entry.Identifier == identifier));
         }
@@ -577,13 +577,13 @@ namespace NetExtender.Localization.Behavior
         public virtual LocalizationValueEntry[]? GetExistsValues(LocalizationIdentifier identifier, IEnumerable<String>? sections)
         {
             ConfigurationValueEntry[]? entries = Behavior.GetExistsValues(sections);
-            return entries is not null ? GetExistsValuesInternal(identifier, entries).ToArray() : null;
+            return entries is not null ? GetExistsValuesCore(identifier, entries).ToArray() : null;
         }
 
         public virtual async Task<LocalizationValueEntry[]?> GetExistsValuesAsync(LocalizationIdentifier identifier, IEnumerable<String>? sections, CancellationToken token)
         {
             ConfigurationValueEntry[]? entries = await Behavior.GetExistsValuesAsync(sections, token).ConfigureAwait(false);
-            return entries is not null ? GetExistsValuesInternal(identifier, entries).ToArray() : null;
+            return entries is not null ? GetExistsValuesCore(identifier, entries).ToArray() : null;
         }
 
         public virtual Boolean Clear(IEnumerable<String>? sections)

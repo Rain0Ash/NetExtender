@@ -25,52 +25,52 @@ namespace NetExtender.Windows.Services.Types.Services
         {
             try
             {
-                if (!BeforeCustomCommandInternal(command))
+                if (!BeforeCustomCommandCore(command))
                 {
                     return;
                 }
 
-                if (!CustomCommandInternal(command))
+                if (!CustomCommandCore(command))
                 {
                     return;
                 }
 
-                AfterCustomCommandInternal(command);
+                AfterCustomCommandCore(command);
             }
             catch (Exception exception)
             {
-                if (!ExceptionCustomCommandInternalHandler(command, exception))
+                if (!ExceptionCustomCommandCoreHandler(command, exception))
                 {
                     throw;
                 }
             }
             finally
             {
-                FinallyCustomCommandInternalHandler(command);
+                FinallyCustomCommandCoreHandler(command);
             }
         }
 
-        protected virtual Boolean BeforeCustomCommandInternal(Int32 command)
+        protected virtual Boolean BeforeCustomCommandCore(Int32 command)
         {
             return true;
         }
 
-        protected virtual Boolean CustomCommandInternal(Int32 command)
+        protected virtual Boolean CustomCommandCore(Int32 command)
         {
             return true;
         }
 
-        protected virtual Boolean AfterCustomCommandInternal(Int32 command)
+        protected virtual Boolean AfterCustomCommandCore(Int32 command)
         {
             return true;
         }
 
-        protected virtual Boolean ExceptionCustomCommandInternalHandler(Int32 command, Exception exception)
+        protected virtual Boolean ExceptionCustomCommandCoreHandler(Int32 command, Exception exception)
         {
             return false;
         }
 
-        protected virtual Boolean FinallyCustomCommandInternalHandler(Int32 command)
+        protected virtual Boolean FinallyCustomCommandCoreHandler(Int32 command)
         {
             return true;
         }
@@ -79,54 +79,54 @@ namespace NetExtender.Windows.Services.Types.Services
         {
             try
             {
-                if (!BeforePowerEventInternal(power))
+                if (!BeforePowerEventCore(power))
                 {
                     return false;
                 }
 
-                if (!PowerEventInternal(power))
+                if (!PowerEventCore(power))
                 {
                     return false;
                 }
 
-                return AfterPowerEventInternal(power);
+                return AfterPowerEventCore(power);
             }
             catch (Exception exception)
             {
-                if (!ExceptionPowerEventInternalHandler(power, exception))
+                if (!ExceptionPowerEventCoreHandler(power, exception))
                 {
                     throw;
                 }
             }
             finally
             {
-                FinallyPowerEventInternalHandler(power);
+                FinallyPowerEventCoreHandler(power);
             }
 
             return base.OnPowerEvent(power);
         }
 
-        protected virtual Boolean BeforePowerEventInternal(PowerBroadcastStatus power)
+        protected virtual Boolean BeforePowerEventCore(PowerBroadcastStatus power)
         {
             return true;
         }
 
-        protected virtual Boolean PowerEventInternal(PowerBroadcastStatus power)
+        protected virtual Boolean PowerEventCore(PowerBroadcastStatus power)
         {
             return true;
         }
 
-        protected virtual Boolean AfterPowerEventInternal(PowerBroadcastStatus power)
+        protected virtual Boolean AfterPowerEventCore(PowerBroadcastStatus power)
         {
             return true;
         }
 
-        protected virtual Boolean ExceptionPowerEventInternalHandler(PowerBroadcastStatus power, Exception exception)
+        protected virtual Boolean ExceptionPowerEventCoreHandler(PowerBroadcastStatus power, Exception exception)
         {
             return false;
         }
 
-        protected virtual Boolean FinallyPowerEventInternalHandler(PowerBroadcastStatus power)
+        protected virtual Boolean FinallyPowerEventCoreHandler(PowerBroadcastStatus power)
         {
             return true;
         }
@@ -135,52 +135,52 @@ namespace NetExtender.Windows.Services.Types.Services
         {
             try
             {
-                if (!BeforeSessionChangeInternal(description))
+                if (!BeforeSessionChangeCore(description))
                 {
                     return;
                 }
 
-                if (!SessionChangeInternal(description))
+                if (!SessionChangeCore(description))
                 {
                     return;
                 }
 
-                AfterSessionChangeInternal(description);
+                AfterSessionChangeCore(description);
             }
             catch (Exception exception)
             {
-                if (!ExceptionSessionChangeInternalHandler(description, exception))
+                if (!ExceptionSessionChangeCoreHandler(description, exception))
                 {
                     throw;
                 }
             }
             finally
             {
-                FinallySessionChangeInternalHandler(description);
+                FinallySessionChangeCoreHandler(description);
             }
         }
 
-        protected virtual Boolean BeforeSessionChangeInternal(SessionChangeDescription description)
+        protected virtual Boolean BeforeSessionChangeCore(SessionChangeDescription description)
         {
             return true;
         }
 
-        protected virtual Boolean SessionChangeInternal(SessionChangeDescription description)
+        protected virtual Boolean SessionChangeCore(SessionChangeDescription description)
         {
             return true;
         }
 
-        protected virtual Boolean AfterSessionChangeInternal(SessionChangeDescription description)
+        protected virtual Boolean AfterSessionChangeCore(SessionChangeDescription description)
         {
             return true;
         }
 
-        protected virtual Boolean ExceptionSessionChangeInternalHandler(SessionChangeDescription description, Exception exception)
+        protected virtual Boolean ExceptionSessionChangeCoreHandler(SessionChangeDescription description, Exception exception)
         {
             return false;
         }
 
-        protected virtual Boolean FinallySessionChangeInternalHandler(SessionChangeDescription description)
+        protected virtual Boolean FinallySessionChangeCoreHandler(SessionChangeDescription description)
         {
             return true;
         }
@@ -191,52 +191,52 @@ namespace NetExtender.Windows.Services.Types.Services
 
             try
             {
-                if (!BeforeStartInternal(args))
+                if (!BeforeStartCore(args))
                 {
                     return;
                 }
 
-                if (!StartInternal(args))
+                if (!StartCore(args))
                 {
                     return;
                 }
 
-                AfterStartInternal(args);
+                AfterStartCore(args);
             }
             catch (Exception exception)
             {
-                if (!ExceptionStartInternalHandler(args, exception))
+                if (!ExceptionStartCoreHandler(args, exception))
                 {
                     throw;
                 }
             }
             finally
             {
-                FinallyStartInternalHandler(args);
+                FinallyStartCoreHandler(args);
             }
         }
 
-        protected virtual Boolean BeforeStartInternal(String[] args)
+        protected virtual Boolean BeforeStartCore(String[] args)
         {
             return true;
         }
 
-        protected virtual Boolean StartInternal(String[] args)
+        protected virtual Boolean StartCore(String[] args)
         {
             return true;
         }
 
-        protected virtual Boolean AfterStartInternal(String[] args)
+        protected virtual Boolean AfterStartCore(String[] args)
         {
             return true;
         }
 
-        protected virtual Boolean ExceptionStartInternalHandler(String[] args, Exception exception)
+        protected virtual Boolean ExceptionStartCoreHandler(String[] args, Exception exception)
         {
             return false;
         }
 
-        protected virtual Boolean FinallyStartInternalHandler(String[] args)
+        protected virtual Boolean FinallyStartCoreHandler(String[] args)
         {
             return true;
         }
@@ -245,52 +245,52 @@ namespace NetExtender.Windows.Services.Types.Services
         {
             try
             {
-                if (!BeforeStopInternal())
+                if (!BeforeStopCore())
                 {
                     return;
                 }
 
-                if (!StopInternal())
+                if (!StopCore())
                 {
                     return;
                 }
 
-                AfterStopInternal();
+                AfterStopCore();
             }
             catch (Exception exception)
             {
-                if (!ExceptionStopInternalHandler(exception))
+                if (!ExceptionStopCoreHandler(exception))
                 {
                     throw;
                 }
             }
             finally
             {
-                FinallyStopInternalHandler();
+                FinallyStopCoreHandler();
             }
         }
 
-        protected virtual Boolean BeforeStopInternal()
+        protected virtual Boolean BeforeStopCore()
         {
             return true;
         }
 
-        protected virtual Boolean StopInternal()
+        protected virtual Boolean StopCore()
         {
             return true;
         }
 
-        protected virtual Boolean AfterStopInternal()
+        protected virtual Boolean AfterStopCore()
         {
             return true;
         }
 
-        protected virtual Boolean ExceptionStopInternalHandler(Exception exception)
+        protected virtual Boolean ExceptionStopCoreHandler(Exception exception)
         {
             return false;
         }
 
-        protected virtual Boolean FinallyStopInternalHandler()
+        protected virtual Boolean FinallyStopCoreHandler()
         {
             return true;
         }
@@ -299,37 +299,37 @@ namespace NetExtender.Windows.Services.Types.Services
         {
             try
             {
-                if (!BeforePauseInternal())
+                if (!BeforePauseCore())
                 {
                     return;
                 }
 
-                if (!PauseInternal())
+                if (!PauseCore())
                 {
                     return;
                 }
 
-                AfterPauseInternal();
+                AfterPauseCore();
             }
             catch (Exception exception)
             {
-                if (!ExceptionPauseInternalHandler(exception))
+                if (!ExceptionPauseCoreHandler(exception))
                 {
                     throw;
                 }
             }
             finally
             {
-                FinallyPauseInternalHandler();
+                FinallyPauseCoreHandler();
             }
         }
 
-        protected virtual Boolean BeforePauseInternal()
+        protected virtual Boolean BeforePauseCore()
         {
             return PauseStateHandler is not null && !PauseStateHandler.IsPaused;
         }
 
-        protected virtual Boolean PauseInternal()
+        protected virtual Boolean PauseCore()
         {
             if (PauseStateHandler is null || PauseStateHandler.IsPaused)
             {
@@ -340,17 +340,17 @@ namespace NetExtender.Windows.Services.Types.Services
             return true;
         }
 
-        protected virtual Boolean AfterPauseInternal()
+        protected virtual Boolean AfterPauseCore()
         {
             return true;
         }
 
-        protected virtual Boolean ExceptionPauseInternalHandler(Exception exception)
+        protected virtual Boolean ExceptionPauseCoreHandler(Exception exception)
         {
             return false;
         }
 
-        protected virtual Boolean FinallyPauseInternalHandler()
+        protected virtual Boolean FinallyPauseCoreHandler()
         {
             return true;
         }
@@ -359,37 +359,37 @@ namespace NetExtender.Windows.Services.Types.Services
         {
             try
             {
-                if (!BeforeContinueInternal())
+                if (!BeforeContinueCore())
                 {
                     return;
                 }
 
-                if (!ContinueInternal())
+                if (!ContinueCore())
                 {
                     return;
                 }
 
-                AfterContinueInternal();
+                AfterContinueCore();
             }
             catch (Exception exception)
             {
-                if (!ExceptionContinueInternalHandler(exception))
+                if (!ExceptionContinueCoreHandler(exception))
                 {
                     throw;
                 }
             }
             finally
             {
-                FinallyContinueInternalHandler();
+                FinallyContinueCoreHandler();
             }
         }
 
-        protected virtual Boolean BeforeContinueInternal()
+        protected virtual Boolean BeforeContinueCore()
         {
             return PauseStateHandler is not null && PauseStateHandler.IsPaused;
         }
 
-        protected virtual Boolean ContinueInternal()
+        protected virtual Boolean ContinueCore()
         {
             if (PauseStateHandler is null || !PauseStateHandler.IsPaused)
             {
@@ -400,17 +400,17 @@ namespace NetExtender.Windows.Services.Types.Services
             return true;
         }
 
-        protected virtual Boolean AfterContinueInternal()
+        protected virtual Boolean AfterContinueCore()
         {
             return true;
         }
 
-        protected virtual Boolean ExceptionContinueInternalHandler(Exception exception)
+        protected virtual Boolean ExceptionContinueCoreHandler(Exception exception)
         {
             return false;
         }
 
-        protected virtual Boolean FinallyContinueInternalHandler()
+        protected virtual Boolean FinallyContinueCoreHandler()
         {
             return true;
         }

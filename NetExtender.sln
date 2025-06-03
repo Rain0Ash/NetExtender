@@ -41,6 +41,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.Cryptography", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.Cryptography.Certificate", "NetExtender.Cryptography.Certificate\NetExtender.Cryptography.Certificate.csproj", "{03F0B837-5E35-4F53-8A6F-DECB75580DAD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.JWT", "NetExtender.JWT\NetExtender.JWT.csproj", "{ACE706EA-AFC5-4755-87C3-713E386A0B6F}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.Memento", "NetExtender.Memento\NetExtender.Memento.csproj", "{2EA1EAFC-84DC-4F99-9609-34A821C35756}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.StrongId", "NetExtender.StrongId\NetExtender.StrongId.csproj", "{A79BBB7F-2DCF-4337-877B-F1D0E3E4F41C}"
@@ -310,6 +312,11 @@ Global
                 {03F0B837-5E35-4F53-8A6F-DECB75580DAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
                 {03F0B837-5E35-4F53-8A6F-DECB75580DAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
                 {03F0B837-5E35-4F53-8A6F-DECB75580DAD}.Release|Any CPU.Build.0 = Release|Any CPU
+
+                {ACE706EA-AFC5-4755-87C3-713E386A0B6F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+                {ACE706EA-AFC5-4755-87C3-713E386A0B6F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+                {ACE706EA-AFC5-4755-87C3-713E386A0B6F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+                {ACE706EA-AFC5-4755-87C3-713E386A0B6F}.Release|Any CPU.Build.0 = Release|Any CPU
 
                 {2EA1EAFC-84DC-4F99-9609-34A821C35756}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
                 {2EA1EAFC-84DC-4F99-9609-34A821C35756}.Debug|Any CPU.Build.0 = Debug|Any CPU
@@ -706,6 +713,7 @@ Global
                 {47692AB7-5D73-4577-B4E6-BFE37AA19954} = {0831D84F-7D4F-4E1A-87BA-8E00A2BFB199}
                 {A876A04B-A1C8-45A8-8072-CA7A40A3F6F3} = {0831D84F-7D4F-4E1A-87BA-8E00A2BFB199}
                 {03F0B837-5E35-4F53-8A6F-DECB75580DAD} = {0831D84F-7D4F-4E1A-87BA-8E00A2BFB199}
+                {ACE706EA-AFC5-4755-87C3-713E386A0B6F} = {0831D84F-7D4F-4E1A-87BA-8E00A2BFB199}
                 {2EA1EAFC-84DC-4F99-9609-34A821C35756} = {0831D84F-7D4F-4E1A-87BA-8E00A2BFB199}
                 {A79BBB7F-2DCF-4337-877B-F1D0E3E4F41C} = {0831D84F-7D4F-4E1A-87BA-8E00A2BFB199}
                 {39631D3C-404E-487F-BFFB-7F3F2F720B7F} = {0831D84F-7D4F-4E1A-87BA-8E00A2BFB199}

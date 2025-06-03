@@ -2,7 +2,6 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -147,26 +146,26 @@ namespace NetExtender.Initializer
 
         private static event Action? DomainInitialized;
 
-        private static Boolean? _domain = false;
+        private static Boolean? domain = false;
         protected internal static Boolean? IsDomain
         {
             get
             {
-                return _domain;
+                return domain;
             }
             set
             {
-                if (_domain is not false && value is false || _domain is true)
+                if (domain is not false && value is false || domain is true)
                 {
                     throw new InvalidOperationException();
                 }
 
-                if (_domain == value)
+                if (domain == value)
                 {
                     return;
                 }
 
-                _domain = value;
+                domain = value;
                 DomainInitialized?.Invoke();
                 DomainInitialized = null;
             }
@@ -462,6 +461,11 @@ namespace NetExtender.Initializer
             public static implicit operator Task<T>(Awaiter<T> value)
             {
                 return value.Internal ?? Task.FromResult(default(T)!);
+            }
+
+            public static implicit operator Awaiter<T>(T value)
+            {
+                return Task.CompletedTask.ContinueWith<T>(_ => value);
             }
             
             public static Boolean operator ==(Awaiter<T> first, Awaiter<T> second)

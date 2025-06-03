@@ -52,9 +52,9 @@ namespace NetExtender.Types.Collections
             Collection.Clear();
         }
 
-        public void CopyTo(T[] array, Int32 arrayIndex)
+        public void CopyTo(T[] array, Int32 index)
         {
-            Collection.CopyTo(array, arrayIndex);
+            Collection.CopyTo(array, index);
         }
 
         public IEnumerator<T> GetEnumerator()

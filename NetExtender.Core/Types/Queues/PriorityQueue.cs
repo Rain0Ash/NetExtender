@@ -176,7 +176,6 @@ namespace NetExtender.Types.Queues
             EnqueueRange(Upper, source);
         }
 
-        [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
         public void EnqueueRange(Int32 priority, IEnumerable<T> source)
         {
             if (source is null)
@@ -382,22 +381,22 @@ namespace NetExtender.Types.Queues
             return GetEnumerator();
         }
 
-        public void CopyTo(T[] array, Int32 arrayIndex)
+        public void CopyTo(T[] array, Int32 index)
         {
             if (array is null)
             {
                 throw new ArgumentNullException(nameof(array));
             }
 
-            if (arrayIndex < 0 || arrayIndex > array.Length || array.Length - arrayIndex < Count)
+            if (index < 0 || index > array.Length || array.Length - index < Count)
             {
-                throw new ArgumentOutOfRangeException(nameof(arrayIndex), arrayIndex, null);
+                throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
 
             foreach (Queue<T> queue in Queue.Values)
             {
-                queue.CopyTo(array, arrayIndex);
-                arrayIndex += queue.Count;
+                queue.CopyTo(array, index);
+                index += queue.Count;
             }
         }
 

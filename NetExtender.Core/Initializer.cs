@@ -7,6 +7,7 @@ using System.Runtime.CompilerServices;
 using NetExtender.Types.Exceptions;
 using NetExtender.Utilities.Core;
 
+[assembly: IgnoresAccessChecksTo("System.Private.CoreLib")]
 namespace NetExtender.Initializer
 {
     internal static class NetExtenderInitializer

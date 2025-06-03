@@ -45,7 +45,7 @@ namespace NetExtender.Windows.Utilities.IO
         {
             get
             {
-                static unsafe KeyboardLayout[] Internal()
+                static unsafe KeyboardLayout[] Core()
                 {
                     Int32 size = GetKeyboardLayoutList(0, null);
 
@@ -58,7 +58,7 @@ namespace NetExtender.Windows.Utilities.IO
                     return pointers.Select(KeyboardLayout.Create).ToArray();
                 }
 
-                return ThreadUtilities.STA(Internal);
+                return ThreadUtilities.STA(Core);
             }
         }
 
@@ -81,7 +81,7 @@ namespace NetExtender.Windows.Utilities.IO
             }
             set
             {
-                if (!SetKeyboardLayoutInternal(value, false))
+                if (!SetKeyboardLayoutCore(value, false))
                 {
                     throw new ArgumentException("Keyboard layout is invalid", nameof(value));
                 }
@@ -89,7 +89,7 @@ namespace NetExtender.Windows.Utilities.IO
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static Boolean SetKeyboardLayoutInternal(KeyboardLayout layout, Boolean process)
+        private static Boolean SetKeyboardLayoutCore(KeyboardLayout layout, Boolean process)
         {
             IntPtr handle = (IntPtr) layout;
             if (handle == IntPtr.Zero)
@@ -116,7 +116,7 @@ namespace NetExtender.Windows.Utilities.IO
                     return true;
                 }
 
-                return SetKeyboardLayoutInternal(layout, process) && KeyboardLayout == layout;
+                return SetKeyboardLayoutCore(layout, process) && KeyboardLayout == layout;
             }
             catch (Exception)
             {
@@ -170,7 +170,7 @@ namespace NetExtender.Windows.Utilities.IO
                 }
 
                 KeyboardLayout next = layouts[unchecked(index + count) % layouts.Length];
-                SetKeyboardLayoutInternal(next, process);
+                SetKeyboardLayoutCore(next, process);
 
                 return KeyboardLayout == next;
             }

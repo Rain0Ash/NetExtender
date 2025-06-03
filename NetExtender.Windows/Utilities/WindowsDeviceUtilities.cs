@@ -6,6 +6,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using NetExtender.Windows.Types;
 using NetExtender.Utilities.Core;
@@ -34,7 +35,7 @@ namespace NetExtender.Utilities.Windows
         }
     }
 
-    public readonly struct MonitorInfo
+    public readonly struct MonitorInfo : IStruct<MonitorInfo>
     {
         public String Name { get; }
         public Rectangle Area { get; }
@@ -42,6 +43,7 @@ namespace NetExtender.Utilities.Windows
 
         public Boolean IsEmpty
         {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
                 return Name is null;

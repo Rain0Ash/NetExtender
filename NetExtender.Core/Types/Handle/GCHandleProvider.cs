@@ -9,9 +9,14 @@ namespace Core.Types.Handle
 {
     public class GCHandleProvider : IDisposable
     {
-        public GCHandleProvider(Object obj)
+        public GCHandleProvider(Object value)
         {
-            Handle = obj.ToGCHandle();
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            Handle = value.ToGCHandle();
         }
 
         public GCHandleProvider(GCHandle handle)

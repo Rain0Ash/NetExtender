@@ -7,6 +7,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 using NetExtender.Domains.Interfaces;
 using NetExtender.Domains.Utilities;
+using NetExtender.Types.Exceptions;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Domains
@@ -151,13 +152,13 @@ namespace NetExtender.Domains
             name = name.Trim();
             if (String.IsNullOrEmpty(name))
             {
-                throw new ArgumentException("Value cannot be null or empty.", nameof(name));
+                throw new ArgumentNullOrEmptyStringException(name, nameof(name));
             }
 
             identifier = ToIdentifier(identifier);
             if (String.IsNullOrEmpty(identifier))
             {
-                throw new ArgumentException("Value cannot be null or empty.", nameof(identifier));
+                throw new ArgumentNullOrEmptyStringException(identifier, nameof(identifier));
             }
 
             Guid = Guid.NewGuid();
@@ -227,7 +228,7 @@ namespace NetExtender.Domains
 
         public void Dispose()
         {
-            DisposeInternal(true);
+            DisposeCore(true);
             GC.SuppressFinalize(this);
         }
 
@@ -235,7 +236,7 @@ namespace NetExtender.Domains
         {
         }
 
-        private void DisposeInternal(Boolean disposing)
+        private void DisposeCore(Boolean disposing)
         {
             if (_disposed)
             {

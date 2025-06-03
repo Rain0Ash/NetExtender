@@ -8,8 +8,18 @@ using NetExtender.Utilities.Numerics;
 namespace NetExtender.Types.Numerics
 {
     [Serializable]
-    public readonly struct AngleDegree : IEquatable<AngleDegree>, IComparable<AngleDegree>, IFormattable
+    public readonly struct AngleDegree : IEquality<AngleDegree>, IFormattable
     {
+        public static implicit operator AngleDegree(Double degree)
+        {
+            return new AngleDegree(degree);
+        }
+
+        public static explicit operator Double(AngleDegree angle)
+        {
+            return angle.Degree;
+        }
+        
         /// <summary>
         /// Represents the zero <see cref="AngleDegree"/> value (0 degrees).
         /// </summary>
@@ -49,16 +59,6 @@ namespace NetExtender.Types.Numerics
         /// Represents the largest possible value of a <see cref="AngleDegree"/>.
         /// </summary>
         public static AngleDegree MaxValue { get; } = new AngleDegree(Double.MaxValue);
-
-        public static explicit operator Double(AngleDegree angle)
-        {
-            return angle.Degree;
-        }
-
-        public static implicit operator AngleDegree(Double degree)
-        {
-            return new AngleDegree(degree);
-        }
 
         /// <summary>
         /// Indicates whether two <see cref="AngleDegree"/> instances are equal.
@@ -242,6 +242,16 @@ namespace NetExtender.Types.Numerics
         }
 
         /// <summary>
+        /// Returns a hash code for this instance.
+        /// </summary>
+        /// <returns>A 32-bit signed integer hash code.</returns>
+        [Pure]
+        public override Int32 GetHashCode()
+        {
+            return Degree.GetHashCode();
+        }
+
+        /// <summary>
         /// Indicates whether two <see cref="AngleDegree"/> instances are equal.
         /// </summary>
         /// <param name="first">The first angle to compare.</param>
@@ -281,16 +291,6 @@ namespace NetExtender.Types.Numerics
                 AngleRevolution angle => Equals(angle.ToAngleDegree()),
                 _ => false
             };
-        }
-
-        /// <summary>
-        /// Returns a hash code for this instance.
-        /// </summary>
-        /// <returns>A 32-bit signed integer hash code.</returns>
-        [Pure]
-        public override Int32 GetHashCode()
-        {
-            return Degree.GetHashCode();
         }
 
         /// <summary>

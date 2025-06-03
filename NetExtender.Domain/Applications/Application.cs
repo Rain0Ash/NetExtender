@@ -26,7 +26,6 @@ namespace NetExtender.Domains.Applications
 
         public abstract IDispatcher? Dispatcher { get; }
         public abstract ApplicationShutdownMode ShutdownMode { get; set; }
-
         public virtual CancellationToken ShutdownToken { get; protected set; }
 
         protected virtual CancellationTokenRegistration RegisterShutdownToken(CancellationToken token)

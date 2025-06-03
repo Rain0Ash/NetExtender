@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using NetExtender.NewtonSoft.Types.Trees;
 using NetExtender.Types.Trees.Interfaces;
@@ -32,6 +33,7 @@ namespace NetExtender.Types.Trees
         [JsonIgnore]
         public Int64 FullCount
         {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
                 return Node.FullCount;
@@ -41,6 +43,7 @@ namespace NetExtender.Types.Trees
         [JsonIgnore]
         public Boolean IsEmpty
         {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
                 return Node.IsEmpty;
@@ -50,6 +53,7 @@ namespace NetExtender.Types.Trees
         [JsonIgnore]
         public Boolean HasValue
         {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
                 return Node.HasValue;
@@ -59,6 +63,7 @@ namespace NetExtender.Types.Trees
         [JsonIgnore]
         public Boolean HasTree
         {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
                 return Node.HasTree;
@@ -68,6 +73,7 @@ namespace NetExtender.Types.Trees
         [JsonIgnore]
         public Boolean TreeIsEmpty
         {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
                 return Node.TreeIsEmpty;
@@ -413,7 +419,7 @@ namespace NetExtender.Types.Trees
             return Purge(key, (IEnumerable<TKey>) sections);
         }
 
-        private IEnumerable<DictionaryTreeEntry<TKey, TValue>> DumpInternal(IEnumerable<TKey>? sections)
+        private IEnumerable<DictionaryTreeEntry<TKey, TValue>> DumpCore(IEnumerable<TKey>? sections)
         {
             ImmutableArray<TKey> section = sections.AsImmutableArray();
 
@@ -482,7 +488,7 @@ namespace NetExtender.Types.Trees
         {
             try
             {
-                return DumpInternal(sections).ToArray();
+                return DumpCore(sections).ToArray();
             }
             catch (Exception)
             {

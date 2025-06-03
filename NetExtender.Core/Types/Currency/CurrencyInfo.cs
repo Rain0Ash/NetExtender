@@ -66,6 +66,16 @@ namespace NetExtender.Types.Currency
             return (CountryInfo?) info;
         }
 
+        public static Boolean operator ==(CurrencyInfo? first, CurrencyInfo? second)
+        {
+            return ReferenceEquals(first, second) || first is not null && first.Equals(second);
+        }
+
+        public static Boolean operator !=(CurrencyInfo? first, CurrencyInfo? second)
+        {
+            return !(first == second);
+        }
+
         public static CurrencyInfo? CurrentCurrency
         {
             get

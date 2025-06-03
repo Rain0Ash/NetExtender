@@ -1,3 +1,6 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 using System;
 using System.Collections;
 using System.Collections.Concurrent;
@@ -26,7 +29,7 @@ namespace NetExtender.Utilities.Types
             public Inherit.Result Inherit { get; init; }
         }
         
-        private readonly struct MiddlewareResult : IComparable<MiddlewareResult>
+        private readonly struct MiddlewareResult : IComparableStruct<MiddlewareResult>
         {
             public Type Type { get; }
             public IMiddlewareInfo? Middleware { get; }
@@ -34,6 +37,7 @@ namespace NetExtender.Utilities.Types
             
             public Boolean IsEmpty
             {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 get
                 {
                     return Type is null;
@@ -157,7 +161,7 @@ namespace NetExtender.Utilities.Types
             {
                 return new MiddlewareResult(type)
                 {
-                    Exception = new TypeNotSupportedException(type, $"Type '{type}' must implements '{typeof(IMiddleware<>)}' or '{typeof(IAsyncMiddleware<>)}'.")
+                    Exception = new TypeNotSupportedException(type, $"Type '{type}' must implements '{typeof(IMiddleware<>).Name}' or '{typeof(IAsyncMiddleware<>).Name}'.")
                 };
             }
 

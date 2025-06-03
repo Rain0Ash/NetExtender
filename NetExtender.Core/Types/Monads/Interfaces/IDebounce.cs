@@ -1,11 +1,13 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using NetExtender.Interfaces;
 
 namespace NetExtender.Types.Monads.Interfaces
 {
-    public interface IDebounce<T> : IDebounce, IDebounceEquatable<T, T>, IDebounceEquatable<T, IDebounce<T>>, IDebounceComparable<T, T>, IDebounceComparable<T, IDebounce<T>>, ICloneable<IDebounce<T>>
+    public interface IDebounce<T> : IDebounce, IMonad<T>, IDebounceEquality<T, T>, IDebounceEquality<T, IDebounce<T>>, ICloneable<IDebounce<T>>
     {
         public T Value { get; }
         
@@ -17,10 +19,9 @@ namespace NetExtender.Types.Monads.Interfaces
         public Boolean Set(T value, out DateTime time, [MaybeNullWhen(false)] out IDebounce<T> result);
         
         public new IDebounce<T> Clone();
-        public Boolean Equals(Object? other, IEqualityComparer<T>? comparer);
     }
     
-    public interface IDebounce : ICloneable, ICloneable<IDebounce>
+    public interface IDebounce : IMonad, ICloneable<IDebounce>
     {
         public TimeSpan Time { get; }
         public DateTime SetTime { get; }
@@ -30,21 +31,27 @@ namespace NetExtender.Types.Monads.Interfaces
         public new IDebounce Clone();
     }
     
-    public interface IDebounceEquatable<out T, TDebounce> : IDebounceEquatable<TDebounce>
-    {
-        public Boolean Equals(TDebounce? other, IEqualityComparer<T>? comparer);
-    }
-    
-    public interface IDebounceEquatable<T> : IEquatable<T>
+    public interface IDebounceEquality<out T, TDebounce> : IDebounceEquality<TDebounce>, IDebounceComparable<T, TDebounce>, IDebounceEquatable<T, TDebounce>, IMonadEquality<T, TDebounce>
     {
     }
     
-    public interface IDebounceComparable<out T, in TDebounce> : IDebounceComparable<TDebounce>
+    public interface IDebounceEquality<T> : IDebounceComparable<T>, IDebounceEquatable<T>, IMonadEquality<T>
     {
-        public Int32 CompareTo(TDebounce? other, IComparer<T>? comparer);
+    }
+
+    public interface IDebounceEquatable<out T, TDebounce> : IDebounceEquatable<TDebounce>, IMonadEquatable<T, TDebounce>
+    {
     }
     
-    public interface IDebounceComparable<in T> : IComparable<T>
+    public interface IDebounceEquatable<T> : IMonadEquatable<T>
+    {
+    }
+    
+    public interface IDebounceComparable<out T, in TDebounce> : IDebounceComparable<TDebounce>, IMonadComparable<T, TDebounce>
+    {
+    }
+    
+    public interface IDebounceComparable<in T> : IMonadComparable<T>
     {
     }
 }

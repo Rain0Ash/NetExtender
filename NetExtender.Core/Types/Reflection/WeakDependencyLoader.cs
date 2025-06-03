@@ -1,3 +1,6 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -35,7 +38,7 @@ namespace NetExtender.Types.Reflection
 
     public class WeakDependencyLoader<TFactory> : IWeakDependencyLoader<TFactory> where TFactory : class, IWeakDependencyFactory, new()
     {
-        public SyncRoot SyncRoot { get; } = ConcurrentUtilities.SyncRoot;
+        public SyncRoot SyncRoot { get; } = SyncRoot.Create();
         
         private Assembly? _assembly;
         public Assembly? Assembly

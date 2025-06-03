@@ -120,9 +120,9 @@ namespace NetExtender.Configuration.Behavior.Settings
             Synchronizer.Clear();
         }
 
-        public void CopyTo(IConfigPropertyInfo[] array, Int32 arrayIndex)
+        public void CopyTo(IConfigPropertyInfo[] array, Int32 index)
         {
-            Synchronizer.CopyTo(array, arrayIndex);
+            Synchronizer.CopyTo(array, index);
         }
 
         public IEnumerator<IConfigPropertyInfo> GetEnumerator()

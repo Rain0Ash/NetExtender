@@ -3,6 +3,7 @@
     <PropertyGroup>
         <TargetFramework>net6.0-windows</TargetFramework>
         <Nullable>enable</Nullable>
+        <ImplicitUsings>disable</ImplicitUsings>
         <OutputType>Library</OutputType>
         <LangVersion>10</LangVersion>
         <Authors>Rain0Ash</Authors>
@@ -24,7 +25,7 @@
         <PackageReference Include="NAudio" Version="2.2.1"/>
         <PackageReference Include="NAudio.Asio" Version="2.2.1"/>
         <PackageReference Include="NAudio.Core" Version="2.2.1"/>
-        <PackageReference Include="NAudio.Flac.Unknown" Version="1.0.2"/>
+        <PackageReference Include="NAudio.Flac.Unknown" Version="1.0.4" />
         <PackageReference Include="NAudio.Midi" Version="2.2.1"/>
         <PackageReference Include="NAudio.Wasapi" Version="2.2.1"/>
         <PackageReference Include="NAudio.WinForms" Version="2.2.1"/>

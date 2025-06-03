@@ -1,10 +1,13 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 using System;
 using System.Net.Http;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
-using NetExtender.Types.Interception;
-using NetExtender.Types.Interception.Interfaces;
+using NetExtender.Types.Intercept;
+using NetExtender.Types.Intercept.Interfaces;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Network

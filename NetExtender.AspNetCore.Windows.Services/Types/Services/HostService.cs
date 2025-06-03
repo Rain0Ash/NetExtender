@@ -7,7 +7,7 @@ using Microsoft.Extensions.Hosting;
 namespace NetExtender.AspNetCore.Windows.Services.Types.Services
 {
     /// <summary>
-    ///     Provides an implementation of a Windows service that hosts ASP.NET Core.
+    /// Provides an implementation of a Windows service that hosts ASP.NET Core.
     /// </summary>
     public sealed class HostService : AspHostService
     {
@@ -23,7 +23,7 @@ namespace NetExtender.AspNetCore.Windows.Services.Types.Services
             Host = host ?? throw new ArgumentNullException(nameof(host));
         }
 
-        protected override Boolean StartInternal(String[] args)
+        protected override Boolean StartCore(String[] args)
         {
             try
             {
@@ -36,13 +36,13 @@ namespace NetExtender.AspNetCore.Windows.Services.Types.Services
             }
         }
 
-        protected override Boolean StopInternal()
+        protected override Boolean StopCore()
         {
             Host.StopAsync().GetAwaiter().GetResult();
             return true;
         }
 
-        protected override Boolean FinallyStopInternalHandler()
+        protected override Boolean FinallyStopCoreHandler()
         {
             Host.Dispose();
             return true;

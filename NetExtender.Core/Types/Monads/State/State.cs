@@ -1,8 +1,14 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using NetExtender.Interfaces;
 using NetExtender.Types.Exceptions;
 using NetExtender.Types.Monads.Interfaces;
+using NetExtender.Utilities.Serialization;
+using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Monads
 {
@@ -12,7 +18,8 @@ namespace NetExtender.Types.Monads
         Value
     }
     
-    public readonly struct State<T> : IState<T>, IStateEquatable<T, State<T>>, IStateComparable<T, State<T>>, ICloneable<State<T>>
+    [Serializable]
+    public readonly struct State<T> : IEqualityStruct<State<T>>, IState<T>, IStateEquality<T, State<T>>, ICloneable<State<T>>, ISerializable
     {
         public static implicit operator T(State<T> value)
         {
@@ -126,11 +133,19 @@ namespace NetExtender.Types.Monads
         
         public Maybe<T> Next { get; init; }
 
-        public Boolean HasValue
+        public Boolean HasNext
         {
             get
             {
-                return Next;
+                return Next.HasValue;
+            }
+        }
+
+        public Boolean IsEmpty
+        {
+            get
+            {
+                return Next.IsEmpty && EqualityComparer<T>.Default.Equals(Value, default);
             }
         }
 
@@ -140,6 +155,35 @@ namespace NetExtender.Types.Monads
             Next = default;
         }
 
+        public State(T value, T next)
+        {
+            Value = value;
+            Next = next;
+        }
+
+        public State(T value, Maybe<T> next)
+        {
+            Value = value;
+            Next = next;
+        }
+
+        private State(SerializationInfo info, StreamingContext context)
+        {
+            Value = info.GetValue<T>(nameof(Value));
+            Next = info.GetBoolean(nameof(HasNext)) ? info.GetValue<T>(nameof(Next)) : default(Maybe<T>);
+        }
+        
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue(nameof(Value), Value);
+            info.AddValue(nameof(HasNext), Next.HasValue);
+
+            if (HasNext)
+            {
+                info.AddValue(nameof(Next), Next.Value);
+            }
+        }
+
         public Boolean HasDifference()
         {
             return HasDifference(null);
@@ -147,7 +191,7 @@ namespace NetExtender.Types.Monads
 
         public Boolean HasDifference(IEqualityComparer<T>? comparer)
         {
-            return HasValue && !Equals(Value, StateEquality.Current, comparer);
+            return HasNext && !Equals(Value, StateEquality.Current, comparer);
         }
 
         public T Get()
@@ -242,7 +286,7 @@ namespace NetExtender.Types.Monads
 
         public Boolean? Difference(IEqualityComparer<T>? comparer, out State<T> result)
         {
-            if (!HasValue)
+            if (!HasNext)
             {
                 result = this;
                 return null;
@@ -291,7 +335,7 @@ namespace NetExtender.Types.Monads
                 return true;
             }
 
-            if (HasValue)
+            if (HasNext)
             {
                 result = Reset();
                 return false;
@@ -334,7 +378,7 @@ namespace NetExtender.Types.Monads
                 return true;
             }
 
-            if (HasValue)
+            if (HasNext)
             {
                 result = Reset();
                 return false;
@@ -396,15 +440,7 @@ namespace NetExtender.Types.Monads
 
         public Int32 CompareTo(T? other, StateEquality equality, IComparer<T>? comparer)
         {
-            try
-            {
-                comparer ??= Comparer<T>.Default;
-                return comparer.Compare(Get(equality), other);
-            }
-            catch (ArgumentException)
-            {
-                return 0;
-            }
+            return comparer.SafeCompare(Get(equality), other) ?? 0;
         }
 
         public Int32 CompareTo(State<T> other)
@@ -543,35 +579,170 @@ namespace NetExtender.Types.Monads
         {
             return this;
         }
-        
-        Object ICloneable.Clone()
-        {
-            return Clone();
-        }
-        
-        IState IState.Clone()
-        {
-            return Clone();
-        }
-        
+
         IState<T> IState<T>.Clone()
         {
             return Clone();
         }
-        
+
         IState<T> ICloneable<IState<T>>.Clone()
         {
             return Clone();
         }
-        
+
+        IState IState.Clone()
+        {
+            return Clone();
+        }
+
+        IState ICloneable<IState>.Clone()
+        {
+            return Clone();
+        }
+
+        IMonad<T> IMonad<T>.Clone()
+        {
+            return Clone();
+        }
+
+        IMonad<T> ICloneable<IMonad<T>>.Clone()
+        {
+            return Clone();
+        }
+
+        IMonad IMonad.Clone()
+        {
+            return Clone();
+        }
+
+        IMonad ICloneable<IMonad>.Clone()
+        {
+            return Clone();
+        }
+
+        Object ICloneable.Clone()
+        {
+            return Clone();
+        }
+
         public override String? ToString()
         {
-            return ToString(default);
+            return ToString(default(StateEquality));
+        }
+
+        public String ToString(String? format)
+        {
+            return ToString(format, null);
+        }
+
+        public String ToString(IFormatProvider? provider)
+        {
+            return ToString(null, provider);
+        }
+
+        public String ToString(String? format, IFormatProvider? provider)
+        {
+            return ToString(default, format, provider);
         }
 
         public String? ToString(StateEquality equality)
         {
-            return Get(equality)?.ToString();
+            return Get(equality) is { } value ? value.ToString() : null;
+        }
+
+        public String ToString(StateEquality equality, String? format)
+        {
+            return ToString(equality, format, null);
+        }
+
+        public String ToString(StateEquality equality, IFormatProvider? provider)
+        {
+            return ToString(equality, null, provider);
+        }
+
+        public String ToString(StateEquality equality, String? format, IFormatProvider? provider)
+        {
+            return Get(equality) is { } value ? StringUtilities.ToString(in value, format, provider) : String.Empty;
+        }
+
+        public String? GetString()
+        {
+            return GetString(default(StateEquality));
+        }
+
+        public String? GetString(EscapeType escape)
+        {
+            return GetString(default, escape);
+        }
+
+        public String? GetString(String? format)
+        {
+            return GetString(default(StateEquality), format);
+        }
+
+        public String? GetString(EscapeType escape, String? format)
+        {
+            return GetString(default, escape, format);
+        }
+
+        public String? GetString(IFormatProvider? provider)
+        {
+            return GetString(default(StateEquality), provider);
+        }
+
+        public String? GetString(EscapeType escape, IFormatProvider? provider)
+        {
+            return GetString(default, escape, provider);
+        }
+
+        public String? GetString(String? format, IFormatProvider? provider)
+        {
+            return GetString(default(StateEquality), format, provider);
+        }
+
+        public String? GetString(EscapeType escape, String? format, IFormatProvider? provider)
+        {
+            return GetString(default, escape, format, provider);
+        }
+
+        public String? GetString(StateEquality equality)
+        {
+            return Get(equality).GetString();
+        }
+
+        public String? GetString(StateEquality equality, EscapeType escape)
+        {
+            return Get(equality).GetString(escape);
+        }
+
+        public String? GetString(StateEquality equality, String? format)
+        {
+            return Get(equality).GetString(format);
+        }
+
+        public String? GetString(StateEquality equality, EscapeType escape, String? format)
+        {
+            return Get(equality).GetString(escape, format);
+        }
+
+        public String? GetString(StateEquality equality, IFormatProvider? provider)
+        {
+            return Get(equality).GetString(provider);
+        }
+
+        public String? GetString(StateEquality equality, EscapeType escape, IFormatProvider? provider)
+        {
+            return Get(equality).GetString(escape, provider);
+        }
+
+        public String? GetString(StateEquality equality, String? format, IFormatProvider? provider)
+        {
+            return Get(equality).GetString(format, provider);
+        }
+
+        public String? GetString(StateEquality equality, EscapeType escape, String? format, IFormatProvider? provider)
+        {
+            return Get(equality).GetString(escape, format, provider);
         }
     }
 }

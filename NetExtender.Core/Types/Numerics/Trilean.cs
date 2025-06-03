@@ -6,7 +6,7 @@ using NetExtender.Types.Exceptions;
 
 namespace NetExtender.Types.Numerics
 {
-    public readonly struct Trilean : IConvertible, IEquatable<Trilean>, IEquatable<Boolean>, IEquatable<Boolean?>, IComparable<Trilean>
+    public readonly struct Trilean : IEquality<Trilean>, IEquatable<Boolean>, IEquatable<Boolean?>, IConvertible
     {
         private enum State : Byte
         {

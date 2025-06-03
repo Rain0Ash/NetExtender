@@ -1,5 +1,9 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 using NetExtender.Types.Events;
 
 namespace NetExtender.WindowsPresentation.Types.Clipboard
@@ -65,6 +69,7 @@ namespace NetExtender.WindowsPresentation.Types.Clipboard
         
         public Boolean IsEmpty
         {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
                 return Data.IsEmpty;

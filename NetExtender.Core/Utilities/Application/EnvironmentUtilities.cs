@@ -4,9 +4,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Text;
 using NetExtender.Types.Environments;
 using NetExtender.Utilities.Types;
 
@@ -14,14 +17,80 @@ namespace NetExtender.Utilities.Application
 {
     public static class EnvironmentUtilities
     {
-        public static String ExpandEnvironmentVariables(String value)
+        // TODO: extension environment
+        
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static ImmutableDictionary<String, String?> WrapEnvironmentVariables(IDictionary variables)
         {
-            if (value is null)
+            if (variables is null)
             {
-                throw new ArgumentNullException(nameof(value));
+                throw new ArgumentNullException(nameof(variables));
             }
 
-            return Environment.ExpandEnvironmentVariables(value);
+            if (variables.Count <= 0)
+            {
+                return ImmutableDictionary<String, String?>.Empty;
+            }
+
+            ImmutableDictionary<String, String?>.Builder builder = ImmutableDictionary.CreateBuilder<String, String?>(StringComparer.OrdinalIgnoreCase);
+
+            foreach (String key in variables.Keys.OfType<String>())
+            {
+                builder.Add(key, variables[key] as String);
+            }
+
+            return builder.ToImmutable();
+        }
+        
+        [return: NotNullIfNotNull("value")]
+        public static String? ExpandEnvironmentVariables(String? value)
+        {
+            return value is not null ? Environment.ExpandEnvironmentVariables(value) : null;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        [return: NotNullIfNotNull("value")]
+        public static String? ExpandEnvironmentVariables(String? value, IReadOnlyDictionary<String, String?>? variables)
+        {
+            if (String.IsNullOrEmpty(value) || variables is null || variables.Count <= 0)
+            {
+                return value;
+            }
+            
+            Int32 position = 0;
+            StringBuilder result = new StringBuilder(value.Length * 2);
+            while (position < value.Length)
+            {
+                Int32 start = value.IndexOf('%', position);
+                if (start < 0)
+                {
+                    result.Append(value, position, value.Length - position);
+                    break;
+                }
+
+                result.Append(value, position, start - position);
+
+                Int32 end = value.IndexOf('%', start + 1);
+                if (end < 0)
+                {
+                    result.Append('%');
+                    position = start + 1;
+                    continue;
+                }
+
+                String variable = value.Substring(start + 1, end - start - 1);
+                position = end + 1;
+                
+                if (variables.TryGetValue(variable, out String? replacement))
+                {
+                    result.Append(replacement);
+                    continue;
+                }
+
+                result.Append('%').Append(variable).Append('%');
+            }
+
+            return result.ToString();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

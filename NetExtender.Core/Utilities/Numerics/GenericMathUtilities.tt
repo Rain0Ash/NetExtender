@@ -17,23 +17,7 @@ using NetExtender.Types.Exceptions;
 namespace NetExtender.Utilities.Numerics
 {
 <#
-    List<Type> vtypes = new List<Type>
-    {
-        typeof(Char),
-        typeof(SByte),
-        typeof(Byte),
-        typeof(Int16),
-        typeof(UInt16),
-        typeof(Int32),
-        typeof(UInt32),
-        typeof(Int64),
-        typeof(UInt64),
-        typeof(Single),
-        typeof(Double),
-        typeof(Decimal)
-    };
-
-    List<String> types = new List<String>
+    List<String> Types = new List<String>
     {
         nameof(Char),
         nameof(SByte),
@@ -49,7 +33,7 @@ namespace NetExtender.Utilities.Numerics
         nameof(Decimal)
     };
 
-    Dictionary<String, String> operands = new Dictionary<String, String>
+    Dictionary<String, String> Operands = new Dictionary<String, String>
     {
         {"+", "Add"},
         {"-", "Subtract"},
@@ -128,7 +112,7 @@ namespace NetExtender.Utilities.Numerics
             nameof(Double) => nameof(Decimal),
             nameof(Decimal) => nameof(Decimal),
             _ => type
-            };
+        };
     }
 
     static String ToSignedType(String type)
@@ -179,14 +163,10 @@ namespace NetExtender.Utilities.Numerics
         Boolean unary = @operator == "~" || @operator == "| |" || @operator == "-| |";
 
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
-
-        WriteLine($"\t\tpublic static {(comparison ? nameof(Boolean) : "T")} {operands[@operator]}<T>({(unary ? "T value" : "T left, T right")}) where T : unmanaged, IConvertible");
-
+        WriteLine($"\t\tpublic static {(comparison ? nameof(Boolean) : "T")} {Operands[@operator]}<T>({(unary ? "T value" : "T left, T right")}) where T : unmanaged, IConvertible");
         WriteLine("\t\t{");
 
-        foreach (
-            String type in
-                types.Where(type => type != nameof(Single) && type != nameof(Double) && type != nameof(Decimal) || @operator != "&" && @operator != "|" && @operator != "^"))
+        foreach (String type in Types.Where(type => type != nameof(Single) && type != nameof(Double) && type != nameof(Decimal) || @operator != "&" && @operator != "|" && @operator != "^"))
         {
             Boolean unsigned = IsUnsignedType(type);
             Boolean small = IsSmallType(type);
@@ -206,7 +186,6 @@ namespace NetExtender.Utilities.Numerics
                 expression = $"({type})({expression})";
             }
 
-
             if (comparison)
             {
                 if ((type == nameof(Single) || type == nameof(Double)) && (@operator == "==" || @operator == "!="))
@@ -220,6 +199,7 @@ namespace NetExtender.Utilities.Numerics
                         _ => throw new NotSupportedException()
                         };
                 }
+                
                 WriteLine($"\t\t\t\treturn {expression};");
             }
             else if (unary)
@@ -227,25 +207,25 @@ namespace NetExtender.Utilities.Numerics
                 switch (@operator)
                 {
                     case "~":
-                        WriteLine($"\t\t\t\t{(small ? nameof(Int32) : $"{type}")} {(small ? "i" : "val")} = ~Unsafe.As<T, {type}>(ref value);");
+                        WriteLine($"\t\t\t\t{(small ? nameof(Int32) : $"{type}")} {(small ? "i" : "result")} = ~Unsafe.As<T, {type}>(ref value);");
                         if (small)
                         {
-                            WriteLine($"\t\t\t\t{type} val = Unsafe.As<{nameof(Int32)}, {type}>(ref i);");
+                            WriteLine($"\t\t\t\t{type} result = Unsafe.As<{nameof(Int32)}, {type}>(ref i);");
                         }
 
-                        WriteLine($"\t\t\t\treturn Unsafe.As<{type}, T>(ref val);");
+                        WriteLine($"\t\t\t\treturn Unsafe.As<{type}, T>(ref result);");
                         break;
                     case "| |":
-                        WriteLine($"\t\t\t\t{type} val = Math.Abs(Unsafe.As<T, {type}>(ref value));");
-                        WriteLine($"\t\t\t\treturn Unsafe.As<{type}, T>(ref val);");
+                        WriteLine($"\t\t\t\t{type} result = Math.Abs(Unsafe.As<T, {type}>(ref value));");
+                        WriteLine($"\t\t\t\treturn Unsafe.As<{type}, T>(ref result);");
                         break;
                     case "-| |":
-                        WriteLine($"\t\t\t\t{(small ? nameof(Int32) : $"{type}")} {(small ? "i" : "val")} = -Math.Abs(Unsafe.As<T, {type}>(ref value));");
+                        WriteLine($"\t\t\t\t{(small ? nameof(Int32) : $"{type}")} {(small ? "i" : "result")} = -Math.Abs(Unsafe.As<T, {type}>(ref value));");
                         if (small)
                         {
-                            WriteLine($"\t\t\t\t{type} val = Unsafe.As<{nameof(Int32)}, {type}>(ref i);");
+                            WriteLine($"\t\t\t\t{type} result = Unsafe.As<{nameof(Int32)}, {type}>(ref i);");
                         }
-                        WriteLine($"\t\t\t\treturn Unsafe.As<{type}, T>(ref val);");
+                        WriteLine($"\t\t\t\treturn Unsafe.As<{type}, T>(ref result);");
                         break;
                     default:
                         throw new NotSupportedException();
@@ -288,7 +268,7 @@ namespace NetExtender.Utilities.Numerics
 
     void Min()
     {
-        ForEach(types.Append(biginteger), MinImplementation);
+        ForEach(Types.Append(biginteger), MinImplementation);
     }
 
     void MaxImplementation(String type)
@@ -313,7 +293,7 @@ namespace NetExtender.Utilities.Numerics
 
     void Max()
     {
-        ForEach(types.Append(biginteger), MaxImplementation);
+        ForEach(Types.Append(biginteger), MaxImplementation);
     }
 
     void RangeImplementation(String type)
@@ -397,7 +377,7 @@ namespace NetExtender.Utilities.Numerics
 
     void Range()
     {
-        ForEach(types.Where(NotChar).Where(IsIntType), RangeImplementation);
+        ForEach(Types.Where(NotChar).Where(IsIntType), RangeImplementation);
     }
 
     void RangeIncludeImplementation(String type)
@@ -472,7 +452,7 @@ namespace NetExtender.Utilities.Numerics
 
     void RangeInclude()
     {
-        ForEach(types.Where(NotChar).Where(IsIntType), RangeIncludeImplementation);
+        ForEach(Types.Where(NotChar).Where(IsIntType), RangeIncludeImplementation);
     }
 
     void ToRangeImplementation(String type)
@@ -526,7 +506,7 @@ namespace NetExtender.Utilities.Numerics
 
     void ToRange()
     {
-        ForEach(types.Append(biginteger), ToRangeImplementation);
+        ForEach(Types.Append(biginteger), ToRangeImplementation);
     }
 
     void InRangeImplementation(String type)
@@ -587,7 +567,7 @@ namespace NetExtender.Utilities.Numerics
 
     void InRange()
     {
-        ForEach(types, InRangeImplementation);
+        ForEach(Types, InRangeImplementation);
     }
 
     void IsPositiveImplementation(String type)
@@ -606,7 +586,7 @@ namespace NetExtender.Utilities.Numerics
 
     void IsPositive()
     {
-        ForEach(types.Append(biginteger), IsPositiveImplementation);
+        ForEach(Types.Append(biginteger), IsPositiveImplementation);
     }
 
     void IsNegativeImplementation(String type)
@@ -625,7 +605,7 @@ namespace NetExtender.Utilities.Numerics
 
     void IsNegative()
     {
-        ForEach(types.Append(biginteger), IsNegativeImplementation);
+        ForEach(Types.Append(biginteger), IsNegativeImplementation);
     }
 
     void ToSignImplementation(String type)
@@ -644,7 +624,7 @@ namespace NetExtender.Utilities.Numerics
 
     void ToSign()
     {
-        ForEach(types.Append(biginteger), ToSignImplementation);
+        ForEach(Types.Append(biginteger), ToSignImplementation);
     }
 
     void RoundToMultiplierImplementation(String type)
@@ -671,7 +651,7 @@ namespace NetExtender.Utilities.Numerics
         WriteLine("\t\t{");
         WriteLine($"\t\t\tif ({(integer ? "multiplier == 0" : "IsEpsilon(multiplier)")})");
         WriteLine("\t\t\t{");
-        WriteLine("\t\t\t\tthrow new ArgumentException(nameof(multiplier));");
+        WriteLine("\t\t\t\tthrow new ArgumentException(null, nameof(multiplier));");
         WriteLine("\t\t\t}");
 
         WriteLine(String.Empty);
@@ -712,7 +692,7 @@ namespace NetExtender.Utilities.Numerics
         WriteLine("\t\t{");
         WriteLine($"\t\t\tif ({(integer ? "multiplier == 0" : "IsEpsilon(multiplier)")})");
         WriteLine("\t\t\t{");
-        WriteLine("\t\t\t\tthrow new ArgumentException(nameof(multiplier));");
+        WriteLine("\t\t\t\tthrow new ArgumentException(null, nameof(multiplier));");
         WriteLine("\t\t\t}");
 
         WriteLine(String.Empty);
@@ -757,7 +737,7 @@ namespace NetExtender.Utilities.Numerics
         WriteLine("\t\t{");
         WriteLine($"\t\t\tif ({(integer ? "multiplier == 0" : "IsEpsilon(multiplier)")})");
         WriteLine("\t\t\t{");
-        WriteLine("\t\t\t\tthrow new ArgumentException(nameof(multiplier));");
+        WriteLine("\t\t\t\tthrow new ArgumentException(null, nameof(multiplier));");
         WriteLine("\t\t\t}");
 
 
@@ -878,7 +858,7 @@ namespace NetExtender.Utilities.Numerics
 
     void RoundToMultiplier()
     {
-        ForEach(types.Where(NotChar), RoundToMultiplierImplementation);
+        ForEach(Types.Where(NotChar), RoundToMultiplierImplementation);
     }
 
     void AbsImplementation(String type)
@@ -910,12 +890,12 @@ namespace NetExtender.Utilities.Numerics
 
     void Abs()
     {
-        ForEach(types, AbsImplementation);
+        ForEach(Types, AbsImplementation);
     }
 
     void MathematicalModulo()
     {
-        ForEach(types.Where(NotChar), MathematicalModuloImplementation);
+        ForEach(Types.Where(NotChar), MathematicalModuloImplementation);
     }
 
     void MathematicalModuloImplementation(String type)
@@ -964,7 +944,7 @@ namespace NetExtender.Utilities.Numerics
 
     void Pow()
     {
-        ForEach(types.Where(type => IsIntType(type) && !IsSmallType(type)).Append(biginteger), PowImplementation);
+        ForEach(Types.Where(type => IsIntType(type) && !IsSmallType(type)).Append(biginteger), PowImplementation);
     }
 
     void RoundUpToPowerOf2Implementation(String type)
@@ -981,7 +961,7 @@ namespace NetExtender.Utilities.Numerics
 
     void RoundUpToPowerOf2()
     {
-        ForEach(types.Where(NotChar).Where(IsIntType), RoundUpToPowerOf2Implementation);
+        ForEach(Types.Where(NotChar).Where(IsIntType), RoundUpToPowerOf2Implementation);
     }
 
     void SqrtImplementation(String type)
@@ -996,7 +976,7 @@ namespace NetExtender.Utilities.Numerics
 
     void Sqrt()
     {
-        ForEach(types.Where(type => type != nameof(Decimal) && type != nameof(Char)), SqrtImplementation);
+        ForEach(Types.Where(type => type != nameof(Decimal) && type != nameof(Char)), SqrtImplementation);
     }
 
     void LogImplementation(String type)
@@ -1073,7 +1053,7 @@ namespace NetExtender.Utilities.Numerics
 
     void Log()
     {
-        ForEach(types.Where(NotChar).Where(IsIntType), LogImplementation);
+        ForEach(Types.Where(NotChar).Where(IsIntType), LogImplementation);
     }
 
     void ClampImplementation(String type)
@@ -1141,7 +1121,7 @@ namespace NetExtender.Utilities.Numerics
 
     void Clamp()
     {
-        ForEach(types, ClampImplementation);
+        ForEach(Types, ClampImplementation);
     }
 
     void DifferenceImplementation(String type)
@@ -1168,7 +1148,7 @@ namespace NetExtender.Utilities.Numerics
 
     void Difference()
     {
-        ForEach(types.Append(biginteger), DifferenceImplementation);
+        ForEach(Types.Append(biginteger), DifferenceImplementation);
     }
 
     void DiscreteDifferenceImplementation(String type)
@@ -1182,7 +1162,7 @@ namespace NetExtender.Utilities.Numerics
 
     void DiscreteDifference()
     {
-        ForEach(types.Where(IsIntType), DiscreteDifferenceImplementation);
+        ForEach(Types.Where(IsIntType), DiscreteDifferenceImplementation);
     }
 
     void DiscreteIncludeDifferenceImplementation(String type)
@@ -1205,7 +1185,7 @@ namespace NetExtender.Utilities.Numerics
 
     void DiscreteIncludeDifference()
     {
-        ForEach(types.Where(IsIntType), DiscreteIncludeDifferenceImplementation);
+        ForEach(Types.Where(IsIntType), DiscreteIncludeDifferenceImplementation);
     }
 
     void ToRadiansImplementation(String type)
@@ -1219,7 +1199,7 @@ namespace NetExtender.Utilities.Numerics
 
     void ToRadians()
     {
-        ForEach(types.Where(type => IsIntType(type) && type != nameof(Char)), ToRadiansImplementation);
+        ForEach(Types.Where(type => IsIntType(type) && type != nameof(Char)), ToRadiansImplementation);
     }
 
     void ToNonZeroImplementation(String type)
@@ -1265,7 +1245,7 @@ namespace NetExtender.Utilities.Numerics
 
     void ToNonZero()
     {
-        ForEach(types.Where(NotChar), ToNonZeroImplementation);
+        ForEach(Types.Where(NotChar), ToNonZeroImplementation);
     }
 
     void ToNonNegativeImplementation(String type)
@@ -1309,7 +1289,7 @@ namespace NetExtender.Utilities.Numerics
 
     void ToNonNegative()
     {
-        ForEach(types.Where(NotChar), ToNonNegativeImplementation);
+        ForEach(Types.Where(NotChar), ToNonNegativeImplementation);
     }
 
     void MeanImplementation(String type)
@@ -1345,7 +1325,7 @@ namespace NetExtender.Utilities.Numerics
 
     void Mean()
     {
-        ForEach(types.Where(NotChar).Append(biginteger), MeanImplementation);
+        ForEach(Types.Where(NotChar).Append(biginteger), MeanImplementation);
     }
 
     void ToBaseImplementation(String type)
@@ -1419,7 +1399,7 @@ namespace NetExtender.Utilities.Numerics
 
         WriteLine(String.Empty);
 
-        ForEach(types.Where(type => NotChar(type) && IsIntType(type)).Append(biginteger), ToBaseImplementation);
+        ForEach(Types.Where(type => NotChar(type) && IsIntType(type)).Append(biginteger), ToBaseImplementation);
     }
 
     void SumImplementation(String type)
@@ -1454,7 +1434,7 @@ namespace NetExtender.Utilities.Numerics
 
     void Sum()
     {
-        ForEach(types.Where(NotChar).Append(biginteger).Append(complex), SumImplementation);
+        ForEach(Types.Where(NotChar).Append(biginteger).Append(complex), SumImplementation);
     }
 
     void MultiplyImplementation(String type)
@@ -1515,7 +1495,7 @@ namespace NetExtender.Utilities.Numerics
 
     void Multiply()
     {
-        ForEach(types.Where(NotChar), MultiplyImplementation);
+        ForEach(Types.Where(NotChar), MultiplyImplementation);
     }
 
     void AverageImplementation(String type)
@@ -1537,7 +1517,7 @@ namespace NetExtender.Utilities.Numerics
 
     void Average()
     {
-        ForEach(types.Where(type => IsSmallType(type) || IsUnsignedType(type)).Where(NotChar), AverageImplementation);
+        ForEach(Types.Where(type => IsSmallType(type) || IsUnsignedType(type)).Where(NotChar), AverageImplementation);
     }
 
     void VarianceImplementation(String type)
@@ -1571,7 +1551,7 @@ namespace NetExtender.Utilities.Numerics
 
     void Variance()
     {
-        ForEach(types.Where(NotChar), VarianceImplementation);
+        ForEach(Types.Where(NotChar), VarianceImplementation);
     }
 
     void StandardDeviationImplementation(String type)
@@ -1592,7 +1572,7 @@ namespace NetExtender.Utilities.Numerics
 
     void StandardDeviation()
     {
-        ForEach(types.Where(NotChar), StandardDeviationImplementation, false);
+        ForEach(Types.Where(NotChar), StandardDeviationImplementation, false);
     }
 
     void ReverseImplementation(String type)
@@ -1614,12 +1594,12 @@ namespace NetExtender.Utilities.Numerics
 
     void Reverse()
     {
-        ForEach(types.Where(NotChar).Where(IsIntType), ReverseImplementation);
+        ForEach(Types.Where(NotChar).Where(IsIntType), ReverseImplementation);
     }
 
     void PercentImplementation(String type)
     {
-        String[] subtypes = types.Where(NotChar).ToArray();
+        String[] subtypes = Types.Where(NotChar).ToArray();
         foreach (String subtype in subtypes)
         {
             WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
@@ -1637,12 +1617,12 @@ namespace NetExtender.Utilities.Numerics
 
     void Percent()
     {
-        ForEach(types.Where(NotChar), PercentImplementation);
+        ForEach(Types.Where(NotChar), PercentImplementation);
     }
 
     void PromilleImplementation(String type)
     {
-        String[] subtypes = types.Where(NotChar).ToArray();
+        String[] subtypes = Types.Where(NotChar).ToArray();
         foreach (String subtype in subtypes)
         {
             WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
@@ -1660,7 +1640,7 @@ namespace NetExtender.Utilities.Numerics
 
     void Promille()
     {
-        ForEach(types.Where(NotChar), PromilleImplementation);
+        ForEach(Types.Where(NotChar), PromilleImplementation);
     }
 
     void IsTypeImplementation(String type)
@@ -1674,7 +1654,7 @@ namespace NetExtender.Utilities.Numerics
 
     void IsType()
     {
-        ForEach(types, IsTypeImplementation);
+        ForEach(Types, IsTypeImplementation);
     }
 #>
     [SuppressMessage("ReSharper", "RedundantOverflowCheckingContext")]
@@ -1756,7 +1736,7 @@ namespace NetExtender.Utilities.Numerics
     public static partial class MathUnsafe
     {
 <#
-    foreach (String @operator in operands.Keys)
+    foreach (String @operator in Operands.Keys)
     {
         Functions(@operator);
     }

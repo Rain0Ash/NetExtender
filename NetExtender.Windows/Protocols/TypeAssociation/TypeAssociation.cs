@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using Microsoft.Win32;
 using NetExtender.Registry;
 using NetExtender.Registry.Interfaces;
+using NetExtender.Types.Exceptions;
 using NetExtender.Utilities.IO;
 using NetExtender.Utilities.Registry;
 using NetExtender.Utilities.Types;
@@ -41,7 +42,7 @@ namespace NetExtender.Windows.Protocols
         {
             if (String.IsNullOrEmpty(extension))
             {
-                throw new ArgumentException("Value cannot be null or empty.", nameof(extension));
+                throw new ArgumentNullOrEmptyStringException(extension, nameof(extension));
             }
 
             using IRegistry registry = RegistryKeys.CurrentUser.Create(FileAccess.Read, "Software", "Microsoft", "Windows", "CurrentVersion", "Explorer", "FileExts");
@@ -118,7 +119,7 @@ namespace NetExtender.Windows.Protocols
         {
             if (String.IsNullOrEmpty(protocol))
             {
-                throw new ArgumentException("Value cannot be null or empty.", nameof(protocol));
+                throw new ArgumentNullOrEmptyStringException(protocol, nameof(protocol));
             }
 
             using IRegistry registry = RegistryKeys.CurrentUser.Create(FileAccess.Read, "Software", "Microsoft", "Windows", "Shell", "Associations", "UrlAssociations");
@@ -201,12 +202,12 @@ namespace NetExtender.Windows.Protocols
         {
             if (String.IsNullOrEmpty(path))
             {
-                throw new ArgumentException("Value cannot be null or empty.", nameof(path));
+                throw new ArgumentNullOrEmptyStringException(path, nameof(path));
             }
 
             if (String.IsNullOrEmpty(extension))
             {
-                throw new ArgumentException("Value cannot be null or empty.", nameof(extension));
+                throw new ArgumentNullOrEmptyStringException(extension, nameof(extension));
             }
 
             if (!PathUtilities.IsExistAsFile(path))
@@ -268,12 +269,12 @@ namespace NetExtender.Windows.Protocols
         {
             if (String.IsNullOrEmpty(progid))
             {
-                throw new ArgumentException("Value cannot be null or empty.", nameof(progid));
+                throw new ArgumentNullOrEmptyStringException(progid, nameof(progid));
             }
 
             if (String.IsNullOrEmpty(extension))
             {
-                throw new ArgumentException("Value cannot be null or empty.", nameof(extension));
+                throw new ArgumentNullOrEmptyStringException(extension, nameof(extension));
             }
 
             if (PathUtilities.IsExistAsFile(progid))
@@ -318,12 +319,12 @@ namespace NetExtender.Windows.Protocols
         {
             if (String.IsNullOrEmpty(progid))
             {
-                throw new ArgumentException("Value cannot be null or empty.", nameof(progid));
+                throw new ArgumentNullOrEmptyStringException(progid, nameof(progid));
             }
 
             if (String.IsNullOrEmpty(extension))
             {
-                throw new ArgumentException("Value cannot be null or empty.", nameof(extension));
+                throw new ArgumentNullOrEmptyStringException(extension, nameof(extension));
             }
 
             if (PathUtilities.IsExistAsFile(progid))
@@ -356,17 +357,17 @@ namespace NetExtender.Windows.Protocols
         {
             if (String.IsNullOrEmpty(progid))
             {
-                throw new ArgumentException("Value cannot be null or empty.", nameof(progid));
+                throw new ArgumentNullOrEmptyStringException(progid, nameof(progid));
             }
 
             if (String.IsNullOrEmpty(extension))
             {
-                throw new ArgumentException("Value cannot be null or empty.", nameof(extension));
+                throw new ArgumentNullOrEmptyStringException(extension, nameof(extension));
             }
 
             if (String.IsNullOrEmpty(hash))
             {
-                throw new ArgumentException("Value cannot be null or empty.", nameof(hash));
+                throw new ArgumentNullOrEmptyStringException(hash, nameof(hash));
             }
 
             using IRegistry registry = RegistryKeys.CurrentUser.Create(true, "Software", "Microsoft", "Windows", "CurrentVersion", "Explorer", "FileExts", extension, "UserChoice");
@@ -380,17 +381,17 @@ namespace NetExtender.Windows.Protocols
         {
             if (String.IsNullOrEmpty(progid))
             {
-                throw new ArgumentException("Value cannot be null or empty.", nameof(progid));
+                throw new ArgumentNullOrEmptyStringException(progid, nameof(progid));
             }
 
             if (String.IsNullOrEmpty(protocol))
             {
-                throw new ArgumentException("Value cannot be null or empty.", nameof(protocol));
+                throw new ArgumentNullOrEmptyStringException(protocol, nameof(protocol));
             }
 
             if (String.IsNullOrEmpty(hash))
             {
-                throw new ArgumentException("Value cannot be null or empty.", nameof(hash));
+                throw new ArgumentNullOrEmptyStringException(hash, nameof(hash));
             }
 
             using IRegistry registry = RegistryKeys.CurrentUser.Create(true, "Software", "Microsoft", "Windows", "Shell", "Associations", "UrlAssociations", protocol, "UserChoice");

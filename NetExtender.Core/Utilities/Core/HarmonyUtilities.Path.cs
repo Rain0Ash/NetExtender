@@ -1,6 +1,9 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 using System;
 using System.Diagnostics.CodeAnalysis;
-using NetExtender.Types.Interception.Interfaces;
+using NetExtender.Types.Intercept.Interfaces;
 
 #pragma warning disable CA1041
 
@@ -21,7 +24,7 @@ namespace NetExtender.Utilities.Core
 
             private static IInterceptPathHandler Interceptor { get; }
 
-#pragma warning disable CS0612 // Type or member is obsolete
+#pragma warning disable CS0612
             static Path()
             {
                 Interceptor = new InterceptHarmonyFileSystem(typeof(Path));
@@ -31,7 +34,7 @@ namespace NetExtender.Utilities.Core
                 AltDirectorySeparatorChar = Interceptor.AltDirectorySeparatorChar;
                 InvalidPathChars = Interceptor.InvalidPathChars;
             }
-#pragma warning restore CS0612 // Type or member is obsolete
+#pragma warning restore CS0612
 
             /// <inheritdoc cref="System.IO.Path.GetInvalidPathChars()" />
             public static Char[] GetInvalidPathChars()

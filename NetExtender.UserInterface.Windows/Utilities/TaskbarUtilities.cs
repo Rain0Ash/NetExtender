@@ -46,7 +46,7 @@ namespace NetExtender.Utilities.UserInterface
         {
             return new FlashInfo
             {
-                cbSize = ReflectionUtilities.GetSize<FlashInfo>(),
+                cbSize = ReflectionUtilities.SizeOf<FlashInfo>(),
                 hwnd = handle,
                 dwFlags = flags,
                 uCount = count,

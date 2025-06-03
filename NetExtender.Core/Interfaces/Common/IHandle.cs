@@ -3,7 +3,7 @@
 
 using System;
 
-namespace NetExtender.Interfaces.Common
+namespace NetExtender
 {
     public interface IHandle
     {

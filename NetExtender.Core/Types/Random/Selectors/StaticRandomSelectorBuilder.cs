@@ -489,9 +489,9 @@ namespace NetExtender.Types.Random
             return new StaticRandomSelectorBinary<T>(items, cda, seed);
         }
 
-        public void CopyTo(KeyValuePair<T, Double>[] array, Int32 arrayIndex)
+        public void CopyTo(KeyValuePair<T, Double>[] array, Int32 index)
         {
-            Items.CopyTo(array, arrayIndex);
+            Items.CopyTo(array, index);
         }
 
         public override T GetRandom()

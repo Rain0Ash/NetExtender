@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using NetExtender.Types.Dictionaries;
+using NetExtender.Types.Exceptions;
 
 namespace NetExtender.Serialization.Ini
 {
@@ -82,7 +83,7 @@ namespace NetExtender.Serialization.Ini
         {
             if (String.IsNullOrEmpty(key))
             {
-                throw new ArgumentException("Value cannot be null or empty.", nameof(key));
+                throw new ArgumentNullOrEmptyStringException(key, nameof(key));
             }
             
             return Sections.ContainsKey(key);
@@ -92,7 +93,7 @@ namespace NetExtender.Serialization.Ini
         {
             if (String.IsNullOrEmpty(item.Key))
             {
-                throw new ArgumentException("Value cannot be null or empty.", nameof(item.Key));
+                throw new ArgumentNullOrEmptyStringException(item.Key, nameof(item) + '.' + nameof(item.Key));
             }
 
             return ((IDictionary<String, IniSection>) Sections).Contains(item);
@@ -102,7 +103,7 @@ namespace NetExtender.Serialization.Ini
         {
             if (String.IsNullOrEmpty(key))
             {
-                throw new ArgumentException("Value cannot be null or empty.", nameof(key));
+                throw new ArgumentNullOrEmptyStringException(key, nameof(key));
             }
 
             return Sections.TryGetValue(key, out result);
@@ -112,7 +113,7 @@ namespace NetExtender.Serialization.Ini
         {
             if (String.IsNullOrEmpty(key))
             {
-                throw new ArgumentException("Value cannot be null or empty.", nameof(key));
+                throw new ArgumentNullOrEmptyStringException(key, nameof(key));
             }
             
             return Sections.IndexOf(key);
@@ -122,7 +123,7 @@ namespace NetExtender.Serialization.Ini
         {
             if (String.IsNullOrEmpty(key))
             {
-                throw new ArgumentException("Value cannot be null or empty.", nameof(key));
+                throw new ArgumentNullOrEmptyStringException(key, nameof(key));
             }
             
             return Sections.IndexOf(key, index);
@@ -132,7 +133,7 @@ namespace NetExtender.Serialization.Ini
         {
             if (String.IsNullOrEmpty(key))
             {
-                throw new ArgumentException("Value cannot be null or empty.", nameof(key));
+                throw new ArgumentNullOrEmptyStringException(key, nameof(key));
             }
             
             return Sections.IndexOf(key, index, count);
@@ -142,7 +143,7 @@ namespace NetExtender.Serialization.Ini
         {
             if (String.IsNullOrEmpty(key))
             {
-                throw new ArgumentException("Value cannot be null or empty.", nameof(key));
+                throw new ArgumentNullOrEmptyStringException(key, nameof(key));
             }
             
             return Sections.LastIndexOf(key);
@@ -152,7 +153,7 @@ namespace NetExtender.Serialization.Ini
         {
             if (String.IsNullOrEmpty(key))
             {
-                throw new ArgumentException("Value cannot be null or empty.", nameof(key));
+                throw new ArgumentNullOrEmptyStringException(key, nameof(key));
             }
             
             return Sections.LastIndexOf(key, index);
@@ -162,7 +163,7 @@ namespace NetExtender.Serialization.Ini
         {
             if (String.IsNullOrEmpty(key))
             {
-                throw new ArgumentException("Value cannot be null or empty.", nameof(key));
+                throw new ArgumentNullOrEmptyStringException(key, nameof(key));
             }
             
             return Sections.LastIndexOf(key, index, count);
@@ -172,7 +173,7 @@ namespace NetExtender.Serialization.Ini
         {
             if (String.IsNullOrEmpty(key))
             {
-                throw new ArgumentException("Value cannot be null or empty.", nameof(key));
+                throw new ArgumentNullOrEmptyStringException(key, nameof(key));
             }
 
             IniSection value = new IniSection(Comparer);
@@ -184,7 +185,7 @@ namespace NetExtender.Serialization.Ini
         {
             if (String.IsNullOrEmpty(key))
             {
-                throw new ArgumentException("Value cannot be null or empty.", nameof(key));
+                throw new ArgumentNullOrEmptyStringException(key, nameof(key));
             }
 
             if (value is null)
@@ -210,7 +211,7 @@ namespace NetExtender.Serialization.Ini
         {
             if (String.IsNullOrEmpty(key))
             {
-                throw new ArgumentException("Value cannot be null or empty.", nameof(key));
+                throw new ArgumentNullOrEmptyStringException(key, nameof(key));
             }
 
             if (values is null)
@@ -225,7 +226,7 @@ namespace NetExtender.Serialization.Ini
         {
             if (String.IsNullOrEmpty(item.Key))
             {
-                throw new ArgumentException("Value cannot be null or empty.", nameof(item.Key));
+                throw new ArgumentNullOrEmptyStringException(item.Key, nameof(item) + '.' + nameof(item.Key));
             }
 
             ((IDictionary<String, IniSection>) Sections).Add(item);
@@ -235,7 +236,7 @@ namespace NetExtender.Serialization.Ini
         {
             if (String.IsNullOrEmpty(key))
             {
-                throw new ArgumentException("Value cannot be null or empty.", nameof(key));
+                throw new ArgumentNullOrEmptyStringException(key, nameof(key));
             }
             
             Sections.Insert(index, key, value);
@@ -270,7 +271,7 @@ namespace NetExtender.Serialization.Ini
         {
             if (String.IsNullOrEmpty(key))
             {
-                throw new ArgumentException("Value cannot be null or empty.", nameof(key));
+                throw new ArgumentNullOrEmptyStringException(key, nameof(key));
             }
 
             return Sections.Remove(key);
@@ -280,7 +281,7 @@ namespace NetExtender.Serialization.Ini
         {
             if (String.IsNullOrEmpty(item.Key))
             {
-                throw new ArgumentException("Value cannot be null or empty.", nameof(item.Key));
+                throw new ArgumentNullOrEmptyStringException(item.Key, nameof(item) + '.' + nameof(item.Key));
             }
 
             return ((IDictionary<String, IniSection>) Sections).Remove(item);
@@ -518,9 +519,9 @@ namespace NetExtender.Serialization.Ini
             }
         }
 
-        void ICollection<KeyValuePair<String, IniSection>>.CopyTo(KeyValuePair<String, IniSection>[] array, Int32 arrayIndex)
+        void ICollection<KeyValuePair<String, IniSection>>.CopyTo(KeyValuePair<String, IniSection>[] array, Int32 index)
         {
-            ((IDictionary<String, IniSection>) Sections).CopyTo(array, arrayIndex);
+            ((IDictionary<String, IniSection>) Sections).CopyTo(array, index);
         }
 
         public IEnumerator<KeyValuePair<String, IniSection>> GetEnumerator()
@@ -539,7 +540,7 @@ namespace NetExtender.Serialization.Ini
             {
                 if (String.IsNullOrEmpty(key))
                 {
-                    throw new ArgumentException("Value cannot be null or empty.", nameof(key));
+                    throw new ArgumentNullOrEmptyStringException(key, nameof(key));
                 }
 
                 if (Sections.TryGetValue(key, out IniSection? result))
@@ -555,7 +556,7 @@ namespace NetExtender.Serialization.Ini
             {
                 if (String.IsNullOrEmpty(key))
                 {
-                    throw new ArgumentException("Value cannot be null or empty.", nameof(key));
+                    throw new ArgumentNullOrEmptyStringException(key, nameof(key));
                 }
 
                 if (!Equals(value.Comparer, Comparer))

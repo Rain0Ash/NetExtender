@@ -520,6 +520,13 @@ namespace NetExtender.Utilities.Types
 
         /// <inheritdoc cref="Array.ConvertAll{TInput,TOutput}"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static TOutput[] ConvertAll<TInput, TOutput>(this TInput[] array) where TInput : class where TOutput : class
+        {
+            return Array.ConvertAll(array, static item => (TOutput) (Object) item);
+        }
+
+        /// <inheritdoc cref="Array.ConvertAll{TInput,TOutput}"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TOutput[] ConvertAll<TInput, TOutput>(this TInput[] array, Converter<TInput, TOutput> converter)
         {
             return Array.ConvertAll(array, converter);

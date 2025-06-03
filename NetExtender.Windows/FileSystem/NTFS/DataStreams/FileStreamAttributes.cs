@@ -3,7 +3,7 @@
 
 using System;
 
-namespace NetExtender.IO.FileSystem.NTFS.DataStreams
+namespace NetExtender.FileSystems.NTFS.DataStreams
 {
     /// <summary>
     /// Represents the attributes of a file stream.

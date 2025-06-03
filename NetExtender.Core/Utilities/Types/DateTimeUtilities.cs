@@ -2,8 +2,10 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Collections.Generic;
 using System.Data.SqlTypes;
 using System.Globalization;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using NetExtender.Types.Exceptions;
 using NetExtender.Utilities.Numerics;
@@ -60,7 +62,7 @@ namespace NetExtender.Utilities.Types
         {
             get
             {
-                return new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+                return new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
             }
         }
 
@@ -813,11 +815,7 @@ namespace NetExtender.Utilities.Types
             }
 
             Int32 current = date.DayOfWeek == DayOfWeek.Sunday ? 7 : (Int32) date.DayOfWeek;
-
-            // Monday = 1
-            Int32 diff = 1 - current;
-
-            return date.Date.AddDays(diff);
+            return date.Date.AddDays(1 - current);
         }
 
         public static DateTime GetFirstDayOfMonth(this DateTime date)
@@ -828,7 +826,6 @@ namespace NetExtender.Utilities.Types
         public static DateTime GetFirstDayOfMonth(this DateTime date, DayOfWeek day)
         {
             date = date.GetFirstDayOfMonth();
-
             DayOfWeek current = date.DayOfWeek;
 
             if (current == day)
@@ -973,6 +970,28 @@ namespace NetExtender.Utilities.Types
         public static DateTime Max(this DateTime first, DateTime second)
         {
             return first > second ? first : second;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DateTime Newest(this IEnumerable<DateTime> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Max();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DateTime Oldest(this IEnumerable<DateTime> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Min();
         }
 
         /// <summary>
@@ -1184,13 +1203,13 @@ namespace NetExtender.Utilities.Types
         }
 
         /// <summary>
-        ///     Checks if <paramref name="value" /> is between 1/1/1753 12:00:00 AM and 12/31/9999 11:59:59 PM.
+        /// Checks if <paramref name="value" /> is between 1/1/1753 12:00:00 AM and 12/31/9999 11:59:59 PM.
         /// </summary>
         /// <remarks>
-        ///     SQL Server defines two different datetime formats:
-        ///     The datetime datatype is capable of storing dates in the range 1753-01-01 to 9999-12-31.
-        ///     The datetime2 datatype was introduced in SQL Server 2008. The range of dates that it is capable of storing is
-        ///     0001-01-01 to 9999-12-31.
+        /// SQL Server defines two different datetime formats:
+        /// The datetime datatype is capable of storing dates in the range 1753-01-01 to 9999-12-31.
+        /// The datetime2 datatype was introduced in SQL Server 2008. The range of dates that it is capable of storing is
+        /// 0001-01-01 to 9999-12-31.
         /// </remarks>
         private static Boolean IsSqlServerDatetime(this DateTime value)
         {

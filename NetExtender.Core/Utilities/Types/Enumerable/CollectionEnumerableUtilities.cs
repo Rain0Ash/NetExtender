@@ -22,7 +22,7 @@ namespace NetExtender.Utilities.Types
         /// <param name="source"></param>
         /// <returns></returns>
         [Pure]
-        public static Int32? CountIfMaterialized<T>(this IEnumerable<T> source)
+        public static Int32? CountIfMaterialized<T>([JetBrains.Annotations.NoEnumeration] this IEnumerable<T> source)
         {
             if (source is null)
             {
@@ -43,7 +43,22 @@ namespace NetExtender.Utilities.Types
         }
 
         [Pure]
-        public static Boolean IsMaterialized<T>(this IEnumerable<T> source)
+        public static Boolean CountIfMaterialized<T>([JetBrains.Annotations.NoEnumeration] this IEnumerable<T> source, out Int32 count)
+        {
+            Int32? result = CountIfMaterialized(source);
+            count = result ?? 0;
+            return result is not null;
+        }
+
+        [Pure]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int32 CountIfMaterialized<T>([JetBrains.Annotations.NoEnumeration] this IEnumerable<T> source, Int32 count)
+        {
+            return CountIfMaterialized(source, out Int32 result) && result >= 0 ? result : count;
+        }
+
+        [Pure]
+        public static Boolean IsMaterialized<T>([JetBrains.Annotations.NoEnumeration] this IEnumerable<T> source)
         {
             if (source is null)
             {
@@ -55,7 +70,7 @@ namespace NetExtender.Utilities.Types
 
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean IsMaterialized<T>(this IEnumerable<T> source, [NotNullWhen(true)] out Int32? count)
+        public static Boolean IsMaterialized<T>([JetBrains.Annotations.NoEnumeration] this IEnumerable<T> source, [NotNullWhen(true)] out Int32? count)
         {
             if (source is null)
             {
@@ -300,7 +315,7 @@ namespace NetExtender.Utilities.Types
         }
 
         [Pure]
-        public static Int32? CountIfMaterializedByReflection(this IEnumerable source)
+        public static Int32? CountIfMaterializedByReflection([JetBrains.Annotations.NoEnumeration] this IEnumerable source)
         {
             if (source is null)
             {
@@ -310,11 +325,11 @@ namespace NetExtender.Utilities.Types
             return source.TryGetPropertyValue("Length", out Int32 length) ? length :
                 source.TryGetPropertyValue("Count", out length) ? length :
                 source.TryGetPropertyValue("LongLength", out length) ? length :
-                source.TryGetPropertyValue("LongCount", out length) ? length : default;
+                source.TryGetPropertyValue("LongCount", out length) ? length : null;
         }
 
         [Pure]
-        public static Int64? LongCountIfMaterializedByReflection(this IEnumerable source)
+        public static Int64? LongCountIfMaterializedByReflection([JetBrains.Annotations.NoEnumeration] this IEnumerable source)
         {
             if (source is null)
             {
@@ -324,19 +339,19 @@ namespace NetExtender.Utilities.Types
             return source.TryGetPropertyValue("LongLength", out Int64 length) ? length :
                 source.TryGetPropertyValue("LongCount", out length) ? length :
                 source.TryGetPropertyValue("Length", out length) ? length :
-                source.TryGetPropertyValue("Count", out length) ? length : default;
+                source.TryGetPropertyValue("Count", out length) ? length : null;
         }
 
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean IsMaterializedByReflection(this IEnumerable source)
+        public static Boolean IsMaterializedByReflection([JetBrains.Annotations.NoEnumeration] this IEnumerable source)
         {
             return IsMaterializedByReflection(source, out Int32? _);
         }
 
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean IsMaterializedByReflection(this IEnumerable source, [NotNullWhen(true)] out Int32? count)
+        public static Boolean IsMaterializedByReflection([JetBrains.Annotations.NoEnumeration] this IEnumerable source, [NotNullWhen(true)] out Int32? count)
         {
             if (source is null)
             {
@@ -349,20 +364,20 @@ namespace NetExtender.Utilities.Types
 
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean IsMaterializedByReflection(this IEnumerable source, [NotNullWhen(true)] out Int64? count)
+        public static Boolean IsMaterializedByReflection([JetBrains.Annotations.NoEnumeration] this IEnumerable source, [NotNullWhen(true)] out Int64? count)
         {
             return IsLongMaterializedByReflection(source, out count);
         }
 
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean IsLongMaterializedByReflection(this IEnumerable source)
+        public static Boolean IsLongMaterializedByReflection([JetBrains.Annotations.NoEnumeration] this IEnumerable source)
         {
             return IsLongMaterializedByReflection(source, out _);
         }
 
         [Pure]
-        public static Boolean IsLongMaterializedByReflection(this IEnumerable source, [NotNullWhen(true)] out Int64? count)
+        public static Boolean IsLongMaterializedByReflection([JetBrains.Annotations.NoEnumeration] this IEnumerable source, [NotNullWhen(true)] out Int64? count)
         {
             if (source is null)
             {

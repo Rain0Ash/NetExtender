@@ -10,6 +10,7 @@ using NetExtender.Types.Comparers;
 
 namespace NetExtender.Types.Immutable.LinkedLists
 {
+    //TODO: verify
     public static class ImmutableLinkedList
     {
         /// <summary>
@@ -587,11 +588,11 @@ namespace NetExtender.Types.Immutable.LinkedLists
                 return this;
             }
 
-            SortInternal(Head, Count, comparer, out Segment sorted, out Node? _);
+            SortCore(Head, Count, comparer, out Segment sorted, out Node? _);
             return new ImmutableLinkedList<T>(sorted.First, Count);
         }
 
-        private static void SortInternal(Node head, Int32 count, IComparer<T>? comparer, out Segment sorted, out Node? next)
+        private static void SortCore(Node head, Int32 count, IComparer<T>? comparer, out Segment sorted, out Node? next)
         {
             comparer ??= ComparisonComparer<T>.Default;
             
@@ -603,7 +604,7 @@ namespace NetExtender.Types.Immutable.LinkedLists
             }
 
             Int32 half = count >> 1;
-            SortInternal(head, half, comparer, out Segment segment1, out Node? half2);
+            SortCore(head, half, comparer, out Segment segment1, out Node? half2);
 
             if (half2 is null)
             {
@@ -612,7 +613,7 @@ namespace NetExtender.Types.Immutable.LinkedLists
                 return;
             }
             
-            SortInternal(half2, count - half, comparer, out Segment segment2, out next);
+            SortCore(half2, count - half, comparer, out Segment segment2, out next);
 
             if (!TryShortCircuitMerge(ref segment1, ref segment2, count, comparer, out sorted))
             {
@@ -809,28 +810,28 @@ namespace NetExtender.Types.Immutable.LinkedLists
         }
 
         /// <summary>
-        /// Copies the elements of the list to <paramref name="array"/>, starting at <paramref name="arrayIndex"/>
+        /// Copies the elements of the list to <paramref name="array"/>, starting at <paramref name="index"/>
         /// </summary>
-        public void CopyTo(T[] array, Int32 arrayIndex)
+        public void CopyTo(T[] array, Int32 index)
         {
             if (array is null)
             {
                 throw new ArgumentNullException(nameof(array));
             }
 
-            if (arrayIndex < 0 || arrayIndex > array.Length)
+            if (index < 0 || index > array.Length)
             {
-                throw new ArgumentOutOfRangeException(nameof(arrayIndex), arrayIndex, @"must be non-negative and less than or equal to the array length");
+                throw new ArgumentOutOfRangeException(nameof(index), index, @"must be non-negative and less than or equal to the array length");
             }
 
-            if (arrayIndex + Count > array.Length)
+            if (index + Count > array.Length)
             {
                 throw new ArgumentException(@"destination array was not long enough", nameof(array));
             }
 
             for (Node? current = Head; current is not null; current = current.Next)
             {
-                array[arrayIndex++] = current.Value;
+                array[index++] = current.Value;
             }
         }
 

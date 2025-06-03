@@ -5,6 +5,7 @@ using System;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
+using NetExtender.Types.Exceptions;
 using ReactiveUI;
 
 namespace NetExtender.ReactiveUI.Utilities
@@ -38,7 +39,7 @@ namespace NetExtender.ReactiveUI.Utilities
 
             if (String.IsNullOrEmpty(name))
             {
-                throw new ArgumentException("Value cannot be null or empty.", nameof(name));
+                throw new ArgumentNullOrEmptyStringException(name, nameof(name));
             }
 
             if (type is null)
@@ -77,7 +78,7 @@ namespace NetExtender.ReactiveUI.Utilities
 
             if (String.IsNullOrEmpty(name))
             {
-                throw new ArgumentException("Value cannot be null or empty.", nameof(name));
+                throw new ArgumentNullOrEmptyStringException(name, nameof(name));
             }
 
             if (type is null)
@@ -127,7 +128,7 @@ namespace NetExtender.ReactiveUI.Utilities
 
             if (String.IsNullOrEmpty(name))
             {
-                throw new ArgumentException("Value cannot be null or empty.", nameof(name));
+                throw new ArgumentNullOrEmptyStringException(name, nameof(name));
             }
 
             if (type is null)

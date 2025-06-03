@@ -10,22 +10,22 @@ namespace NetExtender.Types.Dictionaries
     public class EnumDictionary<TKey, TValue> : Dictionary<TKey, TValue> where TKey : unmanaged, Enum
     {
         public EnumDictionary()
-            : base(new EnumEqualityComparer<TKey>())
+            : base(new EnumComparer<TKey>())
         {
         }
 
         public EnumDictionary(IDictionary<TKey, TValue> dictionary)
-            : base(dictionary, new EnumEqualityComparer<TKey>())
+            : base(dictionary, new EnumComparer<TKey>())
         {
         }
 
         public EnumDictionary(IEnumerable<KeyValuePair<TKey, TValue>> collection)
-            : base(collection, new EnumEqualityComparer<TKey>())
+            : base(collection, new EnumComparer<TKey>())
         {
         }
 
         public EnumDictionary(Int32 capacity)
-            : base(capacity, new EnumEqualityComparer<TKey>())
+            : base(capacity, new EnumComparer<TKey>())
         {
         }
     }

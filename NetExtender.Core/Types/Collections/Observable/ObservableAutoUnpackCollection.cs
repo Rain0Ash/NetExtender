@@ -1,5 +1,7 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -7,12 +9,11 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Linq.Expressions;
 using NetExtender.Types.Collections.Interfaces;
-using NetExtender.Types.Dictionaries;
 using NetExtender.Types.Sets;
 using NetExtender.Types.Storages;
 using NetExtender.Types.Storages.Interfaces;
+using NetExtender.Utilities.Core;
 using NetExtender.Utilities.IO;
-using NetExtender.Utilities.Numerics;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Collections
@@ -23,9 +24,8 @@ namespace NetExtender.Types.Collections
     
     //TODO:
     // Подумать над ячейками длин с индексами и обновлениям по ячейкам. Подумать над множественным вхождением
-    internal class ObservableAutoUnpackCollectionInternal<T> : ItemObservableCollection<ObservableAutoUnpackCollectionInternal<T>.Unpack>, IItemObservableCollection<T> where T : class?
+    internal class ObservableAutoUnpackCollectionAbstraction<T> : ItemObservableCollection<ObservableAutoUnpackCollectionAbstraction<T>.Unpack>, IItemObservableCollection<T>, IReadOnlyItemObservableCollection<T> where T : class?
     {
-        protected SyncRoot SyncRoot { get; } = ConcurrentUtilities.SyncRoot;
         protected SelectorCollectionWrapper<Unpack, T> Wrapper { get; }
         protected OrderedSet<Select>? Selectors { get; }
 #pragma warning disable CS8634
@@ -44,20 +44,20 @@ namespace NetExtender.Types.Collections
             }
         }
         
-        public ObservableAutoUnpackCollectionInternal(params Expression<Func<T, IEnumerable<T>>>?[]? selectors)
+        public ObservableAutoUnpackCollectionAbstraction(params Expression<Func<T, IEnumerable<T>>>?[]? selectors)
         {
             Wrapper = new SelectorCollectionWrapper<Unpack, T>(this, static unpack => unpack.Item);
             Selectors = ToSelectors(selectors);
         }
         
-        public ObservableAutoUnpackCollectionInternal(IEnumerable<T> collection, params Expression<Func<T, IEnumerable<T>>>?[]? selectors)
+        public ObservableAutoUnpackCollectionAbstraction(IEnumerable<T> collection, params Expression<Func<T, IEnumerable<T>>>?[]? selectors)
             : base(collection is not null ? Convert(collection) : throw new ArgumentNullException(nameof(collection)))
         {
             Wrapper = new SelectorCollectionWrapper<Unpack, T>(this, static unpack => unpack.Item);
             Selectors = ToSelectors(selectors);
         }
         
-        public ObservableAutoUnpackCollectionInternal(List<T> list, params Expression<Func<T, IEnumerable<T>>>?[]? selectors)
+        public ObservableAutoUnpackCollectionAbstraction(List<T> list, params Expression<Func<T, IEnumerable<T>>>?[]? selectors)
             : base(list is not null ? Convert(list) : throw new ArgumentNullException(nameof(list)))
         {
             Wrapper = new SelectorCollectionWrapper<Unpack, T>(this, static unpack => unpack.Item);
@@ -88,6 +88,7 @@ namespace NetExtender.Types.Collections
                 .Select(static selector => new Select(selector.Key, selector.Value.Compile())).ToOrderedSet();
         }
 
+        // TODO:
         protected virtual void SubCollectionChanged(Object? sender, NotifyCollectionChangedEventArgs args)
         {
             if (sender is not ValueTuple<Object?, Unpack> tuple)
@@ -125,74 +126,68 @@ namespace NetExtender.Types.Collections
             item.ToConsole();
             args.ToConsole();
         }
-        
-        // ReSharper disable once CognitiveComplexity
-        protected override void Subscribe(IList? items)
+
+        protected override void Subscribe<TItem>(TItem? item) where TItem : default
         {
-            lock (SyncRoot)
-            {
-                base.Subscribe(items);
-                
-                if (items is null || Selectors is not { Count: > 0 })
-                {
-                    return;
-                }
+            base.Subscribe(item);
             
-                foreach (Unpack item in items.OfType<Unpack>())
+            if (item is not Unpack unpack || Selectors is not { Count: > 0 })
+            {
+                return;
+            }
+            
+            Boolean recursive = unpack.Depth < MaxDepth;
+
+            foreach (Select? selector in Selectors)
+            {
+                IEnumerable<T> source = selector.Selector(unpack);
+
+                if (recursive)
                 {
-                    Boolean recursive = item.Depth < MaxDepth;
-                    
-                    foreach (Select? selector in Selectors)
+                    AddRange(source.Select(pack => new Unpack(pack) { Parent = unpack }));
+                }
+
+                switch (source)
+                {
+                    case INotifyCollectionChanged notify:
                     {
-                        IEnumerable<T> source = selector.Selector(item);
-                        
-                        if (recursive)
+                        Dictionary<Select, NotifyCollectionChangedEventHandler> storage = CollectionChangedEventHandlers.GetOrAdd(unpack, () => new Dictionary<Select, NotifyCollectionChangedEventHandler>());
+                        NotifyCollectionChangedEventHandler handler = storage.GetOrAdd(selector, key => (sender, args) => SubCollectionChanged((sender, unpack, key), args));
+
+                        notify.CollectionChanged += handler;
+                        continue;
+                    }
+                    case INotifyPropertyChanged notify:
+                    {
+                        Dictionary<Select, PropertyChangedEventHandler> storage = PropertyChangedEventHandlers.GetOrAdd(unpack, () => new Dictionary<Select, PropertyChangedEventHandler>());
+                        PropertyChangedEventHandler handler = storage.GetOrAdd(selector, key => (sender, args) => SubCollectionPropertyChanged((sender, unpack, key), args));
+
+                        static List<T> Factory((T, Select) value)
                         {
-                            AddRange(source.Select(unpack => new Unpack(unpack) { Parent = item }));
+                            (T unpack, Select select) = value;
+                            return new List<T>(select.Selector(unpack));
                         }
-                        
-                        switch (source)
-                        {
-                            case INotifyCollectionChanged notify:
-                            {
-                                Dictionary<Select, NotifyCollectionChangedEventHandler> storage = CollectionChangedEventHandlers.GetOrAdd(item, () => new Dictionary<Select, NotifyCollectionChangedEventHandler>());
-                                NotifyCollectionChangedEventHandler handler = storage.GetOrAdd(selector, key => (sender, args) => SubCollectionChanged((sender, item, key), args));
-                                
-                                notify.CollectionChanged += handler;
-                                continue;
-                            }
-                            case INotifyPropertyChanged notify:
-                            {
-                                Dictionary<Select, PropertyChangedEventHandler> storage = PropertyChangedEventHandlers.GetOrAdd(item, () => new Dictionary<Select, PropertyChangedEventHandler>());
-                                PropertyChangedEventHandler handler = storage.GetOrAdd(selector, key => (sender, args) => SubCollectionPropertyChanged((sender, item, key), args));
-                                
-                                static List<T> Factory((T, Select) value)
-                                {
-                                    (T item, Select select) = value;
-                                    return new List<T>(select.Selector(item));
-                                }
-                                
-                                notify.PropertyChanged += handler;
-                                Dictionary<Select, List<T>> dictionary = Storage.GetOrAdd(item, () => new Dictionary<Select, List<T>>());
-                                dictionary.GetOrAdd(selector, key => Factory((item, key)));
-                                continue;
-                            }
-                        }
+
+                        notify.PropertyChanged += handler;
+                        Dictionary<Select, List<T>> dictionary = Storage.GetOrAdd(unpack, () => new Dictionary<Select, List<T>>());
+                        dictionary.GetOrAdd(selector, key => Factory((unpack, key)));
+                        continue;
                     }
                 }
             }
         }
-        
-        protected override void Unsubscribe(IList? items)
+
+        //TODO:
+        protected override void Unsubscribe<TItem>(TItem? item) where TItem : default
         {
-            base.Unsubscribe(items);
-            
-            if (items is null || Selectors is not { Count: > 0 })
+            base.Unsubscribe(item);
+
+            if (item is not Unpack unpack || Selectors is not { Count: > 0 })
             {
                 return;
             }
         }
-        
+
         public Boolean Contains(T item)
         {
             return base.Contains(item);
@@ -238,9 +233,9 @@ namespace NetExtender.Types.Collections
             base.RemoveRange(source.Select(Unpack.Create));
         }
         
-        public void CopyTo(T[] array, Int32 arrayIndex)
+        public void CopyTo(T[] array, Int32 index)
         {
-            Wrapper.CopyTo(array, arrayIndex);
+            Wrapper.CopyTo(array, index);
         }
         
         public new IEnumerator<T> GetEnumerator()

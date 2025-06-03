@@ -337,6 +337,11 @@ namespace NetExtender.Localization.Properties
         {
             return Internal.GetValue();
         }
+        
+        ILocalizationString? IGetter<ILocalizationString?>.Get()
+        {
+            return GetValue();
+        }
 
         public ILocalizationString? GetValue(Func<ILocalizationString?, Boolean>? predicate)
         {
@@ -347,10 +352,20 @@ namespace NetExtender.Localization.Properties
         {
             return Internal.GetValueAsync();
         }
+        
+        async ValueTask<ILocalizationString?> IAsyncGetter<ILocalizationString?>.GetAsync()
+        {
+            return await GetValueAsync();
+        }
 
         public Task<ILocalizationString?> GetValueAsync(CancellationToken token)
         {
             return Internal.GetValueAsync(token);
+        }
+        
+        async ValueTask<ILocalizationString?> IAsyncGetter<ILocalizationString?>.GetAsync(CancellationToken token)
+        {
+            return await GetValueAsync(token);
         }
 
         public Task<ILocalizationString?> GetValueAsync(Func<ILocalizationString?, Boolean>? predicate)

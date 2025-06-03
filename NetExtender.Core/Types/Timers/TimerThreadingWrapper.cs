@@ -24,13 +24,13 @@ namespace NetExtender.Types.Timers
         public event TickHandler? Tick;
         public Boolean IsStarted { get; private set; }
         
-        private DateTimeFactory _factory = DateTimeFactory.Factory;
+        private DateTimeProvider _provider = DateTimeProvider.Provider;
 
         public DateTime Now
         {
             get
             {
-                return _factory.Now;
+                return _provider.Now;
             }
         }
         
@@ -38,11 +38,11 @@ namespace NetExtender.Types.Timers
         {
             get
             {
-                return _factory.Kind;
+                return _provider.Kind;
             }
             set
             {
-                _factory.Kind = value;
+                _provider.Kind = value;
             }
         }
 
@@ -90,6 +90,34 @@ namespace NetExtender.Types.Timers
             Timer = new Timer(OnTick, null, Timeout.Infinite, Timeout.Infinite);
         }
 
+        public TimerThreadingWrapper(TimerCallback callback, Object? state, TimeSpan dueTime, TimeSpan period)
+            : this(callback, state, dueTime, period, null)
+        {
+        }
+
+        public TimerThreadingWrapper(TimerCallback callback, Object? state, TimeSpan dueTime, TimeSpan period, TickHandler? handler)
+        {
+            Interval = TimerUtilities.CheckInterval(period);
+            Timer = new Timer(item => { callback.Invoke(item); OnTick(item); }, state, Timeout.Infinite, Timeout.Infinite);
+
+            if (handler is not null)
+            {
+                Tick += handler;
+            }
+            
+            try
+            {
+                Timer.Change(dueTime, period);
+                IsStarted = true;
+            }
+            catch (Exception)
+            {
+                Tick = null;
+                Timer.Dispose();
+                throw;
+            }
+        }
+
         private void OnTick(Object? state)
         {
             if (!IsStarted)
@@ -104,13 +132,19 @@ namespace NetExtender.Types.Timers
                 return;
             }
 
-            Tick?.Invoke(timer, new TimeEventArgs(DateTime.Now));
+            Tick?.Invoke(timer, new TimeEventArgs(Now));
         }
 
         public Boolean TrySetKind(DateTimeKind kind)
         {
             Kind = kind;
             return true;
+        }
+
+        public Boolean Change(TimeSpan dueTime, TimeSpan period)
+        {
+            Timer timer = Timer ?? throw new ObjectDisposedException(nameof(TimerThreadingWrapper));
+            return timer.Change(dueTime, period);
         }
 
         public void Start()

@@ -347,7 +347,7 @@ namespace NetExtender.Types.Tries
             Count = 0;
         }
 
-        public void CopyTo(IEnumerable<T>[] array, Int32 arrayIndex)
+        public void CopyTo(IEnumerable<T>[] array, Int32 index)
         {
             if (array is null)
             {
@@ -355,7 +355,7 @@ namespace NetExtender.Types.Tries
             }
 
             IEnumerable<T>[] entries = GetAllNodes(Root).Select(node => node.Item).WhereNotNull().ToArray();
-            Array.Copy(entries, 0, array, arrayIndex, Count);
+            Array.Copy(entries, 0, array, index, Count);
         }
 
         public IEnumerator<IEnumerable<T>> GetEnumerator()

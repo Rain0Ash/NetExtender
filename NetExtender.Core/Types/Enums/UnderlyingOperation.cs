@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using NetExtender.Types.Enums.Interfaces;
 
@@ -18,37 +19,52 @@ namespace NetExtender.Types.Enums
     {
         private sealed class Continuous : ContinuousUnderlyingEnumOperation<T, SByte>
         {
-            public Continuous(SByte min, SByte max, EnumMember<T>[] members)
+            public Continuous(SByte min, SByte max, ImmutableArray<EnumMember<T>> members)
                 : base(min, max, members)
             {
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override Boolean IsDefined(ref T value)
+            public override Boolean IsDefined(T value)
             {
-                ref SByte result = ref Unsafe.As<T, SByte>(ref value);
-                return Min <= result && result <= Max;
+                SByte convert = Unsafe.As<T, SByte>(ref value);
+                return Min <= convert && convert <= Max;
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override Boolean IsDefined(ref SByte value)
+            public override Boolean IsDefined(SByte value)
             {
                 return Min <= value && value <= Max;
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override EnumMember<T> GetMember(ref T value)
+            public override EnumMember<T> GetMember(T value)
             {
-                ref SByte result = ref Unsafe.As<T, SByte>(ref value);
-                Int32 index = result - Min;
+                SByte convert = Unsafe.As<T, SByte>(ref value);
+                Int32 index = convert - Min;
 
                 return Members[index];
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override Boolean TryParse(String text, out T result)
+            public override Boolean TryGetMember(T value, [MaybeNullWhen(false)] out EnumMember<T> result)
             {
-                return SByteOperation<T>.TryParse(text, out result);
+                try
+                {
+                    result = GetMember(value);
+                    return true;
+                }
+                catch (IndexOutOfRangeException)
+                {
+                    result = null;
+                    return false;
+                }
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public override Boolean TryParse(String value, out T result)
+            {
+                return SByteOperation<T>.TryParse(value, out result);
             }
         }
 
@@ -60,42 +76,49 @@ namespace NetExtender.Types.Enums
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override Boolean IsDefined(ref T value)
+            public override Boolean IsDefined(T value)
             {
-                ref SByte result = ref Unsafe.As<T, SByte>(ref value);
-                return Value.ContainsKey(result);
+                SByte convert = Unsafe.As<T, SByte>(ref value);
+                return Value.ContainsKey(convert);
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override Boolean IsDefined(ref SByte value)
+            public override Boolean IsDefined(SByte value)
             {
                 return Value.ContainsKey(value);
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override EnumMember<T> GetMember(ref T value)
+            public override EnumMember<T> GetMember(T value)
             {
-                ref SByte result = ref Unsafe.As<T, SByte>(ref value);
-                return Value[result];
+                SByte convert = Unsafe.As<T, SByte>(ref value);
+                return Value[convert];
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override Boolean TryParse(String text, out T result)
+            public override Boolean TryGetMember(T value, [MaybeNullWhen(false)] out EnumMember<T> result)
             {
-                return SByteOperation<T>.TryParse(text, out result);
+                SByte convert = Unsafe.As<T, SByte>(ref value);
+                return Value.TryGetValue(convert, out result);
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public override Boolean TryParse(String value, out T result)
+            {
+                return SByteOperation<T>.TryParse(value, out result);
             }
         }
 
         private static UnderlyingEnumOperation<T, SByte>? Operation { get; set; }
 
-        public static IUnderlyingEnumOperation<T, SByte> Create(T min, T max, EnumMember<T>[] members)
+        public static IUnderlyingEnumOperation<T, SByte> Create(T min, T max, ImmutableArray<EnumMember<T>> members)
         {
             SByte minimum = Unsafe.As<T, SByte>(ref min);
             SByte maximum = Unsafe.As<T, SByte>(ref max);
 
-            ImmutableDictionary<SByte, EnumMember<T>> dictionary = members.ToImmutableDictionary(x =>
+            ImmutableDictionary<SByte, EnumMember<T>> dictionary = members.ToImmutableDictionary(static member =>
             {
-                T value = x.Value;
+                T value = member.Value;
                 return Unsafe.As<T, SByte>(ref value);
             });
 
@@ -116,18 +139,18 @@ namespace NetExtender.Types.Enums
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean IsDefined(ref SByte value)
+        public static Boolean IsDefined(SByte value)
         {
-            return Operation?.IsDefined(ref value) ?? false;
+            return Operation?.IsDefined(value) ?? false;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static Boolean TryParse(String text, out T result)
+        private static Boolean TryParse(String value, out T result)
         {
             result = default;
-            ref SByte value = ref Unsafe.As<T, SByte>(ref result);
+            ref SByte convert = ref Unsafe.As<T, SByte>(ref result);
 
-            return SByte.TryParse(text, out value);
+            return SByte.TryParse(value, out convert);
         }
     }
 
@@ -139,37 +162,52 @@ namespace NetExtender.Types.Enums
     {
         private sealed class Continuous : ContinuousUnderlyingEnumOperation<T, Byte>
         {
-            public Continuous(Byte min, Byte max, EnumMember<T>[] members)
+            public Continuous(Byte min, Byte max, ImmutableArray<EnumMember<T>> members)
                 : base(min, max, members)
             {
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override Boolean IsDefined(ref T value)
+            public override Boolean IsDefined(T value)
             {
-                ref Byte result = ref Unsafe.As<T, Byte>(ref value);
-                return Min <= result && result <= Max;
+                Byte convert = Unsafe.As<T, Byte>(ref value);
+                return Min <= convert && convert <= Max;
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override Boolean IsDefined(ref Byte value)
+            public override Boolean IsDefined(Byte value)
             {
                 return Min <= value && value <= Max;
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override EnumMember<T> GetMember(ref T value)
+            public override EnumMember<T> GetMember(T value)
             {
-                ref Byte result = ref Unsafe.As<T, Byte>(ref value);
-                Int32 index = result - Min;
+                Byte convert = Unsafe.As<T, Byte>(ref value);
+                Int32 index = convert - Min;
 
                 return Members[index];
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override Boolean TryParse(String text, out T result)
+            public override Boolean TryGetMember(T value, [MaybeNullWhen(false)] out EnumMember<T> result)
             {
-                return ByteOperation<T>.TryParse(text, out result);
+                try
+                {
+                    result = GetMember(value);
+                    return true;
+                }
+                catch (IndexOutOfRangeException)
+                {
+                    result = null;
+                    return false;
+                }
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public override Boolean TryParse(String value, out T result)
+            {
+                return ByteOperation<T>.TryParse(value, out result);
             }
         }
 
@@ -181,42 +219,49 @@ namespace NetExtender.Types.Enums
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override Boolean IsDefined(ref T value)
+            public override Boolean IsDefined(T value)
             {
-                ref Byte result = ref Unsafe.As<T, Byte>(ref value);
-                return Value.ContainsKey(result);
+                Byte convert = Unsafe.As<T, Byte>(ref value);
+                return Value.ContainsKey(convert);
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override Boolean IsDefined(ref Byte value)
+            public override Boolean IsDefined(Byte value)
             {
                 return Value.ContainsKey(value);
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override EnumMember<T> GetMember(ref T value)
+            public override EnumMember<T> GetMember(T value)
             {
-                ref Byte result = ref Unsafe.As<T, Byte>(ref value);
-                return Value[result];
+                Byte convert = Unsafe.As<T, Byte>(ref value);
+                return Value[convert];
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override Boolean TryParse(String text, out T result)
+            public override Boolean TryGetMember(T value, [MaybeNullWhen(false)] out EnumMember<T> result)
             {
-                return ByteOperation<T>.TryParse(text, out result);
+                Byte convert = Unsafe.As<T, Byte>(ref value);
+                return Value.TryGetValue(convert, out result);
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public override Boolean TryParse(String value, out T result)
+            {
+                return ByteOperation<T>.TryParse(value, out result);
             }
         }
 
         private static UnderlyingEnumOperation<T, Byte>? Operation { get; set; }
 
-        public static IUnderlyingEnumOperation<T, Byte> Create(T min, T max, EnumMember<T>[] members)
+        public static IUnderlyingEnumOperation<T, Byte> Create(T min, T max, ImmutableArray<EnumMember<T>> members)
         {
             Byte minimum = Unsafe.As<T, Byte>(ref min);
             Byte maximum = Unsafe.As<T, Byte>(ref max);
 
-            ImmutableDictionary<Byte, EnumMember<T>> dictionary = members.ToImmutableDictionary(x =>
+            ImmutableDictionary<Byte, EnumMember<T>> dictionary = members.ToImmutableDictionary(static member =>
             {
-                T value = x.Value;
+                T value = member.Value;
                 return Unsafe.As<T, Byte>(ref value);
             });
 
@@ -237,18 +282,18 @@ namespace NetExtender.Types.Enums
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean IsDefined(ref Byte value)
+        public static Boolean IsDefined(Byte value)
         {
-            return Operation?.IsDefined(ref value) ?? false;
+            return Operation?.IsDefined(value) ?? false;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean TryParse(String text, out T result)
+        public static Boolean TryParse(String value, out T result)
         {
             result = default;
-            ref Byte value = ref Unsafe.As<T, Byte>(ref result);
+            ref Byte convert = ref Unsafe.As<T, Byte>(ref result);
 
-            return Byte.TryParse(text, out value);
+            return Byte.TryParse(value, out convert);
         }
     }
 
@@ -260,37 +305,52 @@ namespace NetExtender.Types.Enums
     {
         private sealed class Continuous : ContinuousUnderlyingEnumOperation<T, Int16>
         {
-            public Continuous(Int16 min, Int16 max, EnumMember<T>[] members)
+            public Continuous(Int16 min, Int16 max, ImmutableArray<EnumMember<T>> members)
                 : base(min, max, members)
             {
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override Boolean IsDefined(ref T value)
+            public override Boolean IsDefined(T value)
             {
-                ref Int16 result = ref Unsafe.As<T, Int16>(ref value);
-                return Min <= result && result <= Max;
+                Int16 convert = Unsafe.As<T, Int16>(ref value);
+                return Min <= convert && convert <= Max;
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override Boolean IsDefined(ref Int16 value)
+            public override Boolean IsDefined(Int16 value)
             {
                 return Min <= value && value <= Max;
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override EnumMember<T> GetMember(ref T value)
+            public override EnumMember<T> GetMember(T value)
             {
-                ref Int16 result = ref Unsafe.As<T, Int16>(ref value);
-                Int32 index = result - Min;
+                Int16 convert = Unsafe.As<T, Int16>(ref value);
+                Int32 index = convert - Min;
 
                 return Members[index];
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override Boolean TryParse(String text, out T result)
+            public override Boolean TryGetMember(T value, [MaybeNullWhen(false)] out EnumMember<T> result)
             {
-                return Int16Operation<T>.TryParse(text, out result);
+                try
+                {
+                    result = GetMember(value);
+                    return true;
+                }
+                catch (IndexOutOfRangeException)
+                {
+                    result = null;
+                    return false;
+                }
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public override Boolean TryParse(String value, out T result)
+            {
+                return Int16Operation<T>.TryParse(value, out result);
             }
         }
 
@@ -302,42 +362,49 @@ namespace NetExtender.Types.Enums
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override Boolean IsDefined(ref T value)
+            public override Boolean IsDefined(T value)
             {
-                ref Int16 result = ref Unsafe.As<T, Int16>(ref value);
-                return Value.ContainsKey(result);
+                Int16 convert = Unsafe.As<T, Int16>(ref value);
+                return Value.ContainsKey(convert);
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override Boolean IsDefined(ref Int16 value)
+            public override Boolean IsDefined(Int16 value)
             {
                 return Value.ContainsKey(value);
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override EnumMember<T> GetMember(ref T value)
+            public override EnumMember<T> GetMember(T value)
             {
-                ref Int16 result = ref Unsafe.As<T, Int16>(ref value);
-                return Value[result];
+                Int16 convert = Unsafe.As<T, Int16>(ref value);
+                return Value[convert];
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override Boolean TryParse(String text, out T result)
+            public override Boolean TryGetMember(T value, [MaybeNullWhen(false)] out EnumMember<T> result)
             {
-                return Int16Operation<T>.TryParse(text, out result);
+                Int16 convert = Unsafe.As<T, Int16>(ref value);
+                return Value.TryGetValue(convert, out result);
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public override Boolean TryParse(String value, out T result)
+            {
+                return Int16Operation<T>.TryParse(value, out result);
             }
         }
 
         private static UnderlyingEnumOperation<T, Int16>? Operation { get; set; }
 
-        public static IUnderlyingEnumOperation<T, Int16> Create(T min, T max, EnumMember<T>[] members)
+        public static IUnderlyingEnumOperation<T, Int16> Create(T min, T max, ImmutableArray<EnumMember<T>> members)
         {
             Int16 minimum = Unsafe.As<T, Int16>(ref min);
             Int16 maximum = Unsafe.As<T, Int16>(ref max);
 
-            ImmutableDictionary<Int16, EnumMember<T>> dictionary = members.ToImmutableDictionary(x =>
+            ImmutableDictionary<Int16, EnumMember<T>> dictionary = members.ToImmutableDictionary(static member =>
             {
-                T value = x.Value;
+                T value = member.Value;
                 return Unsafe.As<T, Int16>(ref value);
             });
 
@@ -358,18 +425,18 @@ namespace NetExtender.Types.Enums
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean IsDefined(ref Int16 value)
+        public static Boolean IsDefined(Int16 value)
         {
-            return Operation?.IsDefined(ref value) ?? false;
+            return Operation?.IsDefined(value) ?? false;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean TryParse(String text, out T result)
+        public static Boolean TryParse(String value, out T result)
         {
             result = default;
-            ref Int16 value = ref Unsafe.As<T, Int16>(ref result);
+            ref Int16 convert = ref Unsafe.As<T, Int16>(ref result);
 
-            return Int16.TryParse(text, out value);
+            return Int16.TryParse(value, out convert);
         }
     }
 
@@ -381,37 +448,52 @@ namespace NetExtender.Types.Enums
     {
         private sealed class Continuous : ContinuousUnderlyingEnumOperation<T, UInt16>
         {
-            public Continuous(UInt16 min, UInt16 max, EnumMember<T>[] members)
+            public Continuous(UInt16 min, UInt16 max, ImmutableArray<EnumMember<T>> members)
                 : base(min, max, members)
             {
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override Boolean IsDefined(ref T value)
+            public override Boolean IsDefined(T value)
             {
-                ref UInt16 result = ref Unsafe.As<T, UInt16>(ref value);
-                return Min <= result && result <= Max;
+                UInt16 convert = Unsafe.As<T, UInt16>(ref value);
+                return Min <= convert && convert <= Max;
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override Boolean IsDefined(ref UInt16 value)
+            public override Boolean IsDefined(UInt16 value)
             {
                 return Min <= value && value <= Max;
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override EnumMember<T> GetMember(ref T value)
+            public override EnumMember<T> GetMember(T value)
             {
-                ref UInt16 result = ref Unsafe.As<T, UInt16>(ref value);
-                Int32 index = result - Min;
+                UInt16 convert = Unsafe.As<T, UInt16>(ref value);
+                Int32 index = convert - Min;
 
                 return Members[index];
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override Boolean TryParse(String text, out T result)
+            public override Boolean TryGetMember(T value, [MaybeNullWhen(false)] out EnumMember<T> result)
             {
-                return UInt16Operation<T>.TryParse(text, out result);
+                try
+                {
+                    result = GetMember(value);
+                    return true;
+                }
+                catch (IndexOutOfRangeException)
+                {
+                    result = null;
+                    return false;
+                }
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public override Boolean TryParse(String value, out T result)
+            {
+                return UInt16Operation<T>.TryParse(value, out result);
             }
         }
 
@@ -423,42 +505,49 @@ namespace NetExtender.Types.Enums
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override Boolean IsDefined(ref T value)
+            public override Boolean IsDefined(T value)
             {
-                ref UInt16 result = ref Unsafe.As<T, UInt16>(ref value);
-                return Value.ContainsKey(result);
+                UInt16 convert = Unsafe.As<T, UInt16>(ref value);
+                return Value.ContainsKey(convert);
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override Boolean IsDefined(ref UInt16 value)
+            public override Boolean IsDefined(UInt16 value)
             {
                 return Value.ContainsKey(value);
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override EnumMember<T> GetMember(ref T value)
+            public override EnumMember<T> GetMember(T value)
             {
-                ref UInt16 result = ref Unsafe.As<T, UInt16>(ref value);
-                return Value[result];
+                UInt16 convert = Unsafe.As<T, UInt16>(ref value);
+                return Value[convert];
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override Boolean TryParse(String text, out T result)
+            public override Boolean TryGetMember(T value, [MaybeNullWhen(false)] out EnumMember<T> result)
             {
-                return UInt16Operation<T>.TryParse(text, out result);
+                UInt16 convert = Unsafe.As<T, UInt16>(ref value);
+                return Value.TryGetValue(convert, out result);
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public override Boolean TryParse(String value, out T result)
+            {
+                return UInt16Operation<T>.TryParse(value, out result);
             }
         }
 
         private static UnderlyingEnumOperation<T, UInt16>? Operation { get; set; }
 
-        public static IUnderlyingEnumOperation<T, UInt16> Create(T min, T max, EnumMember<T>[] members)
+        public static IUnderlyingEnumOperation<T, UInt16> Create(T min, T max, ImmutableArray<EnumMember<T>> members)
         {
             UInt16 minimum = Unsafe.As<T, UInt16>(ref min);
             UInt16 maximum = Unsafe.As<T, UInt16>(ref max);
 
-            ImmutableDictionary<UInt16, EnumMember<T>> dictionary = members.ToImmutableDictionary(x =>
+            ImmutableDictionary<UInt16, EnumMember<T>> dictionary = members.ToImmutableDictionary(static member =>
             {
-                T value = x.Value;
+                T value = member.Value;
                 return Unsafe.As<T, UInt16>(ref value);
             });
 
@@ -480,18 +569,18 @@ namespace NetExtender.Types.Enums
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean IsDefined(ref UInt16 value)
+        public static Boolean IsDefined(UInt16 value)
         {
-            return Operation?.IsDefined(ref value) ?? false;
+            return Operation?.IsDefined(value) ?? false;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean TryParse(String text, out T result)
+        public static Boolean TryParse(String value, out T result)
         {
             result = default;
-            ref UInt16 value = ref Unsafe.As<T, UInt16>(ref result);
+            ref UInt16 convert = ref Unsafe.As<T, UInt16>(ref result);
 
-            return UInt16.TryParse(text, out value);
+            return UInt16.TryParse(value, out convert);
         }
     }
 
@@ -503,37 +592,52 @@ namespace NetExtender.Types.Enums
     {
         private sealed class Continuous : ContinuousUnderlyingEnumOperation<T, Int32>
         {
-            public Continuous(Int32 min, Int32 max, EnumMember<T>[] members)
+            public Continuous(Int32 min, Int32 max, ImmutableArray<EnumMember<T>> members)
                 : base(min, max, members)
             {
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override Boolean IsDefined(ref T value)
+            public override Boolean IsDefined(T value)
             {
-                ref Int32 result = ref Unsafe.As<T, Int32>(ref value);
-                return Min <= result && result <= Max;
+                Int32 convert = Unsafe.As<T, Int32>(ref value);
+                return Min <= convert && convert <= Max;
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override Boolean IsDefined(ref Int32 value)
+            public override Boolean IsDefined(Int32 value)
             {
                 return Min <= value && value <= Max;
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override EnumMember<T> GetMember(ref T value)
+            public override EnumMember<T> GetMember(T value)
             {
-                ref Int32 result = ref Unsafe.As<T, Int32>(ref value);
-                Int32 index = result - Min;
+                Int32 convert = Unsafe.As<T, Int32>(ref value);
+                Int32 index = convert - Min;
 
                 return Members[index];
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override Boolean TryParse(String text, out T result)
+            public override Boolean TryGetMember(T value, [MaybeNullWhen(false)] out EnumMember<T> result)
             {
-                return Int32Operation<T>.TryParse(text, out result);
+                try
+                {
+                    result = GetMember(value);
+                    return true;
+                }
+                catch (IndexOutOfRangeException)
+                {
+                    result = null;
+                    return false;
+                }
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public override Boolean TryParse(String value, out T result)
+            {
+                return Int32Operation<T>.TryParse(value, out result);
             }
         }
 
@@ -545,42 +649,49 @@ namespace NetExtender.Types.Enums
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override Boolean IsDefined(ref T value)
+            public override Boolean IsDefined(T value)
             {
-                ref Int32 result = ref Unsafe.As<T, Int32>(ref value);
-                return Value.ContainsKey(result);
+                Int32 convert = Unsafe.As<T, Int32>(ref value);
+                return Value.ContainsKey(convert);
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override Boolean IsDefined(ref Int32 value)
+            public override Boolean IsDefined(Int32 value)
             {
                 return Value.ContainsKey(value);
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override EnumMember<T> GetMember(ref T value)
+            public override EnumMember<T> GetMember(T value)
             {
-                ref Int32 result = ref Unsafe.As<T, Int32>(ref value);
-                return Value[result];
+                Int32 convert = Unsafe.As<T, Int32>(ref value);
+                return Value[convert];
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override Boolean TryParse(String text, out T result)
+            public override Boolean TryGetMember(T value, [MaybeNullWhen(false)] out EnumMember<T> result)
             {
-                return Int32Operation<T>.TryParse(text, out result);
+                Int32 convert = Unsafe.As<T, Int32>(ref value);
+                return Value.TryGetValue(convert, out result);
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public override Boolean TryParse(String value, out T result)
+            {
+                return Int32Operation<T>.TryParse(value, out result);
             }
         }
 
         private static UnderlyingEnumOperation<T, Int32>? Operation { get; set; }
 
-        public static IUnderlyingEnumOperation<T, Int32> Create(T min, T max, EnumMember<T>[] members)
+        public static IUnderlyingEnumOperation<T, Int32> Create(T min, T max, ImmutableArray<EnumMember<T>> members)
         {
             Int32 minimum = Unsafe.As<T, Int32>(ref min);
             Int32 maximum = Unsafe.As<T, Int32>(ref max);
 
-            ImmutableDictionary<Int32, EnumMember<T>> dictionary = members.ToImmutableDictionary(x =>
+            ImmutableDictionary<Int32, EnumMember<T>> dictionary = members.ToImmutableDictionary(static member =>
             {
-                T value = x.Value;
+                T value = member.Value;
                 return Unsafe.As<T, Int32>(ref value);
             });
 
@@ -601,18 +712,18 @@ namespace NetExtender.Types.Enums
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean IsDefined(ref Int32 value)
+        public static Boolean IsDefined(Int32 value)
         {
-            return Operation?.IsDefined(ref value) ?? false;
+            return Operation?.IsDefined(value) ?? false;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean TryParse(String text, out T result)
+        public static Boolean TryParse(String value, out T result)
         {
             result = default;
-            ref Int32 value = ref Unsafe.As<T, Int32>(ref result);
+            ref Int32 convert = ref Unsafe.As<T, Int32>(ref result);
 
-            return Int32.TryParse(text, out value);
+            return Int32.TryParse(value, out convert);
         }
     }
 
@@ -624,37 +735,52 @@ namespace NetExtender.Types.Enums
     {
         private sealed class Continuous : ContinuousUnderlyingEnumOperation<T, UInt32>
         {
-            public Continuous(UInt32 min, UInt32 max, EnumMember<T>[] members)
+            public Continuous(UInt32 min, UInt32 max, ImmutableArray<EnumMember<T>> members)
                 : base(min, max, members)
             {
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override Boolean IsDefined(ref T value)
+            public override Boolean IsDefined(T value)
             {
-                ref UInt32 result = ref Unsafe.As<T, UInt32>(ref value);
-                return Min <= result && result <= Max;
+                UInt32 convert = Unsafe.As<T, UInt32>(ref value);
+                return Min <= convert && convert <= Max;
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override Boolean IsDefined(ref UInt32 value)
+            public override Boolean IsDefined(UInt32 value)
             {
                 return Min <= value && value <= Max;
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override EnumMember<T> GetMember(ref T value)
+            public override EnumMember<T> GetMember(T value)
             {
-                ref UInt32 result = ref Unsafe.As<T, UInt32>(ref value);
-                UInt32 index = result - Min;
+                UInt32 convert = Unsafe.As<T, UInt32>(ref value);
+                UInt32 index = convert - Min;
 
-                return Members[index];
+                return Members[unchecked((Int32) index)];
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override Boolean TryParse(String text, out T result)
+            public override Boolean TryGetMember(T value, [MaybeNullWhen(false)] out EnumMember<T> result)
             {
-                return UInt32Operation<T>.TryParse(text, out result);
+                try
+                {
+                    result = GetMember(value);
+                    return true;
+                }
+                catch (IndexOutOfRangeException)
+                {
+                    result = null;
+                    return false;
+                }
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public override Boolean TryParse(String value, out T result)
+            {
+                return UInt32Operation<T>.TryParse(value, out result);
             }
         }
 
@@ -666,42 +792,49 @@ namespace NetExtender.Types.Enums
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override Boolean IsDefined(ref T value)
+            public override Boolean IsDefined(T value)
             {
-                ref UInt32 result = ref Unsafe.As<T, UInt32>(ref value);
-                return Value.ContainsKey(result);
+                UInt32 convert = Unsafe.As<T, UInt32>(ref value);
+                return Value.ContainsKey(convert);
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override Boolean IsDefined(ref UInt32 value)
+            public override Boolean IsDefined(UInt32 value)
             {
                 return Value.ContainsKey(value);
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override EnumMember<T> GetMember(ref T value)
+            public override EnumMember<T> GetMember(T value)
             {
-                ref UInt32 result = ref Unsafe.As<T, UInt32>(ref value);
-                return Value[result];
+                UInt32 convert = Unsafe.As<T, UInt32>(ref value);
+                return Value[convert];
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override Boolean TryParse(String text, out T result)
+            public override Boolean TryGetMember(T value, [MaybeNullWhen(false)] out EnumMember<T> result)
             {
-                return UInt32Operation<T>.TryParse(text, out result);
+                UInt32 convert = Unsafe.As<T, UInt32>(ref value);
+                return Value.TryGetValue(convert, out result);
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public override Boolean TryParse(String value, out T result)
+            {
+                return UInt32Operation<T>.TryParse(value, out result);
             }
         }
 
         private static UnderlyingEnumOperation<T, UInt32>? Operation { get; set; }
 
-        public static IUnderlyingEnumOperation<T, UInt32> Create(T min, T max, EnumMember<T>[] members)
+        public static IUnderlyingEnumOperation<T, UInt32> Create(T min, T max, ImmutableArray<EnumMember<T>> members)
         {
             UInt32 minimum = Unsafe.As<T, UInt32>(ref min);
             UInt32 maximum = Unsafe.As<T, UInt32>(ref max);
 
-            ImmutableDictionary<UInt32, EnumMember<T>> dictionary = members.ToImmutableDictionary(x =>
+            ImmutableDictionary<UInt32, EnumMember<T>> dictionary = members.ToImmutableDictionary(static member =>
             {
-                T value = x.Value;
+                T value = member.Value;
                 return Unsafe.As<T, UInt32>(ref value);
             });
 
@@ -722,18 +855,18 @@ namespace NetExtender.Types.Enums
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean IsDefined(ref UInt32 value)
+        public static Boolean IsDefined(UInt32 value)
         {
-            return Operation?.IsDefined(ref value) ?? false;
+            return Operation?.IsDefined(value) ?? false;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean TryParse(String text, out T result)
+        public static Boolean TryParse(String value, out T result)
         {
             result = default;
-            ref UInt32 value = ref Unsafe.As<T, UInt32>(ref result);
+            ref UInt32 convert = ref Unsafe.As<T, UInt32>(ref result);
 
-            return UInt32.TryParse(text, out value);
+            return UInt32.TryParse(value, out convert);
         }
     }
 
@@ -745,37 +878,52 @@ namespace NetExtender.Types.Enums
     {
         private sealed class Continuous : ContinuousUnderlyingEnumOperation<T, Int64>
         {
-            public Continuous(Int64 min, Int64 max, EnumMember<T>[] members)
+            public Continuous(Int64 min, Int64 max, ImmutableArray<EnumMember<T>> members)
                 : base(min, max, members)
             {
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override Boolean IsDefined(ref T value)
+            public override Boolean IsDefined(T value)
             {
-                ref Int64 result = ref Unsafe.As<T, Int64>(ref value);
-                return Min <= result && result <= Max;
+                Int64 convert = Unsafe.As<T, Int64>(ref value);
+                return Min <= convert && convert <= Max;
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override Boolean IsDefined(ref Int64 value)
+            public override Boolean IsDefined(Int64 value)
             {
                 return Min <= value && value <= Max;
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override EnumMember<T> GetMember(ref T value)
+            public override EnumMember<T> GetMember(T value)
             {
-                ref Int64 result = ref Unsafe.As<T, Int64>(ref value);
-                Int64 index = result - Min;
+                Int64 convert = Unsafe.As<T, Int64>(ref value);
+                Int64 index = convert - Min;
 
-                return Members[index];
+                return Members[unchecked((Int32) index)];
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override Boolean TryParse(String text, out T result)
+            public override Boolean TryGetMember(T value, [MaybeNullWhen(false)] out EnumMember<T> result)
             {
-                return Int64Operation<T>.TryParse(text, out result);
+                try
+                {
+                    result = GetMember(value);
+                    return true;
+                }
+                catch (IndexOutOfRangeException)
+                {
+                    result = null;
+                    return false;
+                }
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public override Boolean TryParse(String value, out T result)
+            {
+                return Int64Operation<T>.TryParse(value, out result);
             }
         }
 
@@ -787,42 +935,49 @@ namespace NetExtender.Types.Enums
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override Boolean IsDefined(ref T value)
+            public override Boolean IsDefined(T value)
             {
-                ref Int64 result = ref Unsafe.As<T, Int64>(ref value);
-                return Value.ContainsKey(result);
+                Int64 convert = Unsafe.As<T, Int64>(ref value);
+                return Value.ContainsKey(convert);
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override Boolean IsDefined(ref Int64 value)
+            public override Boolean IsDefined(Int64 value)
             {
                 return Value.ContainsKey(value);
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override EnumMember<T> GetMember(ref T value)
+            public override EnumMember<T> GetMember(T value)
             {
-                ref Int64 result = ref Unsafe.As<T, Int64>(ref value);
-                return Value[result];
+                Int64 convert = Unsafe.As<T, Int64>(ref value);
+                return Value[convert];
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override Boolean TryParse(String text, out T result)
+            public override Boolean TryGetMember(T value, [MaybeNullWhen(false)] out EnumMember<T> result)
             {
-                return Int64Operation<T>.TryParse(text, out result);
+                Int64 convert = Unsafe.As<T, Int64>(ref value);
+                return Value.TryGetValue(convert, out result);
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public override Boolean TryParse(String value, out T result)
+            {
+                return Int64Operation<T>.TryParse(value, out result);
             }
         }
 
         private static UnderlyingEnumOperation<T, Int64>? Operation { get; set; }
 
-        public static IUnderlyingEnumOperation<T, Int64> Create(T min, T max, EnumMember<T>[] members)
+        public static IUnderlyingEnumOperation<T, Int64> Create(T min, T max, ImmutableArray<EnumMember<T>> members)
         {
             Int64 minimum = Unsafe.As<T, Int64>(ref min);
             Int64 maximum = Unsafe.As<T, Int64>(ref max);
 
-            ImmutableDictionary<Int64, EnumMember<T>> dictionary = members.ToImmutableDictionary(x =>
+            ImmutableDictionary<Int64, EnumMember<T>> dictionary = members.ToImmutableDictionary(static member =>
             {
-                T value = x.Value;
+                T value = member.Value;
                 return Unsafe.As<T, Int64>(ref value);
             });
 
@@ -843,18 +998,18 @@ namespace NetExtender.Types.Enums
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean IsDefined(ref Int64 value)
+        public static Boolean IsDefined(Int64 value)
         {
-            return Operation?.IsDefined(ref value) ?? false;
+            return Operation?.IsDefined(value) ?? false;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean TryParse(String text, out T result)
+        public static Boolean TryParse(String value, out T result)
         {
             result = default;
-            ref Int64 value = ref Unsafe.As<T, Int64>(ref result);
+            ref Int64 convert = ref Unsafe.As<T, Int64>(ref result);
 
-            return Int64.TryParse(text, out value);
+            return Int64.TryParse(value, out convert);
         }
     }
 
@@ -866,37 +1021,52 @@ namespace NetExtender.Types.Enums
     {
         private sealed class Continuous : ContinuousUnderlyingEnumOperation<T, UInt64>
         {
-            public Continuous(UInt64 min, UInt64 max, EnumMember<T>[] members)
+            public Continuous(UInt64 min, UInt64 max, ImmutableArray<EnumMember<T>> members)
                 : base(min, max, members)
             {
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override Boolean IsDefined(ref T value)
+            public override Boolean IsDefined(T value)
             {
-                ref UInt64 result = ref Unsafe.As<T, UInt64>(ref value);
-                return Min <= result && result <= Max;
+                UInt64 convert = Unsafe.As<T, UInt64>(ref value);
+                return Min <= convert && convert <= Max;
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override Boolean IsDefined(ref UInt64 value)
+            public override Boolean IsDefined(UInt64 value)
             {
                 return Min <= value && value <= Max;
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override EnumMember<T> GetMember(ref T value)
+            public override EnumMember<T> GetMember(T value)
             {
-                ref UInt64 result = ref Unsafe.As<T, UInt64>(ref value);
-                UInt64 index = result - Min;
+                UInt64 convert = Unsafe.As<T, UInt64>(ref value);
+                UInt64 index = convert - Min;
 
-                return Members[index];
+                return Members[unchecked((Int32) index)];
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override Boolean TryParse(String text, out T result)
+            public override Boolean TryGetMember(T value, [MaybeNullWhen(false)] out EnumMember<T> result)
             {
-                return UInt64Operation<T>.TryParse(text, out result);
+                try
+                {
+                    result = GetMember(value);
+                    return true;
+                }
+                catch (IndexOutOfRangeException)
+                {
+                    result = null;
+                    return false;
+                }
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public override Boolean TryParse(String value, out T result)
+            {
+                return UInt64Operation<T>.TryParse(value, out result);
             }
         }
 
@@ -908,42 +1078,49 @@ namespace NetExtender.Types.Enums
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override Boolean IsDefined(ref T value)
+            public override Boolean IsDefined(T value)
             {
-                ref UInt64 result = ref Unsafe.As<T, UInt64>(ref value);
-                return Value.ContainsKey(result);
+                UInt64 convert = Unsafe.As<T, UInt64>(ref value);
+                return Value.ContainsKey(convert);
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override Boolean IsDefined(ref UInt64 value)
+            public override Boolean IsDefined(UInt64 value)
             {
                 return Value.ContainsKey(value);
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override EnumMember<T> GetMember(ref T value)
+            public override EnumMember<T> GetMember(T value)
             {
-                ref UInt64 result = ref Unsafe.As<T, UInt64>(ref value);
-                return Value[result];
+                UInt64 convert = Unsafe.As<T, UInt64>(ref value);
+                return Value[convert];
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override Boolean TryParse(String text, out T result)
+            public override Boolean TryGetMember(T value, [MaybeNullWhen(false)] out EnumMember<T> result)
             {
-                return UInt64Operation<T>.TryParse(text, out result);
+                UInt64 convert = Unsafe.As<T, UInt64>(ref value);
+                return Value.TryGetValue(convert, out result);
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public override Boolean TryParse(String value, out T result)
+            {
+                return UInt64Operation<T>.TryParse(value, out result);
             }
         }
 
         private static UnderlyingEnumOperation<T, UInt64>? Operation { get; set; }
 
-        public static IUnderlyingEnumOperation<T, UInt64> Create(T min, T max, EnumMember<T>[] members)
+        public static IUnderlyingEnumOperation<T, UInt64> Create(T min, T max, ImmutableArray<EnumMember<T>> members)
         {
             UInt64 minval = Unsafe.As<T, UInt64>(ref min);
             UInt64 maxval = Unsafe.As<T, UInt64>(ref max);
 
-            ImmutableDictionary<UInt64, EnumMember<T>> dictionary = members.ToImmutableDictionary(x =>
+            ImmutableDictionary<UInt64, EnumMember<T>> dictionary = members.ToImmutableDictionary(static member =>
             {
-                T value = x.Value;
+                T value = member.Value;
                 return Unsafe.As<T, UInt64>(ref value);
             });
 
@@ -963,18 +1140,18 @@ namespace NetExtender.Types.Enums
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean IsDefined(ref UInt64 value)
+        public static Boolean IsDefined(UInt64 value)
         {
-            return Operation?.IsDefined(ref value) ?? false;
+            return Operation?.IsDefined(value) ?? false;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean TryParse(String text, out T result)
+        public static Boolean TryParse(String value, out T result)
         {
             result = default;
-            ref UInt64 value = ref Unsafe.As<T, UInt64>(ref result);
+            ref UInt64 convert = ref Unsafe.As<T, UInt64>(ref result);
 
-            return UInt64.TryParse(text, out value);
+            return UInt64.TryParse(value, out convert);
         }
     }
 }

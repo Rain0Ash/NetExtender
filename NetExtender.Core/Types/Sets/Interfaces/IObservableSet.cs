@@ -6,6 +6,22 @@ using NetExtender.Interfaces.Notify;
 
 namespace NetExtender.Types.Sets.Interfaces
 {
+    public interface IObservableSortedSet<T> : IObservableSet<T>, ISortedSet<T>
+    {
+    }
+    
+    public interface IIndexObservableSortedSet<T> : IObservableSortedSet<T>, IIndexSortedSet<T>
+    {
+    }
+    
+    public interface IObservableHashSet<T> : IObservableSet<T>, IHashSet<T>
+    {
+    }
+    
+    public interface IIndexObservableHashSet<T> : IObservableHashSet<T>
+    {
+    }
+    
     public interface IObservableSet<T> : ISet<T>, INotifyCollection
     {
     }

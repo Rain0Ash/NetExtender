@@ -268,6 +268,11 @@ namespace NetExtender.Configuration.Properties
             return GetValue(Validate);
         }
 
+        T IGetter<T>.Get()
+        {
+            return GetValue();
+        }
+
         public virtual T GetValue(Func<T, Boolean>? predicate)
         {
             if (IsAlwaysDefault)
@@ -284,9 +289,19 @@ namespace NetExtender.Configuration.Properties
             return GetValueAsync(CancellationToken.None);
         }
 
+        async ValueTask<T> IAsyncGetter<T>.GetAsync()
+        {
+            return await GetValueAsync();
+        }
+
         public virtual Task<T> GetValueAsync(CancellationToken token)
         {
             return GetValueAsync(Validate, token);
+        }
+
+        async ValueTask<T> IAsyncGetter<T>.GetAsync(CancellationToken token)
+        {
+            return await GetValueAsync(token);
         }
 
         public Task<T> GetValueAsync(Func<T, Boolean>? predicate)
@@ -310,14 +325,29 @@ namespace NetExtender.Configuration.Properties
             return !IsReadOnly && Property.SetValue(value, Converter);
         }
 
+        void ISetter<T>.Set(T value)
+        {
+            SetValue(value);
+        }
+
         public Task<Boolean> SetValueAsync(T value)
         {
             return SetValueAsync(value, CancellationToken.None);
         }
 
+        async ValueTask IAsyncSetter<T>.SetAsync(T value)
+        {
+            await SetValueAsync(value);
+        }
+
         public virtual async Task<Boolean> SetValueAsync(T value, CancellationToken token)
         {
             return !IsReadOnly && await Property.SetValueAsync(value, Converter, token).ConfigureAwait(false);
+        }
+
+        async ValueTask IAsyncSetter<T>.SetAsync(T value, CancellationToken token)
+        {
+            await SetValueAsync(value, token);
         }
 
         public virtual Boolean RemoveValue()
@@ -539,35 +569,35 @@ namespace NetExtender.Configuration.Properties
                 return Value = Alternate;
             }
 
-            return GetValueInternal();
+            return GetValueCore();
         }
 
-        protected virtual String? GetValueInternal()
+        protected virtual String? GetValueCore()
         {
             return Config.GetValue(Key, Alternate, Sections);
         }
 
-        protected virtual Task<String?> GetValueInternalAsync(CancellationToken token)
+        protected virtual Task<String?> GetValueCoreAsync(CancellationToken token)
         {
             return Config.GetValueAsync(Key, Alternate, Sections, token);
         }
 
-        protected virtual Boolean KeyExistInternal()
+        protected virtual Boolean KeyExistCore()
         {
             return Config.KeyExist(Key, Sections);
         }
 
-        protected virtual Task<Boolean> KeyExistInternalAsync(CancellationToken token)
+        protected virtual Task<Boolean> KeyExistCoreAsync(CancellationToken token)
         {
             return Config.KeyExistAsync(Key, Sections, token);
         }
 
-        protected virtual Boolean SetValueInternal()
+        protected virtual Boolean SetValueCore()
         {
             return Config.SetValue(Key, Internal.Value, Sections);
         }
 
-        protected virtual Task<Boolean> SetValueInternalAsync(CancellationToken token)
+        protected virtual Task<Boolean> SetValueCoreAsync(CancellationToken token)
         {
             return Config.SetValueAsync(Key, Internal.Value, Sections, token);
         }
@@ -675,7 +705,7 @@ namespace NetExtender.Configuration.Properties
 
         public virtual Boolean KeyExist()
         {
-            return KeyExistInternal();
+            return KeyExistCore();
         }
 
         public Task<Boolean> KeyExistAsync()
@@ -685,7 +715,7 @@ namespace NetExtender.Configuration.Properties
 
         public virtual Task<Boolean> KeyExistAsync(CancellationToken token)
         {
-            return KeyExistInternalAsync(token);
+            return KeyExistCoreAsync(token);
         }
 
         public virtual Boolean Read()
@@ -695,7 +725,7 @@ namespace NetExtender.Configuration.Properties
                 return false;
             }
 
-            String? value = GetValueInternal() ?? Alternate;
+            String? value = GetValueCore() ?? Alternate;
 
             if (Internal.IsValueCreated && value == Internal.Value)
             {
@@ -719,7 +749,7 @@ namespace NetExtender.Configuration.Properties
                 return false;
             }
 
-            String? value = await GetValueInternalAsync(token).ConfigureAwait(false) ?? Alternate;
+            String? value = await GetValueCoreAsync(token).ConfigureAwait(false) ?? Alternate;
 
             if (Internal.IsValueCreated && value == Internal.Value)
             {
@@ -738,7 +768,7 @@ namespace NetExtender.Configuration.Properties
                 return false;
             }
 
-            return SetValueInternal();
+            return SetValueCore();
         }
 
         public Task<Boolean> SaveAsync()
@@ -753,7 +783,7 @@ namespace NetExtender.Configuration.Properties
                 return TaskUtilities.False;
             }
 
-            return SetValueInternalAsync(token);
+            return SetValueCoreAsync(token);
         }
 
         public virtual Boolean Reset()

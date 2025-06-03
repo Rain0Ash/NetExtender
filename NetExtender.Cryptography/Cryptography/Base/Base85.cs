@@ -104,7 +104,7 @@ namespace NetExtender.Cryptography.Base
                 fixed (Byte* pinput = value)
                 fixed (Char* poutput = output)
                 {
-                    if (!InternalEncode(pinput, value.Length, poutput, count, out Int32 written))
+                    if (!EncodeCore(pinput, value.Length, poutput, count, out Int32 written))
                     {
                         throw new InvalidOperationException("Insufficient output buffer size while encoding Base85");
                     }
@@ -148,7 +148,7 @@ namespace NetExtender.Cryptography.Base
                 fixed (Byte* pinput = value)
                 fixed (Char* poutput = output)
                 {
-                    return InternalEncode(pinput, value.Length, poutput, output.Length, out written);
+                    return EncodeCore(pinput, value.Length, poutput, output.Length, out written);
                 }
             }
         }
@@ -164,7 +164,7 @@ namespace NetExtender.Cryptography.Base
             return EncodeAsync(input, output, (buffer, _) => Encode(buffer.Span));
         }
 
-        private unsafe Boolean InternalEncode(Byte* pinput, Int32 inputlength, Char* poutput, Int32 outputlength, out Int32 written)
+        private unsafe Boolean EncodeCore(Byte* pinput, Int32 inputlength, Char* poutput, Int32 outputlength, out Int32 written)
         {
             unchecked
             {
@@ -276,7 +276,7 @@ namespace NetExtender.Cryptography.Base
                 fixed (Char* pointer = value)
                 fixed (Byte* pbuffer = buffer)
                 {
-                    InternalDecode(pointer, value.Length, pbuffer, buffer.Length, out Int32 written);
+                    DecodeCore(pointer, value.Length, pbuffer, buffer.Length, out Int32 written);
                     return buffer.AsSpan()[..written];
                 }
             }
@@ -308,7 +308,7 @@ namespace NetExtender.Cryptography.Base
             fixed (Char* pinput = input)
             fixed (Byte* poutput = output)
             {
-                return InternalDecode(pinput, input.Length, poutput, output.Length, out written);
+                return DecodeCore(pinput, input.Length, poutput, output.Length, out written);
             }
         }
 
@@ -334,7 +334,7 @@ namespace NetExtender.Cryptography.Base
         }
 
         // ReSharper disable once CognitiveComplexity
-        private unsafe Boolean InternalDecode(Char* pinput, Int32 inputlength, Byte* poutput, Int32 outputlength, out Int32 written)
+        private unsafe Boolean DecodeCore(Char* pinput, Int32 inputlength, Byte* poutput, Int32 outputlength, out Int32 written)
         {
             unchecked
             {

@@ -1,3 +1,6 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 namespace NetExtender.Types.Immutable.Bags
 {
     /*public class ImmutableCompressionBagAbstraction<T, TCount, TBag> : ImmutableCompressionBagAbstraction<TCount>, IList<T>, IList, IImmutableList<T> where T : notnull where TCount : unmanaged, IConvertible

@@ -235,13 +235,13 @@ namespace NetExtender.Types.Exceptions
             }
 
             public Exception(T value, String? message, System.Exception? exception)
-                : base(message ?? $"Specified value '{value}' was out of the range of valid values of enum type '{typeof(T)}'.", exception)
+                : base(message ?? $"Specified value '{value}' was out of the range of valid values of enum type '{typeof(T).Name}'.", exception)
             {
                 Value = value;
             }
 
             public Exception(T value, String? parameter, String? message)
-                : base(parameter, value, message ?? $"Specified value '{value}' was out of the range of valid values of enum type '{typeof(T)}'.")
+                : base(parameter, value, message ?? $"Specified value '{value}' was out of the range of valid values of enum type '{typeof(T).Name}'.")
             {
                 Value = value;
             }

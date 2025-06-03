@@ -3,14 +3,31 @@
 
 using NetExtender.CQRS.Interfaces;
 using NetExtender.Types.Enumerables.Interfaces;
+using NetExtender.Types.Monads.Result;
 
 namespace NetExtender.CQRS.Requests.Interfaces
 {
+    public interface IBusinessPaginationRequestCQRS<TResult> : IBusinessPaginationRequestCQRS<TResult, IPaginationEnumerable<TResult>>
+    {
+    }
+
+    public interface IBusinessPaginationRequestCQRS<TResult, TCollection> : IBusinessRequestCQRS<TCollection> where TCollection : IPaginationEnumerable<TResult>
+    {
+    }
+    
     public interface IPaginationRequestCQRS<TResult> : IPaginationRequestCQRS<TResult, IPaginationEnumerable<TResult>>
     {
     }
 
     public interface IPaginationRequestCQRS<TResult, TCollection> : IRequestCQRS<TCollection> where TCollection : IPaginationEnumerable<TResult>
+    {
+    }
+    
+    public interface IBusinessRequestCQRS<TResult> : IRequestCQRS<BusinessResult<TResult>>
+    {
+    }
+    
+    public interface IBusinessRequestCQRS : IRequestCQRS<BusinessResult>
     {
     }
     

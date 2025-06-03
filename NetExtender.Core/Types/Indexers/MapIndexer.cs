@@ -48,7 +48,6 @@ namespace NetExtender.Types.Indexers
         {
         }
 
-        [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
         public MapIndexer(IEnumerable<T> source, IEqualityComparer<T>? comparer)
         {
             if (source is null)
@@ -56,7 +55,7 @@ namespace NetExtender.Types.Indexers
                 throw new ArgumentNullException(nameof(source));
             }
 
-            Index = new Map<T, Int32>(source.CountIfMaterialized() ?? 0, comparer, null);
+            Index = new Map<T, Int32>(source.CountIfMaterialized(0), comparer, null);
             AddRange(source);
         }
 
@@ -156,10 +155,9 @@ namespace NetExtender.Types.Indexers
                 throw new ArgumentOutOfRangeException(nameof(array), array.Length, null);
             }
 
-            Int32 i = 0;
             foreach (T item in this)
             {
-                array[index + i++] = item;
+                array[index++] = item;
             }
         }
 

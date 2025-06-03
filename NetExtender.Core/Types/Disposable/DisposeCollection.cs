@@ -103,9 +103,9 @@ namespace NetExtender.Types.Disposable
             Internal.Clear();
         }
 
-        public void CopyTo(T[] array, Int32 arrayIndex)
+        public void CopyTo(T[] array, Int32 index)
         {
-            Internal.Keys.CopyTo(array, arrayIndex);
+            Internal.Keys.CopyTo(array, index);
         }
 
         public IEnumerator<T> GetEnumerator()
@@ -192,9 +192,9 @@ namespace NetExtender.Types.Disposable
             Internal.Clear();
         }
 
-        public void CopyTo(T[] array, Int32 arrayIndex)
+        public void CopyTo(T[] array, Int32 index)
         {
-            Internal.Keys.CopyTo(array, arrayIndex);
+            Internal.Keys.CopyTo(array, index);
         }
 
         public IEnumerator<T> GetEnumerator()

@@ -1,3 +1,6 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 using System;
 using System.Collections.Concurrent;
 using System.Globalization;
@@ -125,6 +128,12 @@ namespace NetExtender.Types.Reflection
                 const BindingFlags binding = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.CreateInstance;
                 return (IUnaryReflectionOperator?) Activator.CreateInstance(typeof(UnaryReflectionOperator<,>).MakeGenericType(type, method.ReturnType), binding, null, new Object[] { method, @operator }, null);
             });
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public new static IUnaryReflectionOperator<T, T>? Get<T>(UnaryOperator @operator)
+        {
+            return Get<T, T>(@operator);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

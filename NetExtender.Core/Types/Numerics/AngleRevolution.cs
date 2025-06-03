@@ -8,8 +8,18 @@ using NetExtender.Utilities.Numerics;
 namespace NetExtender.Types.Numerics
 {
     [Serializable]
-    public readonly struct AngleRevolution : IEquatable<AngleRevolution>, IComparable<AngleRevolution>, IFormattable
+    public readonly struct AngleRevolution : IEquality<AngleRevolution>, IFormattable
     {
+        public static implicit operator AngleRevolution(Double revolution)
+        {
+            return new AngleRevolution(revolution);
+        }
+
+        public static explicit operator Double(AngleRevolution angle)
+        {
+            return angle.Revolution;
+        }
+
         /// <summary>
         /// Represents the zero <see cref="AngleRevolution"/> value (0 degrees).
         /// </summary>
@@ -49,16 +59,6 @@ namespace NetExtender.Types.Numerics
         /// Represents the largest possible value of a <see cref="AngleRevolution"/>.
         /// </summary>
         public static AngleRevolution MaxValue { get; } = new AngleRevolution(Double.MaxValue);
-
-        public static explicit operator Double(AngleRevolution angle)
-        {
-            return angle.Revolution;
-        }
-
-        public static implicit operator AngleRevolution(Double revolution)
-        {
-            return new AngleRevolution(revolution);
-        }
 
         /// <summary>
         /// Indicates whether two <see cref="AngleRevolution"/> instances are equal.
@@ -220,6 +220,16 @@ namespace NetExtender.Types.Numerics
         }
 
         /// <summary>
+        /// Returns a hash code for this instance.
+        /// </summary>
+        /// <returns>A 32-bit signed integer hash code.</returns>
+        [Pure]
+        public override Int32 GetHashCode()
+        {
+            return Revolution.GetHashCode();
+        }
+
+        /// <summary>
         /// Indicates whether two <see cref="AngleRevolution"/> instances are equal.
         /// </summary>
         /// <param name="first">The first angle to compare.</param>
@@ -259,16 +269,6 @@ namespace NetExtender.Types.Numerics
                 AngleGradian angle => Equals(angle.ToAngleRevolution()),
                 _ => false
             };
-        }
-
-        /// <summary>
-        /// Returns a hash code for this instance.
-        /// </summary>
-        /// <returns>A 32-bit signed integer hash code.</returns>
-        [Pure]
-        public override Int32 GetHashCode()
-        {
-            return Revolution.GetHashCode();
         }
 
         /// <summary>

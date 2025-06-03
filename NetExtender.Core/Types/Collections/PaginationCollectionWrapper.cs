@@ -87,9 +87,9 @@ namespace NetExtender.Types.Collections
             Source.Clear();
         }
 
-        public void CopyTo(T[] array, Int32 arrayIndex)
+        public void CopyTo(T[] array, Int32 index)
         {
-            Source.CopyTo(array, arrayIndex);
+            Source.CopyTo(array, index);
         }
 
         public sealed override IEnumerator<T> GetEnumerator()

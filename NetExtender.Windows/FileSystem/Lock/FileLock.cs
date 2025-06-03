@@ -3,11 +3,11 @@
 
 using System;
 using System.Diagnostics;
-using NetExtender.IO.FileSystem.Lock.Common;
-using NetExtender.IO.FileSystem.Lock.Content;
-using NetExtender.IO.FileSystem.Lock.Interfaces;
+using NetExtender.FileSystems.Lock.Common;
+using NetExtender.FileSystems.Lock.Content;
+using NetExtender.FileSystems.Lock.Interfaces;
 
-namespace NetExtender.IO.FileSystem.Lock
+namespace NetExtender.FileSystems.Lock
 {
     public class FileLock : IFileLock
     {

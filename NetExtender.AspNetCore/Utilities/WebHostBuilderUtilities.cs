@@ -14,6 +14,7 @@ using Microsoft.Extensions.Hosting;
 using NetExtender.AspNetCore.Types.Exceptions;
 using NetExtender.AspNetCore.Types.Initializers;
 using NetExtender.AspNetCore.Types.Initializers.Interfaces;
+using NetExtender.Types.Exceptions;
 using NetExtender.Utilities.Network;
 using NetExtender.Utilities.Types;
 
@@ -359,14 +360,14 @@ namespace NetExtender.Utilities.AspNetCore.Types
             return builder.UseUrls(UriUtilities.HttpsDelimiter, endpoints);
         }
 
-        public static IWebHostBuilder UseUrls(this IWebHostBuilder builder, String delemiter, params IPEndPoint[] endpoints)
+        public static IWebHostBuilder UseUrls(this IWebHostBuilder builder, String delimiter, params IPEndPoint[] endpoints)
         {
             if (builder is null)
             {
                 throw new ArgumentNullException(nameof(builder));
             }
 
-            return builder.UseUrls(endpoints.SelectWhereNotNull(endpoint => delemiter + endpoint).ToArray());
+            return builder.UseUrls(endpoints.SelectWhereNotNull(endpoint => delimiter + endpoint).ToArray());
         }
 
         public static IWebHostBuilder UseUrls(this IWebHostBuilder builder, UInt16 http, UInt16 https)
@@ -397,6 +398,122 @@ namespace NetExtender.Utilities.AspNetCore.Types
             }
 
             return builder.UseUrls(UriUtilities.HttpDelimiter + http, UriUtilities.HttpsDelimiter + https);
+        }
+        
+        public static IWebHostBuilder UseUrls(this IWebHostBuilder builder, Boolean https, String address, UInt16 port)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            if (String.IsNullOrEmpty(address))
+            {
+                throw new ArgumentNullOrEmptyStringException(address, nameof(address));
+            }
+
+            return HostingAbstractionsWebHostBuilderExtensions.UseUrls(builder, $"{(https ? "https" : "http")}://{address}:{port}");
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IWebHostBuilder UseUrls(this IWebHostBuilder builder, Boolean https, String address, Int32 port)
+        {
+            return port is >= UInt16.MinValue and <= UInt16.MaxValue ? UseUrls(builder, https, address, (UInt16) port) : throw new ArgumentOutOfRangeException(nameof(port), port, $"The port must be between '{UInt16.MinValue}' and '{UInt16.MaxValue}'.");
+        }
+
+        public static IWebHostBuilder UseUrls(this IWebHostBuilder builder, IGetter<Boolean> https, IGetter<String> address, UInt16 port)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            if (https is null)
+            {
+                throw new ArgumentNullException(nameof(https));
+            }
+
+            if (address is null)
+            {
+                throw new ArgumentNullException(nameof(address));
+            }
+            
+            return UseUrls(builder, https.Get(), address.Get(), port);
+        }
+
+        public static IWebHostBuilder UseUrls(this IWebHostBuilder builder, IGetter<Boolean> https, IGetter<String> address, Int32 port)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            if (https is null)
+            {
+                throw new ArgumentNullException(nameof(https));
+            }
+
+            if (address is null)
+            {
+                throw new ArgumentNullException(nameof(address));
+            }
+
+            if (port is >= UInt16.MinValue and <= UInt16.MaxValue)
+            {
+                return UseUrls(builder, https.Get(), address.Get(), (UInt16) port);
+            }
+            
+            throw new ArgumentOutOfRangeException(nameof(port), port, $"The port must be between {UInt16.MinValue} and {UInt16.MaxValue}.");
+        }
+
+        public static IWebHostBuilder UseUrls(this IWebHostBuilder builder, IGetter<Boolean> https, IGetter<String> address, IGetter<UInt16> port)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            if (https is null)
+            {
+                throw new ArgumentNullException(nameof(https));
+            }
+
+            if (address is null)
+            {
+                throw new ArgumentNullException(nameof(address));
+            }
+
+            if (port is null)
+            {
+                throw new ArgumentNullException(nameof(port));
+            }
+            
+            return UseUrls(builder, https, address, port.Get());
+        }
+        
+        public static IWebHostBuilder UseUrls(this IWebHostBuilder builder, IGetter<Boolean> https, IGetter<String> address, IGetter<Int32> port)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            if (https is null)
+            {
+                throw new ArgumentNullException(nameof(https));
+            }
+
+            if (address is null)
+            {
+                throw new ArgumentNullException(nameof(address));
+            }
+
+            if (port is null)
+            {
+                throw new ArgumentNullException(nameof(port));
+            }
+            
+            return UseUrls(builder, https, address, port.Get());
         }
     }
 }

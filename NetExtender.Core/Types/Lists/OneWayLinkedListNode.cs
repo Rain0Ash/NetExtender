@@ -1,13 +1,17 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using NetExtender.Types.Lists.Interfaces;
 using NetExtender.Types.Nodes.Interfaces;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.LinkedLists
 {
-    public readonly struct OneWayLinkedListNode<T> : ILinkedListNode<T>, IEnumerable<OneWayLinkedListNode<T>>, IEnumerable<ILinkedListNode<T>>
+    public readonly struct OneWayLinkedListNode<T> : ILinkedListNode<T>, IEnumerable<OneWayLinkedListNode<T>>, IEnumerable<ILinkedListNode<T>>, IStruct<OneWayLinkedListNode<T>>
     {
         public static implicit operator OneWayLinkedListNode<T>(LinkedListNode<T>? value)
         {
@@ -188,6 +192,7 @@ namespace NetExtender.Types.LinkedLists
         
         public Boolean IsEmpty
         {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
                 return Internal is null;

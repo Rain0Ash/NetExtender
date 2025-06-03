@@ -1,7 +1,12 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 using System;
 using System.Collections;
+using System.Runtime.CompilerServices;
 using System.Windows;
 using NetExtender.Types.Comparers;
+using NetExtender.Utilities.Types;
 
 namespace NetExtender.WindowsPresentation.Types.Clipboard
 {
@@ -16,7 +21,7 @@ namespace NetExtender.WindowsPresentation.Types.Clipboard
         Data
     }
     
-    public readonly struct ClipboardObject : IEquatable<ClipboardObject>, IComparable<ClipboardObject>, IComparable
+    public readonly struct ClipboardObject : IEqualityStruct<ClipboardObject>, IComparable
     {
         public static Boolean operator ==(ClipboardObject first, ClipboardObject second)
         {
@@ -33,6 +38,7 @@ namespace NetExtender.WindowsPresentation.Types.Clipboard
 
         public Boolean IsEmpty
         {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
                 return Type == ClipboardType.NoContent && Value is null;
@@ -52,28 +58,14 @@ namespace NetExtender.WindowsPresentation.Types.Clipboard
                 return CompareTo(@object);
             }
             
-            try
-            {
-                return Comparer.Default.Compare(Value, other);
-            }
-            catch (Exception)
-            {
-                return 0;
-            }
+            return Comparer.Default.SafeCompare(Value, other) ?? 0;
         }
         
         public Int32 CompareTo(ClipboardObject other)
         {
-            try
-            {
-                return Comparer.Default.Compare(Value, other);
-            }
-            catch (Exception)
-            {
-                return 0;
-            }
+            return Comparer.Default.SafeCompare(Value, other) ?? 0;
         }
-        
+
         public override Int32 GetHashCode()
         {
             return HashCode.Combine(Type, Value);

@@ -81,7 +81,7 @@ namespace NetExtender.Types.Queues
                 throw new ArgumentNullException(nameof(source));
             }
 
-            Int32 capacity = source.CountIfMaterialized() ?? 16;
+            Int32 capacity = source.CountIfMaterialized(16);
             Queue = new LinkedList<T>();
             Set = new HashSet<T>(capacity, comparer);
         }
@@ -178,26 +178,6 @@ namespace NetExtender.Types.Queues
             Add(item);
         }
 
-        public Boolean IsProperSubsetOf(IEnumerable<T> other)
-        {
-            if (other is null)
-            {
-                throw new ArgumentNullException(nameof(other));
-            }
-
-            return Set.IsProperSubsetOf(other);
-        }
-
-        public Boolean IsProperSupersetOf(IEnumerable<T> other)
-        {
-            if (other is null)
-            {
-                throw new ArgumentNullException(nameof(other));
-            }
-
-            return Set.IsProperSupersetOf(other);
-        }
-
         public Boolean IsSubsetOf(IEnumerable<T> other)
         {
             if (other is null)
@@ -208,6 +188,16 @@ namespace NetExtender.Types.Queues
             return Set.IsSubsetOf(other);
         }
 
+        public Boolean IsProperSubsetOf(IEnumerable<T> other)
+        {
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            return Set.IsProperSubsetOf(other);
+        }
+
         public Boolean IsSupersetOf(IEnumerable<T> other)
         {
             if (other is null)
@@ -216,6 +206,16 @@ namespace NetExtender.Types.Queues
             }
 
             return Set.IsSupersetOf(other);
+        }
+
+        public Boolean IsProperSupersetOf(IEnumerable<T> other)
+        {
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            return Set.IsProperSupersetOf(other);
         }
 
         public Boolean Overlaps(IEnumerable<T> other)
@@ -260,9 +260,9 @@ namespace NetExtender.Types.Queues
             return Queue.ToArray();
         }
 
-        public void CopyTo(T[] array, Int32 arrayIndex)
+        public void CopyTo(T[] array, Int32 index)
         {
-            Queue.CopyTo(array, arrayIndex);
+            Queue.CopyTo(array, index);
         }
 
         void ICollection.CopyTo(Array array, Int32 index)

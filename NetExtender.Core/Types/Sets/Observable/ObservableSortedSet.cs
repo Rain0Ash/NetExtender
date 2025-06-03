@@ -1,35 +1,45 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using NetExtender.Types.Monads;
+using NetExtender.Types.Sets.Interfaces;
 
 namespace NetExtender.Types.Sets
 {
-    public sealed class ObservableSortedSet<T> : ObservableSortedSetAbstraction<T>
+    public class ObservableSortedSet<T> : ObservableSortedSet<T, SortedSetCollection<T>>
     {
         public ObservableSortedSet()
+            : base(new SortedSetCollection<T>())
         {
         }
 
         public ObservableSortedSet(IComparer<T>? comparer)
-            : base(comparer)
+            : base(new SortedSetCollection<T>(comparer))
         {
         }
 
         public ObservableSortedSet(IEnumerable<T> collection)
-            : base(collection)
+            : base(collection is not null ? new SortedSetCollection<T>(collection) : throw new ArgumentNullException(nameof(collection)))
         {
         }
 
         public ObservableSortedSet(IEnumerable<T> collection, IComparer<T>? comparer)
-            : base(collection, comparer)
+            : base(collection is not null ? new SortedSetCollection<T>(collection, comparer) : throw new ArgumentNullException(nameof(collection)))
         {
         }
 
-        private ObservableSortedSet(SortedSetCollection<T> set)
+        protected ObservableSortedSet(SortedSetCollection<T> set)
             : base(set)
         {
+        }
+        
+        protected sealed override SortedSetCollection<T> Clone()
+        {
+            return new SortedSetCollection<T>(Internal, Internal.Comparer);
         }
         
         public override ObservableSortedSet<T> GetViewBetween(T? lower, T? upper)
@@ -38,40 +48,7 @@ namespace NetExtender.Types.Sets
         }
     }
 
-    public abstract class ObservableSortedSetAbstraction<T> : ObservableSortedSet<T, SortedSetCollection<T>>
-    {
-        public ObservableSortedSetAbstraction()
-            : base(new SortedSetCollection<T>())
-        {
-        }
-
-        public ObservableSortedSetAbstraction(IComparer<T>? comparer)
-            : base(new SortedSetCollection<T>(comparer))
-        {
-        }
-
-        public ObservableSortedSetAbstraction(IEnumerable<T> collection)
-            : base(collection is not null ? new SortedSetCollection<T>(collection) : throw new ArgumentNullException(nameof(collection)))
-        {
-        }
-
-        public ObservableSortedSetAbstraction(IEnumerable<T> collection, IComparer<T>? comparer)
-            : base(collection is not null ? new SortedSetCollection<T>(collection, comparer) : throw new ArgumentNullException(nameof(collection)))
-        {
-        }
-
-        protected ObservableSortedSetAbstraction(SortedSetCollection<T> set)
-            : base(set)
-        {
-        }
-        
-        protected sealed override SortedSetCollection<T> CloneInternal()
-        {
-            return new SortedSetCollection<T>(Internal, Internal.Comparer);
-        }
-    }
-
-    public abstract class ObservableSortedSet<T, TSet> : ObservableSet<T, TSet> where TSet : SortedSet<T>
+    public abstract class ObservableSortedSet<T, TSet> : ObservableSet<T, TSet>, IObservableSortedSet<T>, IReadOnlyObservableSortedSet<T> where TSet : SortedSet<T>
     {
         public virtual IComparer<T> Comparer
         {
@@ -167,7 +144,17 @@ namespace NetExtender.Types.Sets
             return Internal.TryGetValue(equal, out actual);
         }
 
-        public abstract ObservableSet<T, TSet> GetViewBetween(T? lower, T? upper);
+        public abstract ObservableSortedSet<T, TSet> GetViewBetween(T? lower, T? upper);
+
+        ISortedSet<T> ISortedSet<T>.GetViewBetween(T? lower, T? upper)
+        {
+            return GetViewBetween(lower, upper);
+        }
+
+        ISortedSet<T> IReadOnlySortedSet<T>.GetViewBetween(T? lower, T? upper)
+        {
+            return GetViewBetween(lower, upper);
+        }
 
         public virtual Int32 RemoveWhere(Predicate<T> match)
         {
@@ -177,7 +164,7 @@ namespace NetExtender.Types.Sets
             }
 
             TSet @internal = Internal;
-            TSet set = CloneInternal();
+            TSet set = Clone();
             Int32 count = set.RemoveWhere(match);
 
             if (count <= 0)
@@ -212,14 +199,14 @@ namespace NetExtender.Types.Sets
             Internal.CopyTo(array);
         }
 
-        public virtual void CopyTo(T[] array, Int32 arrayIndex, Int32 count)
+        public virtual void CopyTo(T[] array, Int32 index, Int32 count)
         {
             if (array is null)
             {
                 throw new ArgumentNullException(nameof(array));
             }
 
-            Internal.CopyTo(array, arrayIndex, count);
+            Internal.CopyTo(array, index, count);
         }
 
         public new virtual SortedSet<T>.Enumerator GetEnumerator()

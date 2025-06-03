@@ -9,7 +9,86 @@ using NetExtender.Types.Sets.Interfaces;
 
 namespace NetExtender.Types.Sets
 {
-    public class SetAdapter<T> : ISet, ISet<T>, IReadOnlySet<T>
+    public class SortedSetAdapter<T> : SetAdapter<T, SortedSet<T>>, ISortedSet, ISortedSet<T>, IReadOnlySortedSet<T>
+    {
+        public IComparer<T> Comparer
+        {
+            get
+            {
+                return Internal.Comparer;
+            }
+        }
+
+        public T? Min
+        {
+            get
+            {
+                return Internal.Min;
+            }
+        }
+
+        Object? ISortedSet.Min
+        {
+            get
+            {
+                return Min;
+            }
+        }
+
+        public T? Max
+        {
+            get
+            {
+                return Internal.Max;
+            }
+        }
+
+        Object? ISortedSet.Max
+        {
+            get
+            {
+                return Max;
+            }
+        }
+
+        [return: NotNullIfNotNull("set")]
+        public static implicit operator SortedSetAdapter<T>?(SortedSet<T>? set)
+        {
+            return set is not null ? new SortedSetAdapter<T>(set) : null;
+        }
+
+        public SortedSetAdapter(SortedSet<T> set)
+            : base(set)
+        {
+        }
+
+        public Boolean TryGetValue(T equalValue, [MaybeNullWhen(false)] out T actualValue)
+        {
+            return Internal.TryGetValue(equalValue, out actualValue);
+        }
+
+        ISortedSet<T> IReadOnlySortedSet<T>.GetViewBetween(T? lower, T? upper)
+        {
+            return new SortedSetAdapter<T>(Internal.GetViewBetween(lower, upper));
+        }
+
+        ISortedSet<T> ISortedSet<T>.GetViewBetween(T? lower, T? upper)
+        {
+            return new SortedSetAdapter<T>(Internal.GetViewBetween(lower, upper));
+        }
+
+        public IEnumerable<T> Reverse()
+        {
+            return Internal.Reverse();
+        }
+
+        IEnumerable ISortedSet.Reverse()
+        {
+            return Reverse();
+        }
+    }
+
+    public class SetAdapter<T> : SetAdapter<T, ISet<T>>
     {
         [return: NotNullIfNotNull("set")]
         public static implicit operator SetAdapter<T>?(HashSet<T>? set)
@@ -23,7 +102,15 @@ namespace NetExtender.Types.Sets
             return set is not null ? new SetAdapter<T>(set) : null;
         }
 
-        private ISet<T> Internal { get; }
+        public SetAdapter(ISet<T> set)
+            : base(set)
+        {
+        }
+    }
+
+    public abstract class SetAdapter<T, TSet> : ISet, ISet<T>, IReadOnlySet<T> where TSet : ISet<T>
+    {
+        protected TSet Internal { get; }
 
         public Int32 Count
         {
@@ -57,7 +144,7 @@ namespace NetExtender.Types.Sets
             }
         }
 
-        public SetAdapter(ISet<T> set)
+        protected SetAdapter(TSet set)
         {
             Internal = set ?? throw new ArgumentNullException(nameof(set));
         }

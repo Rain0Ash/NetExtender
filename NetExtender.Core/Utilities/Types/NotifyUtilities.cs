@@ -1,3 +1,6 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 using System;
 using System.Collections.Concurrent;
 using System.ComponentModel;
@@ -169,7 +172,7 @@ namespace NetExtender.Utilities.Types
         }
     }
     
-    public readonly struct PropertyChanging : IEquatable<String?>, IEquatable<PropertyChanging>, IEquatable<PropertyChangingEventArgs>, IComparable, IComparable<String?>, IComparable<PropertyChanging>, IComparable<PropertyChangingEventArgs>
+    public readonly struct PropertyChanging : IEquality<String?>, IEquality<PropertyChanging>, IEquality<PropertyChangingEventArgs>, IAnyEquality
     {
         public static implicit operator String?(PropertyChanging value)
         {
@@ -353,15 +356,15 @@ namespace NetExtender.Utilities.Types
             return Property?.GetHashCode() ?? 0;
         }
 
-        public Int32 CompareTo(Object? obj)
+        public Int32 CompareTo(Object? other)
         {
-            return obj switch
+            return other switch
             {
                 null => Property is not null ? 1 : 0,
-                String other => CompareTo(other),
-                PropertyChanging other => CompareTo(other),
-                PropertyChangingEventArgs other => CompareTo(other),
-                _ => CompareTo(obj.ToString())
+                String value => CompareTo(value),
+                PropertyChanging value => CompareTo(value),
+                PropertyChangingEventArgs value => CompareTo(value),
+                _ => CompareTo(other.ToString())
             };
         }
 
@@ -413,7 +416,7 @@ namespace NetExtender.Utilities.Types
         }
     }
     
-    public readonly struct PropertyChanged : IEquatable<String?>, IEquatable<PropertyChanged>, IEquatable<PropertyChangedEventArgs>, IComparable, IComparable<String?>, IComparable<PropertyChanged>, IComparable<PropertyChangedEventArgs>
+    public readonly struct PropertyChanged : IEquality<String?>, IEquality<PropertyChanged>, IEquality<PropertyChangedEventArgs>, IAnyEquality
     {
         public static implicit operator String?(PropertyChanged value)
         {
@@ -597,15 +600,15 @@ namespace NetExtender.Utilities.Types
             return Property?.GetHashCode() ?? 0;
         }
 
-        public Int32 CompareTo(Object? obj)
+        public Int32 CompareTo(Object? other)
         {
-            return obj switch
+            return other switch
             {
                 null => Property is not null ? 1 : 0,
-                String other => CompareTo(other),
-                PropertyChanged other => CompareTo(other),
-                PropertyChangedEventArgs other => CompareTo(other),
-                _ => CompareTo(obj.ToString())
+                String value => CompareTo(value),
+                PropertyChanged value => CompareTo(value),
+                PropertyChangedEventArgs value => CompareTo(value),
+                _ => CompareTo(other.ToString())
             };
         }
 

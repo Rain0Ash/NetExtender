@@ -4,6 +4,7 @@
 using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using NetExtender.Types.Exceptions;
 
 namespace NetExtender.Types.Network.Formatters
 {
@@ -12,7 +13,7 @@ namespace NetExtender.Types.Network.Formatters
         public MediaTypeHeaderValue MediaType { get; private set; }
 
         protected MediaTypeFormatterMapping(String media)
-            : this(!String.IsNullOrWhiteSpace(media) ? new MediaTypeHeaderValue(media) : throw new ArgumentException("Value cannot be null or whitespace.", nameof(media)))
+            : this(!String.IsNullOrWhiteSpace(media) ? new MediaTypeHeaderValue(media) : throw new ArgumentNullOrWhiteSpaceStringException(media, nameof(media)))
         {
         }
 

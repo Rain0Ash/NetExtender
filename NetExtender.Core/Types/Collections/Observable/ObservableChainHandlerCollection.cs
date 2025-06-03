@@ -29,8 +29,8 @@ namespace NetExtender.Types.Collections
         {
         }
     }
-    
-    public class ItemObservableChainHandlerCollection<T, THandler> : ItemObservableChainHandlerCollection<T, THandler, ItemObservableCollection<THandler>> where THandler : IChainHandler<T>
+
+    public class ItemObservableChainHandlerCollection<T, THandler> : ItemObservableChainHandlerCollection<T, THandler, ItemObservableCollection<THandler>> where THandler : class, IChainHandler<T>
     {
         public ItemObservableChainHandlerCollection()
             : base(new ItemObservableCollection<THandler>())
@@ -261,9 +261,9 @@ namespace NetExtender.Types.Collections
             Internal.Clear();
         }
         
-        public void CopyTo(THandler[] array, int arrayIndex)
+        public void CopyTo(THandler[] array, Int32 index)
         {
-            Internal.CopyTo(array, arrayIndex);
+            Internal.CopyTo(array, index);
         }
         
         public IEnumerator<THandler> GetEnumerator()

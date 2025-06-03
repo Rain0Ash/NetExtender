@@ -6,15 +6,16 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 using NetExtender.Types.Collections;
+using NetExtender.Types.Dictionaries.Interfaces;
 using NetExtender.Types.Monads;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Dictionaries
 {
     [Serializable]
-    public class NullableDictionary<TKey, TValue> : Dictionary<NullMaybe<TKey>, TValue>, IDictionary<TKey, TValue>, IReadOnlyDictionary<TKey, TValue>
+    public class NullableDictionary<TKey, TValue> : Dictionary<NullMaybe<TKey>, TValue>, IHashDictionary<TKey, TValue>, IReadOnlyHashDictionary<TKey, TValue>
     {
-        private ICollection<TKey>? _keys { get; set; }
+        private ICollection<TKey>? _keys;
         public new ICollection<TKey> Keys
         {
             get
@@ -53,6 +54,22 @@ namespace NetExtender.Types.Dictionaries
             get
             {
                 return _comparer ??= Comparer.ToEqualityComparer();
+            }
+        }
+
+        IEqualityComparer<TKey> IHashDictionary<TKey, TValue>.Comparer
+        {
+            get
+            {
+                return KeyComparer;
+            }
+        }
+
+        IEqualityComparer<TKey> IReadOnlyHashDictionary<TKey, TValue>.Comparer
+        {
+            get
+            {
+                return KeyComparer;
             }
         }
         
@@ -164,9 +181,9 @@ namespace NetExtender.Types.Dictionaries
         }
         
         //TODO: починить все
-        public void CopyTo(KeyValuePair<TKey, TValue>[] array, Int32 arrayIndex)
+        public void CopyTo(KeyValuePair<TKey, TValue>[] array, Int32 index)
         {
-            CollectionUtilities.CopyTo(this, array, arrayIndex);
+            CollectionUtilities.CopyTo(this, array, index);
         }
 
         public new IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()

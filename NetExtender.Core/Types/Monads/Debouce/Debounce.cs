@@ -1,16 +1,23 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.Serialization;
 using NetExtender.Interfaces;
 using NetExtender.Types.Monads.Interfaces;
+using NetExtender.Utilities.Serialization;
+using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Monads.Debouce
 {
-    public readonly struct Debounce<T> : IDebounce<T>, IDebounceEquatable<T, Debounce<T>>, IDebounceComparable<T, Debounce<T>>, ICloneable<Debounce<T>>
+    [Serializable]
+    public readonly struct Debounce<T> : IEqualityStruct<Debounce<T>>, IDebounce<T>, IDebounceEquality<T, Debounce<T>>, ICloneable<Debounce<T>>, ISerializable
     {
         public static implicit operator T(Debounce<T> value)
         {
-            return value.Value;
+            return value._value;
         }
 
         public static implicit operator Debounce<T>(T value)
@@ -107,9 +114,16 @@ namespace NetExtender.Types.Monads.Debouce
         {
             return first.CompareTo(second) <= 0;
         }
-        
-        public T Value { get; }
-        
+
+        private readonly T _value;
+        public T Value
+        {
+            get
+            {
+                return _value;
+            }
+        }
+
         public TimeSpan Time
         {
             get
@@ -118,20 +132,20 @@ namespace NetExtender.Types.Monads.Debouce
             }
         }
         
-        public DateTime SetTime { get; private init; }
-        
-        private readonly TimeSpan _delay;
+        private readonly TimeSpan? _delay;
         public TimeSpan Delay
         {
             get
             {
-                return Normalize(_delay);
+                return Normalize(_delay ?? TimeSpan.Zero);
             }
             init
             {
-                _delay = value >= default(TimeSpan) ? value : throw new ArgumentOutOfRangeException(nameof(value), value, null);
+                _delay = value >= TimeSpan.Zero ? value : throw new ArgumentOutOfRangeException(nameof(value), value, null);
             }
         }
+        
+        public DateTime SetTime { get; init; }
         
         public Boolean IsDebounce
         {
@@ -140,29 +154,51 @@ namespace NetExtender.Types.Monads.Debouce
                 return Time < Delay;
             }
         }
-        
+
+        public Boolean IsEmpty
+        {
+            get
+            {
+                return _delay is null && SetTime == default;
+            }
+        }
+
         public Debounce(TimeSpan delay)
         {
-            _delay = delay >= default(TimeSpan) ? Normalize(delay) : throw new ArgumentOutOfRangeException(nameof(delay), delay, null);
-            Value = default!;
+            _delay = delay >= TimeSpan.Zero ? Normalize(delay) : throw new ArgumentOutOfRangeException(nameof(delay), delay, null);
+            _value = default!;
             SetTime = default;
         }
         
         public Debounce(T value)
-            : this(value, default)
+            : this(value, TimeSpan.Zero)
         {
         }
         
         public Debounce(T value, TimeSpan delay)
             : this(delay)
         {
-            Value = value;
+            _value = value;
             SetTime = DateTime.Now;
+        }
+        
+        private Debounce(SerializationInfo info, StreamingContext context)
+            : this(info.GetValue<TimeSpan>(nameof(Delay)))
+        {
+            _value = info.GetValue<T>(nameof(Value));
+            SetTime = info.GetDateTime(nameof(SetTime));
+        }
+        
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue(nameof(Value), _value);
+            info.AddValue(nameof(Delay), _delay);
+            info.AddValue(nameof(SetTime), SetTime);
         }
         
         private static TimeSpan Normalize(TimeSpan value)
         {
-            return value >= default(TimeSpan) ? value : Utilities.Types.Time.Millisecond.Ten;
+            return value >= TimeSpan.Zero ? value : Utilities.Types.Time.Millisecond.Ten;
         }
         
         public Boolean Set(T value, out Debounce<T> result)
@@ -183,7 +219,7 @@ namespace NetExtender.Types.Monads.Debouce
                 return true;
             }
             
-            result = default;
+            result = null;
             return false;
         }
         
@@ -214,7 +250,7 @@ namespace NetExtender.Types.Monads.Debouce
                 return true;
             }
             
-            result = default;
+            result = null;
             return false;
         }
         
@@ -246,13 +282,13 @@ namespace NetExtender.Types.Monads.Debouce
                 return true;
             }
             
-            result = default;
+            result = null;
             return false;
         }
         
         public Debounce<T> With(TimeSpan delay)
         {
-            return new Debounce<T>(Value, delay) { SetTime = SetTime };
+            return new Debounce<T>(_value, delay) { SetTime = SetTime };
         }
         
         public Int32 CompareTo(T? other)
@@ -262,17 +298,9 @@ namespace NetExtender.Types.Monads.Debouce
         
         public Int32 CompareTo(T? other, IComparer<T>? comparer)
         {
-            try
-            {
-                comparer ??= Comparer<T>.Default;
-                return comparer.Compare(Value, other);
-            }
-            catch (ArgumentException)
-            {
-                return 0;
-            }
+            return comparer.SafeCompare(_value, other) ?? 0;
         }
-        
+
         public Int32 CompareTo(Debounce<T> other)
         {
             return CompareTo(other, null);
@@ -280,7 +308,7 @@ namespace NetExtender.Types.Monads.Debouce
         
         public Int32 CompareTo(Debounce<T> other, IComparer<T>? comparer)
         {
-            return CompareTo(other.Value, comparer);
+            return CompareTo(other._value, comparer);
         }
         
         public Int32 CompareTo(IDebounce<T>? other)
@@ -295,7 +323,7 @@ namespace NetExtender.Types.Monads.Debouce
         
         public override Int32 GetHashCode()
         {
-            return Value?.GetHashCode() ?? 0;
+            return _value is not null ? _value.GetHashCode() : 0;
         }
 
         public override Boolean Equals(Object? other)
@@ -322,7 +350,7 @@ namespace NetExtender.Types.Monads.Debouce
         public Boolean Equals(T? other, IEqualityComparer<T>? comparer)
         {
             comparer ??= EqualityComparer<T>.Default;
-            return comparer.Equals(Value, other);
+            return comparer.Equals(_value, other);
         }
         
         public Boolean Equals(Debounce<T> other)
@@ -332,7 +360,7 @@ namespace NetExtender.Types.Monads.Debouce
         
         public Boolean Equals(Debounce<T> other, IEqualityComparer<T>? comparer)
         {
-            return Equals(other.Value, comparer);
+            return Equals(other._value, comparer);
         }
         
         public Boolean Equals(IDebounce<T>? other)
@@ -349,30 +377,110 @@ namespace NetExtender.Types.Monads.Debouce
         {
             return this;
         }
-        
-        Object ICloneable.Clone()
-        {
-            return Clone();
-        }
-        
-        IDebounce IDebounce.Clone()
-        {
-            return Clone();
-        }
-        
+
         IDebounce<T> IDebounce<T>.Clone()
         {
             return Clone();
         }
-        
+
         IDebounce<T> ICloneable<IDebounce<T>>.Clone()
         {
             return Clone();
         }
-        
+
+        IDebounce IDebounce.Clone()
+        {
+            return Clone();
+        }
+
+        IDebounce ICloneable<IDebounce>.Clone()
+        {
+            return Clone();
+        }
+
+        IMonad<T> IMonad<T>.Clone()
+        {
+            return Clone();
+        }
+
+        IMonad<T> ICloneable<IMonad<T>>.Clone()
+        {
+            return Clone();
+        }
+
+        IMonad IMonad.Clone()
+        {
+            return Clone();
+        }
+
+        IMonad ICloneable<IMonad>.Clone()
+        {
+            return Clone();
+        }
+
+        Object ICloneable.Clone()
+        {
+            return Clone();
+        }
+
         public override String? ToString()
         {
-            return Value?.ToString();
+            return _value is not null ? _value.ToString() : null;
+        }
+
+        public String ToString(String? format)
+        {
+            return ToString(format, null);
+        }
+
+        public String ToString(IFormatProvider? provider)
+        {
+            return ToString(null, provider);
+        }
+
+        public String ToString(String? format, IFormatProvider? provider)
+        {
+            return _value is not null ? StringUtilities.ToString(in _value, format, provider) : String.Empty;
+        }
+
+        public String? GetString()
+        {
+            return _value.GetString();
+        }
+
+        public String? GetString(EscapeType escape)
+        {
+            return _value.GetString(escape);
+        }
+
+        public String? GetString(String? format)
+        {
+            return _value.GetString(format);
+        }
+
+        public String? GetString(EscapeType escape, String? format)
+        {
+            return _value.GetString(escape, format);
+        }
+
+        public String? GetString(IFormatProvider? provider)
+        {
+            return _value.GetString(provider);
+        }
+
+        public String? GetString(EscapeType escape, IFormatProvider? provider)
+        {
+            return _value.GetString(escape, provider);
+        }
+
+        public String? GetString(String? format, IFormatProvider? provider)
+        {
+            return _value.GetString(format, provider);
+        }
+
+        public String? GetString(EscapeType escape, String? format, IFormatProvider? provider)
+        {
+            return _value.GetString(escape, format, provider);
         }
     }
 }

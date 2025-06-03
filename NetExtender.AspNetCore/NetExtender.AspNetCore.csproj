@@ -3,6 +3,7 @@
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
         <Nullable>enable</Nullable>
+        <ImplicitUsings>disable</ImplicitUsings>
         <OutputType>Library</OutputType>
         <LangVersion>10</LangVersion>
         <Authors>Rain0Ash</Authors>
@@ -23,12 +24,35 @@
     <ItemGroup>
         <ProjectReference Include="..\NetExtender.Core\NetExtender.Core.csproj"/>
         <ProjectReference Include="..\NetExtender.DependencyInjection\NetExtender.DependencyInjection.csproj"/>
+        <ProjectReference Include="..\NetExtender.JWT\NetExtender.JWT.csproj" />
     </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.1.0"/>
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
         <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Utilities\IdentityUtilities.Identity.cs">
+        <DependentUpon>IdentityUtilities.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Utilities\IdentityUtilities.JWT.cs">
+        <DependentUpon>IdentityUtilities.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Types\Identity\IdentityUser.Confirmation.cs">
+        <DependentUpon>IdentityUser.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Types\Identity\IdentityUser.Password.cs">
+        <DependentUpon>IdentityUser.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Types\Identity\IdentityUser.Restriction.cs">
+        <DependentUpon>IdentityUser.cs</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Types\Filters\JWT\" />
     </ItemGroup>
 
 </Project>

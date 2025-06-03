@@ -8,7 +8,7 @@ using System.Reflection;
 using NetExtender.Types.Entities;
 using NetExtender.Types.Expressions.Specification;
 using NetExtender.Types.Expressions.Specification.Interfaces;
-using NetExtender.Utilities.Numerics;
+using NetExtender.Utilities.Core;
 
 namespace NetExtender.Types.Expressions
 {

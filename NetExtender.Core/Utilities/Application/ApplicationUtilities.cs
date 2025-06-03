@@ -6,10 +6,10 @@ using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using NetExtender.Types.Dispatchers.Interfaces;
+using NetExtender.Utilities.Core;
 using NetExtender.Utilities.IO;
 using NetExtender.Utilities.Threading;
 
@@ -77,7 +77,7 @@ namespace NetExtender.Utilities.Application
         {
             try
             {
-                String? location = Assembly.GetEntryAssembly()?.Location;
+                String? location = ReflectionUtilities.GetEntryAssembly()?.Location;
                 if (String.IsNullOrWhiteSpace(location))
                 {
                     return null;

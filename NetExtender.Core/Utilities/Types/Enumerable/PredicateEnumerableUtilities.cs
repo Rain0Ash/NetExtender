@@ -267,7 +267,7 @@ namespace NetExtender.Utilities.Types
             }
         }
 
-        public static IEnumerable<T> WhereNotNull<T>(this IEnumerable<T> source, Func<T, Boolean> predicate)
+        public static IEnumerable<T> WhereNotNull<T>(this IEnumerable<T?> source, Func<T, Boolean> predicate)
         {
             if (source is null)
             {
@@ -282,7 +282,7 @@ namespace NetExtender.Utilities.Types
             return source.WhereNotNull().Where(predicate);
         }
 
-        public static IEnumerable<T> WhereNotNull<T>(this IEnumerable<T> source, Func<T, Int32, Boolean> predicate)
+        public static IEnumerable<T> WhereNotNull<T>(this IEnumerable<T?> source, Func<T, Int32, Boolean> predicate)
         {
             if (source is null)
             {
@@ -950,7 +950,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(other));
             }
             
-            if (source.TryGetNonEnumeratedCount(out Int32 first) && first <= 0 || other.TryGetNonEnumeratedCount(out Int32 second) && second <= 0)
+            if (source.CountIfMaterialized(out Int32 first) && first <= 0 || other.CountIfMaterialized(out Int32 second) && second <= 0)
             {
                 yield break;
             }
@@ -995,7 +995,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(selector));
             }
             
-            if (source.TryGetNonEnumeratedCount(out Int32 first) && first <= 0 || other.TryGetNonEnumeratedCount(out Int32 second) && second <= 0)
+            if (source.CountIfMaterialized(out Int32 first) && first <= 0 || other.CountIfMaterialized(out Int32 second) && second <= 0)
             {
                 yield break;
             }
@@ -1035,12 +1035,12 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(other));
             }
             
-            if (source.TryGetNonEnumeratedCount(out Int32 first) && first <= 0)
+            if (source.CountIfMaterialized(out Int32 first) && first <= 0)
             {
                 yield break;
             }
             
-            if (other.TryGetNonEnumeratedCount(out Int32 second) && second <= 0)
+            if (other.CountIfMaterialized(out Int32 second) && second <= 0)
             {
                 foreach (T item in source)
                 {
@@ -1050,7 +1050,7 @@ namespace NetExtender.Utilities.Types
                 yield break;
             }
             
-            static IEnumerable<T> Internal(IEnumerable<T> source, IEnumerable<T> other, IEqualityComparer<T>? comparer)
+            static IEnumerable<T> Core(IEnumerable<T> source, IEnumerable<T> other, IEqualityComparer<T>? comparer)
             {
                 Counter64<T> counter = new Counter64<T>(other, comparer);
                 
@@ -1063,7 +1063,7 @@ namespace NetExtender.Utilities.Types
                 }
             }
             
-            foreach (T item in Internal(source, other, comparer).Reverse())
+            foreach (T item in Core(source, other, comparer).Reverse())
             {
                 yield return item;
             }
@@ -1093,12 +1093,12 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(selector));
             }
             
-            if (source.TryGetNonEnumeratedCount(out Int32 first) && first <= 0)
+            if (source.CountIfMaterialized(out Int32 first) && first <= 0)
             {
                 yield break;
             }
             
-            if (other.TryGetNonEnumeratedCount(out Int32 second) && second <= 0)
+            if (other.CountIfMaterialized(out Int32 second) && second <= 0)
             {
                 foreach (TSource item in source)
                 {
@@ -1108,7 +1108,7 @@ namespace NetExtender.Utilities.Types
                 yield break;
             }
             
-            static IEnumerable<TSource> Internal(IEnumerable<TSource> source, IEnumerable<TSource> other, Func<TSource, TResult> selector, IEqualityComparer<TResult>? comparer)
+            static IEnumerable<TSource> Core(IEnumerable<TSource> source, IEnumerable<TSource> other, Func<TSource, TResult> selector, IEqualityComparer<TResult>? comparer)
             {
                 Counter64<TResult> counter = new Counter64<TResult>(other.Select(selector), comparer);
                 
@@ -1121,7 +1121,7 @@ namespace NetExtender.Utilities.Types
                 }
             }
             
-            foreach (TSource item in Internal(source, other, selector, comparer).Reverse())
+            foreach (TSource item in Core(source, other, selector, comparer).Reverse())
             {
                 yield return item;
             }
@@ -1146,7 +1146,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(other));
             }
             
-            if (source.TryGetNonEnumeratedCount(out Int32 first) && first <= 0)
+            if (source.CountIfMaterialized(out Int32 first) && first <= 0)
             {
                 foreach (T item in other)
                 {
@@ -1156,7 +1156,7 @@ namespace NetExtender.Utilities.Types
                 yield break;
             }
             
-            if (other.TryGetNonEnumeratedCount(out Int32 second) && second <= 0)
+            if (other.CountIfMaterialized(out Int32 second) && second <= 0)
             {
                 foreach (T item in source)
                 {

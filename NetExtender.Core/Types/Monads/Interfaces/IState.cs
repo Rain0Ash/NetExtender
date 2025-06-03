@@ -1,15 +1,20 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 using System;
 using System.Collections.Generic;
 using NetExtender.Interfaces;
 using NetExtender.Interfaces.Notify;
+using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Monads.Interfaces
 {
-    public interface INotifyState<T> : IState<T>, INotifyState
+    public interface INotifyState<T> : INotifyState, IState<T>, ICloneable<INotifyState<T>>
     {
+        public new INotifyState<T> Clone();
     }
     
-    public interface IState<T> : IState, IStateEquatable<T, T>, IStateEquatable<T, IState<T>>, IStateComparable<T, T>, IStateComparable<T, IState<T>>, ICloneable<IState<T>>
+    public interface IState<T> : IState, IMonad<T>, IStateEquality<T, T>, IStateEquality<T, IState<T>>, ICloneable<IState<T>>
     {
         public T Value { get; }
         public T Current { get; }
@@ -32,17 +37,17 @@ namespace NetExtender.Types.Monads.Interfaces
         public new IState<T> Swap();
         public new IState<T> Reset();
         public new IState<T> Clone();
-        public Boolean Equals(Object? other, IEqualityComparer<T>? comparer);
         public Boolean Equals(Object? other, StateEquality equality, IEqualityComparer<T>? comparer);
     }
     
-    public interface INotifyState : IState, INotifyProperty
+    public interface INotifyState : IState, ICloneable<INotifyState>, INotifyProperty
     {
+        public new INotifyState Clone();
     }
     
-    public interface IState : ICloneable, ICloneable<IState>
+    public interface IState : IMonad, ICloneable<IState>
     {
-        public Boolean HasValue { get; }
+        public Boolean HasNext { get; }
         
         public Boolean HasDifference();
         public IState Save();
@@ -51,26 +56,43 @@ namespace NetExtender.Types.Monads.Interfaces
         public new IState Clone();
         public Boolean Equals(Object? other, StateEquality equality);
         public String? ToString(StateEquality equality);
+        public String ToString(StateEquality equality, String? format);
+        public String ToString(StateEquality equality, IFormatProvider? provider);
+        public String? ToString(StateEquality equality, String? format, IFormatProvider? provider);
+        public String? GetString(StateEquality equality);
+        public String? GetString(StateEquality equality, EscapeType escape);
+        public String? GetString(StateEquality equality, String? format);
+        public String? GetString(StateEquality equality, EscapeType escape, String? format);
+        public String? GetString(StateEquality equality, IFormatProvider? provider);
+        public String? GetString(StateEquality equality, EscapeType escape, IFormatProvider? provider);
+        public String? GetString(StateEquality equality, String? format, IFormatProvider? provider);
+        public String? GetString(StateEquality equality, EscapeType escape, String? format, IFormatProvider? provider);
     }
     
-    public interface IStateEquatable<out T, TState> : IStateEquatable<TState>
+    public interface IStateEquality<out T, TState> : IStateEquality<TState>, IStateComparable<T, TState>, IStateEquatable<T, TState>, IMonadEquality<T, TState>
     {
-        public Boolean Equals(TState? other, IEqualityComparer<T>? comparer);
+    }
+    
+    public interface IStateEquality<T> : IStateComparable<T>, IStateEquatable<T>, IMonadEquality<T>
+    {
+    }
+    
+    public interface IStateEquatable<out T, TState> : IStateEquatable<TState>, IMonadEquatable<T, TState>
+    {
         public Boolean Equals(TState? other, StateEquality equality, IEqualityComparer<T>? comparer);
     }
     
-    public interface IStateEquatable<T> : IEquatable<T>
+    public interface IStateEquatable<T> : IMonadEquatable<T>
     {
         public Boolean Equals(T? other, StateEquality equality);
     }
     
-    public interface IStateComparable<out T, in TState> : IStateComparable<TState>
+    public interface IStateComparable<out T, in TState> : IStateComparable<TState>, IMonadComparable<T, TState>
     {
-        public Int32 CompareTo(TState? other, IComparer<T>? comparer);
         public Int32 CompareTo(TState? other, StateEquality equality, IComparer<T>? comparer);
     }
     
-    public interface IStateComparable<in T> : IComparable<T>
+    public interface IStateComparable<in T> : IMonadComparable<T>
     {
         public Int32 CompareTo(T? other, StateEquality equality);
     }

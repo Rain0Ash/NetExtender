@@ -3,7 +3,7 @@
 
 using System;
 using System.IO;
-using NetExtender.IO.Shortcut.Interfaces;
+using NetExtender.Types.FileSystems.Interfaces;
 using NetExtender.Utilities.IO;
 using NetExtender.Windows.Shortcut;
 

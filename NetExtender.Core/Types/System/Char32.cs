@@ -2,6 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System.Text;
+using NetExtender;
 using NetExtender.Utilities.Numerics;
 
 namespace System
@@ -9,9 +10,9 @@ namespace System
     [Serializable]
     public readonly struct Char32 : 
 #if NETCOREAPP3_1_OR_GREATER
-        IComparable, IComparable<Char>, IEquatable<Char>, IComparable<Rune>, IEquatable<Rune>, IComparable<Char32>, IEquatable<Char32>, IConvertible, ISpanFormattable
+        IEquality<Char>, IEquality<Rune>, IEquality<Char32>, IAnyEquality, IConvertible, ISpanFormattable
 #else
-        IComparable, IComparable<Char>, IEquatable<Char>, IComparable<Char32>, IEquatable<Char32>, IConvertible, ISpanFormattable
+        IEquality<Char>, IEquality<Char32>, IAnyEquality, IConvertible, ISpanFormattable
 #endif
     {
         public static explicit operator Char(Char32 value)
@@ -513,13 +514,13 @@ namespace System
             return false;
         }
 
-        public Int32 CompareTo(Object? obj)
+        public Int32 CompareTo(Object? other)
         {
-            return obj switch
+            return other switch
             {
-                Char32 character => CompareTo(character),
-                Char character => CompareTo(character),
-                _ => Value.CompareTo(obj)
+                Char32 value => CompareTo(value),
+                Char value => CompareTo(value),
+                _ => Value.CompareTo(other)
             };
         }
 

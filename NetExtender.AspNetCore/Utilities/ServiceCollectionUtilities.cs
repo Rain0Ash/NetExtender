@@ -3,81 +3,142 @@
 
 using System;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.DependencyInjection;
-using NetExtender.AspNetCore.Types.Identities;
+using NetExtender.AspNetCore.Filters;
+using NetExtender.AspNetCore.Identity.Interfaces;
+using NetExtender.AspNetCore.Types.Services.Interfaces;
 
 namespace NetExtender.Utilities.AspNetCore.Types
 {
     public static class ServiceCollectionUtilities
     {
-        public static IMvcBuilder InjectControllers(this IServiceCollection collection)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IMvcBuilder InjectControllers(this IServiceCollection services)
         {
-            if (collection is null)
+            if (services is null)
             {
-                throw new ArgumentNullException(nameof(collection));
+                throw new ArgumentNullException(nameof(services));
             }
             
-            return collection.AddControllers().AddControllersAsServices();
+            return services.AddControllers().AddControllersAsServices();
         }
         
-        public static IServiceCollection AddContextAccessor(this IServiceCollection collection)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IMvcBuilder AddControllers<TId, TUser, TRole, TFilter>(this IServiceCollection services) where TId : struct, IEquatable<TId> where TUser : class, IUserInfo<TId, TRole>, new() where TRole : IEquatable<TRole> where TFilter : IdentityServiceFilter<TId, TUser, TRole>
         {
-            if (collection is null)
+            return AddControllers<TId, TUser, TRole, TFilter>(services, null);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IMvcBuilder AddControllers<TId, TUser, TRole, TFilter>(this IServiceCollection services, Action<MvcOptions>? options) where TId : struct, IEquatable<TId> where TUser : class, IUserInfo<TId, TRole>, new() where TRole : IEquatable<TRole> where TFilter : IdentityServiceFilter<TId, TUser, TRole>
+        {
+            return AddControllers<TId, TUser, TRole, ActionInfoServiceFilter<TId, TUser, TRole>, TFilter>(services, options);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IMvcBuilder AddControllers<TId, TUser, TRole, TActionFilter, TIdentityFilter>(this IServiceCollection services) where TId : struct, IEquatable<TId> where TUser : class, IUserInfo<TId, TRole>, new() where TRole : IEquatable<TRole> where TIdentityFilter : IdentityServiceFilter<TId, TUser, TRole> where TActionFilter : ActionInfoServiceFilter<TId, TUser, TRole>
+        {
+            return AddControllers<TId, TUser, TRole, TActionFilter, TIdentityFilter>(services, null);
+        }
+        
+        public static IMvcBuilder AddControllers<TId, TUser, TRole, TActionFilter, TIdentityFilter>(this IServiceCollection services, Action<MvcOptions>? options) where TId : struct, IEquatable<TId> where TUser : class, IUserInfo<TId, TRole>, new() where TRole : IEquatable<TRole> where TIdentityFilter : IdentityServiceFilter<TId, TUser, TRole> where TActionFilter : ActionInfoServiceFilter<TId, TUser, TRole>
+        {
+            if (services is null)
             {
-                throw new ArgumentNullException(nameof(collection));
+                throw new ArgumentNullException(nameof(services));
             }
 
-            if (collection.All(service => service.ServiceType != typeof(IHttpContextAccessor)))
+            services = services.AddScoped<IActionInfoService, TActionFilter>().AddScoped<IIdentityUserService<TId, TUser, TRole>, TIdentityFilter>();
+            return services.AddControllers(mvc =>
             {
-                collection = collection.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+                mvc.Filters.AddIdentityFilter<TId, TUser, TRole, TActionFilter, TIdentityFilter>();
+                options?.Invoke(mvc);
+            });
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IMvcBuilder AddControllersWithViews<TId, TUser, TRole, TFilter>(this IServiceCollection services) where TId : struct, IEquatable<TId> where TUser : class, IUserInfo<TId, TRole>, new() where TRole : IEquatable<TRole> where TFilter : IdentityServiceFilter<TId, TUser, TRole>
+        {
+            return AddControllersWithViews<TId, TUser, TRole, TFilter>(services, null);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IMvcBuilder AddControllersWithViews<TId, TUser, TRole, TFilter>(this IServiceCollection services, Action<MvcOptions>? options) where TId : struct, IEquatable<TId> where TUser : class, IUserInfo<TId, TRole>, new() where TRole : IEquatable<TRole> where TFilter : IdentityServiceFilter<TId, TUser, TRole>
+        {
+            return AddControllersWithViews<TId, TUser, TRole, ActionInfoServiceFilter<TId, TUser, TRole>, TFilter>(services, options);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IMvcBuilder AddControllersWithViews<TId, TUser, TRole, TActionFilter, TIdentityFilter>(this IServiceCollection services) where TId : struct, IEquatable<TId> where TUser : class, IUserInfo<TId, TRole>, new() where TRole : IEquatable<TRole> where TIdentityFilter : IdentityServiceFilter<TId, TUser, TRole> where TActionFilter : ActionInfoServiceFilter<TId, TUser, TRole>
+        {
+            return AddControllersWithViews<TId, TUser, TRole, TActionFilter, TIdentityFilter>(services, null);
+        }
+        
+        public static IMvcBuilder AddControllersWithViews<TId, TUser, TRole, TActionFilter, TIdentityFilter>(this IServiceCollection services, Action<MvcOptions>? options) where TId : struct, IEquatable<TId> where TUser : class, IUserInfo<TId, TRole>, new() where TRole : IEquatable<TRole> where TIdentityFilter : IdentityServiceFilter<TId, TUser, TRole> where TActionFilter : ActionInfoServiceFilter<TId, TUser, TRole>
+        {
+            if (services is null)
+            {
+                throw new ArgumentNullException(nameof(services));
             }
 
-            if (collection.All(service => service.ServiceType != typeof(IActionContextAccessor)))
+            services = services.AddScoped<IActionInfoService, TActionFilter>().AddScoped<IIdentityUserService<TId, TUser, TRole>, TIdentityFilter>();
+            return services.AddControllersWithViews(mvc =>
             {
-                collection = collection.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+                mvc.Filters.AddIdentityFilter<TId, TUser, TRole, TActionFilter, TIdentityFilter>();
+                options?.Invoke(mvc);
+            });
+        }
+        
+        public static IServiceCollection AddContextAccessor(this IServiceCollection services)
+        {
+            if (services is null)
+            {
+                throw new ArgumentNullException(nameof(services));
             }
 
-            return collection;
+            if (services.All(service => service.ServiceType != typeof(IHttpContextAccessor)))
+            {
+                services = services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            }
+
+            if (services.All(service => service.ServiceType != typeof(IActionContextAccessor)))
+            {
+                services = services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+            }
+
+            return services;
         }
 
-        public static IServiceCollection AddHttpContextAccessor(this IServiceCollection collection)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IServiceCollection AddHttpContextAccessor(this IServiceCollection services)
         {
-            if (collection is null)
+            if (services is null)
             {
-                throw new ArgumentNullException(nameof(collection));
+                throw new ArgumentNullException(nameof(services));
             }
 
-            return collection.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            return services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         }
 
-        public static IServiceCollection AddDefaultUser<TUser, TKey>(this IServiceCollection collection) where TUser : IdentityUser<TKey> where TKey : IEquatable<TKey>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IServiceCollection AddApiVersioning<T>(this IServiceCollection services) where T : IApiVersionReader
         {
-            if (collection is null)
+            return AddApiVersioning<T>(services, null);
+        }
+
+        public static IServiceCollection AddApiVersioning<T>(this IServiceCollection services, String? version) where T : IApiVersionReader
+        {
+            if (services is null)
             {
-                throw new ArgumentNullException(nameof(collection));
+                throw new ArgumentNullException(nameof(services));
             }
 
-            return collection.AddScoped<DefaultIdentityUser<TUser, TKey>>();
-        }
-
-        public static IServiceCollection AddApiVersioning<T>(this IServiceCollection collection) where T : IApiVersionReader
-        {
-            return AddApiVersioning<T>(collection, null);
-        }
-
-        public static IServiceCollection AddApiVersioning<T>(this IServiceCollection collection, String? version) where T : IApiVersionReader
-        {
-            if (collection is null)
-            {
-                throw new ArgumentNullException(nameof(collection));
-            }
-
-            collection.AddApiVersioning(options =>
+            services.AddApiVersioning(options =>
             {
                 options.DefaultApiVersion = ApiVersion.TryParse(version, out ApiVersion? api) ? api : ApiVersion.Default;
                 options.AssumeDefaultVersionWhenUnspecified = true;
@@ -85,7 +146,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
                 options.ApiVersionReader = Activator.CreateInstance<T>();
             });
             
-            return collection;
+            return services;
         }
     }
 }

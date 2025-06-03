@@ -1,3 +1,6 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -371,14 +374,14 @@ namespace NetExtender.Types.Counters
             return successful;
         }
 
-        public void CopyTo(KeyValuePair<T, TCount>[] array, Int32 arrayIndex)
+        public void CopyTo(KeyValuePair<T, TCount>[] array, Int32 index)
         {
             if (array is null)
             {
                 throw new ArgumentNullException(nameof(array));
             }
 
-            Internal.CopyTo(array, arrayIndex);
+            Internal.CopyTo(array, index);
         }
 
         public virtual KeyValuePair<T, TCount>[] ToArray()

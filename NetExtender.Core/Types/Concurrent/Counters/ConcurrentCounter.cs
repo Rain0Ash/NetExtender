@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using NetExtender.Types.Counters;
 
 namespace NetExtender.Types.Concurrent.Counters
@@ -245,6 +246,7 @@ namespace NetExtender.Types.Concurrent.Counters
 
         public Boolean IsEmpty
         {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
                 return Internal.IsEmpty;

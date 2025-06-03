@@ -77,7 +77,7 @@ namespace NetExtender.Domains.Utilities
             
             if (initializer.Count > 1)
             {
-                throw new ScanAmbiguousException($"Ambiguous '{typeof(ApplicationInitializerAttribute)}' types: {initializer.GetString()}.");
+                throw new ScanAmbiguousException($"Ambiguous '{nameof(ApplicationInitializerAttribute)}' types: {initializer.GetString()}.");
             }
             
             Type type = initializer.Single();
@@ -101,7 +101,7 @@ namespace NetExtender.Domains.Utilities
             return type;
         }
         
-        private static IApplication AutoInitializeInternal(IDomain source)
+        private static IApplication AutoInitializeCore(IDomain source)
         {
             if (source is null)
             {
@@ -121,7 +121,7 @@ namespace NetExtender.Domains.Utilities
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return source.Initialize(AutoInitializeInternal(source));
+            return source.Initialize(AutoInitializeCore(source));
         }
 
         // ReSharper disable once AsyncConverter.AsyncMethodNamingHighlighting
@@ -144,7 +144,7 @@ namespace NetExtender.Domains.Utilities
                 throw new ArgumentNullException(nameof(source));
             }
 
-            IApplication application = AutoInitializeInternal(source);
+            IApplication application = AutoInitializeCore(source);
             return application is IApplicationInitializer initializer ? source.Initialize(initializer).View(initializer, args) : source.Initialize(application).AutoView(args);
         }
         
@@ -168,7 +168,7 @@ namespace NetExtender.Domains.Utilities
                 throw new ArgumentNullException(nameof(source));
             }
 
-            IApplication application = AutoInitializeInternal(source);
+            IApplication application = AutoInitializeCore(source);
             return application is IApplicationInitializer initializer ? source.Initialize(initializer).View(initializer, args) : source.Initialize(application).AutoView(args);
         }
         
@@ -228,7 +228,7 @@ namespace NetExtender.Domains.Utilities
                    assembly.GetTypeWithoutNamespace("View");
         }
 
-        private static IApplicationView AutoViewInternal(IDomain source)
+        private static IApplicationView AutoViewCore(IDomain source)
         {
             if (source is null)
             {
@@ -248,7 +248,7 @@ namespace NetExtender.Domains.Utilities
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return source.View(AutoViewInternal(source));
+            return source.View(AutoViewCore(source));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -259,7 +259,7 @@ namespace NetExtender.Domains.Utilities
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return source.View(AutoViewInternal(source), args);
+            return source.View(AutoViewCore(source), args);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -270,7 +270,7 @@ namespace NetExtender.Domains.Utilities
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return source.View(AutoViewInternal(source), args);
+            return source.View(AutoViewCore(source), args);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -287,7 +287,7 @@ namespace NetExtender.Domains.Utilities
             }
 
             IDomain domain = await source.ConfigureAwait(false);
-            return await domain.ViewAsync(AutoViewInternal(await source.ConfigureAwait(false)), token).ConfigureAwait(false);
+            return await domain.ViewAsync(AutoViewCore(await source.ConfigureAwait(false)), token).ConfigureAwait(false);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -304,7 +304,7 @@ namespace NetExtender.Domains.Utilities
             }
 
             IDomain domain = await source.ConfigureAwait(false);
-            return await domain.ViewAsync(AutoViewInternal(await source.ConfigureAwait(false)), args, token).ConfigureAwait(false);
+            return await domain.ViewAsync(AutoViewCore(await source.ConfigureAwait(false)), args, token).ConfigureAwait(false);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -321,7 +321,7 @@ namespace NetExtender.Domains.Utilities
             }
 
             IDomain domain = await source.ConfigureAwait(false);
-            return await domain.ViewAsync(AutoViewInternal(await source.ConfigureAwait(false)), args, token).ConfigureAwait(false);
+            return await domain.ViewAsync(AutoViewCore(await source.ConfigureAwait(false)), args, token).ConfigureAwait(false);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

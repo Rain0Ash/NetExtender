@@ -3,13 +3,14 @@
 
 using System;
 using System.Drawing;
+using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 using NetExtender.Utilities.Windows;
 using NetExtender.Workstation.Interfaces;
 
 namespace NetExtender.Types.Monitors
 {
-    public readonly struct Monitor : IScreen
+    public readonly struct Monitor : IScreen, IStruct<Monitor>
     {
         public Int32 Id { get; }
         public String Name { get; }
@@ -61,6 +62,7 @@ namespace NetExtender.Types.Monitors
 
         public Boolean IsEmpty
         {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
                 return Name is null;

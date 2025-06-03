@@ -1,3 +1,6 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -22,13 +25,13 @@ namespace NetExtender.Types.Exceptions
         {
         }
 
-        public AggregateException(T result, params Exception[] innerExceptions)
-            : base(result, innerExceptions)
+        public AggregateException(T result, params Exception[] exceptions)
+            : base(result, exceptions)
         {
         }
 
-        public AggregateException(T result, IEnumerable<Exception> innerExceptions)
-            : base(result, innerExceptions)
+        public AggregateException(T result, IEnumerable<Exception> exceptions)
+            : base(result, exceptions)
         {
         }
 
@@ -37,18 +40,18 @@ namespace NetExtender.Types.Exceptions
         {
         }
 
-        public AggregateException(T result, String? message, Exception innerException)
-            : base(result, message, innerException)
+        public AggregateException(T result, String? message, Exception exception)
+            : base(result, message, exception)
         {
         }
 
-        public AggregateException(T result, String? message, params Exception[] innerExceptions)
-            : base(result, message, innerExceptions)
+        public AggregateException(T result, String? message, params Exception[] exceptions)
+            : base(result, message, exceptions)
         {
         }
 
-        public AggregateException(T result, String? message, IEnumerable<Exception> innerExceptions)
-            : base(result, message, innerExceptions)
+        public AggregateException(T result, String? message, IEnumerable<Exception> exceptions)
+            : base(result, message, exceptions)
         {
         }
 
@@ -76,14 +79,14 @@ namespace NetExtender.Types.Exceptions
             Result = result;
         }
 
-        protected AggregateResultException(T result, params Exception[] innerExceptions)
-            : base(innerExceptions)
+        protected AggregateResultException(T result, params Exception[] exceptions)
+            : base(exceptions)
         {
             Result = result;
         }
 
-        protected AggregateResultException(T result, IEnumerable<Exception> innerExceptions)
-            : base(innerExceptions)
+        protected AggregateResultException(T result, IEnumerable<Exception> exceptions)
+            : base(exceptions)
         {
             Result = result;
         }
@@ -94,20 +97,20 @@ namespace NetExtender.Types.Exceptions
             Result = result;
         }
 
-        protected AggregateResultException(T result, String? message, Exception innerException)
-            : base(message, innerException)
+        protected AggregateResultException(T result, String? message, Exception exception)
+            : base(message, exception)
         {
             Result = result;
         }
 
-        protected AggregateResultException(T result, String? message, params Exception[] innerExceptions)
-            : base(message, innerExceptions)
+        protected AggregateResultException(T result, String? message, params Exception[] exceptions)
+            : base(message, exceptions)
         {
             Result = result;
         }
 
-        protected AggregateResultException(T result, String? message, IEnumerable<Exception> innerExceptions)
-            : base(message, innerExceptions)
+        protected AggregateResultException(T result, String? message, IEnumerable<Exception> exceptions)
+            : base(message, exceptions)
         {
             Result = result;
         }
@@ -142,13 +145,13 @@ namespace NetExtender.Types.Exceptions
         {
         }
 
-        protected AggregateResultException(params Exception[] innerExceptions)
-            : base(innerExceptions)
+        protected AggregateResultException(params Exception[] exceptions)
+            : base(exceptions)
         {
         }
 
-        protected AggregateResultException(IEnumerable<Exception> innerExceptions)
-            : base(innerExceptions)
+        protected AggregateResultException(IEnumerable<Exception> exceptions)
+            : base(exceptions)
         {
         }
 
@@ -157,18 +160,18 @@ namespace NetExtender.Types.Exceptions
         {
         }
 
-        protected AggregateResultException(String? message, Exception innerException)
-            : base(message, innerException)
+        protected AggregateResultException(String? message, Exception exception)
+            : base(message, exception)
         {
         }
 
-        protected AggregateResultException(String? message, params Exception[] innerExceptions)
-            : base(message, innerExceptions)
+        protected AggregateResultException(String? message, params Exception[] exceptions)
+            : base(message, exceptions)
         {
         }
 
-        protected AggregateResultException(String? message, IEnumerable<Exception> innerExceptions)
-            : base(message, innerExceptions)
+        protected AggregateResultException(String? message, IEnumerable<Exception> exceptions)
+            : base(message, exceptions)
         {
         }
 

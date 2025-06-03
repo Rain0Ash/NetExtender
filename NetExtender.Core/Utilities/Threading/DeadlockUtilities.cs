@@ -1,3 +1,6 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -129,7 +132,7 @@ namespace NetExtender.Utilities.Threading
         [SecurityPermission(SecurityAction.InheritanceDemand, Flags = SecurityPermissionFlag.ControlEvidence | SecurityPermissionFlag.ControlPolicy)]
         internal sealed class SynchronizationContext : System.Threading.SynchronizationContext
         {
-            private SyncRoot SyncRoot { get; } = ConcurrentUtilities.SyncRoot;
+            private SyncRoot SyncRoot { get; } = SyncRoot.Create();
             public System.Threading.SynchronizationContext? Context { get; }
 
             private StackTrace? StackTrace { get; set; }

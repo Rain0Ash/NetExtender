@@ -3,7 +3,7 @@
 
 using System;
 
-namespace NetExtender.IO.FileSystem.Lock.Interfaces
+namespace NetExtender.FileSystems.Lock.Interfaces
 {
     public interface IFileLock
     {

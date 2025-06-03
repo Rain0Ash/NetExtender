@@ -19,6 +19,13 @@ namespace NetExtender.Types.Comparers
                 return Comparer<Char>.Default;
             }
         }
+        
+        public static IEqualityComparer<Char> CurrentCulture { get; } = new CharEqualityComparer(StringComparison.CurrentCulture);
+        public static IEqualityComparer<Char> CurrentCultureIgnoreCase { get; } = new CharEqualityComparer(StringComparison.CurrentCultureIgnoreCase);
+        public static IEqualityComparer<Char> InvariantCulture { get; } = new CharEqualityComparer(StringComparison.InvariantCulture);
+        public static IEqualityComparer<Char> InvariantCultureIgnoreCase { get; } = new CharEqualityComparer(StringComparison.InvariantCultureIgnoreCase);
+        public static IEqualityComparer<Char> Ordinal { get; } = new CharEqualityComparer(StringComparison.Ordinal);
+        public static IEqualityComparer<Char> OrdinalIgnoreCase { get; } = new CharEqualityComparer(StringComparison.OrdinalIgnoreCase);
 
         public StringComparison Comparison { get; }
         private CompareHandler? Comparer { get; }
@@ -34,6 +41,20 @@ namespace NetExtender.Types.Comparers
             Comparer = GetComparer();
         }
 
+        public static IEqualityComparer<Char> Create(StringComparison comparison)
+        {
+            return comparison switch
+            {
+                StringComparison.CurrentCulture => CurrentCulture,
+                StringComparison.CurrentCultureIgnoreCase => CurrentCultureIgnoreCase,
+                StringComparison.InvariantCulture => InvariantCulture,
+                StringComparison.InvariantCultureIgnoreCase => InvariantCultureIgnoreCase,
+                StringComparison.Ordinal => Ordinal,
+                StringComparison.OrdinalIgnoreCase => OrdinalIgnoreCase,
+                _ => throw new EnumUndefinedOrNotSupportedException<StringComparison>(comparison, nameof(comparison), null)
+            };
+        }
+
         private CompareHandler GetComparer()
         {
             return GetComparer(Comparison);
@@ -43,13 +64,13 @@ namespace NetExtender.Types.Comparers
         {
             if (comparison == Comparison)
             {
-                return Comparer ?? GetComparerInternal(comparison);
+                return Comparer ?? GetComparerCore(comparison);
             }
 
-            return GetComparerInternal(comparison);
+            return GetComparerCore(comparison);
         }
 
-        private static CompareHandler GetComparerInternal(StringComparison comparison)
+        private static CompareHandler GetComparerCore(StringComparison comparison)
         {
             return comparison switch
             {
@@ -79,9 +100,9 @@ namespace NetExtender.Types.Comparers
             return Equals(x, y, GetComparer(comparison));
         }
 
-        public Int32 GetHashCode(Char obj)
+        public Int32 GetHashCode(Char value)
         {
-            return obj.GetHashCode();
+            return value.GetHashCode();
         }
     }
 }

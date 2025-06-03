@@ -4,6 +4,7 @@
 using System;
 using System.Collections;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 using Org.BouncyCastle.Utilities.Collections;
 
 namespace NetExtender.Types.Sets
@@ -20,6 +21,7 @@ namespace NetExtender.Types.Sets
 
         public Int32 Count
         {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
                 return Internal.Count;
@@ -28,6 +30,7 @@ namespace NetExtender.Types.Sets
 
         public Boolean IsEmpty
         {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
                 return Internal.IsEmpty;
@@ -36,6 +39,7 @@ namespace NetExtender.Types.Sets
 
         public Boolean IsFixedSize
         {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
                 return Internal.IsFixedSize;
@@ -44,6 +48,7 @@ namespace NetExtender.Types.Sets
 
         public Boolean IsReadOnly
         {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
                 return Internal.IsReadOnly;
@@ -52,6 +57,7 @@ namespace NetExtender.Types.Sets
 
         public Boolean IsSynchronized
         {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
                 return Internal.IsSynchronized;
@@ -60,6 +66,7 @@ namespace NetExtender.Types.Sets
 
         public Object SyncRoot
         {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
                 return Internal.SyncRoot;
@@ -71,41 +78,49 @@ namespace NetExtender.Types.Sets
             Internal = @internal;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Add(Object item)
         {
             Internal.Add(item);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void AddAll(IEnumerable enumerable)
         {
             Internal.AddAll(enumerable);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Boolean Contains(Object item)
         {
             return Internal.Contains(item);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Remove(Object item)
         {
             Internal.Remove(item);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void RemoveAll(IEnumerable enumerable)
         {
             Internal.RemoveAll(enumerable);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Clear()
         {
             Internal.Clear();
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         void ICollection.CopyTo(Array array, Int32 index)
         {
             Internal.CopyTo(array, index);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public IEnumerator GetEnumerator()
         {
             return Internal.GetEnumerator();

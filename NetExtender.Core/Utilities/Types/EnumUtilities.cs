@@ -7,6 +7,7 @@ using System.Collections.Immutable;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
@@ -410,7 +411,6 @@ namespace NetExtender.Utilities.Types
             return ValuesWithoutDefaultStorage<T>.Values.GetRandom();
         }
         
-        [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
         public static T GetRandomEnumValue<T>(this IEnumerable<T> source) where T : unmanaged, Enum
         {
             if (source is null)
@@ -509,40 +509,26 @@ namespace NetExtender.Utilities.Types
             return AsSpan(in value);
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Int32 CountOfFlags<T>() where T : unmanaged, Enum
         {
             return ValuesStorage<T>.Flags ?? throw new NotFlagsEnumTypeException<T>(null, nameof(T));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-        public static T[] Flags<T>(this T value) where T : unmanaged, Enum
+        public static Int32 CountOfFlags<T>(T value) where T : unmanaged, Enum
         {
-            static IEnumerable<T> Enumerate(IReadOnlyList<Byte> values)
-            {
-                Int32[] destination = new Int32[BitUtilities.BitInByte];
+            return BitOperations.PopCount(value.AsUInt64());
+        }
 
-                for (Int32 counter = 0; counter < values.Count; counter++)
-                {
-                    Byte value = values[counter];
-                    if (!BitUtilities.TryGetSetBits(value, destination, out Int32 written))
-                    {
-                        throw new InvalidOperationException();
-                    }
-
-                    for (Int32 i = 0; i < written; i++)
-                    {
-                        UInt64 result = 1UL << (destination[i] + counter * BitUtilities.BitInByte);
-                        yield return Unsafe.As<UInt64, T>(ref result);
-                    }
-                }
-            }
-
-            return Enumerate(AsSpan(in value).ToArray()).ToArray();
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static EnumFlagsEnumerator<T> Flags<T>(this T value) where T : unmanaged, Enum
+        {
+            return new EnumFlagsEnumerator<T>(value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
-        private static unsafe Boolean HasFlags<T>(T* first, T* second) where T : unmanaged, Enum
+        private static unsafe Boolean HasFlags<T>(T* first, T* second) where T : unmanaged
         {
             Byte* pf = (Byte*) first;
             Byte* ps = (Byte*) second;
@@ -657,11 +643,8 @@ namespace NetExtender.Utilities.Types
             }
         }
 
-        /// <summary>
-        ///     Returns the underlying type of the specified enumeration.
-        /// </summary>
+        /// <summary>Returns the underlying type of the specified enumeration.</summary>
         /// <typeparam name="T">Enum type</typeparam>
-        /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Type GetUnderlyingType<T>() where T : unmanaged, Enum
         {
@@ -704,33 +687,24 @@ namespace NetExtender.Utilities.Types
             return ValuesWithoutDefaultStorage<T>.Contains(value);
         }
 
-        /// <summary>
-        ///     Retrieves an array of the values of the constants in a specified enumeration.
-        /// </summary>
+        /// <summary>Retrieves an array of the constants in a specified enumeration.</summary>
         /// <typeparam name="T">Enum type</typeparam>
-        /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableArray<T> GetValues<T>() where T : unmanaged, Enum
         {
             return ValuesStorage<T>.Values;
         }
 
-        /// <summary>
-        ///     Retrieves an array of the values of the constants in a specified enumeration.
-        /// </summary>
+        /// <summary>Retrieves an array of the constants in a specified enumeration.</summary>
         /// <typeparam name="T">Enum type</typeparam>
-        /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableArray<T> GetValues<T>(Boolean without) where T : unmanaged, Enum
         {
             return without ? GetValuesWithoutDefault<T>() : GetValues<T>();
         }
 
-        /// <summary>
-        ///     Retrieves an array of the values (exclude default values) of the constants in a specified enumeration.
-        /// </summary>
+        /// <summary>Retrieves an array (exclude default value) of the constants in a specified enumeration.</summary>
         /// <typeparam name="T">Enum type</typeparam>
-        /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableArray<T> GetValuesWithoutDefault<T>() where T : unmanaged, Enum
         {
@@ -755,186 +729,141 @@ namespace NetExtender.Utilities.Types
             return NamesWithoutDefaultStorage<T>.Contains(name);
         }
 
-        /// <summary>
-        ///     Retrieves an array of the names of the constants in a specified enumeration.
-        /// </summary>
+        /// <summary>Retrieves an array of the names of the constants in a specified enumeration.</summary>
         /// <typeparam name="T">Enum type</typeparam>
-        /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ReadOnlyCollection<String> GetNames<T>() where T : unmanaged, Enum
         {
             return NamesStorage<T>.Names;
         }
 
-        /// <summary>
-        ///     Retrieves an array of the names of the constants in a specified enumeration.
-        /// </summary>
+        /// <summary>Retrieves an array of the names of the constants in a specified enumeration.</summary>
         /// <typeparam name="T">Enum type</typeparam>
-        /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ReadOnlyCollection<String> GetNames<T>(Boolean without) where T : unmanaged, Enum
         {
             return without ? GetNamesWithoutDefault<T>() : GetNames<T>();
         }
 
-        /// <summary>
-        ///     Retrieves an array of the names of the constants in a specified enumeration.
-        /// </summary>
+        /// <summary>Retrieves an array of the names of the constants in a specified enumeration.</summary>
         /// <typeparam name="T">Enum type</typeparam>
-        /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ReadOnlyCollection<String> GetNamesWithoutDefault<T>() where T : unmanaged, Enum
         {
             return NamesWithoutDefaultStorage<T>.Names;
         }
 
-        /// <summary>
-        ///     Retrieves the name of the constants in a specified enumeration.
-        /// </summary>
+        /// <summary>Retrieves the name of the constants in a specified enumeration.</summary>
         /// <typeparam name="T">Enum type</typeparam>
-        /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String GetName<T>(T value) where T : unmanaged, Enum
         {
-            return GetMember(value).Name;
+            return TryGetMember(value, out EnumMember<T>? member) ? member.Name : value.ToString();
         }
 
-        /// <summary>
-        ///     Retrieves an array of the member information of the constants in a specified enumeration.
-        /// </summary>
+        /// <summary>Retrieves an array of the member information of the constants in a specified enumeration.</summary>
         /// <typeparam name="T">Enum type</typeparam>
-        /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableArray<EnumMember<T>> GetMembers<T>() where T : unmanaged, Enum
         {
             return MembersStorage<T>.Members;
         }
 
-        /// <summary>
-        ///     Retrieves an array of the member information of the constants in a specified enumeration.
-        /// </summary>
+        /// <summary>Retrieves an array of the member information of the constants in a specified enumeration.</summary>
         /// <typeparam name="T">Enum type</typeparam>
-        /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableArray<EnumMember<T>> GetMembers<T>(Boolean without) where T : unmanaged, Enum
         {
             return without ? GetMembersWithoutDefault<T>() : GetMembers<T>();
         }
 
-        /// <summary>
-        ///     Retrieves an array of the member information of the constants in a specified enumeration.
-        /// </summary>
+        /// <summary>Retrieves an array of the member information of the constants in a specified enumeration.</summary>
         /// <typeparam name="T">Enum type</typeparam>
-        /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableArray<EnumMember<T>> GetMembersWithoutDefault<T>() where T : unmanaged, Enum
         {
             return MembersWithoutDefaultStorage<T>.Members;
         }
 
-        /// <summary>
-        ///     Retrieves the member information of the constants in a specified enumeration.
-        /// </summary>
+        /// <summary>Retrieves the member information of the constants in a specified enumeration.</summary>
         /// <typeparam name="T">Enum type</typeparam>
-        /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static EnumMember<T> GetMember<T>(T value) where T : unmanaged, Enum
         {
-            return UnderlyingOperationStorage<T>.Operation.GetMember(ref value);
+            return UnderlyingOperationStorage<T>.Operation.GetMember(value);
         }
 
-        /// <summary>
-        ///     Returns whether no fields in a specified enumeration.
-        /// </summary>
+        /// <summary>Retrieves the member information of the constants in a specified enumeration.</summary>
         /// <typeparam name="T">Enum type</typeparam>
-        /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean TryGetMember<T>(T value, [MaybeNullWhen(false)] out EnumMember<T> result) where T : unmanaged, Enum
+        {
+            return UnderlyingOperationStorage<T>.Operation.TryGetMember(value, out result);
+        }
+
+        /// <summary>Returns whether no fields in a specified enumeration.</summary>
+        /// <typeparam name="T">Enum type</typeparam>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsEmpty<T>() where T : unmanaged, Enum
         {
             return ValuesStorage<T>.IsEmpty;
         }
 
-        /// <summary>
-        ///     Returns whether the values of the constants in a specified enumeration are continuous.
-        /// </summary>
+        /// <summary>Returns whether the values of the constants in a specified enumeration are continuous.</summary>
         /// <typeparam name="T">Enum type</typeparam>
-        /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsContinuous<T>() where T : unmanaged, Enum
         {
             return UnderlyingOperationStorage<T>.Operation.IsContinuous;
         }
 
-        /// <summary>
-        ///     Returns whether the <see cref="FlagsAttribute" /> is defined.
-        /// </summary>
+        /// <summary>Returns whether the <see cref="FlagsAttribute" /> is defined.</summary>
         /// <typeparam name="T">Enum type</typeparam>
-        /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsFlags<T>() where T : unmanaged, Enum
         {
             return CacheIsFlags<T>.IsFlags;
         }
 
-        /// <summary>
-        ///     Returns an indication whether a constant with a specified value exists in a specified enumeration.
-        /// </summary>
-        /// <param name="value"></param>
+        /// <summary>Returns an indication whether a constant with a specified value exists in a specified enumeration.</summary>
         /// <typeparam name="T">Enum type</typeparam>
-        /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsDefined<T>(T value) where T : unmanaged, Enum
         {
-            return UnderlyingOperationStorage<T>.Operation.IsDefined(ref value);
+            return UnderlyingOperationStorage<T>.Operation.IsDefined(value);
         }
 
-        /// <summary>
-        ///     Returns an indication whether a constant with a specified name exists in a specified enumeration.
-        /// </summary>
-        /// <param name="name"></param>
+        /// <summary>Returns an indication whether a constant with a specified name exists in a specified enumeration.</summary>
         /// <typeparam name="T">Enum type</typeparam>
-        /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsDefined<T>(String name) where T : unmanaged, Enum
         {
             return TryParseName<T>(name, false, out _);
         }
 
-        /// <summary>
-        ///     Converts the string representation of the name or numeric value of one or more enumerated constants to an
-        ///     equivalent enumerated object.
-        /// </summary>
-        /// <param name="value"></param>
+        /// <summary>Converts the string representation of the name or numeric value of one or more enumerated constants to an equivalent enumerated object.</summary>
         /// <typeparam name="T">Enum type</typeparam>
-        /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T Parse<T>(String value) where T : unmanaged, Enum
         {
-            return TryParse(value, false, out T result) ? result : throw new ArgumentException(nameof(value));
+            return TryParse(value, false, out T result) ? result : throw new ArgumentException(null, nameof(value));
         }
 
         /// <summary>
-        ///     Converts the string representation of the name or numeric value of one or more enumerated constants to an
-        ///     equivalent enumerated object.
-        ///     A parameter specifies whether the operation is case-insensitive.
+        /// Converts the string representation of the name or numeric value of one or more enumerated constants to an
+        /// equivalent enumerated object.
+        /// A parameter specifies whether the operation is case-insensitive.
         /// </summary>
-        /// <param name="value"></param>
-        /// <param name="ignoreCase"></param>
         /// <typeparam name="T">Enum type</typeparam>
-        /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T Parse<T>(String value, Boolean ignoreCase) where T : unmanaged, Enum
         {
-            return TryParse(value, ignoreCase, out T result) ? result : throw new ArgumentException(nameof(value));
+            return TryParse(value, ignoreCase, out T result) ? result : throw new ArgumentException(null, nameof(value));
         }
 
         /// <summary>
-        ///     Converts the string representation of the name or numeric value of one or more enumerated constants to an
-        ///     equivalent enumerated object.
-        ///     The return value indicates whether the conversion succeeded.
+        /// Converts the string representation of the name or numeric value of one or more enumerated constants to an equivalent enumerated object.
         /// </summary>
-        /// <param name="value"></param>
-        /// <param name="result"></param>
         /// <typeparam name="T">Enum type</typeparam>
         /// <returns>true if the value parameter was converted successfully; otherwise, false.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -944,14 +873,11 @@ namespace NetExtender.Utilities.Types
         }
 
         /// <summary>
-        ///     Converts the string representation of the name or numeric value of one or more enumerated constants to an
-        ///     equivalent enumerated object.
-        ///     A parameter specifies whether the operation is case-sensitive.
-        ///     The return value indicates whether the conversion succeeded.
+        /// Converts the string representation of the name or numeric value of one or more enumerated constants to an
+        /// equivalent enumerated object.
+        /// A parameter specifies whether the operation is case-sensitive.
+        /// The return value indicates whether the conversion succeeded.
         /// </summary>
-        /// <param name="value"></param>
-        /// <param name="ignoreCase"></param>
-        /// <param name="result"></param>
         /// <typeparam name="T">Enum type</typeparam>
         /// <returns>true if the value parameter was converted successfully; otherwise, false.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -966,11 +892,8 @@ namespace NetExtender.Utilities.Types
             return false;
         }
 
-        /// <summary>
-        ///     Checks whether specified charactor is number.
-        /// </summary>
+        /// <summary>Checks whether specified charactor is number.</summary>
         /// <param name="character"></param>
-        /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static Boolean IsNumeric(Char character)
         {
@@ -983,16 +906,11 @@ namespace NetExtender.Utilities.Types
         }
 
         /// <summary>
-        ///     Converts the string representation of the name of one or more enumerated constants to an equivalent enumerated
-        ///     object.
-        ///     A parameter specifies whether the operation is case-sensitive.
-        ///     The return value indicates whether the conversion succeeded.
+        /// Converts the string representation of the name of one or more enumerated constants to an equivalent enumerated object.
+        /// A parameter specifies whether the operation is case-sensitive.
+        /// The return value indicates whether the conversion succeeded.
         /// </summary>
-        /// <param name="name"></param>
-        /// <param name="insensitive"></param>
-        /// <param name="result"></param>
         /// <typeparam name="T">Enum type</typeparam>
-        /// <returns></returns>
         public static Boolean TryParseName<T>(String name, Boolean insensitive, out T result) where T : unmanaged, Enum
         {
             if (!insensitive)
@@ -1017,48 +935,31 @@ namespace NetExtender.Utilities.Types
             return false;
         }
 
-        /// <summary>
-        ///     Converts to the member information of the constant in the specified enumeration value.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="value"></param>
-        /// <returns></returns>
+        /// <summary>Converts to the member information of the constant in the specified enumeration value.</summary>
+        /// <typeparam name="T">Enum type</typeparam>
         public static EnumMember<T> ToMember<T>(this T value) where T : unmanaged, Enum
         {
             return GetMember(value);
         }
 
-        /// <summary>
-        /// Gets the Attribute of specified enumration member.
-        /// </summary>
+        /// <summary>Gets the Attribute of specified enumeration member.</summary>
         /// <typeparam name="T">Enum Type</typeparam>
         /// <typeparam name="TAttribute">Attribute Type</typeparam>
-        /// <param name="value"></param>
-        /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IReadOnlyList<TAttribute> GetAttributes<T, TAttribute>(this T value) where T : unmanaged, Enum where TAttribute : Attribute
         {
             return AttributesStorage<T, TAttribute>.Cache[value];
         }
 
-        /// <summary>
-        ///     Converts to the name of the constant in the specified enumeration value.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="value"></param>
-        /// <returns></returns>
+        /// <summary>Converts to the name of the constant in the specified enumeration value.</summary>
+        /// <typeparam name="T">Enum type</typeparam>
         public static String ToName<T>(this T value) where T : unmanaged, Enum
         {
             return GetName(value);
         }
 
-        /// <summary>
-        ///     Gets the WellKnown types of specified enumeration member.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="value"></param>
-        /// <exception cref="NotFoundException"></exception>
-        /// <returns></returns>
+        /// <summary>Gets the WellKnown types of specified enumeration member.</summary>
+        /// <typeparam name="T">Enum type</typeparam>
         public static String? GetEnumMemberValue<T>(this T value) where T : unmanaged, Enum
         {
             if (value.TryGetEnumMemberValue(out String? member))
@@ -1069,13 +970,8 @@ namespace NetExtender.Utilities.Types
             throw new NotFoundException($"{nameof(EnumMemberAttribute)} is not found.");
         }
 
-        /// <summary>
-        ///     Gets the WellKnown types of specified enumeration member.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="value"></param>
-        /// <param name="member"></param>
-        /// <returns></returns>
+        /// <summary>Gets the WellKnown types of specified enumeration member.</summary>
+        /// <typeparam name="T">Enum type</typeparam>
         public static Boolean TryGetEnumMemberValue<T>(this T value, out String? member) where T : unmanaged, Enum
         {
             EnumMemberAttribute? attribute = value.ToMember().EnumMemberAttribute;
@@ -1090,27 +986,15 @@ namespace NetExtender.Utilities.Types
             return false;
         }
 
-        /// <summary>
-        ///     Gets the <see cref="EnumLabelAttribute.Value" /> of specified enumration member.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="value"></param>
-        /// <param name="index"></param>
-        /// <exception cref="NotFoundException"></exception>
-        /// <returns></returns>
+        /// <summary>Gets the <see cref="EnumLabelAttribute.Value" /> of specified enumeration member.</summary>
+        /// <typeparam name="T">Enum type</typeparam>
         public static String? GetLabel<T>(this T value, Int32 index = 0) where T : unmanaged, Enum
         {
             return value.ToMember().GetLabel(index);
         }
 
-        /// <summary>
-        ///     Gets the WellKnown types of specified enumration member.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="member"></param>
-        /// <param name="index"></param>
-        /// <exception cref="NotFoundException"></exception>
-        /// <returns></returns>
+        /// <summary>Gets the WellKnown types of specified enumeration member.</summary>
+        /// <typeparam name="T">Enum type</typeparam>
         public static String? GetLabel<T>(this EnumMember<T> member, Int32 index = 0) where T : unmanaged, Enum
         {
             if (member is null)
@@ -1126,51 +1010,29 @@ namespace NetExtender.Utilities.Types
             throw new NotFoundException($"{nameof(EnumLabelAttribute)} that is specified index {index} is not found.");
         }
 
-        /// <summary>
-        ///     Gets the <see cref="EnumLabelAttribute.Value" /> of specified enumration member.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="value"></param>
-        /// <param name="label"></param>
-        /// <returns></returns>
+        /// <summary>Gets the <see cref="EnumLabelAttribute.Value" /> of specified enumeration member.</summary>
+        /// <typeparam name="T">Enum type</typeparam>
         public static Boolean TryGetLabel<T>(this T value, out String? label) where T : unmanaged, Enum
         {
             return value.TryGetLabel(0, out label);
         }
 
-        /// <summary>
-        ///     Gets the WellKnown types of specified enumration member.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="member"></param>
-        /// <param name="label"></param>
-        /// <returns></returns>
+        /// <summary>Gets the WellKnown types of specified enumeration member.</summary>
+        /// <typeparam name="T">Enum type</typeparam>
         public static Boolean TryGetLabel<T>(this EnumMember<T> member, out String? label) where T : unmanaged, Enum
         {
             return member.TryGetLabel(0, out label);
         }
 
-        /// <summary>
-        ///     Gets the <see cref="EnumLabelAttribute.Value" /> of specified enumration member.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="value"></param>
-        /// <param name="index"></param>
-        /// <param name="label"></param>
-        /// <returns></returns>
+        /// <summary>Gets the <see cref="EnumLabelAttribute.Value" /> of specified enumeration member.</summary>
+        /// <typeparam name="T">Enum type</typeparam>
         public static Boolean TryGetLabel<T>(this T value, Int32 index, out String? label) where T : unmanaged, Enum
         {
             return value.ToMember().TryGetLabel(index, out label);
         }
 
-        /// <summary>
-        ///     Gets the WellKnown types of specified enumration member.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="member"></param>
-        /// <param name="index"></param>
-        /// <param name="label"></param>
-        /// <returns></returns>
+        /// <summary>Gets the WellKnown types of specified enumeration member.</summary>
+        /// <typeparam name="T">Enum type</typeparam>
         public static Boolean TryGetLabel<T>(this EnumMember<T> member, Int32 index, out String? label) where T : unmanaged, Enum
         {
             if (member is null)
@@ -1189,129 +1051,97 @@ namespace NetExtender.Utilities.Types
             return false;
         }
 
-        /// <summary>
-        ///     Returns an indication whether a constant with a specified value exists in a specified enumeration.
-        /// </summary>
-        /// <param name="value"></param>
+        /// <summary>Returns an indication whether a constant with a specified value exists in a specified enumeration.</summary>
         /// <typeparam name="T">Enum type</typeparam>
-        /// <returns></returns>
         public static Boolean IsDefined<T>(SByte value) where T : unmanaged, Enum
         {
             if (UnderlyingOperationStorage<T>.Underlying == typeof(SByte))
             {
-                return SByteOperation<T>.IsDefined(ref value);
+                return SByteOperation<T>.IsDefined(value);
             }
 
             throw new ArgumentException(IsDefinedTypeMismatchMessage, nameof(value));
         }
 
-        /// <summary>
-        ///     Returns an indication whether a constant with a specified value exists in a specified enumeration.
-        /// </summary>
-        /// <param name="value"></param>
+        /// <summary>Returns an indication whether a constant with a specified value exists in a specified enumeration.</summary>
         /// <typeparam name="T">Enum type</typeparam>
-        /// <returns></returns>
         public static Boolean IsDefined<T>(Byte value) where T : unmanaged, Enum
         {
             if (UnderlyingOperationStorage<T>.Underlying == typeof(Byte))
             {
-                return ByteOperation<T>.IsDefined(ref value);
+                return ByteOperation<T>.IsDefined(value);
             }
 
             throw new ArgumentException(IsDefinedTypeMismatchMessage, nameof(value));
         }
 
-        /// <summary>
-        ///     Returns an indication whether a constant with a specified value exists in a specified enumeration.
-        /// </summary>
-        /// <param name="value"></param>
+        /// <summary>Returns an indication whether a constant with a specified value exists in a specified enumeration.</summary>
         /// <typeparam name="T">Enum type</typeparam>
-        /// <returns></returns>
         public static Boolean IsDefined<T>(Int16 value) where T : unmanaged, Enum
         {
             if (UnderlyingOperationStorage<T>.Underlying == typeof(Int16))
             {
-                return Int16Operation<T>.IsDefined(ref value);
+                return Int16Operation<T>.IsDefined(value);
             }
 
             throw new ArgumentException(IsDefinedTypeMismatchMessage, nameof(value));
         }
 
-        /// <summary>
-        ///     Returns an indication whether a constant with a specified value exists in a specified enumeration.
-        /// </summary>
-        /// <param name="value"></param>
+        /// <summary>Returns an indication whether a constant with a specified value exists in a specified enumeration.</summary>
         /// <typeparam name="T">Enum type</typeparam>
-        /// <returns></returns>
         public static Boolean IsDefined<T>(UInt16 value) where T : unmanaged, Enum
         {
             if (UnderlyingOperationStorage<T>.Underlying == typeof(UInt16))
             {
-                return UInt16Operation<T>.IsDefined(ref value);
+                return UInt16Operation<T>.IsDefined(value);
             }
 
             throw new ArgumentException(IsDefinedTypeMismatchMessage, nameof(value));
         }
 
-        /// <summary>
-        ///     Returns an indication whether a constant with a specified value exists in a specified enumeration.
-        /// </summary>
-        /// <param name="value"></param>
+        /// <summary>Returns an indication whether a constant with a specified value exists in a specified enumeration.</summary>
         /// <typeparam name="T">Enum type</typeparam>
-        /// <returns></returns>
         public static Boolean IsDefined<T>(Int32 value) where T : unmanaged, Enum
         {
             if (UnderlyingOperationStorage<T>.Underlying == typeof(Int32))
             {
-                return Int32Operation<T>.IsDefined(ref value);
+                return Int32Operation<T>.IsDefined(value);
             }
 
             throw new ArgumentException(IsDefinedTypeMismatchMessage, nameof(value));
         }
 
-        /// <summary>
-        ///     Returns an indication whether a constant with a specified value exists in a specified enumeration.
-        /// </summary>
-        /// <param name="value"></param>
+        /// <summary>Returns an indication whether a constant with a specified value exists in a specified enumeration.</summary>
         /// <typeparam name="T">Enum type</typeparam>
-        /// <returns></returns>
         public static Boolean IsDefined<T>(UInt32 value) where T : unmanaged, Enum
         {
             if (UnderlyingOperationStorage<T>.Underlying == typeof(UInt32))
             {
-                return UInt32Operation<T>.IsDefined(ref value);
+                return UInt32Operation<T>.IsDefined(value);
             }
 
             throw new ArgumentException(IsDefinedTypeMismatchMessage, nameof(value));
         }
 
-        /// <summary>
-        ///     Returns an indication whether a constant with a specified value exists in a specified enumeration.
-        /// </summary>
-        /// <param name="value"></param>
+        /// <summary>Returns an indication whether a constant with a specified value exists in a specified enumeration.</summary>
         /// <typeparam name="T">Enum type</typeparam>
-        /// <returns></returns>
         public static Boolean IsDefined<T>(Int64 value) where T : unmanaged, Enum
         {
             if (UnderlyingOperationStorage<T>.Underlying == typeof(Int64))
             {
-                return Int64Operation<T>.IsDefined(ref value);
+                return Int64Operation<T>.IsDefined(value);
             }
 
             throw new ArgumentException(IsDefinedTypeMismatchMessage, nameof(value));
         }
 
-        /// <summary>
-        ///     Returns an indication whether a constant with a specified value exists in a specified enumeration.
-        /// </summary>
-        /// <param name="value"></param>
+        /// <summary>Returns an indication whether a constant with a specified value exists in a specified enumeration.</summary>
         /// <typeparam name="T">Enum type</typeparam>
-        /// <returns></returns>
         public static Boolean IsDefined<T>(UInt64 value) where T : unmanaged, Enum
         {
             if (UnderlyingOperationStorage<T>.Underlying == typeof(UInt64))
             {
-                return UInt64Operation<T>.IsDefined(ref value);
+                return UInt64Operation<T>.IsDefined(value);
             }
 
             throw new ArgumentException(IsDefinedTypeMismatchMessage, nameof(value));

@@ -4,7 +4,7 @@
 using System;
 using System.IO;
 using System.Text;
-using NetExtender.IO.FileSystem.NTFS.DataStreams;
+using NetExtender.FileSystems.NTFS.DataStreams;
 using NetExtender.Types.Exceptions;
 using NetExtender.Utilities.IO;
 using NetExtender.Utilities.Types;
@@ -57,7 +57,7 @@ namespace NetExtender.Windows.Utilities.IO
             return info.IsAlternateDataStreamExists(ZoneIdentifier) ? info.ReadAlternateDataStream(ZoneIdentifier) : null;
         }
 
-        private static TrustedZoneIdentifier GetTrustedZoneIdentifierInternal(String value)
+        private static TrustedZoneIdentifier GetTrustedZoneIdentifierCore(String value)
         {
             if (value is null)
             {
@@ -101,7 +101,7 @@ namespace NetExtender.Windows.Utilities.IO
                 throw new FileNotFoundException(null, path + ":" + ZoneIdentifier);
             }
 
-            return GetTrustedZoneIdentifierInternal(value);
+            return GetTrustedZoneIdentifierCore(value);
         }
 
         public static TrustedZoneIdentifier GetTrustedZoneIdentifier(this FileSystemInfo info)
@@ -123,10 +123,10 @@ namespace NetExtender.Windows.Utilities.IO
                 throw new FileNotFoundException(null, info.FullName + ":" + ZoneIdentifier);
             }
 
-            return GetTrustedZoneIdentifierInternal(value);
+            return GetTrustedZoneIdentifierCore(value);
         }
 
-        private static Boolean TryGetTrustedZoneIdentifierInternal(String? value, out TrustedZoneIdentifier identifier)
+        private static Boolean TryGetTrustedZoneIdentifierCore(String? value, out TrustedZoneIdentifier identifier)
         {
             if (value is null)
             {
@@ -184,7 +184,7 @@ namespace NetExtender.Windows.Utilities.IO
             {
                 if (PathUtilities.IsExist(path))
                 {
-                    return TryGetTrustedZoneIdentifierInternal(ReadTrustedZoneIdentifier(path), out identifier);
+                    return TryGetTrustedZoneIdentifierCore(ReadTrustedZoneIdentifier(path), out identifier);
                 }
 
                 identifier = default;
@@ -208,7 +208,7 @@ namespace NetExtender.Windows.Utilities.IO
             {
                 if (info.Exists)
                 {
-                    return TryGetTrustedZoneIdentifierInternal(info.ReadTrustedZoneIdentifier(), out identifier);
+                    return TryGetTrustedZoneIdentifierCore(info.ReadTrustedZoneIdentifier(), out identifier);
                 }
 
                 identifier = default;
@@ -340,7 +340,7 @@ namespace NetExtender.Windows.Utilities.IO
         }
 
         // ReSharper disable once CognitiveComplexity
-        private static Boolean SetTrustedZoneIdentifierInternal(AlternateDataStreamInfo alternate, TrustedZoneIdentifier identifier)
+        private static Boolean SetTrustedZoneIdentifierCore(AlternateDataStreamInfo alternate, TrustedZoneIdentifier identifier)
         {
             if (alternate is null)
             {
@@ -461,7 +461,7 @@ namespace NetExtender.Windows.Utilities.IO
             }
 
             AlternateDataStreamInfo alternate = AlternateStreamUtilities.OpenAlternateDataStream(path, ZoneIdentifier, FileMode.OpenOrCreate);
-            return SetTrustedZoneIdentifierInternal(alternate, identifier);
+            return SetTrustedZoneIdentifierCore(alternate, identifier);
         }
 
         public static Boolean SetTrustedZoneIdentifier(this FileSystemInfo info, TrustedZoneIdentifier identifier)
@@ -477,11 +477,11 @@ namespace NetExtender.Windows.Utilities.IO
             }
 
             AlternateDataStreamInfo alternate = info.OpenAlternateDataStream(ZoneIdentifier, FileMode.OpenOrCreate);
-            return SetTrustedZoneIdentifierInternal(alternate, identifier);
+            return SetTrustedZoneIdentifierCore(alternate, identifier);
         }
 
         // ReSharper disable once CognitiveComplexity
-        private static Boolean TrySetTrustedZoneIdentifierInternal(AlternateDataStreamInfo alternate, TrustedZoneIdentifier identifier)
+        private static Boolean TrySetTrustedZoneIdentifierCore(AlternateDataStreamInfo alternate, TrustedZoneIdentifier identifier)
         {
             if (alternate is null)
             {
@@ -623,7 +623,7 @@ namespace NetExtender.Windows.Utilities.IO
                 }
 
                 AlternateDataStreamInfo alternate = AlternateStreamUtilities.OpenAlternateDataStream(path, ZoneIdentifier, FileMode.OpenOrCreate);
-                return TrySetTrustedZoneIdentifierInternal(alternate, identifier);
+                return TrySetTrustedZoneIdentifierCore(alternate, identifier);
             }
             catch (Exception)
             {
@@ -646,7 +646,7 @@ namespace NetExtender.Windows.Utilities.IO
                 }
 
                 AlternateDataStreamInfo alternate = info.OpenAlternateDataStream(ZoneIdentifier, FileMode.OpenOrCreate);
-                return TrySetTrustedZoneIdentifierInternal(alternate, identifier);
+                return TrySetTrustedZoneIdentifierCore(alternate, identifier);
             }
             catch (Exception)
             {

@@ -25,9 +25,9 @@ namespace NetExtender.Types.Comparers
             return Compare(x, y) == 0;
         }
 
-        public Int32 GetHashCode(T obj)
+        public Int32 GetHashCode(T value)
         {
-            return obj?.GetHashCode() ?? 0;
+            return value?.GetHashCode() ?? 0;
         }
     }
 }

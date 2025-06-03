@@ -23,7 +23,7 @@ namespace NetExtender.AspNetCore.Windows.Services.Types.Services
             CanPauseAndContinue = PauseStateHandler is not null;
         }
 
-        protected override Boolean AfterStartInternal(String[] args)
+        protected override Boolean AfterStartCore(String[] args)
         {
             return OnStartRegistration(Provider);
         }
@@ -50,10 +50,10 @@ namespace NetExtender.AspNetCore.Windows.Services.Types.Services
             }
         }
 
-        protected override Boolean BeforeStopInternal()
+        protected override Boolean BeforeStopCore()
         {
             StopRequestsByWindows = true;
-            return base.BeforeStopInternal();
+            return base.BeforeStopCore();
         }
     }
 }

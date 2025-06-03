@@ -1,3 +1,6 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -11,8 +14,7 @@ using HarmonyLib;
 using NetExtender.Types.Assemblies;
 using NetExtender.Types.Assemblies.Interfaces;
 using NetExtender.Types.Exceptions;
-using NetExtender.Types.Interception.Interfaces;
-using NetExtender.Types.Network;
+using NetExtender.Types.Intercept.Interfaces;
 
 namespace NetExtender.Utilities.Core
 {

@@ -9,7 +9,7 @@ namespace NetExtender.AspNetCore.Types.Initializers.Interfaces
 {
     public interface IStartupProvider
     {
-        public void ConfigureServices(IServiceCollection collection);
+        public void ConfigureServices(IServiceCollection services);
         public void Configure(IApplicationBuilder application, IServiceProvider provider);
     }
 }

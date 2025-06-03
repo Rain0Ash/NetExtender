@@ -1,3 +1,6 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -6,7 +9,9 @@ using System.Runtime.Versioning;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using NetExtender.Types.Interception.Interfaces;
+using NetExtender.FileSystems;
+using NetExtender.FileSystems.Interfaces;
+using NetExtender.Types.Intercept.Interfaces;
 
 namespace NetExtender.Utilities.Core
 {
@@ -24,13 +29,15 @@ namespace NetExtender.Utilities.Core
             /// <inheritdoc cref="IInterceptFileHandler.CreateSymbolicLink(System.String, System.String)" />
             public static FileSystemInfo CreateSymbolicLink(String path, String pathToTarget)
             {
-                return Interceptor.CreateSymbolicLink(path, pathToTarget);
+                IFileSystemInfo info = Interceptor.CreateSymbolicLink(path, pathToTarget);
+                return info.Info ?? throw new FileSystemIsNotRealException(info);
             }
 
             /// <inheritdoc cref="IInterceptFileHandler.ResolveLinkTarget(System.String, System.Boolean)" />
             public static FileSystemInfo? ResolveLinkTarget(String linkPath, Boolean returnFinalTarget)
             {
-                return Interceptor.ResolveLinkTarget(linkPath, returnFinalTarget);
+                IFileSystemInfo? info = Interceptor.ResolveLinkTarget(linkPath, returnFinalTarget);
+                return info is not null ? info.Info ?? throw new FileSystemIsNotRealException(info) : null;
             }
 
             /// <inheritdoc cref="IInterceptFileHandler.Exists(System.String)" />
@@ -139,6 +146,12 @@ namespace NetExtender.Utilities.Core
             public static System.IO.FileStream Open(String path, FileMode mode, FileAccess access, FileShare share)
             {
                 return Interceptor.Open(path, mode, access, share);
+            }
+
+            /// <inheritdoc cref="IInterceptFileHandler.Open(System.String, System.IO.FileStreamOptions)" />
+            public static System.IO.FileStream Open(String path, FileStreamOptions options)
+            {
+                return Interceptor.Open(path, options);
             }
 
             /// <inheritdoc cref="IInterceptFileHandler.OpenRead(System.String)" />

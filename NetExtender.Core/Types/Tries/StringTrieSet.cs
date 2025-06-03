@@ -121,7 +121,7 @@ namespace NetExtender.Types.Tries
             Trie.Clear();
         }
 
-        public void CopyTo(String[] array, Int32 arrayIndex)
+        public void CopyTo(String[] array, Int32 index)
         {
             if (array is null)
             {
@@ -129,7 +129,7 @@ namespace NetExtender.Types.Tries
             }
 
             String[] entries = Trie.Select(item => new String(item.ToArray())).ToArray();
-            Array.Copy(entries, 0, array, arrayIndex, Count);
+            Array.Copy(entries, 0, array, index, Count);
         }
 
         public IEnumerator<String> GetEnumerator()

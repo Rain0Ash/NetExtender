@@ -37,7 +37,7 @@ namespace NetExtender.Types.Maps.Interfaces
         public Boolean RemoveByValue(TValue key, TKey value);
         public Boolean RemoveByValue(TValue key, [MaybeNullWhen(false)] out TKey value);
         public Boolean RemoveByValue(KeyValuePair<TValue, TKey> item);
-        public void CopyTo(KeyValuePair<TValue, TKey>[] array, Int32 arrayIndex);
+        public void CopyTo(KeyValuePair<TValue, TKey>[] array, Int32 index);
         public TValue this[TKey key] { get; set; }
         public TKey this[TValue key] { get; set; }
     }

@@ -38,9 +38,9 @@ namespace NetExtender.Types.Interprocess
         private IInterprocessMemoryMappedFile? MappedFile { get; set; }
         private ConcurrentQueue<InterprocessLogEntry> ReceivedMessagesQueue { get; } = new ConcurrentQueue<InterprocessLogEntry>();
 
-        private Object MessageReaderLock { get; } = ConcurrentUtilities.SyncRoot;
-        private Object HandlerTaskLock { get; } = ConcurrentUtilities.SyncRoot;
-        private Object HandlerLock { get; } = ConcurrentUtilities.SyncRoot;
+        private SyncRoot MessageReaderLock { get; } = SyncRoot.Create();
+        private SyncRoot HandlerTaskLock { get; } = SyncRoot.Create();
+        private SyncRoot HandlerLock { get; } = SyncRoot.Create();
         private Int64 LastEntryId { get; set; }
 
         private InterprocessMessageStatistics Statistics { get; } = new InterprocessMessageStatistics();
@@ -154,7 +154,7 @@ namespace NetExtender.Types.Interprocess
                 throw new ArgumentNullException(nameof(messages), "Message list can not be empty");
             }
 
-            void Internal()
+            void Core()
             {
                 // ReSharper disable once PossibleMultipleEnumeration
                 IEnumerable<InterprocessLogEntry> entries = messages.Select(message => new InterprocessLogEntry { Instance = InstanceId, Message = message });
@@ -166,7 +166,7 @@ namespace NetExtender.Types.Interprocess
                 }
             }
 
-            return Task.Run(Internal);
+            return Task.Run(Core);
         }
 
         private Byte[] PublishMessages(Byte[] data, Queue<InterprocessLogEntry> queue, TimeSpan timeout)
@@ -244,7 +244,7 @@ namespace NetExtender.Types.Interprocess
 
             lock (HandlerTaskLock)
             {
-                void Internal()
+                void Core()
                 {
                     lock (HandlerLock)
                     {
@@ -257,7 +257,7 @@ namespace NetExtender.Types.Interprocess
                     }
                 }
 
-                Task task = Task.Run(Internal);
+                Task task = Task.Run(Core);
                 List<Task> tasks = HandlerTasks.Where(item => item.Status == TaskStatus.Running).ToList();
                 tasks.Add(task);
 

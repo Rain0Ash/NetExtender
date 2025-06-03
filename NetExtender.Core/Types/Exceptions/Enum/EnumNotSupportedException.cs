@@ -192,13 +192,13 @@ namespace NetExtender.Types.Exceptions
             }
 
             public Exception(T value, String? message)
-                : base(message ?? $"Specified value '{value}' of enum type '{typeof(T)}' is not supported.")
+                : base(message ?? $"Specified value '{value}' of enum type '{typeof(T).Name}' is not supported.")
             {
                 Value = value;
             }
 
             public Exception(T value, String? message, System.Exception? exception)
-                : base(message ?? $"Specified value '{value}' of enum type '{typeof(T)}' is not supported.", exception)
+                : base(message ?? $"Specified value '{value}' of enum type '{typeof(T).Name}' is not supported.", exception)
             {
                 Value = value;
             }

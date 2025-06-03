@@ -1,3 +1,6 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
@@ -53,7 +56,7 @@ namespace NetExtender.Types.Network
                     case ExceptionHandlerAction.Rethrow:
                         throw;
                     default:
-                        throw new EnumUndefinedOrNotSupportedThrowableException<ExceptionHandlerAction>(action, nameof(action), null);
+                        throw new EnumUndefinedOrNotSupportedException<ExceptionHandlerAction>(action, nameof(action), null);
                 }
             }
             catch (MediaTypeNotSupportedException media)
@@ -78,7 +81,7 @@ namespace NetExtender.Types.Network
                     case ExceptionHandlerAction.Rethrow:
                         throw;
                     default:
-                        throw new EnumUndefinedOrNotSupportedThrowableException<ExceptionHandlerAction>(action, nameof(action), null);
+                        throw new EnumUndefinedOrNotSupportedException<ExceptionHandlerAction>(action, nameof(action), null);
                 }
             }
             catch (HttpRequestException exception) when (exception.IsSocketException(out SocketException? socket))
@@ -104,7 +107,7 @@ namespace NetExtender.Types.Network
                     case ExceptionHandlerAction.Rethrow:
                         throw;
                     default:
-                        throw new EnumUndefinedOrNotSupportedThrowableException<ExceptionHandlerAction>(action, nameof(action), null);
+                        throw new EnumUndefinedOrNotSupportedException<ExceptionHandlerAction>(action, nameof(action), null);
                 }
             }
             catch (HttpRequestException exception) when (exception.IsIOException(out IOException? io))
@@ -130,7 +133,7 @@ namespace NetExtender.Types.Network
                     case ExceptionHandlerAction.Rethrow:
                         throw;
                     default:
-                        throw new EnumUndefinedOrNotSupportedThrowableException<ExceptionHandlerAction>(action, nameof(action), null);
+                        throw new EnumUndefinedOrNotSupportedException<ExceptionHandlerAction>(action, nameof(action), null);
                 }
             }
             catch (HttpRequestException exception)
@@ -155,7 +158,7 @@ namespace NetExtender.Types.Network
                     case ExceptionHandlerAction.Rethrow:
                         throw;
                     default:
-                        throw new EnumUndefinedOrNotSupportedThrowableException<ExceptionHandlerAction>(action, nameof(action), null);
+                        throw new EnumUndefinedOrNotSupportedException<ExceptionHandlerAction>(action, nameof(action), null);
                 }
             }
             catch (Exception exception)
@@ -173,7 +176,7 @@ namespace NetExtender.Types.Network
                     case ExceptionHandlerAction.Rethrow:
                         throw;
                     default:
-                        throw new EnumUndefinedOrNotSupportedThrowableException<ExceptionHandlerAction>(action, nameof(action), null);
+                        throw new EnumUndefinedOrNotSupportedException<ExceptionHandlerAction>(action, nameof(action), null);
                 }
             }
             finally
@@ -214,7 +217,7 @@ namespace NetExtender.Types.Network
                     case ExceptionHandlerAction.Rethrow:
                         throw;
                     default:
-                        throw new EnumUndefinedOrNotSupportedThrowableException<ExceptionHandlerAction>(action, nameof(action), null);
+                        throw new EnumUndefinedOrNotSupportedException<ExceptionHandlerAction>(action, nameof(action), null);
                 }
             }
             catch (MediaTypeNotSupportedException media)
@@ -238,7 +241,7 @@ namespace NetExtender.Types.Network
                     case ExceptionHandlerAction.Rethrow:
                         throw;
                     default:
-                        throw new EnumUndefinedOrNotSupportedThrowableException<ExceptionHandlerAction>(action, nameof(action), null);
+                        throw new EnumUndefinedOrNotSupportedException<ExceptionHandlerAction>(action, nameof(action), null);
                 }
             }
             catch (HttpRequestException exception) when (exception.IsSocketException(out SocketException? socket))
@@ -263,7 +266,7 @@ namespace NetExtender.Types.Network
                     case ExceptionHandlerAction.Rethrow:
                         throw;
                     default:
-                        throw new EnumUndefinedOrNotSupportedThrowableException<ExceptionHandlerAction>(action, nameof(action), null);
+                        throw new EnumUndefinedOrNotSupportedException<ExceptionHandlerAction>(action, nameof(action), null);
                 }
             }
             catch (HttpRequestException exception) when (exception.IsIOException(out IOException? io))
@@ -288,7 +291,7 @@ namespace NetExtender.Types.Network
                     case ExceptionHandlerAction.Rethrow:
                         throw;
                     default:
-                        throw new EnumUndefinedOrNotSupportedThrowableException<ExceptionHandlerAction>(action, nameof(action), null);
+                        throw new EnumUndefinedOrNotSupportedException<ExceptionHandlerAction>(action, nameof(action), null);
                 }
             }
             catch (HttpRequestException exception)
@@ -312,7 +315,7 @@ namespace NetExtender.Types.Network
                     case ExceptionHandlerAction.Rethrow:
                         throw;
                     default:
-                        throw new EnumUndefinedOrNotSupportedThrowableException<ExceptionHandlerAction>(action, nameof(action), null);
+                        throw new EnumUndefinedOrNotSupportedException<ExceptionHandlerAction>(action, nameof(action), null);
                 }
             }
             catch (JsonException exception)
@@ -336,7 +339,7 @@ namespace NetExtender.Types.Network
                     case ExceptionHandlerAction.Rethrow:
                         throw;
                     default:
-                        throw new EnumUndefinedOrNotSupportedThrowableException<ExceptionHandlerAction>(action, nameof(action), null);
+                        throw new EnumUndefinedOrNotSupportedException<ExceptionHandlerAction>(action, nameof(action), null);
                 }
             }
             catch (Exception exception)
@@ -353,7 +356,7 @@ namespace NetExtender.Types.Network
                     case ExceptionHandlerAction.Rethrow:
                         throw;
                     default:
-                        throw new EnumUndefinedOrNotSupportedThrowableException<ExceptionHandlerAction>(action, nameof(action), null);
+                        throw new EnumUndefinedOrNotSupportedException<ExceptionHandlerAction>(action, nameof(action), null);
                 }
             }
             finally

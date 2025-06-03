@@ -215,6 +215,19 @@ namespace NetExtender.Utilities.Network
             client.Dispose();
             throw new ArgumentException("Invalid user agent", nameof(agent));
         }
+
+        [return: NotNullIfNotNull("handler")]
+        public static T? SetNoCertificate<T>(this T? handler) where T : HttpClientHandler
+        {
+            if (handler is null)
+            {
+                return null;
+            }
+            
+            handler.ClientCertificateOptions = ClientCertificateOption.Manual;
+            handler.ServerCertificateCustomValidationCallback = (_, _, _, _) => true;
+            return handler;
+        }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<HttpResponseMessage> PostAsync<T>(this HttpClient client, String requestUri, T value, MediaTypeFormatter formatter)

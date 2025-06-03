@@ -54,9 +54,9 @@ namespace NetExtender.Types.Collections
             throw new NotSupportedException();
         }
 
-        public void CopyTo(T[] array, Int32 arrayIndex)
+        public void CopyTo(T[] array, Int32 index)
         {
-            Collection.CopyTo(array, arrayIndex);
+            Collection.CopyTo(array, index);
         }
 
         public IEnumerator<T> GetEnumerator()

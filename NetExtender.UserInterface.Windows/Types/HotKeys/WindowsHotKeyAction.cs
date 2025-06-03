@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Runtime.CompilerServices;
 using System.Text;
 using NetExtender.Types.HotKeys.Interfaces;
 using NetExtender.Utilities.UserInterface;
@@ -51,6 +52,7 @@ namespace NetExtender.Types.HotKeys
 
         public Boolean IsEmpty
         {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
                 return Key <= 0;
@@ -184,6 +186,7 @@ namespace NetExtender.Types.HotKeys
 
         public Boolean IsEmpty
         {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
                 return Key <= 0;

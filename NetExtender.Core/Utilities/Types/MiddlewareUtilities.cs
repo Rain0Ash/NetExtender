@@ -1,3 +1,6 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 using System;
 using NetExtender.Types.Middlewares;
 using NetExtender.Types.Middlewares.Interfaces;
@@ -12,12 +15,12 @@ namespace NetExtender.Utilities.Types
     
     public static partial class MiddlewareUtilities
     {
-        private static readonly IResettableLazy<IAssemblyMiddlewareManager> _manager = new ResettableLazy<IAssemblyMiddlewareManager>(Create);
+        private static readonly IResettableLazy<IAssemblyMiddlewareManager> manager = new ResettableLazy<IAssemblyMiddlewareManager>(Create);
         public static IAssemblyMiddlewareManager Manager
         {
             get
             {
-                return _manager.Value;
+                return manager.Value;
             }
         }
 
@@ -28,7 +31,7 @@ namespace NetExtender.Utilities.Types
         
         private static void OnAssemblyLoad(Object? sender, AssemblyLoadEventArgs args)
         {
-            if (_manager.IsValueCreated && _manager.Value is { IsScan: true } manager)
+            if (MiddlewareUtilities.manager.IsValueCreated && MiddlewareUtilities.manager.Value is { IsScan: true } manager)
             {
                 manager.Scan(args.LoadedAssembly);
             }
@@ -41,16 +44,16 @@ namespace NetExtender.Utilities.Types
         
         public static void Reset<T>() where T : class, IAssemblyMiddlewareManager, new()
         {
-            if (!_manager.IsValueCreated)
+            if (!manager.IsValueCreated)
             {
-                _manager.Reset(static () => new T());
+                manager.Reset(static () => new T());
                 return;
             }
             
-            _manager.Reset(() =>
+            manager.Reset(() =>
             {
                 T @new = new T();
-                @new.From(_manager.Value);
+                @new.From(manager.Value);
                 return @new;
             });
         }

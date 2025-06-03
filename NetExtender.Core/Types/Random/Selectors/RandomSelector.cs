@@ -70,7 +70,6 @@ namespace NetExtender.Types.Random
             }
 
             Int32 length = source.Count;
-
             Double sum = 0;
 
             for (Int32 i = 0; i < length; i++)

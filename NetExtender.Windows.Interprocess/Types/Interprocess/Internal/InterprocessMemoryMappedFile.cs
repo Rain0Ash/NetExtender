@@ -1,3 +1,6 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO.MemoryMappedFiles;
@@ -138,7 +141,7 @@ namespace NetExtender.Types.Interprocess
 
             try
             {
-                return InternalRead();
+                return ReadCore();
             }
             finally
             {
@@ -165,7 +168,7 @@ namespace NetExtender.Types.Interprocess
 
             try
             {
-                InternalWrite(data);
+                WriteCore(data);
             }
             finally
             {
@@ -189,7 +192,7 @@ namespace NetExtender.Types.Interprocess
 
             try
             {
-                InternalWrite(function(InternalRead()));
+                WriteCore(function(ReadCore()));
             }
             finally
             {
@@ -219,7 +222,7 @@ namespace NetExtender.Types.Interprocess
             }
         }
 
-        private Byte[] InternalRead()
+        private Byte[] ReadCore()
         {
             if (MappedFile is null)
             {
@@ -233,7 +236,7 @@ namespace NetExtender.Types.Interprocess
             return data;
         }
 
-        private void InternalWrite(Byte[] data)
+        private void WriteCore(Byte[] data)
         {
             if (data is null)
             {

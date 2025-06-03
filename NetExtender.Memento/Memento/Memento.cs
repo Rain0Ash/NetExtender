@@ -133,7 +133,7 @@ namespace NetExtender.Types.Memento
 
             if (builder is null)
             {
-                throw new InvalidOperationException($"Builder for type {typeof(TSource)} isn't set");
+                throw new InvalidOperationException($"Builder for type '{typeof(TSource).Name}' isn't set.");
             }
 
             IMementoItem<TSource> build = builder.Build(item);
@@ -209,9 +209,9 @@ namespace NetExtender.Types.Memento
             }
         }
 
-        public void CopyTo(IMementoItem<TSource>[] array, Int32 arrayIndex)
+        public void CopyTo(IMementoItem<TSource>[] array, Int32 index)
         {
-            Internal.CopyTo(array, arrayIndex);
+            Internal.CopyTo(array, index);
         }
 
         public IEnumerator<IMementoItem<TSource>> GetEnumerator()

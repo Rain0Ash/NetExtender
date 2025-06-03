@@ -10,7 +10,7 @@ using NetExtender.Types.Collections.Interfaces;
 
 namespace NetExtender.Types.Collections
 {
-    public class ItemObservableCollection<T> : SuppressObservableCollection<T>, IItemObservableCollection<T>
+    public class ItemObservableCollection<T> : SuppressObservableCollection<T>, IItemObservableCollection<T>, IReadOnlyItemObservableCollection<T> where T : class
     {
         public event PropertyChangingEventHandler? ItemChanging;
         public event PropertyChangedEventHandler? ItemChanged;
@@ -22,11 +22,19 @@ namespace NetExtender.Types.Collections
         public ItemObservableCollection(IEnumerable<T> collection)
             : base(collection)
         {
+            foreach (T item in this)
+            {
+                Initialize(item);
+            }
         }
 
         public ItemObservableCollection(List<T> list)
             : base(list)
         {
+            foreach (T item in this)
+            {
+                Initialize(item);
+            }
         }
 
         protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs args)
@@ -45,61 +53,132 @@ namespace NetExtender.Types.Collections
         {
             ItemChanged?.Invoke(sender, args);
         }
-        
-        protected virtual void Subscribe(IList? items)
+
+        private void Initialize(T? item)
+        {
+            if (item is null)
+            {
+                return;
+            }
+
+            if (item is INotifyPropertyChanging changing)
+            {
+                changing.PropertyChanging += ItemPropertyChanging;
+            }
+
+            if (item is INotifyPropertyChanged changed)
+            {
+                changed.PropertyChanged += ItemPropertyChanged;
+            }
+        }
+
+        protected virtual void Subscribe<TItem>(TItem? item)
+        {
+            if (item is null)
+            {
+                return;
+            }
+
+            if (item is INotifyPropertyChanging changing)
+            {
+                changing.PropertyChanging += ItemPropertyChanging;
+            }
+
+            if (item is INotifyPropertyChanged changed)
+            {
+                changed.PropertyChanged += ItemPropertyChanged;
+            }
+        }
+
+        protected void Subscribe(IList? items)
         {
             if (items is null)
             {
                 return;
             }
 
-            foreach (Object item in items)
+            lock (SyncRoot)
             {
-                if (item is INotifyPropertyChanging changing)
+                foreach (Object item in items)
                 {
-                    changing.PropertyChanging += ItemPropertyChanging;
-                }
-                
-                if (item is INotifyPropertyChanged changed)
-                {
-                    changed.PropertyChanged += ItemPropertyChanged;
+                    Subscribe(item);
                 }
             }
         }
         
-        protected virtual void Unsubscribe(IList? items)
+        protected void Subscribe(IList<T>? items)
         {
             if (items is null)
             {
                 return;
             }
 
-            foreach (Object item in items)
+            lock (SyncRoot)
             {
-                if (item is INotifyPropertyChanging changing)
+                foreach (T item in items)
                 {
-                    changing.PropertyChanging -= ItemPropertyChanging;
+                    Subscribe(item);
                 }
+            }
+        }
+        
+        protected virtual void Unsubscribe<TItem>(TItem? item)
+        {
+            if (item is null)
+            {
+                return;
+            }
 
-                if (item is INotifyPropertyChanged changed)
+            if (item is INotifyPropertyChanging changing)
+            {
+                changing.PropertyChanging -= ItemPropertyChanging;
+            }
+
+            if (item is INotifyPropertyChanged changed)
+            {
+                changed.PropertyChanged -= ItemPropertyChanged;
+            }
+        }
+        
+        protected void Unsubscribe(IList? items)
+        {
+            if (items is null)
+            {
+                return;
+            }
+
+            lock (SyncRoot)
+            {
+                foreach (Object item in items)
                 {
-                    changed.PropertyChanged -= ItemPropertyChanged;
+                    Unsubscribe(item);
+                }
+            }
+        }
+        
+        protected void Unsubscribe(IList<T>? items)
+        {
+            if (items is null)
+            {
+                return;
+            }
+
+            lock (SyncRoot)
+            {
+                foreach (T item in items)
+                {
+                    Unsubscribe(item);
                 }
             }
         }
 
         protected override void ClearItems()
         {
-            foreach(T item in this)
+            lock (SyncRoot)
             {
-                if (item is INotifyPropertyChanging changing)
+                foreach(T item in this)
                 {
-                    changing.PropertyChanging -= ItemPropertyChanging;
-                }
-                
-                if (item is INotifyPropertyChanged changed)
-                {
-                    changed.PropertyChanged -= ItemPropertyChanged;
+                    Unsubscribe(item);
                 }
             }
 

@@ -1,3 +1,6 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -17,12 +20,12 @@ namespace NetExtender.Types.Lists
     /// <inheritdoc cref="LinkedList{T}"/>
     public class LinkedList<T, TNode, TList> : LinkedContainer<TNode>, ILinkedList<T, TNode, TList>, IReadOnlyLinkedList<T, TNode, TList>, ISerializable, IDeserializationCallback where TNode : LinkedListNode<T, TNode, TList> where TList : LinkedList<T, TNode, TList>
     {
-        private static Func<TList?, T, TNode>? _factory;
+        private static Func<TList?, T, TNode>? factory;
         private static Func<TList?, T, TNode> Factory
         {
             get
             {
-                return _factory ??= ReflectionUtilities.New<TNode, TList?, T>();
+                return factory ??= ReflectionUtilities.New<TNode, TList?, T>();
             }
         }
         
@@ -488,11 +491,11 @@ namespace NetExtender.Types.Lists
             
             if (Head is null)
             {
-                InternalInsertNodeToEmptyList(@new);
+                InsertNodeToEmptyListCore(@new);
                 return @new;
             }
 
-            InternalInsertNodeBefore(Head, @new);
+            InsertNodeBeforeCore(Head, @new);
             return Head = @new;
         }
         
@@ -509,11 +512,11 @@ namespace NetExtender.Types.Lists
             
             if (Head is null)
             {
-                InternalInsertNodeToEmptyList(@new);
+                InsertNodeToEmptyListCore(@new);
                 return @new;
             }
             
-            InternalInsertNodeBefore(Head, @new);
+            InsertNodeBeforeCore(Head, @new);
             return @new;
         }
         
@@ -529,7 +532,7 @@ namespace NetExtender.Types.Lists
             ValidateNode(node);
 
             TNode @new = Create(node.List, value);
-            InternalInsertNodeBefore(node, @new);
+            InsertNodeBeforeCore(node, @new);
             return ReferenceEquals(Head, node) ? Head = @new : @new;
         }
         
@@ -538,7 +541,7 @@ namespace NetExtender.Types.Lists
         {
             ValidateNode(node);
             TNode @new = Create(node.List, value);
-            InternalInsertNodeBefore(node.Next, @new);
+            InsertNodeBeforeCore(node.Next, @new);
             return @new;
         }
         
@@ -550,7 +553,7 @@ namespace NetExtender.Types.Lists
                 return false;
             }
             
-            InternalRemoveNode(node);
+            RemoveNodeCore(node);
             return true;
         }
         

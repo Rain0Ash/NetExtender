@@ -4,11 +4,13 @@
 using System;
 using System.Data.Common;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Transactions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Storage;
 using NetExtender.EntityFrameworkCore;
 using NetExtender.EntityFrameworkCore.Entities.Auditing.Interfaces;
@@ -21,6 +23,28 @@ namespace NetExtender.Utilities.EntityFrameworkCore
 {
     public static class DbContextUtilities
     {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void UseLazyLoading(this DbContextOptionsBuilder builder)
+        {
+            UseLazyLoading(builder, null);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void UseLazyLoading(this DbContextOptionsBuilder builder, IInterceptor? interceptor)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            if (interceptor is not null)
+            {
+                builder.AddInterceptors(interceptor);
+            }
+
+            builder.UseLazyLoadingProxies();
+        }
+        
         public static DbConnectionStringBuilder GetConnectionStringBuilder(this DbConnection connection)
         {
             return GetConnectionStringBuilder<DbConnectionStringBuilder>(connection);
@@ -447,7 +471,7 @@ namespace NetExtender.Utilities.EntityFrameworkCore
 
             if (String.IsNullOrEmpty(editor))
             {
-                throw new ArgumentException("Value cannot be null or empty.", nameof(editor));
+                throw new ArgumentNullOrEmptyStringException(editor, nameof(editor));
             }
 
             EntityState state = entity.State;
@@ -536,7 +560,7 @@ namespace NetExtender.Utilities.EntityFrameworkCore
 
             if (String.IsNullOrEmpty(editor))
             {
-                throw new ArgumentException("Value cannot be null or empty.", nameof(editor));
+                throw new ArgumentNullOrEmptyStringException(editor, nameof(editor));
             }
 
             DateTime now = DateTime.UtcNow;

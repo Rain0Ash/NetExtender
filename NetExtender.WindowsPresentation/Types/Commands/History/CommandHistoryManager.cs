@@ -1,3 +1,6 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 using System;
 using System.Windows.Input;
 using NetExtender.Types.Concurrent.Dictionaries;
@@ -18,12 +21,12 @@ namespace NetExtender.WindowsPresentation.Types.Commands.History
 
     public class CommandHistoryManager<T, TId, TNode, TContainer> : ICommandHistoryIdManager<T, TId, TNode, TContainer> where T : class? where TId : struct where TNode : LinkedNode<TNode>, ICommandHistoryLink<TNode> where TContainer : CommandHistoryLinkedContainer<TNode>, new()
     {
-        private static Func<ICommand<T>, T, CommandHistoryEntryOptions, TNode>? _factory;
+        private static Func<ICommand<T>, T, CommandHistoryEntryOptions, TNode>? factory;
         protected static Func<ICommand<T>, T, CommandHistoryEntryOptions, TNode> Factory
         {
             get
             {
-                return _factory ??= ReflectionUtilities.New<TNode, ICommand<T>, T, CommandHistoryEntryOptions>();
+                return factory ??= ReflectionUtilities.New<TNode, ICommand<T>, T, CommandHistoryEntryOptions>();
             }
         }
 

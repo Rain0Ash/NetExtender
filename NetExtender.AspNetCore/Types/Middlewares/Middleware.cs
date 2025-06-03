@@ -22,6 +22,19 @@ namespace NetExtender.AspNetCore.Types.Middlewares
             Next.Invoke(context).ConfigureAwait(false);
         }
     }
+    
+    public abstract class InvokeMiddleware : IInvokeMiddleware
+    {
+        public virtual void Invoke(HttpContext context, RequestDelegate next)
+        {
+            if (next is null)
+            {
+                throw new ArgumentNullException(nameof(next));
+            }
+
+            next.Invoke(context).ConfigureAwait(false);
+        }
+    }
 
     public abstract class AsyncMiddleware : IAsyncMiddleware
     {
@@ -34,8 +47,20 @@ namespace NetExtender.AspNetCore.Types.Middlewares
 
         public virtual async Task InvokeAsync(HttpContext context)
         {
-            // ReSharper disable once AsyncConverter.AsyncAwaitMayBeElidedHighlighting
             await Next.Invoke(context).ConfigureAwait(false);
+        }
+    }
+    
+    public abstract class AsyncInvokeMiddleware : IAsyncInvokeMiddleware
+    {
+        public virtual async Task InvokeAsync(HttpContext context, RequestDelegate next)
+        {
+            if (next is null)
+            {
+                throw new ArgumentNullException(nameof(next));
+            }
+
+            await next.Invoke(context).ConfigureAwait(false);
         }
     }
 }

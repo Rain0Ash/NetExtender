@@ -1,3 +1,6 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -22,14 +25,14 @@ namespace NetExtender.Domains.AspNetCore.Builder.Middlewares
             Idempotency = MiddlewareIdempotencyMode.Argument;
         }
         
-        public override void Invoke(Object? sender, IServiceCollection collection)
+        public override void Invoke(Object? sender, IServiceCollection services)
         {
-            if (collection is null)
+            if (services is null)
             {
-                throw new ArgumentNullException(nameof(collection));
+                throw new ArgumentNullException(nameof(services));
             }
 
-            if (!Memorize(sender, collection))
+            if (!Memorize(sender, services))
             {
                 return;
             }
@@ -39,10 +42,10 @@ namespace NetExtender.Domains.AspNetCore.Builder.Middlewares
                 case IScannable { IsScan: false }:
                     return;
                 case IAspNetCoreBuilder builder:
-                    collection.InjectFrom(builder.ServiceHandler);
+                    services.InjectFrom(builder.ServiceHandler);
                     return;
                 default:
-                    collection.InjectFrom();
+                    services.InjectFrom();
                     return;
             }
         }
