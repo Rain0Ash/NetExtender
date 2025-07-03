@@ -3,26 +3,23 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.Serialization;
-using NetExtender.Types.Exceptions;
+using NetExtender.Utilities.Core;
+using NetExtender.Utilities.Types;
 
 namespace NetExtender.Utilities.Serialization
 {
     public static class SerializationUtilities
     {
-        private static Func<SerializationInfo, String, Type, Object?> GetValueNoThrow { get; }
+        [ReflectionSignature(typeof(SerializationInfo))]
+        private static Func<SerializationInfo, String, Type, Object?>? GetValueNoThrow { get; }
 
         static SerializationUtilities()
         {
-            const BindingFlags binding = BindingFlags.Instance | BindingFlags.NonPublic;
-            MethodInfo method = typeof(SerializationInfo).GetMethod(nameof(GetValueNoThrow), binding) ?? throw new NeverOperationException();
-            ParameterExpression instance = Expression.Parameter(typeof(SerializationInfo), nameof(instance));
-            ParameterExpression name = Expression.Parameter(typeof(String), nameof(name));
-            ParameterExpression type = Expression.Parameter(typeof(Type), nameof(type));
-            MethodCallExpression expression = Expression.Call(instance, method, name, type);
-            GetValueNoThrow = Expression.Lambda<Func<SerializationInfo, String, Type, Object?>>(expression, instance, name, type).Compile();
+            const BindingFlags binding = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+            MethodInfo? method = typeof(SerializationInfo).GetMethod(nameof(GetValueNoThrow), binding);
+            GetValueNoThrow = method?.CreateTargetDelegate<SerializationInfo, Func<SerializationInfo, String, Type, Object?>>();
         }
 
         public static void GetObjectData<T>(T value, SerializationInfo info, StreamingContext context) where T : ISerializable
@@ -87,7 +84,12 @@ namespace NetExtender.Utilities.Serialization
                 throw new ArgumentNullException(nameof(type));
             }
 
-            return (result = GetValueNoThrow(info, parameter, type)) is not null;
+            if (GetValueNoThrow is not { } handler)
+            {
+                throw new MissingMethodException(nameof(SerializationInfo), nameof(GetValueNoThrow));
+            }
+
+            return (result = handler(info, parameter, type)) is not null;
         }
 
         public static Boolean TryGetValue<T>(this SerializationInfo info, String parameter, [MaybeNullWhen(false)] out T result)

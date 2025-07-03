@@ -5,16 +5,21 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using NetExtender.Interfaces;
 using NetExtender.Interfaces.Notify;
+using NetExtender.Newtonsoft.Types.Monads;
 using NetExtender.Types.Monads.Interfaces;
 using NetExtender.Utilities.Serialization;
 using NetExtender.Utilities.Types;
+using Newtonsoft.Json;
 
-namespace NetExtender.Types.Monads.Default
+namespace NetExtender.Types.Monads
 {
     [Serializable]
+    [JsonConverter(typeof(NotifyMutableValueDefaultJsonConverter<>))]
+    [System.Text.Json.Serialization.JsonConverter(typeof(Serialization.Json.Monads.NotifyMutableValueDefaultJsonConverter<>))]
     public class NotifyMutableValueDefault<T> : MutableValueDefault<T>, ICloneable<NotifyMutableValueDefault<T>>
     {
         public static implicit operator NotifyMutableValueDefault<T>(T value)
@@ -30,10 +35,23 @@ namespace NetExtender.Types.Monads.Default
             }
             protected set
             {
+                Boolean has = HasValue;
+                Boolean empty = IsEmpty;
                 Boolean @default = IsDefault;
+
                 this.RaiseAndSetIfChanged(ref _value, value);
+
+                if (has != HasValue)
+                {
+                    this.RaiseProperty(nameof(HasValue));
+                }
+
+                if (empty != IsEmpty)
+                {
+                    this.RaiseProperty(nameof(IsEmpty));
+                }
                 
-                if (@default)
+                if (@default != IsDefault)
                 {
                     this.RaiseProperty(nameof(IsDefault));
                 }
@@ -49,10 +67,10 @@ namespace NetExtender.Types.Monads.Default
             set
             {
                 this.RaiseAndSetIfChanged(ref _default, value);
-                
-                if (IsDefault)
+
+                if (IsEmpty)
                 {
-                    this.RaiseProperty(nameof(Value));
+                    this.RaisePropertyChanged(nameof(Value));
                 }
             }
         }
@@ -62,13 +80,13 @@ namespace NetExtender.Types.Monads.Default
         {
         }
         
-        public NotifyMutableValueDefault(T value, T @default)
-            : base(value, @default)
+        public NotifyMutableValueDefault(T @default, T value)
+            : base(@default, value)
         {
         }
 
-        private protected NotifyMutableValueDefault(Maybe<T> value, T @default)
-            : base(value, @default)
+        private protected NotifyMutableValueDefault(T @default, Maybe<T> value)
+            : base(@default, value)
         {
         }
 
@@ -79,32 +97,53 @@ namespace NetExtender.Types.Monads.Default
         
         public override Boolean Reset()
         {
-            if (IsDefault)
+            if (IsEmpty)
             {
                 return false;
             }
-            
+
+            Boolean has = HasValue;
+            Boolean empty = IsEmpty;
+            Boolean @default = IsDefault;
+
             this.RaiseAndSetIfChanged(ref _value, default(Maybe<T>), nameof(Value));
-            this.RaiseProperty(nameof(IsDefault));
+
+            if (has != HasValue)
+            {
+                this.RaisePropertyChanged(nameof(HasValue));
+            }
+
+            if (empty != IsEmpty)
+            {
+                this.RaisePropertyChanged(nameof(IsEmpty));
+            }
+
+            if (@default != IsDefault)
+            {
+                this.RaisePropertyChanged(nameof(IsDefault));
+            }
+            
             return true;
         }
 
         public override NotifyMutableValueDefault<T> Clone()
         {
-            return new NotifyMutableValueDefault<T>(_value, _default);
+            return new NotifyMutableValueDefault<T>(_default, _value);
         }
     }
     
     [Serializable]
+    [JsonConverter(typeof(MutableValueDefaultJsonConverter<>))]
+    [System.Text.Json.Serialization.JsonConverter(typeof(Serialization.Json.Monads.MutableValueDefaultJsonConverter<>))]
     public class MutableValueDefault<T> : MutableDefault<T>, ICloneable<MutableValueDefault<T>>
     {
         public static implicit operator MutableValueDefault<T>(T value)
         {
             return new MutableValueDefault<T>(value);
         }
-        
+
         protected T _default;
-        public virtual T Default
+        public new virtual T Default
         {
             get
             {
@@ -115,19 +154,27 @@ namespace NetExtender.Types.Monads.Default
                 _default = value;
             }
         }
+
+        public sealed override Boolean IsDefault
+        {
+            get
+            {
+                return _value.IsEmpty || EqualityComparer<T>.Default.Equals(Default, Value);
+            }
+        }
         
         public MutableValueDefault(T @default)
         {
             _default = @default;
         }
         
-        public MutableValueDefault(T value, T @default)
+        public MutableValueDefault(T @default, T value)
             : base(value)
         {
             _default = @default;
         }
 
-        private protected MutableValueDefault(Maybe<T> value, T @default)
+        private protected MutableValueDefault(T @default, Maybe<T> value)
             : base(value)
         {
             _default = @default;
@@ -157,10 +204,12 @@ namespace NetExtender.Types.Monads.Default
 
         public override MutableValueDefault<T> Clone()
         {
-            return new MutableValueDefault<T>(_value, _default);
+            return new MutableValueDefault<T>(_default, _value);
         }
     }
-    
+
+    [JsonConverter(typeof(NotifyMutableDynamicDefaultJsonConverter<>))]
+    [System.Text.Json.Serialization.JsonConverter(typeof(Serialization.Json.Monads.NotifyMutableDynamicDefaultJsonConverter<>))]
     public class NotifyMutableDynamicDefault<T> : MutableDynamicDefault<T>, ICloneable<NotifyMutableDynamicDefault<T>>
     {
         public override T Value
@@ -171,12 +220,25 @@ namespace NetExtender.Types.Monads.Default
             }
             protected set
             {
+                Boolean has = HasValue;
+                Boolean empty = IsEmpty;
                 Boolean @default = IsDefault;
-                this.RaiseAndSetIfChanged(ref _value, value);
                 
-                if (@default)
+                this.RaiseAndSetIfChanged(ref _value, value);
+
+                if (has != HasValue)
                 {
-                    this.RaiseProperty(nameof(IsDefault));
+                    this.RaisePropertyChanged(nameof(HasValue));
+                }
+
+                if (empty != IsEmpty)
+                {
+                    this.RaisePropertyChanged(nameof(IsEmpty));
+                }
+
+                if (@default != IsDefault)
+                {
+                    this.RaisePropertyChanged(nameof(IsDefault));
                 }
             }
         }
@@ -195,26 +257,26 @@ namespace NetExtender.Types.Monads.Default
                 }
                 
                 this.RaiseAndSetIfChanged(ref _default, value);
-                
-                if (IsDefault)
+
+                if (IsEmpty)
                 {
-                    this.RaiseProperty(nameof(Value));
+                    this.RaisePropertyChanged(nameof(Value));
                 }
             }
         }
-        
+
         public NotifyMutableDynamicDefault(Func<T> @default)
             : base(@default)
         {
         }
         
-        public NotifyMutableDynamicDefault(T value, Func<T> @default)
-            : base(value, @default)
+        public NotifyMutableDynamicDefault(Func<T> @default, T value)
+            : base(@default, value)
         {
         }
 
-        private protected NotifyMutableDynamicDefault(Maybe<T> value, Func<T> @default)
-            : base(value, @default)
+        private protected NotifyMutableDynamicDefault(Func<T> @default, Maybe<T> value)
+            : base(@default, value)
         {
         }
 
@@ -225,26 +287,47 @@ namespace NetExtender.Types.Monads.Default
         
         public override Boolean Reset()
         {
-            if (IsDefault)
+            if (IsEmpty)
             {
                 return false;
             }
-            
+
+            Boolean has = HasValue;
+            Boolean empty = IsEmpty;
+            Boolean @default = IsDefault;
+
             this.RaiseAndSetIfChanged(ref _value, default(Maybe<T>), nameof(Value));
-            this.RaiseProperty(nameof(IsDefault));
+
+            if (has != HasValue)
+            {
+                this.RaiseProperty(nameof(HasValue));
+            }
+
+            if (empty != IsEmpty)
+            {
+                this.RaiseProperty(nameof(IsEmpty));
+            }
+
+            if (@default != IsDefault)
+            {
+                this.RaiseProperty(nameof(IsDefault));
+            }
+            
             return true;
         }
 
         public override NotifyMutableDynamicDefault<T> Clone()
         {
-            return new NotifyMutableDynamicDefault<T>(Maybe, Default);
+            return new NotifyMutableDynamicDefault<T>(Default, Maybe);
         }
     }
     
+    [JsonConverter(typeof(MutableDynamicDefaultJsonConverter<>))]
+    [System.Text.Json.Serialization.JsonConverter(typeof(Serialization.Json.Monads.MutableDynamicDefaultJsonConverter<>))]
     public class MutableDynamicDefault<T> : MutableDefault<T>, ICloneable<MutableDynamicDefault<T>>
     {
         protected Func<T> _default;
-        public virtual Func<T> Default
+        public new virtual Func<T> Default
         {
             get
             {
@@ -255,19 +338,27 @@ namespace NetExtender.Types.Monads.Default
                 _default = value ?? throw new ArgumentNullException(nameof(value));
             }
         }
-        
+
+        public sealed override Boolean IsDefault
+        {
+            get
+            {
+                return _value.IsEmpty || EqualityComparer<T>.Default.Equals(Default(), Value);
+            }
+        }
+
         public MutableDynamicDefault(Func<T> @default)
         {
             _default = @default ?? throw new ArgumentNullException(nameof(@default));
         }
         
-        public MutableDynamicDefault(T value, Func<T> @default)
+        public MutableDynamicDefault(Func<T> @default, T value)
             : base(value)
         {
             _default = @default ?? throw new ArgumentNullException(nameof(@default));
         }
 
-        private protected MutableDynamicDefault(Maybe<T> value, Func<T> @default)
+        private protected MutableDynamicDefault(Func<T> @default, Maybe<T> value)
             : base(value)
         {
             _default = @default ?? throw new ArgumentNullException(nameof(@default));
@@ -292,7 +383,7 @@ namespace NetExtender.Types.Monads.Default
 
         public override MutableDynamicDefault<T> Clone()
         {
-            return new MutableDynamicDefault<T>(_value, Default);
+            return new MutableDynamicDefault<T>(Default, _value);
         }
 
         MutableDynamicDefault<T> ICloneable<MutableDynamicDefault<T>>.Clone()
@@ -302,6 +393,8 @@ namespace NetExtender.Types.Monads.Default
     }
     
     [Serializable]
+    [JsonConverter(typeof(MutableDefaultJsonConverter<>))]
+    [System.Text.Json.Serialization.JsonConverter(typeof(Serialization.Json.Monads.MutableDefaultJsonConverter<>))]
     public abstract class MutableDefault<T> : IDefault<T>, IDefaultEquality<T, MutableDefault<T>>, ICloneable<MutableDefault<T>>, ISerializable, INotifyProperty
     {
         [return: NotNullIfNotNull("value")]
@@ -404,11 +497,23 @@ namespace NetExtender.Types.Monads.Default
         public event PropertyChangedEventHandler? PropertyChanged;
         
         private protected Maybe<T> _value;
-        protected Maybe<T> Maybe
+        protected internal Maybe<T> Maybe
         {
             get
             {
                 return _value;
+            }
+        }
+
+        public T Default
+        {
+            get
+            {
+                return GetDefault();
+            }
+            protected set
+            {
+                SetDefault(value);
             }
         }
         
@@ -423,14 +528,16 @@ namespace NetExtender.Types.Monads.Default
                 _value = value;
             }
         }
-        
-        public Boolean IsDefault
+
+        public Boolean HasValue
         {
             get
             {
-                return !_value.HasValue;
+                return !_value.IsEmpty;
             }
         }
+
+        public abstract Boolean IsDefault { get; }
 
         public Boolean IsEmpty
         {
@@ -458,7 +565,79 @@ namespace NetExtender.Types.Monads.Default
         {
             _value = info.GetBoolean(nameof(_value.HasValue)) ? info.GetValue<T>(nameof(_value.Value))! : default(Maybe<T>);
         }
-        
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static MutableDefault<T> Create(T @default)
+        {
+            return new MutableValueDefault<T>(@default);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static MutableDefault<T> CreateNotify(T @default)
+        {
+            return new NotifyMutableValueDefault<T>(@default);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static MutableDefault<T> Create(T @default, Boolean notify)
+        {
+            return notify ? CreateNotify(@default) : Create(@default);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static MutableDefault<T> Create(T @default, T value)
+        {
+            return new MutableValueDefault<T>(@default, value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static MutableDefault<T> CreateNotify(T @default, T value)
+        {
+            return new NotifyMutableValueDefault<T>(@default, value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static MutableDefault<T> Create(T @default, T value, Boolean notify)
+        {
+            return notify ? CreateNotify(@default, value) : Create(@default, value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static MutableDefault<T> Create(Func<T> @default)
+        {
+            return new MutableDynamicDefault<T>(@default);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static MutableDefault<T> CreateNotify(Func<T> @default)
+        {
+            return new NotifyMutableDynamicDefault<T>(@default);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static MutableDefault<T> Create(Func<T> @default, Boolean notify)
+        {
+            return notify ? CreateNotify(@default) : Create(@default);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static MutableDefault<T> Create(Func<T> @default, T value)
+        {
+            return new MutableDynamicDefault<T>(@default, value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static MutableDefault<T> CreateNotify(Func<T> @default, T value)
+        {
+            return new NotifyMutableDynamicDefault<T>(@default, value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static MutableDefault<T> Create(Func<T> @default, T value, Boolean notify)
+        {
+            return notify ? CreateNotify(@default, value) : Create(@default, value);
+        }
+
         public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue(nameof(_value.HasValue), _value.HasValue);
@@ -523,7 +702,7 @@ namespace NetExtender.Types.Monads.Default
         
         public virtual Boolean Reset()
         {
-            if (IsDefault)
+            if (IsEmpty)
             {
                 return false;
             }

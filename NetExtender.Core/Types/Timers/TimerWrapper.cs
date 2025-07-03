@@ -6,6 +6,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using System.Timers;
 using NetExtender.Types.Timers.Interfaces;
+using NetExtender.Types.Times;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Timers
@@ -26,12 +27,14 @@ namespace NetExtender.Types.Timers
 
         private Timer Timer { get; }
         public event TickHandler? Tick;
+        
+        private DateTimeProvider _provider = DateTimeProvider.Provider;
 
         public DateTime Now
         {
             get
             {
-                return Kind.Now();
+                return _provider.Now;
             }
         }
 
@@ -39,11 +42,11 @@ namespace NetExtender.Types.Timers
         {
             get
             {
-                return DateTimeKind.Local;
+                return _provider.Kind;
             }
             set
             {
-                throw new NotSupportedException();
+                _provider.Kind = value;
             }
         }
 
@@ -94,12 +97,21 @@ namespace NetExtender.Types.Timers
 
         private void OnTick(Object? sender, ElapsedEventArgs args)
         {
+            args.SetSignalTime(args.SignalTime.ToKind(Kind));
             Tick?.Invoke(sender, args);
         }
-        
+
         public Boolean TrySetKind(DateTimeKind kind)
         {
-            return false;
+            try
+            {
+                Kind = kind;
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
         public Boolean Change(TimeSpan dueTime, TimeSpan period)

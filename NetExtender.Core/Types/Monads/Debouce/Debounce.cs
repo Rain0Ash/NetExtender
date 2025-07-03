@@ -7,11 +7,14 @@ using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 using NetExtender.Interfaces;
 using NetExtender.Types.Monads.Interfaces;
+using NetExtender.Types.Times;
 using NetExtender.Utilities.Serialization;
 using NetExtender.Utilities.Types;
+using Newtonsoft.Json;
 
-namespace NetExtender.Types.Monads.Debouce
+namespace NetExtender.Types.Monads
 {
+    //TODO: json
     [Serializable]
     public readonly struct Debounce<T> : IEqualityStruct<Debounce<T>>, IDebounce<T>, IDebounceEquality<T, Debounce<T>>, ICloneable<Debounce<T>>, ISerializable
     {
@@ -115,6 +118,17 @@ namespace NetExtender.Types.Monads.Debouce
             return first.CompareTo(second) <= 0;
         }
 
+        public const DateTimeKind DefaultDateTimeKind = DateTimeKind.Utc;
+
+        private readonly DateTimeProvider _provider;
+        private DateTimeProvider Provider
+        {
+            get
+            {
+                return _provider ? _provider : DateTimeProvider.Utc.Provider;
+            }
+        }
+
         private readonly T _value;
         public T Value
         {
@@ -124,11 +138,19 @@ namespace NetExtender.Types.Monads.Debouce
             }
         }
 
+        private DateTime Now
+        {
+            get
+            {
+                return Provider.Now;
+            }
+        }
+
         public TimeSpan Time
         {
             get
             {
-                return DateTime.Now - SetTime;
+                return Now - SetTime;
             }
         }
         
@@ -146,7 +168,15 @@ namespace NetExtender.Types.Monads.Debouce
         }
         
         public DateTime SetTime { get; init; }
-        
+
+        public DateTimeKind TimeKind
+        {
+            get
+            {
+                return Provider.Kind;
+            }
+        }
+
         public Boolean IsDebounce
         {
             get
@@ -155,6 +185,8 @@ namespace NetExtender.Types.Monads.Debouce
             }
         }
 
+        [JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public Boolean IsEmpty
         {
             get
@@ -164,29 +196,53 @@ namespace NetExtender.Types.Monads.Debouce
         }
 
         public Debounce(TimeSpan delay)
+            : this(delay, DefaultDateTimeKind)
+        {
+        }
+
+        public Debounce(TimeSpan delay, DateTimeKind kind)
         {
             _delay = delay >= TimeSpan.Zero ? Normalize(delay) : throw new ArgumentOutOfRangeException(nameof(delay), delay, null);
+            _provider = new DateTimeProvider(kind);
             _value = default!;
             SetTime = default;
         }
         
         public Debounce(T value)
-            : this(value, TimeSpan.Zero)
+            : this(value, DefaultDateTimeKind)
+        {
+        }
+        
+        public Debounce(T value, DateTimeKind kind)
+            : this(value, TimeSpan.Zero, kind)
         {
         }
         
         public Debounce(T value, TimeSpan delay)
-            : this(delay)
+            : this(delay, DefaultDateTimeKind)
         {
-            _value = value;
-            SetTime = DateTime.Now;
         }
         
+        public Debounce(T value, TimeSpan delay, DateTimeKind kind)
+            : this(delay)
+        {
+            _provider = new DateTimeProvider(kind);
+            _value = value;
+            SetTime = Now;
+        }
+
         private Debounce(SerializationInfo info, StreamingContext context)
             : this(info.GetValue<TimeSpan>(nameof(Delay)))
         {
             _value = info.GetValue<T>(nameof(Value));
             SetTime = info.GetDateTime(nameof(SetTime));
+            _provider = (DateTimeKind) info.GetByte(nameof(TimeKind)) switch
+            {
+                DateTimeKind.Unspecified => new DateTimeProvider(DateTimeKind.Unspecified),
+                DateTimeKind.Utc => new DateTimeProvider(DateTimeKind.Utc),
+                DateTimeKind.Local => new DateTimeProvider(DateTimeKind.Local),
+                var kind => throw new SerializationException($"Debounce time kind '{kind}' is not supported.")
+            };
         }
         
         public void GetObjectData(SerializationInfo info, StreamingContext context)
@@ -194,6 +250,7 @@ namespace NetExtender.Types.Monads.Debouce
             info.AddValue(nameof(Value), _value);
             info.AddValue(nameof(Delay), _delay);
             info.AddValue(nameof(SetTime), SetTime);
+            info.AddValue(nameof(TimeKind), (Byte) TimeKind);
         }
         
         private static TimeSpan Normalize(TimeSpan value)
@@ -232,7 +289,7 @@ namespace NetExtender.Types.Monads.Debouce
                 return false;
             }
             
-            result = new Debounce<T>(value, Delay) { SetTime = DateTime.Now };
+            result = new Debounce<T>(value, Delay) { SetTime = Now };
             return true;
         }
         
@@ -263,7 +320,7 @@ namespace NetExtender.Types.Monads.Debouce
                 return false;
             }
             
-            time = DateTime.Now;
+            time = Now;
             result = new Debounce<T>(value, Delay) { SetTime = time };
             return true;
         }

@@ -5,14 +5,18 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using NetExtender.Interfaces;
+using NetExtender.Newtonsoft.Types.Monads.Results;
 using NetExtender.Types.Exceptions;
 using NetExtender.Types.Monads.Interfaces;
 using NetExtender.Utilities.Serialization;
 using NetExtender.Utilities.Types;
+using Newtonsoft.Json;
 
 namespace NetExtender.Types.Monads.Result
 {
     [Serializable]
+    [JsonConverter(typeof(ResultJsonConverter<>))]
+    [System.Text.Json.Serialization.JsonConverter(typeof(NetExtender.Serialization.Json.Monads.ResultJsonConverter<>))]
     public readonly struct Result<T> : IEqualityStruct<Result<T>>, IResult<T, Exception>, IResultEquality<T, Result<T>>, IResultEquality<T, Result<T, Exception>>, IResultEquality<T, BusinessResult<T>>, ICloneable<Result<T>>, ISerializable
     {
         public static implicit operator Result<T, Exception>(Result<T> value)
@@ -166,6 +170,8 @@ namespace NetExtender.Types.Monads.Result
             }
         }
 
+        [JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public Boolean IsEmpty
         {
             get
@@ -454,8 +460,10 @@ namespace NetExtender.Types.Monads.Result
             return Internal.GetString(escape, format, provider);
         }
     }
-    
+
     [Serializable]
+    [JsonConverter(typeof(ResultJsonConverter<,>))]
+    [System.Text.Json.Serialization.JsonConverter(typeof(NetExtender.Serialization.Json.Monads.ResultJsonConverter<,>))]
     public readonly struct Result<T, TException> : IEqualityStruct<Result<T, TException>>, IResult<T, TException>, IResultEquality<T, Result<T>>, IResultEquality<T, Result<T, TException>>, IResultEquality<T, BusinessResult<T>>, ICloneable<Result<T, TException>>, ISerializable where TException : Exception
     {
         public static implicit operator Result<T>(Result<T, TException> value)
@@ -618,6 +626,8 @@ namespace NetExtender.Types.Monads.Result
             }
         }
 
+        [JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public Boolean IsEmpty
         {
             get

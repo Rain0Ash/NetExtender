@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using NetExtender.Interfaces;
-using NetExtender.NewtonSoft.Types.Monads;
+using NetExtender.Newtonsoft.Types.Monads;
 using NetExtender.Types.Monads.Interfaces;
 using NetExtender.Utilities.Serialization;
 using NetExtender.Utilities.Types;
@@ -15,6 +15,7 @@ namespace NetExtender.Types.Monads
 {
     [Serializable]
     [JsonConverter(typeof(MaybeJsonConverter<>))]
+    [System.Text.Json.Serialization.JsonConverter(typeof(NetExtender.Serialization.Json.Monads.MaybeJsonConverter<>))]
     public readonly struct Maybe<T> : IEqualityStruct<Maybe<T>>, IMaybe<T>, IMaybeEquality<T, Maybe<T>>, IMaybeEquality<T, NullMaybe<T>>, ICloneable<Maybe<T>>, ISerializable
     {
         public static implicit operator Boolean(Maybe<T> value)
@@ -186,6 +187,8 @@ namespace NetExtender.Types.Monads
             }
         }
 
+        [JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public Boolean IsEmpty
         {
             get

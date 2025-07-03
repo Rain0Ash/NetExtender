@@ -3,8 +3,10 @@
 
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
@@ -189,8 +191,7 @@ namespace NetExtender.Utilities.Types
             return CreateGetDelegate(field, type, null);
         }
 
-        public static TDelegate CreateGetDelegate<TDelegate>(this FieldInfo field, Object? target)
-            where TDelegate : Delegate
+        public static TDelegate CreateGetDelegate<TDelegate>(this FieldInfo field, Object? target) where TDelegate : Delegate
         {
             return (TDelegate) CreateGetDelegate(field, typeof(TDelegate), target);
         }
@@ -401,6 +402,28 @@ namespace NetExtender.Utilities.Types
             }
 
             return (TDelegate) method.CreateDelegate(typeof(TDelegate), target);
+        }
+
+        public static TDelegate CreateTargetDelegate<TTarget, TDelegate>(this MethodInfo method) where TDelegate : Delegate
+        {
+            if (method is null)
+            {
+                throw new ArgumentNullException(nameof(method));
+            }
+
+            ParameterExpression instance = Expression.Parameter(typeof(TTarget), nameof(instance));
+            ParameterInfo[] parameters = method.GetParameters();
+            ParameterExpression[] arguments = new ParameterExpression[parameters.Length + 1];
+            arguments[0] = instance;
+
+            Int32 i = 1;
+            foreach (ParameterInfo parameter in parameters)
+            {
+                arguments[i++] = Expression.Parameter(parameter.ParameterType, parameter.Name);
+            }
+            
+            MethodCallExpression call = Expression.Call(instance, method, arguments[1..]);
+            return Expression.Lambda<TDelegate>(call, arguments).Compile();
         }
 
         private static ConcurrentDictionary<FieldInfo, DynamicMethod> DynamicGetMethods { get; } = new ConcurrentDictionary<FieldInfo, DynamicMethod>();

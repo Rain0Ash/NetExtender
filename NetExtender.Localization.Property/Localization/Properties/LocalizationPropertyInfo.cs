@@ -110,7 +110,7 @@ namespace NetExtender.Localization.Properties
         {
             String? key = Key;
             ImmutableArray<String> sections = key is not null ? Sections.Add(key) : Sections;
-            return String.Join(".", sections.Select(section => section.ToUpperInvariant()));
+            return String.Join('.', sections.Select(static section => section.ToUpperInvariant()));
         }
 
         public abstract override String? ToString();

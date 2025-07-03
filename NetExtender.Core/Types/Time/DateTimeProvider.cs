@@ -23,6 +23,11 @@ namespace NetExtender.Types.Times
             }
         }
 
+        public static implicit operator Boolean(DateTimeProvider value)
+        {
+            return !value.IsEmpty;
+        }
+
         public static DateTimeProvider Provider
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]

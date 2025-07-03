@@ -12,8 +12,9 @@ using NetExtender.Interfaces.Notify;
 using NetExtender.Types.Monads.Interfaces;
 using NetExtender.Utilities.Serialization;
 using NetExtender.Utilities.Types;
+using Newtonsoft.Json;
 
-namespace NetExtender.Types.Monads.Debouce
+namespace NetExtender.Types.Monads
 {
     [Serializable]
     public class NotifyDebounce<T> : MutableDebounce<T>
@@ -36,7 +37,7 @@ namespace NetExtender.Types.Monads.Debouce
             }
         }
         
-        protected override Debounce<T> Internal
+        protected internal override Debounce<T> Internal
         {
             get
             {
@@ -299,7 +300,7 @@ namespace NetExtender.Types.Monads.Debouce
         protected Guid Id { get; } = Guid.NewGuid();
         
         private Debounce<T> _internal;
-        protected virtual Debounce<T> Internal
+        protected internal virtual Debounce<T> Internal
         {
             get
             {
@@ -354,6 +355,14 @@ namespace NetExtender.Types.Monads.Debouce
             }
         }
 
+        public DateTimeKind TimeKind
+        {
+            get
+            {
+                return _internal.TimeKind;
+            }
+        }
+
         public Boolean IsDebounce
         {
             get
@@ -362,6 +371,8 @@ namespace NetExtender.Types.Monads.Debouce
             }
         }
         
+        [JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public Boolean IsEmpty
         {
             get

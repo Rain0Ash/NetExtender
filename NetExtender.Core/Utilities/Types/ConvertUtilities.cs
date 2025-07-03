@@ -94,7 +94,7 @@ namespace NetExtender.Utilities.Types
             }
             catch (Exception)
             {
-                result = default;
+                result = null;
                 return false;
             }
         }
@@ -114,7 +114,7 @@ namespace NetExtender.Utilities.Types
             }
             catch (Exception)
             {
-                result = default;
+                result = null;
                 return false;
             }
         }
@@ -129,7 +129,7 @@ namespace NetExtender.Utilities.Types
             }
             catch (Exception)
             {
-                result = default;
+                result = null;
                 return false;
             }
         }
@@ -144,7 +144,7 @@ namespace NetExtender.Utilities.Types
             }
             catch (Exception)
             {
-                result = default;
+                result = null;
                 return false;
             }
         }
@@ -792,7 +792,8 @@ namespace NetExtender.Utilities.Types
                 DateTime number => number.GetString(provider),
                 TimeSpan number => number.GetString(provider),
                 Enum number => number.GetString(escape, provider),
-                Expression expression => expression.GetString(provider),
+                Exception exception => exception.GetString(escape, provider),
+                Expression expression => expression.GetString(escape, provider),
                 IReadableExpression expression => expression.ToString(),
                 IString @string => escape.HasFlag(EscapeType.Full) ? $"\"{@string.ToString(provider)}\"" : @string.ToString(provider),
                 ITuple tuple => tuple.GetString(escape, provider),
@@ -861,7 +862,8 @@ namespace NetExtender.Utilities.Types
                 DateTime number => number.GetString(format, provider),
                 TimeSpan number => number.GetString(format, provider),
                 Enum number => number.GetString(escape, format, provider),
-                Expression expression => expression.GetString(format, provider),
+                Exception exception => exception.GetString(escape, format, provider),
+                Expression expression => expression.GetString(escape, format, provider),
                 IReadableExpression expression => expression.ToString(),
                 IString @string => escape.HasFlag(EscapeType.Full) ? $"\"{@string.ToString(format, provider)}\"" : @string.ToString(format, provider),
                 ITuple tuple => tuple.GetString(escape, format, provider),
@@ -889,7 +891,7 @@ namespace NetExtender.Utilities.Types
         {
             if (value is null)
             {
-                result = default;
+                result = null;
                 return false;
             }
 
@@ -911,7 +913,7 @@ namespace NetExtender.Utilities.Types
                 type = type.BaseType;
             }
 
-            result = default;
+            result = null;
             return false;
         }
 
@@ -1793,11 +1795,152 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static String GetString(this Expression? value)
+        [return: NotNullIfNotNull("value")]
+        public static String? GetString(this Exception? value)
+        {
+            return GetString(value, CultureInfo.InvariantCulture);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [return: NotNullIfNotNull("value")]
+        public static String? GetString(this Exception? value, String? format)
+        {
+            return GetString(value, format, CultureInfo.InvariantCulture);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [return: NotNullIfNotNull("value")]
+        public static String? GetString(this Exception? value, IFormatProvider? provider)
+        {
+            return GetString(value, DefaultEscapeType, provider);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [return: NotNullIfNotNull("value")]
+        public static String? GetString(this Exception? value, String? format, IFormatProvider? provider)
+        {
+            return GetString(value, DefaultEscapeType, format, provider);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [return: NotNullIfNotNull("value")]
+        public static String? GetString(this Exception? value, EscapeType escape)
+        {
+            return GetString(value, escape, CultureInfo.InvariantCulture);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [return: NotNullIfNotNull("value")]
+        public static String? GetString(this Exception? value, EscapeType escape, String? format)
+        {
+            return GetString(value, escape, format, CultureInfo.InvariantCulture);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [return: NotNullIfNotNull("value")]
+        public static String? GetString(this Exception? value, EscapeType escape, IFormatProvider? provider)
+        {
+            return GetString(value, escape, null, provider);
+        }
+
+        [return: NotNullIfNotNull("value")]
+        public static String? GetString(this Exception? value, EscapeType escape, String? format, IFormatProvider? provider)
         {
             if (value is null)
             {
-                return StringUtilities.NullString;
+                return GetString((String?) null, escape, provider);
+            }
+            
+            StringBuilder builder = new StringBuilder();
+            FormatException(builder, value, escape, format, provider, 0);
+            return builder.ToString();
+        }
+
+        // ReSharper disable once CognitiveComplexity
+        private static void FormatException(StringBuilder builder, Exception exception, EscapeType escape, String? format, IFormatProvider? provider, Int32 depth)
+        {
+            provider ??= CultureInfo.InvariantCulture;
+            
+            start:
+            if (depth > 0)
+            {
+                builder.AppendLine();
+                builder.AppendLine("--- Inner Exception ---");
+            }
+
+            builder.Append(exception.GetType().FullName);
+            builder.Append(": ");
+            builder.AppendLine(exception.Message);
+            builder.Append($"{nameof(Exception.HResult)}: ");
+            builder.AppendLine(exception.HResult.ToString(provider));
+
+            if (exception.Data.Count > 0)
+            {
+                builder.AppendLine($"{nameof(Exception.Data)}:");
+                foreach (Object? key in exception.Data.Keys)
+                {
+                    builder.Append('\t');
+                    builder.Append(key);
+                    builder.Append(": ");
+                    builder.AppendLine(exception.Data[key]?.GetString(escape, provider));
+                }
+            }
+            
+            builder.AppendLine(exception.ToString());
+
+            if (exception is AggregateException aggregate)
+            {
+                foreach (Exception inner in aggregate.InnerExceptions)
+                {
+                    FormatException(builder, inner, escape, format, provider, depth + 1);
+                }
+                
+                return;
+            }
+
+            if (exception.InnerException is not null)
+            {
+                depth++;
+                exception = exception.InnerException;
+                goto start;
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [return: NotNullIfNotNull("value")]
+        public static String? GetString(this Expression? value)
+        {
+            return GetString(value, CultureInfo.InvariantCulture);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [return: NotNullIfNotNull("value")]
+        public static String? GetString(this Expression? value, String? format)
+        {
+            return GetString(value, format, CultureInfo.InvariantCulture);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [return: NotNullIfNotNull("value")]
+        public static String? GetString(this Expression? value, IFormatProvider? provider)
+        {
+            return GetString(value, DefaultEscapeType, provider);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [return: NotNullIfNotNull("value")]
+        public static String? GetString(this Expression? value, String? format, IFormatProvider? provider)
+        {
+            return GetString(value, DefaultEscapeType, format, provider);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [return: NotNullIfNotNull("value")]
+        public static String? GetString(this Expression? value, EscapeType escape)
+        {
+            if (value is null)
+            {
+                return GetString((String?) null, escape);
             }
             
             try
@@ -1811,21 +1954,24 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static String GetString(this Expression? value, String? format)
+        [return: NotNullIfNotNull("value")]
+        public static String? GetString(this Expression? value, EscapeType escape, String? format)
         {
-            return GetString(value, format, CultureInfo.InvariantCulture);
+            return GetString(value, escape, format, CultureInfo.InvariantCulture);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static String GetString(this Expression? value, IFormatProvider? provider)
+        [return: NotNullIfNotNull("value")]
+        public static String? GetString(this Expression? value, EscapeType escape, IFormatProvider? provider)
         {
-            return GetString(value);
+            return GetString(value, escape);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static String GetString(this Expression? value, String? format, IFormatProvider? provider)
+        [return: NotNullIfNotNull("value")]
+        public static String? GetString(this Expression? value, EscapeType escape, String? format, IFormatProvider? provider)
         {
-            return GetString(value);
+            return GetString(value, escape);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -2202,7 +2348,8 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static String GetString(this String value, EscapeType escape)
+        [return: NotNullIfNotNull("value")]
+        public static String? GetString(this String? value, EscapeType escape)
         {
             return escape.HasFlag(EscapeType.Null) ? GetStringEscape(value) : GetString(value);
         }

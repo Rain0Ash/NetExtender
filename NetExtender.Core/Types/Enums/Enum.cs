@@ -7,7 +7,7 @@ using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Text;
-using NetExtender.NewtonSoft.Types.Enums;
+using NetExtender.Newtonsoft.Types.Enums;
 using NetExtender.Types.Culture;
 using NetExtender.Types.Enums.Interfaces;
 using NetExtender.Types.Lists.Interfaces;

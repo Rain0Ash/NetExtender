@@ -25,7 +25,7 @@ namespace NetExtender.Types.Assemblies
             : this(Guid(), access)
         {
         }
-        
+
         public DynamicInitializerAssembly(String name, AssemblyBuilderAccess access)
         {
             if (name is null)
@@ -43,7 +43,7 @@ namespace NetExtender.Types.Assemblies
             Assembly = assembly;
             Module = module;
         }
-        
+
         internal static String Guid()
         {
             return System.Guid.NewGuid().ToString();

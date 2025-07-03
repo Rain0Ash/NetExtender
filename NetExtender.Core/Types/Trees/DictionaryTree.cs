@@ -8,7 +8,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
-using NetExtender.NewtonSoft.Types.Trees;
+using NetExtender.Newtonsoft.Types.Trees;
 using NetExtender.Types.Trees.Interfaces;
 using NetExtender.Utilities.Types;
 using Newtonsoft.Json;

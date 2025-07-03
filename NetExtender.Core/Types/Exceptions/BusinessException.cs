@@ -2,13 +2,17 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
+using NetExtender.Types.Dictionaries;
 using NetExtender.Types.Exceptions.Interfaces;
 using NetExtender.Utilities.Serialization;
+using NetExtender.Utilities.Types;
 using Newtonsoft.Json;
 
 namespace NetExtender.Types.Exceptions
@@ -239,7 +243,7 @@ namespace NetExtender.Types.Exceptions
 
         protected override BusinessInfo ToBusinessInfo(BusinessException.BusinessInfo? inner, Boolean include)
         {
-            return new BusinessInfo(Message, Name, Code, Description, Status, inner, ToBusinessInfoReason(include)) { Business = true, Include = include };
+            return new BusinessInfo(Id, Message, Name, Code, Description, Status, inner, ToBusinessInfoReason(include)) { Business = true, Include = include, Data = Data };
         }
 
 #if NET7_0_OR_GREATER
@@ -247,9 +251,9 @@ namespace NetExtender.Types.Exceptions
 #endif
         public new record BusinessInfo : BusinessException.BusinessInfo
         {
+            [JsonProperty(NullValueHandling = NullValueHandling.Include, DefaultValueHandling = DefaultValueHandling.Include, Order = 3)]
+            [System.Text.Json.Serialization.JsonPropertyOrder(3)]
             [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.Never)]
-            [System.Text.Json.Serialization.JsonPropertyOrder(2)]
-            [JsonProperty(NullValueHandling = NullValueHandling.Include, Order = 2)]
             public T Code { get; init; }
 
             protected BusinessInfo()
@@ -262,14 +266,14 @@ namespace NetExtender.Types.Exceptions
                 Code = code;
             }
 
-            public BusinessInfo(String? message, String? name, T code, String? description, HttpStatusCode? status, ImmutableList<BusinessException.BusinessInfo>? reason)
-                : base(message, name, description, status, reason)
+            public BusinessInfo(Guid id, String? message, String? name, T code, String? description, HttpStatusCode? status, ImmutableList<BusinessException.BusinessInfo>? reason)
+                : base(id, message, name, description, status, reason)
             {
                 Code = code;
             }
 
-            public BusinessInfo(String? message, String? name, T code, String? description, HttpStatusCode? status, BusinessException.BusinessInfo? inner, ImmutableList<BusinessException.BusinessInfo>? reason)
-                : base(message, name, description, status, inner, reason)
+            public BusinessInfo(Guid id, String? message, String? name, T code, String? description, HttpStatusCode? status, BusinessException.BusinessInfo? inner, ImmutableList<BusinessException.BusinessInfo>? reason)
+                : base(id, message, name, description, status, inner, reason)
             {
                 Code = code;
             }
@@ -493,6 +497,7 @@ namespace NetExtender.Types.Exceptions
             return Create(value.Status, value.Message, value.Description, value.Exception);
         }
 
+        public Guid Id { get; init; } = DateTime.UtcNow.NewGuid();
         public String? Name { get; init; }
         public String? Description { get; init; }
         public HttpStatusCode? Status { get; init; }
@@ -753,7 +758,7 @@ namespace NetExtender.Types.Exceptions
 
                 if (exception is not BusinessException business)
                 {
-                    return include ? new BusinessInfo(exception.Message, null, null, null, inner, null) { Business = false, Include = include } : inner;
+                    return include ? new BusinessInfo((exception as ITraceException)?.Id, exception.Message, null, null, null, inner, null) { Business = false, Include = include, Data = exception.Data } : inner;
                 }
 
                 if (include || inner.Business)
@@ -770,7 +775,7 @@ namespace NetExtender.Types.Exceptions
                 {
                     null => throw new ArgumentNullException(nameof(exception)),
                     BusinessException business => business.ToBusinessInfo(include),
-                    _ => include ? new BusinessInfo(exception.Message, null, null, null, null) { Business = false, Include = include } : null
+                    _ => include ? new BusinessInfo((exception as ITraceException)?.Id, exception.Message, null, null, null, null) { Business = false, Include = include, Data = exception.Data } : null
                 };
             }
 
@@ -794,7 +799,7 @@ namespace NetExtender.Types.Exceptions
 
         protected virtual BusinessInfo ToBusinessInfo(BusinessInfo? inner, Boolean include)
         {
-            return new BusinessInfo(Message, Name, Description, Status, inner, ToBusinessInfoReason(include)) { Business = true, Include = include };
+            return new BusinessInfo(Id, Message, Name, Description, Status, inner, ToBusinessInfoReason(include)) { Business = true, Include = include, Data = Data };
         }
 
         protected virtual ImmutableList<BusinessInfo>? ToBusinessInfoReason(Boolean include)
@@ -814,38 +819,67 @@ namespace NetExtender.Types.Exceptions
             return builder.Count > 0 ? builder.ToImmutable() : null;
         }
 
-        [SuppressMessage("ReSharper", "StructMemberCanBeMadeReadOnly")]
-        [SuppressMessage("ReSharper", "AutoPropertyCanBeMadeGetOnly.Global")]
         public record BusinessInfo
         {
-            [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]
+            [JsonProperty(NullValueHandling = NullValueHandling.Ignore, DefaultValueHandling = DefaultValueHandling.Ignore, Order = 0)]
             [System.Text.Json.Serialization.JsonPropertyOrder(0)]
-            [JsonProperty(NullValueHandling = NullValueHandling.Ignore, Order = 0)]
+            [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]
+            public Guid? Id { get; init; }
+            
+            [JsonProperty(NullValueHandling = NullValueHandling.Ignore, Order = 1)]
+            [System.Text.Json.Serialization.JsonPropertyOrder(1)]
+            [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]
             public String? Message { get; init; }
 
+            [JsonProperty(NullValueHandling = NullValueHandling.Ignore, Order = 2)]
+            [System.Text.Json.Serialization.JsonPropertyOrder(2)]
             [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]
-            [System.Text.Json.Serialization.JsonPropertyOrder(1)]
-            [JsonProperty(NullValueHandling = NullValueHandling.Ignore, Order = 1)]
             public String? Name { get; init; }
-
+            
+            [JsonProperty(PropertyName = nameof(Data), NullValueHandling = NullValueHandling.Ignore, Order = 4)]
+            [System.Text.Json.Serialization.JsonPropertyName(nameof(Data))]
+            [System.Text.Json.Serialization.JsonPropertyOrder(4)]
             [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]
-            [System.Text.Json.Serialization.JsonPropertyOrder(3)]
-            [JsonProperty(NullValueHandling = NullValueHandling.Ignore, Order = 3)]
+            private Dictionary<Object, Object?>? _data;
+            
+            [JsonIgnore]
+            [System.Text.Json.Serialization.JsonIgnore]
+            public IDictionary Data
+            {
+                get
+                {
+                    return (IDictionary?) _data ?? NoneDictionary.Empty;
+                }
+                init
+                {
+                    _data = value switch
+                    {
+                        null => null,
+                        { Count: 0 } => null,
+                        Dictionary<Object, Object?> dictionary => dictionary,
+                        _ => value.ToDictionary()
+                    };
+                }
+            }
+
+            [JsonProperty(NullValueHandling = NullValueHandling.Ignore, Order = 5)]
+            [System.Text.Json.Serialization.JsonPropertyOrder(5)]
+            [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]
             public String? Description { get; init; }
 
+            [JsonProperty(NullValueHandling = NullValueHandling.Ignore, DefaultValueHandling = DefaultValueHandling.Ignore, Order = 6)]
+            [System.Text.Json.Serialization.JsonPropertyOrder(6)]
             [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]
-            [System.Text.Json.Serialization.JsonPropertyOrder(4)]
-            [JsonProperty(NullValueHandling = NullValueHandling.Ignore, Order = 4)]
             public HttpStatusCode? Status { get; init; }
 
             [System.Text.Json.Serialization.JsonIgnore]
             [JsonIgnore]
             public Boolean Business { get; init; }
 
-            [System.Text.Json.Serialization.JsonInclude]
-            [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
-            [System.Text.Json.Serialization.JsonPropertyOrder(Int32.MaxValue - 2)]
             [JsonProperty(NullValueHandling = NullValueHandling.Ignore, Order = Int32.MaxValue - 2)]
+            [System.Text.Json.Serialization.JsonInclude]
+            [System.Text.Json.Serialization.JsonPropertyOrder(Int32.MaxValue - 2)]
+            [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
             private Boolean? IsBusiness
             {
                 get
@@ -858,35 +892,36 @@ namespace NetExtender.Types.Exceptions
                 }
             }
 
-            [System.Text.Json.Serialization.PolymorphicJsonConverter]
-            [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]
-            [System.Text.Json.Serialization.JsonPropertyOrder(Int32.MaxValue - 1)]
             [JsonProperty(NullValueHandling = NullValueHandling.Ignore, Order = Int32.MaxValue - 1)]
-            [JsonConverter(typeof(NewtonSoft.PolymorphicJsonConverter))]
+            [JsonConverter(typeof(Newtonsoft.PolymorphicJsonConverter))]
+            [System.Text.Json.Serialization.JsonPropertyOrder(Int32.MaxValue - 1)]
+            [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]
+            [System.Text.Json.Serialization.PolymorphicJsonConverter]
             public BusinessInfo? Inner { get; init; }
             
-            [System.Text.Json.Serialization.PolymorphicJsonConverter]
-            [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]
-            [System.Text.Json.Serialization.JsonPropertyOrder(Int32.MaxValue)]
             [JsonProperty(NullValueHandling = NullValueHandling.Ignore, Order = Int32.MaxValue)]
-            [JsonConverter(typeof(NewtonSoft.PolymorphicJsonConverter))]
+            [JsonConverter(typeof(Newtonsoft.PolymorphicJsonConverter))]
+            [System.Text.Json.Serialization.JsonPropertyOrder(Int32.MaxValue)]
+            [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]
+            [System.Text.Json.Serialization.PolymorphicJsonConverter]
             public ImmutableList<BusinessInfo>? Reason { get; init; }
             
-            [System.Text.Json.Serialization.JsonIgnore]
             [JsonIgnore]
+            [System.Text.Json.Serialization.JsonIgnore]
             protected internal Boolean Include { get; init; }
 
             protected BusinessInfo()
             {
             }
 
-            public BusinessInfo(String? message, String? name, String? description, HttpStatusCode? status, ImmutableList<BusinessInfo>? reason)
-                : this(message, name, description, status, null, reason)
+            public BusinessInfo(Guid? id, String? message, String? name, String? description, HttpStatusCode? status, ImmutableList<BusinessInfo>? reason)
+                : this(id, message, name, description, status, null, reason)
             {
             }
 
-            public BusinessInfo(String? message, String? name, String? description, HttpStatusCode? status, BusinessInfo? inner, ImmutableList<BusinessInfo>? reason)
+            public BusinessInfo(Guid? id, String? message, String? name, String? description, HttpStatusCode? status, BusinessInfo? inner, ImmutableList<BusinessInfo>? reason)
             {
+                Id = id;
                 Message = message;
                 Name = name;
                 Description = description;

@@ -8,15 +8,18 @@ using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using NetExtender.Interfaces;
+using NetExtender.Newtonsoft.Types.Monads;
 using NetExtender.Types.Entities.Interfaces;
 using NetExtender.Types.Monads.Interfaces;
 using NetExtender.Utilities.Serialization;
 using NetExtender.Utilities.Types;
+using Newtonsoft.Json;
 
 namespace NetExtender.Types.Monads
 {
     [Serializable]
-    [SuppressMessage("ReSharper", "NonReadonlyMemberInGetHashCode")]
+    [JsonConverter(typeof(BoxJsonConverter<>))]
+    [System.Text.Json.Serialization.JsonConverter(typeof(NetExtender.Serialization.Json.Monads.BoxJsonConverter<>))]
     public sealed class Box<T> : INotifyBox<T>, IEntityId<Guid>, IBoxEquality<T, Box<T>>, ISerializable
     {
         public static implicit operator Box<T>(T value)
@@ -43,7 +46,7 @@ namespace NetExtender.Types.Monads
         public event PropertyChangingEventHandler? PropertyChanging;
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        public Guid Id { get; }
+        public Guid Id { get; private set; }
 
         private T _value;
         public T Value
@@ -51,6 +54,10 @@ namespace NetExtender.Types.Monads
             get
             {
                 return _value;
+            }
+            private set
+            {
+                this.RaiseAndSetIfChanged(ref _value, value);
             }
         }
         Object? IBox.Value
@@ -70,6 +77,8 @@ namespace NetExtender.Types.Monads
             }
         }
 
+        [JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         Boolean IMonad.IsEmpty
         {
             get
@@ -90,6 +99,16 @@ namespace NetExtender.Types.Monads
 
         private Box(T value, State state)
             : this(NewGuid(state), value, state)
+        {
+        }
+
+        internal Box(Guid id, T value)
+            : this(id, value, State.Immutable)
+        {
+        }
+
+        internal Box(Guid id, T value, Boolean mutable)
+            : this(id, value, mutable ? State.Mutable : State.Immutable)
         {
         }
 
@@ -114,10 +133,16 @@ namespace NetExtender.Types.Monads
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Guid NewGuid()
+        {
+            return DateTimeOffset.UtcNow.NewGuid();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [SuppressMessage("ReSharper", "UnusedParameter.Local")]
         private static Guid NewGuid(State state)
         {
-            return DateTimeOffset.UtcNow.NewGuid();
+            return NewGuid();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -137,6 +162,16 @@ namespace NetExtender.Types.Monads
             }
         }
 
+        public Box<T> Initialize()
+        {
+            if (Id == Guid.Empty)
+            {
+                Id = NewGuid(_state);
+            }
+
+            return this;
+        }
+
         Guid IEntity<Guid>.Get()
         {
             return Id;
@@ -149,7 +184,7 @@ namespace NetExtender.Types.Monads
                 return false;
             }
 
-            this.RaiseAndSetIfChanged(ref _value, value, nameof(Value));
+            Value = value;
             return true;
         }
 
@@ -183,6 +218,7 @@ namespace NetExtender.Types.Monads
             return ReferenceEquals(this, other) ? 0 : other is not null ? CompareTo(other.Value, comparer) : 1;
         }
 
+        [SuppressMessage("ReSharper", "NonReadonlyMemberInGetHashCode")]
         public override Int32 GetHashCode()
         {
             return IsReadOnly ? _value is not null ? _value.GetHashCode() : 0 : Id.GetHashCode();

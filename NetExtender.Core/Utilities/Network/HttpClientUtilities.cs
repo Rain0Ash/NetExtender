@@ -202,12 +202,7 @@ namespace NetExtender.Utilities.Network
                 throw new ArgumentNullException(nameof(client));
             }
 
-            if (agent == String.Empty)
-            {
-                return client;
-            }
-
-            if (client.AddUserAgentHeader(agent ?? UserAgentUtilities.CurrentSessionUserAgent))
+            if (agent == String.Empty || client.AddUserAgentHeader(agent ?? UserAgentUtilities.CurrentSessionUserAgent))
             {
                 return client;
             }

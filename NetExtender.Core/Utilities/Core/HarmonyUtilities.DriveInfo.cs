@@ -2,7 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using NetExtender.FileSystems;
-using NetExtender.Types.Intercept.Interfaces;
+using NetExtender.FileSystems.Interfaces;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Utilities.Core
@@ -12,7 +12,7 @@ namespace NetExtender.Utilities.Core
         [ReflectionSignature]
         public static class DriveInfo
         {
-            public static IInterceptDriveInfoHandler Interceptor { get; }
+            public static IInterceptDriveHandler Interceptor { get; }
 
             static DriveInfo()
             {

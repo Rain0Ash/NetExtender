@@ -9,6 +9,7 @@ namespace NetExtender.Types.Monads.Interfaces
 {
     public interface IDefault<T> : IDefault, IMonad<T>, IDefaultEquality<T, T>, IDefaultEquality<T, IDefault<T>>, ICloneable<IDefault<T>>
     {
+        public T Default { get; }
         public T Value { get; }
 
         public IDefault<T> Set(T value);
@@ -20,6 +21,7 @@ namespace NetExtender.Types.Monads.Interfaces
     
     public interface IDefault : IMonad, ICloneable<IDefault>
     {
+        public Boolean HasValue { get; }
         public Boolean IsDefault { get; }
         
         public IDefault Swap();

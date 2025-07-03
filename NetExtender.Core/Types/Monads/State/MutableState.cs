@@ -8,13 +8,17 @@ using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using NetExtender.Interfaces;
+using NetExtender.Newtonsoft.Types.Monads;
 using NetExtender.Types.Monads.Interfaces;
 using NetExtender.Utilities.Serialization;
 using NetExtender.Utilities.Types;
+using Newtonsoft.Json;
 
 namespace NetExtender.Types.Monads
 {
     [Serializable]
+    [JsonConverter(typeof(NotifyStateJsonConverter<>))]
+    [System.Text.Json.Serialization.JsonConverter(typeof(NetExtender.Serialization.Json.Monads.NotifyStateJsonConverter<>))]
     public class NotifyState<T> : MutableState<T>, INotifyState<T>, ICloneable<NotifyState<T>>
     {
         public static implicit operator NotifyState<T>(T value)
@@ -35,7 +39,7 @@ namespace NetExtender.Types.Monads
             }
         }
         
-        protected override State<T> Internal
+        protected internal override State<T> Internal
         {
             get
             {
@@ -125,6 +129,8 @@ namespace NetExtender.Types.Monads
     }
     
     [Serializable]
+    [JsonConverter(typeof(MutableStateJsonConverter<>))]
+    [System.Text.Json.Serialization.JsonConverter(typeof(NetExtender.Serialization.Json.Monads.MutableStateJsonConverter<>))]
     public class MutableState<T> : IState<T>, IStateEquality<T, State<T>>, IStateEquality<T, MutableState<T>>, ICloneable<State<T>>, ICloneable<MutableState<T>>, ISerializable
     {
         [return: NotNullIfNotNull("value")]
@@ -312,7 +318,7 @@ namespace NetExtender.Types.Monads
         public Guid Id { get; } = Guid.NewGuid();
 
         private State<T> _internal;
-        protected virtual State<T> Internal
+        protected internal virtual State<T> Internal
         {
             get
             {
@@ -368,6 +374,8 @@ namespace NetExtender.Types.Monads
             }
         }
 
+        [JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public Boolean IsEmpty
         {
             get

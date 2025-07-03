@@ -4,7 +4,7 @@
 using System;
 using NetExtender.Configuration.Common;
 using NetExtender.Configuration.File;
-using NetExtender.NewtonSoft;
+using NetExtender.Newtonsoft;
 using NetExtender.Types.Trees;
 using Newtonsoft.Json;
 

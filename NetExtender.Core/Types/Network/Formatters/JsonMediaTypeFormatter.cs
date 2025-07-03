@@ -17,7 +17,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 using Microsoft.Extensions.Logging;
-using NetExtender.NewtonSoft.Types.Network.Formatters;
+using NetExtender.Newtonsoft.Types.Network.Formatters;
 using NetExtender.Types.Network.Formatters.Exceptions;
 using NetExtender.Types.Streams;
 using NetExtender.Utilities.Core;
@@ -25,6 +25,8 @@ using NetExtender.Utilities.Network.Formatters;
 using NetExtender.Utilities.Types;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using Formatting = Newtonsoft.Json.Formatting;
+using ErrorEventArgs = Newtonsoft.Json.Serialization.ErrorEventArgs;
 
 namespace NetExtender.Types.Network.Formatters
 {
@@ -227,7 +229,7 @@ namespace NetExtender.Types.Network.Formatters
                 return serializer.Deserialize(reader, type);
             }
 
-            void Handler(Object? _, Newtonsoft.Json.Serialization.ErrorEventArgs args)
+            void Handler(Object? _, ErrorEventArgs args)
             {
                 Exception error = args.ErrorContext.Error;
                 logger.LogError(args.ErrorContext.Path, error);
@@ -438,7 +440,7 @@ namespace NetExtender.Types.Network.Formatters
             }
             catch (Exception)
             {
-                result = default;
+                result = null;
                 return false;
             }
         }
@@ -463,12 +465,12 @@ namespace NetExtender.Types.Network.Formatters
             try
             {
                 StreamWriter writer = new StreamWriter(stream, encoding);
-                result = Indent ? new JsonTextWriter(writer) { Formatting = Newtonsoft.Json.Formatting.Indented } : new JsonTextWriter(writer);
+                result = Indent ? new JsonTextWriter(writer) { Formatting = Formatting.Indented } : new JsonTextWriter(writer);
                 return true;
             }
             catch (Exception)
             {
-                result = default;
+                result = null;
                 return false;
             }
         }

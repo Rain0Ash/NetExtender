@@ -4,6 +4,7 @@
 using System;
 using System.Globalization;
 using System.Runtime.CompilerServices;
+using NetExtender.Types.Exceptions;
 
 namespace NetExtender.Utilities.Types
 {
@@ -19,6 +20,18 @@ namespace NetExtender.Utilities.Types
         public static DateTimeOffset Epoch(Calendar? calendar, TimeSpan offset)
         {
             return calendar is not null ? new DateTimeOffset(1970, 1, 1, 0, 0, 0, 0, calendar, offset) : Epoch(offset);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DateTimeOffset NowOffset(this DateTimeKind value)
+        {
+            return value switch
+            {
+                DateTimeKind.Unspecified => DateTimeOffset.Now,
+                DateTimeKind.Utc => DateTimeOffset.UtcNow,
+                DateTimeKind.Local => DateTimeOffset.Now,
+                _ => throw new EnumUndefinedOrNotSupportedException<DateTimeKind>(value, nameof(value), null)
+            };
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

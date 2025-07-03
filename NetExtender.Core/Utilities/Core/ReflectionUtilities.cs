@@ -5625,13 +5625,13 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(method));
             }
-            
+
             if (method.IsAbstract)
             {
                 @virtual = true;
                 return false;
             }
-            
+
             @virtual = method switch
             {
                 { IsVirtual: true } => true,

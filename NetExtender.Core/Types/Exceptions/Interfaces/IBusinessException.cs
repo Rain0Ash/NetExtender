@@ -19,7 +19,7 @@ namespace NetExtender.Types.Exceptions.Interfaces
         }
     }
 
-    public interface IBusinessException : IException
+    public interface IBusinessException : ITraceException
     {
         public Type? Type { get; }
         public String? Name { get; }

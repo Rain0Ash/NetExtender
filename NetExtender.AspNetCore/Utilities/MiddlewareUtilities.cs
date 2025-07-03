@@ -17,6 +17,16 @@ namespace NetExtender.Utilities.AspNetCore.Types
     {
         private const DynamicallyAccessedMemberTypes MiddlewareAccessibility = DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.PublicMethods;
 
+        public static IApplicationBuilder UseRequestTracing(this IApplicationBuilder builder)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            return builder.UseMiddleware<RequestTracingMiddleware>();
+        }
+        
         public static IApplicationBuilder UseBusinessExceptionHandler(this IApplicationBuilder builder)
         {
             return UseBusinessExceptionHandler<BusinessExceptionHandlerMiddleware>(builder);

@@ -18,6 +18,28 @@ namespace NetExtender.Utilities.Network
 {
     public static class HttpRequestUtilities
     {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String ToHeaderString(this HttpRequestMessage request)
+        {
+            if (request is null)
+            {
+                throw new ArgumentNullException(nameof(request));
+            }
+            
+            return request.Headers.ToHeaderString(request.Content?.Headers);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String ToHeaderString(this HttpRequestMessage request, Int32 buffer)
+        {
+            if (request is null)
+            {
+                throw new ArgumentNullException(nameof(request));
+            }
+            
+            return request.Headers.ToHeaderString(request.Content?.Headers, buffer);
+        }
+        
         public static CookieHeaderValue[] GetCookies(this HttpRequestHeaders source)
         {
             if (source is null)

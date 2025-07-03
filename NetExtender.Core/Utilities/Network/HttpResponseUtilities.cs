@@ -13,6 +13,28 @@ namespace NetExtender.Utilities.Network
 {
     public static class HttpResponseUtilities
     {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String ToHeaderString(this HttpResponseMessage response)
+        {
+            if (response is null)
+            {
+                throw new ArgumentNullException(nameof(response));
+            }
+            
+            return response.Headers.ToHeaderString(response.Content.Headers);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String ToHeaderString(this HttpResponseMessage response, Int32 buffer)
+        {
+            if (response is null)
+            {
+                throw new ArgumentNullException(nameof(response));
+            }
+            
+            return response.Headers.ToHeaderString(response.Content.Headers, buffer);
+        }
+        
         public static void AddCookies(this HttpResponseHeaders source, IEnumerable<CookieHeaderValue?>? values)
         {
             if (source is null)

@@ -25,9 +25,10 @@ namespace NetExtender.Types.Monads.Interfaces
     {
         public TimeSpan Time { get; }
         public DateTime SetTime { get; }
+        public DateTimeKind TimeKind { get; }
         public TimeSpan Delay { get; }
         public Boolean IsDebounce { get; }
-        
+
         public new IDebounce Clone();
     }
     

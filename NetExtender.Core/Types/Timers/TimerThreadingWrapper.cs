@@ -22,6 +22,7 @@ namespace NetExtender.Types.Timers
 
         private Timer? Timer { get; set; }
         public event TickHandler? Tick;
+        
         public Boolean IsStarted { get; private set; }
         
         private DateTimeProvider _provider = DateTimeProvider.Provider;
