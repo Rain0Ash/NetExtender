@@ -3,16 +3,22 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Xml;
-using NetExtender.NewtonSoft;
+using NetExtender.Newtonsoft;
+using NetExtender.Serialization.Json;
 using NetExtender.Types.Exceptions;
 using NetExtender.Utilities.Types;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
+using Formatting = Newtonsoft.Json.Formatting;
+using JsonConverter = Newtonsoft.Json.JsonConverter;
+using JsonSerializer = Newtonsoft.Json.JsonSerializer;
 
 namespace NetExtender.Utilities.Serialization
 {
@@ -69,22 +75,407 @@ namespace NetExtender.Utilities.Serialization
             }
         }
 
+        public static Boolean IsEmpty(this JsonElement element)
+        {
+            return element.ValueKind switch
+            {
+                JsonValueKind.Undefined or JsonValueKind.Null => true,
+                JsonValueKind.Object => !element.EnumerateObject().MoveNext(),
+                JsonValueKind.Array => element.GetArrayLength() <= 0,
+                _ => false
+            };
+        }
+
+        public static Boolean IsEmptyObject(this ref Utf8JsonReader reader)
+        {
+            using JsonDocument document = JsonDocument.ParseValue(ref reader);
+            JsonElement @object = document.RootElement;
+            return !@object.EnumerateObject().MoveNext();
+        }
+
+        public static Boolean IsEmptyObject(this JsonReader reader)
+        {
+            if (reader is null)
+            {
+                throw new ArgumentNullException(nameof(reader));
+            }
+
+            return JObject.Load(reader) is { HasValues: false };
+        }
+
+        public static Boolean IsEmptyArray(this ref Utf8JsonReader reader)
+        {
+            using JsonDocument document = JsonDocument.ParseValue(ref reader);
+            JsonElement array = document.RootElement;
+            return array.GetArrayLength() <= 0;
+        }
+
+        public static Boolean IsEmptyArray(this JsonReader reader)
+        {
+            if (reader is null)
+            {
+                throw new ArgumentNullException(nameof(reader));
+            }
+
+            return JArray.Load(reader) is { Count: <= 0 };
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static JsonNamingPolicy? GetNamingPolicy(this JsonSerializerOptions options)
+        {
+            if (options is null)
+            {
+                throw new ArgumentNullException(nameof(options));
+            }
+
+            return options.PropertyNamingPolicy;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean TryGetNamingPolicy(this JsonSerializerOptions options, [MaybeNullWhen(false)] out JsonNamingPolicy result)
+        {
+            if (options is null)
+            {
+                throw new ArgumentNullException(nameof(options));
+            }
+
+            result = options.PropertyNamingPolicy;
+            return result is not null;
+        }
+
+        [return: NotNullIfNotNull("property")]
+        public static String? ApplyNamingPolicy(this JsonSerializerOptions options, String? property)
+        {
+            if (options is null)
+            {
+                throw new ArgumentNullException(nameof(options));
+            }
+
+            if (property is null)
+            {
+                return null;
+            }
+
+            return TryGetNamingPolicy(options, out JsonNamingPolicy? policy) ? Apply(policy, property) : property;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [return: NotNullIfNotNull("property")]
+        public static String? Apply(this JsonNamingPolicy? policy, String? property)
+        {
+            return property is not null ? policy?.ConvertName(property) ?? property : null;
+        }
+        
+        public static NamingStrategy? GetNamingStrategy(this JsonSerializer serializer)
+        {
+            if (serializer is null)
+            {
+                throw new ArgumentNullException(nameof(serializer));
+            }
+
+            return TryGetNamingStrategy(serializer, out NamingStrategy? result) ? result : null;
+        }
+
+        public static Boolean TryGetNamingStrategy(this JsonSerializer serializer, [MaybeNullWhen(false)] out NamingStrategy result)
+        {
+            if (serializer is null)
+            {
+                throw new ArgumentNullException(nameof(serializer));
+            }
+
+            if (serializer.ContractResolver is not DefaultContractResolver { NamingStrategy: { } strategy })
+            {
+                result = null;
+                return false;
+            }
+
+            result = strategy;
+            return true;
+        }
+
+        [return: NotNullIfNotNull("property")]
+        public static String? ApplyNamingStrategy(this JsonSerializer serializer, String? property)
+        {
+            return ApplyNamingStrategy(serializer, property, false);
+        }
+
+        [return: NotNullIfNotNull("property")]
+        public static String? ApplyNamingStrategy(this JsonSerializer serializer, String? property, Boolean specified)
+        {
+            if (serializer is null)
+            {
+                throw new ArgumentNullException(nameof(serializer));
+            }
+
+            if (property is null)
+            {
+                return null;
+            }
+
+            return TryGetNamingStrategy(serializer, out NamingStrategy? strategy) ? Apply(strategy, property, specified) : property;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [return: NotNullIfNotNull("property")]
+        public static String? Apply(this NamingStrategy? strategy, String? property)
+        {
+            return Apply(strategy, property, false);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [return: NotNullIfNotNull("property")]
+        public static String? Apply(this NamingStrategy? strategy, String? property, Boolean specified)
+        {
+            return property is not null ? strategy?.GetPropertyName(property, specified) ?? property : null;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [return: NotNullIfNotNull("factory")]
+        public static T? Wrap<T>(this JsonConverterFactory? factory) where T : TextJsonConverterFactoryWrapper, new()
+        {
+            return TextJsonConverterFactoryWrapper.Wrap<T>(factory);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [return: NotNullIfNotNull("resolver")]
+        public static T? Wrap<T>(this DefaultContractResolver? resolver) where T : NewtonsoftContractResolverWrapper, new()
+        {
+            return NewtonsoftContractResolverWrapper.Wrap<T>(resolver);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [return: NotNullIfNotNull("factory")]
+        public static JsonConverterFactory? Unwrap(this JsonConverterFactory? factory)
+        {
+            return factory switch
+            {
+                null => null,
+                TextJsonConverterFactoryWrapper wrapper => wrapper.Factory,
+                _ => factory
+            };
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [return: NotNullIfNotNull("resolver")]
+        public static DefaultContractResolver? Unwrap(this DefaultContractResolver? resolver)
+        {
+            return resolver switch
+            {
+                null => null,
+                NewtonsoftContractResolverWrapper wrapper => wrapper.Resolver,
+                _ => resolver
+            };
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static JsonElement GetProperty(this JsonElement element, String name, JsonNamingPolicy? policy)
+        {
+            return element.GetProperty(policy.Apply(name));
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static JToken? GetValue(this JObject @object, String property, NamingStrategy? strategy)
+        {
+            if (@object is null)
+            {
+                throw new ArgumentNullException(nameof(@object));
+            }
+
+            return @object.GetValue(strategy.Apply(property));
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static JToken? GetValue(this JObject @object, String property, NamingStrategy? strategy, Boolean specified)
+        {
+            if (@object is null)
+            {
+                throw new ArgumentNullException(nameof(@object));
+            }
+
+            return @object.GetValue(strategy.Apply(property, specified));
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static JToken? GetValue(this JObject @object, String property, StringComparison comparison, NamingStrategy? strategy)
+        {
+            if (@object is null)
+            {
+                throw new ArgumentNullException(nameof(@object));
+            }
+
+            return @object.GetValue(strategy.Apply(property), comparison);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static JToken? GetValue(this JObject @object, String property, StringComparison comparison, NamingStrategy? strategy, Boolean specified)
+        {
+            if (@object is null)
+            {
+                throw new ArgumentNullException(nameof(@object));
+            }
+
+            return @object.GetValue(strategy.Apply(property, specified), comparison);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean TryGetProperty(this JsonElement element, String name, JsonNamingPolicy? policy, out JsonElement value)
+        {
+            return element.TryGetProperty(policy.Apply(name), out value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean TryGetValue(this JObject @object, String property, NamingStrategy? strategy, [MaybeNullWhen(false)] out JToken value)
+        {
+            if (@object is null)
+            {
+                throw new ArgumentNullException(nameof(@object));
+            }
+
+            return @object.TryGetValue(strategy.Apply(property), out value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean TryGetValue(this JObject @object, String property, NamingStrategy? strategy, Boolean specified, [MaybeNullWhen(false)] out JToken value)
+        {
+            if (@object is null)
+            {
+                throw new ArgumentNullException(nameof(@object));
+            }
+
+            return @object.TryGetValue(strategy.Apply(property, specified), out value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean TryGetValue(this JObject @object, String property, StringComparison comparison, NamingStrategy? strategy, [MaybeNullWhen(false)] out JToken value)
+        {
+            if (@object is null)
+            {
+                throw new ArgumentNullException(nameof(@object));
+            }
+
+            return @object.TryGetValue(strategy.Apply(property), comparison, out value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean TryGetValue(this JObject @object, String property, StringComparison comparison, NamingStrategy? strategy, Boolean specified, [MaybeNullWhen(false)] out JToken value)
+        {
+            if (@object is null)
+            {
+                throw new ArgumentNullException(nameof(@object));
+            }
+
+            return @object.TryGetValue(strategy.Apply(property, specified), comparison, out value);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void WritePropertyName(this Utf8JsonWriter writer, String name, JsonNamingPolicy? policy)
+        {
+            if (writer is null)
+            {
+                throw new ArgumentNullException(nameof(writer));
+            }
+            
+            writer.WritePropertyName(policy.Apply(name));
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void WritePropertyName(this JsonWriter writer, String property, NamingStrategy? strategy)
+        {
+            WritePropertyName(writer, property, strategy, false);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void WritePropertyName(this JsonWriter writer, String property, NamingStrategy? strategy, Boolean specified)
+        {
+            if (writer is null)
+            {
+                throw new ArgumentNullException(nameof(writer));
+            }
+            
+            writer.WritePropertyName(strategy.Apply(property, specified));
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void WritePropertyName(this JsonWriter writer, String property, Boolean escape, NamingStrategy? strategy)
+        {
+            WritePropertyName(writer, property, escape, strategy, false);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void WritePropertyName(this JsonWriter writer, String property, Boolean escape, NamingStrategy? strategy, Boolean specified)
+        {
+            if (writer is null)
+            {
+                throw new ArgumentNullException(nameof(writer));
+            }
+            
+            writer.WritePropertyName(strategy.Apply(property, specified), escape);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void WriteObject(this Utf8JsonWriter writer)
+        {
+            if (writer is null)
+            {
+                throw new ArgumentNullException(nameof(writer));
+            }
+
+            writer.WriteStartObject();
+            writer.WriteEndObject();
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void WriteArray(this Utf8JsonWriter writer)
+        {
+            if (writer is null)
+            {
+                throw new ArgumentNullException(nameof(writer));
+            }
+
+            writer.WriteStartArray();
+            writer.WriteEndArray();
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void WriteObject(this JsonWriter writer)
+        {
+            if (writer is null)
+            {
+                throw new ArgumentNullException(nameof(writer));
+            }
+
+            writer.WriteStartObject();
+            writer.WriteEndObject();
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void WriteArray(this JsonWriter writer)
+        {
+            if (writer is null)
+            {
+                throw new ArgumentNullException(nameof(writer));
+            }
+
+            writer.WriteStartArray();
+            writer.WriteEndArray();
+        }
+
         public static String JsonSerializeObject(this Object? value)
         {
             return JsonConvert.SerializeObject(value);
         }
 
-        public static String JsonSerializeObject(this Object? value, Newtonsoft.Json.Formatting formatting)
+        public static String JsonSerializeObject(this Object? value, Formatting formatting)
         {
             return JsonConvert.SerializeObject(value, formatting);
         }
 
-        public static String JsonSerializeObject(this Object? value, params Newtonsoft.Json.JsonConverter[] converters)
+        public static String JsonSerializeObject(this Object? value, params JsonConverter[] converters)
         {
             return JsonConvert.SerializeObject(value, converters);
         }
 
-        public static String JsonSerializeObject(this Object? value, Newtonsoft.Json.Formatting formatting, params Newtonsoft.Json.JsonConverter[] converters)
+        public static String JsonSerializeObject(this Object? value, Formatting formatting, params JsonConverter[] converters)
         {
             return JsonConvert.SerializeObject(value, formatting, converters);
         }
@@ -99,12 +490,12 @@ namespace NetExtender.Utilities.Serialization
             return JsonConvert.SerializeObject(value, type, settings);
         }
 
-        public static String JsonSerializeObject(this Object? value, Newtonsoft.Json.Formatting formatting, JsonSerializerSettings? settings)
+        public static String JsonSerializeObject(this Object? value, Formatting formatting, JsonSerializerSettings? settings)
         {
             return JsonConvert.SerializeObject(value, formatting, settings);
         }
 
-        public static String JsonSerializeObject(this Object? value, Type? type, Newtonsoft.Json.Formatting formatting, JsonSerializerSettings? settings)
+        public static String JsonSerializeObject(this Object? value, Type? type, Formatting formatting, JsonSerializerSettings? settings)
         {
             return JsonConvert.SerializeObject(value, type, formatting, settings);
         }
@@ -151,7 +542,7 @@ namespace NetExtender.Utilities.Serialization
 
         public static String ToJson(this XmlDocument document)
         {
-            return JsonConvert.SerializeXmlNode(document, Newtonsoft.Json.Formatting.Indented, true);
+            return JsonConvert.SerializeXmlNode(document, Formatting.Indented, true);
         }
 
         private static PropertyContractResolver InitializePropertyResolver(JsonSerializerSettings settings)
@@ -274,13 +665,13 @@ namespace NetExtender.Utilities.Serialization
             }
         }
 
-        public static TSettings ConverterOverride<TSettings>(this TSettings settings, Type type, Newtonsoft.Json.JsonConverter? converter) where TSettings : JsonSerializerSettings
+        public static TSettings ConverterOverride<TSettings>(this TSettings settings, Type type, JsonConverter? converter) where TSettings : JsonSerializerSettings
         {
             InitializeOverrideContractResolver(settings).Add(type, converter);
             return settings;
         }
 
-        public static TSettings ConverterOverride<T, TSettings>(this TSettings settings, Newtonsoft.Json.JsonConverter? converter) where TSettings : JsonSerializerSettings
+        public static TSettings ConverterOverride<T, TSettings>(this TSettings settings, JsonConverter? converter) where TSettings : JsonSerializerSettings
         {
             InitializeOverrideContractResolver(settings).Add<T>(converter);
             return settings;
@@ -303,7 +694,7 @@ namespace NetExtender.Utilities.Serialization
             return ConverterOverrideRemove(settings, type, out _);
         }
 
-        public static TSettings ConverterOverrideRemove<TSettings>(this TSettings settings, Type type, out Newtonsoft.Json.JsonConverter? converter) where TSettings : JsonSerializerSettings
+        public static TSettings ConverterOverrideRemove<TSettings>(this TSettings settings, Type type, out JsonConverter? converter) where TSettings : JsonSerializerSettings
         {
             InitializeOverrideContractResolver(settings).Remove(type, out converter);
             return settings;
@@ -314,7 +705,7 @@ namespace NetExtender.Utilities.Serialization
             return ConverterOverrideRemove<T, TSettings>(settings, out _);
         }
 
-        public static TSettings ConverterOverrideRemove<T, TSettings>(this TSettings settings, out Newtonsoft.Json.JsonConverter? converter) where TSettings : JsonSerializerSettings
+        public static TSettings ConverterOverrideRemove<T, TSettings>(this TSettings settings, out JsonConverter? converter) where TSettings : JsonSerializerSettings
         {
             InitializeOverrideContractResolver(settings).Remove<T>(out converter);
             return settings;

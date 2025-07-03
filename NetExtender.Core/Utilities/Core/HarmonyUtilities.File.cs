@@ -11,7 +11,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using NetExtender.FileSystems;
 using NetExtender.FileSystems.Interfaces;
-using NetExtender.Types.Intercept.Interfaces;
 
 namespace NetExtender.Utilities.Core
 {

@@ -3,7 +3,7 @@
 
 using System;
 
-namespace NetExtender.Types.FileSystems.Interfaces
+namespace NetExtender.FileSystems.Interfaces
 {
     public interface IShortcut
     {

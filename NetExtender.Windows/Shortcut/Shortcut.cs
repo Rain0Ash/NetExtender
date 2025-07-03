@@ -4,8 +4,8 @@
 using System;
 using System.IO;
 using System.Reflection;
+using NetExtender.FileSystems.Interfaces;
 using NetExtender.Types.Exceptions;
-using NetExtender.Types.FileSystems.Interfaces;
 using NetExtender.Utilities.IO;
 using NetExtender.Windows.Shortcut.Interfaces;
 

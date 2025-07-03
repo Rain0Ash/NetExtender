@@ -12,7 +12,7 @@ using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Network
 {
-    public sealed class HttpClientInterceptHandler : DelegatingHandler, IIntercept<HttpInterceptEventArgs>, IAnyInterceptTarget<HttpResponseMessage?, HttpInterceptEventArgs>
+    public sealed class HttpClientInterceptHandler : HttpDelegatingHandler, IIntercept<HttpInterceptEventArgs>, IAnyInterceptTarget<HttpResponseMessage?, HttpInterceptEventArgs>
     {
         public IAnyInterceptor<HttpResponseMessage?, HttpClientInterceptHandler, HttpInterceptEventArgs> Interceptor { get; init; } = AnyInterceptor<HttpResponseMessage?, HttpClientInterceptHandler, HttpInterceptEventArgs>.Default;
         
@@ -70,12 +70,11 @@ namespace NetExtender.Types.Network
         }
 
         public HttpClientInterceptHandler()
-            : this(null)
         {
         }
 
-        public HttpClientInterceptHandler(HttpMessageHandler? inner)
-            : base(inner ?? new HttpClientHandler())
+        public HttpClientInterceptHandler(HttpMessageHandler? handler)
+            : base(handler)
         {
         }
 

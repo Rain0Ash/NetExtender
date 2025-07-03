@@ -3,7 +3,7 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using NetExtender.Types.Intercept.Interfaces;
+using NetExtender.FileSystems.Interfaces;
 
 #pragma warning disable CA1041
 

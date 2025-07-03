@@ -2,6 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -42,6 +43,25 @@ namespace NetExtender.Utilities.Types
             }
 
             return new ConcurrentDictionary<TKey, TValue>(dictionary, comparer);
+        }
+
+        [SuppressMessage("ReSharper", "NullCoalescingConditionIsAlwaysNotNullAccordingToAPIContract")]
+        public static Dictionary<Object, Object?> ToDictionary(this IDictionary source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            Dictionary<Object, Object?> result = new Dictionary<Object, Object?>(source.Count);
+
+            foreach (Object? key in source.Keys)
+            {
+                Object? value = source[key];
+                result[key ?? ObjectUtilities.Null] = value;
+            }
+
+            return result;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

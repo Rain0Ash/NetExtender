@@ -3,12 +3,38 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Text;
 using Microsoft.AspNetCore.Http;
+using NetExtender.Utilities.Network;
 
 namespace NetExtender.Utilities.AspNetCore.Types
 {
     public static class HeaderDictionaryUtilities
     {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String ToHeaderString(this IHeaderDictionary source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return HttpHeaderUtilities.ToHeaderString(source.Select(static pair => new KeyValuePair<String, IEnumerable<String>>(pair.Key, pair.Value)));
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String ToHeaderString(this IHeaderDictionary source, Int32 buffer)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return HttpHeaderUtilities.ToHeaderString(source.Select(static pair => new KeyValuePair<String, IEnumerable<String>>(pair.Key, pair.Value)), buffer);
+        }
+        
         public static void RemoveRange(this IHeaderDictionary dictionary, params String[] items)
         {
             RemoveRange(dictionary, (IEnumerable<String>) items);

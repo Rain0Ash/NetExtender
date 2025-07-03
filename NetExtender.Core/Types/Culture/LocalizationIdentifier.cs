@@ -4,7 +4,7 @@
 using System;
 using System.Collections.Immutable;
 using System.Globalization;
-using NetExtender.NewtonSoft.Types.Culture;
+using NetExtender.Newtonsoft.Types.Culture;
 using NetExtender.Types.Currency;
 using NetExtender.Types.Region;
 using NetExtender.Utilities.Types;

@@ -11,7 +11,6 @@ using NetExtender.Types.Exceptions;
 using NetExtender.Types.Intercept.Interfaces;
 using NetExtender.Types.Monads;
 using NetExtender.Utilities.Core;
-using NetExtender.Utilities.Numerics;
 
 namespace NetExtender.Types.Intercept
 {

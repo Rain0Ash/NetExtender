@@ -3,9 +3,9 @@
 
 using System;
 using System.Text.RegularExpressions;
+using NetExtender.FileSystems;
 using NetExtender.FileSystems.Interfaces;
 using NetExtender.Types.Entities;
-using NetExtender.Types.Intercept;
 using NetExtender.Types.Intercept.Interfaces;
 #pragma warning disable CS0618
 

@@ -760,6 +760,8 @@ namespace NetExtender.Types.Monads.Result
             }
         }
 
+        [JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public Boolean IsEmpty
         {
             get
@@ -1371,6 +1373,8 @@ namespace NetExtender.Types.Monads.Result
             }
         }
 
+        [JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public Boolean IsEmpty
         {
             get

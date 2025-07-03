@@ -5,10 +5,12 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using NetExtender.Interfaces;
+using NetExtender.Newtonsoft.Types.Monads;
 using NetExtender.Types.Exceptions;
 using NetExtender.Types.Monads.Interfaces;
 using NetExtender.Utilities.Serialization;
 using NetExtender.Utilities.Types;
+using Newtonsoft.Json;
 
 namespace NetExtender.Types.Monads
 {
@@ -19,6 +21,8 @@ namespace NetExtender.Types.Monads
     }
     
     [Serializable]
+    [JsonConverter(typeof(StateJsonConverter<>))]
+    [System.Text.Json.Serialization.JsonConverter(typeof(NetExtender.Serialization.Json.Monads.StateJsonConverter<>))]
     public readonly struct State<T> : IEqualityStruct<State<T>>, IState<T>, IStateEquality<T, State<T>>, ICloneable<State<T>>, ISerializable
     {
         public static implicit operator T(State<T> value)
@@ -120,8 +124,15 @@ namespace NetExtender.Types.Monads
         {
             return first.CompareTo(second) <= 0;
         }
-        
-        public T Value { get; }
+
+        private readonly Maybe<T> _value;
+        public T Value
+        {
+            get
+            {
+                return _value.Internal;
+            }
+        }
 
         public T Current
         {
@@ -141,35 +152,37 @@ namespace NetExtender.Types.Monads
             }
         }
 
+        [JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public Boolean IsEmpty
         {
             get
             {
-                return Next.IsEmpty && EqualityComparer<T>.Default.Equals(Value, default);
+                return _value.IsEmpty && Next.IsEmpty;
             }
         }
 
         public State(T value)
         {
-            Value = value;
+            _value = value;
             Next = default;
         }
 
         public State(T value, T next)
         {
-            Value = value;
+            _value = value;
             Next = next;
         }
 
         public State(T value, Maybe<T> next)
         {
-            Value = value;
+            _value = value;
             Next = next;
         }
 
         private State(SerializationInfo info, StreamingContext context)
         {
-            Value = info.GetValue<T>(nameof(Value));
+            _value = info.GetValue<T>(nameof(Value));
             Next = info.GetBoolean(nameof(HasNext)) ? info.GetValue<T>(nameof(Next)) : default(Maybe<T>);
         }
         

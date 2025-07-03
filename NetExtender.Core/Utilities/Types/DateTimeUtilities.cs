@@ -79,18 +79,6 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static DateTimeOffset OffsetNow(this DateTimeKind value)
-        {
-            return value switch
-            {
-                DateTimeKind.Unspecified => DateTimeOffset.Now,
-                DateTimeKind.Utc => DateTimeOffset.UtcNow,
-                DateTimeKind.Local => DateTimeOffset.Now,
-                _ => throw new EnumUndefinedOrNotSupportedException<DateTimeKind>(value, nameof(value), null)
-            };
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TimeSpan Elapsed(this DateTime value)
         {
             return DateTime.Now - value;

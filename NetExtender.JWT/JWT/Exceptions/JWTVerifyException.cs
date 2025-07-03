@@ -45,7 +45,7 @@ namespace NetExtender.JWT
             : this("Token invalid signature")
         {
             Expected = crypto;
-            Received = signatures is not null ? $"{String.Join(",", signatures)}" : String.Empty;
+            Received = signatures is not null ? $"{String.Join(',', signatures)}" : String.Empty;
         }
 
         protected JWTVerifyException(SerializationInfo info, StreamingContext context)

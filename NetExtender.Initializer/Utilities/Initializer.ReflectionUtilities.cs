@@ -62,6 +62,7 @@ namespace NetExtender.Initializer
             private static Assembly? assembly;
             private static Assembly? EntryAssembly
             {
+                [SuppressMessage("ReSharper", "LocalVariableHidesMember")]
                 get
                 {
                     return assembly ??= AppDomain.CurrentDomain.GetAssemblies().Where(static assembly => assembly.GetCustomAttributes(typeof(ApplicationEntryAssemblyAttribute), false).Length > 0).ToArray() switch

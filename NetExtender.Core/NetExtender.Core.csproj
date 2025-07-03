@@ -43,7 +43,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="NewtonSoft\Network\Http\"/>
+        <Folder Include="Newtonsoft\Network\Http\" />
         <Folder Include="Types\Enums\Converters\"/>
         <Folder Include="Types\Reflection\Operator\" />
     </ItemGroup>
@@ -311,15 +311,6 @@
         <Compile Update="Types\FileSystems\FileSystemStorage.Path.cs">
           <DependentUpon>FileSystemStorage.cs</DependentUpon>
         </Compile>
-        <Compile Update="Types\Intercept\FileSystems\FileSystemIntercept.Directory.cs">
-          <DependentUpon>FileSystemIntercept.cs</DependentUpon>
-        </Compile>
-        <Compile Update="Types\Intercept\FileSystems\FileSystemIntercept.File.cs">
-          <DependentUpon>FileSystemIntercept.cs</DependentUpon>
-        </Compile>
-        <Compile Update="Types\Intercept\FileSystems\FileSystemIntercept.Path.cs">
-          <DependentUpon>FileSystemIntercept.cs</DependentUpon>
-        </Compile>
         <Compile Update="Types\Intercept\FileSystems\Interfaces\IInterceptDirectoryHandler.cs">
           <DependentUpon>IFileSystemIntercept.cs</DependentUpon>
         </Compile>
@@ -379,12 +370,6 @@
         </Compile>
         <Compile Update="Utilities\Core\HarmonyUtilities.DriveInfo.cs">
           <DependentUpon>HarmonyUtilities.cs</DependentUpon>
-        </Compile>
-        <Compile Update="Types\Intercept\FileSystems\FileSystemIntercept.Drive.cs">
-          <DependentUpon>FileSystemIntercept.cs</DependentUpon>
-        </Compile>
-        <Compile Update="Types\Intercept\FileSystems\FileSystemIntercept.Link.cs">
-          <DependentUpon>FileSystemIntercept.cs</DependentUpon>
         </Compile>
         <Compile Update="Types\FileSystems\FileSystemStorage.Drive.cs">
           <DependentUpon>FileSystemStorage.cs</DependentUpon>
@@ -465,6 +450,9 @@
         </Compile>
         <Compile Update="Types\FileSystems\MemoryFileSystem.Path.cs">
           <DependentUpon>MemoryFileSystem.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\FileSystems\Intercept\Interfaces\IInterceptDriveHandler.cs">
+          <DependentUpon>IFileSystemIntercept.cs</DependentUpon>
         </Compile>
     </ItemGroup>
 

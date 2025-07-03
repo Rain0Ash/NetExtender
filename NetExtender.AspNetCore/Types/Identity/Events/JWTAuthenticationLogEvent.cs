@@ -22,7 +22,7 @@ namespace NetExtender.AspNetCore.Identity
 
         static JWTAuthenticationLogEvent()
         {
-            DefaultSuccessTicketHandler = LoggerMessage.Define(LogLevel.Information, Events.SuccessTicket, "Successful decoded JWT. Return: 'Success'.");
+            DefaultSuccessTicketHandler = LoggerMessage.Define(LogLevel.Trace, Events.SuccessTicket, "Successful decoded JWT. Return: 'Success'.");
             DefaultInvalidTicketHandler = LoggerMessage.Define<String>(LogLevel.Information, Events.InvalidTicket, "JWT invalid ticket: {Exception}. Return: 'Fail'.");
             DefaultFailTicketHandler = LoggerMessage.Define<String>(LogLevel.Information, Events.FailTicket, "JWT error: {Exception}. Return: 'Fail'.");
             DefaultMissingHeaderHandler = LoggerMessage.Define(LogLevel.Information, Events.MissingHeader, $"Header '{nameof(HeaderNames.Authorization)}' is missing. Return: 'Null'.");
@@ -119,7 +119,7 @@ namespace NetExtender.AspNetCore.Identity
             {
                 get
                 {
-                    return 1;
+                    return new EventId(1, nameof(SuccessTicket));
                 }
             }
 
@@ -128,7 +128,7 @@ namespace NetExtender.AspNetCore.Identity
             {
                 get
                 {
-                    return 2;
+                    return new EventId(2, nameof(InvalidTicket));
                 }
             }
 
@@ -137,7 +137,7 @@ namespace NetExtender.AspNetCore.Identity
             {
                 get
                 {
-                    return 3;
+                    return new EventId(3, nameof(FailTicket));
                 }
             }
 
@@ -146,7 +146,7 @@ namespace NetExtender.AspNetCore.Identity
             {
                 get
                 {
-                    return 10;
+                    return new EventId(10, nameof(MissingHeader));
                 }
             }
 
@@ -155,7 +155,7 @@ namespace NetExtender.AspNetCore.Identity
             {
                 get
                 {
-                    return 12;
+                    return new EventId(12, nameof(InvalidHeader));
                 }
             }
 
@@ -164,7 +164,7 @@ namespace NetExtender.AspNetCore.Identity
             {
                 get
                 {
-                    return 11;
+                    return new EventId(11, nameof(InvalidScheme));
                 }
             }
         }

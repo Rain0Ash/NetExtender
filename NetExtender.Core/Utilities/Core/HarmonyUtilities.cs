@@ -1263,7 +1263,7 @@ namespace NetExtender.Utilities.Core
                 
                 if (!New.IsAssignableTo(Old))
                 {
-                    throw new ArgumentException($"The type {New} must be assignable to {Old}.");
+                    throw new ArgumentException($"The type '{New.FullName}' must be assignable to '{Old.FullName}'.");
                 }
             }
         }

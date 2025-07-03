@@ -9,6 +9,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
+using NetExtender.Types.Entities;
 using NetExtender.Utilities.Core;
 
 namespace NetExtender.Utilities.Types
@@ -38,7 +39,7 @@ namespace NetExtender.Utilities.Types
                 }
                 catch (Exception)
                 {
-                    result = default;
+                    result = null;
                     return false;
                 }
             }
@@ -55,11 +56,11 @@ namespace NetExtender.Utilities.Types
                     throw new NotSupportedException();
                 }
 
-                ParameterExpression parameter = Expression.Parameter(typeof(Object), "value");
-                UnaryExpression convert = Expression.Convert(parameter, type);
+                ParameterExpression argument = Expression.Parameter(typeof(Object), nameof(argument));
+                UnaryExpression convert = Expression.Convert(argument, type);
 
-                Func<Object, Object?> key = Expression.Lambda<Func<Object, Object?>>(Expression.Convert(Expression.Property(convert, "Key"), typeof(Object)), parameter).Compile();
-                Func<Object, Object?> value = Expression.Lambda<Func<Object, Object?>>(Expression.Convert(Expression.Property(convert, "Value"), typeof(Object)), parameter).Compile();
+                Func<Object, Object?> key = Expression.Lambda<Func<Object, Object?>>(Expression.Convert(Expression.Property(convert, nameof(KeyValuePair<Any.Value, Any.Value>.Key)), typeof(Object)), argument).Compile();
+                Func<Object, Object?> value = Expression.Lambda<Func<Object, Object?>>(Expression.Convert(Expression.Property(convert, nameof(KeyValuePair<Any.Value, Any.Value>.Value)), typeof(Object)), argument).Compile();
 
                 return new KeyValuePairAccessor(key, value);
             }
@@ -75,8 +76,8 @@ namespace NetExtender.Utilities.Types
         {
             if (@object is null || !TryGetAccessor(@object.GetType(), out KeyValuePairAccessor? accessor))
             {
-                key = default;
-                value = default;
+                key = null;
+                value = null;
                 return false;
             }
 
@@ -89,7 +90,7 @@ namespace NetExtender.Utilities.Types
         {
             if (@object is null || !TryGetAccessor(@object.GetType(), out KeyValuePairAccessor? accessor))
             {
-                key = default;
+                key = null;
                 return false;
             }
 
@@ -101,7 +102,7 @@ namespace NetExtender.Utilities.Types
         {
             if (@object is null || !TryGetAccessor(@object.GetType(), out KeyValuePairAccessor? accessor))
             {
-                value = default;
+                value = null;
                 return false;
             }
 
