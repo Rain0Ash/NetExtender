@@ -9,6 +9,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Http;
+using Microsoft.Extensions.Logging;
 using NetExtender.AspNetCore.Filters;
 using NetExtender.AspNetCore.Identity.Interfaces;
 using NetExtender.AspNetCore.Types.Services.Interfaces;
@@ -131,6 +134,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
             return AddApiVersioning<T>(services, null);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IServiceCollection AddApiVersioning<T>(this IServiceCollection services, String? version) where T : IApiVersionReader
         {
             if (services is null)
@@ -146,6 +150,25 @@ namespace NetExtender.Utilities.AspNetCore.Types
                 options.ApiVersionReader = Activator.CreateInstance<T>();
             });
             
+            return services;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IServiceCollection AddHttpTracingToAllHttpClients(this IServiceCollection services)
+        {
+            return AddHttpTracingToAllHttpClients(services, null);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IServiceCollection AddHttpTracingToAllHttpClients(this IServiceCollection services, Func<IServiceProvider, HttpMessageHandlerBuilder, TracingHttpMessageHandlerBuilderFilter.Configuration>? configuration)
+        {
+            if (services is null)
+            {
+                throw new ArgumentNullException(nameof(services));
+            }
+
+            ServiceDescriptor descriptor = ServiceDescriptor.Singleton<IHttpMessageHandlerBuilderFilter, TracingHttpMessageHandlerBuilderFilter>(provider => new TracingHttpMessageHandlerBuilderFilter(provider, provider.GetRequiredService<ILoggerFactory>(), configuration));
+            services.TryAddEnumerable(descriptor);
             return services;
         }
     }

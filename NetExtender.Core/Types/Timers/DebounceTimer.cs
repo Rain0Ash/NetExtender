@@ -5,6 +5,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using NetExtender.Types.Events;
+using NetExtender.Types.Exceptions;
 using NetExtender.Types.Timers.Interfaces;
 using NetExtender.Types.Times;
 using NetExtender.Utilities.Types;
@@ -105,7 +106,7 @@ namespace NetExtender.Types.Timers
         {
             if (Timer is null)
             {
-                throw new ObjectDisposedException(nameof(DebounceTimer));
+                throw new ThisObjectDisposedException(this);
             }
             
             Timer.Change(Interval, Timeout.InfiniteTimeSpan);
@@ -121,7 +122,7 @@ namespace NetExtender.Types.Timers
         {
             if (Timer is null)
             {
-                throw new ObjectDisposedException(nameof(DebounceTimer));
+                throw new ThisObjectDisposedException(this);
             }
 
             Timer.Change(Interval, Timeout.InfiniteTimeSpan);
@@ -132,7 +133,7 @@ namespace NetExtender.Types.Timers
         {
             if (Timer is null)
             {
-                throw new ObjectDisposedException(nameof(DebounceTimer));
+                throw new ThisObjectDisposedException(this);
             }
 
             Timer.Change(Timeout.Infinite, Timeout.Infinite);

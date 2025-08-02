@@ -5,6 +5,7 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 using NetExtender.Logging.Common;
+using NetExtender.Types.Exceptions;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Logging.Behavior
@@ -22,7 +23,7 @@ namespace NetExtender.Logging.Behavior
         {
             if (Writer is null)
             {
-                throw new ObjectDisposedException(nameof(TextWriter));
+                throw new ThisObjectDisposedException(this);
             }
 
             message = Formatter.Format(message, level, options, offset, provider);

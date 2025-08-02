@@ -7,6 +7,7 @@ using System.IO;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using NetExtender.Types.Exceptions;
 
 namespace NetExtender.Types.Streams
 {
@@ -32,7 +33,7 @@ namespace NetExtender.Types.Streams
             {
                 if (Stream is null)
                 {
-                    throw new ObjectDisposedException(GetType().Name, "Cannot access to a disposed stream.");
+                    throw new ThisObjectDisposedException(this);
                 }
                 
                 return Stream.CanRead;
@@ -45,7 +46,7 @@ namespace NetExtender.Types.Streams
             {
                 if (Stream is null)
                 {
-                    throw new ObjectDisposedException(GetType().Name, "Cannot access to a disposed stream.");
+                    throw new ThisObjectDisposedException(this);
                 }
                 
                 return false;
@@ -58,7 +59,7 @@ namespace NetExtender.Types.Streams
             {
                 if (Stream is null)
                 {
-                    throw new ObjectDisposedException(GetType().Name, "Cannot access to a disposed stream.");
+                    throw new ThisObjectDisposedException(this);
                 }
                 
                 return Stream.CanWrite;
@@ -117,7 +118,7 @@ namespace NetExtender.Types.Streams
         {
             if (Stream is null)
             {
-                throw new ObjectDisposedException(GetType().Name, "Cannot access to a disposed stream.");
+                throw new ThisObjectDisposedException(this);
             }
             
             if (!CanRead)
@@ -196,7 +197,7 @@ namespace NetExtender.Types.Streams
         {
             if (Stream is null)
             {
-                throw new ObjectDisposedException(GetType().Name, "Cannot access to a disposed stream.");
+                throw new ThisObjectDisposedException(this);
             }
             
             if (!CanRead)
@@ -256,7 +257,7 @@ namespace NetExtender.Types.Streams
         {
             if (Stream is null)
             {
-                throw new ObjectDisposedException(GetType().Name, "Cannot access to a disposed stream.");
+                throw new ThisObjectDisposedException(this);
             }
             
             if (!CanRead)
@@ -287,7 +288,7 @@ namespace NetExtender.Types.Streams
         {
             if (Stream is null)
             {
-                throw new ObjectDisposedException(GetType().Name, "Cannot access to a disposed stream.");
+                throw new ThisObjectDisposedException(this);
             }
     
             if (!CanRead)
@@ -339,7 +340,7 @@ namespace NetExtender.Types.Streams
         {
             if (Stream is null)
             {
-                throw new ObjectDisposedException(GetType().Name, "Cannot access to a disposed stream.");
+                throw new ThisObjectDisposedException(this);
             }
             
             if (!CanWrite)
@@ -412,7 +413,7 @@ namespace NetExtender.Types.Streams
         {
             if (Stream is null)
             {
-                throw new ObjectDisposedException(GetType().Name, "Cannot access to a disposed stream.");
+                throw new ThisObjectDisposedException(this);
             }
     
             if (!CanWrite)
@@ -473,7 +474,7 @@ namespace NetExtender.Types.Streams
         {
             if (Stream is null)
             {
-                throw new ObjectDisposedException(GetType().Name, "Cannot access to a disposed stream.");
+                throw new ThisObjectDisposedException(this);
             }
             
             if (!CanWrite)
@@ -553,7 +554,7 @@ namespace NetExtender.Types.Streams
         {
             if (Stream is null)
             {
-                throw new ObjectDisposedException(GetType().Name, "Cannot access to a disposed stream.");
+                throw new ThisObjectDisposedException(this);
             }
             
             Stream.Flush();
@@ -563,7 +564,7 @@ namespace NetExtender.Types.Streams
         {
             if (Stream is null)
             {
-                throw new ObjectDisposedException(GetType().Name, "Cannot access to a disposed stream.");
+                throw new ThisObjectDisposedException(this);
             }
             
             await Stream.FlushAsync(token);

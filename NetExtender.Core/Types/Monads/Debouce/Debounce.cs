@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 using NetExtender.Interfaces;
+using NetExtender.Newtonsoft.Types.Monads;
 using NetExtender.Types.Monads.Interfaces;
 using NetExtender.Types.Times;
 using NetExtender.Utilities.Serialization;
@@ -14,8 +15,9 @@ using Newtonsoft.Json;
 
 namespace NetExtender.Types.Monads
 {
-    //TODO: json
     [Serializable]
+    [JsonConverter(typeof(DebounceJsonConverter<>))]
+    [System.Text.Json.Serialization.JsonConverter(typeof(Serialization.Json.Monads.DebounceJsonConverter<>))]
     public readonly struct Debounce<T> : IEqualityStruct<Debounce<T>>, IDebounce<T>, IDebounceEquality<T, Debounce<T>>, ICloneable<Debounce<T>>, ISerializable
     {
         public static implicit operator T(Debounce<T> value)

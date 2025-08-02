@@ -45,7 +45,7 @@ namespace NetExtender.NAudio.Types.Providers
         }
 
         public FadeOutSampleProvider(ISampleProvider provider, TimeSpan fadeout, Boolean silent)
-            : this(provider, default, fadeout, silent)
+            : this(provider, TimeSpan.Zero, fadeout, silent)
         {
         }
 
@@ -55,7 +55,7 @@ namespace NetExtender.NAudio.Types.Providers
         }
 
         public FadeOutSampleProvider(ISampleProvider provider, TimeSpan delay, TimeSpan fadeout, Boolean silent)
-            : this(provider, default, delay, fadeout, silent)
+            : this(provider, TimeSpan.Zero, delay, fadeout, silent)
         {
         }
 
@@ -69,15 +69,15 @@ namespace NetExtender.NAudio.Types.Providers
             Provider = provider ?? throw new ArgumentNullException(nameof(provider));
             State = silent ? FadeState.Silence : FadeState.Standard;
 
-            FadeIn = fadein >= default(TimeSpan) ? fadein : default;
-            FadeOut = fadeout >= default(TimeSpan) ? fadeout : default;
-            FadeOutDelay = FadeOut > default(TimeSpan) && delay - FadeIn >= default(TimeSpan) ? delay - FadeIn : default;
+            FadeIn = fadein >= TimeSpan.Zero ? fadein : TimeSpan.Zero;
+            FadeOut = fadeout >= TimeSpan.Zero ? fadeout : TimeSpan.Zero;
+            FadeOutDelay = FadeOut > TimeSpan.Zero && delay - FadeIn >= TimeSpan.Zero ? delay - FadeIn : TimeSpan.Zero;
 
-            if (FadeIn > default(TimeSpan))
+            if (FadeIn > TimeSpan.Zero)
             {
                 BeginFadeIn(FadeIn);
             }
-            else if (FadeOut > default(TimeSpan))
+            else if (FadeOut > TimeSpan.Zero)
             {
                 BeginFadeOut(FadeOutDelay, FadeOut);
             }
@@ -95,7 +95,7 @@ namespace NetExtender.NAudio.Types.Providers
 
         private void BeginFadeOut(TimeSpan duration)
         {
-            BeginFadeOut(default, duration);
+            BeginFadeOut(TimeSpan.Zero, duration);
         }
 
         private void BeginFadeOut(TimeSpan delay, TimeSpan duration)
@@ -178,7 +178,7 @@ namespace NetExtender.NAudio.Types.Providers
 
                 State = FadeState.Standard;
 
-                if (FadeOut > default(TimeSpan))
+                if (FadeOut > TimeSpan.Zero)
                 {
                     BeginFadeOut(FadeOutDelay, FadeOut);
                 }

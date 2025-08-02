@@ -10,6 +10,99 @@ namespace NetExtender.Utilities.Network
     public static class HttpHeaderUtilities
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void AddRange(this HttpHeaders collection, IEnumerable<KeyValuePair<String, String>>? source)
+        {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
+            if (source is null)
+            {
+                return;
+            }
+            
+            foreach ((String key, String value) in source)
+            {
+                collection.Add(key, value);
+            }
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void AddRange(this HttpHeaders collection, IEnumerable<KeyValuePair<String, IEnumerable<String>>>? source)
+        {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
+            if (source is null)
+            {
+                return;
+            }
+            
+            foreach ((String key, IEnumerable<String> value) in source)
+            {
+                collection.Add(key, value);
+            }
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void AddRange(this HttpHeaders collection, HttpHeaders? source)
+        {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
+            if (source is null)
+            {
+                return;
+            }
+            
+            foreach ((String key, IEnumerable<String> value) in source)
+            {
+                collection.Add(key, value);
+            }
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void With(this HttpHeaders collection, IEnumerable<KeyValuePair<String, String>>? source)
+        {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
+            collection.Clear();
+            collection.AddRange(source);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void With(this HttpHeaders collection, IEnumerable<KeyValuePair<String, IEnumerable<String>>>? source)
+        {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
+            collection.Clear();
+            collection.AddRange(source);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void With(this HttpHeaders collection, HttpHeaders? source)
+        {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
+            collection.Clear();
+            collection.AddRange(source);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String ToHeaderString(this HttpHeaders? headers, HttpHeaders? content)
         {
             return ToHeaderString(headers, content, 0);

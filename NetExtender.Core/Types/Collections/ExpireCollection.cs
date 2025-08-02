@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using NetExtender.Types.Events;
+using NetExtender.Types.Exceptions;
 using NetExtender.Types.Timers;
 using NetExtender.Types.Timers.Interfaces;
 using NetExtender.Utilities.Types;
@@ -37,7 +38,7 @@ namespace NetExtender.Types.Collections
             {
                 if (Timer is null)
                 {
-                    throw new ObjectDisposedException(GetType().Name);
+                    throw new ThisObjectDisposedException(this);
                 }
                 
                 return Timer.Interval;
@@ -46,7 +47,7 @@ namespace NetExtender.Types.Collections
             {
                 if (Timer is null)
                 {
-                    throw new ObjectDisposedException(GetType().Name);
+                    throw new ThisObjectDisposedException(this);
                 }
                 
                 Timer.Interval = value;
@@ -72,7 +73,7 @@ namespace NetExtender.Types.Collections
         public event TickHandler? Tick;
 
         public ExpireCollection(TimeSpan expire)
-            : this(expire, new TimeSpan())
+            : this(expire, TimeSpan.Zero)
         {
         }
 

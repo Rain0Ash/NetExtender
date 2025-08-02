@@ -9,6 +9,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using NetExtender.Interfaces;
 using NetExtender.Interfaces.Notify;
+using NetExtender.Newtonsoft.Types.Monads;
 using NetExtender.Types.Monads.Interfaces;
 using NetExtender.Utilities.Serialization;
 using NetExtender.Utilities.Types;
@@ -17,6 +18,8 @@ using Newtonsoft.Json;
 namespace NetExtender.Types.Monads
 {
     [Serializable]
+    [JsonConverter(typeof(NotifyDebounceJsonConverter<>))]
+    [System.Text.Json.Serialization.JsonConverter(typeof(Serialization.Json.Monads.NotifyDebounceJsonConverter<>))]
     public class NotifyDebounce<T> : MutableDebounce<T>
     {
         public static implicit operator NotifyDebounce<T>(T value)
@@ -113,6 +116,8 @@ namespace NetExtender.Types.Monads
     }
     
     [Serializable]
+    [JsonConverter(typeof(MutableDebounceJsonConverter<>))]
+    [System.Text.Json.Serialization.JsonConverter(typeof(Serialization.Json.Monads.MutableDebounceJsonConverter<>))]
     public class MutableDebounce<T> : IDebounce<T>, IDebounceEquality<T, Debounce<T>>, IDebounceEquality<T, MutableDebounce<T>>, ICloneable<Debounce<T>>, ICloneable<MutableDebounce<T>>, ISerializable, INotifyProperty
     {
         [return: NotNullIfNotNull("value")]
@@ -465,7 +470,7 @@ namespace NetExtender.Types.Monads
                 return true;
             }
             
-            result = default;
+            result = null;
             return false;
         }
         

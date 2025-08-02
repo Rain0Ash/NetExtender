@@ -27,6 +27,12 @@ namespace NetExtender.NAudio.Types.Progress
             Callback = callback ?? throw new ArgumentNullException(nameof(callback));
         }
 
+        public ProgressWaveProvider(IWaveProvider provider, IProgress<Int64> progress)
+        {
+            Provider = provider ?? throw new ArgumentNullException(nameof(provider));
+            Callback = progress is not null ? progress.Report : throw new ArgumentNullException(nameof(progress));
+        }
+
         public Int32 Read(Byte[] buffer, Int32 offset, Int32 count)
         {
             Int32 read = Provider.Read(buffer, offset, count);

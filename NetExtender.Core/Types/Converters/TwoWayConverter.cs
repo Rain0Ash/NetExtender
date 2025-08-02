@@ -3,9 +3,14 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 using NetExtender.Types.Converters.Interfaces;
+using NetExtender.Types.Enums;
+using NetExtender.Types.Enums.Interfaces;
 using NetExtender.Types.Storages;
 using NetExtender.Types.Storages.Interfaces;
+using NetExtender.Utilities.Core;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Converters
@@ -318,8 +323,261 @@ namespace NetExtender.Types.Converters
         }
     }
     
-    //TODO:
-    public abstract class EnumConverter<TInput, TOutput> : TwoWayConverter<TInput, TOutput> where TOutput : unmanaged, Enum
+    //TODO: verify
+    public class EnumConverter<TInput, TOutput> : TwoWayConverter<TInput, TOutput> where TInput : unmanaged, Enum
     {
+        protected static EnumConverter<TInput, TOutput>? Converter { get; }
+
+        static EnumConverter()
+        {
+            if (typeof(TOutput).IsValueType || !typeof(TOutput).Implements<IEnum<TInput>>())
+            {
+                return;
+            }
+
+            const BindingFlags binding = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.CreateInstance;
+
+            Type? converter = null;
+            
+            try
+            {
+                if (typeof(TOutput).IsAssignableTo(typeof(Enum<,>).MakeGenericType(typeof(TInput), typeof(TOutput))))
+                {
+                    converter = typeof(EnumConverter.Wrapper2<,>).MakeGenericType(typeof(TInput), typeof(TOutput));
+                    goto converter;
+                }
+            }
+            catch (ArgumentException)
+            {
+            }
+            
+            try
+            {
+                if (typeof(TOutput).IsAssignableTo(typeof(IEnum<,>).MakeGenericType(typeof(TInput), typeof(TOutput))))
+                {
+                    converter = typeof(EnumConverter.Wrapper2<,>).MakeGenericType(typeof(TInput), typeof(Enum<,>).MakeGenericType(typeof(TInput), typeof(TOutput)));
+                    goto converter;
+                }
+            }
+            catch (ArgumentException)
+            {
+            }
+            
+            try
+            {
+                if (typeof(TOutput).IsAssignableTo(typeof(Enum<TInput>)))
+                {
+                    converter = typeof(EnumConverter.Wrapper1<,>).MakeGenericType(typeof(TInput), typeof(TOutput));
+                    goto converter;
+                }
+            }
+            catch (ArgumentException)
+            {
+            }
+            
+            try
+            {
+                if (typeof(TOutput).IsAssignableTo(typeof(IEnum<TInput>)))
+                {
+                    converter = typeof(EnumConverter.Wrapper1<,>).MakeGenericType(typeof(TInput), typeof(Enum<TInput>));
+                    goto converter;
+                }
+            }
+            catch (ArgumentException)
+            {
+            }
+
+            if (converter is null)
+            {
+                return;
+            }
+            
+            converter:
+            Converter = Activator.CreateInstance(converter, binding, Array.Empty<Object?>()) as EnumConverter<TInput, TOutput>;
+        }
+        
+        public override TOutput Convert(TInput input)
+        {
+            return TryConvert(input, out TOutput? output) ? output : throw new InvalidCastException();
+        }
+
+        public override Boolean TryConvert(TInput input, [MaybeNullWhen(false)] out TOutput output)
+        {
+            if (typeof(TInput) == typeof(TOutput))
+            {
+                output = Unsafe.As<TInput, TOutput>(ref input);
+                return true;
+            }
+            
+            if (typeof(TOutput) == typeof(String))
+            {
+                String result = EnumUtilities.GetName(input);
+                output = Unsafe.As<String, TOutput>(ref result);
+                return true;
+            }
+
+            if (typeof(TOutput) == typeof(Enum))
+            {
+                Enum result = input;
+                output = Unsafe.As<Enum, TOutput>(ref result);
+                return true;
+            }
+
+            if (typeof(TOutput).IsEnum)
+            {
+                try
+                {
+                    if (System.Convert.ChangeType(input, typeof(TOutput)) is TOutput result)
+                    {
+                        output = result;
+                        return true;
+                    }
+                }
+                catch (Exception)
+                {
+                }
+
+                output = default;
+                return false;
+            }
+
+            if (Converter is { } converter)
+            {
+                return converter.TryConvert(input, out output);
+            }
+            
+            output = default;
+            return false;
+        }
+
+        public override TInput ConvertBack(TOutput? input)
+        {
+            return TryConvertBack(input, out TInput output) ? output : throw new InvalidCastException();
+        }
+
+        // ReSharper disable once CognitiveComplexity
+        public override Boolean TryConvertBack(TOutput? input, out TInput output)
+        {
+            if (input is null)
+            {
+                output = default;
+                return false;
+            }
+            
+            if (typeof(TOutput) == typeof(TInput))
+            {
+                output = Unsafe.As<TOutput, TInput>(ref input);
+                return true;
+            }
+            
+            if (typeof(TOutput) == typeof(String))
+            {
+                String value = Unsafe.As<TOutput, String>(ref input);
+                return EnumUtilities.TryParse(value, out output);
+            }
+
+            if (typeof(TOutput) == typeof(Enum))
+            {
+                if (Unsafe.As<TOutput, Enum>(ref input) is TInput value)
+                {
+                    output = value;
+                    return true;
+                }
+                
+                output = default;
+                return false;
+            }
+
+            if (typeof(TOutput).IsEnum)
+            {
+                try
+                {
+                    if (System.Convert.ChangeType(input, typeof(TInput)) is TInput result)
+                    {
+                        output = result;
+                        return true;
+                    }
+                }
+                catch (Exception)
+                {
+                }
+                
+                output = default;
+                return false;
+            }
+
+            if (Converter is { } converter)
+            {
+                return converter.TryConvertBack(input, out output);
+            }
+            
+            output = default;
+            return false;
+        }
+    }
+
+    internal static class EnumConverter
+    {
+        internal sealed class Wrapper1<TInput, TOutput> : EnumConverter<TInput, TOutput> where TInput : unmanaged, Enum where TOutput : Enum<TInput>
+        {
+            private Wrapper1()
+            {
+            }
+
+            public override Boolean TryConvert(TInput input, [MaybeNullWhen(false)] out TOutput output)
+            {
+                if (Enum<TInput>.TryParse(input, out Enum<TInput>? value) && value is TOutput result)
+                {
+                    output = result;
+                    return true;
+                }
+            
+                output = null;
+                return false;
+            }
+
+            public override Boolean TryConvertBack(TOutput? input, out TInput output)
+            {
+                if (input is null)
+                {
+                    output = default;
+                    return false;
+                }
+            
+                output = input.Id;
+                return true;
+            }
+        }
+
+        internal sealed class Wrapper2<TInput, TOutput> : EnumConverter<TInput, TOutput> where TInput : unmanaged, Enum where TOutput : Enum<TInput, TOutput>, new()
+        {
+            private Wrapper2()
+            {
+            }
+
+            public override Boolean TryConvert(TInput input, [MaybeNullWhen(false)] out TOutput output)
+            {
+                if (Enum<TInput, TOutput>.TryParse(input, out TOutput? result))
+                {
+                    output = result;
+                    return true;
+                }
+            
+                output = null;
+                return false;
+            }
+
+            public override Boolean TryConvertBack(TOutput? input, out TInput output)
+            {
+                if (input is null)
+                {
+                    output = default;
+                    return false;
+                }
+            
+                output = input.Id;
+                return true;
+            }
+        }
     }
 }

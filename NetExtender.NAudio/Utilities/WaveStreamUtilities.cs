@@ -10,6 +10,11 @@ namespace NetExtender.Utilities.NAudio
     {
         public static void Skip(this WaveStream stream, TimeSpan skip)
         {
+            if (stream is null)
+            {
+                throw new ArgumentNullException(nameof(stream));
+            }
+
             Int64 position = stream.Position + (Int64) (stream.WaveFormat.AverageBytesPerSecond * skip.TotalSeconds);
 
             if (position > stream.Length)

@@ -10,7 +10,6 @@ namespace NetExtender.NAudio.Types.Readers
     public class WaveStreamReaderProvider : IWaveProvider
     {
         protected Stream Stream { get; }
-
         public WaveFormat WaveFormat { get; }
 
         public WaveStreamReaderProvider(WaveStream stream)

@@ -15,6 +15,11 @@ namespace NetExtender.Cryptography.Hash.XXHash
         /// <returns>hash</returns>
         public static UInt64 ComputeHash(Byte[] data, UInt32 seed = 0)
         {
+            if (data is null)
+            {
+                throw new ArgumentNullException(nameof(data));
+            }
+
             return ComputeHash(data, data.Length, seed);
         }
 
@@ -27,9 +32,14 @@ namespace NetExtender.Cryptography.Hash.XXHash
         /// <returns>hash</returns>
         public static unsafe UInt64 ComputeHash(Byte[] data, Int32 length, UInt64 seed = 0)
         {
-            fixed (Byte* pData = &data[0])
+            if (data is null)
             {
-                return UnsafeComputeHash(pData, length, seed);
+                throw new ArgumentNullException(nameof(data));
+            }
+
+            fixed (Byte* pointer = &data[0])
+            {
+                return UnsafeComputeHash(pointer, length, seed);
             }
         }
 
@@ -63,6 +73,5 @@ namespace NetExtender.Cryptography.Hash.XXHash
         {
             return ComputeHash(data.Array ?? throw new ArgumentNullException(nameof(data)), data.Offset, data.Count, seed);
         }   
-
     }
 }

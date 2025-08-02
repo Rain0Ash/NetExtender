@@ -123,10 +123,10 @@ namespace NetExtender.Utilities.NAudio
                     throw new ArgumentNullException(nameof(provider));
                 case WaveStream stream:
                     Repeat(player, stream);
-                    break;
+                    return;
                 default:
                     Repeat(player, new WaveProviderWaveStreamLazyReader(provider));
-                    break;
+                    return;
             }
         }
 
@@ -189,8 +189,6 @@ namespace NetExtender.Utilities.NAudio
             }
 
             player.Play();
-            
-            // ReSharper disable once AsyncConverter.AsyncAwaitMayBeElidedHighlighting
             await player.WaitAsync(token).ConfigureAwait(false);
         }
 
@@ -212,8 +210,6 @@ namespace NetExtender.Utilities.NAudio
             }
 
             Play(player, provider);
-            
-            // ReSharper disable once AsyncConverter.AsyncAwaitMayBeElidedHighlighting
             await player.WaitAsync(token).ConfigureAwait(false);
         }
 
@@ -235,8 +231,6 @@ namespace NetExtender.Utilities.NAudio
             }
 
             Play(player, provider);
-            
-            // ReSharper disable once AsyncConverter.AsyncAwaitMayBeElidedHighlighting
             await player.WaitAsync(token).ConfigureAwait(false);
         }
 
@@ -258,8 +252,6 @@ namespace NetExtender.Utilities.NAudio
             }
 
             Play(player, provider, bit16);
-            
-            // ReSharper disable once AsyncConverter.AsyncAwaitMayBeElidedHighlighting
             await player.WaitAsync(token).ConfigureAwait(false);
         }
 

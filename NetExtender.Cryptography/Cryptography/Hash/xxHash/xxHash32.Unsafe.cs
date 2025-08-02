@@ -18,16 +18,21 @@ namespace NetExtender.Cryptography.Hash.XXHash
         /// <summary>
         /// Compute xxhash32 for the unsafe array of memory
         /// </summary>
-        /// <param name="ptr"></param>
+        /// <param name="pointer"></param>
         /// <param name="length"></param>
         /// <param name="seed"></param>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static unsafe UInt32 UnsafeComputeHash(Byte* ptr, Int32 length, UInt32 seed)
+        private static unsafe UInt32 UnsafeComputeHash(Byte* pointer, Int32 length, UInt32 seed)
         {
+            if (length <= 0)
+            {
+                return 0;
+            }
+            
             unchecked
             {
-                Byte* end = ptr + length;
+                Byte* end = pointer + length;
                 UInt32 h32;
 
                 if (length >= 16)
@@ -41,26 +46,26 @@ namespace NetExtender.Cryptography.Hash.XXHash
 
                     do
                     {
-                        v1 += *(UInt32*) ptr * P2;
+                        v1 += *(UInt32*) pointer * P2;
                         v1 = v1.BitwiseRotateLeft(13); // rotl 13
                         v1 *= P1;
-                        ptr += 4;
+                        pointer += 4;
 
-                        v2 += *(UInt32*) ptr * P2;
+                        v2 += *(UInt32*) pointer * P2;
                         v2 = v2.BitwiseRotateLeft(13); // rotl 13
                         v2 *= P1;
-                        ptr += 4;
+                        pointer += 4;
 
-                        v3 += *(UInt32*) ptr * P2;
+                        v3 += *(UInt32*) pointer * P2;
                         v3 = v3.BitwiseRotateLeft(13); // rotl 13
                         v3 *= P1;
-                        ptr += 4;
+                        pointer += 4;
 
-                        v4 += *(UInt32*) ptr * P2;
+                        v4 += *(UInt32*) pointer * P2;
                         v4 = v4.BitwiseRotateLeft(13); // rotl 13
                         v4 *= P1;
-                        ptr += 4;
-                    } while (ptr <= limit);
+                        pointer += 4;
+                    } while (pointer <= limit);
 
                     h32 = v1.BitwiseRotateLeft(1) + // rotl 1
                           v2.BitwiseRotateLeft(7) + // rotl 7
@@ -75,18 +80,18 @@ namespace NetExtender.Cryptography.Hash.XXHash
                 h32 += (UInt32) length;
 
                 // finalize
-                while (ptr <= end - 4)
+                while (pointer <= end - 4)
                 {
-                    h32 += *(UInt32*) ptr * P3;
+                    h32 += *(UInt32*) pointer * P3;
                     h32 = h32.BitwiseRotateLeft(17) * P4; // (rotl 17) * p4
-                    ptr += 4;
+                    pointer += 4;
                 }
 
-                while (ptr < end)
+                while (pointer < end)
                 {
-                    h32 += *ptr * P5;
+                    h32 += *pointer * P5;
                     h32 = h32.BitwiseRotateLeft(11) * P1; // (rotl 11) * p1
-                    ptr += 1;
+                    pointer += 1;
                 }
 
                 // avalanche
@@ -112,11 +117,16 @@ namespace NetExtender.Cryptography.Hash.XXHash
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static unsafe void UnsafeAlign(ReadOnlySpan<Byte> data, Int32 l, ref UInt32 v1, ref UInt32 v2, ref UInt32 v3, ref UInt32 v4)
         {
+            if (data.Length <= 0)
+            {
+                return;
+            }
+            
             unchecked
             {
-                fixed (Byte* pData = &data[0])
+                fixed (Byte* pointer = &data[0])
                 {
-                    Byte* ptr = pData;
+                    Byte* ptr = pointer;
                     Byte* limit = ptr + l;
 
                     do
@@ -160,12 +170,17 @@ namespace NetExtender.Cryptography.Hash.XXHash
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static unsafe UInt32 UnsafeFinal(ReadOnlySpan<Byte> data, Int32 l, ref UInt32 v1, ref UInt32 v2, ref UInt32 v3, ref UInt32 v4, Int64 length, UInt32 seed)
         {
+            if (data.Length <= 0)
+            {
+                return 0;
+            }
+            
             unchecked
             {
-                fixed (Byte* pData = &data[0])
+                fixed (Byte* pointer = &data[0])
                 {
-                    Byte* ptr = pData;
-                    Byte* end = pData + l;
+                    Byte* ptr = pointer;
+                    Byte* end = pointer + l;
                     UInt32 h32;
 
                     if (length >= 16)

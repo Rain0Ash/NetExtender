@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -30,33 +31,54 @@ namespace NetExtender.Utilities.Network
             DefaultResponseFailHandler = LoggerMessage.Define<String, HttpStatusCode, String?, String, String>(LogLevel.Warning, Events.ResponseFail, ResponseMessageFormat);
         }
 
-        protected ILogger Logger { get; }
         protected Predicate<HttpResponseMessage>? Validator { get; }
+        public Boolean Buffering { get; init; }
+        
         public Action<ILogger, HttpMethod, Uri?, String, String, String, Exception?>? RequestSuccessHandler { get; init; } = DefaultRequestSuccessHandler;
         public Action<ILogger, String, HttpStatusCode, String?, String, String, Exception?>? ResponseSuccessHandler { get; init; } = DefaultResponseSuccessHandler;
         public Action<ILogger, HttpMethod, Uri?, String, String, String, Exception?>? RequestFailHandler { get; init; } = DefaultRequestFailHandler;
         public Action<ILogger, String, HttpStatusCode, String?, String, String, Exception?>? ResponseFailHandler { get; init; } = DefaultResponseFailHandler;
-        
-        public HttpTracingHandler(ILogger logger)
-            : this(logger, null)
+
+        public HttpTracingHandler(ILogger? logger)
+            : this(logger, false)
         {
         }
 
-        public HttpTracingHandler(ILogger logger, Predicate<HttpResponseMessage>? validator)
-            : this(null, logger, validator)
+        public HttpTracingHandler(ILogger? logger, Boolean buffering)
+            : this(logger, null, buffering)
         {
         }
 
-        public HttpTracingHandler(HttpMessageHandler? handler, ILogger logger)
-            : this(handler, logger, null)
+        public HttpTracingHandler(ILogger? logger, Predicate<HttpResponseMessage>? validator)
+            : this(logger, validator, false)
         {
         }
 
-        public HttpTracingHandler(HttpMessageHandler? handler, ILogger logger, Predicate<HttpResponseMessage>? validator)
-            : base(logger is not null ? handler : throw new ArgumentNullException(nameof(logger)))
+        public HttpTracingHandler(ILogger? logger, Predicate<HttpResponseMessage>? validator, Boolean buffering)
+            : this(null, logger, validator, buffering)
         {
-            Logger = logger;
+        }
+
+        public HttpTracingHandler(HttpMessageHandler? handler, ILogger? logger)
+            : this(handler, logger, false)
+        {
+        }
+
+        public HttpTracingHandler(HttpMessageHandler? handler, ILogger? logger, Boolean buffering)
+            : this(handler, logger, null, buffering)
+        {
+        }
+
+        public HttpTracingHandler(HttpMessageHandler? handler, ILogger? logger, Predicate<HttpResponseMessage>? validator)
+            : this(handler, logger, validator, false)
+        {
+        }
+
+        public HttpTracingHandler(HttpMessageHandler? handler, ILogger? logger, Predicate<HttpResponseMessage>? validator, Boolean buffering)
+            : base(handler, logger)
+        {
             Validator = validator;
+            Buffering = buffering;
         }
 
         protected virtual Boolean Validate(HttpResponseMessage response)
@@ -83,12 +105,23 @@ namespace NetExtender.Utilities.Network
         {
             try
             {
-                HttpResponseMessage response = await base.SendAsync(request, token);
+                if (Buffering && request.Content is not null)
+                {
+                    Stream stream = await request.Content.ReadAsStreamAsync(token).ConfigureAwait(false);
+                    request.Content = new StreamContent(stream).AddHeaders(request.Content.Headers);
+                }
+                
+                HttpResponseMessage response = await base.SendAsync(request, token).ConfigureAwait(false);
+
+                if (Logger is null)
+                {
+                    return response;
+                }
 
                 if (!Validate(response))
                 {
-                    await Fail(request);
-                    await Fail(response);
+                    await Fail(Logger, request).ConfigureAwait(false);
+                    await Fail(Logger, response).ConfigureAwait(false);
                     return response;
                 }
 
@@ -97,71 +130,71 @@ namespace NetExtender.Utilities.Network
                     return response;
                 }
 
-                await Success(request);
-                await Success(response);
+                await Success(Logger, request).ConfigureAwait(false);
+                await Success(Logger, response).ConfigureAwait(false);
                 return response;
             }
             catch (Exception exception)
             {
-                await Fail(request, exception);
+                await Fail(Logger, request, exception).ConfigureAwait(false);
                 throw;
             }
         }
 
-        protected virtual async Task Success(HttpRequestMessage? request)
+        protected virtual async ValueTask Success(ILogger? logger, HttpRequestMessage? request)
         {
-            if (request is null || RequestSuccessHandler is null)
+            if (logger is null || request is null || RequestSuccessHandler is null)
             {
                 return;
             }
 
-            String content = request.Content is not null ? await request.Content.ReadAsStringAsync() : String.Empty;
-            RequestSuccessHandler(Logger, request.Method, request.RequestUri, $"HTTP/{request.Version}", request.ToHeaderString(), content, null);
+            String content = request.Content is not null ? await request.Content.ReadAsStringAsync().ConfigureAwait(false) : String.Empty;
+            RequestSuccessHandler(logger, request.Method, request.RequestUri, $"HTTP/{request.Version}", request.ToHeaderString(), content, null);
         }
 
         [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract")]
-        protected virtual async Task Success(HttpResponseMessage? response)
+        protected virtual async ValueTask Success(ILogger? logger, HttpResponseMessage? response)
         {
-            if (response is null || ResponseSuccessHandler is null)
+            if (logger is null || response is null || ResponseSuccessHandler is null)
             {
                 return;
             }
 
-            String content = response.Content is not null ? await response.Content.ReadAsStringAsync() : String.Empty;
-            ResponseSuccessHandler(Logger, $"HTTP/{response.Version}", response.StatusCode, response.ReasonPhrase, response.ToHeaderString(), content, null);
+            String content = response.Content is not null ? await response.Content.ReadAsStringAsync().ConfigureAwait(false) : String.Empty;
+            ResponseSuccessHandler(logger, $"HTTP/{response.Version}", response.StatusCode, response.ReasonPhrase, response.ToHeaderString(), content, null);
         }
 
-        protected Task Fail(HttpRequestMessage? request)
+        protected ValueTask Fail(ILogger? logger, HttpRequestMessage? request)
         {
-            return Fail(request, null);
+            return Fail(logger, request, null);
         }
 
-        protected virtual async Task Fail(HttpRequestMessage? request, Exception? exception)
+        protected virtual async ValueTask Fail(ILogger? logger, HttpRequestMessage? request, Exception? exception)
         {
-            if (request is null || RequestFailHandler is null)
+            if (logger is null || request is null || RequestFailHandler is null)
             {
                 return;
             }
 
-            String content = request.Content is not null ? await request.Content.ReadAsStringAsync() : String.Empty;
-            RequestFailHandler(Logger, request.Method, request.RequestUri, $"HTTP/{request.Version}", request.ToHeaderString(), content, exception);
+            String content = request.Content is not null ? await request.Content.ReadAsStringAsync().ConfigureAwait(false) : String.Empty;
+            RequestFailHandler(logger, request.Method, request.RequestUri, $"HTTP/{request.Version}", request.ToHeaderString(), content, exception);
         }
 
-        protected Task Fail(HttpResponseMessage response)
+        protected ValueTask Fail(ILogger? logger, HttpResponseMessage response)
         {
-            return Fail(response, null);
+            return Fail(logger, response, null);
         }
 
         [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract")]
-        protected virtual async Task Fail(HttpResponseMessage? response, Exception? exception)
+        protected virtual async ValueTask Fail(ILogger? logger, HttpResponseMessage? response, Exception? exception)
         {
-            if (response is null || ResponseFailHandler is null)
+            if (logger is null || response is null || ResponseFailHandler is null)
             {
                 return;
             }
 
-            String content = response.Content is not null ? await response.Content.ReadAsStringAsync() : String.Empty;
-            ResponseFailHandler(Logger, $"HTTP/{response.Version}", response.StatusCode, response.ReasonPhrase, response.ToHeaderString(), content, exception);
+            String content = response.Content is not null ? await response.Content.ReadAsStringAsync().ConfigureAwait(false) : String.Empty;
+            ResponseFailHandler(logger, $"HTTP/{response.Version}", response.StatusCode, response.ReasonPhrase, response.ToHeaderString(), content, exception);
         }
         
         private static class Events
@@ -206,23 +239,23 @@ namespace NetExtender.Utilities.Network
     
     public class HttpTracingHandler<T> : HttpTracingHandler
     {
-        public HttpTracingHandler(ILoggerFactory factory)
-            : this(factory, null)
+        public HttpTracingHandler(ILoggerFactory logger)
+            : this(logger, null)
         {
         }
 
-        public HttpTracingHandler(ILoggerFactory factory, Predicate<HttpResponseMessage>? validator)
-            : base(factory is not null ? factory.CreateLogger(LoggerCategory<T>()) : throw new ArgumentNullException(nameof(factory)), validator)
+        public HttpTracingHandler(ILoggerFactory logger, Predicate<HttpResponseMessage>? validator)
+            : base(logger is not null ? logger.CreateLogger(LoggerCategory<T>()) : throw new ArgumentNullException(nameof(logger)), validator)
         {
         }
 
-        public HttpTracingHandler(HttpMessageHandler? handler, ILoggerFactory factory)
-            : this(handler, factory, null)
+        public HttpTracingHandler(HttpMessageHandler? handler, ILoggerFactory logger)
+            : this(handler, logger, null)
         {
         }
 
-        public HttpTracingHandler(HttpMessageHandler? handler, ILoggerFactory factory, Predicate<HttpResponseMessage>? validator)
-            : base(handler, factory is not null ? factory.CreateLogger(LoggerCategory<T>()) : throw new ArgumentNullException(nameof(factory)), validator)
+        public HttpTracingHandler(HttpMessageHandler? handler, ILoggerFactory logger, Predicate<HttpResponseMessage>? validator)
+            : base(handler, logger is not null ? logger.CreateLogger(LoggerCategory<T>()) : throw new ArgumentNullException(nameof(logger)), validator)
         {
         }
     }

@@ -345,14 +345,14 @@ namespace NetExtender.Types.Streams
             Stream.Flush();
         }
 
-        public override void Flush(Boolean flushToDisk)
+        public override void Flush(Boolean disk)
         {
-            Stream.Flush(flushToDisk);
+            Stream.Flush(disk);
         }
 
-        public override Task FlushAsync(CancellationToken cancellationToken)
+        public override Task FlushAsync(CancellationToken token)
         {
-            return Stream.FlushAsync(cancellationToken);
+            return Stream.FlushAsync(token);
         }
 
         public override void Close()

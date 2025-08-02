@@ -12,29 +12,13 @@ namespace NetExtender.Cryptography.Hash.XXHash
         /// Compute xxHash for the data byte span
         /// </summary>
         /// <param name="data">The source of data</param>
-        /// <param name="length">The length of the data for hashing</param>
         /// <param name="seed">The seed number</param>
         /// <returns>hash</returns>
-        public static unsafe UInt64 ComputeHash(Span<Byte> data, Int32 length, UInt64 seed = 0)
+        public static unsafe UInt64 ComputeHash(ReadOnlySpan<Byte> data, UInt64 seed = 0)
         {
-            fixed (Byte* pData = &MemoryMarshal.GetReference(data))
+            fixed (Byte* pointer = &MemoryMarshal.GetReference(data))
             {
-                return UnsafeComputeHash(pData, length, seed);
-            }
-        }
-
-        /// <summary>
-        /// Compute xxHash for the data byte span
-        /// </summary>
-        /// <param name="data">The source of data</param>
-        /// <param name="length">The length of the data for hashing</param>
-        /// <param name="seed">The seed number</param>
-        /// <returns>hash</returns>
-        public static unsafe UInt64 ComputeHash(ReadOnlySpan<Byte> data, Int32 length, UInt64 seed = 0)
-        {
-            fixed (Byte* pData = &MemoryMarshal.GetReference(data))
-            {
-                return UnsafeComputeHash(pData, length, seed);
+                return UnsafeComputeHash(pointer, data.Length, seed);
             }
         }
     }

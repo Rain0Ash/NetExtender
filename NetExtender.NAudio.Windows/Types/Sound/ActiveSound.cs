@@ -4,6 +4,7 @@
 using System;
 using NAudio.Wave;
 using NetExtender.NAudio.Types.Sound.Interfaces;
+using NetExtender.Types.Exceptions;
 using NetExtender.Utilities.NAudio;
 
 namespace NetExtender.NAudio.Types.Sound
@@ -39,7 +40,7 @@ namespace NetExtender.NAudio.Types.Sound
         {
             if (Reader is null || Device is null)
             {
-                throw new ObjectDisposedException(nameof(ActiveSound), $"Can't play disposed sound '{Sound.Path}'");
+                throw new ThisObjectDisposedException(this, $"Can't play disposed sound '{Sound.Path}'");
             }
             
             Device.Volume = Volume ?? 0;

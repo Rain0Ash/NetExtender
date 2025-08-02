@@ -19,6 +19,12 @@ namespace NetExtender.NAudio.Types.Progress
                 Callback = callback ?? throw new ArgumentNullException(nameof(callback));
             }
 
+            public ProgressWaveStreamWithoutLength(WaveStream stream, IProgress<Int64> progress)
+                : base(stream)
+            {
+                Callback = progress is not null ? progress.Report : throw new ArgumentNullException(nameof(progress));
+            }
+
             public override Int32 Read(Byte[] buffer, Int32 offset, Int32 count)
             {
                 Int64 position = Position;
@@ -37,6 +43,12 @@ namespace NetExtender.NAudio.Types.Progress
                 : base(stream)
             {
                 Callback = callback ?? throw new ArgumentNullException(nameof(callback));
+            }
+
+            public ProgressWaveStreamWithLength(WaveStream stream, IProgress<(Int64, Int64)> progress)
+                : base(stream)
+            {
+                Callback = progress is not null ? (position, length) => progress.Report((position, length)) : throw new ArgumentNullException(nameof(progress));
             }
 
             public override Int32 Read(Byte[] buffer, Int32 offset, Int32 count)
@@ -59,6 +71,12 @@ namespace NetExtender.NAudio.Types.Progress
                 Callback = callback ?? throw new ArgumentNullException(nameof(callback));
             }
 
+            public TimeProgressWaveStream(WaveStream stream, IProgress<TimeSpan> progress)
+                : base(stream)
+            {
+                Callback = progress is not null ? progress.Report : throw new ArgumentNullException(nameof(progress));
+            }
+
             public override Int32 Read(Byte[] buffer, Int32 offset, Int32 count)
             {
                 Callback.Invoke(CurrentTime);
@@ -76,6 +94,12 @@ namespace NetExtender.NAudio.Types.Progress
                 Callback = callback ?? throw new ArgumentNullException(nameof(callback));
             }
 
+            public TimeProgressWaveStreamWithLength(WaveStream stream, IProgress<(TimeSpan, TimeSpan)> progress)
+                : base(stream)
+            {
+                Callback = progress is not null ? (current, total) => progress.Report((current, total)) : throw new ArgumentNullException(nameof(progress));
+            }
+
             public override Int32 Read(Byte[] buffer, Int32 offset, Int32 count)
             {
                 Callback.Invoke(CurrentTime, TotalTime);
@@ -83,23 +107,48 @@ namespace NetExtender.NAudio.Types.Progress
             }
         }
 
+        protected ProgressWaveStream(WaveStream stream)
+            : base(stream)
+        {
+        }
+
         public ProgressWaveStream(WaveStream stream, Action<Int64> callback)
-            : base(new ProgressWaveStreamWithoutLength(stream ?? throw new ArgumentNullException(nameof(stream)), callback ?? throw new ArgumentNullException(nameof(callback))))
+            : this(new ProgressWaveStreamWithoutLength(stream ?? throw new ArgumentNullException(nameof(stream)), callback ?? throw new ArgumentNullException(nameof(callback))))
+        {
+        }
+
+        public ProgressWaveStream(WaveStream stream, IProgress<Int64> progress)
+            : this(new ProgressWaveStreamWithoutLength(stream ?? throw new ArgumentNullException(nameof(stream)), progress ?? throw new ArgumentNullException(nameof(progress))))
         {
         }
 
         public ProgressWaveStream(WaveStream stream, Action<Int64, Int64> callback)
-            : base(new ProgressWaveStreamWithLength(stream ?? throw new ArgumentNullException(nameof(stream)), callback ?? throw new ArgumentNullException(nameof(callback))))
+            : this(new ProgressWaveStreamWithLength(stream ?? throw new ArgumentNullException(nameof(stream)), callback ?? throw new ArgumentNullException(nameof(callback))))
+        {
+        }
+
+        public ProgressWaveStream(WaveStream stream, IProgress<(Int64, Int64)> progress)
+            : this(new ProgressWaveStreamWithLength(stream ?? throw new ArgumentNullException(nameof(stream)), progress ?? throw new ArgumentNullException(nameof(progress))))
         {
         }
 
         public ProgressWaveStream(WaveStream stream, Action<TimeSpan> callback)
-            : base(new TimeProgressWaveStream(stream ?? throw new ArgumentNullException(nameof(stream)), callback ?? throw new ArgumentNullException(nameof(callback))))
+            : this(new TimeProgressWaveStream(stream ?? throw new ArgumentNullException(nameof(stream)), callback ?? throw new ArgumentNullException(nameof(callback))))
+        {
+        }
+
+        public ProgressWaveStream(WaveStream stream, IProgress<TimeSpan> progress)
+            : this(new TimeProgressWaveStream(stream ?? throw new ArgumentNullException(nameof(stream)), progress ?? throw new ArgumentNullException(nameof(progress))))
         {
         }
 
         public ProgressWaveStream(WaveStream stream, Action<TimeSpan, TimeSpan> callback)
-            : base(new TimeProgressWaveStreamWithLength(stream ?? throw new ArgumentNullException(nameof(stream)), callback ?? throw new ArgumentNullException(nameof(callback))))
+            : this(new TimeProgressWaveStreamWithLength(stream ?? throw new ArgumentNullException(nameof(stream)), callback ?? throw new ArgumentNullException(nameof(callback))))
+        {
+        }
+
+        public ProgressWaveStream(WaveStream stream, IProgress<(TimeSpan, TimeSpan)> progress)
+            : this(new TimeProgressWaveStreamWithLength(stream ?? throw new ArgumentNullException(nameof(stream)), progress ?? throw new ArgumentNullException(nameof(progress))))
         {
         }
     }

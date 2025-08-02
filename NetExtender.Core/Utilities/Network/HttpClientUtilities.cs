@@ -1516,11 +1516,11 @@ namespace System.Net.Http.Json
         /// <param name="requestUri">The Uri the request is sent to.</param>
         /// <param name="value">The value to serialize.</param>
         /// <param name="options">Options to control the behavior during serialization. The default options are those specified by <see cref="F:System.Text.Json.JsonSerializerDefaults.Web" />.</param>
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <param name="token">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <typeparam name="TValue">The type of the value to serialize.</typeparam>
         /// <returns>The task object representing the asynchronous operation.</returns>
         [RequiresUnreferencedCode("JSON serialization and deserialization might require types that cannot be statically analyzed. Use the overload that takes a JsonTypeInfo or JsonSerializerContext, or make sure all of the required types are preserved.")]
-        public static Task<HttpResponseMessage> PatchAsJsonAsync<TValue>(this HttpClient client, String? requestUri, TValue value, JsonSerializerOptions? options = null, CancellationToken cancellationToken = default)
+        public static Task<HttpResponseMessage> PatchAsJsonAsync<TValue>(this HttpClient client, String? requestUri, TValue value, JsonSerializerOptions? options = null, CancellationToken token = default)
         {
             if (client is null)
             {
@@ -1528,7 +1528,7 @@ namespace System.Net.Http.Json
             }
 
             JsonContent content = JsonContent.Create(value, options: options);
-            return client.PatchAsync(requestUri, content, cancellationToken);
+            return client.PatchAsync(requestUri, content, token);
         }
 
         /// <summary>Sends a PATCH request to the specified Uri containing the <paramref name="value" /> serialized as JSON in the request body.</summary>
@@ -1536,11 +1536,11 @@ namespace System.Net.Http.Json
         /// <param name="requestUri">The Uri the request is sent to.</param>
         /// <param name="value">The value to serialize.</param>
         /// <param name="options">Options to control the behavior during serialization. The default options are those specified by <see cref="F:System.Text.Json.JsonSerializerDefaults.Web" />.</param>
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <param name="token">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <typeparam name="TValue">The type of the value to serialize.</typeparam>
         /// <returns>The task object representing the asynchronous operation.</returns>
         [RequiresUnreferencedCode("JSON serialization and deserialization might require types that cannot be statically analyzed. Use the overload that takes a JsonTypeInfo or JsonSerializerContext, or make sure all of the required types are preserved.")]
-        public static Task<HttpResponseMessage> PatchAsJsonAsync<TValue>(this HttpClient client, Uri? requestUri, TValue value, JsonSerializerOptions? options = null, CancellationToken cancellationToken = default)
+        public static Task<HttpResponseMessage> PatchAsJsonAsync<TValue>(this HttpClient client, Uri? requestUri, TValue value, JsonSerializerOptions? options = null, CancellationToken token = default)
         {
             if (client is null)
             {
@@ -1548,43 +1548,43 @@ namespace System.Net.Http.Json
             }
             
             JsonContent content = JsonContent.Create(value, options: options);
-            return client.PatchAsync(requestUri, content, cancellationToken);
+            return client.PatchAsync(requestUri, content, token);
         }
 
         /// <summary>Sends a PATCH request to the specified Uri containing the <paramref name="value" /> serialized as JSON in the request body.</summary>
         /// <param name="client">The client used to send the request.</param>
         /// <param name="requestUri">The Uri the request is sent to.</param>
         /// <param name="value">The value to serialize.</param>
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <param name="token">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <typeparam name="TValue">The type of the value to serialize.</typeparam>
         /// <returns>The task object representing the asynchronous operation.</returns>
         [RequiresUnreferencedCode("JSON serialization and deserialization might require types that cannot be statically analyzed. Use the overload that takes a JsonTypeInfo or JsonSerializerContext, or make sure all of the required types are preserved.")]
-        public static Task<HttpResponseMessage> PatchAsJsonAsync<TValue>(this HttpClient client, String? requestUri, TValue value, CancellationToken cancellationToken)
+        public static Task<HttpResponseMessage> PatchAsJsonAsync<TValue>(this HttpClient client, String? requestUri, TValue value, CancellationToken token)
         {
             if (client is null)
             {
                 throw new ArgumentNullException(nameof(client));
             }
 
-            return client.PatchAsJsonAsync(requestUri, value, (JsonSerializerOptions?) null, cancellationToken);
+            return client.PatchAsJsonAsync(requestUri, value, (JsonSerializerOptions?) null, token);
         }
 
         /// <summary>Sends a PATCH request to the specified Uri containing the <paramref name="value" /> serialized as JSON in the request body.</summary>
         /// <param name="client">The client used to send the request.</param>
         /// <param name="requestUri">The Uri the request is sent to.</param>
         /// <param name="value">The value to serialize.</param>
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <param name="token">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <typeparam name="TValue">The type of the value to serialize.</typeparam>
         /// <returns>The task object representing the asynchronous operation.</returns>
         [RequiresUnreferencedCode("JSON serialization and deserialization might require types that cannot be statically analyzed. Use the overload that takes a JsonTypeInfo or JsonSerializerContext, or make sure all of the required types are preserved.")]
-        public static Task<HttpResponseMessage> PatchAsJsonAsync<TValue>(this HttpClient client, Uri? requestUri, TValue value, CancellationToken cancellationToken)
+        public static Task<HttpResponseMessage> PatchAsJsonAsync<TValue>(this HttpClient client, Uri? requestUri, TValue value, CancellationToken token)
         {
             if (client is null)
             {
                 throw new ArgumentNullException(nameof(client));
             }
 
-            return client.PatchAsJsonAsync(requestUri, value, (JsonSerializerOptions?) null, cancellationToken);
+            return client.PatchAsJsonAsync(requestUri, value, (JsonSerializerOptions?) null, token);
         }
 
         /// <summary>Sends a PATCH request to the specified Uri containing the <paramref name="value" /> serialized as JSON in the request body.</summary>
@@ -1592,10 +1592,10 @@ namespace System.Net.Http.Json
         /// <param name="requestUri">The Uri the request is sent to.</param>
         /// <param name="value">The value to serialize.</param>
         /// <param name="jsonTypeInfo">Source generated JsonTypeInfo to control the behavior during serialization.</param>
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <param name="token">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <typeparam name="TValue">The type of the value to serialize.</typeparam>
         /// <returns>The task object representing the asynchronous operation.</returns>
-        public static Task<HttpResponseMessage> PatchAsJsonAsync<TValue>(this HttpClient client, String? requestUri, TValue value, JsonTypeInfo<TValue> jsonTypeInfo, CancellationToken cancellationToken = default)
+        public static Task<HttpResponseMessage> PatchAsJsonAsync<TValue>(this HttpClient client, String? requestUri, TValue value, JsonTypeInfo<TValue> jsonTypeInfo, CancellationToken token = default)
         {
             if (client is null)
             {
@@ -1603,7 +1603,7 @@ namespace System.Net.Http.Json
             }
 
             HttpContent content = JsonContentFactory<TValue>.Create(value, jsonTypeInfo);
-            return client.PatchAsync(requestUri, content, cancellationToken);
+            return client.PatchAsync(requestUri, content, token);
         }
 
         /// <summary>Sends a PATCH request to the specified Uri containing the <paramref name="value" /> serialized as JSON in the request body.</summary>
@@ -1611,10 +1611,10 @@ namespace System.Net.Http.Json
         /// <param name="requestUri">The Uri the request is sent to.</param>
         /// <param name="value">The value to serialize.</param>
         /// <param name="jsonTypeInfo">Source generated JsonTypeInfo to control the behavior during serialization.</param>
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <param name="token">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <typeparam name="TValue">The type of the value to serialize.</typeparam>
         /// <returns>The task object representing the asynchronous operation.</returns>
-        public static Task<HttpResponseMessage> PatchAsJsonAsync<TValue>(this HttpClient client, Uri? requestUri, TValue value, JsonTypeInfo<TValue> jsonTypeInfo, CancellationToken cancellationToken = default)
+        public static Task<HttpResponseMessage> PatchAsJsonAsync<TValue>(this HttpClient client, Uri? requestUri, TValue value, JsonTypeInfo<TValue> jsonTypeInfo, CancellationToken token = default)
         {
             if (client is null)
             {
@@ -1622,7 +1622,7 @@ namespace System.Net.Http.Json
             }
             
             HttpContent content = JsonContentFactory<TValue>.Create(value, jsonTypeInfo);
-            return client.PatchAsync(requestUri, content, cancellationToken);
+            return client.PatchAsync(requestUri, content, token);
         }
     }
 }

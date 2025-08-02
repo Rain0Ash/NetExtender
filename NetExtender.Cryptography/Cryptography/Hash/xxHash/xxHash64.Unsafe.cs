@@ -18,16 +18,21 @@ namespace NetExtender.Cryptography.Hash.XXHash
         /// <summary>
         /// Compute xxhash64 for the unsafe array of memory
         /// </summary>
-        /// <param name="ptr"></param>
+        /// <param name="pointer"></param>
         /// <param name="length"></param>
         /// <param name="seed"></param>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static unsafe UInt64 UnsafeComputeHash(Byte* ptr, Int32 length, UInt64 seed)
+        private static unsafe UInt64 UnsafeComputeHash(Byte* pointer, Int32 length, UInt64 seed)
         {
+            if (length <= 0)
+            {
+                return 0;
+            }
+            
             unchecked
             {
-                Byte* end = ptr + length;
+                Byte* end = pointer + length;
                 UInt64 h64;
 
                 if (length >= 32)
@@ -41,26 +46,26 @@ namespace NetExtender.Cryptography.Hash.XXHash
 
                     do
                     {
-                        v1 += *(UInt64*) ptr * P2;
+                        v1 += *(UInt64*) pointer * P2;
                         v1 = v1.BitwiseRotateLeft(31); // rotl 31
                         v1 *= P1;
-                        ptr += 8;
+                        pointer += 8;
 
-                        v2 += *(UInt64*) ptr * P2;
+                        v2 += *(UInt64*) pointer * P2;
                         v2 = v2.BitwiseRotateLeft(31); // rotl 31
                         v2 *= P1;
-                        ptr += 8;
+                        pointer += 8;
 
-                        v3 += *(UInt64*) ptr * P2;
+                        v3 += *(UInt64*) pointer * P2;
                         v3 = v3.BitwiseRotateLeft(31); // rotl 31
                         v3 *= P1;
-                        ptr += 8;
+                        pointer += 8;
 
-                        v4 += *(UInt64*) ptr * P2;
+                        v4 += *(UInt64*) pointer * P2;
                         v4 = v4.BitwiseRotateLeft(31); // rotl 31
                         v4 *= P1;
-                        ptr += 8;
-                    } while (ptr <= limit);
+                        pointer += 8;
+                    } while (pointer <= limit);
 
                     h64 = v1.BitwiseRotateLeft(1) + // rotl 1
                           v2.BitwiseRotateLeft(7) + // rotl 7
@@ -103,28 +108,28 @@ namespace NetExtender.Cryptography.Hash.XXHash
                 h64 += (UInt64) length;
 
                 // finalize
-                while (ptr <= end - 8)
+                while (pointer <= end - 8)
                 {
-                    UInt64 t1 = *(UInt64*) ptr * P2;
+                    UInt64 t1 = *(UInt64*) pointer * P2;
                     t1 = t1.BitwiseRotateLeft(31); // rotl 31
                     t1 *= P1;
                     h64 ^= t1;
                     h64 = h64.BitwiseRotateLeft(27) * P1 + P4; // (rotl 27) * p1 + p4
-                    ptr += 8;
+                    pointer += 8;
                 }
 
-                if (ptr <= end - 4)
+                if (pointer <= end - 4)
                 {
-                    h64 ^= *(UInt32*) ptr * P1;
+                    h64 ^= *(UInt32*) pointer * P1;
                     h64 = h64.BitwiseRotateLeft(23) * P2 + P3; // (rotl 23) * p2 + p3
-                    ptr += 4;
+                    pointer += 4;
                 }
 
-                while (ptr < end)
+                while (pointer < end)
                 {
-                    h64 ^= *ptr * P5;
+                    h64 ^= *pointer * P5;
                     h64 = h64.BitwiseRotateLeft(11) * P1; // (rotl 11) * p1
-                    ptr += 1;
+                    pointer += 1;
                 }
 
                 // avalanche
@@ -150,11 +155,16 @@ namespace NetExtender.Cryptography.Hash.XXHash
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static unsafe void UnsafeAlign(ReadOnlySpan<Byte> data, Int32 l, ref UInt64 v1, ref UInt64 v2, ref UInt64 v3, ref UInt64 v4)
         {
+            if (data.Length <= 0)
+            {
+                return;
+            }
+            
             unchecked
             {
-                fixed (Byte* pData = &data[0])
+                fixed (Byte* pointer = &data[0])
                 {
-                    Byte* ptr = pData;
+                    Byte* ptr = pointer;
                     Byte* limit = ptr + l;
 
                     do
@@ -198,12 +208,17 @@ namespace NetExtender.Cryptography.Hash.XXHash
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static unsafe UInt64 UnsafeFinal(ReadOnlySpan<Byte> data, Int32 l, ref UInt64 v1, ref UInt64 v2, ref UInt64 v3, ref UInt64 v4, Int64 length, UInt64 seed)
         {
+            if (data.Length <= 0)
+            {
+                return 0;
+            }
+            
             unchecked
             {
-                fixed (Byte* pData = &data[0])
+                fixed (Byte* pointer = &data[0])
                 {
-                    Byte* ptr = pData;
-                    Byte* end = pData + l;
+                    Byte* ptr = pointer;
+                    Byte* end = pointer + l;
                     UInt64 h64;
 
                     if (length >= 32)

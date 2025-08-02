@@ -6,6 +6,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using NetExtender.Types.Events;
+using NetExtender.Types.Exceptions;
 using NetExtender.Types.Timers.Interfaces;
 using NetExtender.Types.Times;
 using NetExtender.Utilities.Types;
@@ -144,20 +145,20 @@ namespace NetExtender.Types.Timers
 
         public Boolean Change(TimeSpan dueTime, TimeSpan period)
         {
-            Timer timer = Timer ?? throw new ObjectDisposedException(nameof(TimerThreadingWrapper));
+            Timer timer = Timer ?? throw new ThisObjectDisposedException(this);
             return timer.Change(dueTime, period);
         }
 
         public void Start()
         {
-            Timer timer = Timer ?? throw new ObjectDisposedException(nameof(TimerThreadingWrapper));
+            Timer timer = Timer ?? throw new ThisObjectDisposedException(this);
             timer.Change(Interval, Interval);
             IsStarted = true;
         }
 
         public void Stop()
         {
-            Timer timer = Timer ?? throw new ObjectDisposedException(nameof(TimerThreadingWrapper));
+            Timer timer = Timer ?? throw new ThisObjectDisposedException(this);
             timer.Change(Timeout.Infinite, Timeout.Infinite);
             IsStarted = false;
         }

@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using NetExtender.Types.Exceptions;
 using NetExtender.Utilities.Threading;
 using NetExtender.Utilities.Types;
 
@@ -56,7 +57,7 @@ namespace NetExtender.Types.TaskSchedulers
         {
             if (Tasks is null)
             {
-                throw new ObjectDisposedException(nameof(STATaskScheduler));
+                throw new ThisObjectDisposedException(this);
             }
 
             Tasks.Add(task);
@@ -66,7 +67,7 @@ namespace NetExtender.Types.TaskSchedulers
         {
             if (Tasks is null)
             {
-                throw new ObjectDisposedException(nameof(STATaskScheduler));
+                throw new ThisObjectDisposedException(this);
             }
 
             return Tasks.ToArray();

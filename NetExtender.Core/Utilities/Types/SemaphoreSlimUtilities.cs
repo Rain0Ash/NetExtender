@@ -37,20 +37,20 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static AwaitableDisposable<IDisposable> LockAsync(this SemaphoreSlim value, CancellationToken cancellationToken)
+        public static AwaitableDisposable<IDisposable> LockAsync(this SemaphoreSlim value, CancellationToken token)
         {
             if (value is null)
             {
                 throw new ArgumentNullException(nameof(value));
             }
             
-            static async Task<IDisposable> Core(SemaphoreSlim value, CancellationToken cancellationToken)
+            static async Task<IDisposable> Core(SemaphoreSlim value, CancellationToken token)
             {
-                await value.WaitAsync(cancellationToken).ConfigureAwait(false);
+                await value.WaitAsync(token).ConfigureAwait(false);
                 return Disposable.Create(value, static value => value.Release());
             }
 
-            return new AwaitableDisposable<IDisposable>(Core(value, cancellationToken));
+            return new AwaitableDisposable<IDisposable>(Core(value, token));
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

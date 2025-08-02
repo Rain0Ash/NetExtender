@@ -178,9 +178,9 @@ namespace NetExtender.Types.Streams
             Stream.Flush();
         }
 
-        public override Task FlushAsync(CancellationToken cancellationToken)
+        public override Task FlushAsync(CancellationToken token)
         {
-            return Stream.FlushAsync(cancellationToken);
+            return Stream.FlushAsync(token);
         }
 
         public override void Close()

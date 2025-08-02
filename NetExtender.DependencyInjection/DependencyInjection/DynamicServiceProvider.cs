@@ -12,6 +12,7 @@ using NetExtender.DependencyInjection.Exceptions;
 using NetExtender.DependencyInjection.Interfaces;
 using NetExtender.Types.Collections;
 using NetExtender.Types.Collections.Interfaces;
+using NetExtender.Types.Exceptions;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.DependencyInjection
@@ -416,7 +417,7 @@ namespace NetExtender.DependencyInjection
             {
                 if (!IsStable && _disposed)
                 {
-                    throw new ObjectDisposedException(nameof(ServiceProvider));
+                    throw new ThisObjectDisposedException(this);
                 }
                 
                 return Provider.GetService(service);

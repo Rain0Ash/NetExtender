@@ -14,13 +14,23 @@ namespace NetExtender.Cryptography.Hash.XXHash
         /// Compute xxHash for the stream
         /// </summary>
         /// <param name="stream">The stream of data</param>
-        /// <param name="bufferSize">The buffer size</param>
+        /// <param name="buffer">The buffer size</param>
         /// <param name="seed">The seed number</param>
         /// <returns>The hash</returns>
-        public static UInt32 ComputeHash(Stream stream, Int32 bufferSize = BufferUtilities.DefaultBuffer, UInt32 seed = 0)
+        public static UInt32 ComputeHash(Stream stream, Int32 buffer = BufferUtilities.DefaultBuffer, UInt32 seed = 0)
         {
+            if (stream is null)
+            {
+                throw new ArgumentNullException(nameof(stream));
+            }
+
+            if (buffer < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(buffer), buffer, null);
+            }
+
             // Optimizing memory allocation
-            Byte[] buffer = ArrayPool<Byte>.Shared.Rent(bufferSize + 16);
+            Byte[] array = ArrayPool<Byte>.Shared.Rent(buffer + 16);
 
             Int32 offset = 0;
             Int64 length = 0;
@@ -34,11 +44,11 @@ namespace NetExtender.Cryptography.Hash.XXHash
             try
             {
                 // Read flow of bytes
-                Int32 readBytes;
-                while ((readBytes = stream.Read(buffer, offset, bufferSize)) > 0)
+                Int32 read;
+                while ((read = stream.Read(array, offset, buffer)) > 0)
                 {
-                    length += readBytes;
-                    offset += readBytes;
+                    length += read;
+                    offset += read;
 
                     if (offset < 16)
                     {
@@ -49,22 +59,22 @@ namespace NetExtender.Cryptography.Hash.XXHash
                     Int32 l = offset - r;  // length
 
                     // Process the next chunk 
-                    UnsafeAlign(buffer, l, ref v1, ref v2, ref v3, ref v4);
+                    UnsafeAlign(array, l, ref v1, ref v2, ref v3, ref v4);
 
                     // Put remaining bytes to buffer
-                    BufferUtilities.BlockCopyUnsafe(buffer, l, buffer, 0, r);
+                    BufferUtilities.BlockCopyUnsafe(array, l, array, 0, r);
                     offset = r;
                 }
 
                 // Process the last chunk
-                UInt32 h32 = UnsafeFinal(buffer, offset, ref v1, ref v2, ref v3, ref v4, length, seed);
+                UInt32 h32 = UnsafeFinal(array, offset, ref v1, ref v2, ref v3, ref v4, length, seed);
 
                 return h32;
             }
             finally
             {
                 // Free memory
-                ArrayPool<Byte>.Shared.Return(buffer, true);
+                ArrayPool<Byte>.Shared.Return(array, true);
             }
         }
     }

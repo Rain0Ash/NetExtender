@@ -12,7 +12,6 @@ namespace NetExtender.NAudio.Types.Providers
     {
         public IAudioSound Sound { get; }
         private ISampleProvider Provider { get; }
-
         private OffsetSampleProvider Offset { get; }
         private FadeOutSampleProvider FadeOut { get; }
 

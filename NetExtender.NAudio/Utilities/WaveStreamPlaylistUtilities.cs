@@ -13,20 +13,15 @@ namespace NetExtender.Utilities.NAudio
     {
         public static IWaveStreamPlaylist Playlist(this WaveStream stream)
         {
-            if (stream is null)
+            return stream switch
             {
-                throw new ArgumentNullException(nameof(stream));
-            }
-
-            if (stream is IWaveStreamPlaylist playlist)
-            {
-                return playlist;
-            }
-
-            return new WaveStreamPlaylist(stream);
+                null => throw new ArgumentNullException(nameof(stream)),
+                IWaveStreamPlaylist playlist => playlist,
+                _ => new WaveStreamPlaylist(stream)
+            };
         }
 
-        public static IWaveStreamPlaylist Playlist(this WaveStream stream, params WaveStream[] items)
+        public static IWaveStreamPlaylist Playlist(this WaveStream stream, params WaveStream[]? items)
         {
             if (stream is null)
             {
@@ -34,7 +29,12 @@ namespace NetExtender.Utilities.NAudio
             }
 
             IWaveStreamPlaylist playlist = new WaveStreamPlaylist(stream);
-            playlist.AddRange(items);
+            
+            if (items is not null)
+            {
+                playlist.AddRange(items);
+            }
+            
             return playlist;
         }
 
@@ -58,7 +58,7 @@ namespace NetExtender.Utilities.NAudio
             return new WaveStreamPlaylist(stream);
         }
 
-        public static WaveStream AsPlaylistStream(this WaveStream stream, params WaveStream[] items)
+        public static WaveStream AsPlaylistStream(this WaveStream stream, params WaveStream[]? items)
         {
             if (stream is null)
             {
@@ -66,7 +66,12 @@ namespace NetExtender.Utilities.NAudio
             }
 
             WaveStreamPlaylist playlist = new WaveStreamPlaylist(stream);
-            playlist.AddRange(items);
+            
+            if (items is not null)
+            {
+                playlist.AddRange(items);
+            }
+            
             return playlist;
         }
 
@@ -90,7 +95,7 @@ namespace NetExtender.Utilities.NAudio
             return new WaveStreamPlaylist<T>(stream);
         }
 
-        public static WaveStreamPlaylist<T> AsPlaylistStream<T>(this T stream, params T[] items) where T : WaveStream
+        public static WaveStreamPlaylist<T> AsPlaylistStream<T>(this T stream, params T[]? items) where T : WaveStream
         {
             if (stream is null)
             {
@@ -98,7 +103,12 @@ namespace NetExtender.Utilities.NAudio
             }
 
             WaveStreamPlaylist<T> playlist = new WaveStreamPlaylist<T>(stream);
-            playlist.AddRange(items);
+            
+            if (items is not null)
+            {
+                playlist.AddRange(items);
+            }
+            
             return playlist;
         }
 
@@ -114,20 +124,15 @@ namespace NetExtender.Utilities.NAudio
 
         public static IWaveStreamPlaylist<T> WithPlaylist<T>(this T stream) where T : WaveStream
         {
-            if (stream is null)
+            return stream switch
             {
-                throw new ArgumentNullException(nameof(stream));
-            }
-
-            if (stream is IWaveStreamPlaylist<T> playlist)
-            {
-                return playlist;
-            }
-
-            return new WaveStreamPlaylist<T>(stream);
+                null => throw new ArgumentNullException(nameof(stream)),
+                IWaveStreamPlaylist<T> playlist => playlist,
+                _ => new WaveStreamPlaylist<T>(stream)
+            };
         }
 
-        public static IWaveStreamPlaylist<T> WithPlaylist<T>(this T stream, params T[] items) where T : WaveStream
+        public static IWaveStreamPlaylist<T> WithPlaylist<T>(this T stream, params T[]? items) where T : WaveStream
         {
             if (stream is null)
             {
@@ -135,7 +140,12 @@ namespace NetExtender.Utilities.NAudio
             }
 
             IWaveStreamPlaylist<T> playlist = new WaveStreamPlaylist<T>(stream);
-            playlist.AddRange(items);
+            
+            if (items is not null)
+            {
+                playlist.AddRange(items);
+            }
+            
             return playlist;
         }
 
@@ -159,7 +169,7 @@ namespace NetExtender.Utilities.NAudio
             return new RepeatWaveStreamPlaylist(stream);
         }
 
-        public static IWaveStreamPlaylist RepeatPlaylist(this WaveStream stream, params WaveStream[] items)
+        public static IWaveStreamPlaylist RepeatPlaylist(this WaveStream stream, params WaveStream[]? items)
         {
             if (stream is null)
             {
@@ -167,7 +177,12 @@ namespace NetExtender.Utilities.NAudio
             }
 
             IWaveStreamPlaylist playlist = new RepeatWaveStreamPlaylist(stream);
-            playlist.AddRange(items);
+            
+            if (items is not null)
+            {
+                playlist.AddRange(items);
+            }
+            
             return playlist;
         }
 
@@ -191,7 +206,7 @@ namespace NetExtender.Utilities.NAudio
             return new RepeatWaveStreamPlaylist(stream);
         }
 
-        public static RepeatWaveStreamPlaylist AsRepeatPlaylistStream(this WaveStream stream, params WaveStream[] items)
+        public static RepeatWaveStreamPlaylist AsRepeatPlaylistStream(this WaveStream stream, params WaveStream[]? items)
         {
             if (stream is null)
             {
@@ -199,7 +214,12 @@ namespace NetExtender.Utilities.NAudio
             }
 
             RepeatWaveStreamPlaylist playlist = new RepeatWaveStreamPlaylist(stream);
-            playlist.AddRange(items);
+            
+            if (items is not null)
+            {
+                playlist.AddRange(items);
+            }
+            
             return playlist;
         }
 
@@ -223,7 +243,7 @@ namespace NetExtender.Utilities.NAudio
             return new RepeatWaveStreamPlaylist<T>(stream);
         }
 
-        public static RepeatWaveStreamPlaylist<T> AsRepeatPlaylistStream<T>(this T stream, params T[] items) where T : WaveStream
+        public static RepeatWaveStreamPlaylist<T> AsRepeatPlaylistStream<T>(this T stream, params T[]? items) where T : WaveStream
         {
             if (stream is null)
             {
@@ -231,7 +251,12 @@ namespace NetExtender.Utilities.NAudio
             }
 
             RepeatWaveStreamPlaylist<T> playlist = new RepeatWaveStreamPlaylist<T>(stream);
-            playlist.AddRange(items);
+            
+            if (items is not null)
+            {
+                playlist.AddRange(items);
+            }
+            
             return playlist;
         }
 
@@ -255,7 +280,7 @@ namespace NetExtender.Utilities.NAudio
             return new RepeatWaveStreamPlaylist<T>(stream);
         }
 
-        public static IWaveStreamPlaylist<T> WithRepeatPlaylist<T>(this T stream, params T[] items) where T : WaveStream
+        public static IWaveStreamPlaylist<T> WithRepeatPlaylist<T>(this T stream, params T[]? items) where T : WaveStream
         {
             if (stream is null)
             {
@@ -263,7 +288,12 @@ namespace NetExtender.Utilities.NAudio
             }
 
             IWaveStreamPlaylist<T> playlist = new RepeatWaveStreamPlaylist<T>(stream);
-            playlist.AddRange(items);
+
+            if (items is not null)
+            {
+                playlist.AddRange(items);
+            }
+            
             return playlist;
         }
 

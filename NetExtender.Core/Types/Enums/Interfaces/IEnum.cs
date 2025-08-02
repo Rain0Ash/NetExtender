@@ -7,7 +7,7 @@ using NetExtender.Types.Lists.Interfaces;
 
 namespace NetExtender.Types.Enums.Interfaces
 {
-    public interface IEnum<T, TEnum> : IEnum<T>, IEquality<IEnum<T, TEnum>> where T : unmanaged, Enum where TEnum : Enum<T, TEnum>, new()
+    public interface IEnum<T, TEnum> : IEnum<T>, IEquality<IEnum<T, TEnum>> where T : unmanaged, Enum where TEnum : class, IEnum<T, TEnum>, new()
     {
         public new IReadOnlySortedList<TEnum> Flags { get; }
     }

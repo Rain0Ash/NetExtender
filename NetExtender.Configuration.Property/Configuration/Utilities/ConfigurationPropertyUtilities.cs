@@ -472,7 +472,6 @@ namespace NetExtender.Configuration.Utilities
             return converter.TryConvert(value, out T? result) ? result : alternate;
         }
 
-        //TODO: добавить вариант с конвертированием.
         public static Boolean SetValue<T>(this IConfigProperty property, T value)
         {
             if (property is null)

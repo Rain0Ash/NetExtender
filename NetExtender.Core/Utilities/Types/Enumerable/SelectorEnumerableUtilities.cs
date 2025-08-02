@@ -35,43 +35,43 @@ namespace NetExtender.Utilities.Types
             return source.Select(item => (counter++, item));
         }
 
-        public static IEnumerable<TResult> SelectWhere<T, TResult>(this IEnumerable<T> source, TryParseHandler<T, TResult> predicate)
+        public static IEnumerable<TResult> SelectWhere<T, TResult>(this IEnumerable<T> source, TryParseHandler<T, TResult> selector)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
 
-            if (predicate is null)
+            if (selector is null)
             {
-                throw new ArgumentNullException(nameof(predicate));
+                throw new ArgumentNullException(nameof(selector));
             }
 
             foreach (T item in source)
             {
-                if (predicate(item, out TResult? value))
+                if (selector(item, out TResult? value))
                 {
                     yield return value;
                 }
             }
         }
 
-        public static IEnumerable<TResult> SelectWhere<T, TResult>(this IEnumerable<T> source, TryParseHandler<T, Int32, TResult> predicate)
+        public static IEnumerable<TResult> SelectWhere<T, TResult>(this IEnumerable<T> source, TryParseHandler<T, Int32, TResult> selector)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
 
-            if (predicate is null)
+            if (selector is null)
             {
-                throw new ArgumentNullException(nameof(predicate));
+                throw new ArgumentNullException(nameof(selector));
             }
 
             Int32 i = 0;
             foreach (T item in source)
             {
-                if (predicate(item, i++, out TResult? value))
+                if (selector(item, i++, out TResult? value))
                 {
                     yield return value;
                 }
@@ -79,16 +79,11 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IEnumerable<TResult> SelectWhere<T, TResult>(this IEnumerable<T> source, Func<T, Boolean> where, TryParseHandler<T, TResult> predicate)
+        public static IEnumerable<TResult> SelectWhere<T, TResult>(this IEnumerable<T> source, Func<T, Boolean> predicate, TryParseHandler<T, TResult> selector)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
-            }
-
-            if (where is null)
-            {
-                throw new ArgumentNullException(nameof(where));
             }
 
             if (predicate is null)
@@ -96,20 +91,20 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(predicate));
             }
 
-            return source.Where(where).SelectWhere(predicate);
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return source.Where(predicate).SelectWhere(selector);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IEnumerable<TResult> SelectWhere<T, TResult>(this IEnumerable<T> source, Func<T, Int32, Boolean> where, TryParseHandler<T, TResult> predicate)
+        public static IEnumerable<TResult> SelectWhere<T, TResult>(this IEnumerable<T> source, Func<T, Int32, Boolean> predicate, TryParseHandler<T, TResult> selector)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
-            }
-
-            if (where is null)
-            {
-                throw new ArgumentNullException(nameof(where));
             }
 
             if (predicate is null)
@@ -117,20 +112,20 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(predicate));
             }
 
-            return source.Where(where).SelectWhere(predicate);
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return source.Where(predicate).SelectWhere(selector);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IEnumerable<TResult> SelectWhere<T, TResult>(this IEnumerable<T> source, Func<T, Boolean> where, TryParseHandler<T, Int32, TResult> predicate)
+        public static IEnumerable<TResult> SelectWhere<T, TResult>(this IEnumerable<T> source, Func<T, Boolean> predicate, TryParseHandler<T, Int32, TResult> selector)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
-            }
-
-            if (where is null)
-            {
-                throw new ArgumentNullException(nameof(where));
             }
 
             if (predicate is null)
@@ -138,20 +133,20 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(predicate));
             }
 
-            return source.Where(where).SelectWhere(predicate);
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return source.Where(predicate).SelectWhere(selector);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IEnumerable<TResult> SelectWhere<T, TResult>(this IEnumerable<T> source, Func<T, Int32, Boolean> where, TryParseHandler<T, Int32, TResult> predicate)
+        public static IEnumerable<TResult> SelectWhere<T, TResult>(this IEnumerable<T> source, Func<T, Int32, Boolean> predicate, TryParseHandler<T, Int32, TResult> selector)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
-            }
-
-            if (where is null)
-            {
-                throw new ArgumentNullException(nameof(where));
             }
 
             if (predicate is null)
@@ -159,24 +154,29 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(predicate));
             }
 
-            return source.Where(where).SelectWhere(predicate);
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return source.Where(predicate).SelectWhere(selector);
         }
 
-        public static IEnumerable<TResult> SelectWhere<T, TResult>(this IEnumerable<T> source, Func<T, (Boolean, TResult)> predicate)
+        public static IEnumerable<TResult> SelectWhere<T, TResult>(this IEnumerable<T> source, Func<T, (Boolean, TResult)> selector)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
 
-            if (predicate is null)
+            if (selector is null)
             {
-                throw new ArgumentNullException(nameof(predicate));
+                throw new ArgumentNullException(nameof(selector));
             }
 
             foreach (T item in source)
             {
-                (Boolean successful, TResult output) = predicate(item);
+                (Boolean successful, TResult output) = selector(item);
 
                 if (successful)
                 {
@@ -185,37 +185,11 @@ namespace NetExtender.Utilities.Types
             }
         }
 
-        public static IEnumerable<TResult> SelectWhere<T, TResult>(this IEnumerable<T> source, Func<T, Boolean> where, Func<T, TResult> selector)
+        public static IEnumerable<TResult> SelectWhere<T, TResult>(this IEnumerable<T> source, Func<T, Boolean> predicate, Func<T, TResult> selector)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
-            }
-
-            if (where is null)
-            {
-                throw new ArgumentNullException(nameof(where));
-            }
-
-            if (selector is null)
-            {
-                throw new ArgumentNullException(nameof(selector));
-            }
-
-            return source.Where(where).Select(selector);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IEnumerable<TResult> SelectWhereNot<T, TResult>(this IEnumerable<T> source, Func<T, Boolean> where, TryParseHandler<T, TResult> predicate)
-        {
-            if (source is null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-
-            if (where is null)
-            {
-                throw new ArgumentNullException(nameof(where));
             }
 
             if (predicate is null)
@@ -223,20 +197,20 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(predicate));
             }
 
-            return source.WhereNot(where).SelectWhere(predicate);
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return source.Where(predicate).Select(selector);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IEnumerable<TResult> SelectWhereNot<T, TResult>(this IEnumerable<T> source, Func<T, Int32, Boolean> where, TryParseHandler<T, TResult> predicate)
+        public static IEnumerable<TResult> SelectWhereNot<T, TResult>(this IEnumerable<T> source, Func<T, Boolean> predicate, TryParseHandler<T, TResult> selector)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
-            }
-
-            if (where is null)
-            {
-                throw new ArgumentNullException(nameof(where));
             }
 
             if (predicate is null)
@@ -244,20 +218,20 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(predicate));
             }
 
-            return source.WhereNot(where).SelectWhere(predicate);
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return source.WhereNot(predicate).SelectWhere(selector);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IEnumerable<TResult> SelectWhereNot<T, TResult>(this IEnumerable<T> source, Func<T, Boolean> where, TryParseHandler<T, Int32, TResult> predicate)
+        public static IEnumerable<TResult> SelectWhereNot<T, TResult>(this IEnumerable<T> source, Func<T, Int32, Boolean> predicate, TryParseHandler<T, TResult> selector)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
-            }
-
-            if (where is null)
-            {
-                throw new ArgumentNullException(nameof(where));
             }
 
             if (predicate is null)
@@ -265,20 +239,20 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(predicate));
             }
 
-            return source.WhereNot(where).SelectWhere(predicate);
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return source.WhereNot(predicate).SelectWhere(selector);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IEnumerable<TResult> SelectWhereNot<T, TResult>(this IEnumerable<T> source, Func<T, Int32, Boolean> where, TryParseHandler<T, Int32, TResult> predicate)
+        public static IEnumerable<TResult> SelectWhereNot<T, TResult>(this IEnumerable<T> source, Func<T, Boolean> predicate, TryParseHandler<T, Int32, TResult> selector)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
-            }
-
-            if (where is null)
-            {
-                throw new ArgumentNullException(nameof(where));
             }
 
             if (predicate is null)
@@ -286,19 +260,25 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(predicate));
             }
 
-            return source.WhereNot(where).SelectWhere(predicate);
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return source.WhereNot(predicate).SelectWhere(selector);
         }
 
-        public static IEnumerable<TResult> SelectWhereNot<T, TResult>(this IEnumerable<T> source, Func<T, Boolean> where, Func<T, TResult> selector)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<TResult> SelectWhereNot<T, TResult>(this IEnumerable<T> source, Func<T, Int32, Boolean> predicate, TryParseHandler<T, Int32, TResult> selector)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
 
-            if (where is null)
+            if (predicate is null)
             {
-                throw new ArgumentNullException(nameof(where));
+                throw new ArgumentNullException(nameof(predicate));
             }
 
             if (selector is null)
@@ -306,19 +286,19 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(selector));
             }
 
-            return source.WhereNot(where).Select(selector);
+            return source.WhereNot(predicate).SelectWhere(selector);
         }
 
-        public static IEnumerable<TResult> SelectWhere<T, TResult>(this IEnumerable<T> source, Func<T, Int32, Boolean> where, Func<T, TResult> selector)
+        public static IEnumerable<TResult> SelectWhereNot<T, TResult>(this IEnumerable<T> source, Func<T, Boolean> predicate, Func<T, TResult> selector)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
 
-            if (where is null)
+            if (predicate is null)
             {
-                throw new ArgumentNullException(nameof(where));
+                throw new ArgumentNullException(nameof(predicate));
             }
 
             if (selector is null)
@@ -326,19 +306,19 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(selector));
             }
 
-            return source.Where(where).Select(selector);
+            return source.WhereNot(predicate).Select(selector);
         }
 
-        public static IEnumerable<TResult> SelectWhereNot<T, TResult>(this IEnumerable<T> source, Func<T, Int32, Boolean> where, Func<T, TResult> selector)
+        public static IEnumerable<TResult> SelectWhere<T, TResult>(this IEnumerable<T> source, Func<T, Int32, Boolean> predicate, Func<T, TResult> selector)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
 
-            if (where is null)
+            if (predicate is null)
             {
-                throw new ArgumentNullException(nameof(where));
+                throw new ArgumentNullException(nameof(predicate));
             }
 
             if (selector is null)
@@ -346,19 +326,19 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(selector));
             }
 
-            return source.WhereNot(where).Select(selector);
+            return source.Where(predicate).Select(selector);
         }
 
-        public static IEnumerable<TResult> SelectWhere<T, TResult>(this IEnumerable<T> source, Func<T, Boolean> where, Func<T, Int32, TResult> selector)
+        public static IEnumerable<TResult> SelectWhereNot<T, TResult>(this IEnumerable<T> source, Func<T, Int32, Boolean> predicate, Func<T, TResult> selector)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
 
-            if (where is null)
+            if (predicate is null)
             {
-                throw new ArgumentNullException(nameof(where));
+                throw new ArgumentNullException(nameof(predicate));
             }
 
             if (selector is null)
@@ -366,19 +346,19 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(selector));
             }
 
-            return source.Where(where).Select(selector);
+            return source.WhereNot(predicate).Select(selector);
         }
 
-        public static IEnumerable<TResult> SelectWhereNot<T, TResult>(this IEnumerable<T> source, Func<T, Boolean> where, Func<T, Int32, TResult> selector)
+        public static IEnumerable<TResult> SelectWhere<T, TResult>(this IEnumerable<T> source, Func<T, Boolean> predicate, Func<T, Int32, TResult> selector)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
 
-            if (where is null)
+            if (predicate is null)
             {
-                throw new ArgumentNullException(nameof(where));
+                throw new ArgumentNullException(nameof(predicate));
             }
 
             if (selector is null)
@@ -386,19 +366,19 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(selector));
             }
 
-            return source.WhereNot(where).Select(selector);
+            return source.Where(predicate).Select(selector);
         }
 
-        public static IEnumerable<TResult> SelectWhere<T, TResult>(this IEnumerable<T> source, Func<T, Int32, Boolean> where, Func<T, Int32, TResult> selector)
+        public static IEnumerable<TResult> SelectWhereNot<T, TResult>(this IEnumerable<T> source, Func<T, Boolean> predicate, Func<T, Int32, TResult> selector)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
 
-            if (where is null)
+            if (predicate is null)
             {
-                throw new ArgumentNullException(nameof(where));
+                throw new ArgumentNullException(nameof(predicate));
             }
 
             if (selector is null)
@@ -406,19 +386,19 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(selector));
             }
 
-            return source.Where(where).Select(selector);
+            return source.WhereNot(predicate).Select(selector);
         }
 
-        public static IEnumerable<TResult> SelectWhereNot<T, TResult>(this IEnumerable<T> source, Func<T, Int32, Boolean> where, Func<T, Int32, TResult> selector)
+        public static IEnumerable<TResult> SelectWhere<T, TResult>(this IEnumerable<T> source, Func<T, Int32, Boolean> predicate, Func<T, Int32, TResult> selector)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
 
-            if (where is null)
+            if (predicate is null)
             {
-                throw new ArgumentNullException(nameof(where));
+                throw new ArgumentNullException(nameof(predicate));
             }
 
             if (selector is null)
@@ -426,7 +406,27 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(selector));
             }
 
-            return source.WhereNot(where).Select(selector);
+            return source.Where(predicate).Select(selector);
+        }
+
+        public static IEnumerable<TResult> SelectWhereNot<T, TResult>(this IEnumerable<T> source, Func<T, Int32, Boolean> predicate, Func<T, Int32, TResult> selector)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return source.WhereNot(predicate).Select(selector);
         }
 
         public static IEnumerable<T> SelectWhereNotNull<T>(this IEnumerable<T?> source) where T : struct
@@ -470,27 +470,22 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IEnumerable<TResult> TryParse<T, TResult>(this IEnumerable<T> source, TryParseHandler<T, TResult> predicate)
+        public static IEnumerable<TResult> TryParse<T, TResult>(this IEnumerable<T> source, TryParseHandler<T, TResult> selector)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return SelectWhere(source, predicate);
+            return SelectWhere(source, selector);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IEnumerable<TResult> TryParseWhere<T, TResult>(this IEnumerable<T> source, Func<T, Boolean> where, TryParseHandler<T, TResult> predicate)
+        public static IEnumerable<TResult> TryParseWhere<T, TResult>(this IEnumerable<T> source, Func<T, Boolean> predicate, TryParseHandler<T, TResult> selector)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
-            }
-
-            if (where is null)
-            {
-                throw new ArgumentNullException(nameof(where));
             }
 
             if (predicate is null)
@@ -498,20 +493,20 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(predicate));
             }
 
-            return TrySelectWhere(source, where, predicate);
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return TrySelectWhere(source, predicate, selector);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IEnumerable<TResult> TryParseWhereNot<T, TResult>(this IEnumerable<T> source, Func<T, Boolean> where, TryParseHandler<T, TResult> predicate)
+        public static IEnumerable<TResult> TryParseWhereNot<T, TResult>(this IEnumerable<T> source, Func<T, Boolean> predicate, TryParseHandler<T, TResult> selector)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
-            }
-
-            if (where is null)
-            {
-                throw new ArgumentNullException(nameof(where));
             }
 
             if (predicate is null)
@@ -519,7 +514,12 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(predicate));
             }
 
-            return TrySelectWhereNot(source, where, predicate);
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return TrySelectWhereNot(source, predicate, selector);
         }
 
         public static IEnumerable<T> Change<T>(this IEnumerable<T> source, T what, T to)
@@ -672,16 +672,16 @@ namespace NetExtender.Utilities.Types
             }
         }
 
-        public static IEnumerable<T> ChangeWhere<T>(this IEnumerable<T> source, Func<T, Boolean> where, Func<T, T> selector)
+        public static IEnumerable<T> ChangeWhere<T>(this IEnumerable<T> source, Func<T, Boolean> predicate, Func<T, T> selector)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
 
-            if (where is null)
+            if (predicate is null)
             {
-                throw new ArgumentNullException(nameof(where));
+                throw new ArgumentNullException(nameof(predicate));
             }
 
             if (selector is null)
@@ -689,19 +689,19 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(selector));
             }
 
-            return source.Select(item => where(item) ? selector(item) : item);
+            return source.Select(item => predicate(item) ? selector(item) : item);
         }
 
-        public static IEnumerable<T> ChangeWhere<T>(this IEnumerable<T> source, Func<T, Int32, Boolean> where, Func<T, T> selector)
+        public static IEnumerable<T> ChangeWhere<T>(this IEnumerable<T> source, Func<T, Int32, Boolean> predicate, Func<T, T> selector)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
 
-            if (where is null)
+            if (predicate is null)
             {
-                throw new ArgumentNullException(nameof(where));
+                throw new ArgumentNullException(nameof(predicate));
             }
 
             if (selector is null)
@@ -709,19 +709,19 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(selector));
             }
 
-            return source.Select((item, index) => !where(item, index) ? selector(item) : item);
+            return source.Select((item, index) => !predicate(item, index) ? selector(item) : item);
         }
 
-        public static IEnumerable<T> ChangeWhere<T>(this IEnumerable<T> source, Func<T, Boolean> where, Func<T, Int32, T> selector)
+        public static IEnumerable<T> ChangeWhere<T>(this IEnumerable<T> source, Func<T, Boolean> predicate, Func<T, Int32, T> selector)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
 
-            if (where is null)
+            if (predicate is null)
             {
-                throw new ArgumentNullException(nameof(where));
+                throw new ArgumentNullException(nameof(predicate));
             }
 
             if (selector is null)
@@ -729,19 +729,19 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(selector));
             }
 
-            return source.Select((item, index) => where(item) ? selector(item, index) : item);
+            return source.Select((item, index) => predicate(item) ? selector(item, index) : item);
         }
 
-        public static IEnumerable<T> ChangeWhere<T>(this IEnumerable<T> source, Func<T, Int32, Boolean> where, Func<T, Int32, T> selector)
+        public static IEnumerable<T> ChangeWhere<T>(this IEnumerable<T> source, Func<T, Int32, Boolean> predicate, Func<T, Int32, T> selector)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
 
-            if (where is null)
+            if (predicate is null)
             {
-                throw new ArgumentNullException(nameof(where));
+                throw new ArgumentNullException(nameof(predicate));
             }
 
             if (selector is null)
@@ -749,19 +749,19 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(selector));
             }
 
-            return source.Select((item, index) => where(item, index) ? selector(item, index) : item);
+            return source.Select((item, index) => predicate(item, index) ? selector(item, index) : item);
         }
 
-        public static IEnumerable<T> ChangeWhereNot<T>(this IEnumerable<T> source, Func<T, Boolean> where, Func<T, T> selector)
+        public static IEnumerable<T> ChangeWhereNot<T>(this IEnumerable<T> source, Func<T, Boolean> predicate, Func<T, T> selector)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
 
-            if (where is null)
+            if (predicate is null)
             {
-                throw new ArgumentNullException(nameof(where));
+                throw new ArgumentNullException(nameof(predicate));
             }
 
             if (selector is null)
@@ -769,19 +769,19 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(selector));
             }
 
-            return ChangeWhere(source, item => !where(item), selector);
+            return ChangeWhere(source, item => !predicate(item), selector);
         }
 
-        public static IEnumerable<T> ChangeWhereNot<T>(this IEnumerable<T> source, Func<T, Int32, Boolean> where, Func<T, T> selector)
+        public static IEnumerable<T> ChangeWhereNot<T>(this IEnumerable<T> source, Func<T, Int32, Boolean> predicate, Func<T, T> selector)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
 
-            if (where is null)
+            if (predicate is null)
             {
-                throw new ArgumentNullException(nameof(where));
+                throw new ArgumentNullException(nameof(predicate));
             }
 
             if (selector is null)
@@ -789,19 +789,19 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(selector));
             }
 
-            return ChangeWhere(source, (item, index) => !where(item, index), selector);
+            return ChangeWhere(source, (item, index) => !predicate(item, index), selector);
         }
 
-        public static IEnumerable<T> ChangeWhereNot<T>(this IEnumerable<T> source, Func<T, Boolean> where, Func<T, Int32, T> selector)
+        public static IEnumerable<T> ChangeWhereNot<T>(this IEnumerable<T> source, Func<T, Boolean> predicate, Func<T, Int32, T> selector)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
 
-            if (where is null)
+            if (predicate is null)
             {
-                throw new ArgumentNullException(nameof(where));
+                throw new ArgumentNullException(nameof(predicate));
             }
 
             if (selector is null)
@@ -809,19 +809,19 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(selector));
             }
 
-            return ChangeWhere(source, item => !where(item), selector);
+            return ChangeWhere(source, item => !predicate(item), selector);
         }
 
-        public static IEnumerable<T> ChangeWhereNot<T>(this IEnumerable<T> source, Func<T, Int32, Boolean> where, Func<T, Int32, T> selector)
+        public static IEnumerable<T> ChangeWhereNot<T>(this IEnumerable<T> source, Func<T, Int32, Boolean> predicate, Func<T, Int32, T> selector)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
 
-            if (where is null)
+            if (predicate is null)
             {
-                throw new ArgumentNullException(nameof(where));
+                throw new ArgumentNullException(nameof(predicate));
             }
 
             if (selector is null)
@@ -829,7 +829,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(selector));
             }
 
-            return ChangeWhere(source, (item, index) => !where(item, index), selector);
+            return ChangeWhere(source, (item, index) => !predicate(item, index), selector);
         }
 
         public static IEnumerable<T> ChangeWhereNull<T>(this IEnumerable<T?> source, T alternate)
@@ -888,16 +888,16 @@ namespace NetExtender.Utilities.Types
             return source.WhereNotNull().SelectMany(static item => item);
         }
 
-        public static IEnumerable<TResult> SelectManyWhere<T, TResult>(this IEnumerable<T> source, Func<T, Boolean> where, Func<T, IEnumerable<TResult>> selector)
+        public static IEnumerable<TResult> SelectManyWhere<T, TResult>(this IEnumerable<T> source, Func<T, Boolean> predicate, Func<T, IEnumerable<TResult>> selector)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
 
-            if (where is null)
+            if (predicate is null)
             {
-                throw new ArgumentNullException(nameof(where));
+                throw new ArgumentNullException(nameof(predicate));
             }
 
             if (selector is null)
@@ -905,19 +905,19 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(selector));
             }
 
-            return source.Where(where).SelectMany(selector);
+            return source.Where(predicate).SelectMany(selector);
         }
 
-        public static IEnumerable<TResult> SelectManyWhereNot<T, TResult>(this IEnumerable<T> source, Func<T, Boolean> where, Func<T, IEnumerable<TResult>> selector)
+        public static IEnumerable<TResult> SelectManyWhereNot<T, TResult>(this IEnumerable<T> source, Func<T, Boolean> predicate, Func<T, IEnumerable<TResult>> selector)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
 
-            if (where is null)
+            if (predicate is null)
             {
-                throw new ArgumentNullException(nameof(where));
+                throw new ArgumentNullException(nameof(predicate));
             }
 
             if (selector is null)
@@ -925,7 +925,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(selector));
             }
 
-            return source.WhereNot(where).SelectMany(selector);
+            return source.WhereNot(predicate).SelectMany(selector);
         }
 
         public static IEnumerable<T> SelectManyWhereNotNull<T>(this IEnumerable<IEnumerable<T?>?> source)
@@ -1208,7 +1208,6 @@ namespace NetExtender.Utilities.Types
             return source.TakeLast(count).SelectMany(collection, selector);
         }
 
-        //TODO: with depth
         public static IEnumerable<T> UnpackMany<T>(this IEnumerable<T> source, Func<T, IEnumerable<T>?> unpacker)
         {
             if (source is null)
@@ -1220,19 +1219,230 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(unpacker));
             }
-            
-            foreach (T item in source)
-            {
-                yield return item;
 
-                if (unpacker(item) is not { } inner)
+            return Core(source, unpacker);
+
+            static IEnumerable<T> Core(IEnumerable<T> source, Func<T, IEnumerable<T>?> unpacker)
+            {
+                foreach (T item in source)
                 {
-                    continue;
-                }
+                    yield return item;
+
+                    if (unpacker(item) is not { } inner)
+                    {
+                        continue;
+                    }
                 
-                foreach (T subitem in inner)
+                    foreach (T subitem in inner)
+                    {
+                        yield return subitem;
+                    }
+                }
+            }
+        }
+        
+        public static IEnumerable<T> UnpackMany<T>(this IEnumerable<T> source, Int32 depth, Func<T, IEnumerable<T>?> unpacker)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (unpacker is null)
+            {
+                throw new ArgumentNullException(nameof(unpacker));
+            }
+
+            if (depth < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(depth), depth, "Depth must be greater than or equal to 0.");
+            }
+
+            return depth switch
+            {
+                0 => source,
+                1 => UnpackMany(source, unpacker),
+                _ => Core(source, depth, unpacker)
+            };
+
+            static IEnumerable<T> Core(IEnumerable<T> source, Int32 depth, Func<T, IEnumerable<T>?> unpacker)
+            {
+                foreach (T item in source)
                 {
-                    yield return subitem;
+                    yield return item;
+
+                    if (unpacker(item) is not { } inner)
+                    {
+                        continue;
+                    }
+                        
+                    foreach (T subitem in UnpackMany(inner, depth - 1, unpacker))
+                    {
+                        yield return subitem;
+                    }
+                }
+            }
+        }
+
+        public static IEnumerable<T> UnpackMany<T>(this IEnumerable<T> source, Func<T, IEnumerable<T>?> unpacker, Func<T, Boolean>? predicate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (unpacker is null)
+            {
+                throw new ArgumentNullException(nameof(unpacker));
+            }
+            
+            return predicate is not null ? Core(source, unpacker, predicate) : UnpackMany(source, unpacker);
+
+            static IEnumerable<T> Core(IEnumerable<T> source, Func<T, IEnumerable<T>?> unpacker, Func<T, Boolean> predicate)
+            {
+                foreach (T item in source)
+                {
+                    yield return item;
+
+                    if (unpacker(item) is not { } inner)
+                    {
+                        continue;
+                    }
+                
+                    foreach (T subitem in inner)
+                    {
+                        if (predicate(subitem))
+                        {
+                            yield return subitem;
+                        }
+                    }
+                }
+            }
+        }
+
+        public static IEnumerable<T> UnpackMany<T>(this IEnumerable<T> source, Int32 depth, Func<T, IEnumerable<T>?> unpacker, Func<T, Boolean>? predicate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (unpacker is null)
+            {
+                throw new ArgumentNullException(nameof(unpacker));
+            }
+
+            if (depth < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(depth), depth, "Depth must be greater than or equal to 0.");
+            }
+
+            return depth switch
+            {
+                0 when predicate is null => source,
+                0 => source.Where(predicate),
+                1 => UnpackMany(source, unpacker, predicate),
+                _ when predicate is null => UnpackMany(source, depth, unpacker),
+                _ => Core(source, depth, unpacker, predicate)
+            };
+
+            static IEnumerable<T> Core(IEnumerable<T> source, Int32 depth, Func<T, IEnumerable<T>?> unpacker, Func<T, Boolean> predicate)
+            {
+                foreach (T item in source)
+                {
+                    yield return item;
+
+                    if (unpacker(item) is not { } inner)
+                    {
+                        continue;
+                    }
+                    
+                    foreach (T subitem in UnpackMany(inner, depth - 1, unpacker, predicate))
+                    {
+                        yield return subitem;
+                    }
+                }
+            }
+        }
+
+        public static IEnumerable<T> UnpackMany<T>(this IEnumerable<T> source, Func<T, IEnumerable<T>?> unpacker, Func<T, Int32, Boolean>? predicate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (unpacker is null)
+            {
+                throw new ArgumentNullException(nameof(unpacker));
+            }
+            
+            return predicate is not null ? Core(source, unpacker, predicate) : UnpackMany(source, unpacker);
+
+            static IEnumerable<T> Core(IEnumerable<T> source, Func<T, IEnumerable<T>?> unpacker, Func<T, Int32, Boolean> predicate)
+            {
+                foreach (T item in source)
+                {
+                    yield return item;
+
+                    if (unpacker(item) is not { } inner)
+                    {
+                        continue;
+                    }
+                    
+                    Int32 counter = 0;
+                    foreach (T subitem in inner)
+                    {
+                        if (predicate(subitem, counter++))
+                        {
+                            yield return subitem;
+                        }
+                    }
+                }
+            }
+        }
+
+        public static IEnumerable<T> UnpackMany<T>(this IEnumerable<T> source, Int32 depth, Func<T, IEnumerable<T>?> unpacker, Func<T, Int32, Boolean>? predicate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (unpacker is null)
+            {
+                throw new ArgumentNullException(nameof(unpacker));
+            }
+
+            if (depth < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(depth), depth, "Depth must be greater than or equal to 0.");
+            }
+
+            return depth switch
+            {
+                0 when predicate is null => source,
+                0 => source.Where(predicate),
+                1 => UnpackMany(source, unpacker, predicate),
+                _ when predicate is null => UnpackMany(source, depth, unpacker),
+                _ => Core(source, depth, unpacker, predicate)
+            };
+
+            static IEnumerable<T> Core(IEnumerable<T> source, Int32 depth, Func<T, IEnumerable<T>?> unpacker, Func<T, Int32, Boolean> predicate)
+            {
+                foreach (T item in source)
+                {
+                    yield return item;
+
+                    if (unpacker(item) is not { } inner)
+                    {
+                        continue;
+                    }
+                    
+                    foreach (T subitem in UnpackMany(inner, depth - 1, unpacker, predicate))
+                    {
+                        yield return subitem;
+                    }
                 }
             }
         }
@@ -1248,29 +1458,69 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(unpacker));
             }
+            
+            return selector is not null ? Core(source, unpacker, selector) : UnpackMany(source, unpacker);
 
-            if (selector is null)
+            static IEnumerable<T> Core(IEnumerable<T> source, Func<T, IEnumerable<T>?> unpacker, Func<T, T> selector)
             {
-                foreach (T item in UnpackMany(source, unpacker))
+                foreach (T item in source)
                 {
                     yield return item;
-                }
+
+                    if (unpacker(item) is not { } inner)
+                    {
+                        continue;
+                    }
                 
-                yield break;
+                    foreach (T subitem in inner)
+                    {
+                        yield return selector(subitem);
+                    }
+                }
+            }
+        }
+
+        public static IEnumerable<T> UnpackMany<T>(this IEnumerable<T> source, Int32 depth, Func<T, IEnumerable<T>?> unpacker, Func<T, T>? selector)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
             }
             
-            foreach (T item in source)
+            if (unpacker is null)
             {
-                yield return item;
+                throw new ArgumentNullException(nameof(unpacker));
+            }
 
-                if (unpacker(item) is not { } inner)
+            if (depth < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(depth), depth, "Depth must be greater than or equal to 0.");
+            }
+
+            return depth switch
+            {
+                0 when selector is null => source,
+                0 => source.Select(selector),
+                1 => UnpackMany(source, unpacker, selector),
+                _ when selector is null => UnpackMany(source, depth, unpacker),
+                _ => Core(source, depth, unpacker, selector)
+            };
+
+            static IEnumerable<T> Core(IEnumerable<T> source, Int32 depth, Func<T, IEnumerable<T>?> unpacker, Func<T, T> selector)
+            {
+                foreach (T item in source)
                 {
-                    continue;
-                }
-                
-                foreach (T subitem in inner)
-                {
-                    yield return selector(subitem);
+                    yield return item;
+
+                    if (unpacker(item) is not { } inner)
+                    {
+                        continue;
+                    }
+                    
+                    foreach (T subitem in UnpackMany(inner, depth - 1, unpacker, selector))
+                    {
+                        yield return subitem;
+                    }
                 }
             }
         }
@@ -1287,28 +1537,239 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(unpacker));
             }
 
-            if (selector is null)
+            return selector is not null ? Core(source, unpacker, selector) : UnpackMany(source, unpacker);
+
+            static IEnumerable<T> Core(IEnumerable<T> source, Func<T, IEnumerable<T>?> unpacker, Func<T, T, T> selector)
             {
-                foreach (T item in UnpackMany(source, unpacker))
+                foreach (T item in source)
                 {
                     yield return item;
+
+                    if (unpacker(item) is not { } inner)
+                    {
+                        continue;
+                    }
+                    
+                    foreach (T subitem in inner)
+                    {
+                        yield return selector(item, subitem);
+                    }
                 }
-                
-                yield break;
+            }
+        }
+
+        public static IEnumerable<T> UnpackMany<T>(this IEnumerable<T> source, Int32 depth, Func<T, IEnumerable<T>?> unpacker, Func<T, T, T>? selector)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
             }
             
-            foreach (T item in source)
+            if (unpacker is null)
             {
-                yield return item;
+                throw new ArgumentNullException(nameof(unpacker));
+            }
 
-                if (unpacker(item) is not { } inner)
+            if (depth < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(depth), depth, "Depth must be greater than or equal to 0.");
+            }
+
+            return depth switch
+            {
+                0 when selector is null => source,
+                0 => CoreNoDepth(source, selector),
+                1 => UnpackMany(source, unpacker, selector),
+                _ when selector is null => UnpackMany(source, depth, unpacker),
+                _ => Core(source, depth, unpacker, selector)
+            };
+
+            static IEnumerable<T> CoreNoDepth(IEnumerable<T> source, Func<T, T, T> selector)
+            {
+                foreach (T item in source)
                 {
-                    continue;
+                    yield return selector(item, item);
                 }
-                
-                foreach (T subitem in inner)
+            }
+
+            static IEnumerable<T> Core(IEnumerable<T> source, Int32 depth, Func<T, IEnumerable<T>?> unpacker, Func<T, T, T> selector)
+            {
+                foreach (T item in source)
                 {
-                    yield return selector(item, subitem);
+                    yield return item;
+
+                    if (unpacker(item) is not { } inner)
+                    {
+                        continue;
+                    }
+                    
+                    foreach (T subitem in UnpackMany(inner, depth - 1, unpacker, selector))
+                    {
+                        yield return subitem;
+                    }
+                }
+            }
+        }
+
+        public static IEnumerable<T> UnpackMany<T>(this IEnumerable<T> source, Func<T, IEnumerable<T>?> unpacker, TryParseHandler<T, T>? selector)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (unpacker is null)
+            {
+                throw new ArgumentNullException(nameof(unpacker));
+            }
+            
+            return selector is not null ? Core(source, unpacker, selector) : UnpackMany(source, unpacker);
+
+            static IEnumerable<T> Core(IEnumerable<T> source, Func<T, IEnumerable<T>?> unpacker, TryParseHandler<T, T> selector)
+            {
+                foreach (T item in source)
+                {
+                    yield return item;
+
+                    if (unpacker(item) is not { } inner)
+                    {
+                        continue;
+                    }
+                
+                    foreach (T subitem in inner)
+                    {
+                        if (selector(subitem, out T? result))
+                        {
+                            yield return result;
+                        }
+                    }
+                }
+            }
+        }
+
+        public static IEnumerable<T> UnpackMany<T>(this IEnumerable<T> source, Int32 depth, Func<T, IEnumerable<T>?> unpacker, TryParseHandler<T, T>? selector)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (unpacker is null)
+            {
+                throw new ArgumentNullException(nameof(unpacker));
+            }
+
+            if (depth < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(depth), depth, "Depth must be greater than or equal to 0.");
+            }
+
+            return depth switch
+            {
+                0 when selector is null => source,
+                0 => source.SelectWhere(selector),
+                1 => UnpackMany(source, unpacker, selector),
+                _ when selector is null => UnpackMany(source, depth, unpacker),
+                _ => Core(source, depth, unpacker, selector)
+            };
+
+            static IEnumerable<T> Core(IEnumerable<T> source, Int32 depth, Func<T, IEnumerable<T>?> unpacker, TryParseHandler<T, T> selector)
+            {
+                foreach (T item in source)
+                {
+                    yield return item;
+
+                    if (unpacker(item) is not { } inner)
+                    {
+                        continue;
+                    }
+                    
+                    foreach (T subitem in UnpackMany(inner, depth - 1, unpacker, selector))
+                    {
+                        yield return subitem;
+                    }
+                }
+            }
+        }
+
+        public static IEnumerable<T> UnpackMany<T>(this IEnumerable<T> source, Func<T, IEnumerable<T>?> unpacker, TryParseHandler<T, Int32, T>? selector)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (unpacker is null)
+            {
+                throw new ArgumentNullException(nameof(unpacker));
+            }
+            
+            return selector is not null ? Core(source, unpacker, selector) : UnpackMany(source, unpacker);
+
+            static IEnumerable<T> Core(IEnumerable<T> source, Func<T, IEnumerable<T>?> unpacker, TryParseHandler<T, Int32, T> selector)
+            {
+                foreach (T item in source)
+                {
+                    yield return item;
+
+                    if (unpacker(item) is not { } inner)
+                    {
+                        continue;
+                    }
+
+                    Int32 counter = 0;
+                    foreach (T subitem in inner)
+                    {
+                        if (selector(subitem, counter++, out T? result))
+                        {
+                            yield return result;
+                        }
+                    }
+                }
+            }
+        }
+
+        public static IEnumerable<T> UnpackMany<T>(this IEnumerable<T> source, Int32 depth, Func<T, IEnumerable<T>?> unpacker, TryParseHandler<T, Int32, T>? selector)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (unpacker is null)
+            {
+                throw new ArgumentNullException(nameof(unpacker));
+            }
+
+            if (depth < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(depth), depth, "Depth must be greater than or equal to 0.");
+            }
+
+            return depth switch
+            {
+                0 when selector is null => source,
+                0 => source.SelectWhere(selector),
+                1 => UnpackMany(source, unpacker, selector),
+                _ when selector is null => UnpackMany(source, depth, unpacker),
+                _ => Core(source, depth, unpacker, selector)
+            };
+
+            static IEnumerable<T> Core(IEnumerable<T> source, Int32 depth, Func<T, IEnumerable<T>?> unpacker, TryParseHandler<T, Int32, T> selector)
+            {
+                foreach (T item in source)
+                {
+                    yield return item;
+
+                    if (unpacker(item) is not { } inner)
+                    {
+                        continue;
+                    }
+                    
+                    foreach (T subitem in UnpackMany(inner, depth - 1, unpacker, selector))
+                    {
+                        yield return subitem;
+                    }
                 }
             }
         }
@@ -1325,19 +1786,235 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(unpacker));
             }
             
-            Int32 i = 0;
-            foreach (T item in source)
-            {
-                yield return item;
+            return Core(source, unpacker);
 
-                if (unpacker(item, i++) is not { } inner)
+            static IEnumerable<T> Core(IEnumerable<T> source, Func<T, Int32, IEnumerable<T>?> unpacker)
+            {
+                Int32 i = 0;
+                foreach (T item in source)
                 {
-                    continue;
-                }
+                    yield return item;
+
+                    if (unpacker(item, i++) is not { } inner)
+                    {
+                        continue;
+                    }
                 
-                foreach (T subitem in inner)
+                    foreach (T subitem in inner)
+                    {
+                        yield return subitem;
+                    }
+                }
+            }
+        }
+
+        public static IEnumerable<T> UnpackMany<T>(this IEnumerable<T> source, Int32 depth, Func<T, Int32, IEnumerable<T>?> unpacker)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (unpacker is null)
+            {
+                throw new ArgumentNullException(nameof(unpacker));
+            }
+
+            if (depth < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(depth), depth, "Depth must be greater than or equal to 0.");
+            }
+
+            return depth switch
+            {
+                0 => source,
+                1 => UnpackMany(source, unpacker),
+                _ => Core(source, depth, unpacker)
+            };
+
+            static IEnumerable<T> Core(IEnumerable<T> source, Int32 depth, Func<T, Int32, IEnumerable<T>?> unpacker)
+            {
+                Int32 i = 0;
+                foreach (T item in source)
                 {
-                    yield return subitem;
+                    yield return item;
+
+                    if (unpacker(item, i++) is not { } inner)
+                    {
+                        continue;
+                    }
+                    
+                    foreach (T subitem in UnpackMany(inner, depth - 1, unpacker))
+                    {
+                        yield return subitem;
+                    }
+                }
+            }
+        }
+
+        public static IEnumerable<T> UnpackMany<T>(this IEnumerable<T> source, Func<T, Int32, IEnumerable<T>?> unpacker, Func<T, Boolean>? predicate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (unpacker is null)
+            {
+                throw new ArgumentNullException(nameof(unpacker));
+            }
+
+            return predicate is not null ? Core(source, unpacker, predicate) : UnpackMany(source, unpacker);
+
+            static IEnumerable<T> Core(IEnumerable<T> source, Func<T, Int32, IEnumerable<T>?> unpacker, Func<T, Boolean> predicate)
+            {
+                Int32 i = 0;
+                foreach (T item in source)
+                {
+                    yield return item;
+
+                    if (unpacker(item, i++) is not { } inner)
+                    {
+                        continue;
+                    }
+                
+                    foreach (T subitem in inner)
+                    {
+                        if (predicate(subitem))
+                        {
+                            yield return subitem;
+                        }
+                    }
+                }
+            }
+        }
+
+        public static IEnumerable<T> UnpackMany<T>(this IEnumerable<T> source, Int32 depth, Func<T, Int32, IEnumerable<T>?> unpacker, Func<T, Boolean>? predicate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (unpacker is null)
+            {
+                throw new ArgumentNullException(nameof(unpacker));
+            }
+
+            if (depth < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(depth), depth, "Depth must be greater than or equal to 0.");
+            }
+
+            return depth switch
+            {
+                0 when predicate is null => source,
+                0 => source.Where(predicate),
+                1 => UnpackMany(source, unpacker, predicate),
+                _ when predicate is null => UnpackMany(source, depth, unpacker),
+                _ => Core(source, depth, unpacker, predicate)
+            };
+
+            static IEnumerable<T> Core(IEnumerable<T> source, Int32 depth, Func<T, Int32, IEnumerable<T>?> unpacker, Func<T, Boolean> predicate)
+            {
+                Int32 i = 0;
+                foreach (T item in source)
+                {
+                    yield return item;
+
+                    if (unpacker(item, i++) is not { } inner)
+                    {
+                        continue;
+                    }
+                    
+                    foreach (T subitem in UnpackMany(inner, depth - 1, unpacker, predicate))
+                    {
+                        yield return subitem;
+                    }
+                }
+            }
+        }
+
+        public static IEnumerable<T> UnpackMany<T>(this IEnumerable<T> source, Func<T, Int32, IEnumerable<T>?> unpacker, Func<T, Int32, Boolean>? predicate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (unpacker is null)
+            {
+                throw new ArgumentNullException(nameof(unpacker));
+            }
+
+            return predicate is not null ? Core(source, unpacker, predicate) : UnpackMany(source, unpacker);
+
+            static IEnumerable<T> Core(IEnumerable<T> source, Func<T, Int32, IEnumerable<T>?> unpacker, Func<T, Int32, Boolean> predicate)
+            {
+                Int32 i = 0;
+                foreach (T item in source)
+                {
+                    yield return item;
+
+                    if (unpacker(item, i++) is not { } inner)
+                    {
+                        continue;
+                    }
+
+                    Int32 counter = 0;
+                    foreach (T subitem in inner)
+                    {
+                        if (predicate(subitem, counter++))
+                        {
+                            yield return subitem;
+                        }
+                    }
+                }
+            }
+        }
+
+        public static IEnumerable<T> UnpackMany<T>(this IEnumerable<T> source, Int32 depth, Func<T, Int32, IEnumerable<T>?> unpacker, Func<T, Int32, Boolean>? predicate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (unpacker is null)
+            {
+                throw new ArgumentNullException(nameof(unpacker));
+            }
+
+            if (depth < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(depth), depth, "Depth must be greater than or equal to 0.");
+            }
+
+            return depth switch
+            {
+                0 when predicate is null => source,
+                0 => source.Where(predicate),
+                1 => UnpackMany(source, unpacker, predicate),
+                _ when predicate is null => UnpackMany(source, depth, unpacker),
+                _ => Core(source, depth, unpacker, predicate)
+            };
+
+            static IEnumerable<T> Core(IEnumerable<T> source, Int32 depth, Func<T, Int32, IEnumerable<T>?> unpacker, Func<T, Int32, Boolean> predicate)
+            {
+                Int32 i = 0;
+                foreach (T item in source)
+                {
+                    yield return item;
+
+                    if (unpacker(item, i++) is not { } inner)
+                    {
+                        continue;
+                    }
+                    
+                    foreach (T subitem in UnpackMany(inner, depth - 1, unpacker, predicate))
+                    {
+                        yield return subitem;
+                    }
                 }
             }
         }
@@ -1354,32 +2031,74 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(unpacker));
             }
 
-            if (selector is null)
+            return selector is not null ? Core(source, unpacker, selector) : UnpackMany(source, unpacker);
+
+            static IEnumerable<T> Core(IEnumerable<T> source, Func<T, Int32, IEnumerable<T>?> unpacker, Func<T, T> selector)
             {
-                foreach (T item in UnpackMany(source, unpacker))
+                Int32 i = 0;
+                foreach (T item in source)
                 {
                     yield return item;
-                }
-                
-                yield break;
-            }
-            
-            Int32 i = 0;
-            foreach (T item in source)
-            {
-                yield return item;
 
-                if (unpacker(item, i++) is not { } inner)
-                {
-                    continue;
-                }
+                    if (unpacker(item, i++) is not { } inner)
+                    {
+                        continue;
+                    }
                 
-                foreach (T subitem in inner)
-                {
-                    yield return selector(subitem);
+                    foreach (T subitem in inner)
+                    {
+                        yield return selector(subitem);
+                    }
                 }
             }
         }
+
+        public static IEnumerable<T> UnpackMany<T>(this IEnumerable<T> source, Int32 depth, Func<T, Int32, IEnumerable<T>?> unpacker, Func<T, T>? selector)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (unpacker is null)
+            {
+                throw new ArgumentNullException(nameof(unpacker));
+            }
+
+            if (depth < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(depth), depth, "Depth must be greater than or equal to 0.");
+            }
+
+            return depth switch
+            {
+                0 when selector is null => source,
+                0 => source.Select(selector),
+                1 => UnpackMany(source, unpacker, selector),
+                _ when selector is null => UnpackMany(source, depth, unpacker),
+                _ => Core(source, depth, unpacker, selector)
+            };
+
+            static IEnumerable<T> Core(IEnumerable<T> source, Int32 depth, Func<T, Int32, IEnumerable<T>?> unpacker, Func<T, T> selector)
+            {
+                Int32 i = 0;
+                foreach (T item in source)
+                {
+                    yield return item;
+
+                    if (unpacker(item, i++) is not { } inner)
+                    {
+                        continue;
+                    }
+                    
+                    foreach (T subitem in UnpackMany(inner, depth - 1, unpacker, selector))
+                    {
+                        yield return subitem;
+                    }
+                }
+            }
+        }
+        
         public static IEnumerable<T> UnpackMany<T>(this IEnumerable<T> source, Func<T, Int32, IEnumerable<T>?> unpacker, Func<T, T, T>? selector)
         {
             if (source is null)
@@ -1392,71 +2111,247 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(unpacker));
             }
 
-            if (selector is null)
+            return selector is not null ? Core(source, unpacker, selector) : UnpackMany(source, unpacker);
+
+            static IEnumerable<T> Core(IEnumerable<T> source, Func<T, Int32, IEnumerable<T>?> unpacker, Func<T, T, T> selector)
             {
-                foreach (T item in UnpackMany(source, unpacker))
+                Int32 i = 0;
+                foreach (T item in source)
                 {
                     yield return item;
-                }
-                
-                yield break;
-            }
-            
-            Int32 i = 0;
-            foreach (T item in source)
-            {
-                yield return item;
 
-                if (unpacker(item, i++) is not { } inner)
-                {
-                    continue;
-                }
+                    if (unpacker(item, i++) is not { } inner)
+                    {
+                        continue;
+                    }
                 
-                foreach (T subitem in inner)
-                {
-                    yield return selector(item, subitem);
+                    foreach (T subitem in inner)
+                    {
+                        yield return selector(item, subitem);
+                    }
                 }
             }
         }
         
-        public static IEnumerable<TResult> UnpackMany<T, TResult>(this IEnumerable<T> source, Func<T, TResult> selector, Func<T, IEnumerable<T>> unpacker)
+        public static IEnumerable<T> UnpackMany<T>(this IEnumerable<T> source, Int32 depth, Func<T, Int32, IEnumerable<T>?> unpacker, Func<T, T, T>? selector)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
             
-            if (selector is null)
-            {
-                throw new ArgumentNullException(nameof(selector));
-            }
-            
             if (unpacker is null)
             {
                 throw new ArgumentNullException(nameof(unpacker));
             }
-            
-            return source.UnpackMany(unpacker).Select(selector);
+
+            if (depth < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(depth), depth, "Depth must be greater than or equal to 0.");
+            }
+
+            return depth switch
+            {
+                0 when selector is null => source,
+                0 => CoreNoDepth(source, selector),
+                1 => UnpackMany(source, unpacker, selector),
+                _ when selector is null => UnpackMany(source, depth, unpacker),
+                _ => Core(source, depth, unpacker, selector)
+            };
+
+            static IEnumerable<T> CoreNoDepth(IEnumerable<T> source, Func<T, T, T> selector)
+            {
+                foreach (T item in source)
+                {
+                    yield return selector(item, item);
+                }
+            }
+
+            static IEnumerable<T> Core(IEnumerable<T> source, Int32 depth, Func<T, Int32, IEnumerable<T>?> unpacker, Func<T, T, T> selector)
+            {
+                Int32 i = 0;
+                foreach (T item in source)
+                {
+                    yield return item;
+
+                    if (unpacker(item, i++) is not { } inner)
+                    {
+                        continue;
+                    }
+                    
+                    foreach (T subitem in UnpackMany(inner, depth - 1, unpacker, selector))
+                    {
+                        yield return subitem;
+                    }
+                }
+            }
         }
         
-        public static IEnumerable<TResult> UnpackMany<T, TResult>(this IEnumerable<T> source, Func<T, TResult> selector, Func<T, Int32, IEnumerable<T>> unpacker)
+        public static IEnumerable<T> UnpackMany<T>(this IEnumerable<T> source, Func<T, Int32, IEnumerable<T>?> unpacker, TryParseHandler<T, T>? selector)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
-
-            if (selector is null)
+            
+            if (unpacker is null)
             {
-                throw new ArgumentNullException(nameof(selector));
+                throw new ArgumentNullException(nameof(unpacker));
+            }
+
+            return selector is not null ? Core(source, unpacker, selector) : UnpackMany(source, unpacker);
+
+            static IEnumerable<T> Core(IEnumerable<T> source, Func<T, Int32, IEnumerable<T>?> unpacker, TryParseHandler<T, T> selector)
+            {
+                Int32 i = 0;
+                foreach (T item in source)
+                {
+                    yield return item;
+
+                    if (unpacker(item, i++) is not { } inner)
+                    {
+                        continue;
+                    }
+                
+                    foreach (T subitem in inner)
+                    {
+                        if (selector(subitem, out T? result))
+                        {
+                            yield return result;
+                        }
+                    }
+                }
+            }
+        }
+
+        public static IEnumerable<T> UnpackMany<T>(this IEnumerable<T> source, Int32 depth, Func<T, Int32, IEnumerable<T>?> unpacker, TryParseHandler<T, T>? selector)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
             }
             
             if (unpacker is null)
             {
                 throw new ArgumentNullException(nameof(unpacker));
             }
+
+            if (depth < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(depth), depth, "Depth must be greater than or equal to 0.");
+            }
+
+            return depth switch
+            {
+                0 when selector is null => source,
+                0 => source.SelectWhere(selector),
+                1 => UnpackMany(source, unpacker, selector),
+                _ when selector is null => UnpackMany(source, depth, unpacker),
+                _ => Core(source, depth, unpacker, selector)
+            };
+
+            static IEnumerable<T> Core(IEnumerable<T> source, Int32 depth, Func<T, Int32, IEnumerable<T>?> unpacker, TryParseHandler<T, T> selector)
+            {
+                Int32 i = 0;
+                foreach (T item in source)
+                {
+                    yield return item;
+
+                    if (unpacker(item, i++) is not { } inner)
+                    {
+                        continue;
+                    }
+                    
+                    foreach (T subitem in UnpackMany(inner, depth - 1, unpacker, selector))
+                    {
+                        yield return subitem;
+                    }
+                }
+            }
+        }
+        
+        public static IEnumerable<T> UnpackMany<T>(this IEnumerable<T> source, Func<T, Int32, IEnumerable<T>?> unpacker, TryParseHandler<T, Int32, T>? selector)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
             
-            return source.UnpackMany(unpacker).Select(selector);
+            if (unpacker is null)
+            {
+                throw new ArgumentNullException(nameof(unpacker));
+            }
+
+            return selector is not null ? Core(source, unpacker, selector) : UnpackMany(source, unpacker);
+
+            static IEnumerable<T> Core(IEnumerable<T> source, Func<T, Int32, IEnumerable<T>?> unpacker, TryParseHandler<T, Int32, T> selector)
+            {
+                Int32 i = 0;
+                foreach (T item in source)
+                {
+                    yield return item;
+
+                    if (unpacker(item, i++) is not { } inner)
+                    {
+                        continue;
+                    }
+
+                    Int32 counter = 0;
+                    foreach (T subitem in inner)
+                    {
+                        if (selector(subitem, counter++, out T? result))
+                        {
+                            yield return result;
+                        }
+                    }
+                }
+            }
+        }
+
+        public static IEnumerable<T> UnpackMany<T>(this IEnumerable<T> source, Int32 depth, Func<T, Int32, IEnumerable<T>?> unpacker, TryParseHandler<T, Int32, T>? selector)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (unpacker is null)
+            {
+                throw new ArgumentNullException(nameof(unpacker));
+            }
+
+            if (depth < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(depth), depth, "Depth must be greater than or equal to 0.");
+            }
+
+            return depth switch
+            {
+                0 when selector is null => source,
+                0 => source.SelectWhere(selector),
+                1 => UnpackMany(source, unpacker, selector),
+                _ when selector is null => UnpackMany(source, depth, unpacker),
+                _ => Core(source, depth, unpacker, selector)
+            };
+
+            static IEnumerable<T> Core(IEnumerable<T> source, Int32 depth, Func<T, Int32, IEnumerable<T>?> unpacker, TryParseHandler<T, Int32, T> selector)
+            {
+                Int32 i = 0;
+                foreach (T item in source)
+                {
+                    yield return item;
+
+                    if (unpacker(item, i++) is not { } inner)
+                    {
+                        continue;
+                    }
+                    
+                    foreach (T subitem in UnpackMany(inner, depth - 1, unpacker, selector))
+                    {
+                        yield return subitem;
+                    }
+                }
+            }
         }
 
         public static IEnumerable<TResult> TrySelect<T, TResult>(this IEnumerable<T> source, Func<T, TResult> selector)
@@ -1531,100 +2426,11 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IEnumerable<TResult> TrySelectWhere<T, TResult>(this IEnumerable<T> source, Func<T, Boolean> where, Func<T, TResult> selector)
+        public static IEnumerable<TResult> TrySelectWhere<T, TResult>(this IEnumerable<T> source, Func<T, Boolean> predicate, Func<T, TResult> selector)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
-            }
-
-            if (where is null)
-            {
-                throw new ArgumentNullException(nameof(where));
-            }
-
-            if (selector is null)
-            {
-                throw new ArgumentNullException(nameof(selector));
-            }
-
-            return source.Where(where).TrySelect(selector);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IEnumerable<TResult> TrySelectWhere<T, TResult>(this IEnumerable<T> source, Func<T, Int32, Boolean> where, Func<T, TResult> selector)
-        {
-            if (source is null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-
-            if (where is null)
-            {
-                throw new ArgumentNullException(nameof(where));
-            }
-
-            if (selector is null)
-            {
-                throw new ArgumentNullException(nameof(selector));
-            }
-
-            return source.Where(where).TrySelect(selector);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IEnumerable<TResult> TrySelectWhere<T, TResult>(this IEnumerable<T> source, Func<T, Boolean> where, Func<T, Int32, TResult> selector)
-        {
-            if (source is null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-
-            if (where is null)
-            {
-                throw new ArgumentNullException(nameof(where));
-            }
-
-            if (selector is null)
-            {
-                throw new ArgumentNullException(nameof(selector));
-            }
-
-            return source.Where(where).TrySelect(selector);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IEnumerable<TResult> TrySelectWhere<T, TResult>(this IEnumerable<T> source, Func<T, Int32, Boolean> where, Func<T, Int32, TResult> selector)
-        {
-            if (source is null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-
-            if (where is null)
-            {
-                throw new ArgumentNullException(nameof(where));
-            }
-
-            if (selector is null)
-            {
-                throw new ArgumentNullException(nameof(selector));
-            }
-
-            return source.Where(where).TrySelect(selector);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IEnumerable<TResult> TrySelectWhere<T, TResult>(this IEnumerable<T> source, Func<T, Boolean> where, TryParseHandler<T, TResult> predicate)
-        {
-            if (source is null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-
-            if (where is null)
-            {
-                throw new ArgumentNullException(nameof(where));
             }
 
             if (predicate is null)
@@ -1632,20 +2438,20 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(predicate));
             }
 
-            return SelectWhere(source, where, predicate);
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return source.Where(predicate).TrySelect(selector);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IEnumerable<TResult> TrySelectWhereNot<T, TResult>(this IEnumerable<T> source, Func<T, Boolean> where, Func<T, TResult> predicate)
+        public static IEnumerable<TResult> TrySelectWhere<T, TResult>(this IEnumerable<T> source, Func<T, Int32, Boolean> predicate, Func<T, TResult> selector)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
-            }
-
-            if (where is null)
-            {
-                throw new ArgumentNullException(nameof(where));
             }
 
             if (predicate is null)
@@ -1653,20 +2459,20 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(predicate));
             }
 
-            return TrySelectWhere(source, item => !where(item), predicate);
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return source.Where(predicate).TrySelect(selector);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IEnumerable<TResult> TrySelectWhereNot<T, TResult>(this IEnumerable<T> source, Func<T, Boolean> where, TryParseHandler<T, TResult> predicate)
+        public static IEnumerable<TResult> TrySelectWhere<T, TResult>(this IEnumerable<T> source, Func<T, Boolean> predicate, Func<T, Int32, TResult> selector)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
-            }
-
-            if (where is null)
-            {
-                throw new ArgumentNullException(nameof(where));
             }
 
             if (predicate is null)
@@ -1674,7 +2480,96 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(predicate));
             }
 
-            return TrySelectWhere(source, item => !where(item), predicate);
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return source.Where(predicate).TrySelect(selector);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<TResult> TrySelectWhere<T, TResult>(this IEnumerable<T> source, Func<T, Int32, Boolean> predicate, Func<T, Int32, TResult> selector)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return source.Where(predicate).TrySelect(selector);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<TResult> TrySelectWhere<T, TResult>(this IEnumerable<T> source, Func<T, Boolean> predicate, TryParseHandler<T, TResult> selector)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return SelectWhere(source, predicate, selector);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<TResult> TrySelectWhereNot<T, TResult>(this IEnumerable<T> source, Func<T, Boolean> predicate, Func<T, TResult> selector)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return TrySelectWhere(source, item => !predicate(item), selector);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<TResult> TrySelectWhereNot<T, TResult>(this IEnumerable<T> source, Func<T, Boolean> predicate, TryParseHandler<T, TResult> selector)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return TrySelectWhere(source, item => !predicate(item), selector);
         }
 
         /// <summary>

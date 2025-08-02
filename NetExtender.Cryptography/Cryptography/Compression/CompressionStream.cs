@@ -157,7 +157,7 @@ namespace NetExtender.Cryptography.Compression
             return Compression.Read(buffer, offset, count);
         }
 
-        public override ValueTask<Int32> ReadAsync(Memory<Byte> buffer, CancellationToken token = new CancellationToken())
+        public override ValueTask<Int32> ReadAsync(Memory<Byte> buffer, CancellationToken token = default)
         {
             return Compression.ReadAsync(buffer, token);
         }
@@ -192,7 +192,7 @@ namespace NetExtender.Cryptography.Compression
             Compression.Write(buffer, offset, count);
         }
 
-        public override ValueTask WriteAsync(ReadOnlyMemory<Byte> buffer, CancellationToken token = new CancellationToken())
+        public override ValueTask WriteAsync(ReadOnlyMemory<Byte> buffer, CancellationToken token = default)
         {
             return Compression.WriteAsync(buffer, token);
         }

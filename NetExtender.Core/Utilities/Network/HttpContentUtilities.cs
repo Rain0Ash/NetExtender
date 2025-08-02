@@ -11,6 +11,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -35,6 +36,78 @@ namespace NetExtender.Utilities.Network
             {
                 return collection ??= new MediaTypeFormatterCollection();
             }
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T AddHeaders<T>(this T content, IEnumerable<KeyValuePair<String, String>>? source) where T : HttpContent
+        {
+            if (content is null)
+            {
+                throw new ArgumentNullException(nameof(content));
+            }
+
+            content.Headers.AddRange(source);
+            return content;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T AddHeaders<T>(this T content, IEnumerable<KeyValuePair<String, IEnumerable<String>>>? source) where T : HttpContent
+        {
+            if (content is null)
+            {
+                throw new ArgumentNullException(nameof(content));
+            }
+
+            content.Headers.AddRange(source);
+            return content;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T AddHeaders<T>(this T content, HttpHeaders? source) where T : HttpContent
+        {
+            if (content is null)
+            {
+                throw new ArgumentNullException(nameof(content));
+            }
+
+            content.Headers.AddRange(source);
+            return content;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T WithHeaders<T>(this T content, IEnumerable<KeyValuePair<String, String>>? source) where T : HttpContent
+        {
+            if (content is null)
+            {
+                throw new ArgumentNullException(nameof(content));
+            }
+
+            content.Headers.With(source);
+            return content;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T WithHeaders<T>(this T content, IEnumerable<KeyValuePair<String, IEnumerable<String>>>? source) where T : HttpContent
+        {
+            if (content is null)
+            {
+                throw new ArgumentNullException(nameof(content));
+            }
+
+            content.Headers.With(source);
+            return content;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T WithHeaders<T>(this T content, HttpHeaders? source) where T : HttpContent
+        {
+            if (content is null)
+            {
+                throw new ArgumentNullException(nameof(content));
+            }
+
+            content.Headers.With(source);
+            return content;
         }
         
         public static void CopyTo(this HttpContentHeaders source, HttpContentHeaders destination)
@@ -446,6 +519,19 @@ namespace NetExtender.Utilities.Network
 
             token.ThrowIfCancellationRequested();
             return (T?) await formatter.ReadFromStreamAsync(type, await content.ReadAsStreamAsync(token), content, logger, token);
+        }
+        
+        private static Regex BinaryMimeRegex { get; } = new Regex("(image/*|audio/*|video/*|application/octet-stream|multipart/form-data)", RegexOptions.IgnoreCase | RegexOptions.Compiled | RegexOptions.CultureInvariant);
+        
+        public static Boolean IsBinary(this HttpContent content)
+        {
+            if (content is null)
+            {
+                throw new ArgumentNullException(nameof(content));
+            }
+
+            String? media = content.Headers.ContentType?.MediaType;
+            return !String.IsNullOrEmpty(media) && BinaryMimeRegex.IsMatch(media);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

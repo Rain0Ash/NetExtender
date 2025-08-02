@@ -2,13 +2,57 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Runtime.CompilerServices;
 
 namespace NetExtender.Utilities.Network
 {
+    public enum HttpStatusCategory : Byte
+    {
+        Unknown,
+        Informational,
+        Success,
+        Redirection,
+        ClientError,
+        ServerError,
+        CustomError
+    }
+    
+    [SuppressMessage("ReSharper", "RedundantIsBeforeRelationalPattern")]
     public static class HttpUtilities
     {
+        private const HttpStatusCode Custom = (HttpStatusCode) 600;
+        
+        public static HttpStatusCategory Category(this HttpStatusCode code)
+        {
+            return code switch
+            {
+                < HttpStatusCode.Continue => HttpStatusCategory.Unknown,
+                < HttpStatusCode.OK => HttpStatusCategory.Informational,
+                < HttpStatusCode.MultipleChoices => HttpStatusCategory.Success,
+                < HttpStatusCode.BadRequest => HttpStatusCategory.Redirection,
+                < HttpStatusCode.InternalServerError => HttpStatusCategory.ClientError,
+                < Custom => HttpStatusCategory.ServerError,
+                _ => HttpStatusCategory.CustomError
+            };
+        }
+        
+        public static HttpStatusCategory? Category(this HttpStatusCode? code)
+        {
+            return code switch
+            {
+                null => null,
+                < HttpStatusCode.Continue => HttpStatusCategory.Unknown,
+                < HttpStatusCode.OK => HttpStatusCategory.Informational,
+                < HttpStatusCode.MultipleChoices => HttpStatusCategory.Success,
+                < HttpStatusCode.BadRequest => HttpStatusCategory.Redirection,
+                < HttpStatusCode.InternalServerError => HttpStatusCategory.ClientError,
+                < Custom => HttpStatusCategory.ServerError,
+                _ => HttpStatusCategory.CustomError
+            };
+        }
+        
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsError(this HttpStatusCode code)
         {
@@ -36,25 +80,25 @@ namespace NetExtender.Utilities.Network
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsServerError(this HttpStatusCode code)
         {
-            return code is >= HttpStatusCode.InternalServerError and < (HttpStatusCode) 600;
+            return code is >= HttpStatusCode.InternalServerError and < Custom;
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsServerError(this HttpStatusCode? code)
         {
-            return code is >= HttpStatusCode.InternalServerError and < (HttpStatusCode) 600;
+            return code is >= HttpStatusCode.InternalServerError and < Custom;
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsCustomError(this HttpStatusCode code)
         {
-            return code >= (HttpStatusCode) 600;
+            return code >= Custom;
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsCustomError(this HttpStatusCode? code)
         {
-            return code >= (HttpStatusCode) 600;
+            return code >= Custom;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

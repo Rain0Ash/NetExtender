@@ -179,9 +179,9 @@ namespace NetExtender.Types.TextWriters
             return Internal.WriteAsync(buffer, index, count);
         }
 
-        public override Task WriteAsync(ReadOnlyMemory<Char> buffer, CancellationToken cancellationToken = new CancellationToken())
+        public override Task WriteAsync(ReadOnlyMemory<Char> buffer, CancellationToken token = default)
         {
-            return Internal.WriteAsync(buffer, cancellationToken);
+            return Internal.WriteAsync(buffer, token);
         }
 
         public override Task WriteAsync(String? value)
@@ -189,9 +189,9 @@ namespace NetExtender.Types.TextWriters
             return Internal.WriteAsync(value);
         }
 
-        public override Task WriteAsync(StringBuilder? value, CancellationToken cancellationToken = new CancellationToken())
+        public override Task WriteAsync(StringBuilder? value, CancellationToken token = default)
         {
-            return Internal.WriteAsync(value, cancellationToken);
+            return Internal.WriteAsync(value, token);
         }
 
         public override void WriteLine()
@@ -324,9 +324,9 @@ namespace NetExtender.Types.TextWriters
             return Internal.WriteLineAsync(buffer, index, count);
         }
 
-        public override Task WriteLineAsync(ReadOnlyMemory<Char> buffer, CancellationToken cancellationToken = new CancellationToken())
+        public override Task WriteLineAsync(ReadOnlyMemory<Char> buffer, CancellationToken token = default)
         {
-            return Internal.WriteLineAsync(buffer, cancellationToken);
+            return Internal.WriteLineAsync(buffer, token);
         }
 
         public override Task WriteLineAsync(String? value)
@@ -334,9 +334,9 @@ namespace NetExtender.Types.TextWriters
             return Internal.WriteLineAsync(value);
         }
 
-        public override Task WriteLineAsync(StringBuilder? value, CancellationToken cancellationToken = new CancellationToken())
+        public override Task WriteLineAsync(StringBuilder? value, CancellationToken token = default)
         {
-            return Internal.WriteLineAsync(value, cancellationToken);
+            return Internal.WriteLineAsync(value, token);
         }
 
         public override void Flush()
