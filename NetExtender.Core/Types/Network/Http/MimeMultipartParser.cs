@@ -463,26 +463,15 @@ namespace NetExtender.Types.Network
             public Boolean IsFirst { get; protected set; } = true;
             public Boolean IsFinal { get; protected set; }
 
-            private ArraySegment<Byte> _bodypart { get; set; } = new ArraySegment<Byte>(Array.Empty<Byte>());
-            public ArraySegment<Byte> BodyPart
-            {
-                get
-                {
-                    return _bodypart;
-                }
-                set
-                {
-                    _bodypart = value;
-                }
-            }
+            public ArraySegment<Byte> BodyPart { get; set; } = new ArraySegment<Byte>(Array.Empty<Byte>());
 
-            public CurrentBodyPartStore(String referenceBoundary)
+            public CurrentBodyPartStore(String boundary)
             {
                 ReferenceBoundary[0] = 13;
                 ReferenceBoundary[1] = 10;
                 ReferenceBoundary[2] = 45;
                 ReferenceBoundary[3] = 45;
-                ReferenceBoundaryLength = 4 + Encoding.UTF8.GetBytes(referenceBoundary, 0, referenceBoundary.Length, ReferenceBoundary, 4);
+                ReferenceBoundaryLength = 4 + Encoding.UTF8.GetBytes(boundary, 0, boundary.Length, ReferenceBoundary, 4);
                 Boundary[0] = 13;
                 Boundary[1] = 10;
                 BoundaryLength = 2;

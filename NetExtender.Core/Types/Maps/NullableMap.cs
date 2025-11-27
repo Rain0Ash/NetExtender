@@ -12,21 +12,21 @@ namespace NetExtender.Types.Maps
 {
     public class NullableMap<TKey, TValue> : Map<NullMaybe<TKey>, NullMaybe<TValue>>, IMap<TKey, TValue>, IReadOnlyMap<TKey, TValue>
     {
-        private ICollection<TKey>? _keys { get; set; }
+        private ICollection<TKey>? _keys;
         public new ICollection<TKey> Keys
         {
             get
             {
-                return _keys ??= new SelectorCollectionWrapper<NullMaybe<TKey>, TKey>(base.Keys, nullable => nullable);
+                return _keys ??= SelectorCollectionWrapper.Nullable(base.Keys);
             }
         }
 
-        private ICollection<TValue>? _values { get; set; }
+        private ICollection<TValue>? _values;
         public new ICollection<TValue> Values
         {
             get
             {
-                return _values ??= new SelectorCollectionWrapper<NullMaybe<TValue>, TValue>(base.Values, nullable => nullable);
+                return _values ??= SelectorCollectionWrapper.Nullable(base.Values);
             }
         }
 
@@ -54,21 +54,21 @@ namespace NetExtender.Types.Maps
             }
         }
 
-        private IEqualityComparer<TKey>? _keycomparer { get; set; }
+        private IEqualityComparer<TKey>? _key;
         public new IEqualityComparer<TKey> KeyComparer
         {
             get
             {
-                return _keycomparer ??= base.KeyComparer.ToEqualityComparer();
+                return _key ??= base.KeyComparer.ToEqualityComparer();
             }
         }
 
-        private IEqualityComparer<TValue>? _valuecomparer { get; set; }
+        private IEqualityComparer<TValue>? _value;
         public new IEqualityComparer<TValue> ValueComparer
         {
             get
             {
-                return _valuecomparer ??= base.ValueComparer.ToEqualityComparer();
+                return _value ??= base.ValueComparer.ToEqualityComparer();
             }
         }
 
@@ -148,7 +148,7 @@ namespace NetExtender.Types.Maps
 
         public Boolean Contains(KeyValuePair<TKey, TValue> item)
         {
-            return base.Contains(new KeyValuePair<NullMaybe<TKey>, NullMaybe<TValue>>(item.Key, item.Value));
+            return base.Contains(item.Nullable());
         }
 
         public Boolean ContainsKey(TKey key)
@@ -168,7 +168,7 @@ namespace NetExtender.Types.Maps
 
         public Boolean ContainsByValue(KeyValuePair<TValue, TKey> item)
         {
-            return base.ContainsByValue(new KeyValuePair<NullMaybe<TValue>, NullMaybe<TKey>>(item.Key, item.Value));
+            return base.ContainsByValue(item.Nullable());
         }
 
         public TValue GetValue(TKey key)
@@ -197,7 +197,7 @@ namespace NetExtender.Types.Maps
 
         public void Add(KeyValuePair<TKey, TValue> item)
         {
-            base.Add(new KeyValuePair<NullMaybe<TKey>, NullMaybe<TValue>>(item.Key, item.Value));
+            base.Add(item.Nullable());
         }
 
         public void Add(TKey key, TValue value)
@@ -212,7 +212,7 @@ namespace NetExtender.Types.Maps
 
         public void AddByValue(KeyValuePair<TValue, TKey> item)
         {
-            base.AddByValue(new KeyValuePair<NullMaybe<TValue>, NullMaybe<TKey>>(item.Key, item.Value));
+            base.AddByValue(item.Nullable());
         }
 
         public Boolean TryAdd(TKey key, TValue value)
@@ -222,7 +222,7 @@ namespace NetExtender.Types.Maps
 
         public Boolean TryAdd(KeyValuePair<TKey, TValue> item)
         {
-            return base.TryAdd(new KeyValuePair<NullMaybe<TKey>, NullMaybe<TValue>>(item.Key, item.Value));
+            return base.TryAdd(item.Nullable());
         }
 
         public Boolean TryAddByValue(TValue key, TKey value)
@@ -232,12 +232,12 @@ namespace NetExtender.Types.Maps
 
         public Boolean TryAddByValue(KeyValuePair<TValue, TKey> item)
         {
-            return base.TryAddByValue(new KeyValuePair<NullMaybe<TValue>, NullMaybe<TKey>>(item.Key, item.Value));
+            return base.TryAddByValue(item.Nullable());
         }
 
         public Boolean Remove(KeyValuePair<TKey, TValue> item)
         {
-            return base.Remove(new KeyValuePair<NullMaybe<TKey>, NullMaybe<TValue>>(item.Key, item.Value));
+            return base.Remove(item.Nullable());
         }
 
         public Boolean Remove(TKey key)
@@ -269,7 +269,7 @@ namespace NetExtender.Types.Maps
 
         public Boolean RemoveByValue(KeyValuePair<TValue, TKey> item)
         {
-            return base.RemoveByValue(new KeyValuePair<NullMaybe<TValue>, NullMaybe<TKey>>(item.Key, item.Value));
+            return base.RemoveByValue(item.Nullable());
         }
 
         public void CopyTo(KeyValuePair<TKey, TValue>[] array, Int32 index)
@@ -279,7 +279,7 @@ namespace NetExtender.Types.Maps
 
         public void CopyTo(KeyValuePair<TValue, TKey>[] array, Int32 index)
         {
-            this.ReversePairs<TKey, TValue>().CopyTo(array, index);
+            ((ICollection<KeyValuePair<TKey, TValue>>) this).CopyTo(array, index, KeyValuePairUtilities.Reverse);
         }
 
         public new IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()

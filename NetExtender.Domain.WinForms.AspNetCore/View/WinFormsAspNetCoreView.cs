@@ -20,7 +20,7 @@ using NetExtender.Types.Exceptions;
 
 namespace NetExtender.Domains.WinForms.AspNetCore.View
 {
-    public abstract class WinFormsAspNetCoreViewAbstraction<T, TApplication> : WinFormsView where T : class where TApplication : class, IApplication
+    public abstract class WinFormsAspNetCoreViewBase<T, TApplication> : WinFormsView where T : class where TApplication : class, IApplication
     {
         protected Form? Form
         {
@@ -209,7 +209,7 @@ namespace NetExtender.Domains.WinForms.AspNetCore.View
         }
     }
 
-    public abstract class WinFormsAspNetCoreView : WinFormsAspNetCoreViewAbstraction<IHost, WinFormsAspNetCoreApplication>
+    public abstract class WinFormsAspNetCoreView : WinFormsAspNetCoreViewBase<IHost, WinFormsAspNetCoreApplication>
     {
         protected override Task RunAsync(WinFormsAspNetCoreApplication application, IHost host, CancellationToken token)
         {
@@ -365,7 +365,7 @@ namespace NetExtender.Domains.WinForms.AspNetCore.View
         }
     }
 
-    public abstract class WinFormsAspNetCoreWebView : WinFormsAspNetCoreViewAbstraction<IWebHost, WinFormsAspNetCoreWebApplication>
+    public abstract class WinFormsAspNetCoreWebView : WinFormsAspNetCoreViewBase<IWebHost, WinFormsAspNetCoreWebApplication>
     {
         protected override Task RunAsync(WinFormsAspNetCoreWebApplication application, IWebHost host, CancellationToken token)
         {

@@ -20,7 +20,7 @@ using NetExtender.Types.Exceptions;
 
 namespace NetExtender.Domains.WindowsPresentation.AspNetCore.View
 {
-    public abstract class WindowsPresentationAspNetCoreViewAbstraction<T, TApplication> : WindowsPresentationView where T : class where TApplication : class, IApplication
+    public abstract class WindowsPresentationAspNetCoreViewBase<T, TApplication> : WindowsPresentationView where T : class where TApplication : class, IApplication
     {
         protected Window? Window
         {
@@ -209,7 +209,7 @@ namespace NetExtender.Domains.WindowsPresentation.AspNetCore.View
         }
     }
 
-    public abstract class WindowsPresentationAspNetCoreView : WindowsPresentationAspNetCoreViewAbstraction<IHost, WindowsPresentationAspNetCoreApplication>
+    public abstract class WindowsPresentationAspNetCoreView : WindowsPresentationAspNetCoreViewBase<IHost, WindowsPresentationAspNetCoreApplication>
     {
         protected override Task RunAsync(WindowsPresentationAspNetCoreApplication application, IHost host, CancellationToken token)
         {
@@ -365,7 +365,7 @@ namespace NetExtender.Domains.WindowsPresentation.AspNetCore.View
         }
     }
 
-    public abstract class WindowsPresentationAspNetCoreWebView : WindowsPresentationAspNetCoreViewAbstraction<IWebHost, WindowsPresentationAspNetCoreWebApplication>
+    public abstract class WindowsPresentationAspNetCoreWebView : WindowsPresentationAspNetCoreViewBase<IWebHost, WindowsPresentationAspNetCoreWebApplication>
     {
         protected override Task RunAsync(WindowsPresentationAspNetCoreWebApplication application, IWebHost host, CancellationToken token)
         {

@@ -351,11 +351,11 @@ namespace NetExtender.Utilities.Types
             }
         }
 
-        private abstract class CacheTransactionAbstraction : ITransaction
+        private abstract class CacheTransactionBase : ITransaction
         {
-            public static ITransaction Create<T>() where T : CacheTransactionAbstraction, new()
+            public static ITransaction Create<T>() where T : CacheTransactionBase, new()
             {
-                CacheTransactionAbstraction transaction = new T();
+                CacheTransactionBase transaction = new T();
                 transaction.Read();
                 return transaction;
             }
@@ -539,7 +539,7 @@ namespace NetExtender.Utilities.Types
             }
 
             [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
-            private class CacheTransaction : CacheTransactionAbstraction
+            private class CacheTransaction : CacheTransactionBase
             {
                 public ImmutableArray<T> Values { get; private set; }
                 public ImmutableDictionary<T, Int32> Set { get; private set; } = null!;
@@ -662,7 +662,7 @@ namespace NetExtender.Utilities.Types
             }
             
             [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
-            private class CacheTransaction : CacheTransactionAbstraction
+            private class CacheTransaction : CacheTransactionBase
             {
                 public ImmutableArray<T> Values { get; private set; }
                 public ImmutableDictionary<T, Int32> Set { get; private set; } = null!;
@@ -768,7 +768,7 @@ namespace NetExtender.Utilities.Types
             }
             
             [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
-            private class CacheTransaction : CacheTransactionAbstraction
+            private class CacheTransaction : CacheTransactionBase
             {
                 public ReadOnlyCollection<String> Names { get; private set; } = null!;
                 public ImmutableHashSet<String> Set { get; private set; } = null!;
@@ -846,7 +846,7 @@ namespace NetExtender.Utilities.Types
             }
             
             [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
-            private class CacheTransaction : CacheTransactionAbstraction
+            private class CacheTransaction : CacheTransactionBase
             {
                 public ReadOnlyCollection<String> Names { get; private set; } = null!;
                 public ImmutableHashSet<String> Set { get; private set; } = null!;
@@ -1019,7 +1019,7 @@ namespace NetExtender.Utilities.Types
                     Initialize();
                 }
                 
-                internal class CacheTransaction : CacheTransactionAbstraction
+                internal class CacheTransaction : CacheTransactionBase
                 {
                     public ImmutableDictionary<T, ImmutableDictionary<LocalizationIdentifier, String>> Values { get; private set; } = null!;
 
@@ -1135,9 +1135,9 @@ namespace NetExtender.Utilities.Types
             }
             
             [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
-            private class CacheTransaction : CacheTransactionAbstraction
+            private class CacheTransaction : CacheTransactionBase
             {
-                private CacheTransactionAbstraction Description { get; } = new Description.CacheTransaction();
+                private CacheTransactionBase Description { get; } = new Description.CacheTransaction();
                 public ImmutableDictionary<T, String> Values { get; private set; } = null!;
 
                 protected internal override void Read()
@@ -1348,7 +1348,7 @@ namespace NetExtender.Utilities.Types
                     Initialize();
                 }
                 
-                internal class CacheTransaction : CacheTransactionAbstraction
+                internal class CacheTransaction : CacheTransactionBase
                 {
                     public ImmutableDictionary<(LocalizationIdentifier Identifier, String Title), T> Values { get; private set; } = null!;
                     public ImmutableSortedSet<LocalizationIdentifier> Identifiers { get; private set; } = null!;
@@ -1451,9 +1451,9 @@ namespace NetExtender.Utilities.Types
             }
             
             [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
-            private class CacheTransaction : CacheTransactionAbstraction
+            private class CacheTransaction : CacheTransactionBase
             {
-                private CacheTransactionAbstraction Description { get; } = new Description.CacheTransaction();
+                private CacheTransactionBase Description { get; } = new Description.CacheTransaction();
                 public ImmutableDictionary<String, T> Values { get; private set; } = null!;
 
                 protected internal override void Read()
@@ -1514,7 +1514,7 @@ namespace NetExtender.Utilities.Types
             }
             
             [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
-            private class CacheTransaction : CacheTransactionAbstraction
+            private class CacheTransaction : CacheTransactionBase
             {
                 public ImmutableArray<EnumMember<T>> Members { get; private set; }
 
@@ -1584,7 +1584,7 @@ namespace NetExtender.Utilities.Types
             }
             
             [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
-            private class CacheTransaction : CacheTransactionAbstraction
+            private class CacheTransaction : CacheTransactionBase
             {
                 public ImmutableArray<EnumMember<T>> Members { get; private set; }
 
@@ -1676,7 +1676,7 @@ namespace NetExtender.Utilities.Types
             }
             
             [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
-            private class CacheTransaction : CacheTransactionAbstraction
+            private class CacheTransaction : CacheTransactionBase
             {
                 public ImmutableDictionary<String, EnumMember<T>> MembersByName { get; private set; } = null!;
                 public ImmutableDictionary<String, EnumMember<T>> MembersByNameInsensitive { get; private set; } = null!;
@@ -1752,7 +1752,7 @@ namespace NetExtender.Utilities.Types
             }
             
             [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
-            private class CacheTransaction : CacheTransactionAbstraction
+            private class CacheTransaction : CacheTransactionBase
             {
                 public IUnderlyingEnumOperation<T> Operation { get; private set; } = null!;
 
@@ -1996,7 +1996,7 @@ namespace NetExtender.Utilities.Types
                 }
             
                 [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
-                internal class CacheTransaction : CacheTransactionAbstraction
+                internal class CacheTransaction : CacheTransactionBase
                 {
                     public ImmutableSortedSet<TEnum> Values { get; private set; } = null!;
                     public ImmutableDictionary<T, TEnum> Enums { get; private set; } = null!;
@@ -2275,7 +2275,7 @@ namespace NetExtender.Utilities.Types
                 Reset();
             }
 
-            private class CacheTransaction : CacheTransactionAbstraction
+            private class CacheTransaction : CacheTransactionBase
             {
                 public ImmutableSortedSet<Enum<T>> Values { get; private set; } = null!;
                 public ImmutableDictionary<T, Enum<T>> Enums { get; private set; } = null!;
@@ -2521,7 +2521,7 @@ namespace NetExtender.Utilities.Types
             }
             
             [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
-            private class CacheTransaction<T> : CacheTransactionAbstraction where T : unmanaged, Enum
+            private class CacheTransaction<T> : CacheTransactionBase where T : unmanaged, Enum
             {
                 public EnumSynchronizationMember? Member { get; private set; }
 

@@ -24,7 +24,7 @@ namespace NetExtender.Types.Collections
     
     //TODO:
     // Подумать над ячейками длин с индексами и обновлениям по ячейкам. Подумать над множественным вхождением
-    internal class ObservableAutoUnpackCollectionAbstraction<T> : ItemObservableCollection<ObservableAutoUnpackCollectionAbstraction<T>.Unpack>, IItemObservableCollection<T>, IReadOnlyItemObservableCollection<T> where T : class?
+    internal class ObservableAutoUnpackCollectionBase<T> : ItemObservableCollection<ObservableAutoUnpackCollectionBase<T>.Unpack>, IItemObservableCollection<T>, IReadOnlyItemObservableCollection<T> where T : class?
     {
         protected SelectorCollectionWrapper<Unpack, T> Wrapper { get; }
         protected OrderedSet<Select>? Selectors { get; }
@@ -44,20 +44,20 @@ namespace NetExtender.Types.Collections
             }
         }
         
-        public ObservableAutoUnpackCollectionAbstraction(params Expression<Func<T, IEnumerable<T>>>?[]? selectors)
+        public ObservableAutoUnpackCollectionBase(params Expression<Func<T, IEnumerable<T>>>?[]? selectors)
         {
             Wrapper = new SelectorCollectionWrapper<Unpack, T>(this, static unpack => unpack.Item);
             Selectors = ToSelectors(selectors);
         }
         
-        public ObservableAutoUnpackCollectionAbstraction(IEnumerable<T> collection, params Expression<Func<T, IEnumerable<T>>>?[]? selectors)
+        public ObservableAutoUnpackCollectionBase(IEnumerable<T> collection, params Expression<Func<T, IEnumerable<T>>>?[]? selectors)
             : base(collection is not null ? Convert(collection) : throw new ArgumentNullException(nameof(collection)))
         {
             Wrapper = new SelectorCollectionWrapper<Unpack, T>(this, static unpack => unpack.Item);
             Selectors = ToSelectors(selectors);
         }
         
-        public ObservableAutoUnpackCollectionAbstraction(List<T> list, params Expression<Func<T, IEnumerable<T>>>?[]? selectors)
+        public ObservableAutoUnpackCollectionBase(List<T> list, params Expression<Func<T, IEnumerable<T>>>?[]? selectors)
             : base(list is not null ? Convert(list) : throw new ArgumentNullException(nameof(list)))
         {
             Wrapper = new SelectorCollectionWrapper<Unpack, T>(this, static unpack => unpack.Item);

@@ -172,6 +172,11 @@ namespace NetExtender.Types.Memento
             Internal.Clear();
         }
 
+        public void CopyTo(IMementoItem<TSource>[] array)
+        {
+            CopyTo(array, 0);
+        }
+
         public void CopyTo(IMementoItem<TSource>[] array, Int32 index)
         {
             Internal.CopyTo(array, index);

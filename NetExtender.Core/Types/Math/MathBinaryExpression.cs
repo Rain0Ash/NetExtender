@@ -5,7 +5,7 @@ using NetExtender.Interfaces;
 using NetExtender.Types.Comparers;
 using NetExtender.Types.Exceptions;
 using NetExtender.Types.Mathematics.Interfaces;
-using NetExtender.Types.Monads.Result;
+using NetExtender.Types.Monads;
 using NetExtender.Types.Numerics;
 using NetExtender.Utilities.Types;
 
@@ -1617,16 +1617,6 @@ namespace NetExtender.Types.Mathematics
                 return !(first == second);
             }
 
-            public static Boolean operator >(Expression first, Expression second)
-            {
-                return first.CompareTo(second) > 0;
-            }
-
-            public static Boolean operator >=(Expression first, Expression second)
-            {
-                return first.CompareTo(second) >= 0;
-            }
-
             public static Boolean operator <(Expression first, Expression second)
             {
                 return first.CompareTo(second) < 0;
@@ -1635,6 +1625,16 @@ namespace NetExtender.Types.Mathematics
             public static Boolean operator <=(Expression first, Expression second)
             {
                 return first.CompareTo(second) <= 0;
+            }
+
+            public static Boolean operator >(Expression first, Expression second)
+            {
+                return first.CompareTo(second) > 0;
+            }
+
+            public static Boolean operator >=(Expression first, Expression second)
+            {
+                return first.CompareTo(second) >= 0;
             }
 
             Boolean IMathExpression.IsReference

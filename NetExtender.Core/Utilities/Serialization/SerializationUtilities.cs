@@ -44,7 +44,14 @@ namespace NetExtender.Utilities.Serialization
                 throw new ArgumentNullException(nameof(parameter));
             }
 
-            return info.GetValue(parameter, typeof(T)) is T result ? result : throw new SerializationException();
+            try
+            {
+                return (T) info.GetValue(parameter, typeof(T))!;
+            }
+            catch (Exception)
+            {
+                throw new SerializationException();
+            }
         }
 
         public static T? GetValueOrDefault<T>(this SerializationInfo info, String parameter)
@@ -104,14 +111,22 @@ namespace NetExtender.Utilities.Serialization
                 throw new ArgumentNullException(nameof(parameter));
             }
 
-            if (TryGetValue(info, parameter, typeof(T), out Object? value) && value is T convert)
+            if (!TryGetValue(info, parameter, typeof(T), out Object? value))
             {
-                result = convert;
-                return true;
+                result = default;
+                return false;
             }
 
-            result = default;
-            return false;
+            try
+            {
+                result = (T) value;
+                return true;
+            }
+            catch (Exception)
+            {
+                result = default;
+                return false;
+            }
         }
     }
 }

@@ -46,7 +46,7 @@ namespace NetExtender.Types.Exceptions
         {
         }
     }
-    
+
     [Serializable]
     public abstract class NotFlagsEnumTypeException : IncorrectEnumTypeException
     {

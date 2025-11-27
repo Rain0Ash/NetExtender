@@ -563,8 +563,8 @@ namespace NetExtender.Types.Nodes
     
     public abstract class LinkedContainer
     {
-        [ReflectionSystemResource(typeof(LinkedList<>))]
         [SuppressMessage("ReSharper", "IdentifierTypo")]
+        [ReflectionSystemResource(typeof(LinkedList<>))]
         protected static class SR
         {
             private static Type SRType { get; } = SRUtilities.SRType(typeof(LinkedList<>).Assembly);

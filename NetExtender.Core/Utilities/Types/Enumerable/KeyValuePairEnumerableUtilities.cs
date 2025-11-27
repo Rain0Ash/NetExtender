@@ -7,11 +7,54 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using NetExtender.Types.Maps.Interfaces;
+using NetExtender.Types.Monads;
 
 namespace NetExtender.Utilities.Types
 {
     public static partial class EnumerableUtilities
     {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<KeyValuePair<NullMaybe<TKey>, NullMaybe<TValue>>> Nullable<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            foreach (KeyValuePair<TKey, TValue> pair in source)
+            {
+                yield return pair.Nullable();
+            }
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<KeyValuePair<NullMaybe<TKey>, TValue>> KeyNullable<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            foreach (KeyValuePair<TKey, TValue> pair in source)
+            {
+                yield return pair.KeyNullable();
+            }
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<KeyValuePair<TKey, NullMaybe<TValue>>> ValueNullable<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            foreach (KeyValuePair<TKey, TValue> pair in source)
+            {
+                yield return pair.ValueNullable();
+            }
+        }
+        
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryGetValue<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source, TKey key, [MaybeNullWhen(false)] out TValue result)
         {
@@ -561,6 +604,47 @@ namespace NetExtender.Utilities.Types
             foreach (KeyValuePair<TKey, TValue> item in source)
             {
                 yield return item.Value;
+            }
+        }
+
+        public static IEnumerable<KeyValuePair<TKey, TSource>> Pair<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (keySelector is null)
+            {
+                throw new ArgumentNullException(nameof(keySelector));
+            }
+
+            foreach (TSource item in source)
+            {
+                yield return new KeyValuePair<TKey, TSource>(keySelector(item), item);
+            }
+        }
+
+        public static IEnumerable<KeyValuePair<TKey, TValue>> Pair<TSource, TKey, TValue>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TValue> valueSelector)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (keySelector is null)
+            {
+                throw new ArgumentNullException(nameof(keySelector));
+            }
+
+            if (valueSelector is null)
+            {
+                throw new ArgumentNullException(nameof(valueSelector));
+            }
+
+            foreach (TSource item in source)
+            {
+                yield return new KeyValuePair<TKey, TValue>(keySelector(item), valueSelector(item));
             }
         }
 

@@ -8,7 +8,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 using System.Windows.Input;
 using NetExtender.Interfaces;
-using NetExtender.Utilities.Types;
 using NetExtender.WindowsPresentation.Types.Bindings.Interfaces;
 
 namespace NetExtender.WindowsPresentation.Types.Bindings
@@ -218,7 +217,7 @@ namespace NetExtender.WindowsPresentation.Types.Bindings
         
         void ICollection<KeyValuePair<Key, KeyboardBindingHandler<T>>>.CopyTo(KeyValuePair<Key, KeyboardBindingHandler<T>>[] array, Int32 index)
         {
-            Storage.CopyTo(array, index);
+            ((ICollection<KeyValuePair<Key, KeyboardBindingHandler<T>>>) Storage).CopyTo(array, index);
         }
         
         public IEnumerator<KeyValuePair<Key, KeyboardBindingHandler<T>>> GetEnumerator()

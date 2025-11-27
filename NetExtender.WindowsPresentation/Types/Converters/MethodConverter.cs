@@ -8,13 +8,13 @@ using Convert = System.Func<System.Object?, System.Type?, System.Object?, System
 
 namespace NetExtender.WindowsPresentation.Types.Converters
 {
-    public abstract class MethodConverterAbstraction : IValueConverter
+    public abstract class MethodConverterBase : IValueConverter
     {
         protected abstract Convert? Converter { get; }
         protected abstract Convert? BackConverter { get; }
         public IValueConverter? Fallback { get; }
 
-        protected MethodConverterAbstraction(IValueConverter? fallback)
+        protected MethodConverterBase(IValueConverter? fallback)
         {
             Fallback = fallback;
         }
@@ -51,7 +51,7 @@ namespace NetExtender.WindowsPresentation.Types.Converters
         }
     }
 
-    public class MethodConverter : MethodConverterAbstraction
+    public class MethodConverter : MethodConverterBase
     {
         protected sealed override Convert? Converter { get; }
         protected sealed override Convert? BackConverter { get; }
@@ -79,7 +79,7 @@ namespace NetExtender.WindowsPresentation.Types.Converters
         }
     }
 
-    public class DynamicMethodConverter : MethodConverterAbstraction
+    public class DynamicMethodConverter : MethodConverterBase
     {
         private Func<Convert?>? ConverterHandler { get; }
         private Func<Convert?>? BackConverterHandler { get; }

@@ -9,7 +9,7 @@ using NetExtender.Utilities.Types;
 namespace NetExtender.Types.Network.API
 {
     //TODO:
-    public class DynamicHttpApiEndpoint<TRequest, TResponse> : DynamicHttpApiEndpointAbstraction<TRequest, TResponse> where TRequest : IEntityCQRS
+    public class DynamicHttpApiEndpoint<TRequest, TResponse> : DynamicHttpApiEndpointBase<TRequest, TResponse> where TRequest : IEntityCQRS
     { 
         public new virtual String? Controller
         {
@@ -80,7 +80,7 @@ namespace NetExtender.Types.Network.API
         }
     }
     
-    public class DynamicHttpApiEndpointAbstraction<TRequest, TResponse> : HttpApiEndpoint<TRequest, TResponse> where TRequest : IEntityCQRS
+    public class DynamicHttpApiEndpointBase<TRequest, TResponse> : HttpApiEndpoint<TRequest, TResponse> where TRequest : IEntityCQRS
     {
         private protected readonly String? _controller;
         public sealed override String? Controller
@@ -143,7 +143,7 @@ namespace NetExtender.Types.Network.API
             }
         }
 
-        public DynamicHttpApiEndpointAbstraction(String? controller, String? name, Uri endpoint, HttpMethod method)
+        public DynamicHttpApiEndpointBase(String? controller, String? name, Uri endpoint, HttpMethod method)
         {
             _controller = controller;
             _name = name;

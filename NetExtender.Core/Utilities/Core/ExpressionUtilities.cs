@@ -515,12 +515,12 @@ namespace NetExtender.Utilities.Core
                     return TryCreateGetExpression(member, out result);
                 }
 
-                result = default;
+                result = null;
                 return false;
             }
             catch (Exception)
             {
-                result = default;
+                result = null;
                 return false;
             }
         }
@@ -553,12 +553,12 @@ namespace NetExtender.Utilities.Core
                     return TryCreateGetExpression(member, source, value, out result);
                 }
 
-                result = default;
+                result = null;
                 return false;
             }
             catch (Exception)
             {
-                result = default;
+                result = null;
                 return false;
             }
         }
@@ -637,7 +637,7 @@ namespace NetExtender.Utilities.Core
 
             if (member is PropertyInfo { CanRead: false })
             {
-                result = default;
+                result = null;
                 return false;
             }
 
@@ -652,7 +652,7 @@ namespace NetExtender.Utilities.Core
             }
             catch (Exception)
             {
-                result = default;
+                result = null;
                 return false;
             }
         }
@@ -682,7 +682,7 @@ namespace NetExtender.Utilities.Core
 
             if (member is PropertyInfo { CanRead: false })
             {
-                result = default;
+                result = null;
                 return false;
             }
 
@@ -696,7 +696,7 @@ namespace NetExtender.Utilities.Core
             }
             catch (Exception)
             {
-                result = default;
+                result = null;
                 return false;
             }
         }
@@ -790,12 +790,12 @@ namespace NetExtender.Utilities.Core
                     return TryCreateSetExpression(member, out result);
                 }
 
-                result = default;
+                result = null;
                 return false;
             }
             catch (Exception)
             {
-                result = default;
+                result = null;
                 return false;
             }
         }
@@ -841,7 +841,7 @@ namespace NetExtender.Utilities.Core
 
             if (member is PropertyInfo { CanWrite: false })
             {
-                result = default;
+                result = null;
                 return false;
             }
 
@@ -857,7 +857,7 @@ namespace NetExtender.Utilities.Core
             }
             catch (Exception)
             {
-                result = default;
+                result = null;
                 return false;
             }
         }
@@ -928,14 +928,14 @@ namespace NetExtender.Utilities.Core
                 {
                     PropertyInfo property => (source, value) => property.SetValue(source, value),
                     FieldInfo field => (source, value) => field.SetValue(source, value),
-                    _ => default
+                    _ => null
                 };
 
                 return result is not null;
             }
             catch (Exception)
             {
-                result = default;
+                result = null;
                 return false;
             }
         }
@@ -1108,7 +1108,7 @@ namespace NetExtender.Utilities.Core
                         result = property.GetValue(instance);
                         return true;
                     default:
-                        result = default;
+                        result = null;
                         return false;
                 }
             }
@@ -1122,7 +1122,7 @@ namespace NetExtender.Utilities.Core
 
                 if (expression.Method is not null)
                 {
-                    result = default;
+                    result = null;
                     return false;
                 }
 
@@ -1166,7 +1166,7 @@ namespace NetExtender.Utilities.Core
 
                 if (expression.Method.Name != "get_Item")
                 {
-                    result = default;
+                    result = null;
                     return false;
                 }
 
@@ -1267,7 +1267,7 @@ namespace NetExtender.Utilities.Core
             }
             catch (Exception)
             {
-                result = default;
+                result = null;
                 return false;
             }
         }

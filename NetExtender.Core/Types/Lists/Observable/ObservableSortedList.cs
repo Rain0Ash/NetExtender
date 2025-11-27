@@ -56,7 +56,7 @@ namespace NetExtender.Types.Lists
         {
         }
 
-        protected sealed override ItemObservableSortedList<T> Self(ItemObservableCollection<T> collection, IComparer<T>? comparer)
+        protected sealed override ItemObservableSortedList<T> This(ItemObservableCollection<T> collection, IComparer<T>? comparer)
         {
             return new ItemObservableSortedList<T>(collection, comparer);
         }
@@ -113,7 +113,7 @@ namespace NetExtender.Types.Lists
         {
         }
 
-        protected sealed override ObservableSortedList<T> Self(SuppressObservableCollection<T> collection, IComparer<T>? comparer)
+        protected sealed override ObservableSortedList<T> This(SuppressObservableCollection<T> collection, IComparer<T>? comparer)
         {
             return new ObservableSortedList<T>(collection, comparer);
         }
@@ -170,7 +170,7 @@ namespace NetExtender.Types.Lists
         {
         }
 
-        protected sealed override ItemObservableSortedList<T, TCollection> Self(TCollection collection, IComparer<T>? comparer)
+        protected sealed override ItemObservableSortedList<T, TCollection> This(TCollection collection, IComparer<T>? comparer)
         {
             return new ItemObservableSortedList<T, TCollection>(collection, comparer);
         }
@@ -312,7 +312,7 @@ namespace NetExtender.Types.Lists
         {
         }
 
-        protected sealed override SuppressObservableSortedList<T, TCollection> Self(TCollection collection, IComparer<T>? comparer)
+        protected sealed override SuppressObservableSortedList<T, TCollection> This(TCollection collection, IComparer<T>? comparer)
         {
             return new SuppressObservableSortedList<T, TCollection>(collection, comparer);
         }
@@ -450,7 +450,7 @@ namespace NetExtender.Types.Lists
         {
         }
 
-        protected sealed override ObservableSortedList<T, TCollection> Self(TCollection collection, IComparer<T>? comparer)
+        protected sealed override ObservableSortedList<T, TCollection> This(TCollection collection, IComparer<T>? comparer)
         {
             return new ObservableSortedList<T, TCollection>(collection, comparer);
         }
@@ -623,12 +623,12 @@ namespace NetExtender.Types.Lists
             return constructor.Invoke(list);
         }
 
-        protected TSelf Self(TCollection collection)
+        protected TSelf This(TCollection collection)
         {
-            return Self(collection, Comparer);
+            return This(collection, Comparer);
         }
 
-        protected abstract TSelf Self(TCollection collection, IComparer<T>? comparer);
+        protected abstract TSelf This(TCollection collection, IComparer<T>? comparer);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static TCollection Create(IEnumerable<T>? collection, IComparer<T>? comparer)
@@ -817,7 +817,7 @@ namespace NetExtender.Types.Lists
                 }
             }
 
-            return Self(collection);
+            return This(collection);
         }
 
         public Int32 FindIndex(Predicate<T> match)
@@ -1055,7 +1055,7 @@ namespace NetExtender.Types.Lists
         public TSelf Sort(IComparer<T>? comparer)
         {
             comparer ??= Comparer<T>.Default;
-            return Self(Create(Internal, comparer), comparer);
+            return This(Create(Internal, comparer), comparer);
         }
 
         public TSelf Sort(Comparison<T>? comparison)
@@ -1066,7 +1066,7 @@ namespace NetExtender.Types.Lists
         public TSelf Reverse()
         {
             IComparer<T> comparer = Comparer.Reverse();
-            return Self(Create(Internal, comparer), comparer);
+            return This(Create(Internal, comparer), comparer);
         }
 
         public TSelf GetRange(Int32 index, Int32 count)
@@ -1083,7 +1083,7 @@ namespace NetExtender.Types.Lists
 
             if (Internal.Internal() is List<T> list)
             {
-                return Self(Initialize(list.GetRange(index, count)), Comparer);
+                return This(Initialize(list.GetRange(index, count)), Comparer);
             }
 
             TCollection collection = new TCollection();
@@ -1093,7 +1093,7 @@ namespace NetExtender.Types.Lists
                 collection.Add(Internal[i]);
             }
             
-            return Self(collection, Comparer);
+            return This(collection, Comparer);
         }
 
         // ReSharper disable once CognitiveComplexity
@@ -1120,7 +1120,7 @@ namespace NetExtender.Types.Lists
                 search = ~maxindex;
                 if (search <= 0)
                 {
-                    return Self(new TCollection(), Comparer);
+                    return This(new TCollection(), Comparer);
                 }
 
                 maxindex = search - 1;
@@ -1140,7 +1140,7 @@ namespace NetExtender.Types.Lists
                 minindex = ~minindex;
                 if (minindex > maxindex)
                 {
-                    return Self(new TCollection(), Comparer);
+                    return This(new TCollection(), Comparer);
                 }
             }
 
@@ -1151,7 +1151,7 @@ namespace NetExtender.Types.Lists
                 result.Add(Internal[i]);
             }
             
-            return Self(result, Comparer);
+            return This(result, Comparer);
         }
 
         public void ForEach(Action<T>? action)
@@ -1169,7 +1169,7 @@ namespace NetExtender.Types.Lists
 
         public void CopyTo(T[] array)
         {
-            Internal.CopyTo(array);
+            CopyTo(array, 0);
         }
 
         public void CopyTo(T[] array, Int32 index)

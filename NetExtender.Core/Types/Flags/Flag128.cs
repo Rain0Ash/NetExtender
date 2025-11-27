@@ -104,14 +104,14 @@ namespace NetExtender.Types.Flags
             return !(first == second);
         }
 
-        public static Flag128 operator |(Flag128 first, Flag128 second)
-        {
-            return new Flag128(first.High | second.High, first.Low | second.Low);
-        }
-
         public static Flag128 operator &(Flag128 first, Flag128 second)
         {
             return new Flag128(first.High & second.High, first.Low & second.Low);
+        }
+
+        public static Flag128 operator |(Flag128 first, Flag128 second)
+        {
+            return new Flag128(first.High | second.High, first.Low | second.Low);
         }
 
         public static Flag128 operator ^(Flag128 first, Flag128 second)

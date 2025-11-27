@@ -11,6 +11,7 @@ using HarmonyLib;
 using NetExtender.Types.Exceptions;
 using NetExtender.Types.Reflection;
 using NetExtender.Utilities.Core;
+using NetExtender.Utilities.Types;
 
 namespace NetExtender.Patch
 {
@@ -113,7 +114,7 @@ namespace NetExtender.Patch
                 {
                     String name = TypeName("ljehrxk")!;
                     const BindingFlags binding = BindingFlags.Static | BindingFlags.NonPublic;
-                    foreach (FieldInfo field in Provider.GetFields(binding).Where(field => field.FieldType == typeof(Boolean) && field.Name.Contains(name)))
+                    foreach (FieldInfo field in Provider.GetFields(binding).Where(name, static (name, field) => field.FieldType == typeof(Boolean) && field.HasName(name)))
                     {
                         yield return new CodeInstruction(OpCodes.Ldc_I4_1);
                         yield return new CodeInstruction(OpCodes.Stsfld, field);

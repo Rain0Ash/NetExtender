@@ -63,7 +63,6 @@ namespace NetExtender.Configuration.Microsoft
             private IConfig Config { get; }
 
             public String? Path { get; init; }
-
             public String? Key { get; }
 
             public String? Value

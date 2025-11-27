@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 using NetExtender.Interfaces;
 using NetExtender.Newtonsoft.Types.Monads;
@@ -65,16 +66,6 @@ namespace NetExtender.Types.Monads
             return !(first == second);
         }
 
-        public static Boolean operator >(T? first, State<T> second)
-        {
-            return second < first;
-        }
-
-        public static Boolean operator >=(T? first, State<T> second)
-        {
-            return second <= first;
-        }
-
         public static Boolean operator <(T? first, State<T> second)
         {
             return second > first;
@@ -85,14 +76,14 @@ namespace NetExtender.Types.Monads
             return second >= first;
         }
 
-        public static Boolean operator >(State<T> first, T? second)
+        public static Boolean operator >(T? first, State<T> second)
         {
-            return first.CompareTo(second) > 0;
+            return second < first;
         }
 
-        public static Boolean operator >=(State<T> first, T? second)
+        public static Boolean operator >=(T? first, State<T> second)
         {
-            return first.CompareTo(second) >= 0;
+            return second <= first;
         }
 
         public static Boolean operator <(State<T> first, T? second)
@@ -105,12 +96,12 @@ namespace NetExtender.Types.Monads
             return first.CompareTo(second) <= 0;
         }
 
-        public static Boolean operator >(State<T> first, State<T> second)
+        public static Boolean operator >(State<T> first, T? second)
         {
             return first.CompareTo(second) > 0;
         }
 
-        public static Boolean operator >=(State<T> first, State<T> second)
+        public static Boolean operator >=(State<T> first, T? second)
         {
             return first.CompareTo(second) >= 0;
         }
@@ -123,6 +114,16 @@ namespace NetExtender.Types.Monads
         public static Boolean operator <=(State<T> first, State<T> second)
         {
             return first.CompareTo(second) <= 0;
+        }
+
+        public static Boolean operator >(State<T> first, State<T> second)
+        {
+            return first.CompareTo(second) > 0;
+        }
+
+        public static Boolean operator >=(State<T> first, State<T> second)
+        {
+            return first.CompareTo(second) >= 0;
         }
 
         private readonly Maybe<T> _value;
@@ -138,7 +139,7 @@ namespace NetExtender.Types.Monads
         {
             get
             {
-                return Next ? Next.Value : Value;
+                return Next.Unwrap(out T? next) ? next : _value.Internal;
             }
         }
         
@@ -185,16 +186,43 @@ namespace NetExtender.Types.Monads
             _value = info.GetValue<T>(nameof(Value));
             Next = info.GetBoolean(nameof(HasNext)) ? info.GetValue<T>(nameof(Next)) : default(Maybe<T>);
         }
+
+        Boolean IMonad.Unwrap(out Object? value)
+        {
+            if (IsEmpty)
+            {
+                value = null;
+                return false;
+            }
+            
+            value = Current;
+            return true;
+        }
+        
+        public Boolean Unwrap([MaybeNullWhen(false)] out T value)
+        {
+            if (IsEmpty)
+            {
+                value = default;
+                return false;
+            }
+            
+            value = Current;
+            return true;
+        }
         
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue(nameof(Value), Value);
-            info.AddValue(nameof(HasNext), Next.HasValue);
 
-            if (HasNext)
+            if (Next.Unwrap(out T? next))
             {
-                info.AddValue(nameof(Next), Next.Value);
+                info.AddValue(nameof(HasNext), true);
+                info.AddValue(nameof(Next), next);
+                return;
             }
+            
+            info.AddValue(nameof(HasNext), false);
         }
 
         public Boolean HasDifference()

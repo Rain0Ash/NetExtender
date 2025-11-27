@@ -9,7 +9,7 @@ namespace NetExtender.Types.Exceptions.Interfaces
     public interface IBusinessException<T> : IBusinessException
     {
         public T Code { get; }
-        
+
         public new BusinessException<T> Exception
         {
             get
@@ -27,7 +27,7 @@ namespace NetExtender.Types.Exceptions.Interfaces
         public HttpStatusCode? Status { get; }
         public BusinessException.BusinessInfo Info { get; }
         public BusinessException.BusinessInfo Business { get; }
-        
+
         public new BusinessException Exception
         {
             get

@@ -21,13 +21,11 @@ namespace NetExtender.Types.Lists
             }
         }
 
-        private ICollection<TKey>? _keys { get; set; }
-
         public new ICollection<TKey> Keys
         {
             get
             {
-                return _keys ??= new SelectorCollectionWrapper<NullMaybe<TKey>, TKey>(base.Keys, nullable => nullable);
+                return SelectorListWrapper.Nullable(base.Keys);
             }
         }
 
@@ -86,7 +84,7 @@ namespace NetExtender.Types.Lists
 
         public Boolean Contains(KeyValuePair<TKey, TValue> item)
         {
-            return ((IDictionary<NullMaybe<TKey>, TValue>) this).Contains(new KeyValuePair<NullMaybe<TKey>, TValue>(item.Key, item.Value));
+            return ((IDictionary<NullMaybe<TKey>, TValue>) this).Contains(item.KeyNullable());
         }
 
         public Boolean ContainsKey(TKey key)
@@ -106,7 +104,7 @@ namespace NetExtender.Types.Lists
 
         public void Add(KeyValuePair<TKey, TValue> item)
         {
-            ((IDictionary<NullMaybe<TKey>, TValue>) this).Add(new KeyValuePair<NullMaybe<TKey>, TValue>(item.Key, item.Value));
+            ((IDictionary<NullMaybe<TKey>, TValue>) this).Add(item.KeyNullable());
         }
 
         public void Add(TKey key, TValue value)
@@ -116,7 +114,7 @@ namespace NetExtender.Types.Lists
 
         public Boolean Remove(KeyValuePair<TKey, TValue> item)
         {
-            return ((IDictionary<NullMaybe<TKey>, TValue>) this).Remove(new KeyValuePair<NullMaybe<TKey>, TValue>(item.Key, item.Value));
+            return ((IDictionary<NullMaybe<TKey>, TValue>) this).Remove(item.KeyNullable());
         }
 
         public Boolean Remove(TKey key)
@@ -131,7 +129,7 @@ namespace NetExtender.Types.Lists
 
         public new IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
         {
-            foreach ((NullMaybe<TKey> key, TValue? value) in (IEnumerable<KeyValuePair<NullMaybe<TKey>, TValue>>) this)
+            foreach ((NullMaybe<TKey> key, TValue value) in (IEnumerable<KeyValuePair<NullMaybe<TKey>, TValue>>) this)
             {
                 yield return new KeyValuePair<TKey, TValue>(key, value);
             }

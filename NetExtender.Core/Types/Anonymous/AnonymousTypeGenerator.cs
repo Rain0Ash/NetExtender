@@ -13,7 +13,7 @@ using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Anonymous
 {
-    public class AnonymousTypeGenerator : AnonymousTypeGeneratorAbstraction
+    public class AnonymousTypeGenerator : AnonymousTypeGeneratorBase
     {
         public AnonymousTypeGenerator(String assembly)
             : base(assembly)

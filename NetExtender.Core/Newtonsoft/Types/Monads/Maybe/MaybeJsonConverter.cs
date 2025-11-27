@@ -27,13 +27,13 @@ namespace NetExtender.Newtonsoft.Types.Monads
                 return true;
             }
 
-            if (value.Internal is null)
+            if (value.Internal is { } @object)
             {
-                writer.WriteObject();
+                options.Serialize(writer, @object);
                 return true;
             }
 
-            options.Serialize(writer, (T) value);
+            writer.WriteObject();
             return true;
         }
     }
@@ -64,13 +64,13 @@ namespace NetExtender.Serialization.Json.Monads
                 return true;
             }
 
-            if (value.Internal is null)
+            if (value.Internal is { } @object)
             {
-                writer.WriteObject();
+                JsonSerializer.Serialize(writer, @object, options);
                 return true;
             }
 
-            JsonSerializer.Serialize(writer, (T) value, options);
+            writer.WriteObject();
             return true;
         }
     }

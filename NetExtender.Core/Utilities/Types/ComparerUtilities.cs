@@ -59,6 +59,20 @@ namespace NetExtender.Utilities.Types
                 return false;
             }
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Boolean SafeEquals<T>(this IEqualityComparer<T>? comparer, T? first, T? second)
+        {
+            try
+            {
+                comparer ??= EqualityComparer<T>.Default;
+                return comparer.Equals(first, second);
+            }
+            catch (ArgumentException)
+            {
+                return false;
+            }
+        }
         
         public static IComparer<T> Reverse<T>(this IComparer<T> comparer)
         {

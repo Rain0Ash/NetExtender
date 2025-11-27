@@ -1218,6 +1218,65 @@ namespace NetExtender.Utilities.Types
 
                         return (NullMaybeConvert, NullMaybeFormatConvert);
                     }
+
+                    if (generic == MaybeUtilities.WeakMaybeType)
+                    {
+                        static Boolean WeakMaybeConvert(Object? value, EscapeType escape, IFormatProvider? provider, out String? result)
+                        {
+                            switch (value)
+                            {
+                                case null:
+                                    result = null;
+                                    return false;
+                                case IWeakMaybe { Maybe: var maybe }:
+                                    result = maybe.HasValue ? GetString(maybe.Internal, escape, provider) : GetString(default(String), escape, provider);
+                                    return true;
+                                default:
+                                {
+                                    try
+                                    {
+                                        dynamic item = value;
+                                        result = GetString(item.HasValue ? (Object) item.Value : null, escape, provider);
+                                        return true;
+                                    }
+                                    catch (Exception)
+                                    {
+                                        result = null;
+                                        return false;
+                                    }
+                                }
+                            }
+                        }
+
+                        static Boolean WeakMaybeFormatConvert(Object? value, EscapeType escape, String? format, IFormatProvider? provider, out String? result)
+                        {
+                            switch (value)
+                            {
+                                case null:
+                                    result = null;
+                                    return false;
+                                case IWeakMaybe { Maybe: var maybe }:
+                                    result = maybe.HasValue ? GetString(maybe.Internal, escape, format, provider) : GetString(default(String), escape, format, provider);
+                                    return true;
+                                default:
+                                {
+                                    try
+                                    {
+                                        dynamic item = value;
+                                        result = GetString(item.HasValue ? (Object) item.Value : null, escape, format, provider);
+                                        return true;
+                                    }
+                                    catch (Exception)
+                                    {
+                                        result = null;
+                                        return false;
+                                    }
+                                }
+                            }
+                        }
+
+                        return (WeakMaybeConvert, WeakMaybeFormatConvert);
+                    }
                     
                     if (generic.IsMemorySpan())
                     {

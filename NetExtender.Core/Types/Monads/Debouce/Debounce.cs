@@ -29,7 +29,7 @@ namespace NetExtender.Types.Monads
         {
             return new Debounce<T>(value);
         }
-        
+
         public static Boolean operator ==(T? first, Debounce<T> second)
         {
             return second == first;
@@ -49,7 +49,7 @@ namespace NetExtender.Types.Monads
         {
             return !(first == second);
         }
-        
+
         public static Boolean operator ==(Debounce<T> first, Debounce<T> second)
         {
             return first.Equals(second);
@@ -58,16 +58,6 @@ namespace NetExtender.Types.Monads
         public static Boolean operator !=(Debounce<T> first, Debounce<T> second)
         {
             return !(first == second);
-        }
-
-        public static Boolean operator >(T? first, Debounce<T> second)
-        {
-            return second < first;
-        }
-
-        public static Boolean operator >=(T? first, Debounce<T> second)
-        {
-            return second <= first;
         }
 
         public static Boolean operator <(T? first, Debounce<T> second)
@@ -80,14 +70,14 @@ namespace NetExtender.Types.Monads
             return second >= first;
         }
 
-        public static Boolean operator >(Debounce<T> first, T? second)
+        public static Boolean operator >(T? first, Debounce<T> second)
         {
-            return first.CompareTo(second) > 0;
+            return second < first;
         }
 
-        public static Boolean operator >=(Debounce<T> first, T? second)
+        public static Boolean operator >=(T? first, Debounce<T> second)
         {
-            return first.CompareTo(second) >= 0;
+            return second <= first;
         }
 
         public static Boolean operator <(Debounce<T> first, T? second)
@@ -100,12 +90,12 @@ namespace NetExtender.Types.Monads
             return first.CompareTo(second) <= 0;
         }
 
-        public static Boolean operator >(Debounce<T> first, Debounce<T> second)
+        public static Boolean operator >(Debounce<T> first, T? second)
         {
             return first.CompareTo(second) > 0;
         }
 
-        public static Boolean operator >=(Debounce<T> first, Debounce<T> second)
+        public static Boolean operator >=(Debounce<T> first, T? second)
         {
             return first.CompareTo(second) >= 0;
         }
@@ -118,6 +108,16 @@ namespace NetExtender.Types.Monads
         public static Boolean operator <=(Debounce<T> first, Debounce<T> second)
         {
             return first.CompareTo(second) <= 0;
+        }
+
+        public static Boolean operator >(Debounce<T> first, Debounce<T> second)
+        {
+            return first.CompareTo(second) > 0;
+        }
+
+        public static Boolean operator >=(Debounce<T> first, Debounce<T> second)
+        {
+            return first.CompareTo(second) >= 0;
         }
 
         public const DateTimeKind DefaultDateTimeKind = DateTimeKind.Utc;
@@ -155,7 +155,7 @@ namespace NetExtender.Types.Monads
                 return Now - SetTime;
             }
         }
-        
+
         private readonly TimeSpan? _delay;
         public TimeSpan Delay
         {
@@ -168,7 +168,7 @@ namespace NetExtender.Types.Monads
                 _delay = value >= TimeSpan.Zero ? value : throw new ArgumentOutOfRangeException(nameof(value), value, null);
             }
         }
-        
+
         public DateTime SetTime { get; init; }
 
         public DateTimeKind TimeKind
@@ -209,7 +209,7 @@ namespace NetExtender.Types.Monads
             _value = default!;
             SetTime = default;
         }
-        
+
         public Debounce(T value)
             : this(value, DefaultDateTimeKind)
         {
@@ -245,6 +245,30 @@ namespace NetExtender.Types.Monads
                 DateTimeKind.Local => new DateTimeProvider(DateTimeKind.Local),
                 var kind => throw new SerializationException($"Debounce time kind '{kind}' is not supported.")
             };
+        }
+
+        Boolean IMonad.Unwrap(out Object? value)
+        {
+            if (IsEmpty)
+            {
+                value = null;
+                return false;
+            }
+            
+            value = _value;
+            return true;
+        }
+        
+        public Boolean Unwrap([MaybeNullWhen(false)] out T value)
+        {
+            if (IsEmpty)
+            {
+                value = default;
+                return false;
+            }
+            
+            value = _value;
+            return true;
         }
         
         public void GetObjectData(SerializationInfo info, StreamingContext context)

@@ -575,49 +575,49 @@ namespace NetExtender.Utilities.Types
             return method;
         }
 
-        public static Func<Object?, Object?[]?, Object?> CreateDynamicDelegate(this MethodInfo info)
+        public static Func<Object?, Object?[]?, Object?> CreateDynamicDelegate(this MethodInfo method)
         {
-            if (info is null)
+            if (method is null)
             {
-                throw new ArgumentNullException(nameof(info));
+                throw new ArgumentNullException(nameof(method));
             }
 
-            DynamicMethod method = DynamicInvokeMethods.GetOrAdd(info, CreateDynamicInvokeMethod);
-            return method.CreateDelegate<Func<Object?, Object?[]?, Object?>>();
+            DynamicMethod dynamic = DynamicInvokeMethods.GetOrAdd(method, CreateDynamicInvokeMethod);
+            return dynamic.CreateDelegate<Func<Object?, Object?[]?, Object?>>();
         }
 
-        public static Func<Object?[]?, Object?> CreateDynamicDelegate(this MethodInfo info, Object? target)
+        public static Func<Object?[]?, Object?> CreateDynamicDelegate(this MethodInfo method, Object? target)
         {
-            if (info is null)
+            if (method is null)
             {
-                throw new ArgumentNullException(nameof(info));
+                throw new ArgumentNullException(nameof(method));
             }
 
-            DynamicMethod method = DynamicInvokeMethods.GetOrAdd(info, CreateDynamicInvokeMethod);
-            return method.CreateDelegate<Func<Object?[]?, Object?>>(target);
+            DynamicMethod dynamic = DynamicInvokeMethods.GetOrAdd(method, CreateDynamicInvokeMethod);
+            return dynamic.CreateDelegate<Func<Object?[]?, Object?>>(target);
         }
 
-        private static DynamicMethod CreateDynamicInvokeMethod(this MethodInfo info)
+        private static DynamicMethod CreateDynamicInvokeMethod(this MethodInfo method)
         {
-            if (info is null)
+            if (method is null)
             {
-                throw new ArgumentNullException(nameof(info));
+                throw new ArgumentNullException(nameof(method));
             }
 
-            Type? declaring = info.DeclaringType;
+            Type? declaring = method.DeclaringType;
 
             if (declaring is null)
             {
                 throw new TypeAccessException();
             }
 
-            ParameterInfo[] parameters = info.GetParameters();
-            DynamicMethod method = new DynamicMethod($"{info.Name}.DynamicInvoke", typeof(Object), new[] { typeof(Object), typeof(Object?[]) }, true);
-            ParameterBuilder? instance = method.DefineParameter(1, ParameterAttributes.None, nameof(instance));
-            ParameterBuilder? arguments = method.DefineParameter(2, ParameterAttributes.None, nameof(arguments));
-            ILGenerator generator = method.GetILGenerator();
+            ParameterInfo[] parameters = method.GetParameters();
+            DynamicMethod dynamic = new DynamicMethod($"{method.Name}.DynamicInvoke", typeof(Object), new[] { typeof(Object), typeof(Object?[]) }, true);
+            ParameterBuilder? instance = dynamic.DefineParameter(1, ParameterAttributes.None, nameof(instance));
+            ParameterBuilder? arguments = dynamic.DefineParameter(2, ParameterAttributes.None, nameof(arguments));
+            ILGenerator generator = dynamic.GetILGenerator();
 
-            if (!info.IsStatic)
+            if (!method.IsStatic)
             {
                 generator.Emit(OpCodes.Ldarg_0);
                 generator.EmitUnbox(declaring);
@@ -633,19 +633,19 @@ namespace NetExtender.Utilities.Types
                 generator.EmitUnbox(parameter.ParameterType);
             }
 
-            generator.Emit(info.IsVirtual ? OpCodes.Callvirt : OpCodes.Call, info);
+            generator.Emit(method.IsVirtual ? OpCodes.Callvirt : OpCodes.Call, method);
 
-            if (info.ReturnType == typeof(void))
+            if (method.ReturnType == typeof(void))
             {
                 generator.Emit(OpCodes.Ldnull);
                 generator.Emit(OpCodes.Ret);
-                return method;
+                return dynamic;
             }
 
-            generator.EmitBox(info.ReturnType);
+            generator.EmitBox(method.ReturnType);
             generator.Emit(OpCodes.Ret);
 
-            return method;
+            return dynamic;
         }
     }
 }

@@ -15,12 +15,33 @@ namespace NetExtender.Utilities.Types
 {
     public static partial class EnumerableUtilities
     {
-        /// <summary>
-        /// Gets collection count if <see cref="source"/> is materialized, otherwise null.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="source"></param>
-        /// <returns></returns>
+        [Pure]
+        public static Int32? CountIfMaterialized<T>([JetBrains.Annotations.NoEnumeration] this IEnumerable source)
+        {
+            return source switch
+            {
+                null => throw new ArgumentNullException(nameof(source)),
+                IEnumerable<T> convert => convert.CountIfMaterialized(),
+                IEnumerable<Object?> convert => convert.CountIfMaterialized(),
+                _ => null
+            };
+        }
+
+        [Pure]
+        public static Boolean CountIfMaterialized<T>([JetBrains.Annotations.NoEnumeration] this IEnumerable source, out Int32 count)
+        {
+            Int32? result = CountIfMaterialized<T>(source);
+            count = result ?? 0;
+            return result is not null;
+        }
+
+        [Pure]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int32 CountIfMaterialized<T>([JetBrains.Annotations.NoEnumeration] this IEnumerable source, Int32 count)
+        {
+            return CountIfMaterialized<T>(source, out Int32 result) && result >= 0 ? result : count;
+        }
+        
         [Pure]
         public static Int32? CountIfMaterialized<T>([JetBrains.Annotations.NoEnumeration] this IEnumerable<T> source)
         {

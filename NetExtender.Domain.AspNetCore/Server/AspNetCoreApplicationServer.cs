@@ -12,9 +12,9 @@ using NetExtender.Utilities.Types;
 
 namespace NetExtender.Domains.AspNetCore.Server
 {
-    public abstract class AspNetCoreApplicationServerAbstraction<T> : IAspNetCoreApplicationServer<T> where T : class
+    public abstract class AspNetCoreApplicationServerBase<T> : IAspNetCoreApplicationServer<T> where T : class
     {
-        public static AspNetCoreApplicationServerAbstraction<T> Create(T value)
+        public static AspNetCoreApplicationServerBase<T> Create(T value)
         {
             switch (value)
             {
@@ -23,12 +23,12 @@ namespace NetExtender.Domains.AspNetCore.Server
                 case IHost host:
                 {
                     Type type = typeof(AspNetCoreApplicationServer<>).MakeGenericType(typeof(T));
-                    return Activator.CreateInstance(type, host) as AspNetCoreApplicationServerAbstraction<T> ?? throw new InvalidOperationException();
+                    return Activator.CreateInstance(type, host) as AspNetCoreApplicationServerBase<T> ?? throw new InvalidOperationException();
                 }
                 case IWebHost host:
                 {
                     Type type = typeof(AspNetCoreApplicationWebServer<>).MakeGenericType(typeof(T));
-                    return Activator.CreateInstance(type, host) as AspNetCoreApplicationServerAbstraction<T> ?? throw new InvalidOperationException();
+                    return Activator.CreateInstance(type, host) as AspNetCoreApplicationServerBase<T> ?? throw new InvalidOperationException();
                 }
                 default:
                     throw new NotSupportedException();
@@ -97,7 +97,7 @@ namespace NetExtender.Domains.AspNetCore.Server
         }
     }
 
-    public class AspNetCoreApplicationServer<T> : AspNetCoreApplicationServerAbstraction<T>, IAspNetCoreApplicationServer<T> where T : class, IHost
+    public class AspNetCoreApplicationServer<T> : AspNetCoreApplicationServerBase<T>, IAspNetCoreApplicationServer<T> where T : class, IHost
     {
         public sealed override T Context { get; }
 
@@ -117,7 +117,7 @@ namespace NetExtender.Domains.AspNetCore.Server
         }
     }
     
-    public class AspNetCoreApplicationWebServer<T> : AspNetCoreApplicationServerAbstraction<T>, IAspNetCoreApplicationServer<T> where T : class, IWebHost
+    public class AspNetCoreApplicationWebServer<T> : AspNetCoreApplicationServerBase<T>, IAspNetCoreApplicationServer<T> where T : class, IWebHost
     {
         public sealed override T Context { get; }
 

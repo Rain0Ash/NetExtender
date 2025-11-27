@@ -21,24 +21,24 @@
         <PackageTags>Extension</PackageTags>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <IsPackable>true</IsPackable>
-        <ImplicitUsings>disable</ImplicitUsings>
         <IgnoresAccessChecksTo>System.Private.CoreLib</IgnoresAccessChecksTo>
+        <GenerateDocumentationFile>false</GenerateDocumentationFile>
     </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="AgileObjects.ReadableExpressions" Version="4.1.3" />
-        <PackageReference Include="JetBrains.Annotations" Version="2024.3.0" />
-        <PackageReference Include="Lib.Harmony.Thin" Version="2.3.6" />
+        <PackageReference Include="JetBrains.Annotations" Version="2025.2.4" />
+        <PackageReference Include="Lib.Harmony.Thin" Version="2.4.2" />
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.3" />
         <PackageReference Include="Microsoft.Extensions.ObjectPool" Version="8.0.14" />
         <PackageReference Include="Microsoft.Extensions.Primitives" Version="8.0.0" />
         <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="3.0.1"/>
-        <PackageReference Include="Newtonsoft.Json" Version="13.0.3"/>
-        <PackageReference Include="System.Linq.Async" Version="6.0.1"/>
-        <PackageReference Include="System.Reactive" Version="6.0.1"/>
-        <PackageReference Include="System.Reactive.Core" Version="6.0.1"/>
-        <PackageReference Include="System.Reactive.Interfaces" Version="6.0.1"/>
-        <PackageReference Include="System.Reactive.Linq" Version="6.0.1"/>
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+        <PackageReference Include="System.Linq.Async" Version="6.0.3" />
+        <PackageReference Include="System.Reactive" Version="6.1.0" />
+        <PackageReference Include="System.Reactive.Core" Version="6.1.0" />
+        <PackageReference Include="System.Reactive.Interfaces" Version="6.1.0" />
+        <PackageReference Include="System.Reactive.Linq" Version="6.1.0" />
         <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.6.3" />
     </ItemGroup>
 
@@ -57,9 +57,6 @@
         </Compile>
         <Compile Update="Types\Enums\UnderlyingEnumOperation.cs">
             <DependentUpon>UnderlyingOperation.cs</DependentUpon>
-        </Compile>
-        <Compile Update="Utilities\Numerics\GenericMathUtilities.cs">
-            <DependentUpon>GenericMathUtilities.tt</DependentUpon>
         </Compile>
         <Compile Update="Utilities\Numerics\GenericRandomUtilities.cs">
             <DependentUpon>GenericRandomUtilities.tt</DependentUpon>
@@ -380,11 +377,6 @@
         <Compile Update="Types\History\Time\TimeHistoryCollection.Node.cs">
           <DependentUpon>TimeHistoryCollection.cs</DependentUpon>
         </Compile>
-        <Compile Update="Types\Sizes\UnsafeSizeGenerics.cs">
-          <AutoGen>True</AutoGen>
-          <DesignTime>True</DesignTime>
-          <DependentUpon>UnsafeSizeGenerics.tt</DependentUpon>
-        </Compile>
         <Compile Update="Types\FileSystems\Interfaces\IFileSystemStorage.Dynamic.cs">
           <DependentUpon>IFileSystemStorage.cs</DependentUpon>
         </Compile>
@@ -453,6 +445,19 @@
         </Compile>
         <Compile Update="Types\FileSystems\Intercept\Interfaces\IInterceptDriveHandler.cs">
           <DependentUpon>IFileSystemIntercept.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\Concurrent\Observable\ConcurrentObservableCollection.Bridge.cs">
+          <DependentUpon>ConcurrentObservableCollection.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\Sizes\UnsafeSizeGenerics.cs">
+          <AutoGen>True</AutoGen>
+          <DesignTime>True</DesignTime>
+          <DependentUpon>UnsafeSizeGenerics.tt</DependentUpon>
+        </Compile>
+        <Compile Update="Utilities\Numerics\GenericMathUtilities.cs">
+          <AutoGen>True</AutoGen>
+          <DesignTime>True</DesignTime>
+          <DependentUpon>GenericMathUtilities.tt</DependentUpon>
         </Compile>
     </ItemGroup>
 

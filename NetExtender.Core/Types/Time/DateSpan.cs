@@ -111,9 +111,7 @@ namespace NetExtender.Types.Times
         {
             if (start > end)
             {
-                DateTime temp = start;
-                start = end;
-                end = temp;
+                (start, end) = (end, start);
             }
 
             Start = start;

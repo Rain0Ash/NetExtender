@@ -56,6 +56,12 @@ namespace NetExtender.Types.Collections
 
         public void CopyTo(T[] array, Int32 index)
         {
+            if (Collection is ICollection<T> collection)
+            {
+                collection.CopyTo(array, index);
+                return;
+            }
+            
             Collection.CopyTo(array, index);
         }
 

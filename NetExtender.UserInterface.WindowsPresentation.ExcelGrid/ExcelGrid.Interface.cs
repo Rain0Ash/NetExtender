@@ -12,7 +12,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
     {
         public IObservableCollection<ExcelPropertyDefinition> ColumnDefinitions { get; }
         public IObservableCollection<ExcelPropertyDefinition> RowDefinitions { get; }
-        
+
         public Int32 Columns { get; }
         public Int32 Rows { get; }
         public Boolean ItemsInColumns { get; }
@@ -24,8 +24,8 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
         public IList? ColumnHeadersSource { get; }
         public Func<Int32, Object> CreateColumnHeader { get; }
         public Func<Object>? CreateItem { get; }
-        
-        
+
+
         public ExcelPropertyDefinition? GetPropertyDefinition(ExcelCell cell);
         public Int32 FindSourceIndex(Int32 index);
     }

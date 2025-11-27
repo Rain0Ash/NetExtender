@@ -27,7 +27,7 @@ namespace NetExtender.Utilities.Types
             }
 
             value.Wait(token);
-            return Disposable.Create(value, static value => value.Release());
+            return System.Reactive.Disposables.Disposable.Create(value, static value => value.Release());
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -47,7 +47,7 @@ namespace NetExtender.Utilities.Types
             static async Task<IDisposable> Core(SemaphoreSlim value, CancellationToken token)
             {
                 await value.WaitAsync(token).ConfigureAwait(false);
-                return Disposable.Create(value, static value => value.Release());
+                return System.Reactive.Disposables.Disposable.Create(value, static value => value.Release());
             }
 
             return new AwaitableDisposable<IDisposable>(Core(value, token));

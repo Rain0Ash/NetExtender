@@ -22,7 +22,7 @@ namespace NetExtender.Types.Network
     public class DynamicHttpRequestHandler : HttpRequestHandler, IDynamicHttpRequestHandler
     {
         protected ConcurrentDictionary<HttpStatusCode, HttpExceptionHandler> Handlers { get; } = new ConcurrentDictionary<HttpStatusCode, HttpExceptionHandler>();
-        
+
         public Int32 Count
         {
             get
@@ -30,7 +30,7 @@ namespace NetExtender.Types.Network
                 return Handlers.Count;
             }
         }
-        
+
         public ICollection<HttpStatusCode> Keys
         {
             get

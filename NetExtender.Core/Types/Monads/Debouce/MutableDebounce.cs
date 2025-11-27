@@ -191,16 +191,6 @@ namespace NetExtender.Types.Monads
             return !(first == second);
         }
 
-        public static Boolean operator >(T? first, MutableDebounce<T>? second)
-        {
-            return second < first;
-        }
-
-        public static Boolean operator >=(T? first, MutableDebounce<T>? second)
-        {
-            return second <= first;
-        }
-
         public static Boolean operator <(T? first, MutableDebounce<T>? second)
         {
             return second > first;
@@ -211,14 +201,14 @@ namespace NetExtender.Types.Monads
             return second >= first;
         }
 
-        public static Boolean operator >(MutableDebounce<T>? first, T? second)
+        public static Boolean operator >(T? first, MutableDebounce<T>? second)
         {
-            return first is not null && first.CompareTo(second) > 0;
+            return second < first;
         }
 
-        public static Boolean operator >=(MutableDebounce<T>? first, T? second)
+        public static Boolean operator >=(T? first, MutableDebounce<T>? second)
         {
-            return first is null && second is null || first is not null && first.CompareTo(second) >= 0;
+            return second <= first;
         }
 
         public static Boolean operator <(MutableDebounce<T>? first, T? second)
@@ -231,14 +221,14 @@ namespace NetExtender.Types.Monads
             return first is null && second is null || first is not null && first.CompareTo(second) <= 0;
         }
 
-        public static Boolean operator >(Debounce<T> first, MutableDebounce<T>? second)
+        public static Boolean operator >(MutableDebounce<T>? first, T? second)
         {
-            return second < first;
+            return first is not null && first.CompareTo(second) > 0;
         }
 
-        public static Boolean operator >=(Debounce<T> first, MutableDebounce<T>? second)
+        public static Boolean operator >=(MutableDebounce<T>? first, T? second)
         {
-            return second <= first;
+            return first is null && second is null || first is not null && first.CompareTo(second) >= 0;
         }
 
         public static Boolean operator <(Debounce<T> first, MutableDebounce<T>? second)
@@ -251,14 +241,14 @@ namespace NetExtender.Types.Monads
             return second >= first;
         }
 
-        public static Boolean operator >(MutableDebounce<T>? first, Debounce<T> second)
+        public static Boolean operator >(Debounce<T> first, MutableDebounce<T>? second)
         {
-            return first is not null && first.CompareTo(second) > 0;
+            return second < first;
         }
 
-        public static Boolean operator >=(MutableDebounce<T>? first, Debounce<T> second)
+        public static Boolean operator >=(Debounce<T> first, MutableDebounce<T>? second)
         {
-            return first is not null && first.CompareTo(second) >= 0;
+            return second <= first;
         }
 
         public static Boolean operator <(MutableDebounce<T>? first, Debounce<T> second)
@@ -271,14 +261,14 @@ namespace NetExtender.Types.Monads
             return first is not null && first.CompareTo(second) <= 0;
         }
 
-        public static Boolean operator >(MutableDebounce<T>? first, MutableDebounce<T>? second)
+        public static Boolean operator >(MutableDebounce<T>? first, Debounce<T> second)
         {
-            return first is not null && (second is null || first.CompareTo(second) > 0);
+            return first is not null && first.CompareTo(second) > 0;
         }
 
-        public static Boolean operator >=(MutableDebounce<T>? first, MutableDebounce<T>? second)
+        public static Boolean operator >=(MutableDebounce<T>? first, Debounce<T> second)
         {
-            return ReferenceEquals(first, second) || first is not null && (second is null || first.CompareTo(second) >= 0);
+            return first is not null && first.CompareTo(second) >= 0;
         }
 
         public static Boolean operator <(MutableDebounce<T>? first, MutableDebounce<T>? second)
@@ -290,7 +280,17 @@ namespace NetExtender.Types.Monads
         {
             return ReferenceEquals(first, second) || first is null && second is not null || first is not null && first.CompareTo(second) <= 0;
         }
-        
+
+        public static Boolean operator >(MutableDebounce<T>? first, MutableDebounce<T>? second)
+        {
+            return first is not null && (second is null || first.CompareTo(second) > 0);
+        }
+
+        public static Boolean operator >=(MutableDebounce<T>? first, MutableDebounce<T>? second)
+        {
+            return ReferenceEquals(first, second) || first is not null && (second is null || first.CompareTo(second) >= 0);
+        }
+
         public static MutableDebounce<T?> New
         {
             get
@@ -409,6 +409,30 @@ namespace NetExtender.Types.Monads
         protected MutableDebounce(SerializationInfo info, StreamingContext context)
         {
             _internal = new Debounce<T>(info.GetValue<T>(nameof(Value)), info.GetValue<TimeSpan>(nameof(Delay))) { SetTime = info.GetDateTime(nameof(SetTime)) };
+        }
+
+        Boolean IMonad.Unwrap(out Object? value)
+        {
+            if (IsEmpty)
+            {
+                value = null;
+                return false;
+            }
+            
+            value = _internal.Value;
+            return true;
+        }
+        
+        public Boolean Unwrap([MaybeNullWhen(false)] out T value)
+        {
+            if (IsEmpty)
+            {
+                value = default;
+                return false;
+            }
+            
+            value = _internal.Value;
+            return true;
         }
         
         public void GetObjectData(SerializationInfo info, StreamingContext context)

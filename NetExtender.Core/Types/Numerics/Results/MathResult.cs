@@ -2,12 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using NetExtender.Interfaces;
 using NetExtender.Types.Attributes;
 using NetExtender.Types.Exceptions;
 using NetExtender.Types.Monads.Interfaces;
-using NetExtender.Types.Monads.Result;
+using NetExtender.Types.Monads;
 using NetExtender.Types.Numerics.Exceptions;
 using NetExtender.Types.Numerics.Exceptions.Interfaces;
 using NetExtender.Types.Numerics.Interfaces;
@@ -110,16 +111,6 @@ namespace NetExtender.Types.Numerics
             return first._internal != second._internal;
         }
 
-        public static Boolean operator >(T? first, MathResult<T> second)
-        {
-            return first > second._internal;
-        }
-
-        public static Boolean operator >=(T? first, MathResult<T> second)
-        {
-            return first >= second._internal;
-        }
-
         public static Boolean operator <(T? first, MathResult<T> second)
         {
             return first < second._internal;
@@ -130,14 +121,14 @@ namespace NetExtender.Types.Numerics
             return first <= second._internal;
         }
 
-        public static Boolean operator >(MathResult<T> first, T? second)
+        public static Boolean operator >(T? first, MathResult<T> second)
         {
-            return first._internal > second;
+            return first > second._internal;
         }
 
-        public static Boolean operator >=(MathResult<T> first, T? second)
+        public static Boolean operator >=(T? first, MathResult<T> second)
         {
-            return first._internal >= second;
+            return first >= second._internal;
         }
 
         public static Boolean operator <(MathResult<T> first, T? second)
@@ -150,14 +141,14 @@ namespace NetExtender.Types.Numerics
             return first._internal <= second;
         }
 
-        public static Boolean operator >(MathResult<T> first, MathResult<T> second)
+        public static Boolean operator >(MathResult<T> first, T? second)
         {
-            return first._internal > second._internal;
+            return first._internal > second;
         }
 
-        public static Boolean operator >=(MathResult<T> first, MathResult<T> second)
+        public static Boolean operator >=(MathResult<T> first, T? second)
         {
-            return first._internal >= second._internal;
+            return first._internal >= second;
         }
 
         public static Boolean operator <(MathResult<T> first, MathResult<T> second)
@@ -168,6 +159,16 @@ namespace NetExtender.Types.Numerics
         public static Boolean operator <=(MathResult<T> first, MathResult<T> second)
         {
             return first._internal <= second._internal;
+        }
+
+        public static Boolean operator >(MathResult<T> first, MathResult<T> second)
+        {
+            return first._internal > second._internal;
+        }
+
+        public static Boolean operator >=(MathResult<T> first, MathResult<T> second)
+        {
+            return first._internal >= second._internal;
         }
 
         private static Dictionary<MathResult.NumberPart, Func<MathResult<T>, MathResult<T>>> Operators { get; } = new Dictionary<MathResult.NumberPart, Func<MathResult<T>, MathResult<T>>>(EnumUtilities.Count<MathResult.NumberPart>());
@@ -278,6 +279,12 @@ namespace NetExtender.Types.Numerics
                 {
                     return false;
                 }
+
+                if (typeof(T) == typeof(Half))
+                {
+                    Half value = UnsafeUtilities.As<T, Half>(_internal.Internal);
+                    return Half.IsFinite(value);
+                }
                 
                 if (typeof(T) == typeof(Single))
                 {
@@ -333,6 +340,12 @@ namespace NetExtender.Types.Numerics
                 {
                     return Exception is INumericException { IsInfinity: true };
                 }
+
+                if (typeof(T) == typeof(Half))
+                {
+                    Half value = UnsafeUtilities.As<T, Half>(_internal.Internal);
+                    return Half.IsInfinity(value);
+                }
                 
                 if (typeof(T) == typeof(Single))
                 {
@@ -363,6 +376,12 @@ namespace NetExtender.Types.Numerics
                 if (!_internal)
                 {
                     return Exception is INumericException { IsPositiveInfinity: true };
+                }
+
+                if (typeof(T) == typeof(Half))
+                {
+                    Half value = UnsafeUtilities.As<T, Half>(_internal.Internal);
+                    return Half.IsPositiveInfinity(value);
                 }
 
                 if (typeof(T) == typeof(Single))
@@ -396,16 +415,22 @@ namespace NetExtender.Types.Numerics
                     return Exception is INumericException { IsNegativeInfinity: true };
                 }
 
+                if (typeof(T) == typeof(Half))
+                {
+                    Half value = UnsafeUtilities.As<T, Half>(_internal.Internal);
+                    return Half.IsNegativeInfinity(value);
+                }
+
                 if (typeof(T) == typeof(Single))
                 {
                     Single value = UnsafeUtilities.As<T, Single>(_internal.Internal);
-                    return Single.IsPositiveInfinity(value);
+                    return Single.IsNegativeInfinity(value);
                 }
                 
                 if (typeof(T) == typeof(Double))
                 {
                     Double value = UnsafeUtilities.As<T, Double>(_internal.Internal);
-                    return Double.IsPositiveInfinity(value);
+                    return Double.IsNegativeInfinity(value);
                 }
                 
                 if (typeof(T) == typeof(Complex))
@@ -425,6 +450,12 @@ namespace NetExtender.Types.Numerics
                 if (!_internal)
                 {
                     return Exception is INumericException { IsNaN: true };
+                }
+
+                if (typeof(T) == typeof(Half))
+                {
+                    Half value = UnsafeUtilities.As<T, Half>(_internal.Internal);
+                    return Half.IsNaN(value);
                 }
 
                 if (typeof(T) == typeof(Single))
@@ -495,6 +526,43 @@ namespace NetExtender.Types.Numerics
         internal MathResult(SerializationInfo info, StreamingContext context)
         {
             _internal = new Result<T, OverflowException>(info, context);
+        }
+
+        Boolean IMonad.Unwrap(out Object? value)
+        {
+            if (IsEmpty || Exception is not null)
+            {
+                value = Exception;
+                return false;
+            }
+
+            value = Internal;
+            return true;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public Boolean Unwrap(out T value)
+        {
+            if (IsEmpty || Exception is not null)
+            {
+                value = default;
+                return false;
+            }
+
+            value = Internal;
+            return true;
+        }
+
+        Boolean IResult.Unwrap([MaybeNullWhen(false)] out Exception value)
+        {
+            value = Exception;
+            return value is not null;
+        }
+
+        Boolean IResult<T, OverflowException>.Unwrap([MaybeNullWhen(false)] out OverflowException value)
+        {
+            value = Exception;
+            return value is not null;
         }
 
         public void GetObjectData(SerializationInfo info, StreamingContext context)

@@ -6,13 +6,13 @@ namespace NetExtender.Types.Enumerators
 {
     public sealed class DictionaryEnumerator<TKey, TValue> : IDictionaryEnumerator
     {
-        private readonly IEnumerator<KeyValuePair<TKey, TValue>> _enumerator;
+        private readonly IEnumerator<KeyValuePair<TKey, TValue>> Enumerator;
 
         public DictionaryEntry Entry
         {
             get
             {
-                return new DictionaryEntry(_enumerator.Current.Key!, _enumerator.Current.Value);
+                return new DictionaryEntry(Enumerator.Current.Key!, Enumerator.Current.Value);
             }
         }
         
@@ -20,7 +20,7 @@ namespace NetExtender.Types.Enumerators
         {
             get
             {
-                return _enumerator.Current;
+                return Enumerator.Current;
             }
         }
 
@@ -28,7 +28,7 @@ namespace NetExtender.Types.Enumerators
         {
             get
             {
-                return _enumerator.Current.Key!;
+                return Enumerator.Current.Key!;
             }
         }
 
@@ -36,35 +36,35 @@ namespace NetExtender.Types.Enumerators
         {
             get
             {
-                return _enumerator.Current.Value;
+                return Enumerator.Current.Value;
             }
         }
 
         public DictionaryEnumerator(IEnumerator<KeyValuePair<TKey, TValue>> enumerator)
         {
-            _enumerator = enumerator ?? throw new ArgumentNullException(nameof(enumerator));
+            Enumerator = enumerator ?? throw new ArgumentNullException(nameof(enumerator));
         }
         
         public Boolean MoveNext()
         {
-            return _enumerator.MoveNext();
+            return Enumerator.MoveNext();
         }
 
         public void Reset()
         {
-            _enumerator.Reset();
+            Enumerator.Reset();
         }
     }
     
     public sealed class DictionaryEnumerator<TKey, TValue, TEnumerator> : IDictionaryEnumerator where TEnumerator : IEnumerator<KeyValuePair<TKey, TValue>>
     {
-        private readonly TEnumerator _enumerator;
+        private TEnumerator Enumerator;
 
         public DictionaryEntry Entry
         {
             get
             {
-                return new DictionaryEntry(_enumerator.Current.Key!, _enumerator.Current.Value);
+                return new DictionaryEntry(Enumerator.Current.Key!, Enumerator.Current.Value);
             }
         }
         
@@ -72,7 +72,7 @@ namespace NetExtender.Types.Enumerators
         {
             get
             {
-                return _enumerator.Current;
+                return Enumerator.Current;
             }
         }
 
@@ -80,7 +80,7 @@ namespace NetExtender.Types.Enumerators
         {
             get
             {
-                return _enumerator.Current.Key!;
+                return Enumerator.Current.Key!;
             }
         }
 
@@ -88,23 +88,23 @@ namespace NetExtender.Types.Enumerators
         {
             get
             {
-                return _enumerator.Current.Value;
+                return Enumerator.Current.Value;
             }
         }
 
         public DictionaryEnumerator(TEnumerator enumerator)
         {
-            _enumerator = enumerator ?? throw new ArgumentNullException(nameof(enumerator));
+            Enumerator = enumerator ?? throw new ArgumentNullException(nameof(enumerator));
         }
         
         public Boolean MoveNext()
         {
-            return _enumerator.MoveNext();
+            return Enumerator.MoveNext();
         }
 
         public void Reset()
         {
-            _enumerator.Reset();
+            Enumerator.Reset();
         }
     }
 }

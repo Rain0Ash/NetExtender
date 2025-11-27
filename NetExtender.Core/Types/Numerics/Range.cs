@@ -62,15 +62,22 @@ namespace NetExtender.Types.Numerics
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Range<T> Expand(Range<T> other)
+        public void Deconstruct(out T minimum, out T maximum)
         {
-            return new Range<T>(Minimum.Min(other.Minimum), Maximum.Max(other.Maximum));
+            minimum = Minimum;
+            maximum = Maximum;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Range<T> Truncate(Range<T> other)
+        public Boolean Contains(T value)
         {
-            return new Range<T>(Minimum.Max(other.Minimum), Maximum.Min(other.Maximum));
+            return Minimum.GreaterOrEquals(value) && Maximum.LessOrEquals(value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public Boolean Contains(Range<T> other)
+        {
+            return IsSubRange(other);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -92,15 +99,15 @@ namespace NetExtender.Types.Numerics
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Boolean Contains(T value)
+        public Range<T> Expand(Range<T> other)
         {
-            return Minimum.LessOrEquals(value) && Maximum.GreaterOrEquals(value);
+            return new Range<T>(Minimum.Min(other.Minimum), Maximum.Max(other.Maximum));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Boolean Contains(Range<T> other)
+        public Range<T> Truncate(Range<T> other)
         {
-            return IsSubRange(other);
+            return new Range<T>(Minimum.Max(other.Minimum), Maximum.Min(other.Maximum));
         }
 
         public Int32 CompareTo(Range<T> other)
@@ -128,14 +135,14 @@ namespace NetExtender.Types.Numerics
             return HashCode.Combine(Minimum, Maximum);
         }
 
-        public Boolean Equals(Range<T> other)
-        {
-            return EqualityComparer<T>.Default.Equals(Minimum, other.Minimum) && EqualityComparer<T>.Default.Equals(Maximum, other.Maximum);
-        }
-
         public override Boolean Equals(Object? other)
         {
             return other is Range<T> range && Equals(range);
+        }
+
+        public Boolean Equals(Range<T> other)
+        {
+            return EqualityComparer<T>.Default.Equals(Minimum, other.Minimum) && EqualityComparer<T>.Default.Equals(Maximum, other.Maximum);
         }
 
         public override String ToString()

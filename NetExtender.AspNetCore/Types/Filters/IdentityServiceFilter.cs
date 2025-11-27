@@ -54,7 +54,7 @@ namespace NetExtender.AspNetCore.Filters
                 return IdentityServiceFilter.AuthorizeIdentity;
             }
         }
-        
+
         private readonly IUnsafeIdentityUserService<TId, TUser, TRole> _service;
         protected IIdentityUserService<TId, TUser, TRole> Service
         {
@@ -63,35 +63,35 @@ namespace NetExtender.AspNetCore.Filters
                 return _service;
             }
         }
-        
+
         protected IdentityServiceFilter()
         {
             _service = this;
         }
-        
+
         protected IdentityServiceFilter(TRole? @default)
             : base(@default)
         {
             _service = this;
         }
-        
+
         protected IdentityServiceFilter(ImmutableHashSet<TRole>? @default)
             : base(@default)
         {
             _service = this;
         }
-        
+
         protected IdentityServiceFilter(IIdentityUserService<TId, TUser, TRole>? service)
             : base(service?.Unsafe?.NoUserRole)
         {
             _service = service is null ? this : service.Unsafe ?? throw new NotSupportedException($"Service '{service.GetType()}' is not supported.");
         }
-        
+
         protected virtual void Set(TId? id)
         {
             _service.Set(Id = id);
         }
-        
+
         protected virtual void Set(TUser? user)
         {
             _service.Set(User = user);
@@ -137,7 +137,7 @@ namespace NetExtender.AspNetCore.Filters
                 await next.Execute();
                 return;
             }
-            
+
             IdentityAttributeCollection identity = Identity(context);
             TokenInfo? token = Token(context, out IIdentityException? exception);
 
@@ -166,7 +166,7 @@ namespace NetExtender.AspNetCore.Filters
                     await next.Execute();
                     return;
                 }
-                
+
                 await context.Exception<IdentityNoTokenException>();
                 return;
             }
@@ -176,10 +176,10 @@ namespace NetExtender.AspNetCore.Filters
                 await context.Exception<IdentityNoUserException>();
                 return;
             }
-            
+
             Set(user);
         }
-        
+
         protected abstract TokenInfo? Token(String? token);
 
         protected virtual TokenInfo? Token(ActionExecutingContext? context, out IIdentityException? exception)
@@ -210,7 +210,7 @@ namespace NetExtender.AspNetCore.Filters
                 return null;
             }
         }
-        
+
         protected record TokenInfo(TId Id, TRole[]? Role);
     }
 

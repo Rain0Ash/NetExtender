@@ -31,7 +31,7 @@ namespace NetExtender.Domains.Initializer
                 return ApplicationExceptionHandleType.Custom;
             }
         }
-        
+
         protected override void UnhandledException(Object? sender, Exception? exception, ref InitializerUnhandledExceptionState action)
         {
             base.UnhandledException<MessageBoxExceptionHandler>(sender, exception, ref action);
@@ -78,7 +78,7 @@ namespace NetExtender.Domains.Initializer
                     return MessageBoxOptions.None;
                 }
             }
-            
+
             protected virtual void Handle(WindowsPresentationApplicationInitializer initializer, Object? sender, Exception? exception, ref InitializerUnhandledExceptionState action)
             {
                 switch (initializer.ExceptionHandleType)
@@ -99,7 +99,7 @@ namespace NetExtender.Domains.Initializer
                         throw new EnumUndefinedOrNotSupportedException<ApplicationExceptionHandleType>(initializer.ExceptionHandleType, nameof(ExceptionHandleType), null);
                 }
             }
-            
+
             protected virtual void Console(Object? sender, Exception? exception, ref InitializerUnhandledExceptionState action)
             {
                 System.Console.WriteLine(Text(sender, exception, action));
@@ -122,24 +122,24 @@ namespace NetExtender.Domains.Initializer
             }
         }
     }
-    
+
     public abstract class WindowsPresentationApplicationInitializer<T> : ApplicationInitializer<WindowsPresentationApplication, WindowsPresentationView<T>> where T : Window, new()
     {
         public abstract class Middleware<TBuilder> : NetExtender.Types.Middlewares.Middleware<TBuilder> where TBuilder : WindowsPresentationBuilder<T>
         {
         }
     }
-    
+
     public abstract class WindowsPresentationApplicationInitializer<T, TBuilder> : WindowsPresentationApplicationInitializer<T, TBuilder, Application> where T : Window where TBuilder : IApplicationBuilder<T>, new()
     {
         public new abstract class Builder : WindowsPresentationApplicationInitializer<T, TBuilder, Application>.Builder
         {
         }
-        
+
         public new abstract class ConsoleBuilder : WindowsPresentationApplicationInitializer<T, TBuilder, Application>.ConsoleBuilder
         {
         }
-        
+
         public new abstract class Middleware : Middleware<TBuilder>
         {
         }
@@ -150,11 +150,11 @@ namespace NetExtender.Domains.Initializer
         public abstract class Builder : WindowsPresentationBuilder<T>
         {
         }
-        
+
         public abstract class ConsoleBuilder : WindowsPresentationConsoleBuilder<T>
         {
         }
-        
+
         public abstract class Middleware : Middleware<TBuilder>
         {
         }

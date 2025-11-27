@@ -4,10 +4,12 @@
 using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Runtime.Serialization;
 using NetExtender.Types.Exceptions;
 
 namespace NetExtender.Types.Times
 {
+    [Serializable]
     public struct DateTimeProvider : IUnsafeSize, IStruct<DateTimeProvider>
     {
         public static class Utc
@@ -43,15 +45,6 @@ namespace NetExtender.Types.Times
             get
             {
                 return typeof(DateTimeProvider);
-            }
-        }
-
-        unsafe Int32 IUnsafeSize.Length
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get
-            {
-                return sizeof(DateTimeProvider);
             }
         }
 
@@ -122,7 +115,18 @@ namespace NetExtender.Types.Times
                 _ => throw new EnumUndefinedOrNotSupportedException<DateTimeKind>(kind, nameof(kind), null)
             };
         }
-        
+
+        private DateTimeProvider(SerializationInfo info, StreamingContext context)
+        {
+            _unsafe = new Unsafe(info, context);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        readonly void ISerializable.GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            _unsafe.GetObjectData(info, context);
+        }
+
         public unsafe ref Byte GetPinnableReference()
         {
             fixed (Byte* pointer = this)
@@ -131,6 +135,7 @@ namespace NetExtender.Types.Times
             }
         }
         
+        [Serializable]
         [StructLayout(LayoutKind.Sequential)]
         private readonly unsafe struct Unsafe : IUnsafeSize, IStruct<Unsafe>
         {
@@ -143,15 +148,6 @@ namespace NetExtender.Types.Times
                 get
                 {
                     return typeof(Unsafe);
-                }
-            }
-
-            public Int32 Length
-            {
-                [MethodImpl(MethodImplOptions.AggressiveInlining)]
-                get
-                {
-                    return sizeof(Unsafe);
                 }
             }
 
@@ -182,6 +178,29 @@ namespace NetExtender.Types.Times
                 Kind = kind;
                 _now = now;
                 _offset = offset;
+            }
+
+            internal Unsafe(SerializationInfo info, StreamingContext context)
+            {
+                (Kind, _now, _offset) = info.GetByte(nameof(Kind)) switch
+                {
+                    1 => UtcNow,
+                    _ => Now
+                };
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public void Deconstruct(out DateTimeKind kind, out delegate*<DateTime> now, out delegate*<DateTimeOffset> offset)
+            {
+                kind = Kind;
+                now = _now;
+                offset = _offset;
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public void GetObjectData(SerializationInfo info, StreamingContext context)
+            {
+                info.AddValue(nameof(Kind), (Byte) Kind);
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]

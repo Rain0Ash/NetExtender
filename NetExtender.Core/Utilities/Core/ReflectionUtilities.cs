@@ -22,6 +22,7 @@ using System.Threading.Tasks;
 using NetExtender.Types.Anonymous;
 using NetExtender.Types.Attributes;
 using NetExtender.Types.Comparers;
+using NetExtender.Types.Entities;
 using NetExtender.Types.Exceptions;
 using NetExtender.Types.Monads;
 using NetExtender.Types.Monads.Interfaces;
@@ -537,6 +538,17 @@ namespace NetExtender.Utilities.Core
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int32 GetGenericArgumentsCount(this MethodInfo method)
+        {
+            if (method is null)
+            {
+                throw new ArgumentNullException(nameof(method));
+            }
+
+            return method.IsGenericMethod ? method.GetGenericArguments().Length : 0;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean HasInterface<T>(this Type type) where T : class
         {
             if (type is null)
@@ -864,6 +876,12 @@ namespace NetExtender.Utilities.Core
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsAnyType(this Type? value)
+        {
+            return value is not null && (typeof(Any) == value || typeof(Any.Value) == value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsAnonymousType(this Object? value)
         {
             return value is not null && IsAnonymousType(value.GetType());
@@ -915,88 +933,88 @@ namespace NetExtender.Utilities.Core
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean IsDefined<T>(this MemberInfo info) where T : Attribute
+        public static Boolean IsDefined<T>(this MemberInfo member) where T : Attribute
         {
-            if (info is null)
+            if (member is null)
             {
-                throw new ArgumentNullException(nameof(info));
+                throw new ArgumentNullException(nameof(member));
             }
 
-            return info.IsDefined(typeof(T));
+            return member.IsDefined(typeof(T));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean IsDefined<T>(this MemberInfo info, Boolean inherit) where T : Attribute
+        public static Boolean IsDefined<T>(this MemberInfo member, Boolean inherit) where T : Attribute
         {
-            if (info is null)
+            if (member is null)
             {
-                throw new ArgumentNullException(nameof(info));
+                throw new ArgumentNullException(nameof(member));
             }
 
-            return info.IsDefined(typeof(T), inherit);
-        }
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean IsAbstract(this MemberInfo info)
-        {
-            if (info is null)
-            {
-                throw new ArgumentNullException(nameof(info));
-            }
-            
-            return Initializer.Initializer.ReflectionUtilities.IsAbstract(info);
+            return member.IsDefined(typeof(T), inherit);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean IsAbstract(this PropertyInfo info)
+        public static Boolean IsAbstract(this MemberInfo member)
         {
-            if (info is null)
+            if (member is null)
             {
-                throw new ArgumentNullException(nameof(info));
+                throw new ArgumentNullException(nameof(member));
             }
             
-            return Initializer.Initializer.ReflectionUtilities.IsAbstract(info);
+            return Initializer.Initializer.ReflectionUtilities.IsAbstract(member);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean IsAbstract(this EventInfo info)
+        public static Boolean IsAbstract(this PropertyInfo property)
         {
-            if (info is null)
+            if (property is null)
             {
-                throw new ArgumentNullException(nameof(info));
+                throw new ArgumentNullException(nameof(property));
             }
             
-            return Initializer.Initializer.ReflectionUtilities.IsAbstract(info);
+            return Initializer.Initializer.ReflectionUtilities.IsAbstract(property);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsAbstract(this EventInfo @event)
+        {
+            if (@event is null)
+            {
+                throw new ArgumentNullException(nameof(@event));
+            }
+            
+            return Initializer.Initializer.ReflectionUtilities.IsAbstract(@event);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean HasAttribute<T>(this MemberInfo info) where T : Attribute
+        public static Boolean HasAttribute<T>(this MemberInfo member) where T : Attribute
         {
-            if (info is null)
+            if (member is null)
             {
-                throw new ArgumentNullException(nameof(info));
+                throw new ArgumentNullException(nameof(member));
             }
 
-            return info.GetCustomAttribute<T>() is not null;
+            return member.GetCustomAttribute<T>() is not null;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean HasAttribute<T>(this MemberInfo info, Boolean inherit) where T : Attribute
+        public static Boolean HasAttribute<T>(this MemberInfo member, Boolean inherit) where T : Attribute
         {
-            if (info is null)
+            if (member is null)
             {
-                throw new ArgumentNullException(nameof(info));
+                throw new ArgumentNullException(nameof(member));
             }
 
-            return info.GetCustomAttribute<T>(inherit) is not null;
+            return member.GetCustomAttribute<T>(inherit) is not null;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean HasAttribute(this MemberInfo info, Type attribute)
+        public static Boolean HasAttribute(this MemberInfo member, Type attribute)
         {
-            if (info is null)
+            if (member is null)
             {
-                throw new ArgumentNullException(nameof(info));
+                throw new ArgumentNullException(nameof(member));
             }
 
             if (attribute is null)
@@ -1004,15 +1022,15 @@ namespace NetExtender.Utilities.Core
                 throw new ArgumentNullException(nameof(attribute));
             }
 
-            return info.GetCustomAttribute(attribute) is not null;
+            return member.GetCustomAttribute(attribute) is not null;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean HasAttribute(this MemberInfo info, Type attribute, Boolean inherit)
+        public static Boolean HasAttribute(this MemberInfo member, Type attribute, Boolean inherit)
         {
-            if (info is null)
+            if (member is null)
             {
-                throw new ArgumentNullException(nameof(info));
+                throw new ArgumentNullException(nameof(member));
             }
 
             if (attribute is null)
@@ -1020,51 +1038,51 @@ namespace NetExtender.Utilities.Core
                 throw new ArgumentNullException(nameof(attribute));
             }
 
-            return info.GetCustomAttribute(attribute, inherit) is not null;
+            return member.GetCustomAttribute(attribute, inherit) is not null;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T? GetCustomAttribute<T>(this MemberInfo info) where T : Attribute
+        public static T? GetCustomAttribute<T>(this MemberInfo member) where T : Attribute
         {
-            if (info is null)
+            if (member is null)
             {
-                throw new ArgumentNullException(nameof(info));
+                throw new ArgumentNullException(nameof(member));
             }
 
-            return info.GetCustomAttribute(typeof(T)) as T;
+            return member.GetCustomAttribute(typeof(T)) as T;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T? GetCustomAttribute<T>(this MemberInfo info, Boolean inherit) where T : Attribute
+        public static T? GetCustomAttribute<T>(this MemberInfo member, Boolean inherit) where T : Attribute
         {
-            if (info is null)
+            if (member is null)
             {
-                throw new ArgumentNullException(nameof(info));
+                throw new ArgumentNullException(nameof(member));
             }
 
-            return info.GetCustomAttribute(typeof(T), inherit) as T;
+            return member.GetCustomAttribute(typeof(T), inherit) as T;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IEnumerable<T> GetCustomAttributes<T>(this MemberInfo info) where T : Attribute
+        public static IEnumerable<T> GetCustomAttributes<T>(this MemberInfo member) where T : Attribute
         {
-            if (info is null)
+            if (member is null)
             {
-                throw new ArgumentNullException(nameof(info));
+                throw new ArgumentNullException(nameof(member));
             }
 
-            return info.GetCustomAttributes(typeof(T)).OfType<T>();
+            return member.GetCustomAttributes(typeof(T)).OfType<T>();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IEnumerable<T> GetCustomAttributes<T>(this MemberInfo info, Boolean inherit) where T : Attribute
+        public static IEnumerable<T> GetCustomAttributes<T>(this MemberInfo member, Boolean inherit) where T : Attribute
         {
-            if (info is null)
+            if (member is null)
             {
-                throw new ArgumentNullException(nameof(info));
+                throw new ArgumentNullException(nameof(member));
             }
 
-            return info.GetCustomAttributes(typeof(T), inherit).OfType<T>();
+            return member.GetCustomAttributes(typeof(T), inherit).OfType<T>();
         }
         
         public static List<Object> FilterOnBrowsableAttribute<T>(T source) where T : IEnumerable
@@ -2272,18 +2290,18 @@ namespace NetExtender.Utilities.Core
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Type MemberType(this MemberInfo info)
+        public static Type MemberType(this MemberInfo member)
         {
-            if (info is null)
+            if (member is null)
             {
-                throw new ArgumentNullException(nameof(info));
+                throw new ArgumentNullException(nameof(member));
             }
 
-            return info switch
+            return member switch
             {
                 FieldInfo field => field.FieldType,
                 PropertyInfo property => property.PropertyType,
-                _ => throw new ArgumentException($"Member {info.GetType().Name} is not {nameof(FieldInfo)} or {nameof(PropertyInfo)}")
+                _ => throw new ArgumentException($"Member {member.GetType().Name} is not {nameof(FieldInfo)} or {nameof(PropertyInfo)}")
             };
         }
 
@@ -3687,6 +3705,39 @@ namespace NetExtender.Utilities.Core
             return assembly.GetSafeTypes().Where(static type => type.IsInterface);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Boolean HasName(this MemberInfo member, String? name)
+        {
+            if (member is null)
+            {
+                throw new ArgumentNullException(nameof(member));
+            }
+
+            if (String.IsNullOrEmpty(name))
+            {
+                return false;
+            }
+
+            if (member.Name == name)
+            {
+                return true;
+            }
+
+            if (member.Name.Length < name.Length)
+            {
+                return false;
+            }
+
+            Int32 index = member.Name.Length - name.Length - 1;
+
+            if (index >= 0 && member.Name[index] == '.')
+            {
+                return member.Name.EndsWith(name, StringComparison.Ordinal);
+            }
+
+            return false;
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String Name(this Assembly assembly)
         {
@@ -4272,6 +4323,12 @@ namespace NetExtender.Utilities.Core
             return new StackFrame(2, false).GetMethod()?.DeclaringType;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static PropertyInfo? GetProperty(this Type type, String name, BindingFlags binding, Type? returnType)
+        {
+            return type is not null ? type.GetProperty(name, binding, null, returnType, Type.EmptyTypes, null) : throw new ArgumentNullException(nameof(type));
+        }
+
         /// <summary>
         /// Returns all the public properties of this object whose property type is <typeparamref name="T"/>.
         /// </summary>
@@ -4704,14 +4761,14 @@ namespace NetExtender.Utilities.Core
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean IsIndexer(this PropertyInfo info)
+        public static Boolean IsIndexer(this PropertyInfo property)
         {
-            if (info is null)
+            if (property is null)
             {
-                throw new ArgumentNullException(nameof(info));
+                throw new ArgumentNullException(nameof(property));
             }
 
-            return info.GetIndexParameters().Length > 0;
+            return property.GetIndexParameters().Length > 0;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -4753,19 +4810,19 @@ namespace NetExtender.Utilities.Core
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static MethodVisibilityType IsRead(this PropertyInfo info)
+        public static MethodVisibilityType IsRead(this PropertyInfo property)
         {
-            if (info is null)
+            if (property is null)
             {
-                throw new ArgumentNullException(nameof(info));
+                throw new ArgumentNullException(nameof(property));
             }
 
-            if (!info.CanRead)
+            if (!property.CanRead)
             {
                 return MethodVisibilityType.Unavailable;
             }
 
-            return info.GetMethod?.IsPublic switch
+            return property.GetMethod?.IsPublic switch
             {
                 null => MethodVisibilityType.Unavailable,
                 false => MethodVisibilityType.Private,
@@ -4774,19 +4831,19 @@ namespace NetExtender.Utilities.Core
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static MethodVisibilityType IsWrite(this PropertyInfo info)
+        public static MethodVisibilityType IsWrite(this PropertyInfo property)
         {
-            if (info is null)
+            if (property is null)
             {
-                throw new ArgumentNullException(nameof(info));
+                throw new ArgumentNullException(nameof(property));
             }
 
-            if (!info.CanWrite)
+            if (!property.CanWrite)
             {
                 return MethodVisibilityType.Unavailable;
             }
 
-            return info.SetMethod?.IsPublic switch
+            return property.SetMethod?.IsPublic switch
             {
                 null => MethodVisibilityType.Unavailable,
                 false => MethodVisibilityType.Private,

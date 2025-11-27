@@ -71,24 +71,24 @@ namespace NetExtender.Domains
             return !(first == second);
         }
 
-        public static Boolean operator >(ApplicationVersion first, ApplicationVersion second)
-        {
-            return first.CompareTo(second) > 0;
-        }
-
         public static Boolean operator <(ApplicationVersion first, ApplicationVersion second)
         {
             return first.CompareTo(second) < 0;
         }
 
-        public static Boolean operator >=(ApplicationVersion first, ApplicationVersion second)
-        {
-            return first.CompareTo(second) >= 0;
-        }
-
         public static Boolean operator <=(ApplicationVersion first, ApplicationVersion second)
         {
             return first.CompareTo(second) <= 0;
+        }
+
+        public static Boolean operator >(ApplicationVersion first, ApplicationVersion second)
+        {
+            return first.CompareTo(second) > 0;
+        }
+
+        public static Boolean operator >=(ApplicationVersion first, ApplicationVersion second)
+        {
+            return first.CompareTo(second) >= 0;
         }
 
         public UInt32 Major { get; }

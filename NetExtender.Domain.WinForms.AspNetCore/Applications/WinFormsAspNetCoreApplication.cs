@@ -14,7 +14,7 @@ using NetExtender.Domains.WinForms.Applications;
 
 namespace NetExtender.Domains.WinForms.AspNetCore.Applications
 {
-    public class WinFormsAspNetCoreApplicationAbstraction<THost> : WinFormsApplication where THost : class
+    public class WinFormsAspNetCoreApplicationBase<THost> : WinFormsApplication where THost : class
     {
         protected IAspNetCoreApplicationServer<THost>? Server { get; set; }
         
@@ -30,7 +30,7 @@ namespace NetExtender.Domains.WinForms.AspNetCore.Applications
                 throw new ArgumentNullException(nameof(host));
             }
 
-            return AspNetCoreApplicationServerAbstraction<T>.Create(host);
+            return AspNetCoreApplicationServerBase<T>.Create(host);
         }
 
         public override Task<IApplication> RunAsync(CancellationToken token)
@@ -75,11 +75,11 @@ namespace NetExtender.Domains.WinForms.AspNetCore.Applications
         }
     }
     
-    public class WinFormsAspNetCoreApplication : WinFormsAspNetCoreApplicationAbstraction<IHost>
+    public class WinFormsAspNetCoreApplication : WinFormsAspNetCoreApplicationBase<IHost>
     {
     }
     
-    public class WinFormsAspNetCoreWebApplication : WinFormsAspNetCoreApplicationAbstraction<IWebHost>
+    public class WinFormsAspNetCoreWebApplication : WinFormsAspNetCoreApplicationBase<IWebHost>
     {
     }
 }

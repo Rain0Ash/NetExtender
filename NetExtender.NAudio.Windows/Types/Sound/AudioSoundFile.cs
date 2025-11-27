@@ -8,7 +8,7 @@ using NetExtender.NAudio.Types.Providers;
 
 namespace NetExtender.NAudio.Types.Sound
 {
-    public class AudioSoundFile : AudioSoundFileAbstraction, IDisposable
+    public class AudioSoundFile : AudioSoundFileBase, IDisposable
     {
         private AudioFileReader? _reader;
         protected AudioFileReader Reader

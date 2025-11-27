@@ -11,6 +11,6 @@ namespace NetExtender.UserInterface.WindowsPresentation.Localization.Types.Contr
     [ReflectionNaming(typeof(LocalizationBinding))]
     public abstract class LocalizationUserControl : DependencyUserControl
     {
-        public abstract LocalizationInitializerAbstraction Localization { get; }
+        public abstract LocalizationInitializerBase Localization { get; }
     }
 }

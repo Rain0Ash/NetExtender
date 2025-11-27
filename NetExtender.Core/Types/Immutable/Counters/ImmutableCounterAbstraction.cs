@@ -14,7 +14,7 @@ using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Immutable.Counters
 {
-    public abstract class ImmutableCounterAbstraction<T, TCount, TCounter> : CounterAbstraction<TCount>, IImmutableCounter<T, TCount> where T : notnull where TCount : unmanaged, IConvertible where TCounter : class, IImmutableCounter<T, TCount>
+    public abstract class ImmutableCounterBase<T, TCount, TCounter> : CounterBase<TCount>, IImmutableCounter<T, TCount> where T : notnull where TCount : unmanaged, IConvertible where TCounter : class, IImmutableCounter<T, TCount>
     {
         protected abstract IImmutableDictionary<T, TCount> Internal { get; }
 

@@ -17,7 +17,7 @@ namespace NetExtender.AspNetCore.Identity
     public abstract class IdentityUserService<TId, TUser, TRole> : IUnsafeIdentityUserService<TId, TUser, TRole> where TId : struct, IEquatable<TId> where TUser : class, IUserInfo<TId, TRole>, new() where TRole : IEquatable<TRole>
     {
         private ImmutableHashSet<TRole> NoUserRole { get; }
-        
+
         ImmutableHashSet<TRole> IUnsafeIdentityUserService<TId, TUser, TRole>.NoUserRole
         {
             get
@@ -82,7 +82,7 @@ namespace NetExtender.AspNetCore.Identity
         {
             return new TUser { Service = this };
         }
-        
+
         public virtual Boolean HasAccess(TRole? role)
         {
             return role is not null ? Roles.Contains(role) : ReferenceEquals(Roles, NoUserRole);
@@ -114,25 +114,25 @@ namespace NetExtender.AspNetCore.Identity
         {
             return Id is { } id ? FindAsync(id, token) : ValueTask.FromResult(default(TUser));
         }
-        
+
         public abstract ValueTask<TUser?> FindAsync(TId id, CancellationToken token);
-        
+
         public abstract TUser? Find(String login);
 
         public ValueTask<TUser?> FindAsync(String login)
         {
             return FindAsync(login, CancellationToken.None);
         }
-        
+
         public abstract ValueTask<TUser?> FindAsync(String login, CancellationToken token);
-        
+
         public abstract TUser? Find(MailAddress address);
 
         public ValueTask<TUser?> FindAsync(MailAddress address)
         {
             return FindAsync(address, CancellationToken.None);
         }
-        
+
         public abstract ValueTask<TUser?> FindAsync(MailAddress address, CancellationToken token);
 
         public abstract TUser? FromContext(HttpContext context);

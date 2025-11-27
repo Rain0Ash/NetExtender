@@ -15,7 +15,7 @@ using NetExtender.Types.Strings.Interfaces;
 
 namespace NetExtender.Localization.Properties
 {
-    public abstract class LocalizationPropertyInfo : LocalizationPropertyInfoAbstraction<ILocalizationString?>
+    public abstract class LocalizationPropertyInfo : LocalizationPropertyInfoBase<ILocalizationString?>
     {
         protected LocalizationPropertyInfo(String? key, ILocalizationString? alternate, ConfigPropertyOptions options, IEnumerable<String>? sections)
             : base(key, alternate, options, sections)
@@ -23,7 +23,7 @@ namespace NetExtender.Localization.Properties
         }
     }
 
-    public abstract class LocalizationIdentifierPropertyInfo : LocalizationPropertyInfoAbstraction<String?>, ILocalizationIdentifierPropertyInfo
+    public abstract class LocalizationIdentifierPropertyInfo : LocalizationPropertyInfoBase<String?>, ILocalizationIdentifierPropertyInfo
     {
         public abstract event LocalizationValueChangedEventHandler? Changed;
         public sealed override LocalizationIdentifier Identifier { get; }
@@ -35,7 +35,7 @@ namespace NetExtender.Localization.Properties
         }
     }
 
-    public abstract class LocalizationPropertyInfoAbstraction<T> : ConfigPropertyInfo<T>, ILocalizationPropertyInfo where T : class?
+    public abstract class LocalizationPropertyInfoBase<T> : ConfigPropertyInfo<T>, ILocalizationPropertyInfo where T : class?
     {
         public abstract event LocalizationChangedEventHandler? LocalizationChanged;
         public abstract LocalizationIdentifier Identifier { get; }
@@ -101,7 +101,7 @@ namespace NetExtender.Localization.Properties
             }
         }
 
-        protected LocalizationPropertyInfoAbstraction(String? key, T alternate, ConfigPropertyOptions options, IEnumerable<String>? sections)
+        protected LocalizationPropertyInfoBase(String? key, T alternate, ConfigPropertyOptions options, IEnumerable<String>? sections)
             : base(key, alternate, options, sections)
         {
         }

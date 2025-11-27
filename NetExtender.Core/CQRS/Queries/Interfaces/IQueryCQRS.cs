@@ -3,7 +3,7 @@
 
 using NetExtender.CQRS.Interfaces;
 using NetExtender.Types.Enumerables.Interfaces;
-using NetExtender.Types.Monads.Result;
+using NetExtender.Types.Monads;
 
 namespace NetExtender.CQRS.Queries.Interfaces
 {

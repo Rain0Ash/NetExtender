@@ -97,18 +97,6 @@ namespace NetExtender.Types.Numerics
         }
 
         /// <summary>
-        /// Indicates whether a specified <see cref="AngleDegree"/> is greater than another specified <see cref="AngleDegree"/>.
-        /// </summary>
-        /// <param name="first">The first angle to compare.</param>
-        /// <param name="second">The second angle to compare.</param>
-        /// <returns>true if the value of a1 is greater than the value of a2; otherwise, false.</returns>
-        [Pure]
-        public static Boolean operator >(AngleDegree first, AngleDegree second)
-        {
-            return first.Degree > second.Degree;
-        }
-
-        /// <summary>
         /// Indicates whether a specified <see cref="AngleDegree"/> is less than or equal to another specified <see cref="AngleDegree"/>.
         /// </summary>
         /// <param name="first">The first angle to compare.</param>
@@ -118,6 +106,18 @@ namespace NetExtender.Types.Numerics
         public static Boolean operator <=(AngleDegree first, AngleDegree second)
         {
             return first.Degree <= second.Degree;
+        }
+
+        /// <summary>
+        /// Indicates whether a specified <see cref="AngleDegree"/> is greater than another specified <see cref="AngleDegree"/>.
+        /// </summary>
+        /// <param name="first">The first angle to compare.</param>
+        /// <param name="second">The second angle to compare.</param>
+        /// <returns>true if the value of a1 is greater than the value of a2; otherwise, false.</returns>
+        [Pure]
+        public static Boolean operator >(AngleDegree first, AngleDegree second)
+        {
+            return first.Degree > second.Degree;
         }
 
         /// <summary>

@@ -14,7 +14,7 @@ namespace NetExtender.Utilities.Types
 {
     public static partial class EnumerableUtilities
     {
-        public static IEnumerable<T> WhereIs<T, TCheck>(this IEnumerable<T> source)
+        public static IEnumerable<TItem> WhereIs<T, TItem>(this IEnumerable<T> source)
         {
             if (source is null)
             {
@@ -23,9 +23,9 @@ namespace NetExtender.Utilities.Types
 
             foreach (T item in source)
             {
-                if (item is TCheck)
+                if (item is TItem convert)
                 {
-                    yield return item;
+                    yield return convert;
                 }
             }
         }
@@ -210,6 +210,70 @@ namespace NetExtender.Utilities.Types
 
             return source.Where((item, index) => !predicate(selector(item, index), index));
         }
+        
+        public static IEnumerable<T> Where<T, TArgument>(this IEnumerable<T> source, TArgument argument, Func<TArgument, T, Boolean> predicate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            foreach (T item in source)
+            {
+                if (predicate(argument, item))
+                {
+                    yield return item;
+                }
+            }
+        }
+        
+        public static IEnumerable<T> Where<T, TArgument>(this IEnumerable<T> source, TArgument argument, Func<TArgument, T, Int32, Boolean> predicate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            Int32 i = -1;
+            foreach (T item in source)
+            {
+                if (predicate(argument, item, checked(++i)))
+                {
+                    yield return item;
+                }
+            }
+        }
+
+        public static IEnumerable<T> WhereNot<T>(this IEnumerable<T> source, Func<T, Boolean> predicate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            foreach (T item in source)
+            {
+                if (!predicate(item))
+                {
+                    yield return item;
+                }
+            }
+        }
 
         public static IEnumerable<T> WhereNot<T>(this IEnumerable<T> source, Func<T, Int32, Boolean> predicate)
         {
@@ -223,7 +287,57 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(predicate));
             }
 
-            return source.Where((item, index) => !predicate(item, index));
+            Int32 i = -1;
+            foreach (T item in source)
+            {
+                if (!predicate(item, checked(++i)))
+                {
+                    yield return item;
+                }
+            }
+        }
+
+        public static IEnumerable<T> WhereNot<T, TArgument>(this IEnumerable<T> source, TArgument argument, Func<TArgument, T, Boolean> predicate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            foreach (T item in source)
+            {
+                if (!predicate(argument, item))
+                {
+                    yield return item;
+                }
+            }
+        }
+
+        public static IEnumerable<T> WhereNot<T, TArgument>(this IEnumerable<T> source, TArgument argument, Func<TArgument, T, Int32, Boolean> predicate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            Int32 i = -1;
+            foreach (T item in source)
+            {
+                if (!predicate(argument, item, checked(++i)))
+                {
+                    yield return item;
+                }
+            }
         }
 
         public static IEnumerable<T> WhereNotNull<T>(this IEnumerable<T?> source)
@@ -297,6 +411,36 @@ namespace NetExtender.Utilities.Types
             return source.WhereNotNull().Where(predicate);
         }
 
+        public static IEnumerable<T> WhereNotNull<T, TArgument>(this IEnumerable<T?> source, TArgument argument, Func<TArgument, T, Boolean> predicate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            return source.WhereNotNull().Where(argument, predicate);
+        }
+
+        public static IEnumerable<T> WhereNotNull<T, TArgument>(this IEnumerable<T?> source, TArgument argument, Func<TArgument, T, Int32, Boolean> predicate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            return source.WhereNotNull().Where(argument, predicate);
+        }
+
         public static IEnumerable<T> WhereIf<T>(this IEnumerable<T> source, Func<T, Boolean> predicate, Boolean condition)
         {
             if (source is null)
@@ -325,6 +469,36 @@ namespace NetExtender.Utilities.Types
             }
 
             return condition ? source.Where(predicate) : source;
+        }
+
+        public static IEnumerable<T> WhereIf<T, TArgument>(this IEnumerable<T> source, TArgument argument, Func<TArgument, T, Boolean> predicate, Boolean condition)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            return condition ? source.Where(argument, predicate) : source;
+        }
+
+        public static IEnumerable<T> WhereIf<T, TArgument>(this IEnumerable<T> source, TArgument argument, Func<TArgument, T, Int32, Boolean> predicate, Boolean condition)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            return condition ? source.Where(argument, predicate) : source;
         }
 
         public static IEnumerable<T> WhereIfNot<T>(this IEnumerable<T> source, Func<T, Boolean> predicate, Boolean condition)
@@ -357,7 +531,7 @@ namespace NetExtender.Utilities.Types
             return condition ? source.WhereNot(predicate) : source;
         }
 
-        public static IEnumerable<T> WhereNot<T>(this IEnumerable<T> source, Func<T, Boolean> predicate)
+        public static IEnumerable<T> WhereIfNot<T, TArgument>(this IEnumerable<T> source, TArgument argument, Func<TArgument, T, Boolean> predicate, Boolean condition)
         {
             if (source is null)
             {
@@ -369,7 +543,22 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(predicate));
             }
 
-            return source.Where(item => !predicate(item));
+            return condition ? source.WhereNot(argument, predicate) : source;
+        }
+
+        public static IEnumerable<T> WhereIfNot<T, TArgument>(this IEnumerable<T> source, TArgument argument, Func<TArgument, T, Int32, Boolean> predicate, Boolean condition)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            return condition ? source.WhereNot(argument, predicate) : source;
         }
 
         public static IEnumerable<T> WhereSame<T>(this IEnumerable<T> source)

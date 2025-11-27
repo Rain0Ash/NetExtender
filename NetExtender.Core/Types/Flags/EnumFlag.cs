@@ -84,14 +84,14 @@ namespace NetExtender.Types.Flags
             return !(first == second);
         }
 
-        public static EnumFlag<T> operator |(EnumFlag<T> first, EnumFlag<T> second)
-        {
-            return new EnumFlag<T>(first.Internal.AsUInt64() | second.Internal.AsUInt64());
-        }
-
         public static EnumFlag<T> operator &(EnumFlag<T> first, EnumFlag<T> second)
         {
             return new EnumFlag<T>(first.Internal.AsUInt64() & second.Internal.AsUInt64());
+        }
+
+        public static EnumFlag<T> operator |(EnumFlag<T> first, EnumFlag<T> second)
+        {
+            return new EnumFlag<T>(first.Internal.AsUInt64() | second.Internal.AsUInt64());
         }
 
         public static EnumFlag<T> operator ^(EnumFlag<T> first, EnumFlag<T> second)

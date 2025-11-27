@@ -3,7 +3,7 @@
 
 namespace NetExtender.Types.Immutable.Bags
 {
-    /*public class ImmutableCompressionBagAbstraction<T, TCount, TBag> : ImmutableCompressionBagAbstraction<TCount>, IList<T>, IList, IImmutableList<T> where T : notnull where TCount : unmanaged, IConvertible
+    /*public class ImmutableCompressionBagBase<T, TCount, TBag> : ImmutableCompressionBagBase<TCount>, IList<T>, IList, IImmutableList<T> where T : notnull where TCount : unmanaged, IConvertible
     {
         protected TCount Value { get; set; }
         public ImmutableSortedDictionary<T, UInt64>? Constraints { get; }
@@ -27,7 +27,7 @@ namespace NetExtender.Types.Immutable.Bags
             public ImmutableSortedDictionary<T, UInt64>.Builder? Constraints { get; set; }
 
 
-            internal Builder(ImmutableCompressionBagAbstraction<,,> map)
+            internal Builder(ImmutableCompressionBagBase<,,> map)
             {
                 if (map is null)
                 {

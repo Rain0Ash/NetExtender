@@ -8,7 +8,7 @@ using Microsoft.Extensions.Hosting;
 
 namespace NetExtender.Domains.WinForms.AspNetCore.Context
 {
-    public abstract class WinFormsAspNetCoreContextAbstraction<T> where T : class
+    public abstract class WinFormsAspNetCoreContextBase<T> where T : class
     {
         public abstract Form? Form { get; }
         public abstract T? Host { get; }
@@ -53,7 +53,7 @@ namespace NetExtender.Domains.WinForms.AspNetCore.Context
         }
     }
     
-    public abstract class WinFormsAspNetCoreContext : WinFormsAspNetCoreContextAbstraction<IHost>
+    public abstract class WinFormsAspNetCoreContext : WinFormsAspNetCoreContextBase<IHost>
     {
     }
     
@@ -90,7 +90,7 @@ namespace NetExtender.Domains.WinForms.AspNetCore.Context
         }
     }
     
-    public abstract class WinFormsAspNetCoreWebContext : WinFormsAspNetCoreContextAbstraction<IWebHost>
+    public abstract class WinFormsAspNetCoreWebContext : WinFormsAspNetCoreContextBase<IWebHost>
     {
     }
     

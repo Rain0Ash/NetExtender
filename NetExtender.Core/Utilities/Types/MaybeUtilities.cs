@@ -13,17 +13,36 @@ namespace NetExtender.Utilities.Types
     {
         public static Type MaybeType { get; } = typeof(Maybe<>);
         public static Type NullMaybeType { get; } = typeof(NullMaybe<>);
+        public static Type WeakMaybeType { get; } = typeof(NullMaybe<>);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Maybe<T> Maybe<T>(this T value)
+        {
+            return new Maybe<T>(value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static NullMaybe<T> NullMaybe<T>(this T value)
+        {
+            return new NullMaybe<T>(value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static WeakMaybe<T> WeakMaybe<T>(this T value) where T : class
+        {
+            return new WeakMaybe<T>(value);
+        }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T? Unwrap<T>(this Maybe<T> maybe)
         {
-            return maybe.HasValue ? maybe.Value : default;
+            return maybe.HasValue ? maybe.Internal : default;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T Unwrap<T>(this Maybe<T> maybe, T alternate)
         {
-            return maybe.HasValue ? maybe.Value : alternate;
+            return maybe.HasValue ? maybe.Internal : alternate;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -34,7 +53,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(alternate));
             }
 
-            return maybe.HasValue ? maybe.Value : alternate();
+            return maybe.HasValue ? maybe.Internal : alternate();
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -42,7 +61,7 @@ namespace NetExtender.Utilities.Types
         {
             if (maybe.HasValue)
             {
-                result = maybe.Value;
+                result = maybe.Internal;
                 return true;
             }
             
@@ -55,7 +74,7 @@ namespace NetExtender.Utilities.Types
         {
             if (maybe.HasValue)
             {
-                result = maybe.Value;
+                result = maybe.Internal;
                 return true;
             }
             
@@ -73,7 +92,7 @@ namespace NetExtender.Utilities.Types
             
             if (maybe.HasValue)
             {
-                result = maybe.Value;
+                result = maybe.Internal;
                 return true;
             }
             
@@ -82,141 +101,51 @@ namespace NetExtender.Utilities.Types
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static async ValueTask<T?> Unwrap<T>(this ValueTask<Maybe<T>> maybe)
+        public static T? Unwrap<T>(this WeakMaybe<T> maybe) where T : class
         {
-            Maybe<T> result = await maybe;
-            return result.Unwrap();
+            return Unwrap(maybe.Maybe);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static async ValueTask<T> Unwrap<T>(this ValueTask<Maybe<T>> maybe, T alternate)
+        public static T Unwrap<T>(this WeakMaybe<T> maybe, T alternate) where T : class
         {
-            Maybe<T> result = await maybe;
-            return result.Unwrap(alternate);
+            return Unwrap(maybe.Maybe, alternate);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static async ValueTask<T> Unwrap<T>(this ValueTask<Maybe<T>> maybe, Func<T> alternate)
+        public static T Unwrap<T>(this WeakMaybe<T> maybe, Func<T> alternate) where T : class
         {
-            if (alternate is null)
-            {
-                throw new ArgumentNullException(nameof(alternate));
-            }
-
-            Maybe<T> result = await maybe;
-            return result.Unwrap(alternate);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static async ValueTask<T> Unwrap<T>(this ValueTask<Maybe<T>> maybe, Func<ValueTask<T>> alternate)
-        {
-            if (alternate is null)
-            {
-                throw new ArgumentNullException(nameof(alternate));
-            }
-
-            Maybe<T> result = await maybe;
-            return result.HasValue ? result.Value : await alternate();
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static async ValueTask<T> Unwrap<T>(this ValueTask<Maybe<T>> maybe, Func<Task<T>> alternate)
-        {
-            if (alternate is null)
-            {
-                throw new ArgumentNullException(nameof(alternate));
-            }
-
-            Maybe<T> result = await maybe;
-            return result.HasValue ? result.Value : await alternate();
+            return Unwrap(maybe.Maybe, alternate);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static async ValueTask<T?> Unwrap<T>(this ConfiguredValueTaskAwaitable<Maybe<T>> maybe)
+        public static Boolean Unwrap<T>(this WeakMaybe<T> maybe, [MaybeNullWhen(false)] out T result) where T : class
         {
-            Maybe<T> result = await maybe;
-            return result.Unwrap();
+            return Unwrap(maybe.Maybe, out result);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static async ValueTask<T> Unwrap<T>(this ConfiguredValueTaskAwaitable<Maybe<T>> maybe, T alternate)
+        public static Boolean Unwrap<T>(this WeakMaybe<T> maybe, T alternate, [MaybeNullWhen(false)] out T result) where T : class
         {
-            Maybe<T> result = await maybe;
-            return result.Unwrap(alternate);
+            return Unwrap(maybe.Maybe, alternate, out result);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static async ValueTask<T> Unwrap<T>(this ConfiguredValueTaskAwaitable<Maybe<T>> maybe, Func<T> alternate)
+        public static Boolean Unwrap<T>(this WeakMaybe<T> maybe, Func<T> alternate, [MaybeNullWhen(false)] out T result) where T : class
         {
-            if (alternate is null)
-            {
-                throw new ArgumentNullException(nameof(alternate));
-            }
-
-            Maybe<T> result = await maybe;
-            return result.Unwrap(alternate);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static async ValueTask<T> Unwrap<T>(this ConfiguredValueTaskAwaitable<Maybe<T>> maybe, Func<ValueTask<T>> alternate)
-        {
-            if (alternate is null)
-            {
-                throw new ArgumentNullException(nameof(alternate));
-            }
-
-            Maybe<T> result = await maybe;
-            return result.HasValue ? result.Value : await alternate();
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static async ValueTask<T> Unwrap<T>(this ConfiguredValueTaskAwaitable<Maybe<T>> maybe, Func<ConfiguredValueTaskAwaitable<T>> alternate)
-        {
-            if (alternate is null)
-            {
-                throw new ArgumentNullException(nameof(alternate));
-            }
-
-            Maybe<T> result = await maybe;
-            return result.HasValue ? result.Value : await alternate();
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static async ValueTask<T> Unwrap<T>(this ConfiguredValueTaskAwaitable<Maybe<T>> maybe, Func<Task<T>> alternate)
-        {
-            if (alternate is null)
-            {
-                throw new ArgumentNullException(nameof(alternate));
-            }
-
-            Maybe<T> result = await maybe;
-            return result.HasValue ? result.Value : await alternate();
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static async ValueTask<T> Unwrap<T>(this ConfiguredValueTaskAwaitable<Maybe<T>> maybe, Func<ConfiguredTaskAwaitable<T>> alternate)
-        {
-            if (alternate is null)
-            {
-                throw new ArgumentNullException(nameof(alternate));
-            }
-
-            Maybe<T> result = await maybe;
-            return result.HasValue ? result.Value : await alternate();
+            return Unwrap(maybe.Maybe, alternate, out result);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static async ValueTask<T?> Unwrap<T>(this Task<Maybe<T>> maybe)
         {
-            Maybe<T> result = await maybe;
-            return result.Unwrap();
+            return Unwrap(await maybe);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static async ValueTask<T> Unwrap<T>(this Task<Maybe<T>> maybe, T alternate)
         {
-            Maybe<T> result = await maybe;
-            return result.Unwrap(alternate);
+            return Unwrap(await maybe, alternate);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -227,20 +156,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(alternate));
             }
 
-            Maybe<T> result = await maybe;
-            return result.Unwrap(alternate);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static async ValueTask<T> Unwrap<T>(this Task<Maybe<T>> maybe, Func<ValueTask<T>> alternate)
-        {
-            if (alternate is null)
-            {
-                throw new ArgumentNullException(nameof(alternate));
-            }
-
-            Maybe<T> result = await maybe;
-            return result.HasValue ? result.Value : await alternate();
+            return Unwrap(await maybe, alternate);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -251,22 +167,119 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(alternate));
             }
 
-            Maybe<T> result = await maybe;
-            return result.HasValue ? result.Value : await alternate();
+            return Unwrap(await maybe, out T? result) ? result : await alternate();
         }
-        
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static async ValueTask<T> Unwrap<T>(this Task<Maybe<T>> maybe, Func<ConfiguredTaskAwaitable<T>> alternate)
+        {
+            if (alternate is null)
+            {
+                throw new ArgumentNullException(nameof(alternate));
+            }
+
+            return Unwrap(await maybe, out T? result) ? result : await alternate();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static async ValueTask<T> Unwrap<T>(this Task<Maybe<T>> maybe, Func<ValueTask<T>> alternate)
+        {
+            if (alternate is null)
+            {
+                throw new ArgumentNullException(nameof(alternate));
+            }
+
+            return Unwrap(await maybe, out T? result) ? result : await alternate();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static async ValueTask<T> Unwrap<T>(this Task<Maybe<T>> maybe, Func<ConfiguredValueTaskAwaitable<T>> alternate)
+        {
+            if (alternate is null)
+            {
+                throw new ArgumentNullException(nameof(alternate));
+            }
+
+            return Unwrap(await maybe, out T? result) ? result : await alternate();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static async ValueTask<T?> Unwrap<T>(this Task<WeakMaybe<T>> maybe) where T : class
+        {
+            return Unwrap(await maybe);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static async ValueTask<T> Unwrap<T>(this Task<WeakMaybe<T>> maybe, T alternate) where T : class
+        {
+            return Unwrap(await maybe, alternate);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static async ValueTask<T> Unwrap<T>(this Task<WeakMaybe<T>> maybe, Func<T> alternate) where T : class
+        {
+            if (alternate is null)
+            {
+                throw new ArgumentNullException(nameof(alternate));
+            }
+
+            return Unwrap(await maybe, alternate);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static async ValueTask<T> Unwrap<T>(this Task<WeakMaybe<T>> maybe, Func<Task<T>> alternate) where T : class
+        {
+            if (alternate is null)
+            {
+                throw new ArgumentNullException(nameof(alternate));
+            }
+
+            return Unwrap(await maybe, out T? result) ? result : await alternate();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static async ValueTask<T> Unwrap<T>(this Task<WeakMaybe<T>> maybe, Func<ConfiguredTaskAwaitable<T>> alternate) where T : class
+        {
+            if (alternate is null)
+            {
+                throw new ArgumentNullException(nameof(alternate));
+            }
+
+            return Unwrap(await maybe, out T? result) ? result : await alternate();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static async ValueTask<T> Unwrap<T>(this Task<WeakMaybe<T>> maybe, Func<ValueTask<T>> alternate) where T : class
+        {
+            if (alternate is null)
+            {
+                throw new ArgumentNullException(nameof(alternate));
+            }
+
+            return Unwrap(await maybe, out T? result) ? result : await alternate();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static async ValueTask<T> Unwrap<T>(this Task<WeakMaybe<T>> maybe, Func<ConfiguredValueTaskAwaitable<T>> alternate) where T : class
+        {
+            if (alternate is null)
+            {
+                throw new ArgumentNullException(nameof(alternate));
+            }
+
+            return Unwrap(await maybe, out T? result) ? result : await alternate();
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static async ValueTask<T?> Unwrap<T>(this ConfiguredTaskAwaitable<Maybe<T>> maybe)
         {
-            Maybe<T> result = await maybe;
-            return result.Unwrap();
+            return Unwrap(await maybe);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static async ValueTask<T> Unwrap<T>(this ConfiguredTaskAwaitable<Maybe<T>> maybe, T alternate)
         {
-            Maybe<T> result = await maybe;
-            return result.Unwrap(alternate);
+            return Unwrap(await maybe, alternate);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -277,32 +290,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(alternate));
             }
 
-            Maybe<T> result = await maybe;
-            return result.Unwrap(alternate);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static async ValueTask<T> Unwrap<T>(this ConfiguredTaskAwaitable<Maybe<T>> maybe, Func<ValueTask<T>> alternate)
-        {
-            if (alternate is null)
-            {
-                throw new ArgumentNullException(nameof(alternate));
-            }
-
-            Maybe<T> result = await maybe;
-            return result.HasValue ? result.Value : await alternate();
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static async ValueTask<T> Unwrap<T>(this ConfiguredTaskAwaitable<Maybe<T>> maybe, Func<ConfiguredValueTaskAwaitable<T>> alternate)
-        {
-            if (alternate is null)
-            {
-                throw new ArgumentNullException(nameof(alternate));
-            }
-
-            Maybe<T> result = await maybe;
-            return result.HasValue ? result.Value : await alternate();
+            return Unwrap(await maybe, alternate);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -313,8 +301,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(alternate));
             }
 
-            Maybe<T> result = await maybe;
-            return result.HasValue ? result.Value : await alternate();
+            return Unwrap(await maybe, out T? result) ? result : await alternate();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -325,8 +312,364 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(alternate));
             }
 
-            Maybe<T> result = await maybe;
-            return result.HasValue ? result.Value : await alternate();
+            return Unwrap(await maybe, out T? result) ? result : await alternate();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static async ValueTask<T> Unwrap<T>(this ConfiguredTaskAwaitable<Maybe<T>> maybe, Func<ValueTask<T>> alternate)
+        {
+            if (alternate is null)
+            {
+                throw new ArgumentNullException(nameof(alternate));
+            }
+
+            return Unwrap(await maybe, out T? result) ? result : await alternate();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static async ValueTask<T> Unwrap<T>(this ConfiguredTaskAwaitable<Maybe<T>> maybe, Func<ConfiguredValueTaskAwaitable<T>> alternate)
+        {
+            if (alternate is null)
+            {
+                throw new ArgumentNullException(nameof(alternate));
+            }
+
+            return Unwrap(await maybe, out T? result) ? result : await alternate();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static async ValueTask<T?> Unwrap<T>(this ConfiguredTaskAwaitable<WeakMaybe<T>> maybe) where T : class
+        {
+            return Unwrap(await maybe);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static async ValueTask<T> Unwrap<T>(this ConfiguredTaskAwaitable<WeakMaybe<T>> maybe, T alternate) where T : class
+        {
+            return Unwrap(await maybe, alternate);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static async ValueTask<T> Unwrap<T>(this ConfiguredTaskAwaitable<WeakMaybe<T>> maybe, Func<T> alternate) where T : class
+        {
+            if (alternate is null)
+            {
+                throw new ArgumentNullException(nameof(alternate));
+            }
+
+            return Unwrap(await maybe, alternate);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static async ValueTask<T> Unwrap<T>(this ConfiguredTaskAwaitable<WeakMaybe<T>> maybe, Func<Task<T>> alternate) where T : class
+        {
+            if (alternate is null)
+            {
+                throw new ArgumentNullException(nameof(alternate));
+            }
+
+            return Unwrap(await maybe, out T? result) ? result : await alternate();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static async ValueTask<T> Unwrap<T>(this ConfiguredTaskAwaitable<WeakMaybe<T>> maybe, Func<ConfiguredTaskAwaitable<T>> alternate) where T : class
+        {
+            if (alternate is null)
+            {
+                throw new ArgumentNullException(nameof(alternate));
+            }
+
+            return Unwrap(await maybe, out T? result) ? result : await alternate();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static async ValueTask<T> Unwrap<T>(this ConfiguredTaskAwaitable<WeakMaybe<T>> maybe, Func<ValueTask<T>> alternate) where T : class
+        {
+            if (alternate is null)
+            {
+                throw new ArgumentNullException(nameof(alternate));
+            }
+
+            return Unwrap(await maybe, out T? result) ? result : await alternate();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static async ValueTask<T> Unwrap<T>(this ConfiguredTaskAwaitable<WeakMaybe<T>> maybe, Func<ConfiguredValueTaskAwaitable<T>> alternate) where T : class
+        {
+            if (alternate is null)
+            {
+                throw new ArgumentNullException(nameof(alternate));
+            }
+
+            return Unwrap(await maybe, out T? result) ? result : await alternate();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static async ValueTask<T?> Unwrap<T>(this ValueTask<Maybe<T>> maybe)
+        {
+            return Unwrap(await maybe);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static async ValueTask<T> Unwrap<T>(this ValueTask<Maybe<T>> maybe, T alternate)
+        {
+            return Unwrap(await maybe, alternate);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static async ValueTask<T> Unwrap<T>(this ValueTask<Maybe<T>> maybe, Func<T> alternate)
+        {
+            if (alternate is null)
+            {
+                throw new ArgumentNullException(nameof(alternate));
+            }
+
+            return Unwrap(await maybe, alternate);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static async ValueTask<T> Unwrap<T>(this ValueTask<Maybe<T>> maybe, Func<Task<T>> alternate)
+        {
+            if (alternate is null)
+            {
+                throw new ArgumentNullException(nameof(alternate));
+            }
+
+            return Unwrap(await maybe, out T? result) ? result : await alternate();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static async ValueTask<T> Unwrap<T>(this ValueTask<Maybe<T>> maybe, Func<ConfiguredTaskAwaitable<T>> alternate)
+        {
+            if (alternate is null)
+            {
+                throw new ArgumentNullException(nameof(alternate));
+            }
+
+            return Unwrap(await maybe, out T? result) ? result : await alternate();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static async ValueTask<T> Unwrap<T>(this ValueTask<Maybe<T>> maybe, Func<ValueTask<T>> alternate)
+        {
+            if (alternate is null)
+            {
+                throw new ArgumentNullException(nameof(alternate));
+            }
+
+            return Unwrap(await maybe, out T? result) ? result : await alternate();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static async ValueTask<T> Unwrap<T>(this ValueTask<Maybe<T>> maybe, Func<ConfiguredValueTaskAwaitable<T>> alternate)
+        {
+            if (alternate is null)
+            {
+                throw new ArgumentNullException(nameof(alternate));
+            }
+
+            return Unwrap(await maybe, out T? result) ? result : await alternate();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static async ValueTask<T?> Unwrap<T>(this ValueTask<WeakMaybe<T>> maybe) where T : class
+        {
+            return Unwrap(await maybe);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static async ValueTask<T> Unwrap<T>(this ValueTask<WeakMaybe<T>> maybe, T alternate) where T : class
+        {
+            return Unwrap(await maybe, alternate);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static async ValueTask<T> Unwrap<T>(this ValueTask<WeakMaybe<T>> maybe, Func<T> alternate) where T : class
+        {
+            if (alternate is null)
+            {
+                throw new ArgumentNullException(nameof(alternate));
+            }
+
+            return Unwrap(await maybe, alternate);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static async ValueTask<T> Unwrap<T>(this ValueTask<WeakMaybe<T>> maybe, Func<Task<T>> alternate) where T : class
+        {
+            if (alternate is null)
+            {
+                throw new ArgumentNullException(nameof(alternate));
+            }
+
+            return Unwrap(await maybe, out T? result) ? result : await alternate();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static async ValueTask<T> Unwrap<T>(this ValueTask<WeakMaybe<T>> maybe, Func<ConfiguredTaskAwaitable<T>> alternate) where T : class
+        {
+            if (alternate is null)
+            {
+                throw new ArgumentNullException(nameof(alternate));
+            }
+
+            return Unwrap(await maybe, out T? result) ? result : await alternate();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static async ValueTask<T> Unwrap<T>(this ValueTask<WeakMaybe<T>> maybe, Func<ValueTask<T>> alternate) where T : class
+        {
+            if (alternate is null)
+            {
+                throw new ArgumentNullException(nameof(alternate));
+            }
+
+            return Unwrap(await maybe, out T? result) ? result : await alternate();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static async ValueTask<T> Unwrap<T>(this ValueTask<WeakMaybe<T>> maybe, Func<ConfiguredValueTaskAwaitable<T>> alternate) where T : class
+        {
+            if (alternate is null)
+            {
+                throw new ArgumentNullException(nameof(alternate));
+            }
+
+            return Unwrap(await maybe, out T? result) ? result : await alternate();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static async ValueTask<T?> Unwrap<T>(this ConfiguredValueTaskAwaitable<Maybe<T>> maybe)
+        {
+            return Unwrap(await maybe);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static async ValueTask<T> Unwrap<T>(this ConfiguredValueTaskAwaitable<Maybe<T>> maybe, T alternate)
+        {
+            return Unwrap(await maybe, alternate);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static async ValueTask<T> Unwrap<T>(this ConfiguredValueTaskAwaitable<Maybe<T>> maybe, Func<T> alternate)
+        {
+            if (alternate is null)
+            {
+                throw new ArgumentNullException(nameof(alternate));
+            }
+
+            return Unwrap(await maybe, alternate);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static async ValueTask<T> Unwrap<T>(this ConfiguredValueTaskAwaitable<Maybe<T>> maybe, Func<Task<T>> alternate)
+        {
+            if (alternate is null)
+            {
+                throw new ArgumentNullException(nameof(alternate));
+            }
+
+            return Unwrap(await maybe, out T? result) ? result : await alternate();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static async ValueTask<T> Unwrap<T>(this ConfiguredValueTaskAwaitable<Maybe<T>> maybe, Func<ConfiguredTaskAwaitable<T>> alternate)
+        {
+            if (alternate is null)
+            {
+                throw new ArgumentNullException(nameof(alternate));
+            }
+
+            return Unwrap(await maybe, out T? result) ? result : await alternate();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static async ValueTask<T> Unwrap<T>(this ConfiguredValueTaskAwaitable<Maybe<T>> maybe, Func<ValueTask<T>> alternate)
+        {
+            if (alternate is null)
+            {
+                throw new ArgumentNullException(nameof(alternate));
+            }
+
+            return Unwrap(await maybe, out T? result) ? result : await alternate();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static async ValueTask<T> Unwrap<T>(this ConfiguredValueTaskAwaitable<Maybe<T>> maybe, Func<ConfiguredValueTaskAwaitable<T>> alternate)
+        {
+            if (alternate is null)
+            {
+                throw new ArgumentNullException(nameof(alternate));
+            }
+
+            return Unwrap(await maybe, out T? result) ? result : await alternate();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static async ValueTask<T?> Unwrap<T>(this ConfiguredValueTaskAwaitable<WeakMaybe<T>> maybe) where T : class
+        {
+            return Unwrap(await maybe);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static async ValueTask<T> Unwrap<T>(this ConfiguredValueTaskAwaitable<WeakMaybe<T>> maybe, T alternate) where T : class
+        {
+            return Unwrap(await maybe, alternate);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static async ValueTask<T> Unwrap<T>(this ConfiguredValueTaskAwaitable<WeakMaybe<T>> maybe, Func<T> alternate) where T : class
+        {
+            if (alternate is null)
+            {
+                throw new ArgumentNullException(nameof(alternate));
+            }
+
+            return Unwrap(await maybe, alternate);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static async ValueTask<T> Unwrap<T>(this ConfiguredValueTaskAwaitable<WeakMaybe<T>> maybe, Func<Task<T>> alternate) where T : class
+        {
+            if (alternate is null)
+            {
+                throw new ArgumentNullException(nameof(alternate));
+            }
+
+            return Unwrap(await maybe, out T? result) ? result : await alternate();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static async ValueTask<T> Unwrap<T>(this ConfiguredValueTaskAwaitable<WeakMaybe<T>> maybe, Func<ConfiguredTaskAwaitable<T>> alternate) where T : class
+        {
+            if (alternate is null)
+            {
+                throw new ArgumentNullException(nameof(alternate));
+            }
+
+            return Unwrap(await maybe, out T? result) ? result : await alternate();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static async ValueTask<T> Unwrap<T>(this ConfiguredValueTaskAwaitable<WeakMaybe<T>> maybe, Func<ValueTask<T>> alternate) where T : class
+        {
+            if (alternate is null)
+            {
+                throw new ArgumentNullException(nameof(alternate));
+            }
+
+            return Unwrap(await maybe, out T? result) ? result : await alternate();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static async ValueTask<T> Unwrap<T>(this ConfiguredValueTaskAwaitable<WeakMaybe<T>> maybe, Func<ConfiguredValueTaskAwaitable<T>> alternate) where T : class
+        {
+            if (alternate is null)
+            {
+                throw new ArgumentNullException(nameof(alternate));
+            }
+
+            return Unwrap(await maybe, out T? result) ? result : await alternate();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -337,7 +680,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(selector));
             }
 
-            return maybe.HasValue ? selector(maybe.Value) : default(Maybe<TResult>);
+            return maybe.HasValue ? selector(maybe.Internal) : default(Maybe<TResult>);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -348,55 +691,19 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(selector));
             }
 
-            return maybe.HasValue ? selector(maybe.Value) : default;
+            return maybe.HasValue ? selector(maybe.Internal) : default;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static async ValueTask<Maybe<TResult>> Bind<T, TResult>(this ValueTask<Maybe<T>> maybe, Func<T, TResult> selector)
+        public static Maybe<TResult> Bind<T, TResult>(this WeakMaybe<T> maybe, Func<T, TResult> selector) where T : class
         {
-            if (selector is null)
-            {
-                throw new ArgumentNullException(nameof(selector));
-            }
-
-            Maybe<T> result = await maybe;
-            return result.HasValue ? selector(result.Value) : default(Maybe<TResult>);
+            return Bind(maybe.Maybe, selector);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static async ValueTask<Maybe<TResult>> Bind<T, TResult>(this ValueTask<Maybe<T>> maybe, Func<T, Maybe<TResult>> selector)
+        public static Maybe<TResult> Bind<T, TResult>(this WeakMaybe<T> maybe, Func<T, Maybe<TResult>> selector) where T : class
         {
-            if (selector is null)
-            {
-                throw new ArgumentNullException(nameof(selector));
-            }
-
-            Maybe<T> result = await maybe;
-            return result.HasValue ? selector(result.Value) : default;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static async ValueTask<Maybe<TResult>> Bind<T, TResult>(this ConfiguredValueTaskAwaitable<Maybe<T>> maybe, Func<T, TResult> selector)
-        {
-            if (selector is null)
-            {
-                throw new ArgumentNullException(nameof(selector));
-            }
-
-            Maybe<T> result = await maybe;
-            return result.HasValue ? selector(result.Value) : default(Maybe<TResult>);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static async ValueTask<Maybe<TResult>> Bind<T, TResult>(this ConfiguredValueTaskAwaitable<Maybe<T>> maybe, Func<T, Maybe<TResult>> selector)
-        {
-            if (selector is null)
-            {
-                throw new ArgumentNullException(nameof(selector));
-            }
-
-            Maybe<T> result = await maybe;
-            return result.HasValue ? selector(result.Value) : default;
+            return Bind(maybe.Maybe, selector);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -407,8 +714,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(selector));
             }
 
-            Maybe<T> result = await maybe;
-            return result.HasValue ? selector(result.Value) : default(Maybe<TResult>);
+            return Bind(await maybe, selector);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -419,8 +725,29 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(selector));
             }
 
-            Maybe<T> result = await maybe;
-            return result.HasValue ? selector(result.Value) : default;
+            return Bind(await maybe, selector);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static async ValueTask<Maybe<TResult>> Bind<T, TResult>(this Task<WeakMaybe<T>> maybe, Func<T, TResult> selector) where T : class
+        {
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return Bind(await maybe, selector);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static async ValueTask<Maybe<TResult>> Bind<T, TResult>(this Task<WeakMaybe<T>> maybe, Func<T, Maybe<TResult>> selector) where T : class
+        {
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return Bind(await maybe, selector);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -431,8 +758,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(selector));
             }
 
-            Maybe<T> result = await maybe;
-            return result.HasValue ? selector(result.Value) : default(Maybe<TResult>);
+            return Bind(await maybe, selector);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -443,8 +769,129 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(selector));
             }
 
-            Maybe<T> result = await maybe;
-            return result.HasValue ? selector(result.Value) : default;
+            return Bind(await maybe, selector);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static async ValueTask<Maybe<TResult>> Bind<T, TResult>(this ConfiguredTaskAwaitable<WeakMaybe<T>> maybe, Func<T, TResult> selector) where T : class
+        {
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return Bind(await maybe, selector);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static async ValueTask<Maybe<TResult>> Bind<T, TResult>(this ConfiguredTaskAwaitable<WeakMaybe<T>> maybe, Func<T, Maybe<TResult>> selector) where T : class
+        {
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return Bind(await maybe, selector);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static async ValueTask<Maybe<TResult>> Bind<T, TResult>(this ValueTask<Maybe<T>> maybe, Func<T, TResult> selector)
+        {
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return Bind(await maybe, selector);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static async ValueTask<Maybe<TResult>> Bind<T, TResult>(this ValueTask<Maybe<T>> maybe, Func<T, Maybe<TResult>> selector)
+        {
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return Bind(await maybe, selector);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static async ValueTask<Maybe<TResult>> Bind<T, TResult>(this ValueTask<WeakMaybe<T>> maybe, Func<T, TResult> selector) where T : class
+        {
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return Bind(await maybe, selector);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static async ValueTask<Maybe<TResult>> Bind<T, TResult>(this ValueTask<WeakMaybe<T>> maybe, Func<T, Maybe<TResult>> selector) where T : class
+        {
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return Bind(await maybe, selector);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static async ValueTask<Maybe<TResult>> Bind<T, TResult>(this ConfiguredValueTaskAwaitable<Maybe<T>> maybe, Func<T, TResult> selector)
+        {
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return Bind(await maybe, selector);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static async ValueTask<Maybe<TResult>> Bind<T, TResult>(this ConfiguredValueTaskAwaitable<Maybe<T>> maybe, Func<T, Maybe<TResult>> selector)
+        {
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return Bind(await maybe, selector);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static async ValueTask<Maybe<TResult>> Bind<T, TResult>(this ConfiguredValueTaskAwaitable<WeakMaybe<T>> maybe, Func<T, TResult> selector) where T : class
+        {
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return Bind(await maybe, selector);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static async ValueTask<Maybe<TResult>> Bind<T, TResult>(this ConfiguredValueTaskAwaitable<WeakMaybe<T>> maybe, Func<T, Maybe<TResult>> selector) where T : class
+        {
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return Bind(await maybe, selector);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Maybe<T> Or<T>(this Maybe<T> maybe, Maybe<T> fallback)
+        {
+            return maybe.HasValue ? maybe : fallback;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Maybe<T> Or<T>(this WeakMaybe<T> maybe, Maybe<T> fallback) where T : class
+        {
+            return Or(maybe.Maybe, fallback);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -458,22 +905,27 @@ namespace NetExtender.Utilities.Types
             return maybe.HasValue ? maybe : fallback.Invoke();
         }
 
-        // ReSharper disable once AsyncConverter.AsyncMethodNamingHighlighting
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static async Task<Maybe<T>> Or<T>(this Maybe<T> maybe, Func<Task<T>> fallback)
+        public static Maybe<T> Or<T>(this WeakMaybe<T> maybe, Func<T> fallback) where T : class
+        {
+            return Or(maybe.Maybe, fallback);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Maybe<T> Or<T>(this Maybe<T> maybe, Func<Maybe<T>> fallback)
         {
             if (fallback is null)
             {
                 throw new ArgumentNullException(nameof(fallback));
             }
 
-            return maybe.HasValue ? maybe : await fallback.Invoke();
+            return maybe.HasValue ? maybe : fallback.Invoke();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Maybe<T> Or<T>(this Maybe<T> maybe, Maybe<T> fallback)
+        public static Maybe<T> Or<T>(this WeakMaybe<T> maybe, Func<Maybe<T>> fallback) where T : class
         {
-            return maybe.HasValue ? maybe : fallback;
+            return Or(maybe.Maybe, fallback);
         }
 
         // ReSharper disable once AsyncConverter.AsyncMethodNamingHighlighting
@@ -489,14 +941,27 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Maybe<T> Or<T>(this Maybe<T> maybe, Func<Maybe<T>> fallback)
+        public static Task<Maybe<T>> Or<T>(this WeakMaybe<T> maybe, Task<Maybe<T>> fallback) where T : class
+        {
+            return Or(maybe.Maybe, fallback);
+        }
+
+        // ReSharper disable once AsyncConverter.AsyncMethodNamingHighlighting
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static async Task<Maybe<T>> Or<T>(this Maybe<T> maybe, Func<Task<T>> fallback)
         {
             if (fallback is null)
             {
                 throw new ArgumentNullException(nameof(fallback));
             }
 
-            return maybe.HasValue ? maybe : fallback.Invoke();
+            return maybe.HasValue ? maybe : await fallback.Invoke();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Task<Maybe<T>> Or<T>(this WeakMaybe<T> maybe, Func<Task<T>> fallback) where T : class
+        {
+            return Or(maybe.Maybe, fallback);
         }
 
         // ReSharper disable once AsyncConverter.AsyncMethodNamingHighlighting
@@ -509,6 +974,12 @@ namespace NetExtender.Utilities.Types
             }
 
             return maybe.HasValue ? maybe : await fallback.Invoke();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Task<Maybe<T>> Or<T>(this WeakMaybe<T> maybe, Func<Task<Maybe<T>>> fallback) where T : class
+        {
+            return Or(maybe.Maybe, fallback);
         }
     }
 }

@@ -6,7 +6,7 @@ using NetExtender.Interfaces;
 
 namespace NetExtender.Types.Monads.Interfaces
 {
-    public interface IMaybe<T> : IMaybe, IMonad<T>, IMaybeEquality<T, T>, IMaybeEquality<T, IMaybe<T>>, IMaybeEquality<T, INullMaybe<T>>, ICloneable<IMaybe<T>>
+    public interface IMaybe<T> : IMaybe, IMonad<T>, IMaybeEquality<T, T>, IMaybeEquality<T, IMaybe<T>>, IMaybeEquality<T, INullMaybe<T>>, IMaybeEquality<T, IWeakMaybe<T>>, ICloneable<IMaybe<T>>
     {
         public new T Value { get; }
 
@@ -17,6 +17,7 @@ namespace NetExtender.Types.Monads.Interfaces
     {
         public Boolean HasValue { get; }
         public Object? Value { get; }
+        public Boolean IsNull { get; }
 
         public new IMaybe Clone();
     }

@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using NetExtender.Types.Monads;
 using NetExtender.Types.Random.Interfaces;
 using NetExtender.Utilities.Numerics;
 
@@ -33,6 +34,48 @@ namespace NetExtender.Utilities.Types
 
             Int64 counter = 0;
             return source.Select(item => (counter++, item));
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<Maybe<T>> Maybe<T>(this IEnumerable<T> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            foreach (T item in source)
+            {
+                yield return item;
+            }
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<NullMaybe<T>> Nullable<T>(this IEnumerable<T> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            foreach (T item in source)
+            {
+                yield return item;
+            }
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<WeakMaybe<T>> Weak<T>(this IEnumerable<T> source) where T : class
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            foreach (T item in source)
+            {
+                yield return item;
+            }
         }
 
         public static IEnumerable<TResult> SelectWhere<T, TResult>(this IEnumerable<T> source, TryParseHandler<T, TResult> selector)

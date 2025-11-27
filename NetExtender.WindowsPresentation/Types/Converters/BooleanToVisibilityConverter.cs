@@ -9,7 +9,7 @@ using System.Windows.Data;
 namespace NetExtender.WindowsPresentation.Types.Converters
 {
     [ValueConversion(typeof(Boolean), typeof(Visibility))]
-    public abstract class BooleanToVisibilityConverterAbstraction : IValueConverter
+    public abstract class BooleanToVisibilityConverterBase : IValueConverter
     {
         protected abstract Visibility Convert(Boolean value);
         protected abstract Boolean Convert(Visibility value);
@@ -53,7 +53,7 @@ namespace NetExtender.WindowsPresentation.Types.Converters
     }
     
     [ValueConversion(typeof(Boolean), typeof(Visibility))]
-    public class BooleanToVisibilityConverter : BooleanToVisibilityConverterAbstraction
+    public class BooleanToVisibilityConverter : BooleanToVisibilityConverterBase
     {
         public static implicit operator BooleanToVisibilityConverter(Boolean collapsed)
         {
@@ -117,7 +117,7 @@ namespace NetExtender.WindowsPresentation.Types.Converters
     }
     
     [ValueConversion(typeof(Boolean), typeof(Visibility))]
-    public class NotBooleanToVisibilityConverter : BooleanToVisibilityConverterAbstraction
+    public class NotBooleanToVisibilityConverter : BooleanToVisibilityConverterBase
     {
         public static implicit operator NotBooleanToVisibilityConverter(Boolean collapsed)
         {

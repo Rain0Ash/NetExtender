@@ -2,7 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
-using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using NetExtender.Interfaces;
 using NetExtender.Types.Exceptions;
@@ -17,6 +17,7 @@ namespace NetExtender.Types.Monads.Interfaces
         public new BusinessException<TBusiness>.BusinessInfo Info { get; }
         public new BusinessException<TBusiness>.BusinessInfo Business { get; }
         
+        public new Boolean Unwrap([MaybeNullWhen(false)] out BusinessException<TBusiness> value);
         public new IBusinessResult<T, TBusiness> Clone();
     }
     
@@ -24,6 +25,7 @@ namespace NetExtender.Types.Monads.Interfaces
     {
         public new BusinessException? Exception { get; }
         
+        public new Boolean Unwrap([MaybeNullWhen(false)] out BusinessException value);
         public new IBusinessResult<T> Clone();
     }
     
@@ -35,13 +37,15 @@ namespace NetExtender.Types.Monads.Interfaces
         public BusinessException.BusinessInfo Info { get; }
         public BusinessException.BusinessInfo Business { get; }
         
+        public Boolean Unwrap([MaybeNullWhen(false)] out BusinessException value);
         public new IBusinessResult Clone();
     }
     
-    public interface IResult<T, out TException> : IResult<T>, ICloneable<IResult<T, TException>> where TException : Exception
+    public interface IResult<T, TException> : IResult<T>, ICloneable<IResult<T, TException>> where TException : Exception
     {
         public new TException? Exception { get; }
         
+        public Boolean Unwrap([MaybeNullWhen(false)] out TException value);
         public new IResult<T, TException> Clone();
     }
     
@@ -57,6 +61,7 @@ namespace NetExtender.Types.Monads.Interfaces
         public Object? Value { get; }
         public Exception? Exception { get; }
 
+        public Boolean Unwrap([MaybeNullWhen(false)] out Exception value);
         public new IResult Clone();
     }
     

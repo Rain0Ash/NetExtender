@@ -96,14 +96,14 @@ namespace NetExtender.Types.Numerics
             return first.CompareTo(second) < 0;
         }
 
-        public static Boolean operator >(GenericNumber first, GenericNumber second)
-        {
-            return first.CompareTo(second) > 0;
-        }
-
         public static Boolean operator <=(GenericNumber first, GenericNumber second)
         {
             return first.CompareTo(second) <= 0;
+        }
+
+        public static Boolean operator >(GenericNumber first, GenericNumber second)
+        {
+            return first.CompareTo(second) > 0;
         }
 
         public static Boolean operator >=(GenericNumber first, GenericNumber second)
@@ -364,14 +364,14 @@ namespace NetExtender.Types.Numerics
             return first.Equals(second.Value);
         }
 
-        public static Boolean operator ==(GenericNumber<T> first, GenericNumber second)
-        {
-            return first.Equals(second);
-        }
-
         public static Boolean operator !=(GenericNumber<T> first, GenericNumber<T> second)
         {
             return !(first == second);
+        }
+
+        public static Boolean operator ==(GenericNumber<T> first, GenericNumber second)
+        {
+            return first.Equals(second);
         }
 
         public static Boolean operator !=(GenericNumber<T> first, GenericNumber second)
@@ -384,9 +384,9 @@ namespace NetExtender.Types.Numerics
             return first.CompareTo(second.Value) < 0;
         }
 
-        public static Boolean operator <(GenericNumber<T> first, GenericNumber second)
+        public static Boolean operator <=(GenericNumber<T> first, GenericNumber<T> second)
         {
-            return first.CompareTo(second) < 0;
+            return first.CompareTo(second.Value) <= 0;
         }
 
         public static Boolean operator >(GenericNumber<T> first, GenericNumber<T> second)
@@ -394,14 +394,14 @@ namespace NetExtender.Types.Numerics
             return first.CompareTo(second.Value) > 0;
         }
 
-        public static Boolean operator >(GenericNumber<T> first, GenericNumber second)
+        public static Boolean operator >=(GenericNumber<T> first, GenericNumber<T> second)
         {
-            return first.CompareTo(second) > 0;
+            return first.CompareTo(second.Value) >= 0;
         }
 
-        public static Boolean operator <=(GenericNumber<T> first, GenericNumber<T> second)
+        public static Boolean operator <(GenericNumber<T> first, GenericNumber second)
         {
-            return first.CompareTo(second.Value) <= 0;
+            return first.CompareTo(second) < 0;
         }
 
         public static Boolean operator <=(GenericNumber<T> first, GenericNumber second)
@@ -409,9 +409,9 @@ namespace NetExtender.Types.Numerics
             return first.CompareTo(second) <= 0;
         }
 
-        public static Boolean operator >=(GenericNumber<T> first, GenericNumber<T> second)
+        public static Boolean operator >(GenericNumber<T> first, GenericNumber second)
         {
-            return first.CompareTo(second.Value) >= 0;
+            return first.CompareTo(second) > 0;
         }
 
         public static Boolean operator >=(GenericNumber<T> first, GenericNumber second)

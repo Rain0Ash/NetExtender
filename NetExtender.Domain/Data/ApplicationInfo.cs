@@ -35,24 +35,24 @@ namespace NetExtender.Domains
             return !(first == second);
         }
 
-        public static Boolean operator >(ApplicationInfo first, ApplicationInfo second)
-        {
-            return first.CompareTo(second) > 0;
-        }
-
         public static Boolean operator <(ApplicationInfo first, ApplicationInfo second)
         {
             return first.CompareTo(second) < 0;
         }
 
-        public static Boolean operator >=(ApplicationInfo first, ApplicationInfo second)
-        {
-            return first.CompareTo(second) >= 0;
-        }
-
         public static Boolean operator <=(ApplicationInfo first, ApplicationInfo second)
         {
             return first.CompareTo(second) <= 0;
+        }
+
+        public static Boolean operator >(ApplicationInfo first, ApplicationInfo second)
+        {
+            return first.CompareTo(second) > 0;
+        }
+
+        public static Boolean operator >=(ApplicationInfo first, ApplicationInfo second)
+        {
+            return first.CompareTo(second) >= 0;
         }
 
         private ApplicationInfoMessage? _message;

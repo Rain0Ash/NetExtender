@@ -3,6 +3,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using NetExtender.Interfaces;
 using NetExtender.Newtonsoft.Types.Monads;
@@ -20,7 +22,7 @@ namespace NetExtender.Types.Monads
     {
         public static implicit operator NullMaybe<T>(Maybe<T> value)
         {
-            return value.HasValue ? new NullMaybe<T>(value.Value) : default;
+            return value.HasValue ? new NullMaybe<T>(value.Internal) : default;
         }
 
         public static implicit operator Maybe<T>(NullMaybe<T> value)
@@ -78,16 +80,6 @@ namespace NetExtender.Types.Monads
             return !(first == second);
         }
 
-        public static Boolean operator >(T? first, NullMaybe<T> second)
-        {
-            return second < first;
-        }
-
-        public static Boolean operator >=(T? first, NullMaybe<T> second)
-        {
-            return second <= first;
-        }
-
         public static Boolean operator <(T? first, NullMaybe<T> second)
         {
             return second > first;
@@ -98,14 +90,14 @@ namespace NetExtender.Types.Monads
             return second >= first;
         }
 
-        public static Boolean operator >(NullMaybe<T> first, T? second)
+        public static Boolean operator >(T? first, NullMaybe<T> second)
         {
-            return first.CompareTo(second) > 0;
+            return second < first;
         }
 
-        public static Boolean operator >=(NullMaybe<T> first, T? second)
+        public static Boolean operator >=(T? first, NullMaybe<T> second)
         {
-            return first.CompareTo(second) >= 0;
+            return second <= first;
         }
 
         public static Boolean operator <(NullMaybe<T> first, T? second)
@@ -118,12 +110,12 @@ namespace NetExtender.Types.Monads
             return first.CompareTo(second) <= 0;
         }
 
-        public static Boolean operator >(NullMaybe<T> first, NullMaybe<T> second)
+        public static Boolean operator >(NullMaybe<T> first, T? second)
         {
             return first.CompareTo(second) > 0;
         }
 
-        public static Boolean operator >=(NullMaybe<T> first, NullMaybe<T> second)
+        public static Boolean operator >=(NullMaybe<T> first, T? second)
         {
             return first.CompareTo(second) >= 0;
         }
@@ -138,12 +130,12 @@ namespace NetExtender.Types.Monads
             return first.CompareTo(second) <= 0;
         }
 
-        public static Boolean operator >(NullMaybe<T> first, Maybe<T> second)
+        public static Boolean operator >(NullMaybe<T> first, NullMaybe<T> second)
         {
             return first.CompareTo(second) > 0;
         }
 
-        public static Boolean operator >=(NullMaybe<T> first, Maybe<T> second)
+        public static Boolean operator >=(NullMaybe<T> first, NullMaybe<T> second)
         {
             return first.CompareTo(second) >= 0;
         }
@@ -156,6 +148,16 @@ namespace NetExtender.Types.Monads
         public static Boolean operator <=(NullMaybe<T> first, Maybe<T> second)
         {
             return first.CompareTo(second) <= 0;
+        }
+
+        public static Boolean operator >(NullMaybe<T> first, Maybe<T> second)
+        {
+            return first.CompareTo(second) > 0;
+        }
+
+        public static Boolean operator >=(NullMaybe<T> first, Maybe<T> second)
+        {
+            return first.CompareTo(second) >= 0;
         }
 
         private readonly Maybe<T> _value;
@@ -177,6 +179,16 @@ namespace NetExtender.Types.Monads
 
         [JsonIgnore]
         [System.Text.Json.Serialization.JsonIgnore]
+        public Boolean IsNull
+        {
+            get
+            {
+                return _value.Internal is null;
+            }
+        }
+
+        [JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public Boolean IsEmpty
         {
             get
@@ -193,6 +205,43 @@ namespace NetExtender.Types.Monads
         private NullMaybe(SerializationInfo info, StreamingContext context)
         {
             _value = info.GetValue<T>(nameof(Value));
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static NullMaybe<T> Create(T value)
+        {
+            return new NullMaybe<T>(value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T Unwrap(NullMaybe<T> maybe)
+        {
+            return maybe.Value;
+        }
+
+        Boolean IMonad.Unwrap(out Object? value)
+        {
+            if (Value is { } result)
+            {
+                value = result;
+                return true;
+            }
+
+            value = null;
+            return false;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public Boolean Unwrap([MaybeNullWhen(false)] out T value)
+        {
+            if (Value is { } result)
+            {
+                value = result;
+                return true;
+            }
+
+            value = default;
+            return false;
         }
         
         public void GetObjectData(SerializationInfo info, StreamingContext context)
@@ -255,6 +304,16 @@ namespace NetExtender.Types.Monads
             return other is not null ? comparer.SafeCompare(Value, other.Value) ?? 0 : 1;
         }
 
+        public Int32 CompareTo(IWeakMaybe<T>? other)
+        {
+            return CompareTo(other, null);
+        }
+
+        public Int32 CompareTo(IWeakMaybe<T>? other, IComparer<T>? comparer)
+        {
+            return other is not null ? CompareTo(other.Maybe, comparer) : 1;
+        }
+
         public override Int32 GetHashCode()
         {
             return Value is not null ? Value.GetHashCode() : 0;
@@ -275,6 +334,7 @@ namespace NetExtender.Types.Monads
                 NullMaybe<T> value => Equals(value),
                 IMaybe<T> value => Equals(value),
                 INullMaybe<T> value => Equals(value),
+                IWeakMaybe<T> value => Equals(value),
                 _ => Equals(Value, other)
             };
         }
@@ -332,6 +392,16 @@ namespace NetExtender.Types.Monads
         {
             comparer ??= EqualityComparer<T>.Default;
             return other is not null && comparer.Equals(Value, other.Value);
+        }
+
+        public Boolean Equals(IWeakMaybe<T>? other)
+        {
+            return Equals(other, null);
+        }
+
+        public Boolean Equals(IWeakMaybe<T>? other, IEqualityComparer<T>? comparer)
+        {
+            return other is not null && Equals(other.Maybe, comparer);
         }
 
         public NullMaybe<T> Clone()
@@ -442,6 +512,21 @@ namespace NetExtender.Types.Monads
         public String? GetString(EscapeType escape, String? format, IFormatProvider? provider)
         {
             return _value.GetString(escape, format, provider);
+        }
+    }
+
+    public static class NullMaybe
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static NullMaybe<T> Create<T>(T value)
+        {
+            return NullMaybe<T>.Create(value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T Unwrap<T>(NullMaybe<T> maybe)
+        {
+            return NullMaybe<T>.Unwrap(maybe);
         }
     }
 }

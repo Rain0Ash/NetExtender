@@ -43,7 +43,7 @@ namespace NetExtender.Types.Streams
         public Memory<Byte>? Buffer { get; }
     }
 
-    public class FileStreamInterceptEventArgs<T> : FileStreamInterceptAbstractionEventArgs<FileStreamInterceptEventArgs<T>.Information>, IFileStreamInterceptEventArgs<T>
+    public class FileStreamInterceptEventArgs<T> : FileStreamInterceptBaseEventArgs<FileStreamInterceptEventArgs<T>.Information>, IFileStreamInterceptEventArgs<T>
     {
         public readonly struct Information : IFileStreamInterceptArgumentInfo<T>
         {
@@ -168,7 +168,7 @@ namespace NetExtender.Types.Streams
         }
     }
     
-    public class FileStreamInterceptEventArgs : FileStreamInterceptAbstractionEventArgs<FileStreamInterceptEventArgs.Information>
+    public class FileStreamInterceptEventArgs : FileStreamInterceptBaseEventArgs<FileStreamInterceptEventArgs.Information>
     {
         public readonly struct Information : IFileStreamInterceptArgumentInfo
         {
@@ -241,7 +241,7 @@ namespace NetExtender.Types.Streams
         }
     }
 
-    public abstract class FileStreamInterceptAbstractionEventArgs<T> : MethodInterceptAbstractionEventArgs<T>, IFileStreamInterceptEventArgs where T : IFileStreamInterceptArgumentInfo
+    public abstract class FileStreamInterceptBaseEventArgs<T> : MethodInterceptBaseEventArgs<T>, IFileStreamInterceptEventArgs where T : IFileStreamInterceptArgumentInfo
     {
         public FileStreamIntercept Type
         {
@@ -383,7 +383,7 @@ namespace NetExtender.Types.Streams
             }
         }
         
-        protected FileStreamInterceptAbstractionEventArgs(T value)
+        protected FileStreamInterceptBaseEventArgs(T value)
             : base(value)
         {
         }

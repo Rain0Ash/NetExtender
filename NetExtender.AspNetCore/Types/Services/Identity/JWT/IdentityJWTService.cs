@@ -5,7 +5,7 @@ using System;
 using Microsoft.AspNetCore.Http;
 using NetExtender.AspNetCore.Identity.Interfaces;
 using NetExtender.JWT;
-using NetExtender.Types.Monads.Result;
+using NetExtender.Types.Monads;
 using Newtonsoft.Json;
 
 namespace NetExtender.AspNetCore.Identity

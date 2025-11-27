@@ -14,16 +14,16 @@ using NetExtender.Domains.WindowsPresentation.Applications;
 
 namespace NetExtender.Domains.WindowsPresentation.AspNetCore.Applications
 {
-    public abstract class WindowsPresentationAspNetCoreApplicationAbstraction<THost> : WindowsPresentationApplication where THost : class
+    public abstract class WindowsPresentationAspNetCoreApplicationBase<THost> : WindowsPresentationApplication where THost : class
     {
         protected IAspNetCoreApplicationServer<THost>? Server { get; set; }
 
-        protected WindowsPresentationAspNetCoreApplicationAbstraction()
+        protected WindowsPresentationAspNetCoreApplicationBase()
             : this(new Application())
         {
         }
 
-        protected WindowsPresentationAspNetCoreApplicationAbstraction(Application application)
+        protected WindowsPresentationAspNetCoreApplicationBase(Application application)
             : base(application)
         {
         }
@@ -40,7 +40,7 @@ namespace NetExtender.Domains.WindowsPresentation.AspNetCore.Applications
                 throw new ArgumentNullException(nameof(host));
             }
 
-            return AspNetCoreApplicationServerAbstraction<T>.Create(host);
+            return AspNetCoreApplicationServerBase<T>.Create(host);
         }
         
         public override Task<IApplication> RunAsync(CancellationToken token)
@@ -97,7 +97,7 @@ namespace NetExtender.Domains.WindowsPresentation.AspNetCore.Applications
         }
     }
 
-    public class WindowsPresentationAspNetCoreApplication : WindowsPresentationAspNetCoreApplicationAbstraction<IHost>
+    public class WindowsPresentationAspNetCoreApplication : WindowsPresentationAspNetCoreApplicationBase<IHost>
     {
         public WindowsPresentationAspNetCoreApplication()
         {
@@ -122,7 +122,7 @@ namespace NetExtender.Domains.WindowsPresentation.AspNetCore.Applications
         }
     }
 
-    public class WindowsPresentationAspNetCoreWebApplication : WindowsPresentationAspNetCoreApplicationAbstraction<IWebHost>
+    public class WindowsPresentationAspNetCoreWebApplication : WindowsPresentationAspNetCoreApplicationBase<IWebHost>
     {
         public WindowsPresentationAspNetCoreWebApplication()
         {

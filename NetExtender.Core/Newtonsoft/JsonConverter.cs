@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Concurrent;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using NetExtender.Types.Monads;
 using NetExtender.Utilities.Core;
 using NetExtender.Utilities.Serialization;
@@ -12,20 +14,32 @@ namespace NetExtender.Newtonsoft
 {
     public abstract class NewtonsoftJsonConverter<T> : JsonConverter<T>
     {
+        private static (Boolean Read, Boolean Write) Get(Type type)
+        {
+            return NewtonsoftJsonConverter.Initialize(type, static type =>
+            {
+                const BindingFlags binding = BindingFlags.Instance | BindingFlags.NonPublic;
+                MethodInfo read = type.GetMethod(nameof(Read), binding, new[] { typeof(JsonReader).MakeByRefType(), typeof(Type), typeof(Maybe<T?>), typeof(SerializerOptions).MakeByRefType() }) ?? throw new MissingMethodException(type.Name, nameof(Read));
+                MethodInfo write = type.GetMethod(nameof(Write), binding, new[] { typeof(JsonWriter).MakeByRefType(), typeof(T), typeof(SerializerOptions).MakeByRefType() }) ?? throw new MissingMethodException(type.Name, nameof(Write));
+                return (read.HasImplementation(), write.HasImplementation());
+            });
+        }
+
+        private Type? _type;
+        public Type Type
+        {
+            get
+            {
+                return _type ??= GetType();
+            }
+        }
+
         private Boolean? _read;
         public override Boolean CanRead
         {
             get
             {
-                if (_read is { } result)
-                {
-                    return result;
-                }
-                
-                const BindingFlags binding = BindingFlags.Instance | BindingFlags.NonPublic;
-                Type type = GetType();
-                MethodInfo method = type.GetMethod(nameof(Read), binding, new[] { typeof(JsonReader), typeof(Type), typeof(Maybe<T?>), typeof(SerializerOptions) }) ?? throw new MissingMethodException(type.Name, nameof(Read));
-                return (_read = method.HasImplementation()) is true;
+                return _read ??= Get(Type).Read;
             }
         }
 
@@ -34,16 +48,13 @@ namespace NetExtender.Newtonsoft
         {
             get
             {
-                if (_write is { } result)
-                {
-                    return result;
-                }
-                
-                const BindingFlags binding = BindingFlags.Instance | BindingFlags.NonPublic;
-                Type type = GetType();
-                MethodInfo method = type.GetMethod(nameof(Write), binding, new[] { typeof(JsonWriter), typeof(T), typeof(SerializerOptions) }) ?? throw new MissingMethodException(type.Name, nameof(Write));
-                return (_write = method.HasImplementation()) is true;
+                return _write ??= Get(Type).Write;
             }
+        }
+
+        protected internal virtual T? Read(in JsonReader reader, Type type, Maybe<T> exist, ref SerializerOptions options)
+        {
+            return default;
         }
 
         public sealed override T? ReadJson(JsonReader reader, Type type, T? exist, Boolean exists, JsonSerializer serializer)
@@ -67,9 +78,9 @@ namespace NetExtender.Newtonsoft
             return Read(reader, type, exists ? (Maybe<T>) exist! : default, ref options);
         }
 
-        protected internal virtual T? Read(in JsonReader reader, Type type, Maybe<T> exist, ref SerializerOptions options)
+        protected internal virtual Boolean Write(in JsonWriter writer, T? value, ref SerializerOptions options)
         {
-            return default;
+            return false;
         }
 
         public sealed override void WriteJson(JsonWriter writer, T? value, JsonSerializer serializer)
@@ -86,11 +97,6 @@ namespace NetExtender.Newtonsoft
             
             SerializerOptions options = serializer;
             Write(writer, value, ref options);
-        }
-
-        protected internal virtual Boolean Write(in JsonWriter writer, T? value, ref SerializerOptions options)
-        {
-            return false;
         }
 
         protected internal struct SerializerOptions : IEquatableStruct<SerializerOptions>, IEquatable<NamingStrategy>, IEquatable<JsonSerializer>
@@ -220,20 +226,40 @@ namespace NetExtender.Newtonsoft
 
     public abstract class NewtonsoftJsonConverter : JsonConverter
     {
+        internal static ConcurrentDictionary<Type, (Boolean Read, Boolean Write)> Storage { get; } = new ConcurrentDictionary<Type, (Boolean, Boolean)>();
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static (Boolean Read, Boolean Write) Initialize(Type type, Func<Type, (Boolean, Boolean)> factory)
+        {
+            return Storage.GetOrAdd(type, factory);
+        }
+
+        private static (Boolean Read, Boolean Write) Get(Type type)
+        {
+            return Initialize(type, static type =>
+            {
+                const BindingFlags binding = BindingFlags.Instance | BindingFlags.NonPublic;
+                MethodInfo read = type.GetMethod(nameof(Read), binding, new[] { typeof(JsonReader).MakeByRefType(), typeof(Type), typeof(Object), typeof(SerializerOptions).MakeByRefType() }) ?? throw new MissingMethodException(type.Name, nameof(Read));
+                MethodInfo write = type.GetMethod(nameof(Write), binding, new[] { typeof(JsonWriter).MakeByRefType(), typeof(Object), typeof(SerializerOptions).MakeByRefType() }) ?? throw new MissingMethodException(type.Name, nameof(Write));
+                return (read.HasImplementation(), write.HasImplementation());
+            });
+        }
+
+        private Type? _type;
+        public Type Type
+        {
+            get
+            {
+                return _type ??= GetType();
+            }
+        }
+
         private Boolean? _read;
         public override Boolean CanRead
         {
             get
             {
-                if (_read is { } result)
-                {
-                    return result;
-                }
-                
-                const BindingFlags binding = BindingFlags.Instance | BindingFlags.NonPublic;
-                Type type = GetType();
-                MethodInfo method = type.GetMethod(nameof(Read), binding, new[] { typeof(JsonReader), typeof(Type), typeof(Object), typeof(SerializerOptions) }) ?? throw new MissingMethodException(type.Name, nameof(Read));
-                return (_read = method.HasImplementation()) is true;
+                return _read ??= Get(Type).Read;
             }
         }
 
@@ -242,19 +268,16 @@ namespace NetExtender.Newtonsoft
         {
             get
             {
-                if (_write is { } result)
-                {
-                    return result;
-                }
-                
-                const BindingFlags binding = BindingFlags.Instance | BindingFlags.NonPublic;
-                Type type = GetType();
-                MethodInfo method = type.GetMethod(nameof(Write), binding, new[] { typeof(JsonWriter), typeof(Object), typeof(SerializerOptions) }) ?? throw new MissingMethodException(type.Name, nameof(Write));
-                return (_write = method.HasImplementation()) is true;
+                return _write ??= Get(Type).Write;
             }
         }
 
         public abstract override Boolean CanConvert(Type type);
+
+        protected internal virtual Object? Read(in JsonReader reader, Type type, Object? exist, ref SerializerOptions options)
+        {
+            return null;
+        }
 
         public sealed override Object? ReadJson(JsonReader reader, Type type, Object? exist, JsonSerializer serializer)
         {
@@ -277,9 +300,9 @@ namespace NetExtender.Newtonsoft
             return Read(reader, type, exist, ref options);
         }
 
-        protected internal virtual Object? Read(in JsonReader reader, Type type, Object? exist, ref SerializerOptions options)
+        protected internal virtual Boolean Write(in JsonWriter writer, Object? value, ref SerializerOptions options)
         {
-            return null;
+            return false;
         }
 
         public sealed override void WriteJson(JsonWriter writer, Object? value, JsonSerializer serializer)
@@ -298,11 +321,6 @@ namespace NetExtender.Newtonsoft
             Write(writer, value, ref options);
         }
 
-        protected internal virtual Boolean Write(in JsonWriter writer, Object? value, ref SerializerOptions options)
-        {
-            return false;
-        }
-        
         protected internal struct SerializerOptions : IEquatableStruct<SerializerOptions>, IEquatable<NamingStrategy>, IEquatable<JsonSerializer>
         {
             public static implicit operator SerializerOptions(JsonSerializer? value)
@@ -479,6 +497,8 @@ namespace NetExtender.Serialization.Json
             return base.CanConvert(type);
         }
 
+        protected internal abstract T? Read(ref Utf8JsonReader reader, Type type, ref SerializerOptions options);
+
         public sealed override T? Read(ref Utf8JsonReader reader, Type type, JsonSerializerOptions serializer)
         {
             if (type is null)
@@ -495,7 +515,7 @@ namespace NetExtender.Serialization.Json
             return Read(ref reader, type, ref options);
         }
 
-        protected internal abstract T? Read(ref Utf8JsonReader reader, Type type, ref SerializerOptions options);
+        protected internal abstract Boolean Write(in Utf8JsonWriter writer, T value, ref SerializerOptions options);
 
         public sealed override void Write(Utf8JsonWriter writer, T value, JsonSerializerOptions serializer)
         {
@@ -507,8 +527,6 @@ namespace NetExtender.Serialization.Json
             SerializerOptions options = serializer;
             Write(writer, value, ref options);
         }
-
-        protected internal abstract Boolean Write(in Utf8JsonWriter writer, T value, ref SerializerOptions options);
 
         public sealed override T ReadAsPropertyName(ref Utf8JsonReader reader, Type type, JsonSerializerOptions serializer)
         {

@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using NetExtender.Utilities.Numerics;
+using NetExtender.Interfaces;
 
 namespace NetExtender.Utilities.Types
 {
@@ -13,18 +13,18 @@ namespace NetExtender.Utilities.Types
     {
         private static class Equality<TCount> where TCount : unmanaged, IConvertible
         {
-            private static readonly TCount One = MathUnsafe.Increment(default(TCount));
-            
+            private static readonly TCount One = INetExtenderIncrementOperators<TCount>.Increment(default);
+
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static Boolean Unique(TCount first)
+            public static Boolean Unique(TCount value)
             {
-                return MathUnsafe.Equal(first, One);
+                return INetExtenderEqualityOperators<TCount>.Equality(value, One);
             }
-            
+
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static Boolean NotUnique(TCount first)
+            public static Boolean NotUnique(TCount value)
             {
-                return MathUnsafe.Greater(first, One);
+                return INetExtenderComparisonOperators<TCount>.GreaterThanOrEqual(value, One);
             }
         }
         

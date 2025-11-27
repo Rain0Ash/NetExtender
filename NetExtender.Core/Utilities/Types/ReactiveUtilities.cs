@@ -298,7 +298,7 @@ namespace NetExtender.Utilities.Types
                         break;
                     default:
                         String? name = typeof(TDelegate) == typeof(PropertyChangingEventHandler) ? "Changing" : typeof(TDelegate) == typeof(PropertyChangedEventHandler) ? "Changed" : null;
-                        @event = name is not null ? fields.FirstOrDefault(field => field.Name.Contains(name)) : null;
+                        @event = name is not null ? fields.FirstOrDefault(field => field.HasName(name)) : null;
                         break;
                 }
 

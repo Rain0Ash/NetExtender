@@ -2,13 +2,109 @@ using System;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using NetExtender.Types.Exceptions;
-using NetExtender.Types.Monads.Result;
+using NetExtender.Types.Monads;
 using NetExtender.Types.Numerics;
 
 namespace NetExtender.Utilities.Types
 {
     public static class ResultUtilities
     {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Result<T> Result<T>(this T value)
+        {
+            return new Result<T>(value);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Result<T> Result<T>(this Exception? value)
+        {
+            return value is not null ? new Result<T>(value) : default;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Result<T, TException> Result<T, TException>(this T value) where TException : Exception
+        {
+            return new Result<T, TException>(value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Result<T, TException> Result<T, TException>(this TException? value) where TException : Exception
+        {
+            return value is not null ? new Result<T, TException>(value) : default;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static BusinessResult<T> Business<T>(this T value)
+        {
+            return new BusinessResult<T>(value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static BusinessResult<T> Result<T>(this BusinessException? value)
+        {
+            return value is not null ? new BusinessResult<T>(value) : default;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static BusinessResult<T, TBusiness> Business<T, TBusiness>(this T value)
+        {
+            return new BusinessResult<T, TBusiness>(value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static BusinessResult<T, TBusiness> Result<T, TBusiness>(this BusinessException<TBusiness>? value)
+        {
+            return value is not null ? new BusinessResult<T, TBusiness>(value) : default;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static FlowResult<T> Flow<T>(this T value)
+        {
+            return new FlowResult<T>(value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static FlowResult<T> Flow<T>(this Maybe<T> value)
+        {
+            return new FlowResult<T>(value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static FlowResult<T> Flow<T>(this Result<T> value)
+        {
+            return new FlowResult<T>(value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static FlowResult<T> Flow<T>(this Exception? value)
+        {
+            return value is not null ? new FlowResult<T>(value) : default;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static FlowResult<T, TException> Flow<T, TException>(this T value) where TException : Exception
+        {
+            return new FlowResult<T, TException>(value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static FlowResult<T, TException> Flow<T, TException>(this Maybe<T> value) where TException : Exception
+        {
+            return new FlowResult<T, TException>(value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static FlowResult<T, TException> Flow<T, TException>(this Result<T, TException> value) where TException : Exception
+        {
+            return new FlowResult<T, TException>(value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static FlowResult<T, TException> Flow<T, TException>(this TException? value) where TException : Exception
+        {
+            return value is not null ? new FlowResult<T, TException>(value) : default;
+        }
+        
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         private static void Verify<T>(ref Result<T> result, Span<Byte> bitmap, Byte index, ref Byte position, ref Byte count)
         {

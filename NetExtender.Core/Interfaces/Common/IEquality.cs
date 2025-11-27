@@ -8,7 +8,7 @@ namespace NetExtender
     public interface IAnyEquality : IComparable
     {
     }
-    
+
     public interface IEquality<T> : IComparable<T>, IEquatable<T>
     {
     }

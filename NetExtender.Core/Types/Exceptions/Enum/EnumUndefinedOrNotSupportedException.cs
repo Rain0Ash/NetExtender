@@ -29,7 +29,7 @@ namespace NetExtender.Types.Exceptions
             : this(value.Id.In() ? throw EnumNotSupportedException<T, TEnum>.Create(value, message, exception) : exception is not null ? EnumUndefinedException<T, TEnum>.Create(value, message, exception) : EnumUndefinedException<T, TEnum>.Create(value, parameter, message))
         {
         }
-        
+
         protected EnumUndefinedOrNotSupportedException(Exception exception)
             : base(exception)
         {

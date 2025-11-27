@@ -266,7 +266,7 @@ namespace NetExtender.UserInterface.WindowsPresentation
             }
         }
 
-        public abstract class View : ViewAbstraction
+        public abstract class View : ViewBase
         {
             [return: NotNullIfNotNull("value")]
             public static implicit operator String?(View? value)
@@ -304,7 +304,7 @@ namespace NetExtender.UserInterface.WindowsPresentation
             }
         }
 
-        public abstract class ViewAbstraction : IView
+        public abstract class ViewBase : IView
         {
             public event PropertyChangingEventHandler? PropertyChanging;
             public event PropertyChangedEventHandler? PropertyChanged;

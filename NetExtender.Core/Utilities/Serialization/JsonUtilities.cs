@@ -86,7 +86,7 @@ namespace NetExtender.Utilities.Serialization
             };
         }
 
-        public static Boolean IsEmptyObject(this ref Utf8JsonReader reader)
+        public static Boolean IsEmptyObject(this Utf8JsonReader reader)
         {
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
             JsonElement @object = document.RootElement;
@@ -103,7 +103,7 @@ namespace NetExtender.Utilities.Serialization
             return JObject.Load(reader) is { HasValues: false };
         }
 
-        public static Boolean IsEmptyArray(this ref Utf8JsonReader reader)
+        public static Boolean IsEmptyArray(this Utf8JsonReader reader)
         {
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
             JsonElement array = document.RootElement;

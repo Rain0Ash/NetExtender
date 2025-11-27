@@ -10,7 +10,7 @@ using NetExtender.Utilities.Core;
 
 namespace NetExtender.Types.Expressions
 {
-    public sealed class ReadableExpression<T> : ReadableExpressionAbstraction<T> where T : Expression
+    public sealed class ReadableExpression<T> : ReadableExpressionBase<T> where T : Expression
     {
         [return: NotNullIfNotNull("value")]
         public static implicit operator ReadableExpression<T>?(T? value)
@@ -42,20 +42,20 @@ namespace NetExtender.Types.Expressions
         }
     }
 
-    public abstract class ReadableExpressionAbstraction<T> : IReadableExpression<T> where T : Expression
+    public abstract class ReadableExpressionBase<T> : IReadableExpression<T> where T : Expression
     {
         [return: NotNullIfNotNull("value")]
-        public static implicit operator T?(ReadableExpressionAbstraction<T>? value)
+        public static implicit operator T?(ReadableExpressionBase<T>? value)
         {
             return value?.Expression;
         }
 
-        public static Boolean operator ==(ReadableExpressionAbstraction<T>? first, ReadableExpressionAbstraction<T>? second)
+        public static Boolean operator ==(ReadableExpressionBase<T>? first, ReadableExpressionBase<T>? second)
         {
             return ReferenceEquals(first, second) || first is not null && first.Equals((IReadableExpression<T>?) second);
         }
 
-        public static Boolean operator !=(ReadableExpressionAbstraction<T>? first, ReadableExpressionAbstraction<T>? second)
+        public static Boolean operator !=(ReadableExpressionBase<T>? first, ReadableExpressionBase<T>? second)
         {
             return !(first == second);
         }
@@ -70,7 +70,7 @@ namespace NetExtender.Types.Expressions
             }
         }
 
-        protected ReadableExpressionAbstraction(T expression)
+        protected ReadableExpressionBase(T expression)
         {
             Expression = expression ?? throw new ArgumentNullException(nameof(expression));
         }

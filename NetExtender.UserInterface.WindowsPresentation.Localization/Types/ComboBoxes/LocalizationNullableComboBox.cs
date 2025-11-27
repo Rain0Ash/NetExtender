@@ -53,7 +53,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.Localization.Types.Combo
             }
         }
         
-        public new class View : ViewAbstraction
+        public new class View : ViewBase
         {
             private ILocalizationPropertyInfo _display;
             public ILocalizationPropertyInfo Display

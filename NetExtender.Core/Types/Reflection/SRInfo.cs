@@ -42,7 +42,8 @@ namespace NetExtender.Types.Reflection
         {
             get
             {
-                return Handler is not null ? Handler.Invoke() : Name;
+                Get(out String result);
+                return result;
             }
         }
         
@@ -74,6 +75,66 @@ namespace NetExtender.Types.Reflection
             SR = SRUtilities.SRType(assembly);
             Name = name;
             SRUtilities.TryGet(SR, Name, out _handler);
+        }
+
+        public Boolean Get(out String result)
+        {
+            if (Handler is not null)
+            {
+                result = Handler.Invoke();
+                return true;
+            }
+
+            result = Name;
+            return false;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public String Format(Object? arg0)
+        {
+            return Get(out String result) ? String.Format(result, arg0) : result;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public String Format(Object? arg0, Object? arg1)
+        {
+            return Get(out String result) ? String.Format(result, arg0, arg1) : result;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public String Format(Object? arg0, Object? arg1, Object? arg2)
+        {
+            return Get(out String result) ? String.Format(result, arg0, arg1, arg2) : result;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public String Format(params Object?[] args)
+        {
+            return Get(out String result) ? String.Format(result, args) : result;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public String Format(IFormatProvider? provider, Object? arg0)
+        {
+            return Get(out String result) ? String.Format(provider, result, arg0) : result;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public String Format(IFormatProvider? provider, Object? arg0, Object? arg1)
+        {
+            return Get(out String result) ? String.Format(provider, result, arg0, arg1) : result;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public String Format(IFormatProvider? provider, Object? arg0, Object? arg1, Object? arg2)
+        {
+            return Get(out String result) ? String.Format(provider, result, arg0, arg1, arg2) : result;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public String Format(IFormatProvider? provider, params Object?[] args)
+        {
+            return Get(out String result) ? String.Format(provider, result, args) : result;
         }
         
         public override Int32 GetHashCode()

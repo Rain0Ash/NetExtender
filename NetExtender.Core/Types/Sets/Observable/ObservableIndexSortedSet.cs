@@ -3,7 +3,7 @@
 
 namespace NetExtender.Types.Sets
 {
-    /*public sealed class ObservableIndexSortedSet<T> : ObservableIndexSortedSetAbstraction<T>
+    /*public sealed class ObservableIndexSortedSet<T> : ObservableIndexSortedSetBase<T>
     {
         public ObservableIndexSortedSet()
         {
@@ -35,29 +35,29 @@ namespace NetExtender.Types.Sets
         }
     }
 
-    public abstract class ObservableIndexSortedSetAbstraction<T> : ObservableIndexSortedSet<T, IndexSortedSet<T>>
+    public abstract class ObservableIndexSortedSetBase<T> : ObservableIndexSortedSet<T, IndexSortedSet<T>>
     {
-        public ObservableIndexSortedSetAbstraction()
+        public ObservableIndexSortedSetBase()
             : base(new IndexSortedSet<T>())
         {
         }
 
-        public ObservableIndexSortedSetAbstraction(IComparer<T>? comparer)
+        public ObservableIndexSortedSetBase(IComparer<T>? comparer)
             : base(new IndexSortedSet<T>(comparer))
         {
         }
 
-        public ObservableIndexSortedSetAbstraction(IEnumerable<T> collection)
+        public ObservableIndexSortedSetBase(IEnumerable<T> collection)
             : base(collection is not null ? new IndexSortedSet<T>(collection) : throw new ArgumentNullException(nameof(collection)))
         {
         }
 
-        public ObservableIndexSortedSetAbstraction(IEnumerable<T> collection, IComparer<T>? comparer)
+        public ObservableIndexSortedSetBase(IEnumerable<T> collection, IComparer<T>? comparer)
             : base(collection is not null ? new IndexSortedSet<T>(collection, comparer) : throw new ArgumentNullException(nameof(collection)))
         {
         }
 
-        protected ObservableIndexSortedSetAbstraction(IndexSortedSet<T> set)
+        protected ObservableIndexSortedSetBase(IndexSortedSet<T> set)
             : base(set)
         {
         }

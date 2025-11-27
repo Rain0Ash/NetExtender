@@ -6,11 +6,11 @@ using NetExtender.Interfaces.Notify;
 
 namespace NetExtender.Types.Collections.Interfaces
 {
-    public interface IReadOnlyObservableCollection<out T> : IReadOnlyObservableCollectionAbstraction<T>, IReadOnlyList<T>
+    public interface IReadOnlyObservableCollection<out T> : IReadOnlyObservableCollectionBase<T>, IReadOnlyList<T>
     {
     }
 
-    public interface IReadOnlyObservableCollectionAbstraction<out T> : IReadOnlyCollection<T>, INotifyCollection
+    public interface IReadOnlyObservableCollectionBase<out T> : IReadOnlyCollection<T>, INotifyCollection
     {
     }
 }

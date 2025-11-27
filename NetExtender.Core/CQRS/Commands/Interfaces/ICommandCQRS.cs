@@ -2,7 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using NetExtender.CQRS.Interfaces;
-using NetExtender.Types.Monads.Result;
+using NetExtender.Types.Monads;
 
 namespace NetExtender.CQRS.Commands.Interfaces
 {

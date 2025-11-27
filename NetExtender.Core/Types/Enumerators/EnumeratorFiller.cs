@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Runtime.CompilerServices;
 using NetExtender.Interfaces;
-using NetExtender.Types.Dictionaries;
 using NetExtender.Types.Lists;
 
 namespace NetExtender.Types.Enumerators
 {
     public readonly struct EnumeratorFiller<T, TEnumerator, TComparer> where TEnumerator : IReadOnlyCollection<T>, IEnumerator<T>, ICloneable<TEnumerator> where TComparer : IComparer<T>, IEqualityComparer<T>
     {
-        private TEnumerator Enumerator { get; }
+        private readonly TEnumerator Enumerator;
         private TComparer? Comparer { get; }
 
         public EnumeratorFiller(TEnumerator enumerator)

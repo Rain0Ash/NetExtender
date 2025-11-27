@@ -7,7 +7,7 @@ using System.Text.Json.Serialization;
 using NetExtender.JWT.Algorithms.Interfaces;
 using NetExtender.JWT.Interfaces;
 using NetExtender.Types.Exceptions;
-using NetExtender.Types.Monads.Result;
+using NetExtender.Types.Monads;
 using NetExtender.Types.Times.Interfaces;
 using NetExtender.Utilities.JWT;
 using NetExtender.Utilities.Types;

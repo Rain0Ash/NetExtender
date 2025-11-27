@@ -10,6 +10,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using NetExtender.Types.Entities;
+using NetExtender.Types.Monads;
 using NetExtender.Utilities.Core;
 
 namespace NetExtender.Utilities.Types
@@ -114,6 +115,42 @@ namespace NetExtender.Utilities.Types
         {
             key = entry.Key;
             value = entry.Value;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static KeyValuePair<Maybe<TKey>, Maybe<TValue>> Maybe<TKey, TValue>(this KeyValuePair<TKey, TValue> pair)
+        {
+            return new KeyValuePair<Maybe<TKey>, Maybe<TValue>>(pair.Key, pair.Value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static KeyValuePair<Maybe<TKey>, TValue> KeyMaybe<TKey, TValue>(this KeyValuePair<TKey, TValue> pair)
+        {
+            return new KeyValuePair<Maybe<TKey>, TValue>(pair.Key, pair.Value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static KeyValuePair<TKey, Maybe<TValue>> ValueMaybe<TKey, TValue>(this KeyValuePair<TKey, TValue> pair)
+        {
+            return new KeyValuePair<TKey, Maybe<TValue>>(pair.Key, pair.Value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static KeyValuePair<NullMaybe<TKey>, NullMaybe<TValue>> Nullable<TKey, TValue>(this KeyValuePair<TKey, TValue> pair)
+        {
+            return new KeyValuePair<NullMaybe<TKey>, NullMaybe<TValue>>(pair.Key, pair.Value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static KeyValuePair<NullMaybe<TKey>, TValue> KeyNullable<TKey, TValue>(this KeyValuePair<TKey, TValue> pair)
+        {
+            return new KeyValuePair<NullMaybe<TKey>, TValue>(pair.Key, pair.Value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static KeyValuePair<TKey, NullMaybe<TValue>> ValueNullable<TKey, TValue>(this KeyValuePair<TKey, TValue> pair)
+        {
+            return new KeyValuePair<TKey, NullMaybe<TValue>>(pair.Key, pair.Value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

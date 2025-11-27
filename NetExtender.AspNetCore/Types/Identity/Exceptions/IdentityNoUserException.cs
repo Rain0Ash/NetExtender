@@ -68,7 +68,7 @@ namespace NetExtender.AspNetCore.Identity
             }
         }
         
-        public Object? Id { get; init; }
+        public new Object? Id { get; init; }
 
         Object? IIdentityException.Id
         {

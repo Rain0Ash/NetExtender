@@ -1,7 +1,7 @@
 using System;
 using NetExtender.Interfaces;
 using NetExtender.Types.Monads.Interfaces;
-using NetExtender.Types.Monads.Result;
+using NetExtender.Types.Monads;
 
 namespace NetExtender.Types.Numerics.Interfaces
 {

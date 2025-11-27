@@ -8,15 +8,15 @@ using NetExtender.WindowsPresentation.Types.Converters;
 
 namespace NetExtender.WindowsPresentation.Types.Bindings
 {
-    public abstract class VisibilityBindingAbstraction : CustomBinding
+    public abstract class VisibilityBindingBase : CustomBinding
     {
         public abstract override IValueConverter? Converter { get; set; }
 
-        protected VisibilityBindingAbstraction()
+        protected VisibilityBindingBase()
         {
         }
 
-        protected VisibilityBindingAbstraction(String path)
+        protected VisibilityBindingBase(String path)
             : base(path)
         {
         }

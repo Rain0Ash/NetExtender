@@ -94,17 +94,17 @@ namespace NetExtender.Types.Numerics
         {
             return first.Value < second.Value;
         }
-        
-        public static Boolean operator >(Percent first, Percent second)
-        {
-            return first.Value > second.Value;
-        }
-        
+
         public static Boolean operator <=(Percent first, Percent second)
         {
             return first.Value <= second.Value;
         }
-        
+
+        public static Boolean operator >(Percent first, Percent second)
+        {
+            return first.Value > second.Value;
+        }
+
         public static Boolean operator >=(Percent first, Percent second)
         {
             return first.Value >= second.Value;

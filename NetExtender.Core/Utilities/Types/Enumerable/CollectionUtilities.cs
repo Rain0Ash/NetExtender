@@ -2,6 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -11,6 +12,8 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using NetExtender.Types.Combinatoric;
 using NetExtender.Types.Exceptions;
+using NetExtender.Types.Lists;
+using NetExtender.Types.Monads;
 using NetExtender.Utilities.Core;
 
 namespace NetExtender.Utilities.Types
@@ -118,6 +121,20 @@ namespace NetExtender.Utilities.Types
             }
 
             return collection.InternalArray();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [return: NotNullIfNotNull("collection")]
+        public static IList? AsCOW(this ICollection? collection)
+        {
+            return ToCOW(collection);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [return: NotNullIfNotNull("collection")]
+        public static ListWrapperCOW? ToCOW(this ICollection? collection)
+        {
+            return collection is not null ? new ListWrapperCOW(collection) : null;
         }
 
         public static void Rewrite<T>(this Collection<T> collection, IEnumerable<T>? source)
@@ -716,11 +733,52 @@ namespace NetExtender.Utilities.Types
             return collection;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void CopyTo<T>(this IEnumerable source, T[] array)
+        {
+            CopyTo(source, array, 0);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static void CopyTo<T>(this IEnumerable source, T[] array, Int32 index)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (array is null)
+            {
+                throw new ArgumentNullException(nameof(array));
+            }
+
+            if (index < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(index), index, null);
+            }
+
+            if (source.CountIfMaterialized<T>() is { } count && count + index > array.Length)
+            {
+                throw new ArgumentOutOfRangeException(nameof(array), array.Length, null);
+            }
+
+            IEnumerator enumerator = source.GetEnumerator();
+
+            for (Int32 i = index; i < array.Length && enumerator.MoveNext(); i++)
+            {
+                array[i] = (T) enumerator.Current!;
+            }
+            
+            (enumerator as IDisposable)?.Dispose();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void CopyTo<T>(this IEnumerable<T> source, T[] array)
         {
             CopyTo(source, array, 0);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static void CopyTo<T>(this IEnumerable<T> source, T[] array, Int32 index)
         {
             if (source is null)
@@ -738,13 +796,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
 
-            if (source is ICollection<T> collection)
-            {
-                collection.CopyTo(array, index);
-                return;
-            }
-
-            if (source is IReadOnlyCollection<T> count && count.Count + index > array.Length)
+            if (source.CountIfMaterialized() is { } count && count + index > array.Length)
             {
                 throw new ArgumentOutOfRangeException(nameof(array), array.Length, null);
             }
@@ -757,11 +809,13 @@ namespace NetExtender.Utilities.Types
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void CopyTo<TSource, TResult>(this IEnumerable<TSource> source, TResult[] array, Func<TSource, TResult> selector)
         {
             CopyTo(source, array, 0, selector);
         }
-
+        
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static void CopyTo<TSource, TResult>(this IEnumerable<TSource> source, TResult[] array, Int32 index, Func<TSource, TResult> selector)
         {
             if (source is null)
@@ -784,7 +838,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
             
-            if (source is IReadOnlyCollection<TSource> count && count.Count + index > array.Length)
+            if (source.CountIfMaterialized() is { } count && count + index > array.Length)
             {
                 throw new ArgumentOutOfRangeException(nameof(array), array.Length, null);
             }
@@ -794,6 +848,191 @@ namespace NetExtender.Utilities.Types
             for (Int32 i = index; i < array.Length && enumerator.MoveNext(); i++)
             {
                 array[i] = selector(enumerator.Current);
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void CopyTo<T>(this IEnumerable<T> source, Maybe<T>[] array)
+        {
+            CopyTo(source, array, 0);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static void CopyTo<T>(this IEnumerable<T> source, Maybe<T>[] array, Int32 index)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (array is null)
+            {
+                throw new ArgumentNullException(nameof(array));
+            }
+            
+            if (index < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(index), index, null);
+            }
+            
+            if (source.CountIfMaterialized() is { } count && count + index > array.Length)
+            {
+                throw new ArgumentOutOfRangeException(nameof(array), array.Length, null);
+            }
+            
+            using IEnumerator<T> enumerator = source.GetEnumerator();
+
+            for (Int32 i = index; i < array.Length && enumerator.MoveNext(); i++)
+            {
+                array[i] = enumerator.Current;
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void CopyTo<T>(this IEnumerable<T> source, NullMaybe<T>[] array)
+        {
+            CopyTo(source, array, 0);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static void CopyTo<T>(this IEnumerable<T> source, NullMaybe<T>[] array, Int32 index)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (array is null)
+            {
+                throw new ArgumentNullException(nameof(array));
+            }
+            
+            if (index < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(index), index, null);
+            }
+            
+            if (source.CountIfMaterialized() is { } count && count + index > array.Length)
+            {
+                throw new ArgumentOutOfRangeException(nameof(array), array.Length, null);
+            }
+            
+            using IEnumerator<T> enumerator = source.GetEnumerator();
+
+            for (Int32 i = index; i < array.Length && enumerator.MoveNext(); i++)
+            {
+                array[i] = enumerator.Current;
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void CopyTo<T>(this IEnumerable<NullMaybe<T>> source, T[] array)
+        {
+            CopyTo(source, array, 0);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static void CopyTo<T>(this IEnumerable<NullMaybe<T>> source, T[] array, Int32 index)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (array is null)
+            {
+                throw new ArgumentNullException(nameof(array));
+            }
+            
+            if (index < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(index), index, null);
+            }
+            
+            if (source.CountIfMaterialized() is { } count && count + index > array.Length)
+            {
+                throw new ArgumentOutOfRangeException(nameof(array), array.Length, null);
+            }
+            
+            using IEnumerator<NullMaybe<T>> enumerator = source.GetEnumerator();
+
+            for (Int32 i = index; i < array.Length && enumerator.MoveNext(); i++)
+            {
+                array[i] = enumerator.Current;
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void CopyTo<T>(this IEnumerable<T> source, WeakMaybe<T>[] array) where T : class
+        {
+            CopyTo(source, array, 0);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static void CopyTo<T>(this IEnumerable<T> source, WeakMaybe<T>[] array, Int32 index) where T : class
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (array is null)
+            {
+                throw new ArgumentNullException(nameof(array));
+            }
+            
+            if (index < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(index), index, null);
+            }
+            
+            if (source.CountIfMaterialized() is { } count && count + index > array.Length)
+            {
+                throw new ArgumentOutOfRangeException(nameof(array), array.Length, null);
+            }
+            
+            using IEnumerator<T> enumerator = source.GetEnumerator();
+
+            for (Int32 i = index; i < array.Length && enumerator.MoveNext(); i++)
+            {
+                array[i] = enumerator.Current;
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void CopyTo<T>(this IEnumerable<T> source, Box<T>[] array) where T : class
+        {
+            CopyTo(source, array, 0);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static void CopyTo<T>(this IEnumerable<T> source, Box<T>[] array, Int32 index) where T : class
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (array is null)
+            {
+                throw new ArgumentNullException(nameof(array));
+            }
+            
+            if (index < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(index), index, null);
+            }
+            
+            if (source.CountIfMaterialized() is { } count && count + index > array.Length)
+            {
+                throw new ArgumentOutOfRangeException(nameof(array), array.Length, null);
+            }
+            
+            using IEnumerator<T> enumerator = source.GetEnumerator();
+
+            for (Int32 i = index; i < array.Length && enumerator.MoveNext(); i++)
+            {
+                array[i] = enumerator.Current;
             }
         }
     }

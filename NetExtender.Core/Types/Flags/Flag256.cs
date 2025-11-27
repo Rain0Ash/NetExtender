@@ -109,14 +109,14 @@ namespace NetExtender.Types.Flags
             return !(first == second);
         }
 
-        public static Flag256 operator |(Flag256 first, Flag256 second)
-        {
-            return new Flag256(first.High1 | second.High1, first.High0 | second.High0 , first.Low1 | second.Low1, first.Low0 | second.Low0);
-        }
-
         public static Flag256 operator &(Flag256 first, Flag256 second)
         {
             return new Flag256(first.High1 & second.High1, first.High0 & second.High0 , first.Low1 & second.Low1, first.Low0 & second.Low0);
+        }
+
+        public static Flag256 operator |(Flag256 first, Flag256 second)
+        {
+            return new Flag256(first.High1 | second.High1, first.High0 | second.High0 , first.Low1 | second.Low1, first.Low0 | second.Low0);
         }
 
         public static Flag256 operator ^(Flag256 first, Flag256 second)

@@ -22,9 +22,9 @@ namespace NetExtender.FileSystems
     {
         private const Int32 DefaultBufferSize = 1024;
         private const Int32 DefaultFileStreamBufferSize = 4096;
-        
+
         protected IAnyMemberInterceptor<InterceptStreamWriter, IPropertyInterceptEventArgs, MethodInterceptEventArgs, Any.Value> Interceptor { get; }
-        
+
         public event EventHandler<InterceptStreamWriter, IPropertyInterceptEventArgs>? PropertyIntercept
         {
             add
@@ -38,7 +38,7 @@ namespace NetExtender.FileSystems
                 PropertySetIntercept -= value;
             }
         }
-        
+
         public event EventHandler<InterceptStreamWriter, IPropertyInterceptEventArgs>? PropertyIntercepting
         {
             add
@@ -52,7 +52,7 @@ namespace NetExtender.FileSystems
                 PropertySetIntercepting -= value;
             }
         }
-        
+
         public event EventHandler<InterceptStreamWriter, IPropertyInterceptEventArgs>? PropertyIntercepted
         {
             add
@@ -66,7 +66,7 @@ namespace NetExtender.FileSystems
                 PropertySetIntercepted -= value;
             }
         }
-        
+
         public event EventHandler<InterceptStreamWriter, IPropertyInterceptEventArgs>? PropertyGetIntercept
         {
             add
@@ -80,7 +80,7 @@ namespace NetExtender.FileSystems
                 PropertyGetIntercepted -= value;
             }
         }
-        
+
         public event EventHandler<InterceptStreamWriter, IPropertyInterceptEventArgs>? PropertySetIntercept
         {
             add
@@ -94,12 +94,12 @@ namespace NetExtender.FileSystems
                 PropertySetIntercepted -= value;
             }
         }
-        
+
         public event EventHandler<InterceptStreamWriter, IPropertyInterceptEventArgs>? PropertyGetIntercepting;
         public event EventHandler<InterceptStreamWriter, IPropertyInterceptEventArgs>? PropertySetIntercepting;
         public event EventHandler<InterceptStreamWriter, IPropertyInterceptEventArgs>? PropertyGetIntercepted;
         public event EventHandler<InterceptStreamWriter, IPropertyInterceptEventArgs>? PropertySetIntercepted;
-        
+
         public event EventHandler<InterceptStreamWriter, IMethodInterceptEventArgs>? MethodIntercept
         {
             add
@@ -113,10 +113,10 @@ namespace NetExtender.FileSystems
                 MethodIntercepted -= value;
             }
         }
-        
+
         public event EventHandler<InterceptStreamWriter, IMethodInterceptEventArgs>? MethodIntercepting;
         public event EventHandler<InterceptStreamWriter, IMethodInterceptEventArgs>? MethodIntercepted;
-        
+
         private protected String? _identifier;
         public virtual String Identifier
         {
@@ -249,7 +249,7 @@ namespace NetExtender.FileSystems
             {
                 throw new ArgumentNullException(nameof(options));
             }
-            
+
             if ((options.Access & FileAccess.Write) == 0)
             {
                 throw new ArgumentException("Stream not writable.", nameof(options));
@@ -282,7 +282,7 @@ namespace NetExtender.FileSystems
                 Share = FileShare.Read,
                 BufferSize = DefaultFileStreamBufferSize
             };
-            
+
             return ValidateArgsAndOpenPath(path, encoding, options);
         }
 
@@ -356,7 +356,7 @@ namespace NetExtender.FileSystems
             {
                 writer.WriteCore(buffer.Span);
             }
-            
+
             Interceptor.Intercept(this, default, Core, this, buffer);
         }
 
@@ -500,7 +500,7 @@ namespace NetExtender.FileSystems
             {
                 writer.WriteLineCore(buffer.Span);
             }
-            
+
             Interceptor.Intercept(this, default, Core, this, buffer);
         }
 
@@ -643,9 +643,9 @@ namespace NetExtender.FileSystems
             MethodIntercepted?.Invoke(this, args);
         }
     }
-    
+
     public delegate Stream InterceptStreamWriterOpen(String path, Encoding encoding, FileStreamOptions options);
-    
+
     public static class InterceptStreamWriterUtilities
     {
         internal static Encoding UTF8NoBOM

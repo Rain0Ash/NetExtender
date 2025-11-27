@@ -433,16 +433,6 @@ namespace NetExtender.Types.Monads
             return !(first == second);
         }
 
-        public static Boolean operator >(T? first, MutableDefault<T>? second)
-        {
-            return second < first;
-        }
-
-        public static Boolean operator >=(T? first, MutableDefault<T>? second)
-        {
-            return second <= first;
-        }
-
         public static Boolean operator <(T? first, MutableDefault<T>? second)
         {
             return second > first;
@@ -453,14 +443,14 @@ namespace NetExtender.Types.Monads
             return second >= first;
         }
 
-        public static Boolean operator >(MutableDefault<T>? first, T? second)
+        public static Boolean operator >(T? first, MutableDefault<T>? second)
         {
-            return first is not null && first.CompareTo(second) > 0;
+            return second < first;
         }
 
-        public static Boolean operator >=(MutableDefault<T>? first, T? second)
+        public static Boolean operator >=(T? first, MutableDefault<T>? second)
         {
-            return first is null && second is null || first is not null && first.CompareTo(second) >= 0;
+            return second <= first;
         }
 
         public static Boolean operator <(MutableDefault<T>? first, T? second)
@@ -473,14 +463,14 @@ namespace NetExtender.Types.Monads
             return first is null && second is null || first is not null && first.CompareTo(second) <= 0;
         }
 
-        public static Boolean operator >(MutableDefault<T>? first, MutableDefault<T>? second)
+        public static Boolean operator >(MutableDefault<T>? first, T? second)
         {
-            return first is not null && (second is null || first.CompareTo(second) > 0);
+            return first is not null && first.CompareTo(second) > 0;
         }
 
-        public static Boolean operator >=(MutableDefault<T>? first, MutableDefault<T>? second)
+        public static Boolean operator >=(MutableDefault<T>? first, T? second)
         {
-            return ReferenceEquals(first, second) || first is not null && (second is null || first.CompareTo(second) >= 0);
+            return first is null && second is null || first is not null && first.CompareTo(second) >= 0;
         }
 
         public static Boolean operator <(MutableDefault<T>? first, MutableDefault<T>? second)
@@ -492,7 +482,17 @@ namespace NetExtender.Types.Monads
         {
             return ReferenceEquals(first, second) || first is null && second is not null || first is not null && first.CompareTo(second) <= 0;
         }
-        
+
+        public static Boolean operator >(MutableDefault<T>? first, MutableDefault<T>? second)
+        {
+            return first is not null && (second is null || first.CompareTo(second) > 0);
+        }
+
+        public static Boolean operator >=(MutableDefault<T>? first, MutableDefault<T>? second)
+        {
+            return ReferenceEquals(first, second) || first is not null && (second is null || first.CompareTo(second) >= 0);
+        }
+
         public event PropertyChangingEventHandler? PropertyChanging;
         public event PropertyChangedEventHandler? PropertyChanged;
         
@@ -505,6 +505,26 @@ namespace NetExtender.Types.Monads
             }
         }
 
+        public Boolean HasValue
+        {
+            get
+            {
+                return _value.HasValue;
+            }
+        }
+
+        public virtual T Value
+        {
+            get
+            {
+                return _value.Unwrap(out T? result) ? result : Default;
+            }
+            protected set
+            {
+                _value = value;
+            }
+        }
+
         public T Default
         {
             get
@@ -514,26 +534,6 @@ namespace NetExtender.Types.Monads
             protected set
             {
                 SetDefault(value);
-            }
-        }
-        
-        public virtual T Value
-        {
-            get
-            {
-                return _value.Internal;
-            }
-            protected set
-            {
-                _value = value;
-            }
-        }
-
-        public Boolean HasValue
-        {
-            get
-            {
-                return !_value.IsEmpty;
             }
         }
 
@@ -636,6 +636,30 @@ namespace NetExtender.Types.Monads
         public static MutableDefault<T> Create(Func<T> @default, T value, Boolean notify)
         {
             return notify ? CreateNotify(@default, value) : Create(@default, value);
+        }
+
+        Boolean IMonad.Unwrap(out Object? value)
+        {
+            if (IsEmpty)
+            {
+                value = null;
+                return false;
+            }
+            
+            value = Value;
+            return true;
+        }
+        
+        public Boolean Unwrap([MaybeNullWhen(false)] out T value)
+        {
+            if (IsEmpty)
+            {
+                value = default;
+                return false;
+            }
+            
+            value = Value;
+            return true;
         }
 
         public virtual void GetObjectData(SerializationInfo info, StreamingContext context)

@@ -18,7 +18,7 @@ namespace NetExtender.Utilities.Types
 {
     public static partial class SpanUtilities
     {
-        public static IImmutableSet<Type> MemorySpanType { get; } = new HashSet<Type>
+        public static ImmutableHashSet<Type> MemorySpanType { get; } = new HashSet<Type>
         {
             typeof(Memory<>), typeof(ReadOnlyMemory<>), typeof(Span<>), typeof(ReadOnlySpan<>)
         }.ToImmutableHashSet();
@@ -353,21 +353,7 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static Boolean SequenceEqual<T>(this ReadOnlySpan<T> source, ReadOnlySpan<T> other, IEqualityComparer<T>? comparer)
         {
-            if (source.Length != other.Length)
-            {
-                return false;
-            }
-            
-            comparer ??= EqualityComparer<T>.Default;
-            for (Int32 i = 0; i < source.Length; i++)
-            {
-                if (!comparer.Equals(source[i], other[i]))
-                {
-                    return false;
-                }
-            }
-            
-            return true;
+            return MemoryExtensions.SequenceEqual(source, other, comparer);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -534,6 +520,68 @@ namespace NetExtender.Utilities.Types
             }
 
             return false;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean All<T>(this Memory<T> source, T value)
+        {
+            return All(source.Span, value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean All<T>(this Span<T> source, T value)
+        {
+            return All(source, value, EqualityComparer<T>.Default);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean All<T>(this Memory<T> source, T value, IEqualityComparer<T>? comparer)
+        {
+            return All(source.Span, value, comparer);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean All<T>(this Span<T> source, T value, IEqualityComparer<T>? comparer)
+        {
+            return All((ReadOnlySpan<T>) source, value, comparer);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean All<T>(this ReadOnlyMemory<T> source, T value)
+        {
+            return All(source.Span, value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean All<T>(this ReadOnlySpan<T> source, T value)
+        {
+            return All(source, value, EqualityComparer<T>.Default);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean All<T>(this ReadOnlyMemory<T> source, T value, IEqualityComparer<T>? comparer)
+        {
+            return All(source.Span, value, comparer);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean All<T>(this ReadOnlySpan<T> source, T value, IEqualityComparer<T>? comparer)
+        {
+            if (source.Length <= 0)
+            {
+                return false;
+            }
+            
+            comparer ??= EqualityComparer<T>.Default;
+            foreach (T item in source)
+            {
+                if (!comparer.Equals(item, value))
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -5376,15 +5424,7 @@ namespace NetExtender.Utilities.Types
 
         public static Boolean AllSame<T>(this ReadOnlySpan<T> source, IEqualityComparer<T>? comparer)
         {
-            if (source.Length <= 0)
-            {
-                return true;
-            }
-
-            comparer ??= EqualityComparer<T>.Default;
-
-            T first = source[0];
-            return source.All(item => comparer.Equals(first, item));
+            return source.Length <= 0 || source.All(source[0], comparer);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

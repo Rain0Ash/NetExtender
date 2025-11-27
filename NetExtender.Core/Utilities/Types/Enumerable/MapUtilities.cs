@@ -63,7 +63,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(elementSelector));
             }
 
-            return new Map<TKey, TElement>(source.Select(item => new KeyValuePair<TKey, TElement>(keySelector(item), elementSelector(item))));
+            return new Map<TKey, TElement>(source.Pair(keySelector, elementSelector));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -84,12 +84,11 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(elementSelector));
             }
 
-            return new Map<TKey, TElement>(source.Select(item => new KeyValuePair<TKey, TElement>(keySelector(item), elementSelector(item))), comparer);
+            return new Map<TKey, TElement>(source.Pair(keySelector, elementSelector), comparer);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Map<TKey, TElement> ToMap<TSource, TKey, TElement>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector,
-            IEqualityComparer<TKey>? keyComparer, IEqualityComparer<TElement>? valueComparer) where TKey : notnull where TElement : notnull
+        public static Map<TKey, TElement> ToMap<TSource, TKey, TElement>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector, IEqualityComparer<TKey>? keyComparer, IEqualityComparer<TElement>? valueComparer) where TKey : notnull where TElement : notnull
         {
             if (source is null)
             {
@@ -106,7 +105,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(elementSelector));
             }
 
-            return new Map<TKey, TElement>(source.Select(item => new KeyValuePair<TKey, TElement>(keySelector(item), elementSelector(item))), keyComparer, valueComparer);
+            return new Map<TKey, TElement>(source.Pair(keySelector, elementSelector), keyComparer, valueComparer);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -160,7 +159,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(elementSelector));
             }
 
-            return new IndexMap<TKey, TElement>(source.Select(item => new KeyValuePair<TKey, TElement>(keySelector(item), elementSelector(item))));
+            return new IndexMap<TKey, TElement>(source.Pair(keySelector, elementSelector));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -181,12 +180,11 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(elementSelector));
             }
 
-            return new IndexMap<TKey, TElement>(source.Select(item => new KeyValuePair<TKey, TElement>(keySelector(item), elementSelector(item))), comparer);
+            return new IndexMap<TKey, TElement>(source.Pair(keySelector, elementSelector), comparer);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IndexMap<TKey, TElement> ToIndexMap<TSource, TKey, TElement>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector,
-            IEqualityComparer<TKey>? keyComparer, IEqualityComparer<TElement>? valueComparer) where TKey : notnull where TElement : notnull
+        public static IndexMap<TKey, TElement> ToIndexMap<TSource, TKey, TElement>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector, IEqualityComparer<TKey>? keyComparer, IEqualityComparer<TElement>? valueComparer) where TKey : notnull where TElement : notnull
         {
             if (source is null)
             {
@@ -203,7 +201,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(elementSelector));
             }
 
-            return new IndexMap<TKey, TElement>(source.Select(item => new KeyValuePair<TKey, TElement>(keySelector(item), elementSelector(item))), keyComparer, valueComparer);
+            return new IndexMap<TKey, TElement>(source.Pair(keySelector, elementSelector), keyComparer, valueComparer);
         }
 
         public static TValue GetOrAdd<TKey, TValue>(this IMap<TKey, TValue> dictionary, TKey key, TValue value)

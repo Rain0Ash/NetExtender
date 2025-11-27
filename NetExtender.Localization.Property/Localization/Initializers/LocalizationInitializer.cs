@@ -14,7 +14,7 @@ using NetExtender.Utilities.Types;
 
 namespace NetExtender.Localization.Property.Localization.Initializers
 {
-    public abstract class LocalizationAutoInitializer : LocalizationInitializerAbstraction
+    public abstract class LocalizationAutoInitializer : LocalizationInitializerBase
     {
         public sealed override event PropertyChangedEventHandler? PropertyChanged;
         protected IndexDictionary<ILocalizationPropertyInfo, PropertyInfo> Storage { get; } = new IndexDictionary<ILocalizationPropertyInfo, PropertyInfo>();
@@ -63,7 +63,7 @@ namespace NetExtender.Localization.Property.Localization.Initializers
         }
     }
 
-    public abstract class LocalizationInitializer : LocalizationInitializerAbstraction
+    public abstract class LocalizationInitializer : LocalizationInitializerBase
     {
         public sealed override event PropertyChangedEventHandler? PropertyChanged;
         protected IndexDictionary<ILocalizationPropertyInfo, String> Storage { get; } = new IndexDictionary<ILocalizationPropertyInfo, String>();
@@ -110,12 +110,12 @@ namespace NetExtender.Localization.Property.Localization.Initializers
         }
     }
 
-    public abstract class LocalizationInitializerAbstraction : INotifyPropertyChanged
+    public abstract class LocalizationInitializerBase : INotifyPropertyChanged
     {
         public abstract event PropertyChangedEventHandler? PropertyChanged;
     }
 
-    public abstract class LocalizationInitializerSingleton<T> : LocalizationInitializerAbstraction where T : LocalizationInitializerAbstraction, new()
+    public abstract class LocalizationInitializerSingleton<T> : LocalizationInitializerBase where T : LocalizationInitializerBase, new()
     {
         private static ISingleton<T> Internal { get; } = new Singleton<T>();
 

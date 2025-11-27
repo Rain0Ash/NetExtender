@@ -12,7 +12,7 @@ using NetExtender.Utilities.Types;
 
 namespace NetExtender.Configuration.Properties
 {
-    public abstract class ConfigPropertyInfo<T> : ConfigPropertyAbstraction
+    public abstract class ConfigPropertyInfo<T> : ConfigPropertyBase
     {
         protected DynamicLazy<T> Internal { get; }
         public T Alternate { get; }
@@ -35,7 +35,7 @@ namespace NetExtender.Configuration.Properties
         protected abstract T Initialize();
     }
 
-    public abstract class ConfigPropertyAbstraction : IConfigPropertyInfo
+    public abstract class ConfigPropertyBase : IConfigPropertyInfo
     {
         public abstract String Path { get; }
 
@@ -117,7 +117,7 @@ namespace NetExtender.Configuration.Properties
             }
         }
 
-        protected ConfigPropertyAbstraction(String? key, ConfigPropertyOptions options, IEnumerable<String>? sections)
+        protected ConfigPropertyBase(String? key, ConfigPropertyOptions options, IEnumerable<String>? sections)
         {
             Key = key;
             Sections = sections.AsImmutableArray();
@@ -132,7 +132,7 @@ namespace NetExtender.Configuration.Properties
 
         protected abstract void Dispose(Boolean disposing);
 
-        ~ConfigPropertyAbstraction()
+        ~ConfigPropertyBase()
         {
             Dispose(false);
         }

@@ -3,7 +3,7 @@
 
 namespace NetExtender.Types.Bags
 {
-    /*public abstract class CompressionBagAbstraction<T> : ICompressionBag<T>, IReadOnlyCompressionBag<T>, INotifyCollectionChanged where T : notnull
+    /*public abstract class CompressionBagBase<T> : ICompressionBag<T>, IReadOnlyCompressionBag<T>, INotifyCollectionChanged where T : notnull
     {
         public event NotifyCollectionChangedEventHandler? CollectionChanged;
         
@@ -45,7 +45,7 @@ namespace NetExtender.Types.Bags
             }
         }
 
-        protected CompressionBagAbstraction(Func<T, Decimal> converter)
+        protected CompressionBagBase(Func<T, Decimal> converter)
         {
             Converter = converter ?? throw new ArgumentNullException(nameof(converter));
         }
@@ -120,7 +120,7 @@ namespace NetExtender.Types.Bags
 
         public abstract class Constraint : ICounter64<T>, IReadOnlyCounter64<T>
         {
-            protected abstract CompressionBagAbstraction<T> Bag { get; }
+            protected abstract CompressionBagBase<T> Bag { get; }
             protected abstract SortedCounter64<T> Internal { get; }
 
             public IComparer<T> Comparer

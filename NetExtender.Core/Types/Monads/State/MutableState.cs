@@ -204,16 +204,6 @@ namespace NetExtender.Types.Monads
             return !(first == second);
         }
 
-        public static Boolean operator >(T? first, MutableState<T>? second)
-        {
-            return second < first;
-        }
-
-        public static Boolean operator >=(T? first, MutableState<T>? second)
-        {
-            return second <= first;
-        }
-
         public static Boolean operator <(T? first, MutableState<T>? second)
         {
             return second > first;
@@ -224,14 +214,14 @@ namespace NetExtender.Types.Monads
             return second >= first;
         }
 
-        public static Boolean operator >(MutableState<T>? first, T? second)
+        public static Boolean operator >(T? first, MutableState<T>? second)
         {
-            return first is not null && first.CompareTo(second) > 0;
+            return second < first;
         }
 
-        public static Boolean operator >=(MutableState<T>? first, T? second)
+        public static Boolean operator >=(T? first, MutableState<T>? second)
         {
-            return first is null && second is null || first is not null && first.CompareTo(second) >= 0;
+            return second <= first;
         }
 
         public static Boolean operator <(MutableState<T>? first, T? second)
@@ -244,14 +234,14 @@ namespace NetExtender.Types.Monads
             return first is null && second is null || first is not null && first.CompareTo(second) <= 0;
         }
 
-        public static Boolean operator >(State<T> first, MutableState<T>? second)
+        public static Boolean operator >(MutableState<T>? first, T? second)
         {
-            return second < first;
+            return first is not null && first.CompareTo(second) > 0;
         }
 
-        public static Boolean operator >=(State<T> first, MutableState<T>? second)
+        public static Boolean operator >=(MutableState<T>? first, T? second)
         {
-            return second <= first;
+            return first is null && second is null || first is not null && first.CompareTo(second) >= 0;
         }
 
         public static Boolean operator <(State<T> first, MutableState<T>? second)
@@ -264,14 +254,14 @@ namespace NetExtender.Types.Monads
             return second >= first;
         }
 
-        public static Boolean operator >(MutableState<T>? first, State<T> second)
+        public static Boolean operator >(State<T> first, MutableState<T>? second)
         {
-            return first is not null && first.CompareTo(second) > 0;
+            return second < first;
         }
 
-        public static Boolean operator >=(MutableState<T>? first, State<T> second)
+        public static Boolean operator >=(State<T> first, MutableState<T>? second)
         {
-            return first is not null && first.CompareTo(second) >= 0;
+            return second <= first;
         }
 
         public static Boolean operator <(MutableState<T>? first, State<T> second)
@@ -284,14 +274,14 @@ namespace NetExtender.Types.Monads
             return first is not null && first.CompareTo(second) <= 0;
         }
 
-        public static Boolean operator >(MutableState<T>? first, MutableState<T>? second)
+        public static Boolean operator >(MutableState<T>? first, State<T> second)
         {
-            return first is not null && (second is null || first.CompareTo(second) > 0);
+            return first is not null && first.CompareTo(second) > 0;
         }
 
-        public static Boolean operator >=(MutableState<T>? first, MutableState<T>? second)
+        public static Boolean operator >=(MutableState<T>? first, State<T> second)
         {
-            return ReferenceEquals(first, second) || first is not null && (second is null || first.CompareTo(second) >= 0);
+            return first is not null && first.CompareTo(second) >= 0;
         }
 
         public static Boolean operator <(MutableState<T>? first, MutableState<T>? second)
@@ -302,6 +292,16 @@ namespace NetExtender.Types.Monads
         public static Boolean operator <=(MutableState<T>? first, MutableState<T>? second)
         {
             return ReferenceEquals(first, second) || first is null && second is not null || first is not null && first.CompareTo(second) <= 0;
+        }
+
+        public static Boolean operator >(MutableState<T>? first, MutableState<T>? second)
+        {
+            return first is not null && (second is null || first.CompareTo(second) > 0);
+        }
+
+        public static Boolean operator >=(MutableState<T>? first, MutableState<T>? second)
+        {
+            return ReferenceEquals(first, second) || first is not null && (second is null || first.CompareTo(second) >= 0);
         }
 
         public static MutableState<T?> New
@@ -413,16 +413,43 @@ namespace NetExtender.Types.Monads
         {
             _internal = new State<T>(info.GetValue<T>(nameof(Value)), info.GetBoolean(nameof(HasNext)) ? info.GetValue<T>(nameof(Next)) : default(Maybe<T>));
         }
+
+        Boolean IMonad.Unwrap(out Object? value)
+        {
+            if (IsEmpty)
+            {
+                value = null;
+                return false;
+            }
+            
+            value = Current;
+            return true;
+        }
+        
+        public Boolean Unwrap([MaybeNullWhen(false)] out T value)
+        {
+            if (IsEmpty)
+            {
+                value = default;
+                return false;
+            }
+            
+            value = Current;
+            return true;
+        }
         
         public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue(nameof(Value), _internal.Value);
-            info.AddValue(nameof(HasNext), _internal.Next.HasValue);
 
-            if (_internal.HasNext)
+            if (_internal.Next.Unwrap(out T? next))
             {
-                info.AddValue(nameof(Next), _internal.Next.Value);
+                info.AddValue(nameof(HasNext), true);
+                info.AddValue(nameof(Next), next);
+                return;
             }
+            
+            info.AddValue(nameof(HasNext), false);
         }
 
         protected void OnPropertyChanging([CallerMemberName] String? property = null)

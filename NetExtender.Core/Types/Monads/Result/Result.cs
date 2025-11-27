@@ -3,6 +3,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using NetExtender.Interfaces;
 using NetExtender.Newtonsoft.Types.Monads.Results;
@@ -12,7 +14,7 @@ using NetExtender.Utilities.Serialization;
 using NetExtender.Utilities.Types;
 using Newtonsoft.Json;
 
-namespace NetExtender.Types.Monads.Result
+namespace NetExtender.Types.Monads
 {
     [Serializable]
     [JsonConverter(typeof(ResultJsonConverter<>))]
@@ -32,6 +34,11 @@ namespace NetExtender.Types.Monads.Result
         public static implicit operator T(Result<T> value)
         {
             return value.Internal;
+        }
+
+        public static implicit operator Maybe<T>(Result<T> value)
+        {
+            return value.Unwrap(out T? result) ? new Maybe<T>(result) : default;
         }
 
         public static implicit operator Result<T>(T value)
@@ -84,16 +91,6 @@ namespace NetExtender.Types.Monads.Result
             return first.Internal != second.Internal;
         }
 
-        public static Boolean operator >(T? first, Result<T> second)
-        {
-            return first > second.Internal;
-        }
-
-        public static Boolean operator >=(T? first, Result<T> second)
-        {
-            return first >= second.Internal;
-        }
-
         public static Boolean operator <(T? first, Result<T> second)
         {
             return first < second.Internal;
@@ -104,14 +101,14 @@ namespace NetExtender.Types.Monads.Result
             return first <= second.Internal;
         }
 
-        public static Boolean operator >(Result<T> first, T? second)
+        public static Boolean operator >(T? first, Result<T> second)
         {
-            return first.Internal > second;
+            return first > second.Internal;
         }
 
-        public static Boolean operator >=(Result<T> first, T? second)
+        public static Boolean operator >=(T? first, Result<T> second)
         {
-            return first.Internal >= second;
+            return first >= second.Internal;
         }
 
         public static Boolean operator <(Result<T> first, T? second)
@@ -124,14 +121,14 @@ namespace NetExtender.Types.Monads.Result
             return first.Internal <= second;
         }
 
-        public static Boolean operator >(Result<T> first, Result<T> second)
+        public static Boolean operator >(Result<T> first, T? second)
         {
-            return first.Internal > second.Internal;
+            return first.Internal > second;
         }
 
-        public static Boolean operator >=(Result<T> first, Result<T> second)
+        public static Boolean operator >=(Result<T> first, T? second)
         {
-            return first.Internal >= second.Internal;
+            return first.Internal >= second;
         }
 
         public static Boolean operator <(Result<T> first, Result<T> second)
@@ -142,6 +139,16 @@ namespace NetExtender.Types.Monads.Result
         public static Boolean operator <=(Result<T> first, Result<T> second)
         {
             return first.Internal <= second.Internal;
+        }
+
+        public static Boolean operator >(Result<T> first, Result<T> second)
+        {
+            return first.Internal > second.Internal;
+        }
+
+        public static Boolean operator >=(Result<T> first, Result<T> second)
+        {
+            return first.Internal >= second.Internal;
         }
 
         private readonly Result<T, Exception> Internal;
@@ -208,6 +215,55 @@ namespace NetExtender.Types.Monads.Result
         internal Result(SerializationInfo info, StreamingContext context)
         {
             Internal = new Result<T, Exception>(info, context);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Result<T> Create(T value)
+        {
+            return new Result<T>(value);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Result<T> Create(Exception exception)
+        {
+            return new Result<T>(exception);
+        }
+
+        Boolean IMonad.Unwrap(out Object? value)
+        {
+            if (IsEmpty || Exception is not null)
+            {
+                value = Exception;
+                return false;
+            }
+
+            value = Internal.Internal;
+            return true;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public Boolean Unwrap([MaybeNullWhen(false)] out T value)
+        {
+            if (IsEmpty || Exception is not null)
+            {
+                value = default;
+                return false;
+            }
+
+            value = Internal.Internal;
+            return true;
+        }
+
+        Boolean IResult.Unwrap([MaybeNullWhen(false)] out Exception value)
+        {
+            value = Exception;
+            return value is not null;
+        }
+
+        Boolean IResult<T, Exception>.Unwrap([MaybeNullWhen(false)] out Exception value)
+        {
+            value = Exception;
+            return value is not null;
         }
 
         public void GetObjectData(SerializationInfo info, StreamingContext context)
@@ -481,6 +537,11 @@ namespace NetExtender.Types.Monads.Result
             return value.Value;
         }
 
+        public static implicit operator Maybe<T>(Result<T, TException> value)
+        {
+            return value.Unwrap(out T? result) ? new Maybe<T>(result) : default;
+        }
+
         public static implicit operator Result<T, TException>(T value)
         {
             return new Result<T, TException>(value);
@@ -531,16 +592,6 @@ namespace NetExtender.Types.Monads.Result
             return !(first == second);
         }
 
-        public static Boolean operator >(T? first, Result<T, TException> second)
-        {
-            return second < first;
-        }
-
-        public static Boolean operator >=(T? first, Result<T, TException> second)
-        {
-            return second <= first;
-        }
-
         public static Boolean operator <(T? first, Result<T, TException> second)
         {
             return second > first;
@@ -551,14 +602,14 @@ namespace NetExtender.Types.Monads.Result
             return second >= first;
         }
 
-        public static Boolean operator >(Result<T, TException> first, T? second)
+        public static Boolean operator >(T? first, Result<T, TException> second)
         {
-            return first.CompareTo(second) > 0;
+            return second < first;
         }
 
-        public static Boolean operator >=(Result<T, TException> first, T? second)
+        public static Boolean operator >=(T? first, Result<T, TException> second)
         {
-            return first.CompareTo(second) >= 0;
+            return second <= first;
         }
 
         public static Boolean operator <(Result<T, TException> first, T? second)
@@ -571,12 +622,12 @@ namespace NetExtender.Types.Monads.Result
             return first.CompareTo(second) <= 0;
         }
 
-        public static Boolean operator >(Result<T, TException> first, Result<T, TException> second)
+        public static Boolean operator >(Result<T, TException> first, T? second)
         {
             return first.CompareTo(second) > 0;
         }
 
-        public static Boolean operator >=(Result<T, TException> first, Result<T, TException> second)
+        public static Boolean operator >=(Result<T, TException> first, T? second)
         {
             return first.CompareTo(second) >= 0;
         }
@@ -589,6 +640,16 @@ namespace NetExtender.Types.Monads.Result
         public static Boolean operator <=(Result<T, TException> first, Result<T, TException> second)
         {
             return first.CompareTo(second) <= 0;
+        }
+
+        public static Boolean operator >(Result<T, TException> first, Result<T, TException> second)
+        {
+            return first.CompareTo(second) > 0;
+        }
+
+        public static Boolean operator >=(Result<T, TException> first, Result<T, TException> second)
+        {
+            return first.CompareTo(second) >= 0;
         }
 
         private readonly Maybe<T> _value;
@@ -664,6 +725,55 @@ namespace NetExtender.Types.Monads.Result
             Exception = info.GetValue<TException>(nameof(Exception));
         }
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Result<T, TException> Create(T value)
+        {
+            return new Result<T, TException>(value);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Result<T, TException> Create(TException exception)
+        {
+            return new Result<T, TException>(exception);
+        }
+
+        Boolean IMonad.Unwrap(out Object? value)
+        {
+            if (IsEmpty || Exception is not null)
+            {
+                value = Exception;
+                return false;
+            }
+
+            value = Internal;
+            return true;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public Boolean Unwrap([MaybeNullWhen(false)] out T value)
+        {
+            if (IsEmpty || Exception is not null)
+            {
+                value = default;
+                return false;
+            }
+
+            value = Internal;
+            return true;
+        }
+
+        Boolean IResult.Unwrap([MaybeNullWhen(false)] out Exception value)
+        {
+            value = Exception;
+            return value is not null;
+        }
+
+        Boolean IResult<T, TException>.Unwrap([MaybeNullWhen(false)] out TException value)
+        {
+            value = Exception;
+            return value is not null;
+        }
+
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue(nameof(Value), Internal);
@@ -768,7 +878,9 @@ namespace NetExtender.Types.Monads.Result
                 null => _value.Equals(other),
                 T value => Equals(value, comparer),
                 Exception value => Equals(value),
+                Result<T> value => Equals(value, comparer),
                 Result<T, TException> value => Equals(value, comparer),
+                BusinessResult<T> value => Equals(value, comparer),
                 IResult<T> value => Equals(value, comparer),
                 _ when Internal is not null => Exception is null && Internal.Equals(other),
                 _ => false
@@ -925,11 +1037,6 @@ namespace NetExtender.Types.Monads.Result
             return Exception is null ? _value.ToString() : Exception.ToString();
         }
 
-        public String ToString(String? format, IFormatProvider? provider)
-        {
-            return Exception is null ? _value.ToString(format, provider) : Exception.ToString();
-        }
-
         public String ToString(String? format)
         {
             return ToString(format, null);
@@ -938,6 +1045,11 @@ namespace NetExtender.Types.Monads.Result
         public String ToString(IFormatProvider? provider)
         {
             return ToString(null, provider);
+        }
+
+        public String ToString(String? format, IFormatProvider? provider)
+        {
+            return Exception is null ? _value.ToString(format, provider) : Exception.ToString();
         }
 
         public String? GetString()

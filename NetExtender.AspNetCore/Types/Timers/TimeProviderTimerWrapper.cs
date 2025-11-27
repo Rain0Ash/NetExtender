@@ -16,7 +16,7 @@ namespace NetExtender.AspNetCore
     {
         public new Boolean Change(TimeSpan dueTime, TimeSpan period);
     }
-    
+
     public sealed class TimeProviderTimerWrapper : ITimeServiceTimer
     {
         private ITimeProvider Provider { get; }
@@ -63,7 +63,7 @@ namespace NetExtender.AspNetCore
                 }
             }
         }
-        
+
 #if NET8_0_OR_GREATER
         public TimeProviderTimerWrapper(TimeProvider provider, TimerCallback callback, Object? state, TimeSpan dueTime, TimeSpan period)
             : this(callback ?? throw new ArgumentNullException(nameof(callback)), provider is not null ? (ITimeProvider) new TimeProviderWrapper(provider) : throw new ArgumentNullException(nameof(provider)), state, dueTime, period)

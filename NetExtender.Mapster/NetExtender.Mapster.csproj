@@ -19,10 +19,11 @@
         <PackageTags>Extension</PackageTags>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <IsPackable>true</IsPackable>
+        <GenerateDocumentationFile>false</GenerateDocumentationFile>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="DynamicData" Version="9.3.1" />
+        <PackageReference Include="DynamicData" Version="9.4.1" />
         <PackageReference Include="Mapster" Version="7.4.0"/>
         <PackageReference Include="Mapster.Async" Version="2.0.1"/>
         <PackageReference Include="Mapster.Core" Version="1.2.1"/>

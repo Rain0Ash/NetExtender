@@ -14,7 +14,7 @@ using NetExtender.WindowsPresentation.Utilities.Types;
 
 namespace NetExtender.WindowsPresentation.Types
 {
-    public class WindowsPresentationServiceProvider : WindowsPresentationServiceProviderAbstraction
+    public class WindowsPresentationServiceProvider : WindowsPresentationServiceProviderBase
     {
         internal static readonly WindowsPresentationServiceProvider Internal = new WindowsPresentationServiceProvider();
         public static WindowsPresentationServiceProvider Instance
@@ -61,7 +61,7 @@ namespace NetExtender.WindowsPresentation.Types
             return new Scope(scope, scope);
         }
         
-        public sealed class Scope : WindowsPresentationServiceProviderAbstraction, IAsyncViewModelServiceProviderScope, IAsyncWindowServiceProviderScope
+        public sealed class Scope : WindowsPresentationServiceProviderBase, IAsyncViewModelServiceProviderScope, IAsyncWindowServiceProviderScope
         {
             private IServiceScope ModelsScope { get; }
             private IServiceScope WindowsScope { get; }
@@ -130,7 +130,7 @@ namespace NetExtender.WindowsPresentation.Types
         }
     }
     
-    public abstract class WindowsPresentationServiceProviderAbstraction : IViewModelServiceProvider, IWindowServiceProvider
+    public abstract class WindowsPresentationServiceProviderBase : IViewModelServiceProvider, IWindowServiceProvider
     {
         protected abstract IServiceProvider ModelsProvider { get; }
         protected abstract IServiceProvider WindowsProvider { get; }

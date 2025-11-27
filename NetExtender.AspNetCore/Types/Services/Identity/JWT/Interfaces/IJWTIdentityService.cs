@@ -4,7 +4,7 @@
 using System;
 using Microsoft.AspNetCore.Http;
 using NetExtender.JWT;
-using NetExtender.Types.Monads.Result;
+using NetExtender.Types.Monads;
 
 namespace NetExtender.AspNetCore.Identity.Interfaces
 {

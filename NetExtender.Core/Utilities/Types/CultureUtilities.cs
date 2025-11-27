@@ -382,32 +382,32 @@ namespace NetExtender.Utilities.Types
         {
             return TryGetCultureInfo(culture, out CultureInfo info) ? info : type.GetCultureInfo();
         }
-        
+
 #if NET6_0_OR_GREATER
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String? GetUnicodeFlag(UInt16 identifier)
         {
             return GetUnicodeFlag((LocalizationIdentifier) identifier);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String? GetUnicodeFlag(Int32 identifier)
         {
             return GetUnicodeFlag((LocalizationIdentifier) identifier);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String? GetUnicodeFlag(this CultureIdentifier identifier)
         {
             return GetUnicodeFlag((LocalizationIdentifier) identifier);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String? GetUnicodeFlag(this LocalizationIdentifier identifier)
         {
             return identifier.Region is RegionInfo region ? GetUnicodeFlag(region) : null;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String? GetUnicodeFlag(this CultureInfo culture)
         {
@@ -418,7 +418,7 @@ namespace NetExtender.Utilities.Types
 
             return culture.ToRegionInfo() is RegionInfo region ? GetUnicodeFlag(region) : null;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String GetUnicodeFlag(this RegionInfo region)
         {
@@ -468,7 +468,7 @@ namespace NetExtender.Utilities.Types
         {
             return IdentifiersNormalization.TryGetValue(value, out LocalizationIdentifier identifier) ? identifier : value;
         }
-        
+
         public static IEnumerable<LocalizationIdentifier> Normalize(this IEnumerable<LocalizationIdentifier> source)
         {
             if (source is null)

@@ -27,7 +27,7 @@ namespace NetExtender.Types.Streams
         }
 
         protected Lazy<FileStream> Internal { get; } = null!;
-        
+
         protected FileStream Stream
         {
             get
@@ -243,7 +243,7 @@ namespace NetExtender.Types.Streams
         {
             //Internal = new Lazy<FileStream>(() => new FileStream(handle, access, bufferSize, isAsync));
         }
-        
+
         [UnsupportedOSPlatform("ios")]
         [UnsupportedOSPlatform("macos")]
         [UnsupportedOSPlatform("tvos")]
@@ -407,7 +407,7 @@ namespace NetExtender.Types.Streams
             {
                 await Stream.DisposeAsync();
             }
-            
+
             GC.SuppressFinalize(this);
         }
     }

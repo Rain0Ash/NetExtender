@@ -15,7 +15,7 @@ using NetExtender.Utilities.Types;
 
 namespace NetExtender.NAudio.Types.Sound
 {
-    public class AudioSoundStream : AudioSoundSampleProviderAbstraction, IDisposable
+    public class AudioSoundStream : AudioSoundSampleProviderBase, IDisposable
     {
         protected WaveStream Stream { get; }
         protected ISampleProvider Provider { get; }

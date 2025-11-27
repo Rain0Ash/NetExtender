@@ -497,9 +497,46 @@ namespace NetExtender.Types.Exceptions
             return Create(value.Status, value.Message, value.Description, value.Exception);
         }
 
-        public Guid Id { get; init; } = DateTime.UtcNow.NewGuid();
+        public static TimeSpan DefaultLifeTime { get; set; } = Time.Hour.Quarter;
+
+        [JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
+        private DateTime _creation = DateTime.UtcNow;
+
+        [JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
+        private Guid? _id;
+        public Guid Id
+        {
+            get
+            {
+                return _id ??= _creation.NewGuid();
+            }
+            init
+            {
+                _id = value;
+            }
+        }
+
+        //TODO: To Business Info
         public String? Name { get; init; }
         public String? Description { get; init; }
+        
+        public DateTime CreationTime
+        {
+            get
+            {
+                return _creation;
+            }
+            init
+            {
+                _creation = value;
+            }
+        }
+
+        [JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
+        public TimeSpan LifeTime { get; init; } = DefaultLifeTime;
         public HttpStatusCode? Status { get; init; }
         protected Exception? Inner { get; }
 
@@ -817,6 +854,11 @@ namespace NetExtender.Types.Exceptions
             }
             
             return builder.Count > 0 ? builder.ToImmutable() : null;
+        }
+
+        public override Int32 GetHashCode()
+        {
+            return Id.GetHashCode();
         }
 
         public record BusinessInfo

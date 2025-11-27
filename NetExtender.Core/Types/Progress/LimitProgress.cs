@@ -2,8 +2,8 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using NetExtender.Interfaces;
 using NetExtender.Types.Progress.Interface;
-using NetExtender.Utilities.Numerics;
 
 namespace NetExtender.Types.Progress
 {
@@ -40,15 +40,15 @@ namespace NetExtender.Types.Progress
         }
     }
 
-    public class NumericLimitProgress<T> : LimitProgressAbstraction<T> where T : unmanaged, IConvertible, IComparable<T>
+    public class NumericLimitProgress<T> : LimitProgressBase<T> where T : unmanaged, IConvertible, IComparable<T>
     {
         public NumericLimitProgress(T value, T maximum)
-            : base(value, maximum, MathUnsafe.Increment)
+            : base(value, maximum, INetExtenderIncrementOperators<T>.Increment)
         {
         }
     }
 
-    public abstract class LimitProgressAbstraction<T> : Progress<LimitProgressState<T>>, ILimitProgress<T> where T : IComparable<T>
+    public abstract class LimitProgressBase<T> : Progress<LimitProgressState<T>>, ILimitProgress<T> where T : IComparable<T>
     {
         public T Value { get; protected set; }
         public T Maximum { get; }
@@ -63,7 +63,7 @@ namespace NetExtender.Types.Progress
 
         protected Func<T, T> Handler { get; }
 
-        protected LimitProgressAbstraction(T value, T maximum, Func<T, T> next)
+        protected LimitProgressBase(T value, T maximum, Func<T, T> next)
         {
             Value = value;
             Maximum = maximum;

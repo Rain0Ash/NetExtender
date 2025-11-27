@@ -104,14 +104,14 @@ namespace NetExtender.Types.Flags
             return !(first == second);
         }
 
-        public static Flag64 operator |(Flag64 first, Flag64 second)
-        {
-            return new Flag64(first.Internal | second.Internal);
-        }
-
         public static Flag64 operator &(Flag64 first, Flag64 second)
         {
             return new Flag64(first.Internal & second.Internal);
+        }
+
+        public static Flag64 operator |(Flag64 first, Flag64 second)
+        {
+            return new Flag64(first.Internal | second.Internal);
         }
 
         public static Flag64 operator ^(Flag64 first, Flag64 second)

@@ -10,7 +10,7 @@ using NetExtender.Types.Sets.Interfaces;
 
 namespace NetExtender.Types.Sets
 {
-    public abstract class ObservableSet<T, TSet> : ObservableCollectionAbstraction<T, TSet>, ISet, IObservableSet<T>, IReadOnlyObservableSet<T> where TSet : ISet<T>
+    public abstract class ObservableSet<T, TSet> : ObservableCollectionBase<T, TSet>, ISet, IObservableSet<T>, IReadOnlyObservableSet<T> where TSet : ISet<T>
     {
         protected ObservableSet(TSet set)
             : base(set)
@@ -22,7 +22,7 @@ namespace NetExtender.Types.Sets
             return new State(this);
         }
 
-        protected sealed override void Handle(Step step, ObservableCollectionAbstraction<T, TSet>.State? state)
+        protected sealed override void Handle(Step step, ObservableCollectionBase<T, TSet>.State? state)
         {
             if (state is State @new)
             {
@@ -209,7 +209,7 @@ namespace NetExtender.Types.Sets
             state.Return();
         }
 
-        protected new record State : ObservableCollectionAbstraction<T, TSet>.State
+        protected new record State : ObservableCollectionBase<T, TSet>.State
         {
             public State(ObservableSet<T, TSet> set)
                 : base(set)

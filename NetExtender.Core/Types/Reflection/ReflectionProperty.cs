@@ -25,9 +25,9 @@ namespace NetExtender.Types.Reflection
         {
             return value is not null ? new ReflectionProperty(value) : throw new ArgumentNullException(nameof(value));
         }
-        
+
         private IReflectionProperty Internal { get; }
-        
+
         public String Name
         {
             get
@@ -59,14 +59,14 @@ namespace NetExtender.Types.Reflection
                 return Internal.Property;
             }
         }
-        
+
         public ReflectionProperty(PropertyInfo info)
         {
             if (info is null)
             {
                 throw new ArgumentNullException(nameof(info));
             }
-            
+
             if (info.DeclaringType is null)
             {
                 throw new ArgumentNullException(nameof(info) + "." + nameof(info.DeclaringType));
@@ -110,7 +110,7 @@ namespace NetExtender.Types.Reflection
             return Internal.ToString();
         }
     }
-    
+
     public readonly struct ReflectionProperty<TSource, TProperty> : IReflectionProperty<TSource, TProperty> where TSource : notnull
     {
         public static implicit operator ReflectionProperty<TSource, TProperty>(String value)
@@ -122,7 +122,7 @@ namespace NetExtender.Types.Reflection
 
             return new ReflectionProperty<TSource, TProperty>(value);
         }
-        
+
         public static implicit operator ReflectionProperty<TSource, TProperty>(PropertyInfo value)
         {
             if (value is null)
@@ -170,7 +170,7 @@ namespace NetExtender.Types.Reflection
                 {
                     result |= ReflectionPropertyType.Set;
                 }
-                
+
                 return result;
             }
         }

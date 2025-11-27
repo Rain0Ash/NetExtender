@@ -20,6 +20,7 @@
         <PackageTags>Extension</PackageTags>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <IsPackable>true</IsPackable>
+        <GenerateDocumentationFile>false</GenerateDocumentationFile>
     </PropertyGroup>
 
     <ItemGroup>
@@ -33,7 +34,7 @@
         <PackageReference Include="Microsoft.Win32.SystemEvents" Version="8.0.0" />
         <PackageReference Include="System.Drawing.Common" Version="8.0.14" />
         <PackageReference Include="System.IO.FileSystem.AccessControl" Version="6.0.0-preview.5.21301.5"/>
-        <PackageReference Include="System.Management" Version="9.0.3" />
+        <PackageReference Include="System.Management" Version="8.0.0" />
         <PackageReference Include="System.Threading.AccessControl" Version="8.0.0" />
     </ItemGroup>
 

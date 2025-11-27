@@ -14,14 +14,6 @@ namespace NetExtender.Types.Dictionaries
     [Serializable]
     public class NullableIndexDictionary<TKey, TValue> : IndexDictionary<NullMaybe<TKey>, TValue>, IIndexDictionary<TKey, TValue>, IReadOnlyIndexDictionary<TKey, TValue>
     {
-        Boolean ICollection<KeyValuePair<TKey, TValue>>.IsReadOnly
-        {
-            get
-            {
-                return ((ICollection<KeyValuePair<NullMaybe<TKey>, TValue>>) this).IsReadOnly;
-            }
-        }
-
         IEnumerable<TKey> IReadOnlyDictionary<TKey, TValue>.Keys
         {
             get
@@ -43,7 +35,7 @@ namespace NetExtender.Types.Dictionaries
         {
             get
             {
-                return _keys ??= new SelectorCollectionWrapper<NullMaybe<TKey>, TKey>(base.Keys, static nullable => nullable);
+                return _keys ??= SelectorCollectionWrapper.Nullable(base.Keys);
             }
         }
 
@@ -52,6 +44,14 @@ namespace NetExtender.Types.Dictionaries
             get
             {
                 return base.Values;
+            }
+        }
+        
+        Boolean ICollection<KeyValuePair<TKey, TValue>>.IsReadOnly
+        {
+            get
+            {
+                return ((ICollection<KeyValuePair<NullMaybe<TKey>, TValue>>) this).IsReadOnly;
             }
         }
 
@@ -116,7 +116,7 @@ namespace NetExtender.Types.Dictionaries
 
         public Boolean Contains(KeyValuePair<TKey, TValue> item)
         {
-            return ((IDictionary<NullMaybe<TKey>, TValue>) this).Contains(new KeyValuePair<NullMaybe<TKey>, TValue>(item.Key, item.Value));
+            return ((IDictionary<NullMaybe<TKey>, TValue>) this).Contains(item.KeyNullable());
         }
 
         public Boolean ContainsKey(TKey key)
@@ -136,14 +136,14 @@ namespace NetExtender.Types.Dictionaries
 
         public new KeyValuePair<TKey, TValue> GetKeyValuePairByIndex(Int32 index)
         {
-            (NullMaybe<TKey> key, TValue? value) = base.GetKeyValuePairByIndex(index);
+            (NullMaybe<TKey> key, TValue value) = base.GetKeyValuePairByIndex(index);
             return new KeyValuePair<TKey, TValue>(key, value);
         }
 
         public Boolean TryGetKeyValuePairByIndex(Int32 index, out KeyValuePair<TKey, TValue> pair)
         {
             Boolean successful = base.TryGetKeyValuePairByIndex(index, out KeyValuePair<NullMaybe<TKey>, TValue> result);
-            (NullMaybe<TKey> key, TValue? value) = result;
+            (NullMaybe<TKey> key, TValue value) = result;
             pair = new KeyValuePair<TKey, TValue>(key, value);
             return successful;
         }
@@ -180,7 +180,7 @@ namespace NetExtender.Types.Dictionaries
 
         public void Add(KeyValuePair<TKey, TValue> item)
         {
-            ((IDictionary<NullMaybe<TKey>, TValue>) this).Add(new KeyValuePair<NullMaybe<TKey>, TValue>(item.Key, item.Value));
+            ((IDictionary<NullMaybe<TKey>, TValue>) this).Add(item.KeyNullable());
         }
 
         public void Add(TKey key, TValue value)
@@ -210,7 +210,7 @@ namespace NetExtender.Types.Dictionaries
 
         public Boolean Remove(KeyValuePair<TKey, TValue> item)
         {
-            return ((IDictionary<NullMaybe<TKey>, TValue>) this).Remove(new KeyValuePair<NullMaybe<TKey>, TValue>(item.Key, item.Value));
+            return ((IDictionary<NullMaybe<TKey>, TValue>) this).Remove(item.KeyNullable());
         }
 
         public Boolean Remove(TKey key)
@@ -257,7 +257,7 @@ namespace NetExtender.Types.Dictionaries
 
         public new IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
         {
-            foreach ((NullMaybe<TKey> key, TValue? value) in (IEnumerable<KeyValuePair<NullMaybe<TKey>, TValue>>) this)
+            foreach ((NullMaybe<TKey> key, TValue value) in (IEnumerable<KeyValuePair<NullMaybe<TKey>, TValue>>) this)
             {
                 yield return new KeyValuePair<TKey, TValue>(key, value);
             }

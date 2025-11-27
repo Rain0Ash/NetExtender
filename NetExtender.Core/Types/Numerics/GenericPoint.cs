@@ -3,8 +3,8 @@
 
 using System;
 using System.Runtime.CompilerServices;
+using NetExtender.Interfaces;
 using NetExtender.Types.Exceptions;
-using NetExtender.Utilities.Numerics;
 
 namespace NetExtender.Types.Numerics
 {
@@ -23,11 +23,11 @@ namespace NetExtender.Types.Numerics
         DownRight = Down | Right
     }
 
-    public readonly struct Point2<T> : IEquatable<Point2<T>> where T : unmanaged, IComparable<T>, IEquatable<T>, IConvertible
+    public readonly struct Point2<T> : IEquatableStruct<Point2<T>> where T : struct, IEquatable<T>, IComparable<T>, IConvertible
     {
-        public static Boolean operator ==(Point2<T> fisrt, Point2<T> second)
+        public static Boolean operator ==(Point2<T> first, Point2<T> second)
         {
-            return fisrt.Equals(second);
+            return first.Equals(second);
         }
 
         public static Boolean operator !=(Point2<T> first, Point2<T> second)
@@ -37,60 +37,79 @@ namespace NetExtender.Types.Numerics
 
         public static Point2<T> operator +(Point2<T> first, Point2<T> second)
         {
-            return new Point2<T>(MathUnsafe.Add(first.X, second.X), MathUnsafe.Add(first.Y, second.Y));
+            return new Point2<T>(INetExtenderAdditionOperators<T>.Addition(first.X, second.X), INetExtenderAdditionOperators<T>.Addition(first.Y, second.Y));
         }
 
         public static Point2<T> operator -(Point2<T> first, Point2<T> second)
         {
-            return new Point2<T>(MathUnsafe.Subtract(first.X, second.X), MathUnsafe.Subtract(first.Y, second.Y));
+            return new Point2<T>(INetExtenderSubtractionOperators<T>.Subtraction(first.X, second.X), INetExtenderSubtractionOperators<T>.Subtraction(first.Y, second.Y));
         }
 
         public static Point2<T> operator *(Point2<T> first, Point2<T> second)
         {
-            return new Point2<T>(MathUnsafe.Multiply(first.X, second.X), MathUnsafe.Multiply(first.Y, second.Y));
+            return new Point2<T>(INetExtenderMultiplyOperators<T>.Multiply(first.X, second.X), INetExtenderMultiplyOperators<T>.Multiply(first.Y, second.Y));
         }
 
         public static Point2<T> operator /(Point2<T> first, Point2<T> second)
         {
-            return new Point2<T>(MathUnsafe.Divide(first.X, second.X), MathUnsafe.Divide(first.Y, second.Y));
+            return new Point2<T>(INetExtenderDivisionOperators<T>.Division(first.X, second.X), INetExtenderDivisionOperators<T>.Division(first.Y, second.Y));
         }
 
         public static Point2<T> operator %(Point2<T> first, Point2<T> second)
         {
-            return new Point2<T>(MathUnsafe.Modulo(first.X, second.X), MathUnsafe.Modulo(first.Y, second.Y));
+            return new Point2<T>(INetExtenderModulusOperators<T>.Modulus(first.X, second.X), INetExtenderModulusOperators<T>.Modulus(first.Y, second.Y));
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static T ToGeneric(Int32 value)
+        internal static readonly T zero = INetExtenderNumberConstantsBase<T>.Zero;
+        internal static readonly T one = INetExtenderNumberConstantsBase<T>.One;
+
+        public static Point2<T> Zero
         {
-            return (T) Convert.ChangeType(value, typeof(T));
+            get
+            {
+                return new Point2<T>(zero, zero);
+            }
+        }
+
+        public static Point2<T> One
+        {
+            get
+            {
+                return new Point2<T>(one, one);
+            }
         }
 
         public T X { get; }
         public T Y { get; }
 
-        public static Point2<T> Zero { get; } = new Point2<T>(0, 0);
-        public static Point2<T> One { get; } = new Point2<T>(1, 1);
+        public Boolean IsPositive
+        {
+            get
+            {
+                return INetExtenderComparisonOperators<T>.GreaterThanOrEqual(X, zero) && INetExtenderComparisonOperators<T>.GreaterThanOrEqual(Y, zero);
+            }
+        }
+
+        public Boolean IsNegative
+        {
+            get
+            {
+                return INetExtenderComparisonOperators<T>.LessThan(X, zero) && INetExtenderComparisonOperators<T>.LessThan(Y, zero);
+            }
+        }
+
+        public Boolean IsEmpty
+        {
+            get
+            {
+                return INetExtenderEqualityOperators<T>.Equality(X, zero) && INetExtenderEqualityOperators<T>.Equality(Y, zero);
+            }
+        }
 
         public Point2(T x, T y)
         {
             X = x;
             Y = y;
-        }
-
-        public Point2(T x, Int32 y)
-            : this(x, ToGeneric(y))
-        {
-        }
-
-        public Point2(Int32 x, T y)
-            : this(ToGeneric(x), y)
-        {
-        }
-
-        public Point2(Int32 x, Int32 y)
-            : this(ToGeneric(x), ToGeneric(y))
-        {
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -108,7 +127,7 @@ namespace NetExtender.Types.Numerics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Point2<T> Offset(PointOffset offset)
         {
-            return Offset(offset, (T) Convert.ChangeType(1, typeof(T)));
+            return Offset(offset, one);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -117,13 +136,13 @@ namespace NetExtender.Types.Numerics
             return offset switch
             {
                 PointOffset.None => this,
-                PointOffset.Up => this - new Point2<T>(0, count),
-                PointOffset.Down => this + new Point2<T>(0, count),
-                PointOffset.Left => this - new Point2<T>(count, 0),
-                PointOffset.Right => this + new Point2<T>(count, 0),
+                PointOffset.Up => this - new Point2<T>(zero, count),
+                PointOffset.Down => this + new Point2<T>(zero, count),
+                PointOffset.Left => this - new Point2<T>(count, zero),
+                PointOffset.Right => this + new Point2<T>(count, zero),
                 PointOffset.UpLeft => this - new Point2<T>(count, count),
-                PointOffset.DownLeft => this + new Point2<T>(MathUnsafe.Negative(count), count),
-                PointOffset.UpRight => this - new Point2<T>(MathUnsafe.Negative(count), count),
+                PointOffset.DownLeft => this + new Point2<T>(zero, count) - new Point2<T>(count, zero),
+                PointOffset.UpRight => this - new Point2<T>(zero, count) + new Point2<T>(count, zero),
                 PointOffset.DownRight => this + new Point2<T>(count, count),
                 _ => throw new EnumUndefinedOrNotSupportedException<PointOffset>(offset, nameof(offset), null)
             };
@@ -141,18 +160,6 @@ namespace NetExtender.Types.Numerics
             return this - new Point2<T>(x, y);
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Boolean IsPositive()
-        {
-            return MathUnsafe.GreaterEqual(X, default) && MathUnsafe.GreaterEqual(Y, default);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Boolean IsNegative()
-        {
-            return MathUnsafe.LessEqual(X, default) && MathUnsafe.LessEqual(Y, default);
-        }
-
         public override Int32 GetHashCode()
         {
             return HashCode.Combine(X, Y);
@@ -165,20 +172,20 @@ namespace NetExtender.Types.Numerics
 
         public Boolean Equals(Point2<T> other)
         {
-            return MathUnsafe.Equal(X, other.X) && MathUnsafe.Equal(Y, other.Y);
+            return X.Equals(other.X) && Y.Equals(other.Y);
         }
 
         public override String ToString()
         {
-            return $"X:{X}, Y:{Y}";
+            return $"X: {X}, Y: {Y}";
         }
     }
 
     public readonly struct Point3<T> : IEquatable<Point3<T>> where T : unmanaged, IComparable<T>, IEquatable<T>, IConvertible
     {
-        public static Boolean operator ==(Point3<T> fisrt, Point3<T> second)
+        public static Boolean operator ==(Point3<T> first, Point3<T> second)
         {
-            return fisrt.Equals(second);
+            return first.Equals(second);
         }
 
         public static Boolean operator !=(Point3<T> first, Point3<T> second)
@@ -188,52 +195,96 @@ namespace NetExtender.Types.Numerics
 
         public static Point3<T> operator +(Point3<T> first, Point3<T> second)
         {
-            return new Point3<T>(MathUnsafe.Add(first.X, second.X), MathUnsafe.Add(first.Y, second.Y), MathUnsafe.Add(first.Z, second.Z));
+            return new Point3<T>(INetExtenderAdditionOperators<T>.Addition(first.X, second.X), INetExtenderAdditionOperators<T>.Addition(first.Y, second.Y), INetExtenderAdditionOperators<T>.Addition(first.Z, second.Z));
         }
 
         public static Point3<T> operator -(Point3<T> first, Point3<T> second)
         {
-            return new Point3<T>(MathUnsafe.Subtract(first.X, second.X), MathUnsafe.Subtract(first.Y, second.Y), MathUnsafe.Subtract(first.Z, second.Z));
+            return new Point3<T>(INetExtenderSubtractionOperators<T>.Subtraction(first.X, second.X), INetExtenderSubtractionOperators<T>.Subtraction(first.Y, second.Y), INetExtenderSubtractionOperators<T>.Subtraction(first.Z, second.Z));
         }
 
         public static Point3<T> operator *(Point3<T> first, Point3<T> second)
         {
-            return new Point3<T>(MathUnsafe.Multiply(first.X, second.X), MathUnsafe.Multiply(first.Y, second.Y), MathUnsafe.Multiply(first.Z, second.Z));
+            return new Point3<T>(INetExtenderMultiplyOperators<T>.Multiply(first.X, second.X), INetExtenderMultiplyOperators<T>.Multiply(first.Y, second.Y), INetExtenderMultiplyOperators<T>.Multiply(first.Z, second.Z));
         }
 
         public static Point3<T> operator /(Point3<T> first, Point3<T> second)
         {
-            return new Point3<T>(MathUnsafe.Divide(first.X, second.X), MathUnsafe.Divide(first.Y, second.Y), MathUnsafe.Divide(first.Z, second.Z));
+            return new Point3<T>(INetExtenderDivisionOperators<T>.Division(first.X, second.X), INetExtenderDivisionOperators<T>.Division(first.Y, second.Y), INetExtenderDivisionOperators<T>.Division(first.Z, second.Z));
         }
 
         public static Point3<T> operator %(Point3<T> first, Point3<T> second)
         {
-            return new Point3<T>(MathUnsafe.Modulo(first.X, second.X), MathUnsafe.Modulo(first.Y, second.Y), MathUnsafe.Modulo(first.Z, second.Z));
+            return new Point3<T>(INetExtenderModulusOperators<T>.Modulus(first.X, second.X), INetExtenderModulusOperators<T>.Modulus(first.Y, second.Y), INetExtenderModulusOperators<T>.Modulus(first.Z, second.Z));
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static T ToGeneric(Int32 value)
+        private static T zero
         {
-            return (T) Convert.ChangeType(value, typeof(T));
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get
+            {
+                return Point2<T>.zero;
+            }
+        }
+
+        private static T one
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get
+            {
+                return Point2<T>.one;
+            }
+        }
+
+        public static Point3<T> Zero
+        {
+            get
+            {
+                return new Point3<T>(zero, zero, zero);
+            }
+        }
+
+        public static Point3<T> One
+        {
+            get
+            {
+                return new Point3<T>(one, one, one);
+            }
         }
 
         public T X { get; }
         public T Y { get; }
         public T Z { get; }
 
-        public static Point3<T> Zero { get; } = new Point3<T>(0, 0, 0);
-        public static Point3<T> One { get; } = new Point3<T>(1, 1, 1);
+        public Boolean IsPositive
+        {
+            get
+            {
+                return INetExtenderComparisonOperators<T>.GreaterThanOrEqual(X, zero) && INetExtenderComparisonOperators<T>.GreaterThanOrEqual(Y, zero) && INetExtenderComparisonOperators<T>.GreaterThanOrEqual(Z, zero);
+            }
+        }
+
+        public Boolean IsNegative
+        {
+            get
+            {
+                return INetExtenderComparisonOperators<T>.LessThan(X, zero) && INetExtenderComparisonOperators<T>.LessThan(Y, zero) && INetExtenderComparisonOperators<T>.LessThan(Z, zero);
+            }
+        }
+
+        public Boolean IsEmpty
+        {
+            get
+            {
+                return INetExtenderEqualityOperators<T>.Equality(X, zero) && INetExtenderEqualityOperators<T>.Equality(Y, zero) && INetExtenderEqualityOperators<T>.Equality(Z, zero);
+            }
+        }
 
         public Point3(T x, T y, T z)
         {
             X = x;
             Y = y;
             Z = z;
-        }
-
-        public Point3(Int32 x, Int32 y, Int32 z)
-            : this(ToGeneric(x), ToGeneric(y), ToGeneric(z))
-        {
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -260,18 +311,6 @@ namespace NetExtender.Types.Numerics
             return this - new Point3<T>(x, y, z);
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Boolean IsPositive()
-        {
-            return MathUnsafe.GreaterEqual(X, default) && MathUnsafe.GreaterEqual(Y, default) && MathUnsafe.GreaterEqual(Z, default);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Boolean IsNegative()
-        {
-            return MathUnsafe.LessEqual(X, default) && MathUnsafe.LessEqual(Y, default) && MathUnsafe.LessEqual(Z, default);
-        }
-
         public override Int32 GetHashCode()
         {
             return HashCode.Combine(X, Y);
@@ -284,12 +323,12 @@ namespace NetExtender.Types.Numerics
 
         public Boolean Equals(Point3<T> other)
         {
-            return MathUnsafe.Equal(X, other.X) && MathUnsafe.Equal(Y, other.Y) && MathUnsafe.Equal(Z, other.Z);
+            return X.Equals(other.X) && X.Equals(other.Y) && X.Equals(other.Z);
         }
 
         public override String ToString()
         {
-            return $"X:{X}, Y:{Y}, Z:{Z}";
+            return $"X: {X}, Y: {Y}, Z: {Z}";
         }
     }
 }

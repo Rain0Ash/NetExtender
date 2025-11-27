@@ -19,6 +19,11 @@ namespace NetExtender.Types.Counters
         {
         }
 
+        public SortedCounter(IComparer<NullMaybe<T>>? comparer)
+            : base(comparer)
+        {
+        }
+
         public SortedCounter(IEnumerable<T> collection)
             : base(collection)
         {
@@ -34,7 +39,17 @@ namespace NetExtender.Types.Counters
         {
         }
 
+        public SortedCounter(IEnumerable<T> collection, IComparer<NullMaybe<T>>? comparer)
+            : base(collection, comparer)
+        {
+        }
+
         public SortedCounter(IEnumerable<KeyValuePair<T, Int32>> collection, IComparer<T>? comparer)
+            : base(collection, comparer)
+        {
+        }
+
+        public SortedCounter(IEnumerable<KeyValuePair<T, Int32>> collection, IComparer<NullMaybe<T>>? comparer)
             : base(collection, comparer)
         {
         }
@@ -69,14 +84,14 @@ namespace NetExtender.Types.Counters
             return --value;
         }
 
-        protected sealed override Int32 Add(Int32 left, Int32 right)
+        protected sealed override Int32 Add(Int32 first, Int32 second)
         {
-            return left + right;
+            return first + second;
         }
 
-        protected sealed override Int32 Subtract(Int32 left, Int32 right)
+        protected sealed override Int32 Subtract(Int32 first, Int32 second)
         {
-            return left - right;
+            return first - second;
         }
     }
     
@@ -87,6 +102,11 @@ namespace NetExtender.Types.Counters
         }
 
         public SortedCounter64(IComparer<T>? comparer)
+            : base(comparer)
+        {
+        }
+
+        public SortedCounter64(IComparer<NullMaybe<T>>? comparer)
             : base(comparer)
         {
         }
@@ -106,7 +126,17 @@ namespace NetExtender.Types.Counters
         {
         }
 
+        public SortedCounter64(IEnumerable<T> collection, IComparer<NullMaybe<T>>? comparer)
+            : base(collection, comparer)
+        {
+        }
+
         public SortedCounter64(IEnumerable<KeyValuePair<T, Int64>> collection, IComparer<T>? comparer)
+            : base(collection, comparer)
+        {
+        }
+
+        public SortedCounter64(IEnumerable<KeyValuePair<T, Int64>> collection, IComparer<NullMaybe<T>>? comparer)
             : base(collection, comparer)
         {
         }
@@ -141,14 +171,14 @@ namespace NetExtender.Types.Counters
             return --value;
         }
 
-        protected sealed override Int64 Add(Int64 left, Int64 right)
+        protected sealed override Int64 Add(Int64 first, Int64 second)
         {
-            return left + right;
+            return first + second;
         }
 
-        protected sealed override Int64 Subtract(Int64 left, Int64 right)
+        protected sealed override Int64 Subtract(Int64 first, Int64 second)
         {
-            return left - right;
+            return first - second;
         }
     }
     
@@ -159,6 +189,11 @@ namespace NetExtender.Types.Counters
         }
 
         public DecimalSortedCounter(IComparer<T>? comparer)
+            : base(comparer)
+        {
+        }
+
+        public DecimalSortedCounter(IComparer<NullMaybe<T>>? comparer)
             : base(comparer)
         {
         }
@@ -178,7 +213,17 @@ namespace NetExtender.Types.Counters
         {
         }
 
+        public DecimalSortedCounter(IEnumerable<T> collection, IComparer<NullMaybe<T>>? comparer)
+            : base(collection, comparer)
+        {
+        }
+
         public DecimalSortedCounter(IEnumerable<KeyValuePair<T, Decimal>> collection, IComparer<T>? comparer)
+            : base(collection, comparer)
+        {
+        }
+
+        public DecimalSortedCounter(IEnumerable<KeyValuePair<T, Decimal>> collection, IComparer<NullMaybe<T>>? comparer)
             : base(collection, comparer)
         {
         }
@@ -213,18 +258,18 @@ namespace NetExtender.Types.Counters
             return --value;
         }
 
-        protected sealed override Decimal Add(Decimal left, Decimal right)
+        protected sealed override Decimal Add(Decimal first, Decimal second)
         {
-            return left + right;
+            return first + second;
         }
 
-        protected sealed override Decimal Subtract(Decimal left, Decimal right)
+        protected sealed override Decimal Subtract(Decimal first, Decimal second)
         {
-            return left - right;
+            return first - second;
         }
     }
     
-    public class SortedCounter<T, TCount> : CounterAbstraction<T, TCount> where TCount : unmanaged, IConvertible
+    public class SortedCounter<T, TCount> : CounterBase<T, TCount> where TCount : unmanaged, IConvertible
     {
         protected sealed override NullableSortedDictionary<T, TCount> Internal { get; }
 
@@ -250,6 +295,11 @@ namespace NetExtender.Types.Counters
         }
 
         public SortedCounter(IComparer<T>? comparer)
+        {
+            Internal = new NullableSortedDictionary<T, TCount>(comparer);
+        }
+
+        public SortedCounter(IComparer<NullMaybe<T>>? comparer)
         {
             Internal = new NullableSortedDictionary<T, TCount>(comparer);
         }
@@ -287,7 +337,29 @@ namespace NetExtender.Types.Counters
             AddRange(collection);
         }
 
+        public SortedCounter(IEnumerable<T> collection, IComparer<NullMaybe<T>>? comparer)
+        {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
+            Internal = new NullableSortedDictionary<T, TCount>(comparer);
+            AddRange(collection);
+        }
+
         public SortedCounter(IEnumerable<KeyValuePair<T, TCount>> collection, IComparer<T>? comparer)
+        {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
+            Internal = new NullableSortedDictionary<T, TCount>(comparer);
+            AddRange(collection);
+        }
+
+        public SortedCounter(IEnumerable<KeyValuePair<T, TCount>> collection, IComparer<NullMaybe<T>>? comparer)
         {
             if (collection is null)
             {

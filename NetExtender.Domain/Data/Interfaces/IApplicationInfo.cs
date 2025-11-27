@@ -7,24 +7,24 @@ namespace NetExtender.Domains.Interfaces
 {
     public interface IApplicationInfo : IEquality<IApplicationInfo>, IDisposable
     {
-        public static Boolean operator >(IApplicationInfo first, IApplicationInfo second)
-        {
-            return first.CompareTo(second) > 0;
-        }
-
         public static Boolean operator <(IApplicationInfo first, IApplicationInfo second)
         {
             return first.CompareTo(second) < 0;
         }
 
-        public static Boolean operator >=(IApplicationInfo first, IApplicationInfo second)
-        {
-            return first.CompareTo(second) >= 0;
-        }
-
         public static Boolean operator <=(IApplicationInfo first, IApplicationInfo second)
         {
             return first.CompareTo(second) <= 0;
+        }
+
+        public static Boolean operator >(IApplicationInfo first, IApplicationInfo second)
+        {
+            return first.CompareTo(second) > 0;
+        }
+
+        public static Boolean operator >=(IApplicationInfo first, IApplicationInfo second)
+        {
+            return first.CompareTo(second) >= 0;
         }
 
         public ApplicationInfoMessage Message { get; }

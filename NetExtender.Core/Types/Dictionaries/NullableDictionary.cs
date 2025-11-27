@@ -20,7 +20,7 @@ namespace NetExtender.Types.Dictionaries
         {
             get
             {
-                return _keys ??= new SelectorCollectionWrapper<NullMaybe<TKey>, TKey>(base.Keys, static nullable => nullable);
+                return _keys ??= SelectorCollectionWrapper.Nullable(base.Keys);
             }
         }
         
@@ -84,10 +84,40 @@ namespace NetExtender.Types.Dictionaries
         public NullableDictionary()
         {
         }
+
+        public NullableDictionary(IEqualityComparer<TKey>? comparer)
+            : base(comparer?.ToNullMaybeEqualityComparer())
+        {
+        }
+
+        public NullableDictionary(IEqualityComparer<NullMaybe<TKey>>? comparer)
+            : base(comparer)
+        {
+        }
+        
+        public NullableDictionary(IDictionary<TKey, TValue> dictionary)
+            : this(dictionary, (IEqualityComparer<NullMaybe<TKey>>?) null)
+        {
+        }
         
         public NullableDictionary(IDictionary<NullMaybe<TKey>, TValue> dictionary)
             : base(dictionary)
         {
+        }
+
+        public NullableDictionary(IDictionary<TKey, TValue> dictionary, IEqualityComparer<TKey>? comparer)
+            : this(dictionary, comparer?.ToNullMaybeEqualityComparer())
+        {
+        }
+
+        [SuppressMessage("ReSharper", "MergeConditionalExpression")]
+        public NullableDictionary(IDictionary<TKey, TValue> dictionary, IEqualityComparer<NullMaybe<TKey>>? comparer)
+            : base(dictionary is not null ? dictionary.Count : throw new ArgumentNullException(nameof(dictionary)), comparer)
+        {
+            foreach ((TKey key, TValue value) in dictionary)
+            {
+                Add(key, value);
+            }
         }
 
         public NullableDictionary(IDictionary<NullMaybe<TKey>, TValue> dictionary, IEqualityComparer<TKey>? comparer)
@@ -100,8 +130,23 @@ namespace NetExtender.Types.Dictionaries
         {
         }
 
+        public NullableDictionary(IEnumerable<KeyValuePair<TKey, TValue>> collection)
+            : base(collection is not null ? collection.KeyNullable() : throw new ArgumentNullException(nameof(collection)))
+        {
+        }
+
         public NullableDictionary(IEnumerable<KeyValuePair<NullMaybe<TKey>, TValue>> collection)
             : base(collection)
+        {
+        }
+
+        public NullableDictionary(IEnumerable<KeyValuePair<TKey, TValue>> collection, IEqualityComparer<TKey>? comparer)
+            : this(collection is not null ? collection.KeyNullable() : throw new ArgumentNullException(nameof(collection)), comparer)
+        {
+        }
+
+        public NullableDictionary(IEnumerable<KeyValuePair<TKey, TValue>> collection, IEqualityComparer<NullMaybe<TKey>>? comparer)
+            : base(collection is not null ? collection.KeyNullable() : throw new ArgumentNullException(nameof(collection)), comparer)
         {
         }
 
@@ -112,16 +157,6 @@ namespace NetExtender.Types.Dictionaries
 
         public NullableDictionary(IEnumerable<KeyValuePair<NullMaybe<TKey>, TValue>> collection, IEqualityComparer<NullMaybe<TKey>>? comparer)
             : base(collection, comparer)
-        {
-        }
-
-        public NullableDictionary(IEqualityComparer<TKey>? comparer)
-            : base(comparer?.ToNullMaybeEqualityComparer())
-        {
-        }
-
-        public NullableDictionary(IEqualityComparer<NullMaybe<TKey>>? comparer)
-            : base(comparer)
         {
         }
 
@@ -147,7 +182,7 @@ namespace NetExtender.Types.Dictionaries
 
         public Boolean Contains(KeyValuePair<TKey, TValue> item)
         {
-            return ((IDictionary<NullMaybe<TKey>, TValue>) this).Contains(new KeyValuePair<NullMaybe<TKey>, TValue>(item.Key, item.Value));
+            return ((IDictionary<NullMaybe<TKey>, TValue>) this).Contains(item.KeyNullable());
         }
 
         public Boolean ContainsKey(TKey key)
@@ -162,7 +197,7 @@ namespace NetExtender.Types.Dictionaries
 
         public void Add(KeyValuePair<TKey, TValue> item)
         {
-            ((IDictionary<NullMaybe<TKey>, TValue>) this).Add(new KeyValuePair<NullMaybe<TKey>, TValue>(item.Key, item.Value));
+            ((IDictionary<NullMaybe<TKey>, TValue>) this).Add(item.KeyNullable());
         }
 
         public void Add(TKey key, TValue value)
@@ -170,9 +205,14 @@ namespace NetExtender.Types.Dictionaries
             base.Add(key, value);
         }
 
+        public Boolean TryAdd(TKey key, TValue value)
+        {
+            return base.TryAdd(key, value);
+        }
+
         public Boolean Remove(KeyValuePair<TKey, TValue> item)
         {
-            return ((IDictionary<NullMaybe<TKey>, TValue>) this).Remove(new KeyValuePair<NullMaybe<TKey>, TValue>(item.Key, item.Value));
+            return ((IDictionary<NullMaybe<TKey>, TValue>) this).Remove(item.KeyNullable());
         }
 
         public Boolean Remove(TKey key)
@@ -180,7 +220,6 @@ namespace NetExtender.Types.Dictionaries
             return base.Remove(key);
         }
         
-        //TODO: починить все
         public void CopyTo(KeyValuePair<TKey, TValue>[] array, Int32 index)
         {
             CollectionUtilities.CopyTo(this, array, index);
@@ -188,7 +227,7 @@ namespace NetExtender.Types.Dictionaries
 
         public new IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
         {
-            foreach ((NullMaybe<TKey> key, TValue? value) in (IEnumerable<KeyValuePair<NullMaybe<TKey>, TValue>>) this)
+            foreach ((NullMaybe<TKey> key, TValue value) in (IEnumerable<KeyValuePair<NullMaybe<TKey>, TValue>>) this)
             {
                 yield return new KeyValuePair<TKey, TValue>(key, value);
             }

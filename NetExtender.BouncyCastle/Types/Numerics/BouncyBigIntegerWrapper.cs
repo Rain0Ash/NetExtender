@@ -52,24 +52,24 @@ namespace NetExtender.BouncyCastle.Types.Numerics
             return !(first == second);
         }
 
-        public static Boolean operator >(BouncyBigIntegerWrapper first, BouncyBigIntegerWrapper second)
-        {
-            return first.Value > second.Value;
-        }
-
         public static Boolean operator <(BouncyBigIntegerWrapper first, BouncyBigIntegerWrapper second)
         {
             return first.Value < second.Value;
         }
 
-        public static Boolean operator >=(BouncyBigIntegerWrapper first, BouncyBigIntegerWrapper second)
-        {
-            return first.Value >= second.Value;
-        }
-
         public static Boolean operator <=(BouncyBigIntegerWrapper first, BouncyBigIntegerWrapper second)
         {
             return first.Value <= second.Value;
+        }
+
+        public static Boolean operator >(BouncyBigIntegerWrapper first, BouncyBigIntegerWrapper second)
+        {
+            return first.Value > second.Value;
+        }
+
+        public static Boolean operator >=(BouncyBigIntegerWrapper first, BouncyBigIntegerWrapper second)
+        {
+            return first.Value >= second.Value;
         }
 
         public BigInteger Value { get; }

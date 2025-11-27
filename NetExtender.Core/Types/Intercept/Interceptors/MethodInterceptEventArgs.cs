@@ -11,7 +11,7 @@ using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Intercept
 {
-    public class MethodInterceptEventArgs : MethodInterceptAbstractionEventArgs<MethodInterceptEventArgs.Information>
+    public class MethodInterceptEventArgs : MethodInterceptBaseEventArgs<MethodInterceptEventArgs.Information>
     {
         public readonly struct Information : IMemberInterceptArgumentInfo<MethodInfo>
         {
@@ -94,7 +94,7 @@ namespace NetExtender.Types.Intercept
         }
     }
     
-    public class MethodInterceptEventArgs<T> : MethodInterceptAbstractionEventArgs<MethodInterceptEventArgs<T>.Information, T>
+    public class MethodInterceptEventArgs<T> : MethodInterceptBaseEventArgs<MethodInterceptEventArgs<T>.Information, T>
     {
         public readonly struct Information : IMemberInterceptArgumentInfo<MethodInfo, T>
         {
@@ -202,7 +202,7 @@ namespace NetExtender.Types.Intercept
         }
     }
 
-    public abstract class MethodInterceptAbstractionEventArgs<T, TResult> : MethodInterceptAbstractionEventArgs<T>, IMethodInterceptEventArgs<TResult> where T : IMemberInterceptArgumentInfo<MethodInfo, TResult>
+    public abstract class MethodInterceptBaseEventArgs<T, TResult> : MethodInterceptBaseEventArgs<T>, IMethodInterceptEventArgs<TResult> where T : IMemberInterceptArgumentInfo<MethodInfo, TResult>
     {
         private protected Maybe<TResult> _value;
         public virtual TResult Value
@@ -235,7 +235,7 @@ namespace NetExtender.Types.Intercept
             }
         }
         
-        protected MethodInterceptAbstractionEventArgs(T value)
+        protected MethodInterceptBaseEventArgs(T value)
             : base(value)
         {
         }
@@ -248,7 +248,7 @@ namespace NetExtender.Types.Intercept
         }
     }
 
-    public abstract class MethodInterceptAbstractionEventArgs<T> : MemberInterceptEventArgs<MethodInfo, T>, IMethodInterceptEventArgs where T : IMemberInterceptArgumentInfo<MethodInfo>
+    public abstract class MethodInterceptBaseEventArgs<T> : MemberInterceptEventArgs<MethodInfo, T>, IMethodInterceptEventArgs where T : IMemberInterceptArgumentInfo<MethodInfo>
     {
         public MethodInfo Method
         {
@@ -272,7 +272,7 @@ namespace NetExtender.Types.Intercept
 
         public abstract ImmutableArray<Object?> Arguments { get; }
 
-        protected MethodInterceptAbstractionEventArgs(T value)
+        protected MethodInterceptBaseEventArgs(T value)
             : base(value)
         {
         }

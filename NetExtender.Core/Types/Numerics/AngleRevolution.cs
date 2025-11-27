@@ -97,18 +97,6 @@ namespace NetExtender.Types.Numerics
         }
 
         /// <summary>
-        /// Indicates whether a specified <see cref="AngleRevolution"/> is greater than another specified <see cref="AngleRevolution"/>.
-        /// </summary>
-        /// <param name="first">The first angle to compare.</param>
-        /// <param name="second">The second angle to compare.</param>
-        /// <returns>true if the value of first is greater than the value of second; otherwise, false.</returns>
-        [Pure]
-        public static Boolean operator >(AngleRevolution first, AngleRevolution second)
-        {
-            return first.Revolution > second.Revolution;
-        }
-
-        /// <summary>
         /// Indicates whether a specified <see cref="AngleRevolution"/> is less than or equal to another specified <see cref="AngleRevolution"/>.
         /// </summary>
         /// <param name="first">The first angle to compare.</param>
@@ -118,6 +106,18 @@ namespace NetExtender.Types.Numerics
         public static Boolean operator <=(AngleRevolution first, AngleRevolution second)
         {
             return first.Revolution <= second.Revolution;
+        }
+
+        /// <summary>
+        /// Indicates whether a specified <see cref="AngleRevolution"/> is greater than another specified <see cref="AngleRevolution"/>.
+        /// </summary>
+        /// <param name="first">The first angle to compare.</param>
+        /// <param name="second">The second angle to compare.</param>
+        /// <returns>true if the value of first is greater than the value of second; otherwise, false.</returns>
+        [Pure]
+        public static Boolean operator >(AngleRevolution first, AngleRevolution second)
+        {
+            return first.Revolution > second.Revolution;
         }
 
         /// <summary>

@@ -45,14 +45,14 @@ namespace NetExtender.WindowsPresentation.Types
             return !(first == second);
         }
 
-        public static Keys operator |(Keys first, Keys second)
-        {
-            return new Keys(first.Internal | second.Internal);
-        }
-
         public static Keys operator &(Keys first, Keys second)
         {
             return new Keys(first.Internal & second.Internal);
+        }
+
+        public static Keys operator |(Keys first, Keys second)
+        {
+            return new Keys(first.Internal | second.Internal);
         }
 
         public static Keys operator ^(Keys first, Keys second)

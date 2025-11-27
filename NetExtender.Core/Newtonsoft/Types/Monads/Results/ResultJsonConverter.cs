@@ -1,6 +1,5 @@
 using System;
 using NetExtender.Types.Monads;
-using NetExtender.Types.Monads.Result;
 using Newtonsoft.Json;
 
 namespace NetExtender.Newtonsoft.Types.Monads.Results
@@ -46,6 +45,12 @@ namespace NetExtender.Newtonsoft.Types.Monads.Results
 
         protected internal override Boolean Write(in JsonWriter writer, Result<T> value, ref SerializerOptions options)
         {
+            if (value.IsEmpty)
+            {
+                writer.WriteNull();
+                return true;
+            }
+            
             if (value.Exception is { } exception)
             {
                 options.Serialize(writer, exception);
@@ -98,6 +103,12 @@ namespace NetExtender.Newtonsoft.Types.Monads.Results
 
         protected internal override Boolean Write(in JsonWriter writer, Result<T, TException> value, ref SerializerOptions options)
         {
+            if (value.IsEmpty)
+            {
+                writer.WriteNull();
+                return true;
+            }
+            
             if (value.Exception is { } exception)
             {
                 options.Serialize(writer, exception);
@@ -158,6 +169,12 @@ namespace NetExtender.Serialization.Json.Monads
 
         protected internal override Boolean Write(in Utf8JsonWriter writer, Result<T> value, ref SerializerOptions options)
         {
+            if (value.IsEmpty)
+            {
+                writer.WriteNullValue();
+                return true;
+            }
+            
             if (value.Exception is { } exception)
             {
                 JsonSerializer.Serialize(writer, exception, options);
@@ -213,6 +230,12 @@ namespace NetExtender.Serialization.Json.Monads
 
         protected internal override Boolean Write(in Utf8JsonWriter writer, Result<T, TException> value, ref SerializerOptions options)
         {
+            if (value.IsEmpty)
+            {
+                writer.WriteNullValue();
+                return true;
+            }
+            
             if (value.Exception is { } exception)
             {
                 JsonSerializer.Serialize(writer, exception, options);

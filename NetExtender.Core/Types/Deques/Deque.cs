@@ -343,8 +343,8 @@ namespace NetExtender.Types.Deques
         /// Copies the deque elemens into an array. The resulting array always has all the deque elements contiguously.
         /// </summary>
         /// <param name="array">The destination array.</param>
-        /// <param name="arrayIndex">The optional index in the destination array at which to begin writing.</param>
-        private void CopyToArray(Array array, Int32 arrayIndex = 0)
+        /// <param name="index">The optional index in the destination array at which to begin writing.</param>
+        private void CopyToArray(Array array, Int32 index = 0)
         {
             if (array is null)
             {
@@ -355,13 +355,13 @@ namespace NetExtender.Types.Deques
             {
                 // The existing buffer is split, so we have to copy it in parts
                 Int32 length = Capacity - _offset;
-                Array.Copy(_buffer, _offset, array, arrayIndex, length);
-                Array.Copy(_buffer, 0, array, arrayIndex + length, Count - length);
+                Array.Copy(_buffer, _offset, array, index, length);
+                Array.Copy(_buffer, 0, array, index + length, Count - length);
             }
             else
             {
                 // The existing buffer is whole
-                Array.Copy(_buffer, _offset, array, arrayIndex, Count);
+                Array.Copy(_buffer, _offset, array, index, Count);
             }
         }
 

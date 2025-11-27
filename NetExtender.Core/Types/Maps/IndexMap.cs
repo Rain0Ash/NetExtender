@@ -305,17 +305,17 @@ namespace NetExtender.Types.Maps
 
             if (index < 0 || index >= Order.Count)
             {
-                throw new ArgumentException(@"Less than zero or more than count", nameof(index));
+                throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
 
             if (ContainsKey(key))
             {
-                throw new ArgumentException(@"Already exists", nameof(key));
+                throw new ArgumentException(DictionaryUtilities.SR.Argument_AddingDuplicateWithKey.Format(key), nameof(key));
             }
 
             if (ContainsValue(value))
             {
-                throw new ArgumentException(@"Already exists", nameof(value));
+                throw new ArgumentException(DictionaryUtilities.SR.Argument_AddingDuplicateWithKey.Format(value), nameof(value));
             }
 
             base.Add(key, value);

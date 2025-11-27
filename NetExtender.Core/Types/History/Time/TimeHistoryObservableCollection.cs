@@ -167,7 +167,7 @@ namespace NetExtender.Types.History
 
             Boolean minimum = _min != min;
             Boolean maximum = _max != max;
-            
+
             if (minimum)
             {
                 PropertyChanging?.Invoke(this, NotifyUtilities.Changing.Min);
@@ -245,7 +245,7 @@ namespace NetExtender.Types.History
         {
             return Internal.LastIndexOf(Universal(item), index, count);
         }
-        
+
         public Node Find(Predicate<Node> match)
         {
             return Internal.Find(match);
@@ -453,7 +453,7 @@ namespace NetExtender.Types.History
             {
                 throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
-            
+
             using IEnumerator<Node> enumerator = Internal.GetEnumerator();
 
             for (Int32 i = index; i < array.Length && enumerator.MoveNext(); i++)

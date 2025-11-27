@@ -12,6 +12,8 @@ using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using NetExtender.Types.Exceptions;
 using NetExtender.Types.Numerics;
+using NetExtender.Types.Reflection;
+using NetExtender.Utilities.Core;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Utilities.Numerics
@@ -4417,26 +4419,17 @@ namespace NetExtender.Utilities.Numerics
         /// <inheritdoc cref="Math.Atan2"/>
         public static Decimal Atan2(this Decimal value, Decimal second)
         {
-            if (second > Decimal.Zero)
-            {
-                return Atan(value / second);
-            }
-
-            if (second < Decimal.Zero && value >= Decimal.Zero)
-            {
-                return Atan(value / second) + Constants.Decimal.PI;
-            }
-
-            if (second < Decimal.Zero && value < Decimal.Zero)
-            {
-                return Atan(value / second) - Constants.Decimal.PI;
-            }
-
             return second switch
             {
-                Decimal.Zero when value > Decimal.Zero => Constants.Decimal.PIdiv2,
-                Decimal.Zero when value < Decimal.Zero => -Constants.Decimal.PIdiv2,
-                _ => throw new ArgumentException()
+                > Decimal.Zero => Atan(value / second),
+                < Decimal.Zero when value >= Decimal.Zero => Atan(value / second) + Constants.Decimal.PI,
+                < Decimal.Zero when value < Decimal.Zero => Atan(value / second) - Constants.Decimal.PI,
+                _ => second switch
+                {
+                    Decimal.Zero when value > Decimal.Zero => Constants.Decimal.PIdiv2,
+                    Decimal.Zero when value < Decimal.Zero => -Constants.Decimal.PIdiv2,
+                    _ => throw new ArgumentException()
+                }
             };
         }
 
@@ -5496,17 +5489,11 @@ namespace NetExtender.Utilities.Numerics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BigInteger BigFactorial(this Int64 value)
         {
-            if (value < 0)
+            return value switch
             {
-                throw new ArgumentOutOfRangeException(nameof(value), value, null);
-            }
-
-            if (value > UInt32.MaxValue)
-            {
-                throw new ArgumentOutOfRangeException(nameof(value), value, null);
-            }
-
-            return BigFactorial((UInt32) value);
+                < 0 or > UInt32.MaxValue => throw new ArgumentOutOfRangeException(nameof(value), value, null),
+                _ => BigFactorial((UInt32) value)
+            };
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -7577,166 +7564,6 @@ namespace NetExtender.Utilities.Numerics
             right = array[rightcenter + 1];
             q3 = left * 0.25 + right * 0.75;
             return Tuple.Create(q1, q2, q3);
-        }
-    }
-
-    [SuppressMessage("ReSharper", "CognitiveComplexity")]
-    public static partial class MathUnsafe
-    {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T Increment<T>(T value) where T : unmanaged, IConvertible
-        {
-            if (typeof(T) == typeof(Char))
-            {
-                Char result = (Char) unchecked(Unsafe.As<T, Char>(ref value) + 1);
-                return Unsafe.As<Char, T>(ref result);
-            }
-
-            if (typeof(T) == typeof(SByte))
-            {
-                SByte result = (SByte) unchecked(Unsafe.As<T, SByte>(ref value) + 1);
-                return Unsafe.As<SByte, T>(ref result);
-            }
-
-            if (typeof(T) == typeof(Byte))
-            {
-                Byte result = (Byte) unchecked(Unsafe.As<T, Byte>(ref value) + 1);
-                return Unsafe.As<Byte, T>(ref result);
-            }
-
-            if (typeof(T) == typeof(Int16))
-            {
-                Int16 result = (Int16) unchecked(Unsafe.As<T, Int16>(ref value) + 1);
-                return Unsafe.As<Int16, T>(ref result);
-            }
-
-            if (typeof(T) == typeof(UInt16))
-            {
-                UInt16 result = (UInt16) unchecked(Unsafe.As<T, UInt16>(ref value) + 1);
-                return Unsafe.As<UInt16, T>(ref result);
-            }
-
-            if (typeof(T) == typeof(Int32))
-            {
-                Int32 result = unchecked(Unsafe.As<T, Int32>(ref value) + 1);
-                return Unsafe.As<Int32, T>(ref result);
-            }
-
-            if (typeof(T) == typeof(UInt32))
-            {
-                UInt32 result = unchecked(Unsafe.As<T, UInt32>(ref value) + 1);
-                return Unsafe.As<UInt32, T>(ref result);
-            }
-
-            if (typeof(T) == typeof(Int64))
-            {
-                Int64 result = unchecked(Unsafe.As<T, Int64>(ref value) + 1);
-                return Unsafe.As<Int64, T>(ref result);
-            }
-
-            if (typeof(T) == typeof(UInt64))
-            {
-                UInt64 result = unchecked(Unsafe.As<T, UInt64>(ref value) + 1);
-                return Unsafe.As<UInt64, T>(ref result);
-            }
-
-            if (typeof(T) == typeof(Single))
-            {
-                Single result = Unsafe.As<T, Single>(ref value) + 1;
-                return Unsafe.As<Single, T>(ref result);
-            }
-
-            if (typeof(T) == typeof(Double))
-            {
-                Double result = Unsafe.As<T, Double>(ref value) + 1;
-                return Unsafe.As<Double, T>(ref result);
-            }
-
-            if (typeof(T) == typeof(Decimal))
-            {
-                Decimal result = Unsafe.As<T, Decimal>(ref value) + 1;
-                return Unsafe.As<Decimal, T>(ref result);
-            }
-
-            throw new NotSupportedException($"Operator + is not supported for {typeof(T)} type");
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T Decrement<T>(T value) where T : unmanaged, IConvertible
-        {
-            if (typeof(T) == typeof(Char))
-            {
-                Char result = (Char) unchecked(Unsafe.As<T, Char>(ref value) - 1);
-                return Unsafe.As<Char, T>(ref result);
-            }
-
-            if (typeof(T) == typeof(SByte))
-            {
-                SByte result = (SByte) unchecked(Unsafe.As<T, SByte>(ref value) - 1);
-                return Unsafe.As<SByte, T>(ref result);
-            }
-
-            if (typeof(T) == typeof(Byte))
-            {
-                Byte result = (Byte) unchecked(Unsafe.As<T, Byte>(ref value) - 1);
-                return Unsafe.As<Byte, T>(ref result);
-            }
-
-            if (typeof(T) == typeof(Int16))
-            {
-                Int16 result = (Int16) unchecked(Unsafe.As<T, Int16>(ref value) - 1);
-                return Unsafe.As<Int16, T>(ref result);
-            }
-
-            if (typeof(T) == typeof(UInt16))
-            {
-                UInt16 result = (UInt16) unchecked(Unsafe.As<T, UInt16>(ref value) - 1);
-                return Unsafe.As<UInt16, T>(ref result);
-            }
-
-            if (typeof(T) == typeof(Int32))
-            {
-                Int32 result = unchecked(Unsafe.As<T, Int32>(ref value) - 1);
-                return Unsafe.As<Int32, T>(ref result);
-            }
-
-            if (typeof(T) == typeof(UInt32))
-            {
-                UInt32 result = unchecked(Unsafe.As<T, UInt32>(ref value) - 1);
-                return Unsafe.As<UInt32, T>(ref result);
-            }
-
-            if (typeof(T) == typeof(Int64))
-            {
-                Int64 result = unchecked(Unsafe.As<T, Int64>(ref value) - 1);
-                return Unsafe.As<Int64, T>(ref result);
-            }
-
-            if (typeof(T) == typeof(UInt64))
-            {
-                UInt64 result = unchecked(Unsafe.As<T, UInt64>(ref value) - 1);
-                return Unsafe.As<UInt64, T>(ref result);
-            }
-
-            if (typeof(T) == typeof(Single))
-            {
-                Single result = Unsafe.As<T, Single>(ref value) - 1;
-                return Unsafe.As<Single, T>(ref result);
-            }
-
-            if (typeof(T) == typeof(Double))
-            {
-                Double result = Unsafe.As<T, Double>(ref value) - 1;
-                return Unsafe.As<Double, T>(ref result);
-            }
-
-            if (typeof(T) == typeof(Decimal))
-            {
-                Decimal result = Unsafe.As<T, Decimal>(ref value) - 1;
-                return Unsafe.As<Decimal, T>(ref result);
-            }
-
-            throw new NotSupportedException($"Operator - is not supported for {typeof(T)} type");
         }
     }
 

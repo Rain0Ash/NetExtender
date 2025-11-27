@@ -39,7 +39,6 @@ namespace NetExtender.Types.Memory
         {
         }
 
-        [CLSCompliant(false)]
         public UnsafeMemory(T* pointer, Int32 length)
             : this((void*) pointer, length)
         {

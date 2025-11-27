@@ -79,7 +79,7 @@ namespace NetExtender.Types.Monads
 
         [JsonIgnore]
         [System.Text.Json.Serialization.JsonIgnore]
-        Boolean IMonad.IsEmpty
+        public Boolean IsEmpty
         {
             get
             {
@@ -149,6 +149,30 @@ namespace NetExtender.Types.Monads
         public static Box<T> Mutable(T value)
         {
             return new Box<T>(value, State.Mutable);
+        }
+
+        Boolean IMonad.Unwrap(out Object? value)
+        {
+            if (IsEmpty)
+            {
+                value = null;
+                return false;
+            }
+            
+            value = _value;
+            return true;
+        }
+        
+        public Boolean Unwrap([MaybeNullWhen(false)] out T value)
+        {
+            if (IsEmpty)
+            {
+                value = default;
+                return false;
+            }
+            
+            value = _value;
+            return true;
         }
 
         public void GetObjectData(SerializationInfo info, StreamingContext context)

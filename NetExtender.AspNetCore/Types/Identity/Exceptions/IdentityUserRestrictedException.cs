@@ -69,7 +69,7 @@ namespace NetExtender.AspNetCore.Identity
             }
         }
 
-        public Object? Id
+        public new Object? Id
         {
             get
             {

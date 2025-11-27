@@ -75,14 +75,14 @@ namespace NetExtender.Types.Concurrent.Counters
             return --value;
         }
 
-        protected sealed override Int32 Add(Int32 left, Int32 right)
+        protected sealed override Int32 Add(Int32 first, Int32 second)
         {
-            return left + right;
+            return first + second;
         }
 
-        protected sealed override Int32 Subtract(Int32 left, Int32 right)
+        protected sealed override Int32 Subtract(Int32 first, Int32 second)
         {
-            return left - right;
+            return first - second;
         }
     }
     
@@ -152,14 +152,14 @@ namespace NetExtender.Types.Concurrent.Counters
             return --value;
         }
 
-        protected sealed override Int64 Add(Int64 left, Int64 right)
+        protected sealed override Int64 Add(Int64 first, Int64 second)
         {
-            return left + right;
+            return first + second;
         }
 
-        protected sealed override Int64 Subtract(Int64 left, Int64 right)
+        protected sealed override Int64 Subtract(Int64 first, Int64 second)
         {
-            return left - right;
+            return first - second;
         }
     }
     
@@ -229,18 +229,18 @@ namespace NetExtender.Types.Concurrent.Counters
             return --value;
         }
 
-        protected sealed override Decimal Add(Decimal left, Decimal right)
+        protected sealed override Decimal Add(Decimal first, Decimal second)
         {
-            return left + right;
+            return first + second;
         }
 
-        protected sealed override Decimal Subtract(Decimal left, Decimal right)
+        protected sealed override Decimal Subtract(Decimal first, Decimal second)
         {
-            return left - right;
+            return first - second;
         }
     }
     
-    public class ConcurrentCounter<T, TCount> : CounterAbstraction<T, TCount> where T : notnull where TCount : unmanaged, IConvertible
+    public class ConcurrentCounter<T, TCount> : CounterBase<T, TCount> where T : notnull where TCount : unmanaged, IConvertible
     {
         protected sealed override ConcurrentDictionary<T, TCount> Internal { get; }
 

@@ -24,7 +24,17 @@ namespace NetExtender.Types.Counters
         {
         }
 
+        public Counter(IEqualityComparer<NullMaybe<T>>? comparer)
+            : base(comparer)
+        {
+        }
+
         public Counter(Int32 capacity, IEqualityComparer<T>? comparer)
+            : base(capacity, comparer)
+        {
+        }
+
+        public Counter(Int32 capacity, IEqualityComparer<NullMaybe<T>>? comparer)
             : base(capacity, comparer)
         {
         }
@@ -44,7 +54,17 @@ namespace NetExtender.Types.Counters
         {
         }
 
+        public Counter(IEnumerable<T> collection, IEqualityComparer<NullMaybe<T>>? comparer)
+            : base(collection, comparer)
+        {
+        }
+
         public Counter(IEnumerable<KeyValuePair<T, Int32>> collection, IEqualityComparer<T>? comparer)
+            : base(collection, comparer)
+        {
+        }
+
+        public Counter(IEnumerable<KeyValuePair<T, Int32>> collection, IEqualityComparer<NullMaybe<T>>? comparer)
             : base(collection, comparer)
         {
         }
@@ -79,14 +99,14 @@ namespace NetExtender.Types.Counters
             return --value;
         }
 
-        protected sealed override Int32 Add(Int32 left, Int32 right)
+        protected sealed override Int32 Add(Int32 first, Int32 second)
         {
-            return left + right;
+            return first + second;
         }
 
-        protected sealed override Int32 Subtract(Int32 left, Int32 right)
+        protected sealed override Int32 Subtract(Int32 first, Int32 second)
         {
-            return left - right;
+            return first - second;
         }
     }
     
@@ -106,7 +126,17 @@ namespace NetExtender.Types.Counters
         {
         }
 
+        public Counter64(IEqualityComparer<NullMaybe<T>>? comparer)
+            : base(comparer)
+        {
+        }
+
         public Counter64(Int32 capacity, IEqualityComparer<T>? comparer)
+            : base(capacity, comparer)
+        {
+        }
+
+        public Counter64(Int32 capacity, IEqualityComparer<NullMaybe<T>>? comparer)
             : base(capacity, comparer)
         {
         }
@@ -126,7 +156,17 @@ namespace NetExtender.Types.Counters
         {
         }
 
+        public Counter64(IEnumerable<T> collection, IEqualityComparer<NullMaybe<T>>? comparer)
+            : base(collection, comparer)
+        {
+        }
+
         public Counter64(IEnumerable<KeyValuePair<T, Int64>> collection, IEqualityComparer<T>? comparer)
+            : base(collection, comparer)
+        {
+        }
+
+        public Counter64(IEnumerable<KeyValuePair<T, Int64>> collection, IEqualityComparer<NullMaybe<T>>? comparer)
             : base(collection, comparer)
         {
         }
@@ -161,14 +201,14 @@ namespace NetExtender.Types.Counters
             return --value;
         }
 
-        protected sealed override Int64 Add(Int64 left, Int64 right)
+        protected sealed override Int64 Add(Int64 first, Int64 second)
         {
-            return left + right;
+            return first + second;
         }
 
-        protected sealed override Int64 Subtract(Int64 left, Int64 right)
+        protected sealed override Int64 Subtract(Int64 first, Int64 second)
         {
-            return left - right;
+            return first - second;
         }
     }
     
@@ -188,7 +228,17 @@ namespace NetExtender.Types.Counters
         {
         }
 
+        public DecimalCounter(IEqualityComparer<NullMaybe<T>>? comparer)
+            : base(comparer)
+        {
+        }
+
         public DecimalCounter(Int32 capacity, IEqualityComparer<T>? comparer)
+            : base(capacity, comparer)
+        {
+        }
+
+        public DecimalCounter(Int32 capacity, IEqualityComparer<NullMaybe<T>>? comparer)
             : base(capacity, comparer)
         {
         }
@@ -208,7 +258,17 @@ namespace NetExtender.Types.Counters
         {
         }
 
+        public DecimalCounter(IEnumerable<T> collection, IEqualityComparer<NullMaybe<T>>? comparer)
+            : base(collection, comparer)
+        {
+        }
+
         public DecimalCounter(IEnumerable<KeyValuePair<T, Decimal>> collection, IEqualityComparer<T>? comparer)
+            : base(collection, comparer)
+        {
+        }
+
+        public DecimalCounter(IEnumerable<KeyValuePair<T, Decimal>> collection, IEqualityComparer<NullMaybe<T>>? comparer)
             : base(collection, comparer)
         {
         }
@@ -243,18 +303,18 @@ namespace NetExtender.Types.Counters
             return --value;
         }
 
-        protected sealed override Decimal Add(Decimal left, Decimal right)
+        protected sealed override Decimal Add(Decimal first, Decimal second)
         {
-            return left + right;
+            return first + second;
         }
 
-        protected sealed override Decimal Subtract(Decimal left, Decimal right)
+        protected sealed override Decimal Subtract(Decimal first, Decimal second)
         {
-            return left - right;
+            return first - second;
         }
     }
     
-    public class Counter<T, TCount> : CounterAbstraction<T, TCount> where TCount : unmanaged, IConvertible
+    public class Counter<T, TCount> : CounterBase<T, TCount> where TCount : unmanaged, IConvertible
     {
         protected sealed override NullableDictionary<T, TCount> Internal { get; }
         
@@ -289,7 +349,17 @@ namespace NetExtender.Types.Counters
             Internal = new NullableDictionary<T, TCount>(comparer);
         }
 
+        public Counter(IEqualityComparer<NullMaybe<T>>? comparer)
+        {
+            Internal = new NullableDictionary<T, TCount>(comparer);
+        }
+
         public Counter(Int32 capacity, IEqualityComparer<T>? comparer)
+        {
+            Internal = new NullableDictionary<T, TCount>(capacity, comparer);
+        }
+
+        public Counter(Int32 capacity, IEqualityComparer<NullMaybe<T>>? comparer)
         {
             Internal = new NullableDictionary<T, TCount>(capacity, comparer);
         }
@@ -327,7 +397,29 @@ namespace NetExtender.Types.Counters
             AddRange(collection);
         }
 
+        public Counter(IEnumerable<T> collection, IEqualityComparer<NullMaybe<T>>? comparer)
+        {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
+            Internal = new NullableDictionary<T, TCount>(comparer);
+            AddRange(collection);
+        }
+
         public Counter(IEnumerable<KeyValuePair<T, TCount>> collection, IEqualityComparer<T>? comparer)
+        {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
+            Internal = new NullableDictionary<T, TCount>(comparer);
+            AddRange(collection);
+        }
+
+        public Counter(IEnumerable<KeyValuePair<T, TCount>> collection, IEqualityComparer<NullMaybe<T>>? comparer)
         {
             if (collection is null)
             {

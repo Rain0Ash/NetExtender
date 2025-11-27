@@ -227,7 +227,7 @@ namespace NetExtender.Types.Maps
             foreach ((TKey key, TValue value) in source)
             {
                 Base.Add(key, value);
-                Reversed.Add(value, key); //-V3066
+                Reversed.Add(value, key);
             }
         }
 
@@ -383,12 +383,12 @@ namespace NetExtender.Types.Maps
 
             if (ContainsKey(key))
             {
-                throw new ArgumentException(@"Already exists", nameof(key));
+                throw new ArgumentException(DictionaryUtilities.SR.Argument_AddingDuplicateWithKey.Format(key), nameof(key));
             }
 
             if (ContainsValue(value))
             {
-                throw new ArgumentException(@"Already exists", nameof(value));
+                throw new ArgumentException(DictionaryUtilities.SR.Argument_AddingDuplicateWithKey.Format(value), nameof(value));
             }
 
             Base.Add(key, value);
@@ -544,14 +544,24 @@ namespace NetExtender.Types.Maps
             Reversed.Clear();
         }
 
+        public void CopyTo(KeyValuePair<TKey, TValue>[] array)
+        {
+            CopyTo(array, 0);
+        }
+
         public void CopyTo(KeyValuePair<TKey, TValue>[] array, Int32 index)
         {
-            Base.CopyTo(array, index);
+            ((ICollection<KeyValuePair<TKey, TValue>>) Base).CopyTo(array, index);
+        }
+
+        public void CopyTo(KeyValuePair<TValue, TKey>[] array)
+        {
+            CopyTo(array, 0);
         }
 
         public void CopyTo(KeyValuePair<TValue, TKey>[] array, Int32 index)
         {
-            Reversed.CopyTo(array, index);
+            ((ICollection<KeyValuePair<TValue, TKey>>) Reversed).CopyTo(array, index);
         }
 
         public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()

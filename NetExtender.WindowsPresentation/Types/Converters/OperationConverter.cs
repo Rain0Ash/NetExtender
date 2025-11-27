@@ -6,7 +6,6 @@ using System.Globalization;
 using System.Windows.Data;
 using NetExtender.Types.Exceptions;
 using NetExtender.Types.Numerics;
-using NetExtender.Utilities.Numerics;
 
 namespace NetExtender.WindowsPresentation.Types.Converters
 {
@@ -20,7 +19,7 @@ namespace NetExtender.WindowsPresentation.Types.Converters
         GreaterOrEqual,
         Not
     }
-    
+
     [ValueConversion(typeof(Boolean), typeof(Boolean))]
     [ValueConversion(typeof(SByte), typeof(Boolean))]
     [ValueConversion(typeof(Byte), typeof(Boolean))]
@@ -52,9 +51,9 @@ namespace NetExtender.WindowsPresentation.Types.Converters
         {
             switch (value)
             {
-                case Boolean boolean when Operation == ConverterMathOperation.Not:
+                case Boolean boolean when Operation is ConverterMathOperation.Not:
                     return !boolean;
-                case Trilean trilean when Operation == ConverterMathOperation.Not:
+                case Trilean trilean when Operation is ConverterMathOperation.Not:
                     return !trilean;
             }
             
@@ -63,12 +62,11 @@ namespace NetExtender.WindowsPresentation.Types.Converters
                 return Operation switch
                 {
                     ConverterMathOperation.Equal => value == parameter,
-                    ConverterMathOperation.NotEqual => value != parameter,
+                    ConverterMathOperation.NotEqual or ConverterMathOperation.Not => value != parameter,
                     ConverterMathOperation.Less => value is null && parameter is not null,
                     ConverterMathOperation.LessOrEqual => value == parameter || value is null && parameter is not null,
                     ConverterMathOperation.Greater => value is not null && parameter is null,
                     ConverterMathOperation.GreaterOrEqual => value == parameter || value is not null && parameter is null,
-                    ConverterMathOperation.Not => value != parameter,
                     _ => throw new EnumUndefinedOrNotSupportedException<ConverterMathOperation>(Operation, nameof(Operation), null)
                 };
             }
@@ -89,13 +87,12 @@ namespace NetExtender.WindowsPresentation.Types.Converters
             {
                 return Operation switch
                 {
-                    ConverterMathOperation.Equal => MathUnsafe.Equal((dynamic) value, (dynamic) parameter),
-                    ConverterMathOperation.NotEqual => MathUnsafe.NotEqual((dynamic) value, (dynamic) parameter),
-                    ConverterMathOperation.Less => MathUnsafe.Less((dynamic) value, (dynamic) parameter),
-                    ConverterMathOperation.LessOrEqual => MathUnsafe.LessEqual((dynamic) value, (dynamic) parameter),
-                    ConverterMathOperation.Greater => MathUnsafe.Greater((dynamic) value, (dynamic) parameter),
-                    ConverterMathOperation.GreaterOrEqual => MathUnsafe.GreaterEqual((dynamic) value, (dynamic) parameter),
-                    ConverterMathOperation.Not => MathUnsafe.NotEqual((dynamic) value, (dynamic) parameter),
+                    ConverterMathOperation.Equal => (dynamic) value == (dynamic) parameter,
+                    ConverterMathOperation.NotEqual or ConverterMathOperation.Not => (dynamic) value != (dynamic) parameter,
+                    ConverterMathOperation.Less => (dynamic) value < (dynamic) parameter,
+                    ConverterMathOperation.LessOrEqual => (dynamic) value <= (dynamic) parameter,
+                    ConverterMathOperation.Greater => (dynamic) value > (dynamic) parameter,
+                    ConverterMathOperation.GreaterOrEqual => (dynamic) value >= (dynamic) parameter,
                     _ => throw new EnumUndefinedOrNotSupportedException<ConverterMathOperation>(Operation, nameof(Operation), null)
                 };
             }

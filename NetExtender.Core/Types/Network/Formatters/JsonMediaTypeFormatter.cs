@@ -30,7 +30,7 @@ using ErrorEventArgs = Newtonsoft.Json.Serialization.ErrorEventArgs;
 
 namespace NetExtender.Types.Network.Formatters
 {
-    public abstract class JsonMediaTypeFormatterAbstraction : MediaTypeFormatter
+    public abstract class JsonMediaTypeFormatterBase : MediaTypeFormatter
     {
         private Int32 _maxdepth = 256;
         public override Int32 MaxDepth
@@ -69,14 +69,14 @@ namespace NetExtender.Types.Network.Formatters
             }
         }
 
-        protected JsonMediaTypeFormatterAbstraction()
+        protected JsonMediaTypeFormatterBase()
         {
             ContractResolver = new JsonMediaTypeFormatterContractResolver(this);
             SupportedEncoding.Add(new UTF8Encoding(false, true));
             SupportedEncoding.Add(new UnicodeEncoding(false, true, true));
         }
 
-        protected JsonMediaTypeFormatterAbstraction(JsonMediaTypeFormatterAbstraction formatter)
+        protected JsonMediaTypeFormatterBase(JsonMediaTypeFormatterBase formatter)
             : base(formatter)
         {
             ContractResolver = new JsonMediaTypeFormatterContractResolver(this);
@@ -326,7 +326,7 @@ namespace NetExtender.Types.Network.Formatters
         }
     }
     
-    public class JsonMediaTypeFormatter : JsonMediaTypeFormatterAbstraction
+    public class JsonMediaTypeFormatter : JsonMediaTypeFormatterBase
     {
         protected static XsdDataContractExporter XsdExporter { get; } = new XsdDataContractExporter();
         

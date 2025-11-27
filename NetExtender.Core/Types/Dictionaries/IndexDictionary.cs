@@ -27,14 +27,6 @@ namespace NetExtender.Types.Dictionaries
             }
         }
 
-        Boolean ICollection<KeyValuePair<TKey, TValue>>.IsReadOnly
-        {
-            get
-            {
-                return ((ICollection<KeyValuePair<TKey, TValue>>) Dictionary).IsReadOnly;
-            }
-        }
-
         public IEqualityComparer<TKey> Comparer
         {
             get
@@ -88,6 +80,14 @@ namespace NetExtender.Types.Dictionaries
             get
             {
                 return Dictionary.Values;
+            }
+        }
+
+        Boolean ICollection<KeyValuePair<TKey, TValue>>.IsReadOnly
+        {
+            get
+            {
+                return ((ICollection<KeyValuePair<TKey, TValue>>) Dictionary).IsReadOnly;
             }
         }
 

@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using NetExtender.Interfaces;
 
 namespace NetExtender.Types.Monads.Interfaces
 {
     public interface IMonad<T> : IMonad, IMonadEquality<T>, ICloneable<IMonad<T>>
     {
+        public Boolean Unwrap([MaybeNullWhen(false)] out T value);
         public new IMonad<T> Clone();
         public Boolean Equals(Object? other, IEqualityComparer<T>? comparer);
     }
@@ -14,6 +16,7 @@ namespace NetExtender.Types.Monads.Interfaces
     {
         public Boolean IsEmpty { get; }
         
+        public Boolean Unwrap(out Object? value);
         public new IMonad Clone();
     }
     

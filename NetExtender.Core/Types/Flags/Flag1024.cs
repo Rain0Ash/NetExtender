@@ -122,16 +122,16 @@ namespace NetExtender.Types.Flags
             return !(first == second);
         }
 
-        public static Flag1024 operator |(Flag1024 first, Flag1024 second)
-        {
-            return new Flag1024(first.Low7 | second.Low7, first.Low6 | second.Low6, first.Low5 | second.Low5, first.Low4 | second.Low4,
-                               first.Low3 | second.Low3, first.Low2 | second.Low2, first.Low1 | second.Low1, first.Low0 | second.Low0);
-        }
-
         public static Flag1024 operator &(Flag1024 first, Flag1024 second)
         {
             return new Flag1024(first.Low7 & second.Low7, first.Low6 & second.Low6, first.Low5 & second.Low5, first.Low4 & second.Low4,
                                first.Low3 & second.Low3, first.Low2 & second.Low2, first.Low1 & second.Low1, first.Low0 & second.Low0);
+        }
+
+        public static Flag1024 operator |(Flag1024 first, Flag1024 second)
+        {
+            return new Flag1024(first.Low7 | second.Low7, first.Low6 | second.Low6, first.Low5 | second.Low5, first.Low4 | second.Low4,
+                first.Low3 | second.Low3, first.Low2 | second.Low2, first.Low1 | second.Low1, first.Low0 | second.Low0);
         }
 
         public static Flag1024 operator ^(Flag1024 first, Flag1024 second)

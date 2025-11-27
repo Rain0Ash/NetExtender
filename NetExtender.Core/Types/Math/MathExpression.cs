@@ -7,7 +7,7 @@ using NetExtender.Interfaces;
 using NetExtender.Types.Comparers;
 using NetExtender.Types.Exceptions;
 using NetExtender.Types.Mathematics.Interfaces;
-using NetExtender.Types.Monads.Result;
+using NetExtender.Types.Monads;
 using NetExtender.Types.Numerics;
 using NetExtender.Types.Numerics.Exceptions;
 using NetExtender.Types.Reflection;
@@ -137,16 +137,6 @@ namespace NetExtender.Types.Mathematics
             return !(first == second);
         }
 
-        public static Boolean operator >(MathExpression<T>? first, MathExpression<T>? second)
-        {
-            return first is not null && (second is null || first.CompareTo(second) > 0);
-        }
-
-        public static Boolean operator >=(MathExpression<T>? first, MathExpression<T>? second)
-        {
-            return ReferenceEquals(first, second) || first is not null && (second is null || first.CompareTo(second) >= 0);
-        }
-
         public static Boolean operator <(MathExpression<T>? first, MathExpression<T>? second)
         {
             return first is null && second is not null || first is not null && first.CompareTo(second) < 0;
@@ -155,6 +145,16 @@ namespace NetExtender.Types.Mathematics
         public static Boolean operator <=(MathExpression<T>? first, MathExpression<T>? second)
         {
             return ReferenceEquals(first, second) || first is null && second is not null || first is not null && first.CompareTo(second) <= 0;
+        }
+
+        public static Boolean operator >(MathExpression<T>? first, MathExpression<T>? second)
+        {
+            return first is not null && (second is null || first.CompareTo(second) > 0);
+        }
+
+        public static Boolean operator >=(MathExpression<T>? first, MathExpression<T>? second)
+        {
+            return ReferenceEquals(first, second) || first is not null && (second is null || first.CompareTo(second) >= 0);
         }
 
         internal static Func<MathResult<T>, MathResult<T>> UnaryNoOperator

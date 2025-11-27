@@ -33,27 +33,6 @@ namespace NetExtender.Utilities.Numerics
         nameof(Decimal)
     };
 
-    Dictionary<String, String> Operands = new Dictionary<String, String>
-    {
-        {"+", "Add"},
-        {"-", "Subtract"},
-        {"*", "Multiply"},
-        {"/", "Divide"},
-        {"%", "Modulo"},
-        {"&", "And"},
-        {"|", "Or"},
-        {"^", "Xor"},
-        {"~", "Invert"},
-        {"| |", "Abs"},
-        {"-| |", "Negative"},
-        {"==", "Equal"},
-        {"!=", "NotEqual"},
-        {">", "Greater"},
-        {">=", "GreaterEqual"},
-        {"<", "Less"},
-        {"<=", "LessEqual"}
-    };
-
     const String biginteger = "BigInteger";
     const String complex = "Complex";
 
@@ -75,56 +54,6 @@ namespace NetExtender.Utilities.Numerics
     Boolean IsIntType(String type)
     {
         return type == nameof(Char) || type == nameof(SByte) || type == nameof(Byte) || type == nameof(Int16) || type == nameof(UInt16) || type == nameof(Int32) || type == nameof(UInt32) || type == nameof(Int64) || type == nameof(UInt64) || type == biginteger;
-    }
-
-    String ToLessType(String type)
-    {
-        return type switch
-        {
-            nameof(SByte) => nameof(SByte),
-            nameof(Byte) => nameof(Byte),
-            nameof(Int16) => nameof(SByte),
-            nameof(UInt16) => nameof(Byte),
-            nameof(Int32) => nameof(Int16),
-            nameof(UInt32) => nameof(UInt16),
-            nameof(Int64) => nameof(Int32),
-            nameof(UInt64) => nameof(UInt32),
-            nameof(Single) => nameof(Single),
-            nameof(Double) => nameof(Single),
-            nameof(Decimal) => nameof(Double),
-            _ => type
-            };
-    }
-
-    String ToGreaterType(String type, String second)
-    {
-        return type switch
-        {
-            nameof(SByte) => nameof(Int16),
-            nameof(Byte) => nameof(UInt16),
-            nameof(Int16) => nameof(Int32),
-            nameof(UInt16) => nameof(UInt32),
-            nameof(Int32) => nameof(Int64),
-            nameof(UInt32) => nameof(UInt64),
-            nameof(Int64) => nameof(Int64),
-            nameof(UInt64) => nameof(UInt64),
-            nameof(Single) => nameof(Double),
-            nameof(Double) => nameof(Decimal),
-            nameof(Decimal) => nameof(Decimal),
-            _ => type
-        };
-    }
-
-    static String ToSignedType(String type)
-    {
-        return type switch
-        {
-            nameof(Byte) => nameof(SByte),
-            nameof(UInt16) => nameof(Int16),
-            nameof(UInt32) => nameof(Int32),
-            nameof(UInt64) => nameof(Int64),
-            _ => type
-        };
     }
 
     static String ToUnsignedType(String type)
@@ -152,98 +81,6 @@ namespace NetExtender.Utilities.Numerics
                 WriteLine(String.Empty);
             }
         }
-    }
-
-    void Functions(String @operator)
-    {
-        Boolean comparison = @operator == "==" || @operator == "!=" ||
-                             @operator == ">" || @operator == ">=" ||
-                             @operator == "<" || @operator == "<=";
-
-        Boolean unary = @operator == "~" || @operator == "| |" || @operator == "-| |";
-
-        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
-        WriteLine($"\t\tpublic static {(comparison ? nameof(Boolean) : "T")} {Operands[@operator]}<T>({(unary ? "T value" : "T left, T right")}) where T : unmanaged, IConvertible");
-        WriteLine("\t\t{");
-
-        foreach (String type in Types.Where(type => type != nameof(Single) && type != nameof(Double) && type != nameof(Decimal) || @operator != "&" && @operator != "|" && @operator != "^"))
-        {
-            Boolean unsigned = IsUnsignedType(type);
-            Boolean small = IsSmallType(type);
-
-            if (unsigned && (@operator == "| |" || @operator == "-| |") || @operator == "~" && (type == nameof(Single) || type == nameof(Double) || type == nameof(Decimal)))
-            {
-                continue;
-            }
-
-            WriteLine($"\t\t\tif (typeof(T) == typeof({type}))");
-            WriteLine("\t\t\t{");
-
-            String expression = $"Unsafe.As<T, {type}>(ref left) {@operator} Unsafe.As<T, {type}>(ref right)";
-
-            if (!comparison && small)
-            {
-                expression = $"({type})({expression})";
-            }
-
-            if (comparison)
-            {
-                if ((type == nameof(Single) || type == nameof(Double)) && (@operator == "==" || @operator == "!="))
-                {
-                    expression = $"Math.Abs(Unsafe.As<T, {type}>(ref left) - Unsafe.As<T, {type}>(ref right)) {{0}} {type}.Epsilon";
-
-                    expression = @operator switch
-                    {
-                        "==" => String.Format(expression, "<"),
-                        "!=" => String.Format(expression, ">"),
-                        _ => throw new NotSupportedException()
-                        };
-                }
-                
-                WriteLine($"\t\t\t\treturn {expression};");
-            }
-            else if (unary)
-            {
-                switch (@operator)
-                {
-                    case "~":
-                        WriteLine($"\t\t\t\t{(small ? nameof(Int32) : $"{type}")} {(small ? "i" : "result")} = ~Unsafe.As<T, {type}>(ref value);");
-                        if (small)
-                        {
-                            WriteLine($"\t\t\t\t{type} result = Unsafe.As<{nameof(Int32)}, {type}>(ref i);");
-                        }
-
-                        WriteLine($"\t\t\t\treturn Unsafe.As<{type}, T>(ref result);");
-                        break;
-                    case "| |":
-                        WriteLine($"\t\t\t\t{type} result = Math.Abs(Unsafe.As<T, {type}>(ref value));");
-                        WriteLine($"\t\t\t\treturn Unsafe.As<{type}, T>(ref result);");
-                        break;
-                    case "-| |":
-                        WriteLine($"\t\t\t\t{(small ? nameof(Int32) : $"{type}")} {(small ? "i" : "result")} = -Math.Abs(Unsafe.As<T, {type}>(ref value));");
-                        if (small)
-                        {
-                            WriteLine($"\t\t\t\t{type} result = Unsafe.As<{nameof(Int32)}, {type}>(ref i);");
-                        }
-                        WriteLine($"\t\t\t\treturn Unsafe.As<{type}, T>(ref result);");
-                        break;
-                    default:
-                        throw new NotSupportedException();
-                }
-            }
-            else
-            {
-                WriteLine($"\t\t\t\t{type} value = {expression};");
-                WriteLine($"\t\t\t\treturn Unsafe.As<{type}, T>(ref value);");
-            }
-
-            WriteLine("\t\t\t}");
-            WriteLine(String.Empty);
-        }
-
-        WriteLine($"\t\t\tthrow new NotSupportedException($\"Operator {@operator} is not supported for {{typeof(T)}} type\");");
-        WriteLine("\t\t}");
-        WriteLine(String.Empty);
     }
 
     void MinImplementation(String type)
@@ -1657,6 +1494,7 @@ namespace NetExtender.Utilities.Numerics
         ForEach(Types, IsTypeImplementation);
     }
 #>
+    [SuppressMessage("ReSharper", "CognitiveComplexity")]
     [SuppressMessage("ReSharper", "RedundantOverflowCheckingContext")]
     public static partial class MathUtilities
     {
@@ -1728,18 +1566,6 @@ namespace NetExtender.Utilities.Numerics
     Promille();
     WriteLine(String.Empty);
     IsType();
-#>
-    }
-
-    [SuppressMessage("ReSharper", "InvertIf")]
-    [SuppressMessage("ReSharper", "CognitiveComplexity")]
-    public static partial class MathUnsafe
-    {
-<#
-    foreach (String @operator in Operands.Keys)
-    {
-        Functions(@operator);
-    }
 #>
     }
 }

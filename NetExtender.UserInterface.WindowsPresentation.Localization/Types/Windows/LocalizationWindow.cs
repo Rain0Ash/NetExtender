@@ -10,6 +10,6 @@ namespace NetExtender.UserInterface.WindowsPresentation
     [ReflectionNaming(typeof(LocalizationBinding))]
     public abstract class LocalizationWindow : CenterWindow
     {
-        public abstract LocalizationInitializerAbstraction Localization { get; }
+        public abstract LocalizationInitializerBase Localization { get; }
     }
 }

@@ -33,6 +33,32 @@ namespace NetExtender.Types.Exceptions
     }
     
     [Serializable]
+    public class NotImplementedReflectionException : NotImplementedException
+    {
+        private new const String Message = "Reflection operation is not implemented.";
+        
+        public NotImplementedReflectionException()
+            : base(Message)
+        {
+        }
+        
+        public NotImplementedReflectionException(String? message)
+            : base(message ?? Message)
+        {
+        }
+        
+        public NotImplementedReflectionException(String? message, Exception? exception)
+            : base(message ?? Message, exception)
+        {
+        }
+        
+        protected NotImplementedReflectionException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
+        }
+    }
+    
+    [Serializable]
     public class NotSupportedReflectionException : NotSupportedException
     {
         private new const String Message = "Reflection operation is not supported.";

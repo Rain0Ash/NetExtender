@@ -9,12 +9,29 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using NetExtender.Types.Dictionaries;
 using NetExtender.Types.Indexers.Interfaces;
+using NetExtender.Types.Reflection;
+using NetExtender.Utilities.Core;
 using NetExtender.Utilities.Numerics;
 
 namespace NetExtender.Utilities.Types
 {
     public static partial class EnumerableUtilities
     {
+        [ReflectionSystemResource(typeof(Enumerable))]
+        internal static class SR
+        {
+            private static Type SRType { get; } = SRUtilities.SRType(typeof(Enumerable).Assembly);
+
+            [ReflectionSystemResource(typeof(Enumerable))]
+            public static SRInfo NoElements { get; } = new SRInfo(SRType);
+
+            [ReflectionSystemResource(typeof(Enumerable))]
+            public static SRInfo NoMatch { get; } = new SRInfo(SRType);
+
+            [ReflectionSystemResource(typeof(Enumerable))]
+            public static SRInfo MoreThanOneElement { get; } = new SRInfo(SRType);
+        }
+        
         public static Boolean Any<T>(this IEnumerable<T> source, Func<T, Int32, Boolean> predicate)
         {
             if (source is null)
@@ -736,6 +753,79 @@ namespace NetExtender.Utilities.Types
             return result;
         }
 
+        // TODO: Single, First with TArgument
+        public static T Single<T, TArgument>(this IEnumerable<T> source, TArgument argument, Func<TArgument, T, Boolean> predicate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            using IEnumerator<T> enumerator = source.GetEnumerator();
+
+            while (enumerator.MoveNext())
+            {
+                T result = enumerator.Current;
+                if (!predicate(argument, result))
+                {
+                    continue;
+                }
+
+                while (enumerator.MoveNext())
+                {
+                    if (predicate(argument, enumerator.Current))
+                    {
+                        throw new InvalidOperationException(SR.MoreThanOneElement);
+                    }
+                }
+
+                return result;
+            }
+
+            throw new InvalidOperationException(SR.NoMatch);
+        }
+
+        public static T? SingleOrDefault<T, TArgument>(this IEnumerable<T> source, TArgument argument, Func<TArgument, T, Boolean> predicate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            using IEnumerator<T> enumerator = source.GetEnumerator();
+
+            while (enumerator.MoveNext())
+            {
+                T result = enumerator.Current;
+                if (!predicate(argument, result))
+                {
+                    continue;
+                }
+
+                while (enumerator.MoveNext())
+                {
+                    if (predicate(argument, enumerator.Current))
+                    {
+                        throw new InvalidOperationException(SR.MoreThanOneElement);
+                    }
+                }
+
+                return result;
+            }
+
+            return default;
+        }
+
 #if !NET6_0_OR_GREATER
         public static T SingleOrDefault<T>(this IEnumerable<T> source, T alternate)
         {
@@ -826,7 +916,6 @@ namespace NetExtender.Utilities.Types
             }
 
             T item = enumerator.Current;
-
             return enumerator.MoveNext() ? alternate() : item;
         }
 

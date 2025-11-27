@@ -20,7 +20,7 @@ namespace NetExtender.WindowsPresentation.ReactiveUI
         }
     }
 
-    public abstract class SettingsReactiveViewModel : SettingsReactiveViewModelAbstraction<SettingsReactiveViewModelInitializer>
+    public abstract class SettingsReactiveViewModel : SettingsReactiveViewModelBase<SettingsReactiveViewModelInitializer>
     {
         protected SettingsReactiveViewModel(SettingsLocalizationSynchronizedBehavior settings)
             : base(settings)

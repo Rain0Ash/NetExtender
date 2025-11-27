@@ -101,8 +101,7 @@ namespace NetExtender.Types.Trees
         }
 
         public DictionaryTree(Dictionary<TKey, DictionaryTreeNode<TKey, TValue>> dictionary, IEqualityComparer<TKey>? comparer)
-            : this(dictionary is not null ? dictionary.Select(item => new KeyValuePair<TKey, IDictionaryTreeNode<TKey, TValue>>(item.Key, item.Value))
-                : throw new ArgumentNullException(nameof(dictionary)), comparer)
+            : this(dictionary is not null ? dictionary.Select(item => new KeyValuePair<TKey, IDictionaryTreeNode<TKey, TValue>>(item.Key, item.Value)) : throw new ArgumentNullException(nameof(dictionary)), comparer)
         {
         }
 
@@ -453,7 +452,7 @@ namespace NetExtender.Types.Trees
         {
             return Dump()?.Where(entry => entry.Value is not null).Select(entry => entry.Flatten(separator)).OrderBy(entry => entry.Section).ThenBy(entry => entry.Key).ToArray();
         }
-        
+
         public FlattenDictionaryTreeEntry<TKey, TValue>[]? Flatten(params TKey[]? sections)
         {
             return Flatten(FlattenDictionaryTreeEntry<TKey, TValue>.DefaultSeparator, sections);
@@ -463,7 +462,7 @@ namespace NetExtender.Types.Trees
         {
             return Dump(sections)?.Where(entry => entry.Value is not null).Select(entry => entry.Flatten(separator)).OrderBy(entry => entry.Section).ThenBy(entry => entry.Key).ToArray();
         }
-        
+
         public FlattenDictionaryTreeEntry<TKey, TValue>[]? Flatten(IEnumerable<TKey>? sections)
         {
             return Flatten(FlattenDictionaryTreeEntry<TKey, TValue>.DefaultSeparator, sections);

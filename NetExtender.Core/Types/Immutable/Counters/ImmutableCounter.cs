@@ -11,6 +11,7 @@ using NetExtender.Types.Counters;
 using NetExtender.Types.Counters.Interfaces;
 using NetExtender.Types.Exceptions;
 using NetExtender.Types.Immutable.Counters.Interfaces;
+using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Immutable.Counters
 {
@@ -163,7 +164,7 @@ namespace NetExtender.Types.Immutable.Counters
                 throw new ArgumentNullException(nameof(elementSelector));
             }
 
-            return source is ImmutableCounter<TKey, TCount> counter ? counter.WithComparers(comparer) : ImmutableCounter<TKey, TCount>.Empty.WithComparers(comparer).AddRange(source.Select(item => new KeyValuePair<TKey, TCount>(keySelector(item), elementSelector(item))));
+            return source is ImmutableCounter<TKey, TCount> counter ? counter.WithComparers(comparer) : ImmutableCounter<TKey, TCount>.Empty.WithComparers(comparer).AddRange(source.Pair(keySelector, elementSelector));
         }
     }
     
@@ -233,14 +234,14 @@ namespace NetExtender.Types.Immutable.Counters
             return --value;
         }
 
-        protected sealed override Int32 Add(Int32 left, Int32 right)
+        protected sealed override Int32 Add(Int32 first, Int32 second)
         {
-            return left + right;
+            return first + second;
         }
 
-        protected sealed override Int32 Subtract(Int32 left, Int32 right)
+        protected sealed override Int32 Subtract(Int32 first, Int32 second)
         {
-            return left - right;
+            return first - second;
         }
     }
     
@@ -310,14 +311,14 @@ namespace NetExtender.Types.Immutable.Counters
             return --value;
         }
 
-        protected sealed override Int64 Add(Int64 left, Int64 right)
+        protected sealed override Int64 Add(Int64 first, Int64 second)
         {
-            return left + right;
+            return first + second;
         }
 
-        protected sealed override Int64 Subtract(Int64 left, Int64 right)
+        protected sealed override Int64 Subtract(Int64 first, Int64 second)
         {
-            return left - right;
+            return first - second;
         }
     }
     
@@ -387,14 +388,14 @@ namespace NetExtender.Types.Immutable.Counters
             return --value;
         }
 
-        protected sealed override Decimal Add(Decimal left, Decimal right)
+        protected sealed override Decimal Add(Decimal first, Decimal second)
         {
-            return left + right;
+            return first + second;
         }
 
-        protected sealed override Decimal Subtract(Decimal left, Decimal right)
+        protected sealed override Decimal Subtract(Decimal first, Decimal second)
         {
-            return left - right;
+            return first - second;
         }
     }
     
@@ -435,7 +436,7 @@ namespace NetExtender.Types.Immutable.Counters
         }
     }
     
-    public abstract class ImmutableCounter<T, TCount, TCounter> : ImmutableCounterAbstraction<T, TCount, TCounter> where T : notnull where TCount : unmanaged, IConvertible where TCounter : class, IImmutableCounter<T, TCount>
+    public abstract class ImmutableCounter<T, TCount, TCounter> : ImmutableCounterBase<T, TCount, TCounter> where T : notnull where TCount : unmanaged, IConvertible where TCounter : class, IImmutableCounter<T, TCount>
     {
         protected sealed override ImmutableDictionary<T, TCount> Internal { get; }
         

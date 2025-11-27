@@ -3,9 +3,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Net;
+using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using NetExtender.Interfaces;
+using NetExtender.Newtonsoft.Types.Monads.Results;
 using NetExtender.Types.Exceptions;
 using NetExtender.Types.Monads.Interfaces;
 using NetExtender.Utilities.Network;
@@ -13,9 +16,11 @@ using NetExtender.Utilities.Types;
 using Newtonsoft.Json;
 using Unit = System.Reactive.Unit;
 
-namespace NetExtender.Types.Monads.Result
+namespace NetExtender.Types.Monads
 {
     [Serializable]
+    [JsonConverter(typeof(BusinessResultJsonConverter))]
+    [System.Text.Json.Serialization.JsonConverter(typeof(NetExtender.Serialization.Json.Monads.BusinessResultJsonConverter))]
     public readonly struct BusinessResult : IEqualityStruct<BusinessResult>, IBusinessResult<Unit>, IResultEquality<Unit, Result<Unit>>, IResultEquality<Unit, Result<Unit, BusinessException>>, IResultEquality<BusinessResult>, IResultEquality<Unit, BusinessResult<Unit>>, ICloneable<BusinessResult>, ISerializable
     {
         public static implicit operator Result<Unit>(BusinessResult value)
@@ -76,6 +81,11 @@ namespace NetExtender.Types.Monads.Result
         public static implicit operator Unit(BusinessResult value)
         {
             return value.Internal;
+        }
+
+        public static implicit operator Maybe<Unit>(BusinessResult value)
+        {
+            return value.Internal.Unwrap(out Unit result) ? new Maybe<Unit>(result) : default;
         }
 
         public static implicit operator BusinessResult(Unit value)
@@ -193,13 +203,8 @@ namespace NetExtender.Types.Monads.Result
                 return Internal.IsEmpty;
             }
         }
-        
-        public BusinessResult()
-        {
-            Internal = new BusinessResult<Unit>();
-        }
-        
-        public BusinessResult(Unit value)
+
+        internal BusinessResult(Unit value)
         {
             Internal = new BusinessResult<Unit>(value);
         }
@@ -222,6 +227,54 @@ namespace NetExtender.Types.Monads.Result
         internal BusinessResult(SerializationInfo info, StreamingContext context)
         {
             Internal = new BusinessResult<Unit>(info, context);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static BusinessResult Create(Unit value)
+        {
+            return new BusinessResult(value);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static BusinessResult Create(BusinessException exception)
+        {
+            return new BusinessResult(exception);
+        }
+
+        Boolean IMonad.Unwrap(out Object? value)
+        {
+            value = Exception;
+            return !IsEmpty && value is null;
+        }
+
+        Boolean IMonad<Unit>.Unwrap(out Unit value)
+        {
+            value = default;
+            return !IsEmpty && Exception is null;
+        }
+
+        Boolean IResult.Unwrap([MaybeNullWhen(false)] out Exception value)
+        {
+            value = Exception;
+            return value is not null;
+        }
+
+        Boolean IResult<Unit, BusinessException>.Unwrap([MaybeNullWhen(false)] out BusinessException value)
+        {
+            value = Exception;
+            return value is not null;
+        }
+
+        Boolean IBusinessResult.Unwrap([MaybeNullWhen(false)] out BusinessException value)
+        {
+            value = Exception;
+            return value is not null;
+        }
+
+        Boolean IBusinessResult<Unit>.Unwrap([MaybeNullWhen(false)] out BusinessException value)
+        {
+            value = Exception;
+            return value is not null;
         }
 
         public void GetObjectData(SerializationInfo info, StreamingContext context)
@@ -511,6 +564,8 @@ namespace NetExtender.Types.Monads.Result
     }
 
     [Serializable]
+    [JsonConverter(typeof(BusinessResultJsonConverter<>))]
+    [System.Text.Json.Serialization.JsonConverter(typeof(NetExtender.Serialization.Json.Monads.BusinessResultJsonConverter<>))]
     public readonly struct BusinessResult<T> : IEqualityStruct<BusinessResult<T>>, IBusinessResult<T>, IResultEquality<T, Result<T>>, IResultEquality<T, Result<T, BusinessException>>, IResultEquality<T, BusinessResult<T>>, ICloneable<BusinessResult<T>>, ISerializable
     {
         public static implicit operator Result<T>(BusinessResult<T> value)
@@ -573,6 +628,11 @@ namespace NetExtender.Types.Monads.Result
             return value.Internal;
         }
 
+        public static implicit operator Maybe<T>(BusinessResult<T> value)
+        {
+            return value.Unwrap(out T? result) ? new Maybe<T>(result) : default;
+        }
+
         public static implicit operator BusinessResult<T>(T value)
         {
             return new BusinessResult<T>(value);
@@ -623,16 +683,6 @@ namespace NetExtender.Types.Monads.Result
             return first.Internal != second.Internal;
         }
 
-        public static Boolean operator >(T? first, BusinessResult<T> second)
-        {
-            return first > second.Internal;
-        }
-
-        public static Boolean operator >=(T? first, BusinessResult<T> second)
-        {
-            return first >= second.Internal;
-        }
-
         public static Boolean operator <(T? first, BusinessResult<T> second)
         {
             return first < second.Internal;
@@ -643,14 +693,14 @@ namespace NetExtender.Types.Monads.Result
             return first <= second.Internal;
         }
 
-        public static Boolean operator >(BusinessResult<T> first, T? second)
+        public static Boolean operator >(T? first, BusinessResult<T> second)
         {
-            return first.Internal > second;
+            return first > second.Internal;
         }
 
-        public static Boolean operator >=(BusinessResult<T> first, T? second)
+        public static Boolean operator >=(T? first, BusinessResult<T> second)
         {
-            return first.Internal >= second;
+            return first >= second.Internal;
         }
 
         public static Boolean operator <(BusinessResult<T> first, T? second)
@@ -663,14 +713,14 @@ namespace NetExtender.Types.Monads.Result
             return first.Internal <= second;
         }
 
-        public static Boolean operator >(BusinessResult<T> first, BusinessResult<T> second)
+        public static Boolean operator >(BusinessResult<T> first, T? second)
         {
-            return first.Internal > second.Internal;
+            return first.Internal > second;
         }
 
-        public static Boolean operator >=(BusinessResult<T> first, BusinessResult<T> second)
+        public static Boolean operator >=(BusinessResult<T> first, T? second)
         {
-            return first.Internal >= second.Internal;
+            return first.Internal >= second;
         }
 
         public static Boolean operator <(BusinessResult<T> first, BusinessResult<T> second)
@@ -681,6 +731,16 @@ namespace NetExtender.Types.Monads.Result
         public static Boolean operator <=(BusinessResult<T> first, BusinessResult<T> second)
         {
             return first.Internal <= second.Internal;
+        }
+
+        public static Boolean operator >(BusinessResult<T> first, BusinessResult<T> second)
+        {
+            return first.Internal > second.Internal;
+        }
+
+        public static Boolean operator >=(BusinessResult<T> first, BusinessResult<T> second)
+        {
+            return first.Internal >= second.Internal;
         }
 
         private readonly Result<T, BusinessException> Internal;
@@ -799,6 +859,67 @@ namespace NetExtender.Types.Monads.Result
         {
             Internal = new Result<T, BusinessException>(info, context);
             Status = (HttpStatusCode) info.GetInt32(nameof(Status));
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static BusinessResult<T> Create(T value)
+        {
+            return new BusinessResult<T>(value);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static BusinessResult<T> Create(BusinessException exception)
+        {
+            return new BusinessResult<T>(exception);
+        }
+
+        Boolean IMonad.Unwrap(out Object? value)
+        {
+            if (IsEmpty || Exception is not null)
+            {
+                value = Exception;
+                return false;
+            }
+
+            value = Internal.Internal;
+            return true;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public Boolean Unwrap([MaybeNullWhen(false)] out T value)
+        {
+            if (IsEmpty || Exception is not null)
+            {
+                value = default;
+                return false;
+            }
+
+            value = Internal.Internal;
+            return true;
+        }
+
+        Boolean IResult.Unwrap([MaybeNullWhen(false)] out Exception value)
+        {
+            value = Exception;
+            return value is not null;
+        }
+
+        Boolean IResult<T, BusinessException>.Unwrap([MaybeNullWhen(false)] out BusinessException value)
+        {
+            value = Exception;
+            return value is not null;
+        }
+
+        Boolean IBusinessResult.Unwrap([MaybeNullWhen(false)] out BusinessException value)
+        {
+            value = Exception;
+            return value is not null;
+        }
+
+        Boolean IBusinessResult<T>.Unwrap([MaybeNullWhen(false)] out BusinessException value)
+        {
+            value = Exception;
+            return value is not null;
         }
 
         public void GetObjectData(SerializationInfo info, StreamingContext context)
@@ -1074,6 +1195,8 @@ namespace NetExtender.Types.Monads.Result
     }
 
     [Serializable]
+    [JsonConverter(typeof(BusinessResultJsonConverter<,>))]
+    [System.Text.Json.Serialization.JsonConverter(typeof(NetExtender.Serialization.Json.Monads.BusinessResultJsonConverter<,>))]
     public readonly struct BusinessResult<T, TBusiness> : IEqualityStruct<BusinessResult<T, TBusiness>>, IBusinessResult<T, TBusiness>, IResultEquality<T, Result<T>>, IResultEquality<T, Result<T, BusinessException>>, IResultEquality<T, Result<T, BusinessException<TBusiness>>>, IResultEquality<T, BusinessResult<T>>, IResultEquality<T, BusinessResult<T, TBusiness>>, ICloneable<BusinessResult<T, TBusiness>>, ISerializable
     {
         public static implicit operator Result<T>(BusinessResult<T, TBusiness> value)
@@ -1146,6 +1269,11 @@ namespace NetExtender.Types.Monads.Result
             return value.Internal;
         }
 
+        public static implicit operator Maybe<T>(BusinessResult<T, TBusiness> value)
+        {
+            return value.Unwrap(out T? result) ? new Maybe<T>(result) : default;
+        }
+
         public static implicit operator BusinessResult<T, TBusiness>(T value)
         {
             return new BusinessResult<T, TBusiness>(value);
@@ -1196,16 +1324,6 @@ namespace NetExtender.Types.Monads.Result
             return first.Internal != second.Internal;
         }
 
-        public static Boolean operator >(T? first, BusinessResult<T, TBusiness> second)
-        {
-            return first > second.Internal;
-        }
-
-        public static Boolean operator >=(T? first, BusinessResult<T, TBusiness> second)
-        {
-            return first >= second.Internal;
-        }
-
         public static Boolean operator <(T? first, BusinessResult<T, TBusiness> second)
         {
             return first < second.Internal;
@@ -1216,14 +1334,14 @@ namespace NetExtender.Types.Monads.Result
             return first <= second.Internal;
         }
 
-        public static Boolean operator >(BusinessResult<T, TBusiness> first, T? second)
+        public static Boolean operator >(T? first, BusinessResult<T, TBusiness> second)
         {
-            return first.Internal > second;
+            return first > second.Internal;
         }
 
-        public static Boolean operator >=(BusinessResult<T, TBusiness> first, T? second)
+        public static Boolean operator >=(T? first, BusinessResult<T, TBusiness> second)
         {
-            return first.Internal >= second;
+            return first >= second.Internal;
         }
 
         public static Boolean operator <(BusinessResult<T, TBusiness> first, T? second)
@@ -1236,14 +1354,14 @@ namespace NetExtender.Types.Monads.Result
             return first.Internal <= second;
         }
 
-        public static Boolean operator >(BusinessResult<T, TBusiness> first, BusinessResult<T, TBusiness> second)
+        public static Boolean operator >(BusinessResult<T, TBusiness> first, T? second)
         {
-            return first.Internal > second.Internal;
+            return first.Internal > second;
         }
 
-        public static Boolean operator >=(BusinessResult<T, TBusiness> first, BusinessResult<T, TBusiness> second)
+        public static Boolean operator >=(BusinessResult<T, TBusiness> first, T? second)
         {
-            return first.Internal >= second.Internal;
+            return first.Internal >= second;
         }
 
         public static Boolean operator <(BusinessResult<T, TBusiness> first, BusinessResult<T, TBusiness> second)
@@ -1254,6 +1372,16 @@ namespace NetExtender.Types.Monads.Result
         public static Boolean operator <=(BusinessResult<T, TBusiness> first, BusinessResult<T, TBusiness> second)
         {
             return first.Internal <= second.Internal;
+        }
+
+        public static Boolean operator >(BusinessResult<T, TBusiness> first, BusinessResult<T, TBusiness> second)
+        {
+            return first.Internal > second.Internal;
+        }
+
+        public static Boolean operator >=(BusinessResult<T, TBusiness> first, BusinessResult<T, TBusiness> second)
+        {
+            return first.Internal >= second.Internal;
         }
 
         private readonly Result<T, BusinessException<TBusiness>> Internal;
@@ -1407,6 +1535,79 @@ namespace NetExtender.Types.Monads.Result
         {
             Internal = new Result<T, BusinessException<TBusiness>>(info, context);
             Status = (HttpStatusCode) info.GetInt32(nameof(Status));
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static BusinessResult<T, TBusiness> Create(T value)
+        {
+            return new BusinessResult<T, TBusiness>(value);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static BusinessResult<T, TBusiness> Create(BusinessException<TBusiness> exception)
+        {
+            return new BusinessResult<T, TBusiness>(exception);
+        }
+
+        Boolean IMonad.Unwrap(out Object? value)
+        {
+            if (IsEmpty || Exception is not null)
+            {
+                value = Exception;
+                return false;
+            }
+
+            value = Internal.Internal;
+            return true;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public Boolean Unwrap([MaybeNullWhen(false)] out T value)
+        {
+            if (IsEmpty || Exception is not null)
+            {
+                value = default;
+                return false;
+            }
+
+            value = Internal.Internal;
+            return true;
+        }
+
+        Boolean IResult.Unwrap([MaybeNullWhen(false)] out Exception value)
+        {
+            value = Exception;
+            return value is not null;
+        }
+
+        Boolean IResult<T, BusinessException>.Unwrap([MaybeNullWhen(false)] out BusinessException value)
+        {
+            value = Exception;
+            return value is not null;
+        }
+
+        Boolean IResult<T, BusinessException<TBusiness>>.Unwrap([MaybeNullWhen(false)] out BusinessException<TBusiness> value)
+        {
+            value = Exception;
+            return value is not null;
+        }
+
+        Boolean IBusinessResult.Unwrap([MaybeNullWhen(false)] out BusinessException value)
+        {
+            value = Exception;
+            return value is not null;
+        }
+
+        Boolean IBusinessResult<T>.Unwrap([MaybeNullWhen(false)] out BusinessException value)
+        {
+            value = Exception;
+            return value is not null;
+        }
+
+        Boolean IBusinessResult<T, TBusiness>.Unwrap([MaybeNullWhen(false)] out BusinessException<TBusiness> value)
+        {
+            value = Exception;
+            return value is not null;
         }
 
         public void GetObjectData(SerializationInfo info, StreamingContext context)
