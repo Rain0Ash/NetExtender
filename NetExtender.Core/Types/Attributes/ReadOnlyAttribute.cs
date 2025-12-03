@@ -13,12 +13,12 @@ namespace NetExtender.Utilities.Core
         {
             return value?.IsReadOnly ?? false;
         }
-        
+
         public static implicit operator Boolean?(ReadOnlyAttribute? value)
         {
             return value?.State;
         }
-        
+
         [return: NotNullIfNotNull("value")]
         public static implicit operator System.ComponentModel.ReadOnlyAttribute?(ReadOnlyAttribute? value)
         {
@@ -29,7 +29,7 @@ namespace NetExtender.Utilities.Core
                 false => System.ComponentModel.ReadOnlyAttribute.No
             } : null;
         }
-        
+
         [return: NotNullIfNotNull("value")]
         public static implicit operator ReadOnlyAttribute?(System.ComponentModel.ReadOnlyAttribute? value)
         {

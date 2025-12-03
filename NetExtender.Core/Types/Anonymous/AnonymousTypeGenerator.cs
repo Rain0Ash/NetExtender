@@ -381,7 +381,7 @@ namespace NetExtender.Types.Anonymous
             }
 
             Type type = DefineType(properties);
-            
+
             ConstructorInfo[] constructors = type.GetConstructors();
             ConstructorInfo constructor = constructors.Length switch
             {
@@ -390,7 +390,7 @@ namespace NetExtender.Types.Anonymous
                 2 => constructors[1],
                 _ => throw new AmbiguousMatchException(type.Name)
             };
-            
+
             Type[] parameters = constructor.GetParameters().Select(parameter => parameter.ParameterType).ToArray();
             return AnonymousActivator.Create(type, parameters);
         }

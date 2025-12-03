@@ -15,7 +15,7 @@ namespace NetExtender.Utilities.Core
         public EquatableAttribute()
         {
         }
-        
+
         public EquatableAttribute(Int32 order)
             : base(order)
         {
@@ -71,13 +71,13 @@ namespace NetExtender.Utilities.Core
             ParameterExpression x = Expression.Parameter(typeof(T), nameof(x));
             ParameterExpression y = Expression.Parameter(typeof(T), nameof(y));
             ImmutableArray<Member<TAttribute>> members = Members<TAttribute>(name);
-            
+
             const BindingFlags binding = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
-            
+
             var methods = new
             {
                 String = typeof(TAttribute).GetMethod(nameof(EquatableAttribute.Equals), binding, new[] { typeof(String), typeof(String) }),
-                Generic = typeof(TAttribute).GetMethod(nameof(EquatableAttribute.Equals), 1, binding, new[] { Type.MakeGenericMethodParameter(0), Type.MakeGenericMethodParameter(0) }),
+                Generic = typeof(TAttribute).GetMethod(nameof(EquatableAttribute.Equals), 1, binding, new[] { Type.MakeGenericMethodParameter(0), Type.MakeGenericMethodParameter(0) })
             };
 
             if (methods.String is null || methods.Generic is null)

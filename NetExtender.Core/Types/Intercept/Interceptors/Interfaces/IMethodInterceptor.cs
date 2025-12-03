@@ -11,15 +11,15 @@ namespace NetExtender.Types.Intercept.Interfaces
     public interface IAnyMethodInterceptor<in TSender, in TInfo> : IAnyMethodInterceptor<TSender, IMethodInterceptEventArgs, TInfo>, IMethodInterceptor<TSender, TInfo>, IAsyncMethodInterceptor<TSender, TInfo>
     {
     }
-    
+
     public interface IAnyMethodInterceptor<in TSender, in TArgument, in TInfo> : IMethodInterceptor<TSender, TArgument, TInfo>, IAsyncMethodInterceptor<TSender, TArgument, TInfo>
     {
     }
-    
+
     public interface IAsyncMethodInterceptor<in TSender, in TInfo> : IAsyncMethodInterceptor<TSender, IMethodInterceptEventArgs, TInfo>
     {
     }
-    
+
     public interface IAsyncMethodInterceptor<in TSender, in TArgument, in TInfo>
     {
         public ValueTask InterceptAsync<TDelegate>(TSender sender, TArgument args, TDelegate @delegate) where TDelegate : struct, IAsyncValueAction<TDelegate>;
@@ -40,7 +40,7 @@ namespace NetExtender.Types.Intercept.Interfaces
         public ValueTask InterceptAsync<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14>(TSender sender, TInfo? info, Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, Task> method, T1 first, T2 second, T3 third, T4 fourth, T5 fifth, T6 sixth, T7 seventh, T8 eighth, T9 ninth, T10 tenth, T11 eleventh, T12 twelfth, T13 thirteenth, T14 fourteenth);
         public ValueTask InterceptAsync<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15>(TSender sender, TInfo? info, Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, Task> method, T1 first, T2 second, T3 third, T4 fourth, T5 fifth, T6 sixth, T7 seventh, T8 eighth, T9 ninth, T10 tenth, T11 eleventh, T12 twelfth, T13 thirteenth, T14 fourteenth, T15 fifteenth);
         public ValueTask InterceptAsync<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16>(TSender sender, TInfo? info, Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, Task> method, T1 first, T2 second, T3 third, T4 fourth, T5 fifth, T6 sixth, T7 seventh, T8 eighth, T9 ninth, T10 tenth, T11 eleventh, T12 twelfth, T13 thirteenth, T14 fourteenth, T15 fifteenth, T16 sixteenth);
-        
+
         public ValueTask InterceptAsync(TSender sender, TInfo? info, Func<ValueTask> method);
         public ValueTask InterceptAsync<T>(TSender sender, TInfo? info, Func<T, ValueTask> method, T argument);
         public ValueTask InterceptAsync<T1, T2>(TSender sender, TInfo? info, Func<T1, T2, ValueTask> method, T1 first, T2 second);
@@ -58,7 +58,7 @@ namespace NetExtender.Types.Intercept.Interfaces
         public ValueTask InterceptAsync<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14>(TSender sender, TInfo? info, Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, ValueTask> method, T1 first, T2 second, T3 third, T4 fourth, T5 fifth, T6 sixth, T7 seventh, T8 eighth, T9 ninth, T10 tenth, T11 eleventh, T12 twelfth, T13 thirteenth, T14 fourteenth);
         public ValueTask InterceptAsync<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15>(TSender sender, TInfo? info, Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, ValueTask> method, T1 first, T2 second, T3 third, T4 fourth, T5 fifth, T6 sixth, T7 seventh, T8 eighth, T9 ninth, T10 tenth, T11 eleventh, T12 twelfth, T13 thirteenth, T14 fourteenth, T15 fifteenth);
         public ValueTask InterceptAsync<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16>(TSender sender, TInfo? info, Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, ValueTask> method, T1 first, T2 second, T3 third, T4 fourth, T5 fifth, T6 sixth, T7 seventh, T8 eighth, T9 ninth, T10 tenth, T11 eleventh, T12 twelfth, T13 thirteenth, T14 fourteenth, T15 fifteenth, T16 sixteenth);
-        
+
         public ValueTask<TResult> InterceptAsync<TDelegate, TResult>(TSender sender, TArgument args, TDelegate @delegate) where TDelegate : struct, IAsyncValueFunc<TDelegate, TResult>;
         public ValueTask<TResult> InterceptAsync<TResult>(TSender sender, TInfo? info, Func<Task<TResult>> method);
         public ValueTask<TResult> InterceptAsync<T, TResult>(TSender sender, TInfo? info, Func<T, Task<TResult>> method, T argument);
@@ -96,11 +96,11 @@ namespace NetExtender.Types.Intercept.Interfaces
         public ValueTask<TResult> InterceptAsync<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, TResult>(TSender sender, TInfo? info, Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, ValueTask<TResult>> method, T1 first, T2 second, T3 third, T4 fourth, T5 fifth, T6 sixth, T7 seventh, T8 eighth, T9 ninth, T10 tenth, T11 eleventh, T12 twelfth, T13 thirteenth, T14 fourteenth, T15 fifteenth);
         public ValueTask<TResult> InterceptAsync<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, TResult>(TSender sender, TInfo? info, Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, ValueTask<TResult>> method, T1 first, T2 second, T3 third, T4 fourth, T5 fifth, T6 sixth, T7 seventh, T8 eighth, T9 ninth, T10 tenth, T11 eleventh, T12 twelfth, T13 thirteenth, T14 fourteenth, T15 fifteenth, T16 sixteenth);
     }
-    
+
     public interface IMethodInterceptor<in TSender, in TInfo> : IMethodInterceptor<TSender, IMethodInterceptEventArgs, TInfo>
     {
     }
-    
+
     public interface IMethodInterceptor<in TSender, in TArgument, in TInfo>
     {
         public void Intercept<TDelegate>(TSender sender, TArgument args, TDelegate @delegate) where TDelegate : struct, IValueAction<TDelegate>;

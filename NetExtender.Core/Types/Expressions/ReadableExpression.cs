@@ -76,7 +76,7 @@ namespace NetExtender.Types.Expressions
         }
 
         protected abstract ITranslationSettings? Handle(ITranslationSettings? settings);
-        
+
         public override Int32 GetHashCode()
         {
             return Expression.GetHashCode();

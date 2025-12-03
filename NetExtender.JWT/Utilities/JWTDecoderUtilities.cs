@@ -176,7 +176,7 @@ namespace NetExtender.JWT.Utilities
 
             return decoder.TryValidate(jwt, secret?.Keys ?? default);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String Decode(this IJWTDecoder decoder, JWTToken jwt, Byte[]? key)
         {
@@ -356,7 +356,7 @@ namespace NetExtender.JWT.Utilities
         {
             return decoder is not null ? decoder.Decode<T>(jwt, secret?.Keys ?? default, verify) : throw new ArgumentNullException(nameof(decoder));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Dictionary<String, Object> DecodeHeaderToDictionary(this IJWTDecoder decoder, JWTToken jwt)
         {

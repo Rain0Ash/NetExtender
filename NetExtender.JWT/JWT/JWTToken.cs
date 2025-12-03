@@ -144,7 +144,7 @@ namespace NetExtender.JWT
                 Payload = new String(payload),
                 Signature = new String(signature)
             };
-            
+
             return true;
         }
 
@@ -175,10 +175,10 @@ namespace NetExtender.JWT
                 Payload = new String(payload),
                 Signature = new String(signature)
             };
-            
+
             return true;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         private static Boolean Slice(ReadOnlySpan<Char> source, out ReadOnlySpan<Char> slice, Char character)
         {
@@ -198,7 +198,7 @@ namespace NetExtender.JWT
         {
             payload = default;
             signature = default;
-            
+
             if (!Slice(source, out header, '.'))
             {
                 return false;
@@ -208,12 +208,12 @@ namespace NetExtender.JWT
             {
                 return false;
             }
-            
+
             if (!Slice(source = source.Slice(payload.Length + 1), out signature, '.'))
             {
                 return false;
             }
-            
+
             return !Slice(source.Slice(signature.Length + 1), out _, '.');
         }
 

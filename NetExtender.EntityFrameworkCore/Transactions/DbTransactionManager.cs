@@ -59,7 +59,7 @@ namespace NetExtender.EntityFrameworkCore.Transactions
             {
                 return;
             }
-            
+
             if (--_counter == 0)
             {
                 await Lazy.Database.CommitTransactionAsync(token);

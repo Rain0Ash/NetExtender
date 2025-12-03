@@ -7,9 +7,9 @@ using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Timers.Interfaces
 {
-    public interface ITimer : IStartable, IDisposable, IAsyncDisposable
+    public interface ITimer : IStartable, ITimerDisposable
 #if NET8_0_OR_GREATER
-    , System.Threading.ITimer    
+    , System.Threading.ITimer
 #endif
     {
         public event TickHandler Tick;
@@ -18,9 +18,13 @@ namespace NetExtender.Types.Timers.Interfaces
         public TimeSpan Interval { get; set; }
 
         public Boolean TrySetKind(DateTimeKind kind);
-        
+
 #if !NET8_0_OR_GREATER
         public Boolean Change(TimeSpan dueTime, TimeSpan period);
 #endif
+    }
+
+    public interface ITimerDisposable : IDisposable, IAsyncDisposable
+    {
     }
 }

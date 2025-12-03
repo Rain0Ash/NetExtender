@@ -471,29 +471,29 @@ namespace NetExtender.Utilities.Windows.IO
         [DllImport("kernel32", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern Boolean BackupRead(SafeFileHandle file, ref Win32StreamId buffer, Int32 request, out Int32 read, [MarshalAs(UnmanagedType.Bool)] Boolean abort, [MarshalAs(UnmanagedType.Bool)] Boolean security, ref IntPtr context);
-        
+
         [DllImport("kernel32", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern Boolean BackupRead(SafeFileHandle file, SafeGlobalHandle buffer, Int32 request, out Int32 read, [MarshalAs(UnmanagedType.Bool)] Boolean abort, [MarshalAs(UnmanagedType.Bool)] Boolean security, ref IntPtr context);
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static Boolean BackupRead(SafeFileHandle file, ref Win32StreamId buffer, Int32 request, out Int32 read, ref IntPtr context)
         {
             return BackupRead(file, ref buffer, request, out read, false, false, ref context);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static Boolean BackupRead(SafeFileHandle file, SafeGlobalHandle buffer, Int32 request, out Int32 read, ref IntPtr context)
         {
             return BackupRead(file, buffer, request, out read, false, false, ref context);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static Boolean AbortBackupRead(SafeFileHandle file, SafeGlobalHandle buffer, Int32 request, out Int32 read, ref IntPtr context)
         {
             return BackupRead(file, buffer, request, out read, true, false, ref context);
         }
-        
+
         [DllImport("kernel32", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern Boolean BackupSeek(
@@ -539,7 +539,7 @@ namespace NetExtender.Utilities.Windows.IO
         {
             return String.IsNullOrEmpty(name) || name.IndexOfAny(InvalidStreamNameChars) == -1;
         }
-        
+
         // ReSharper disable once CognitiveComplexity
         private static IEnumerable<Win32StreamInfo> GetDataStreams(String path)
         {
@@ -559,7 +559,7 @@ namespace NetExtender.Utilities.Windows.IO
             {
                 yield break;
             }
-            
+
             using StreamName stream = new StreamName();
             Win32StreamId id = new Win32StreamId();
             Int32 size = Marshal.SizeOf(id);
@@ -590,7 +590,7 @@ namespace NetExtender.Utilities.Windows.IO
                             name = stream.ReadStreamName(read >> 1);
                         }
                     }
-                    
+
                     if (!String.IsNullOrEmpty(name))
                     {
                         yield return new Win32StreamInfo((FileStreamType) id.StreamId, (FileStreamAttributes) id.StreamAttributes, id.Size.ToInt64(), name);

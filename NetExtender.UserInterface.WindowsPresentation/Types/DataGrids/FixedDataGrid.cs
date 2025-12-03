@@ -22,11 +22,11 @@ namespace NetExtender.UserInterface.WindowsPresentation
         {
         }
     }
-    
+
     public class FixedDataGrid : System.Windows.Controls.DataGrid
     {
         public static readonly DependencyProperty IsItemSelectEnabledProperty = DependencyProperty.Register(nameof(IsItemSelectEnabled), typeof(Boolean), typeof(FixedDataGrid), new PropertyMetadata(false));
-        
+
         public event ItemSelectedEventHandler? ItemSelected;
 
         private Object? LastItem { get; set; }
@@ -86,17 +86,17 @@ namespace NetExtender.UserInterface.WindowsPresentation
                 ItemSelected?.Invoke(this, new ItemSelectedEventArgs(SelectedItem));
                 return;
             }
-            
+
             args.Handled = true;
             Object? item = LastItem;
-            
+
             if (item is null)
             {
                 item = CurrentItem = LastItem = SelectedItem;
                 ItemSelected?.Invoke(this, new ItemSelectedEventArgs(item));
                 return;
             }
-            
+
             if (!ReferenceEquals(item, SelectedItem) && !Equals(item, SelectedItem))
             {
                 LastItem = SelectedItem;

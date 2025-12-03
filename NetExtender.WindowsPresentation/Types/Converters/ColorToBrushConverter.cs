@@ -14,11 +14,11 @@ namespace NetExtender.WindowsPresentation.Types.Converters
     public class ColorToBrushConverter : ValueConverter
     {
         public static ColorToBrushConverter Default { get; } = new ColorToBrushConverter();
-        
+
         public override Object? Convert(Object? value, Type? targetType, Object? parameter, CultureInfo? culture)
         {
             Type? underlying = targetType is not null ? Nullable.GetUnderlyingType(targetType) : null;
-            
+
             if (value is null)
             {
                 return underlying is not null ? DependencyProperty.UnsetValue : null;
@@ -31,17 +31,17 @@ namespace NetExtender.WindowsPresentation.Types.Converters
                     return color.ToBrush();
                 }
             }
-            
+
             if (targetType != typeof(Color) && underlying != typeof(Color))
             {
                 return DependencyProperty.UnsetValue;
             }
-            
+
             if (value is SolidColorBrush brush)
             {
                 return brush.Color;
             }
-            
+
             return DependencyProperty.UnsetValue;
         }
 

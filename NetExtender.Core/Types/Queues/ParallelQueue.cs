@@ -11,9 +11,7 @@ namespace NetExtender.Types.Queues
     internal sealed class ParallelQueue : IDisposable
     {
         private BlockingCollection<Action?> Queue { get; } = new BlockingCollection<Action?>();
-
         private List<Exception> Exceptions { get; } = new List<Exception>();
-
         private Thread[] Workers { get; }
 
         private Int32 _finished;

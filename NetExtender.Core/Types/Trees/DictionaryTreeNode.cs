@@ -523,7 +523,7 @@ namespace NetExtender.Types.Trees
         {
             return Purge(key, (IEnumerable<TKey>) sections);
         }
-        
+
         public FlattenDictionaryTreeEntry<TKey, TValue>[]? Flatten()
         {
             return HasTree ? Tree.Flatten() : null;
@@ -533,7 +533,7 @@ namespace NetExtender.Types.Trees
         {
             return HasTree ? Tree.Flatten(separator) : null;
         }
-        
+
         public FlattenDictionaryTreeEntry<TKey, TValue>[]? Flatten(params TKey[]? sections)
         {
             return HasTree ? Tree.Flatten(sections) : null;
@@ -543,7 +543,7 @@ namespace NetExtender.Types.Trees
         {
             return HasTree ? Tree.Flatten(separator, sections) : null;
         }
-        
+
         public FlattenDictionaryTreeEntry<TKey, TValue>[]? Flatten(IEnumerable<TKey>? sections)
         {
             return HasTree ? Tree.Flatten(sections) : null;

@@ -15,7 +15,6 @@ using NetExtender.Utilities.Types;
 
 namespace NetExtender.Registry
 {
-    [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
     [SuppressMessage("ReSharper", "InvertIf")]
     public sealed class Registry : IRegistry, IReadOnlyRegistry
     {

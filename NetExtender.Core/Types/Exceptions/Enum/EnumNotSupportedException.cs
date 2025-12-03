@@ -30,13 +30,13 @@ namespace NetExtender.Types.Exceptions
         {
             return new Exception(value, message, exception);
         }
-        
+
         [return: NotNullIfNotNull("exception")]
         public static implicit operator TEnum?(EnumNotSupportedException<T, TEnum>? exception)
         {
             return exception?.Enum ?? default;
         }
-        
+
         public override Type Type
         {
             get
@@ -62,7 +62,7 @@ namespace NetExtender.Types.Exceptions
                 return Enum.Id;
             }
         }
-        
+
         protected EnumNotSupportedException()
         {
         }
@@ -77,11 +77,15 @@ namespace NetExtender.Types.Exceptions
         {
         }
 
+#if NET8_0_OR_GREATER
+        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
         protected EnumNotSupportedException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
         }
-        
+
         [Serializable]
         private sealed class Exception : EnumNotSupportedException<T, TEnum>
         {
@@ -104,12 +108,20 @@ namespace NetExtender.Types.Exceptions
                 Enum = value;
             }
 
+#if NET8_0_OR_GREATER
+            [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+            [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
             private Exception(SerializationInfo info, StreamingContext context)
                 : base(info, context)
             {
                 Enum = info.GetValue<TEnum>(nameof(Enum));
             }
-            
+
+#if NET8_0_OR_GREATER
+            [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+            [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
             public override void GetObjectData(SerializationInfo info, StreamingContext context)
             {
                 base.GetObjectData(info, context);
@@ -138,12 +150,12 @@ namespace NetExtender.Types.Exceptions
         {
             return new Exception(value, message, exception);
         }
-        
+
         public static implicit operator T(EnumNotSupportedException<T>? exception)
         {
             return exception?.Value ?? default;
         }
-        
+
         public override Type Type
         {
             get
@@ -151,7 +163,7 @@ namespace NetExtender.Types.Exceptions
                 return typeof(T);
             }
         }
-        
+
         public abstract T Value { get; }
 
         public sealed override Enum Enum
@@ -176,6 +188,10 @@ namespace NetExtender.Types.Exceptions
         {
         }
 
+#if NET8_0_OR_GREATER
+        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
         protected EnumNotSupportedException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
@@ -203,12 +219,20 @@ namespace NetExtender.Types.Exceptions
                 Value = value;
             }
 
+#if NET8_0_OR_GREATER
+            [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+            [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
             private Exception(SerializationInfo info, StreamingContext context)
                 : base(info, context)
             {
                 Value = info.GetValue<T>(nameof(Value));
             }
-            
+
+#if NET8_0_OR_GREATER
+            [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+            [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
             public override void GetObjectData(SerializationInfo info, StreamingContext context)
             {
                 base.GetObjectData(info, context);
@@ -225,7 +249,7 @@ namespace NetExtender.Types.Exceptions
         {
             return exception?.Enum;
         }
-        
+
         public virtual Type Type
         {
             get
@@ -233,9 +257,9 @@ namespace NetExtender.Types.Exceptions
                 return Enum.GetType();
             }
         }
-        
+
         public abstract Enum Enum { get; }
-        
+
         protected EnumNotSupportedException()
         {
         }
@@ -250,6 +274,10 @@ namespace NetExtender.Types.Exceptions
         {
         }
 
+#if NET8_0_OR_GREATER
+        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
         protected EnumNotSupportedException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {

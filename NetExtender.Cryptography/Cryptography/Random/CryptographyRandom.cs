@@ -18,6 +18,10 @@ namespace NetExtender.Cryptography.Random
             Generator = RandomNumberGenerator.Create();
         }
 
+#if NET7_0_OR_GREATER
+        [Obsolete("Cryptographic factory methods accepting an algorithm name are obsolete. Use the parameterless Create factory method on the algorithm type instead.", DiagnosticId = "SYSLIB0045", UrlFormat = "https://aka.ms/dotnet-warnings/{0}")]
+        [System.Diagnostics.CodeAnalysis.RequiresUnreferencedCode("The default algorithm implementations might be removed, use strong type references like 'RSA.Create()' instead.")]
+#endif
         public CryptographyRandom(String generator)
         {
             if (generator is null)
@@ -29,7 +33,8 @@ namespace NetExtender.Cryptography.Random
         }
 
 #if NET6_0_OR_GREATER
-        [Obsolete]
+        [Obsolete("RNGCryptoServiceProvider is obsolete. To generate a random number, use one of the RandomNumberGenerator static methods instead.", DiagnosticId="SYSLIB0023", UrlFormat="https://aka.ms/dotnet-warnings/  {0}")]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 #endif
         public CryptographyRandom(CspParameters? parameters)
         {

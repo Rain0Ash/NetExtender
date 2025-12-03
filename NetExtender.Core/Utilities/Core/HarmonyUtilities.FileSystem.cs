@@ -31,7 +31,7 @@ namespace NetExtender.Utilities.Core
                 public EventHandler<FileSystemIntercept<IFileSystem, Any.Value>, IMethodInterceptEventArgs>? MethodIntercepted { get; init; }
             }
         }
-        
+
         public class InterceptHarmonyFileSystem : FileSystemIntercept, IInterceptIdentifierTarget<InterceptHarmonyFileSystem>
         {
             public new static event EventHandler<FileSystemIntercept<IFileSystem, Any.Value>, IPropertyInterceptEventArgs>? PropertyIntercept;
@@ -46,12 +46,12 @@ namespace NetExtender.Utilities.Core
             public new static event EventHandler<FileSystemIntercept<IFileSystem, Any.Value>, IMethodInterceptEventArgs>? MethodIntercept;
             public new static event EventHandler<FileSystemIntercept<IFileSystem, Any.Value>, IMethodInterceptEventArgs>? MethodIntercepting;
             public new static event EventHandler<FileSystemIntercept<IFileSystem, Any.Value>, IMethodInterceptEventArgs>? MethodIntercepted;
-            
+
             static InterceptHarmonyFileSystem()
             {
                 Intercept<InterceptHarmonyFileSystem>.Regex = new Regex("(Intercept|FileSystem)", RegexOptions.Compiled);
             }
-            
+
             public override String Identifier
             {
                 get
@@ -63,9 +63,9 @@ namespace NetExtender.Utilities.Core
                     throw new NotSupportedException();
                 }
             }
-            
+
             public Type Type { get; }
-            
+
             public InterceptHarmonyFileSystem(Type type)
             {
                 Type = type ?? throw new ArgumentNullException(nameof(type));

@@ -15,10 +15,10 @@ namespace NetExtender.Types.Network
     public sealed class HttpClientInterceptHandler : HttpDelegatingHandler, IIntercept<HttpInterceptEventArgs>, IAnyInterceptTarget<HttpResponseMessage?, HttpInterceptEventArgs>
     {
         public IAnyInterceptor<HttpResponseMessage?, HttpClientInterceptHandler, HttpInterceptEventArgs> Interceptor { get; init; } = AnyInterceptor<HttpResponseMessage?, HttpClientInterceptHandler, HttpInterceptEventArgs>.Default;
-        
+
         public event EventHandler<HttpInterceptEventArgs>? SendingRequest;
         public event EventHandler<HttpInterceptEventArgs>? ResponseReceived;
-        
+
         public event EventHandler<HttpInterceptEventArgs>? Intercept
         {
             add

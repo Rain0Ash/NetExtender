@@ -109,7 +109,7 @@ namespace NetExtender.Types.Counters
             return first - second;
         }
     }
-    
+
     public class Counter64<T> : Counter<T, Int64>
     {
         public Counter64()
@@ -211,7 +211,7 @@ namespace NetExtender.Types.Counters
             return first - second;
         }
     }
-    
+
     public class DecimalCounter<T> : Counter<T, Decimal>
     {
         public DecimalCounter()
@@ -313,11 +313,11 @@ namespace NetExtender.Types.Counters
             return first - second;
         }
     }
-    
+
     public class Counter<T, TCount> : CounterBase<T, TCount> where TCount : unmanaged, IConvertible
     {
         protected sealed override NullableDictionary<T, TCount> Internal { get; }
-        
+
         public IEqualityComparer<T> Comparer
         {
             get
@@ -325,7 +325,7 @@ namespace NetExtender.Types.Counters
                 return Internal.KeyComparer;
             }
         }
-        
+
         public IEqualityComparer<NullMaybe<T>> NullComparer
         {
             get

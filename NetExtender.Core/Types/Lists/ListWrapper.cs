@@ -10,7 +10,7 @@ namespace NetExtender.Types.Lists
     public sealed class ListWrapperCOW : IList
     {
         private ICollection? Collection { get; set; }
-        
+
         private readonly Lazy<IList> _cow;
         private IList COW
         {
@@ -82,7 +82,7 @@ namespace NetExtender.Types.Lists
         public ListWrapperCOW(ICollection collection)
         {
             Collection = collection ?? throw new ArgumentNullException(nameof(collection));
-            
+
             _cow = new Lazy<IList>(() => 
             {
                 ArrayList cow = new ArrayList(Collection ?? Array.Empty<Object?>());
@@ -171,12 +171,12 @@ namespace NetExtender.Types.Lists
                 {
                     throw new ArgumentOutOfRangeException(nameof(index), index, null);
                 }
-                
+
                 COW[index] = value;
             }
         }
     }
-    
+
     public sealed class ListWrapper : IList
     {
         private ICollection Collection { get; }

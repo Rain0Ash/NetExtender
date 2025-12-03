@@ -32,11 +32,11 @@ namespace NetExtender.WindowsPresentation.ReactiveUI
             Window = WindowStorageUtilities<TWindow>.Require();
         }
     }
-    
+
     public abstract class SettingsReactiveViewModelBase<T> : SettingsReactiveViewModelBase where T : SettingsReactiveViewModelInitializer, new()
     {
         public LocalizationCollection Languages { get; }
-        
+
         public sealed override Int32 Count
         {
             get
@@ -69,11 +69,11 @@ namespace NetExtender.WindowsPresentation.ReactiveUI
             Config.Changed += LocalizationChanged;
             this.WhenPropertyChanged(model => model.Identifier).Subscribe(model => Config.Localization = model.Value);
         }
-        
+
         private void LocalizationChanged(Object? sender, LocalizationChangedEventArgs args)
         {
             LocalizationIdentifier? identifier = Languages.FirstOrDefault(item => item.Identifier == args.Value)?.Identifier;
-            
+
             if (identifier is not null)
             {
                 Identifier = identifier.Value;
@@ -84,7 +84,7 @@ namespace NetExtender.WindowsPresentation.ReactiveUI
         {
             return Languages.GetEnumerator();
         }
-        
+
         public sealed override LocalizationFlagBitmapSourceEntry this[Int32 index]
         {
             get
@@ -125,7 +125,7 @@ namespace NetExtender.WindowsPresentation.ReactiveUI
 
         public abstract Int32 Count { get; }
         public abstract LocalizationIdentifier Identifier { get; set; }
-        
+
         protected SettingsReactiveViewModelBase(SettingsLocalizationSynchronizedBehavior settings)
         {
             Settings = settings ?? throw new ArgumentNullException(nameof(settings));
@@ -140,17 +140,17 @@ namespace NetExtender.WindowsPresentation.ReactiveUI
         {
             CollectionChanged?.Invoke(this, args);
         }
-        
+
         public abstract IEnumerator<LocalizationFlagBitmapSourceEntry> GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
         }
-        
+
         public abstract LocalizationFlagBitmapSourceEntry this[Int32 index] { get; }
     }
-    
+
     public abstract class SettingsReactiveViewModelBaseSingleton<T, TInitializer> : SettingsReactiveViewModelBase<TInitializer> where T : SettingsReactiveViewModelBase<TInitializer>, new() where TInitializer : SettingsReactiveViewModelInitializer, new()
     {
         private static ISingleton<T> Internal { get; } = new Singleton<T>();
@@ -168,7 +168,7 @@ namespace NetExtender.WindowsPresentation.ReactiveUI
         {
         }
     }
-    
+
     public abstract class SettingsReactiveViewModelBaseSingleton<T, TWindow, TInitializer> : SettingsReactiveViewModelBase<TWindow, TInitializer> where T : SettingsReactiveViewModelBase<TWindow, TInitializer>, new() where TWindow : Window where TInitializer : SettingsReactiveViewModelInitializer, new()
     {
         private static ISingleton<T> Internal { get; } = new Singleton<T>();

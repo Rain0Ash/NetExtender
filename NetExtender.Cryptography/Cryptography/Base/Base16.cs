@@ -269,7 +269,7 @@ namespace NetExtender.Cryptography.Base
                     Char* pinput = ptext;
                     Byte* poutput = pointer;
                     Char* pend = pinput + text.Length;
-                    
+
                     while (pinput != pend)
                     {
                         Int32 first = table[pinput[0]] - 1;

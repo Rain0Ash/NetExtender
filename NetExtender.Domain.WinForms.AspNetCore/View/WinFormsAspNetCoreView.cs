@@ -50,9 +50,9 @@ namespace NetExtender.Domains.WinForms.AspNetCore.View
             {
                 return await RunAsync(form, token).ConfigureAwait(false);
             }
-            
+
             TApplication application = Domain.Current.Application.As<TApplication>();
-            
+
             if (form is null)
             {
                 await RunAsync(application, host, token).ConfigureAwait(false);
@@ -76,10 +76,10 @@ namespace NetExtender.Domains.WinForms.AspNetCore.View
             await RunAsync(application, Form, Host, token).ConfigureAwait(false);
             return this;
         }
-        
+
         protected abstract Task RunAsync(TApplication application, T host, CancellationToken token);
         protected abstract Task RunAsync(TApplication application, Form form, T host, CancellationToken token);
-        
+
         protected Task<IApplicationView> RunAsync<TForm, THost>() where TForm : Form, new() where THost : class, IWebHost, T, new()
         {
             return RunAsync<TForm, THost>(CancellationToken.None);
@@ -90,7 +90,7 @@ namespace NetExtender.Domains.WinForms.AspNetCore.View
             return RunAsync(new TForm(), new THost(), token);
         }
     }
-    
+
     public class WinFormsAspNetCoreView<TForm, THost> : WinFormsAspNetCoreView<TForm, THost, WinFormsAspNetCoreBuilder<TForm, THost>> where TForm : Form, new() where THost : class, IHost, new()
     {
         public WinFormsAspNetCoreView()
@@ -113,11 +113,11 @@ namespace NetExtender.Domains.WinForms.AspNetCore.View
         {
         }
     }
-    
+
     public class WinFormsAspNetCoreView<TForm, THost, TBuilder> : WinFormsAspNetCoreView<TBuilder> where TForm : Form where THost : class, IHost where TBuilder : IApplicationBuilder<WinFormsAspNetCoreContext<TForm, THost>>, new()
     {
         protected THost? Internal { get; set; }
-        
+
         protected sealed override IHost? Host
         {
             get
@@ -144,18 +144,18 @@ namespace NetExtender.Domains.WinForms.AspNetCore.View
             : base(form, host)
         {
         }
-        
+
         public WinFormsAspNetCoreView(TBuilder builder)
             : base(builder)
         {
         }
     }
-    
+
     public class WinFormsAspNetCoreView<TBuilder> : WinFormsAspNetCoreView where TBuilder : IApplicationBuilder<WinFormsAspNetCoreContext>, new()
     {
         protected sealed override Form? Context { get; set; }
         protected override IHost? Host { get; set; }
-        
+
         protected TBuilder? Builder { get; }
 
         public WinFormsAspNetCoreView()
@@ -181,7 +181,7 @@ namespace NetExtender.Domains.WinForms.AspNetCore.View
             Form = form;
             Host = host;
         }
-        
+
         public WinFormsAspNetCoreView(TBuilder builder)
         {
             Builder = builder ?? throw new ArgumentNullException(nameof(builder));
@@ -197,12 +197,12 @@ namespace NetExtender.Domains.WinForms.AspNetCore.View
             (Form? form, IHost? host) = Builder.Build(Arguments);
             return RunAsync(Form ?? form, Host ?? host, token);
         }
-        
+
         protected override Task<IApplicationView> RunAsync(Form? form, CancellationToken token)
         {
             return RunAsync(form, Host ?? Builder?.Build(Arguments).Host, token);
         }
-        
+
         protected override Task<IApplicationView> RunAsync(IHost? host, CancellationToken token)
         {
             return RunAsync(Form ?? Builder?.Build(Arguments).Form, host, token);
@@ -246,7 +246,7 @@ namespace NetExtender.Domains.WinForms.AspNetCore.View
             return application.RunAsync(form, host, token);
         }
     }
-    
+
     public class WinFormsAspNetCoreWebView<TForm, THost> : WinFormsAspNetCoreWebView<TForm, THost, WinFormsAspNetCoreWebBuilder<TForm, THost>> where TForm : Form, new() where THost : class, IWebHost, new()
     {
         public WinFormsAspNetCoreWebView()
@@ -269,11 +269,11 @@ namespace NetExtender.Domains.WinForms.AspNetCore.View
         {
         }
     }
-    
+
     public class WinFormsAspNetCoreWebView<TForm, THost, TBuilder> : WinFormsAspNetCoreWebView<TBuilder> where TForm : Form where THost : class, IWebHost where TBuilder : IApplicationBuilder<WinFormsAspNetCoreWebContext<TForm, THost>>, new()
     {
         protected THost? Internal { get; set; }
-        
+
         protected sealed override IWebHost? Host
         {
             get
@@ -300,18 +300,18 @@ namespace NetExtender.Domains.WinForms.AspNetCore.View
             : base(form, host)
         {
         }
-        
+
         public WinFormsAspNetCoreWebView(TBuilder builder)
             : base(builder)
         {
         }
     }
-    
+
     public class WinFormsAspNetCoreWebView<TBuilder> : WinFormsAspNetCoreWebView where TBuilder : IApplicationBuilder<WinFormsAspNetCoreWebContext>, new()
     {
         protected sealed override Form? Context { get; set; }
         protected override IWebHost? Host { get; set; }
-        
+
         protected TBuilder? Builder { get; }
 
         public WinFormsAspNetCoreWebView()
@@ -337,7 +337,7 @@ namespace NetExtender.Domains.WinForms.AspNetCore.View
             Form = form;
             Host = host;
         }
-        
+
         public WinFormsAspNetCoreWebView(TBuilder builder)
         {
             Builder = builder ?? throw new ArgumentNullException(nameof(builder));
@@ -353,12 +353,12 @@ namespace NetExtender.Domains.WinForms.AspNetCore.View
             (Form? form, IWebHost? host) = Builder.Build(Arguments);
             return RunAsync(Form ?? form, Host ?? host, token);
         }
-        
+
         protected override Task<IApplicationView> RunAsync(Form? form, CancellationToken token)
         {
             return RunAsync(form, Host ?? Builder?.Build(Arguments).Host, token);
         }
-        
+
         protected override Task<IApplicationView> RunAsync(IWebHost? host, CancellationToken token)
         {
             return RunAsync(Form ?? Builder?.Build(Arguments).Form, host, token);

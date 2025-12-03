@@ -17,11 +17,11 @@ namespace NetExtender.ReactiveUI
             {
                 @object.Subscriptions.Add(subscription);
             }
-            
+
             return (T?) @object;
         }
     }
-    
+
     public record ReactiveDisposeRecord : ReactiveRecord, IDisposable
     {
         [return: NotNullIfNotNull("record")]
@@ -31,10 +31,10 @@ namespace NetExtender.ReactiveUI
             {
                 record.Subscriptions.Add(subscription);
             }
-            
+
             return record;
         }
-        
+
         private DisposeCollection? _subscriptions;
         private protected DisposeCollection Subscriptions
         {
@@ -43,7 +43,7 @@ namespace NetExtender.ReactiveUI
                 return _subscriptions ??= new DisposeCollection();
             }
         }
-        
+
         public void Dispose()
         {
             Dispose(true);

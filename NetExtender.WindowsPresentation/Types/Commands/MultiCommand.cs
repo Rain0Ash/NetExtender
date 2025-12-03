@@ -12,19 +12,19 @@ namespace NetExtender.WindowsPresentation.Types.Commands
     public abstract class MultiCommand<T> : Command<T>, IMultiCommand<T>
     {
         public new static Command Empty { get; } = new None();
-        
+
         public Boolean CanExecute(IEnumerable<T?>? parameter)
         {
             return CanExecute(null, parameter);
         }
-        
+
         public Boolean CanExecute(Object? sender, IEnumerable<T?>? parameter)
         {
             if (parameter is null)
             {
                 return true;
             }
-            
+
             // ReSharper disable once LoopCanBeConvertedToQuery
             foreach (T? item in parameter)
             {
@@ -33,20 +33,20 @@ namespace NetExtender.WindowsPresentation.Types.Commands
                     return false;
                 }
             }
-            
+
             return true;
         }
-        
+
         public Boolean CanExecute(IEnumerable? parameter)
         {
             return CanExecute(null, parameter);
         }
-        
+
         public Boolean CanExecute(Object? sender, IEnumerable? parameter)
         {
             return CanExecute(sender, parameter?.OfType<T>());
         }
-        
+
         protected override Boolean CanExecuteImplementation(Object? sender, Object? parameter)
         {
             return parameter switch
@@ -58,7 +58,7 @@ namespace NetExtender.WindowsPresentation.Types.Commands
                 _ => base.CanExecuteImplementation(sender, parameter)
             };
         }
-        
+
         public void Execute(IEnumerable<T?>? parameter)
         {
             Execute(null, parameter);
@@ -70,7 +70,7 @@ namespace NetExtender.WindowsPresentation.Types.Commands
             {
                 return;
             }
-            
+
             foreach (T? value in parameter)
             {
                 Execute(sender, value);
@@ -108,35 +108,35 @@ namespace NetExtender.WindowsPresentation.Types.Commands
                     return;
             }
         }
-        
+
         private sealed class None : MultiCommand<T>
         {
             protected override void ExecuteImplementation(Object? sender, T? parameter)
             {
             }
-            
+
             public override void Execute(Object? sender, IEnumerable<T?>? parameter)
             {
             }
         }
     }
-    
+
     public abstract class MultiCommand : Command, IMultiCommand
     {
         public new static Command Empty { get; } = new None();
-        
+
         public Boolean CanExecute(IEnumerable? parameter)
         {
             return CanExecute(null, parameter);
         }
-        
+
         public virtual Boolean CanExecute(Object? sender, IEnumerable? parameter)
         {
             if (parameter is null)
             {
                 return true;
             }
-            
+
             // ReSharper disable once LoopCanBeConvertedToQuery
             foreach (Object? value in parameter)
             {
@@ -145,34 +145,34 @@ namespace NetExtender.WindowsPresentation.Types.Commands
                     return false;
                 }
             }
-            
+
             return true;
         }
-        
+
         public void Execute(IEnumerable? parameter)
         {
             Execute(null, parameter);
         }
-        
+
         public virtual void Execute(Object? sender, IEnumerable? parameter)
         {
             if (parameter is null)
             {
                 return;
             }
-            
+
             foreach (Object? value in parameter)
             {
                 Execute(sender, value);
             }
         }
-        
+
         private sealed class None : MultiCommand
         {
             protected override void ExecuteImplementation(Object? sender, Object? parameter)
             {
             }
-            
+
             public override void Execute(Object? sender, IEnumerable? parameter)
             {
             }

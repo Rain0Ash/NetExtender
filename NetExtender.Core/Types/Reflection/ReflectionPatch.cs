@@ -21,12 +21,12 @@ namespace NetExtender.Types.Reflection
         {
             return Instance.Value.Auto();
         }
-        
+
         Boolean IAutoReflectionPatch.Auto()
         {
             return Auto();
         }
-        
+
         Boolean IAutoPatch.Auto()
         {
             return Auto();
@@ -36,7 +36,7 @@ namespace NetExtender.Types.Reflection
     public abstract class ReflectionPatch<TFactory> : ReflectionPatch<ReflectionPatch, TFactory> where TFactory : ReflectionPatch<TFactory>, new()
     {
     }
-    
+
     public abstract class ReflectionPatch<T, TFactory> : IReflectionPatch, IPatch where T : ReflectionPatch where TFactory : ReflectionPatch<T, TFactory>, new()
     {
         protected static Lazy<T> Instance { get; } = new Lazy<T>(static () =>
@@ -69,7 +69,7 @@ namespace NetExtender.Types.Reflection
                 return SyncRoot;
             }
         }
-        
+
         public static String Name
         {
             get
@@ -77,7 +77,7 @@ namespace NetExtender.Types.Reflection
                 return Instance.Value.Name;
             }
         }
-        
+
         String IReflectionPatchInfo.Name
         {
             get
@@ -85,7 +85,7 @@ namespace NetExtender.Types.Reflection
                 return Name;
             }
         }
-        
+
         String IPatchInfo.Name
         {
             get
@@ -93,7 +93,7 @@ namespace NetExtender.Types.Reflection
                 return Name;
             }
         }
-        
+
         public static ReflectionPatchCategory Category
         {
             get
@@ -101,7 +101,7 @@ namespace NetExtender.Types.Reflection
                 return Instance.Value.Category;
             }
         }
-        
+
         ReflectionPatchCategory IReflectionPatchInfo.Category
         {
             get
@@ -109,7 +109,7 @@ namespace NetExtender.Types.Reflection
                 return Category;
             }
         }
-        
+
         ReflectionPatchCategory IPatchInfo.Category
         {
             get
@@ -117,7 +117,7 @@ namespace NetExtender.Types.Reflection
                 return Category;
             }
         }
-        
+
         public static ReflectionPatchState State
         {
             get
@@ -125,7 +125,7 @@ namespace NetExtender.Types.Reflection
                 return Instance.Value.State;
             }
         }
-        
+
         ReflectionPatchState IReflectionPatchInfo.State
         {
             get
@@ -133,7 +133,7 @@ namespace NetExtender.Types.Reflection
                 return State;
             }
         }
-        
+
         ReflectionPatchState IPatchInfo.State
         {
             get
@@ -141,7 +141,7 @@ namespace NetExtender.Types.Reflection
                 return State;
             }
         }
-        
+
         public static ReflectionPatchThrow IsThrow
         {
             get
@@ -149,7 +149,7 @@ namespace NetExtender.Types.Reflection
                 return Instance.Value.IsThrow;
             }
         }
-        
+
         ReflectionPatchThrow IReflectionPatchInfo.IsThrow
         {
             get
@@ -157,7 +157,7 @@ namespace NetExtender.Types.Reflection
                 return IsThrow;
             }
         }
-        
+
         ReflectionPatchThrow IPatchInfo.IsThrow
         {
             get
@@ -165,7 +165,7 @@ namespace NetExtender.Types.Reflection
                 return IsThrow;
             }
         }
-        
+
         public static Boolean IsAutoInit
         {
             get
@@ -173,7 +173,7 @@ namespace NetExtender.Types.Reflection
                 return Instance.Value.IsAutoInit;
             }
         }
-        
+
         Boolean IReflectionPatch.IsAutoInit
         {
             get
@@ -181,7 +181,7 @@ namespace NetExtender.Types.Reflection
                 return IsAutoInit;
             }
         }
-        
+
         Boolean IPatch.IsAutoInit
         {
             get
@@ -189,47 +189,47 @@ namespace NetExtender.Types.Reflection
                 return IsAutoInit;
             }
         }
-        
+
         public static Boolean Apply()
         {
             return Instance.Value.Apply();
         }
-        
+
         Boolean IReflectionPatch.Apply()
         {
             return Apply();
         }
-        
+
         Boolean IPatch.Apply()
         {
             return Apply();
         }
-        
+
         public static Boolean Apply(Boolean force)
         {
             return Instance.Value.Apply(force);
         }
-        
+
         Boolean IReflectionPatch.Apply(Boolean force)
         {
             return Apply(force);
         }
-        
+
         Boolean IPatch.Apply(Boolean force)
         {
             return Apply(force);
         }
-        
+
         public static Exception? Require()
         {
             return Instance.Value.Require();
         }
-        
+
         Exception? IReflectionPatch.Require()
         {
             return Require();
         }
-        
+
         protected abstract T Create();
 
         public override Int32 GetHashCode()
@@ -260,7 +260,7 @@ namespace NetExtender.Types.Reflection
             Dispose(true);
             GC.SuppressFinalize(this);
         }
-        
+
         protected virtual void Dispose(Boolean disposing)
         {
             if (disposing)
@@ -302,9 +302,9 @@ namespace NetExtender.Types.Reflection
                 return GetName(this);
             }
         }
-        
+
         public abstract ReflectionPatchCategory Category { get; }
-        
+
         public Boolean IsCapability
         {
             get
@@ -312,7 +312,7 @@ namespace NetExtender.Types.Reflection
                 return Category.HasFlag(ReflectionPatchCategory.Capability);
             }
         }
-        
+
         public Boolean IsSpecial
         {
             get
@@ -320,7 +320,7 @@ namespace NetExtender.Types.Reflection
                 return Category.HasFlag(ReflectionPatchCategory.Special);
             }
         }
-        
+
         public Boolean IsAphilargyria
         {
             get
@@ -328,9 +328,9 @@ namespace NetExtender.Types.Reflection
                 return Category.HasFlag(ReflectionPatchCategory.Aphilargyria);
             }
         }
-        
+
         public abstract ReflectionPatchState State { get; protected set; }
-        
+
         public virtual ReflectionPatchThrow IsThrow
         {
             get
@@ -338,7 +338,7 @@ namespace NetExtender.Types.Reflection
                 return ReflectionPatchThrow.Throw;
             }
         }
-        
+
         public virtual Boolean IsAutoInit
         {
             get
@@ -366,7 +366,7 @@ namespace NetExtender.Types.Reflection
 
             return GetName(patch.GetType());
         }
-        
+
         internal void Initialize(Boolean factory)
         {
             lock (SyncRoot)
@@ -377,7 +377,7 @@ namespace NetExtender.Types.Reflection
                     {
                         return;
                     }
-                    
+
                     State = ReflectionPatchState.Failed;
                     ReflectionPatchUtilities.Set(this);
                 }
@@ -402,17 +402,17 @@ namespace NetExtender.Types.Reflection
                 }
             }
         }
-        
+
         protected virtual Boolean Initialize()
         {
             return true;
         }
-        
+
         public Boolean Apply()
         {
             return Apply(true);
         }
-        
+
         public Boolean Apply(Boolean force)
         {
             lock (SyncRoot)
@@ -427,7 +427,7 @@ namespace NetExtender.Types.Reflection
                     {
                         State = IsAutoInit ? Make() : ReflectionPatchState.NotRequired;
                     }
-                    
+
                     ReflectionPatchUtilities.Set(this);
                 }
                 catch (Exception exception)
@@ -464,65 +464,73 @@ namespace NetExtender.Types.Reflection
         }
 
         protected abstract ReflectionPatchState Make();
-        
+
         public sealed override String ToString()
         {
             return Name;
         }
-        
+
         public void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
         }
-        
+
         protected abstract void Dispose(Boolean disposing);
-        
+
         ~ReflectionPatch()
         {
             Dispose(false);
         }
-        
+
         [Serializable]
         protected class ReflectionPatchSignatureMissingException : ReflectionOperationException
         {
             public ReflectionPatchSignatureMissingException()
             {
             }
-            
+
             public ReflectionPatchSignatureMissingException(String? message)
                 : base(message)
             {
             }
-            
+
             public ReflectionPatchSignatureMissingException(String? message, Exception? exception)
                 : base(message, exception)
             {
             }
-            
+
+#if NET8_0_OR_GREATER
+            [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+            [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
             protected ReflectionPatchSignatureMissingException(SerializationInfo info, StreamingContext context)
                 : base(info, context)
             {
             }
         }
-        
+
         [Serializable]
         protected class ReflectionPatchNoModuleException : ReflectionOperationException
         {
             public ReflectionPatchNoModuleException()
             {
             }
-            
+
             public ReflectionPatchNoModuleException(String? message)
                 : base(message)
             {
             }
-            
+
             public ReflectionPatchNoModuleException(String? message, Exception? exception)
                 : base(message, exception)
             {
             }
-            
+
+#if NET8_0_OR_GREATER
+            [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+            [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
             protected ReflectionPatchNoModuleException(SerializationInfo info, StreamingContext context)
                 : base(info, context)
             {

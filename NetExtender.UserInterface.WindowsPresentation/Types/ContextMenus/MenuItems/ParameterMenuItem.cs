@@ -12,7 +12,7 @@ namespace NetExtender.UserInterface.WindowsPresentation
     public class ParameterMenuItem : MenuItem
     {
         public static readonly DependencyProperty AllowRightClickProperty = DependencyProperty.Register(nameof(AllowRightClick), typeof(Boolean), typeof(ParameterMenuItem), new PropertyMetadata(false));
-        
+
         public Boolean AllowRightClick
         {
             [System.Diagnostics.DebuggerStepThrough]
@@ -27,14 +27,14 @@ namespace NetExtender.UserInterface.WindowsPresentation
             }
         }
         protected static Binding CommandParameterBinding { get; } = new Binding();
-        
+
         public ParameterMenuItem()
         {
             PreviewMouseRightButtonDown += OnPreviewMouseRightButton;
             PreviewMouseRightButtonUp += OnPreviewMouseRightButton;
             SetBinding(CommandParameterProperty, CommandParameterBinding);
         }
-        
+
         private void OnPreviewMouseRightButton(Object? sender, MouseButtonEventArgs args)
         {
             args.Handled |= !AllowRightClick;

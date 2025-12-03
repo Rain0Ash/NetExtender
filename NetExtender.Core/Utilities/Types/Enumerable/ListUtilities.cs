@@ -50,7 +50,7 @@ namespace NetExtender.Utilities.Types
 
             return ArrayAccessor<T>.Getter(list);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ReadOnlySpan<T> AsReadOnlySpan<T>(this List<T> collection)
         {
@@ -58,10 +58,10 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(collection));
             }
-            
+
             return CollectionsMarshal.AsSpan(collection);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Span<T> AsSpan<T>(this List<T> collection)
         {
@@ -69,10 +69,10 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(collection));
             }
-            
+
             return CollectionsMarshal.AsSpan(collection);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ReadOnlyCollection<T> AsReadOnly<T>(this IList<T> collection)
         {
@@ -102,7 +102,7 @@ namespace NetExtender.Utilities.Types
                 result = collection.Capacity;
                 return false;
             }
-            
+
             result = collection.EnsureCapacity(capacity);
             return result > capacity;
         }
@@ -161,13 +161,13 @@ namespace NetExtender.Utilities.Types
 
             collection.Insert(index.GetOffset(collection.Count), item);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void InsertRange<T>(this IList<T> collection, Int32 index, params T[]? source)
         {
             InsertRange(collection, index, (IEnumerable<T>?) source);
         }
-        
+
         public static void InsertRange<T>(this IList<T> collection, Int32 index, IEnumerable<T>? source)
         {
             if (collection is null)
@@ -226,7 +226,7 @@ namespace NetExtender.Utilities.Types
             (collection[first], collection[second]) = (collection[second], collection[first]);
             return true;
         }
-        
+
         public static void Replace<T>(this IList<T> collection, params T[]? items)
         {
             Replace(collection, 0, items);
@@ -236,49 +236,49 @@ namespace NetExtender.Utilities.Types
         {
             Replace(collection, 0, source);
         }
-        
+
         public static void Replace<T>(this IList<T> collection, Int32 start, params T[]? items)
         {
             Replace(collection, start, (IEnumerable<T>?) items);
         }
-        
+
         public static void Replace<T>(this IList<T> collection, Int32 start, IEnumerable<T>? source)
         {
             if (collection is null)
             {
                 throw new ArgumentNullException(nameof(collection));
             }
-            
+
             if (collection.IsReadOnly)
             {
                 throw new NotSupportedException();
             }
-            
+
             if (source is null)
             {
                 return;
             }
-            
+
             if (start < 0 || start > collection.Count)
             {
                 throw new ArgumentOutOfRangeException(nameof(start), start, null);
             }
-            
+
             using IEnumerator<T> enumerator = source.GetEnumerator();
-            
+
             Int32 i = start;
             while (i < collection.Count && enumerator.MoveNext())
             {
                 collection[i++] = enumerator.Current;
             }
-            
+
             while (enumerator.MoveNext())
             {
                 collection.Add(enumerator.Current);
                 i++;
             }
         }
-        
+
         public static void FullReplace<T>(this IList<T> collection, params T[]? items)
         {
             FullReplace(collection, 0, items);
@@ -288,48 +288,48 @@ namespace NetExtender.Utilities.Types
         {
             FullReplace(collection, 0, source);
         }
-        
+
         public static void FullReplace<T>(this IList<T> collection, Int32 start, params T[]? items)
         {
             FullReplace(collection, start, (IEnumerable<T>?) items);
         }
-        
+
         public static void FullReplace<T>(this IList<T> collection, Int32 start, IEnumerable<T>? source)
         {
             if (collection is null)
             {
                 throw new ArgumentNullException(nameof(collection));
             }
-            
+
             if (collection.IsReadOnly)
             {
                 throw new NotSupportedException();
             }
-            
+
             if (source is null)
             {
                 return;
             }
-            
+
             if (start < 0 || start > collection.Count)
             {
                 throw new ArgumentOutOfRangeException(nameof(start), start, null);
             }
-            
+
             using IEnumerator<T> enumerator = source.GetEnumerator();
-            
+
             Int32 i = start;
             while (i < collection.Count && enumerator.MoveNext())
             {
                 collection[i++] = enumerator.Current;
             }
-            
+
             while (enumerator.MoveNext())
             {
                 collection.Add(enumerator.Current);
                 i++;
             }
-            
+
             for (Int32 j = collection.Count - 1; j >= i; j--)
             {
                 collection.RemoveAt(j);
@@ -471,7 +471,7 @@ namespace NetExtender.Utilities.Types
                 collection.Add(enumerator.Current);
                 i++;
             }
-            
+
             start = i;
             i = collection.Count;
             while (collection.Count > start)
@@ -677,7 +677,7 @@ namespace NetExtender.Utilities.Types
 
             collection.Sort(index, count, new ComparisonComparer<T>(Comparison));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ReadOnlyPaginationObserver<T> ReadOnlyPaginationObserver<T>(this List<T> collection, Int32 size)
         {
@@ -685,10 +685,10 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(collection));
             }
-            
+
             return new ReadOnlyPaginationObserver<T>(collection.AsReadOnlySpan(), size);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static PaginationObserver<T> PaginationObserver<T>(this List<T> collection, Int32 size)
         {
@@ -696,7 +696,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(collection));
             }
-            
+
             return new PaginationObserver<T>(collection.AsSpan(), size);
         }
     }

@@ -51,13 +51,13 @@ namespace NetExtender.WindowsPresentation.Types.Bindings
         {
             Mode = mode;
         }
-        
+
         protected CustomModeBinding(String path, BindingMode mode, Object? source)
             : base(path, source)
         {
             Mode = mode;
         }
-        
+
         protected CustomModeBinding(String path, BindingMode mode, RelativeSource? source)
             : base(path, source)
         {
@@ -68,7 +68,7 @@ namespace NetExtender.WindowsPresentation.Types.Bindings
     public class DefaultBinding : CustomModeBinding
     {
         private new const BindingMode Mode = BindingMode.Default;
-        
+
         public DefaultBinding()
             : base(Mode)
         {
@@ -78,12 +78,12 @@ namespace NetExtender.WindowsPresentation.Types.Bindings
             : base(path, Mode)
         {
         }
-        
+
         public DefaultBinding(String path, Object? source)
             : base(path, Mode, source)
         {
         }
-        
+
         public DefaultBinding(String path, RelativeSource? source)
             : base(path, Mode, source)
         {
@@ -93,7 +93,7 @@ namespace NetExtender.WindowsPresentation.Types.Bindings
     public class OneTimeBinding : CustomModeBinding
     {
         private new const BindingMode Mode = BindingMode.OneTime;
-        
+
         public OneTimeBinding()
             : base(Mode)
         {
@@ -103,12 +103,12 @@ namespace NetExtender.WindowsPresentation.Types.Bindings
             : base(path, Mode)
         {
         }
-        
+
         public OneTimeBinding(String path, Object? source)
             : base(path, Mode, source)
         {
         }
-        
+
         public OneTimeBinding(String path, RelativeSource? source)
             : base(path, Mode, source)
         {
@@ -118,7 +118,7 @@ namespace NetExtender.WindowsPresentation.Types.Bindings
     public class OneWayBinding : CustomModeBinding
     {
         private new const BindingMode Mode = BindingMode.OneWay;
-        
+
         public OneWayBinding()
             : base(Mode)
         {
@@ -128,12 +128,12 @@ namespace NetExtender.WindowsPresentation.Types.Bindings
             : base(path, Mode)
         {
         }
-        
+
         public OneWayBinding(String path, Object? source)
             : base(path, Mode, source)
         {
         }
-        
+
         public OneWayBinding(String path, RelativeSource? source)
             : base(path, Mode, source)
         {
@@ -143,7 +143,7 @@ namespace NetExtender.WindowsPresentation.Types.Bindings
     public class OneWayToSourceBinding : CustomModeBinding
     {
         private new const BindingMode Mode = BindingMode.OneWayToSource;
-        
+
         public OneWayToSourceBinding()
             : base(Mode)
         {
@@ -153,12 +153,12 @@ namespace NetExtender.WindowsPresentation.Types.Bindings
             : base(path, Mode)
         {
         }
-        
+
         public OneWayToSourceBinding(String path, Object? source)
             : base(path, Mode, source)
         {
         }
-        
+
         public OneWayToSourceBinding(String path, RelativeSource? source)
             : base(path, Mode, source)
         {
@@ -168,7 +168,7 @@ namespace NetExtender.WindowsPresentation.Types.Bindings
     public class TwoWayBinding : CustomModeBinding
     {
         private new const BindingMode Mode = BindingMode.TwoWay;
-        
+
         public TwoWayBinding()
             : base(Mode)
         {
@@ -178,12 +178,12 @@ namespace NetExtender.WindowsPresentation.Types.Bindings
             : base(path, Mode)
         {
         }
-        
+
         public TwoWayBinding(String path, Object? source)
             : base(path, Mode, source)
         {
         }
-        
+
         public TwoWayBinding(String path, RelativeSource? source)
             : base(path, Mode, source)
         {

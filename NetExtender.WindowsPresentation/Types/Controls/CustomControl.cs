@@ -20,15 +20,15 @@ namespace NetExtender.UserInterface.WindowsPresentation
             {
                 return handler.Exception(sender, exception);
             }
-            
+
             return ExceptionHandlerAction.Throw;
         }
-        
+
         ExceptionHandlerAction IWindowsPresentationExceptionHandler.Exception(Object? sender, Exception? exception)
         {
             return Handle(sender, exception);
         }
-        
+
         protected virtual ExceptionHandlerAction Handle<T>(Object? sender, ICommand? command, T? parameter, Exception? exception)
         {
             const BindingFlags binding = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
@@ -36,7 +36,7 @@ namespace NetExtender.UserInterface.WindowsPresentation
             {
                 return Handle(sender, exception);
             }
-            
+
             if (Window.GetWindow(this) is IWindowsPresentationCommandExceptionHandler handler)
             {
                 return handler.Exception(sender, command, parameter, exception);
@@ -44,7 +44,7 @@ namespace NetExtender.UserInterface.WindowsPresentation
 
             return Handle(sender, exception);
         }
-        
+
         ExceptionHandlerAction IWindowsPresentationCommandExceptionHandler.Exception<T>(Object? sender, ICommand? command, T? parameter, Exception? exception) where T : default
         {
             return Handle(sender, command, parameter, exception);

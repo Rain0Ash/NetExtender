@@ -28,7 +28,7 @@ namespace NetExtender.UserInterface.WindowsPresentation
         public static readonly RoutedEvent SystemMenuMouseDownEvent = EventManager.RegisterRoutedEvent(nameof(SystemMenuMouseDown), RoutingStrategy.Bubble, typeof(MouseSystemMenuEventHandler), typeof(FixedWindow));
         public static readonly RoutedEvent SystemMenuMouseUpEvent = EventManager.RegisterRoutedEvent(nameof(SystemMenuMouseUp), RoutingStrategy.Bubble, typeof(MouseSystemMenuEventHandler), typeof(FixedWindow));
         public static readonly RoutedEvent SystemMenuMouseDoubleClickEvent = EventManager.RegisterRoutedEvent(nameof(SystemMenuMouseDoubleClick), RoutingStrategy.Bubble, typeof(MouseSystemMenuEventHandler), typeof(FixedWindow));
-        
+
         public new Window? Owner
         {
             get
@@ -36,7 +36,7 @@ namespace NetExtender.UserInterface.WindowsPresentation
                 return base.Owner ?? Application.Current.MainWindow;
             }
         }
-        
+
         public Boolean IsOwner
         {
             get
@@ -120,7 +120,7 @@ namespace NetExtender.UserInterface.WindowsPresentation
                 }
             }
         }
-        
+
         public Boolean AllowSystemMenuRightClick
         {
             [System.Diagnostics.DebuggerStepThrough]
@@ -134,7 +134,7 @@ namespace NetExtender.UserInterface.WindowsPresentation
                 SetValue(AllowSystemMenuRightClickProperty, value);
             }
         }
-        
+
         public Boolean AllowSystemMenuDoubleClick
         {
             [System.Diagnostics.DebuggerStepThrough]
@@ -166,7 +166,7 @@ namespace NetExtender.UserInterface.WindowsPresentation
 
         public event InterfaceClosingEventHandler? WindowClosing;
         public event SizeChangeToggleHandler? SizeChangeToggle;
-        
+
         public event MouseSystemMenuEventHandler SystemMenuMouseDown
         {
             [System.Diagnostics.DebuggerStepThrough]
@@ -180,7 +180,7 @@ namespace NetExtender.UserInterface.WindowsPresentation
                 RemoveHandler(SystemMenuMouseDownEvent, value);
             }
         }
-        
+
         public event MouseSystemMenuEventHandler SystemMenuMouseUp
         {
             [System.Diagnostics.DebuggerStepThrough]
@@ -194,7 +194,7 @@ namespace NetExtender.UserInterface.WindowsPresentation
                 RemoveHandler(SystemMenuMouseUpEvent, value);
             }
         }
-        
+
         public event MouseSystemMenuEventHandler SystemMenuMouseDoubleClick
         {
             [System.Diagnostics.DebuggerStepThrough]
@@ -226,12 +226,12 @@ namespace NetExtender.UserInterface.WindowsPresentation
         {
             _reason = value;
         }
-        
+
         protected Boolean IsSystemMenu()
         {
             return IsSystemMenu(out _);
         }
-        
+
         protected Boolean IsSystemMenu(out Point click)
         {
             IInputElement previous = Mouse.Captured;
@@ -240,7 +240,7 @@ namespace NetExtender.UserInterface.WindowsPresentation
             Mouse.Capture(previous);
             return IsSystemMenu(click);
         }
-        
+
         protected Boolean IsSystemMenu(Point click)
         {
             const Int32 icon = 32;
@@ -270,7 +270,7 @@ namespace NetExtender.UserInterface.WindowsPresentation
             DependencyPropertyChangedEventArgs @event = new DependencyPropertyChangedEventArgs(DisplayAffinityProperty, DisplayAffinity, current);
             DisplayAffinityChanged(dependency, @event);
         }
-        
+
         private void Create(in WindowsMessage message, out MouseSystemMenuEventArgs args)
         {
             args = new MouseSystemMenuEventArgs(Mouse.PrimaryDevice, Environment.TickCount, message.Message.ToMouse(message))
@@ -280,7 +280,7 @@ namespace NetExtender.UserInterface.WindowsPresentation
                 Position = position
             };
         }
-        
+
         // ReSharper disable once CognitiveComplexity
         protected override Boolean WndProc(ref WindowsMessage message)
         {
@@ -298,7 +298,7 @@ namespace NetExtender.UserInterface.WindowsPresentation
                     {
                         return true;
                     }
-                    
+
                     break;
                 }
                 case WM.NCLBUTTONUP:
@@ -308,12 +308,12 @@ namespace NetExtender.UserInterface.WindowsPresentation
                 {
                     Create(message, out MouseSystemMenuEventArgs args);
                     OnSystemMenuMouseUp(args);
-                    
+
                     if (args.Handled)
                     {
                         return true;
                     }
-                    
+
                     break;
                 }
                 case WM.NCLBUTTONDBLCLK:
@@ -323,18 +323,18 @@ namespace NetExtender.UserInterface.WindowsPresentation
                 {
                     Create(message, out MouseSystemMenuEventArgs args);
                     OnSystemMenuMouseDoubleClick(args);
-                    
+
                     if (args.Handled)
                     {
                         return true;
                     }
-                    
+
                     break;
                 }
                 default:
                     break;
             }
-            
+
             switch (message.Message)
             {
                 case WM.QUERYENDSESSION:
@@ -349,7 +349,7 @@ namespace NetExtender.UserInterface.WindowsPresentation
                     {
                         return true;
                     }
-                    
+
                     break;
                 case WM.NCRBUTTONDOWN:
                 case WM.NCRBUTTONUP:
@@ -357,7 +357,7 @@ namespace NetExtender.UserInterface.WindowsPresentation
                     {
                         return true;
                     }
-                    
+
                     break;
                 case WM.SYSCOMMAND:
                     if (((UInt16) message.WParam & 0xFFF0) == 0xF060)
@@ -382,7 +382,7 @@ namespace NetExtender.UserInterface.WindowsPresentation
                 default:
                     break;
             }
-            
+
             return base.WndProc(ref message);
         }
 
@@ -427,25 +427,25 @@ namespace NetExtender.UserInterface.WindowsPresentation
                 args.Cancel = true;
             }
         }
-        
+
         protected virtual void OnSystemMenuMouseDown(MouseSystemMenuEventArgs args)
         {
             args.RoutedEvent = SystemMenuMouseDownEvent;
             RaiseEvent(args);
         }
-        
+
         protected virtual void OnSystemMenuMouseUp(MouseSystemMenuEventArgs args)
         {
             args.RoutedEvent = SystemMenuMouseUpEvent;
             RaiseEvent(args);
         }
-        
+
         protected virtual void OnSystemMenuMouseDoubleClick(MouseSystemMenuEventArgs args)
         {
             args.RoutedEvent = SystemMenuMouseDoubleClickEvent;
             RaiseEvent(args);
         }
-        
+
         private void DisableIconClickExit(Object? sender, InterfaceClosingEventArgs args)
         {
             if (args.Reason != InterfaceCloseReason.UserClosing)
@@ -457,10 +457,10 @@ namespace NetExtender.UserInterface.WindowsPresentation
             {
                 return;
             }
-            
+
             args.Cancel = IsSystemMenu();
         }
-        
+
         private static void IsSystemMenuEnabledChanged(DependencyObject @object, DependencyPropertyChangedEventArgs args)
         {
             if (@object is not Window window)
@@ -475,7 +475,7 @@ namespace NetExtender.UserInterface.WindowsPresentation
 
             window.SetWindowSystemMenu(menu);
         }
-        
+
         private static void DisplayAffinityChanged(DependencyObject @object, DependencyPropertyChangedEventArgs args)
         {
             if (@object is not Window window)

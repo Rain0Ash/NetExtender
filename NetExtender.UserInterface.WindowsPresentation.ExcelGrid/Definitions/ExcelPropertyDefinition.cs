@@ -16,14 +16,14 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
     public delegate String? ExcelFormat(ExcelCell cell, Object? value);
     public delegate void ExcelElementStyle(FrameworkElement element, Style style);
     public delegate void ExcelElementContextMenu(ContextMenu menu, FrameworkElement element);
-    
+
     public abstract class ExcelPropertyDefinition : DependencyObject, INotifyProperty
     {
         public event PropertyChangingEventHandler? PropertyChanging;
         public event PropertyChangedEventHandler? PropertyChanged;
-        
+
         #region Grid
-        
+
         private String? _formatString;
         public String? FormatString
         {
@@ -36,7 +36,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 this.RaiseAndSetIfChanged(ref _formatString, value);
             }
         }
-        
+
         private ExcelFormat? _format;
         public ExcelFormat? Format
         {
@@ -49,7 +49,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 this.RaiseAndSetIfChanged(ref _format, value);
             }
         }
-        
+
         private Object? _header;
         public Object? Header
         {
@@ -62,7 +62,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 this.RaiseAndSetIfChanged(ref _header, value);
             }
         }
-        
+
         private Object? _tooltip;
         public Object? Tooltip
         {
@@ -75,7 +75,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 this.RaiseAndSetIfChanged(ref _tooltip, value);
             }
         }
-        
+
         private HorizontalAlignment _horizontalAlignment;
         public HorizontalAlignment HorizontalAlignment
         {
@@ -88,7 +88,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 this.RaiseAndSetIfChanged(ref _horizontalAlignment, value);
             }
         }
-        
+
         private String? _propertyName;
         public String? PropertyName
         {
@@ -101,7 +101,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 this.RaiseAndSetIfChanged(ref _propertyName, value);
             }
         }
-        
+
         private Boolean _canSort = true;
         public Boolean CanSort
         {
@@ -114,11 +114,11 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 this.RaiseAndSetIfChanged(ref _canSort, value);
             }
         }
-        
+
         #endregion
-        
+
         #region Factory
-        
+
         private IValueConverter? _converter;
         public IValueConverter? Converter
         {
@@ -131,7 +131,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 this.RaiseAndSetIfChanged(ref _converter, value);
             }
         }
-        
+
         private CultureInfo? _converterCulture;
         public CultureInfo? ConverterCulture
         {
@@ -144,7 +144,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 this.RaiseAndSetIfChanged(ref _converterCulture, value);
             }
         }
-        
+
         private Object? _converterParameter;
         public Object? ConverterParameter
         {
@@ -157,7 +157,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 this.RaiseAndSetIfChanged(ref _converterParameter, value);
             }
         }
-        
+
         private Boolean _isReadOnly;
         public Boolean IsReadOnly
         {
@@ -170,7 +170,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 this.RaiseAndSetIfChanged(ref _isReadOnly, value);
             }
         }
-        
+
         private Boolean _isEditable;
         public Boolean IsEditable
         {
@@ -183,7 +183,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 this.RaiseAndSetIfChanged(ref _isEditable, value);
             }
         }
-        
+
         private IEnumerable? _itemsSource;
         public IEnumerable? ItemsSource
         {
@@ -196,7 +196,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 this.RaiseAndSetIfChanged(ref _itemsSource, value);
             }
         }
-        
+
         private String? _itemsSourceProperty;
         public String? ItemsSourceProperty
         {
@@ -209,7 +209,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 this.RaiseAndSetIfChanged(ref _itemsSourceProperty, value);
             }
         }
-        
+
         private String? _selectedValuePath;
         public String? SelectedValuePath
         {
@@ -222,7 +222,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 this.RaiseAndSetIfChanged(ref _selectedValuePath, value);
             }
         }
-        
+
         private String? _displayMemberPath;
         public String? DisplayMemberPath
         {
@@ -235,7 +235,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 this.RaiseAndSetIfChanged(ref _displayMemberPath, value);
             }
         }
-        
+
         private Int32 _maxLength = Int32.MaxValue;
         public Int32 MaxLength
         {
@@ -248,7 +248,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 this.RaiseAndSetIfChanged(ref _maxLength, value);
             }
         }
-        
+
         private String? _enabledByProperty;
         public String? IsEnabledByProperty
         {
@@ -261,7 +261,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 this.RaiseAndSetIfChanged(ref _enabledByProperty, value);
             }
         }
-        
+
         private Object? _enabledByValue;
         public Object? IsEnabledByValue
         {
@@ -274,7 +274,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 this.RaiseAndSetIfChanged(ref _enabledByValue, value);
             }
         }
-        
+
         private Object? _enabledBySource;
         public Object? IsEnabledBySource
         {
@@ -287,7 +287,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 this.RaiseAndSetIfChanged(ref _enabledBySource, value);
             }
         }
-        
+
         private ExcelElementStyle? _style;
         public ExcelElementStyle? Style
         {
@@ -300,7 +300,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 this.RaiseAndSetIfChanged(ref _style, value);
             }
         }
-        
+
         private ExcelElementContextMenu? _menu;
         public ExcelElementContextMenu? ContextMenu
         {
@@ -313,27 +313,27 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 this.RaiseAndSetIfChanged(ref _menu, value);
             }
         }
-        
+
         #endregion
-        
+
         public void Set(PropertyEnableByAttribute? attribute)
         {
             if (attribute is null)
             {
                 return;
             }
-            
+
             IsEnabledByProperty = attribute.Property;
             IsEnabledByValue = attribute.Value;
         }
-        
+
         public void SetNullable(PropertyEnableByAttribute? attribute)
         {
             if (attribute is null)
             {
                 return;
             }
-            
+
             IsEnabledByProperty ??= attribute.Property;
             IsEnabledByValue ??= attribute.Value;
         }

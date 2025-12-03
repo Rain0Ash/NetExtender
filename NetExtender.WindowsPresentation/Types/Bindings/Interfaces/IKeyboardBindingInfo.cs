@@ -12,7 +12,7 @@ namespace NetExtender.WindowsPresentation.Types.Bindings.Interfaces
     {
         public Int32 Count { get; }
         public IEnumerable<Key> Keys { get; }
-        
+
         public Boolean Invoke(Object? sender, KeyInfo key);
         public Boolean Invoke(Object? sender, KeyInfo key, out Boolean result);
         public Boolean ContainsKey(Key key);

@@ -421,7 +421,7 @@ namespace NetExtender.Utilities.Types
             {
                 arguments[i++] = Expression.Parameter(parameter.ParameterType, parameter.Name);
             }
-            
+
             MethodCallExpression call = Expression.Call(instance, method, arguments[1..]);
             return Expression.Lambda<TDelegate>(call, arguments).Compile();
         }

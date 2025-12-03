@@ -118,7 +118,7 @@ namespace NetExtender.Types.Network
             StringBuilder message = new StringBuilder(2048);
             HttpHeaders? headers = null;
             HttpContent? content = null;
-            
+
             if (HttpRequestMessage is not null)
             {
                 SerializeRequestLine(message, HttpRequestMessage);
@@ -136,7 +136,7 @@ namespace NetExtender.Types.Network
             {
                 SerializeHeaderFields(message, headers);
             }
-            
+
             if (content is not null)
             {
                 SerializeHeaderFields(message, content.Headers);
@@ -166,7 +166,7 @@ namespace NetExtender.Types.Network
                     {
                         builder.Append(header.Key + ": " + field + "\r\n");
                     }
-                    
+
                     return;
                 }
 
@@ -254,14 +254,14 @@ namespace NetExtender.Types.Network
                     length = -1;
                     return false;
                 }
-                
+
                 length = result.Length;
             }
             else
             {
                 length = 0;
             }
-            
+
             Byte[] array = SerializeHeader();
             length += array.Length;
             return true;

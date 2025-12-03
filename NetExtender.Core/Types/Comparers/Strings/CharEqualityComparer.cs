@@ -19,7 +19,7 @@ namespace NetExtender.Types.Comparers
                 return Comparer<Char>.Default;
             }
         }
-        
+
         public static IEqualityComparer<Char> CurrentCulture { get; } = new CharEqualityComparer(StringComparison.CurrentCulture);
         public static IEqualityComparer<Char> CurrentCultureIgnoreCase { get; } = new CharEqualityComparer(StringComparison.CurrentCultureIgnoreCase);
         public static IEqualityComparer<Char> InvariantCulture { get; } = new CharEqualityComparer(StringComparison.InvariantCulture);

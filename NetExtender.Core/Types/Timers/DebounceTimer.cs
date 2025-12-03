@@ -16,9 +16,9 @@ namespace NetExtender.Types.Timers
     {
         private Timer? Timer { get; set; }
         public event TickHandler? Tick;
-        
+
         public Boolean IsStarted { get; private set; }
-        
+
         private DateTimeProvider _provider = DateTimeProvider.Provider;
 
         public DateTime Now
@@ -28,7 +28,7 @@ namespace NetExtender.Types.Timers
                 return _provider.Now;
             }
         }
-        
+
         public DateTimeKind Kind
         {
             get
@@ -40,7 +40,7 @@ namespace NetExtender.Types.Timers
                 _provider.Kind = value;
             }
         }
-        
+
         private TimeSpan _interval = Time.Second.One;
         public TimeSpan Interval
         {
@@ -56,7 +56,7 @@ namespace NetExtender.Types.Timers
                 }
 
                 _interval = TimerUtilities.CheckInterval(value);
-                
+
                 if (IsStarted)
                 {
                     Debounce();
@@ -90,7 +90,7 @@ namespace NetExtender.Types.Timers
             Timer?.Change(Timeout.Infinite, Timeout.Infinite);
             Tick?.Invoke(this, new TimeEventArgs(Now));
         }
-        
+
         public Boolean TrySetKind(DateTimeKind kind)
         {
             Kind = kind;
@@ -108,7 +108,7 @@ namespace NetExtender.Types.Timers
             {
                 throw new ThisObjectDisposedException(this);
             }
-            
+
             Timer.Change(Interval, Timeout.InfiniteTimeSpan);
         }
 

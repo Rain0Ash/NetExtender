@@ -54,7 +54,7 @@ namespace NetExtender.Types.Monads
         {
             return !(first == second);
         }
-        
+
         public static Boolean operator ==(Maybe<T> first, Maybe<T> second)
         {
             return first.Equals(second);
@@ -173,7 +173,7 @@ namespace NetExtender.Types.Monads
         }
 
         private readonly T _value;
-        
+
         //TODO: Replace to Unwrap in usages
         [JsonIgnore]
         [System.Text.Json.Serialization.JsonIgnore]
@@ -184,7 +184,7 @@ namespace NetExtender.Types.Monads
                 return _value;
             }
         }
-        
+
         public T Value
         {
             get
@@ -192,7 +192,7 @@ namespace NetExtender.Types.Monads
                 return HasValue ? _value : throw new InvalidOperationException();
             }
         }
-        
+
         Object? IMaybe.Value
         {
             get
@@ -210,7 +210,7 @@ namespace NetExtender.Types.Monads
                 return HasValue && _value is null;
             }
         }
-        
+
         [JsonIgnore]
         [System.Text.Json.Serialization.JsonIgnore]
         public Boolean IsEmpty
@@ -256,7 +256,7 @@ namespace NetExtender.Types.Monads
             value = null;
             return false;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public Boolean Unwrap([MaybeNullWhen(false)] out T value)
         {
@@ -269,7 +269,7 @@ namespace NetExtender.Types.Monads
             value = default;
             return false;
         }
-        
+
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue(nameof(HasValue), HasValue);
@@ -332,7 +332,7 @@ namespace NetExtender.Types.Monads
             {
                 return 1;
             }
-            
+
             return other.HasValue ? HasValue ? comparer.SafeCompare(_value, other.Value) ?? 0 : -1 : HasValue ? 1 : 0;
         }
 
@@ -347,7 +347,7 @@ namespace NetExtender.Types.Monads
             {
                 return 1;
             }
-            
+
             return HasValue ? comparer.SafeCompare(_value, other.Value) ?? 0 : -1;
         }
 
@@ -431,7 +431,7 @@ namespace NetExtender.Types.Monads
             {
                 return false;
             }
-            
+
             comparer ??= EqualityComparer<T>.Default;
             return !HasValue && !other.HasValue || HasValue && other.HasValue && comparer.Equals(_value, other.Value);
         }

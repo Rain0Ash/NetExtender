@@ -8,7 +8,7 @@ namespace NetExtender.Types.Behavior.Interfaces
     public interface IChangeableBehavior<out TOptions> : IChangeableBehavior, IReadableBehavior<TOptions>, ISaveableBehavior<TOptions>, IResetableBehavior<TOptions> where TOptions : unmanaged, Enum
     {
     }
-    
+
     public interface IChangeableBehavior : IReadableBehavior, ISaveableBehavior, IResetableBehavior
     {
     }

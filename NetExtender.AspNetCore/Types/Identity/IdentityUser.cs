@@ -52,7 +52,7 @@ namespace NetExtender.AspNetCore.Identity
                 return Id;
             }
         }
-        
+
         public new StringId Id
         {
             get
@@ -76,7 +76,7 @@ namespace NetExtender.AspNetCore.Identity
                 UserName = value;
             }
         }
-        
+
         public HashSet<TRole> Roles { get; } = new HashSet<TRole>();
 
         IReadOnlySet<TRole> IUserInfo<StringId, TRole>.Roles
@@ -94,7 +94,7 @@ namespace NetExtender.AspNetCore.Identity
                 return Roles;
             }
         }
-        
+
         public new MailAddress? Email
         {
             get
@@ -254,7 +254,7 @@ namespace NetExtender.AspNetCore.Identity
         {
             Service = null!;
         }
-        
+
         protected IdentityUser(TService service)
         {
             Service = service ?? throw new ArgumentNullException(nameof(service));
@@ -282,7 +282,7 @@ namespace NetExtender.AspNetCore.Identity
                 UserName = value;
             }
         }
-        
+
         public HashSet<TRole> Roles { get; } = new HashSet<TRole>();
 
         IReadOnlySet<TRole> IUserInfo<TId, TRole>.Roles
@@ -300,7 +300,7 @@ namespace NetExtender.AspNetCore.Identity
                 return Roles;
             }
         }
-        
+
         public new MailAddress? Email
         {
             get
@@ -428,7 +428,7 @@ namespace NetExtender.AspNetCore.Identity
                 return Restriction;
             }
         }
-        
+
         TId IEntity<TId>.Get()
         {
             return Id;

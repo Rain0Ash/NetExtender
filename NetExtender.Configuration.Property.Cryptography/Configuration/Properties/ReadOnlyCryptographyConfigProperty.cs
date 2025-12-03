@@ -213,7 +213,7 @@ namespace NetExtender.Configuration.Cryptography.Properties
         {
             Cryptography = config ?? throw new ArgumentNullException(nameof(config));
             InternalCryptor = cryptor?.AsCryptor(Cryptography.CryptographyOptions);
-            
+
             if (IsInitialize)
             {
                 Internal.TryInitialize();
@@ -318,7 +318,7 @@ namespace NetExtender.Configuration.Cryptography.Properties
             }
 
             Cryptor = cryptor.AsCryptor();
-            
+
             if (IsInitialize)
             {
                 Internal.TryInitialize();

@@ -47,6 +47,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessContinue100Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -88,6 +92,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessContinue100Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -134,6 +142,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessSwitchingProtocols101Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -175,6 +187,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessSwitchingProtocols101Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -221,6 +237,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessProcessing102Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -262,6 +282,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessProcessing102Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -308,6 +332,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessEarlyHints103Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -349,6 +377,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessEarlyHints103Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -395,6 +427,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessOK200Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -436,6 +472,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessOK200Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -482,6 +522,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessCreated201Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -523,6 +567,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessCreated201Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -569,6 +617,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessAccepted202Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -610,6 +662,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessAccepted202Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -656,6 +712,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessNonAuthoritativeInformation203Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -697,6 +757,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessNonAuthoritativeInformation203Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -743,6 +807,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessNoContent204Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -784,6 +852,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessNoContent204Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -830,6 +902,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessResetContent205Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -871,6 +947,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessResetContent205Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -917,6 +997,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessPartialContent206Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -958,6 +1042,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessPartialContent206Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -1004,6 +1092,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessMultiStatus207Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -1045,6 +1137,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessMultiStatus207Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -1091,6 +1187,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessAlreadyReported208Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -1132,6 +1232,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessAlreadyReported208Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -1178,6 +1282,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessIMUsed226Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -1219,6 +1327,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessIMUsed226Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -1265,6 +1377,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessMultipleChoices300Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -1306,6 +1422,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessMultipleChoices300Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -1352,6 +1472,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessAmbiguous300Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -1393,6 +1517,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessAmbiguous300Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -1439,6 +1567,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessMovedPermanently301Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -1480,6 +1612,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessMovedPermanently301Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -1526,6 +1662,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessMoved301Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -1567,6 +1707,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessMoved301Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -1613,6 +1757,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessFound302Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -1654,6 +1802,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessFound302Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -1700,6 +1852,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessRedirect302Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -1741,6 +1897,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessRedirect302Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -1787,6 +1947,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessSeeOther303Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -1828,6 +1992,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessSeeOther303Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -1874,6 +2042,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessRedirectMethod303Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -1915,6 +2087,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessRedirectMethod303Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -1961,6 +2137,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessNotModified304Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -2002,6 +2182,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessNotModified304Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -2048,6 +2232,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessUseProxy305Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -2089,6 +2277,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessUseProxy305Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -2135,6 +2327,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessUnused306Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -2176,6 +2372,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessUnused306Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -2222,6 +2422,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessTemporaryRedirect307Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -2263,6 +2467,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessTemporaryRedirect307Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -2309,6 +2517,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessRedirectKeepVerb307Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -2350,6 +2562,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessRedirectKeepVerb307Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -2396,6 +2612,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessPermanentRedirect308Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -2437,6 +2657,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessPermanentRedirect308Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -2483,6 +2707,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessBadRequest400Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -2524,6 +2752,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessBadRequest400Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -2570,6 +2802,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessUnauthorized401Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -2611,6 +2847,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessUnauthorized401Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -2657,6 +2897,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessPaymentRequired402Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -2698,6 +2942,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessPaymentRequired402Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -2744,6 +2992,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessForbidden403Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -2785,6 +3037,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessForbidden403Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -2831,6 +3087,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessNotFound404Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -2872,6 +3132,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessNotFound404Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -2918,6 +3182,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessMethodNotAllowed405Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -2959,6 +3227,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessMethodNotAllowed405Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -3005,6 +3277,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessNotAcceptable406Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -3046,6 +3322,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessNotAcceptable406Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -3092,6 +3372,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessProxyAuthenticationRequired407Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -3133,6 +3417,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessProxyAuthenticationRequired407Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -3179,6 +3467,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessRequestTimeout408Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -3220,6 +3512,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessRequestTimeout408Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -3266,6 +3562,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessConflict409Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -3307,6 +3607,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessConflict409Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -3353,6 +3657,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessGone410Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -3394,6 +3702,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessGone410Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -3440,6 +3752,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessLengthRequired411Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -3481,6 +3797,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessLengthRequired411Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -3527,6 +3847,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessPreconditionFailed412Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -3568,6 +3892,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessPreconditionFailed412Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -3614,6 +3942,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessRequestEntityTooLarge413Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -3655,6 +3987,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessRequestEntityTooLarge413Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -3701,6 +4037,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessRequestUriTooLong414Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -3742,6 +4082,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessRequestUriTooLong414Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -3788,6 +4132,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessUnsupportedMediaType415Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -3829,6 +4177,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessUnsupportedMediaType415Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -3875,6 +4227,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessRequestedRangeNotSatisfiable416Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -3916,6 +4272,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessRequestedRangeNotSatisfiable416Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -3962,6 +4322,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessExpectationFailed417Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -4003,6 +4367,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessExpectationFailed417Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -4049,6 +4417,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessIamATeapot418Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -4090,6 +4462,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessIamATeapot418Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -4136,6 +4512,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessMisdirectedRequest421Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -4177,6 +4557,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessMisdirectedRequest421Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -4223,6 +4607,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessUnprocessableEntity422Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -4264,6 +4652,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessUnprocessableEntity422Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -4310,6 +4702,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessLocked423Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -4351,6 +4747,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessLocked423Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -4397,6 +4797,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessFailedDependency424Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -4438,6 +4842,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessFailedDependency424Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -4484,6 +4892,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessUpgradeRequired426Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -4525,6 +4937,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessUpgradeRequired426Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -4571,6 +4987,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessPreconditionRequired428Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -4612,6 +5032,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessPreconditionRequired428Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -4658,6 +5082,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessTooManyRequests429Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -4699,6 +5127,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessTooManyRequests429Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -4745,6 +5177,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessRequestHeaderFieldsTooLarge431Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -4786,6 +5222,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessRequestHeaderFieldsTooLarge431Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -4832,6 +5272,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessUnavailableForLegalReasons451Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -4873,6 +5317,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessUnavailableForLegalReasons451Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -4919,6 +5367,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessInternalServerError500Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -4960,6 +5412,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessInternalServerError500Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -5006,6 +5462,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessNotImplemented501Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -5047,6 +5507,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessNotImplemented501Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -5093,6 +5557,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessBadGateway502Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -5134,6 +5602,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessBadGateway502Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -5180,6 +5652,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessServiceUnavailable503Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -5221,6 +5697,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessServiceUnavailable503Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -5267,6 +5747,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessGatewayTimeout504Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -5308,6 +5792,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessGatewayTimeout504Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -5354,6 +5842,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessHttpVersionNotSupported505Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -5395,6 +5887,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessHttpVersionNotSupported505Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -5441,6 +5937,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessVariantAlsoNegotiates506Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -5482,6 +5982,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessVariantAlsoNegotiates506Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -5528,6 +6032,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessInsufficientStorage507Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -5569,6 +6077,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessInsufficientStorage507Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -5615,6 +6127,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessLoopDetected508Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -5656,6 +6172,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessLoopDetected508Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -5702,6 +6222,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessNotExtended510Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -5743,6 +6267,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessNotExtended510Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -5789,6 +6317,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessNetworkAuthenticationRequired511Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
@@ -5830,6 +6362,10 @@ namespace NetExtender.Types.Exceptions
 		{
 		}
 
+#if NET8_0_OR_GREATER
+		[Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+		[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
 		protected BusinessNetworkAuthenticationRequired511Exception(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{

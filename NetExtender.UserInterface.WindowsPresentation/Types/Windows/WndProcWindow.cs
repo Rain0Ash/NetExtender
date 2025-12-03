@@ -20,13 +20,13 @@ namespace NetExtender.UserInterface.WindowsPresentation
             Started += InitializeWndProc;
             Closed += DisposeWndProc;
         }
-        
+
         private void InitializeWndProc(Object? sender, RoutedEventArgs args)
         {
             Hwnd = HwndSource.FromHwnd(Handle);
             Hwnd?.AddHook(WndProc);
         }
-        
+
         private void DisposeWndProc(Object? sender, EventArgs args)
         {
             Hwnd?.RemoveHook(WndProc);
@@ -46,16 +46,16 @@ namespace NetExtender.UserInterface.WindowsPresentation
 
             return IntPtr.Zero;
         }
-        
+
         [DllImport("user32.dll")]
         private static extern Int32 SendMessage(IntPtr handle, Int32 message, IntPtr wparam, IntPtr lparam);
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected static Int32 SendMessage(IntPtr handle, WM message, IntPtr wparam, IntPtr lparam)
         {
             return SendMessage(handle, (Int32) message, wparam, lparam);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected static Int32 SendMessage(IntPtr handle, WindowsMessage message)
         {

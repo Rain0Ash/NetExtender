@@ -9,7 +9,7 @@ namespace NetExtender.Types.Banking.Cards
     public class BankingCardChecksumValidator : IBankingCardChecksumValidator
     {
         public static IBankingCardChecksumValidator Default { get; } = new BankingCardChecksumValidator();
-        
+
         public IBankingCardParser Parser { get; }
 
         public BankingCardChecksumValidator()
@@ -28,7 +28,7 @@ namespace NetExtender.Types.Banking.Cards
             {
                 throw new ArgumentNullException(nameof(number));
             }
-            
+
             if (number.Length <= 1 || !Parser.TryParse(number, out Int32 checksum, out Int32 control))
             {
                 return false;

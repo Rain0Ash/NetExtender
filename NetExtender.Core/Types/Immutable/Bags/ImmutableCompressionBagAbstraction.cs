@@ -7,7 +7,7 @@ namespace NetExtender.Types.Immutable.Bags
     {
         protected TCount Value { get; set; }
         public ImmutableSortedDictionary<T, UInt64>? Constraints { get; }
-        
+
         private ImmutableList<T>? _bag;
         public ImmutableList<T> Bag
         {

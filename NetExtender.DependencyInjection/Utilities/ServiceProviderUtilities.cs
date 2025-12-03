@@ -19,13 +19,13 @@ namespace NetExtender.Utilities.Types
     {
         public IReadOnlyCollection<Assembly>? Assemblies { get; }
     }
-    
+
     public static partial class ServiceProviderUtilities
     {
         private static IStorage<IServiceProvider, ConcurrentHashSet<Assembly>> Storage { get; } = new WeakStorage<IServiceProvider, ConcurrentHashSet<Assembly>>();
-        
+
         public static IAssemblyServiceProvider Provider { get; private set; }
-        
+
         private static IReadOnlyCollection<ServiceDescriptor>? services;
         public static IReadOnlyCollection<ServiceDescriptor> Services
         {
@@ -34,7 +34,7 @@ namespace NetExtender.Utilities.Types
                 return services ??= new ReadOnlyCollection<ServiceDescriptor>(((ICustomServiceProvider) Provider).Services);
             }
         }
-        
+
         public static event ServiceProviderChangedEventHandler? Changed;
 
         static ServiceProviderUtilities()
@@ -43,14 +43,14 @@ namespace NetExtender.Utilities.Types
             Provider.Changed += OnChanged;
             AppDomain.CurrentDomain.AssemblyLoad += OnAssemblyLoad;
         }
-        
+
         private static void OnAssemblyLoad(Object? sender, AssemblyLoadEventArgs args)
         {
             if (!Provider.IsScan)
             {
                 return;
             }
-            
+
             if (!Provider.IsValueCreated || Provider is not IDynamicServiceProvider { IsFinal: false } provider || args.LoadedAssembly is not { } assembly)
             {
                 return;
@@ -59,22 +59,22 @@ namespace NetExtender.Utilities.Types
             provider.Scan(assembly);
             Storage.GetOrAdd(provider, static _ => new ConcurrentHashSet<Assembly>()).Add(assembly);
         }
-        
+
         private static void OnChanged(Object? sender, ServiceProviderEventArgs args)
         {
             Changed?.Invoke(sender, args);
         }
-        
+
         public static void Reset(IServiceProvider provider)
         {
             if (provider is null)
             {
                 throw new ArgumentNullException(nameof(provider));
             }
-            
+
             Reset(provider as IAssemblyServiceProvider ?? new ServiceProviderWrapper(provider));
         }
-        
+
         private static void Reset(IAssemblyServiceProvider provider)
         {
             Provider = provider ?? throw new ArgumentNullException(nameof(provider));

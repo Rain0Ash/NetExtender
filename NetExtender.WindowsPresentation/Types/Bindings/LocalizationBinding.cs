@@ -26,7 +26,7 @@ namespace NetExtender.WindowsPresentation.Types.Bindings
             {
                 return new RelativeSource(RelativeSourceMode.FindAncestor, type ?? typeof(Window), 1);
             }
-            
+
             Register<LocalizationBinding>(Factory);
         }
 
@@ -61,16 +61,16 @@ namespace NetExtender.WindowsPresentation.Types.Bindings
             {
                 return new RelativeSource(RelativeSourceMode.FindAncestor, type ?? typeof(Control), 1);
             }
-            
+
             Register<LocalizationBinding>(Factory);
         }
-        
+
         private static Boolean Initialize([MaybeNullWhen(false)] out Type type)
         {
             type = Assembly?.GetSafeTypes().FirstOrDefault(type => type.Name == nameof(Localization) + nameof(Control) && type.HasAttribute<ReflectionNamingAttribute>());
             return type is not null;
         }
-        
+
         public ControlLocalizationBinding()
         {
         }
@@ -96,16 +96,16 @@ namespace NetExtender.WindowsPresentation.Types.Bindings
             {
                 return new RelativeSource(RelativeSourceMode.FindAncestor, type ?? typeof(UserControl), 1);
             }
-            
+
             Register<LocalizationBinding>(Factory);
         }
-        
+
         private static Boolean Initialize([MaybeNullWhen(false)] out Type type)
         {
             type = Assembly?.GetSafeTypes().FirstOrDefault(type => type.Name == nameof(Localization) + nameof(UserControl) && type.HasAttribute<ReflectionNamingAttribute>());
             return type is not null;
         }
-        
+
         public UserControlLocalizationBinding()
         {
         }
@@ -124,10 +124,10 @@ namespace NetExtender.WindowsPresentation.Types.Bindings
             {
                 return new RelativeSource(RelativeSourceMode.Self);
             }
-            
+
             Register<SelfLocalizationBinding>(Factory);
         }
-        
+
         public SelfLocalizationBinding()
         {
         }

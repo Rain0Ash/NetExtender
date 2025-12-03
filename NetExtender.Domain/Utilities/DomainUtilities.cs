@@ -54,53 +54,53 @@ namespace NetExtender.Domains.Utilities
                 _ => throw new EnumUndefinedOrNotSupportedException<ApplicationBranch>(value)
             };
         }
-        
+
         private static Type? AutoApplication(this Assembly assembly, IDomain source, String @namespace)
         {
             if (assembly is null)
             {
                 throw new ArgumentNullException(nameof(assembly));
             }
-            
+
             static Type? Find(Assembly assembly, IDomain source, String @namespace)
             {
                 return assembly.GetTypeWithoutNamespace($"{source.ApplicationName}{nameof(Application)}")
                        ?? assembly.GetTypeWithoutNamespace($"{@namespace}{nameof(Application)}")
                        ?? assembly.GetTypeWithoutNamespace($"{nameof(Application)}");
             }
-            
+
             Inherit.Result inherit = ReflectionUtilities.Inherit;
             if (inherit.Attribute[typeof(ApplicationInitializerAttribute)].Types is not { Count: > 0 } initializer)
             {
                 return Find(assembly, source, @namespace);
             }
-            
+
             if (initializer.Count > 1)
             {
                 throw new ScanAmbiguousException($"Ambiguous '{nameof(ApplicationInitializerAttribute)}' types: {initializer.GetString()}.");
             }
-            
+
             Type type = initializer.Single();
-            
+
             if (type.IsInterface || type.IsAbstract || type.IsValueType)
             {
                 throw new TypeNotSupportedException(type);
             }
-            
+
             if (!inherit[typeof(IApplication)].Contains(type))
             {
                 throw new TypeNotSupportedException(type, $"Type '{type}' must implement '{nameof(IApplication)}'.");
             }
-            
+
             const BindingFlags binding = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.CreateInstance;
             if (type.GetConstructor(binding, Type.EmptyTypes) is null)
             {
                 throw new TypeNotSupportedException(type, $"Type '{type}' must have {ReflectionUtilities.Constructor}().");
             }
-            
+
             return type;
         }
-        
+
         private static IApplication AutoInitializeCore(IDomain source)
         {
             if (source is null)
@@ -147,7 +147,7 @@ namespace NetExtender.Domains.Utilities
             IApplication application = AutoInitializeCore(source);
             return application is IApplicationInitializer initializer ? source.Initialize(initializer).View(initializer, args) : source.Initialize(application).AutoView(args);
         }
-        
+
         // ReSharper disable once AsyncConverter.AsyncMethodNamingHighlighting
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static async Task<IDomain> AutoInitializeWithView(this Task<IDomain> source, IEnumerable<String>? args)
@@ -171,7 +171,7 @@ namespace NetExtender.Domains.Utilities
             IApplication application = AutoInitializeCore(source);
             return application is IApplicationInitializer initializer ? source.Initialize(initializer).View(initializer, args) : source.Initialize(application).AutoView(args);
         }
-        
+
         // ReSharper disable once AsyncConverter.AsyncMethodNamingHighlighting
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static async Task<IDomain> AutoInitializeWithView(this Task<IDomain> source, params String[]? args)

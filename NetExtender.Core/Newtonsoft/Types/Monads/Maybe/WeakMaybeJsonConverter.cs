@@ -22,7 +22,7 @@ namespace NetExtender.Newtonsoft.Types.Monads
         protected internal override Boolean Write(in JsonWriter writer, WeakMaybe<T> value, ref SerializerOptions options)
         {
             Maybe<T> maybe = value.Maybe;
-            
+
             if (!maybe.HasValue)
             {
                 writer.WriteNull();
@@ -61,7 +61,7 @@ namespace NetExtender.Serialization.Json.Monads
         protected internal override Boolean Write(in Utf8JsonWriter writer, WeakMaybe<T> value, ref SerializerOptions options)
         {
             Maybe<T> maybe = value.Maybe;
-            
+
             if (!maybe.HasValue)
             {
                 writer.WriteNullValue();

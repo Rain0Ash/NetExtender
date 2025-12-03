@@ -19,7 +19,7 @@ namespace NetExtender.FileSystems
         {
         }
 #pragma warning restore CS0618
-        
+
         protected FileSystemIntercept()
             : this(null)
         {
@@ -30,7 +30,7 @@ namespace NetExtender.FileSystems
         {
         }
     }
-    
+
     public class FileSystemIntercept<T> : FileSystemIntercept<T, Any.Value> where T : class, IFileSystem
     {
         protected FileSystemIntercept(T handler)
@@ -38,7 +38,7 @@ namespace NetExtender.FileSystems
         {
         }
     }
-    
+
     public partial class FileSystemIntercept<T, TInfo> : FileSystemHandlerWrapper<T>, FileSystemIntercept.IHandler, IInterceptIdentifierTarget<FileSystemIntercept<T, TInfo>>, IPropertyIntercept<FileSystemIntercept<T, TInfo>, IPropertyInterceptEventArgs>, IInterceptTargetRaise<IPropertyInterceptEventArgs>, IMethodIntercept<FileSystemIntercept<T, TInfo>, IMethodInterceptEventArgs>, IInterceptTargetRaise<IMethodInterceptEventArgs> where T : class, IFileSystem
     {
         protected IAnyMemberInterceptor<FileSystemIntercept<T, TInfo>, TInfo> Interceptor { get; }
@@ -56,7 +56,7 @@ namespace NetExtender.FileSystems
                 PropertySetIntercept -= value;
             }
         }
-        
+
         public event EventHandler<FileSystemIntercept<T, TInfo>, IPropertyInterceptEventArgs>? PropertyIntercepting
         {
             add
@@ -70,7 +70,7 @@ namespace NetExtender.FileSystems
                 PropertySetIntercepting -= value;
             }
         }
-        
+
         public event EventHandler<FileSystemIntercept<T, TInfo>, IPropertyInterceptEventArgs>? PropertyIntercepted
         {
             add
@@ -84,7 +84,7 @@ namespace NetExtender.FileSystems
                 PropertySetIntercepted -= value;
             }
         }
-        
+
         public event EventHandler<FileSystemIntercept<T, TInfo>, IPropertyInterceptEventArgs>? PropertyGetIntercept
         {
             add
@@ -98,7 +98,7 @@ namespace NetExtender.FileSystems
                 PropertyGetIntercepted -= value;
             }
         }
-        
+
         public event EventHandler<FileSystemIntercept<T, TInfo>, IPropertyInterceptEventArgs>? PropertySetIntercept
         {
             add
@@ -112,12 +112,12 @@ namespace NetExtender.FileSystems
                 PropertySetIntercepted -= value;
             }
         }
-        
+
         public event EventHandler<FileSystemIntercept<T, TInfo>, IPropertyInterceptEventArgs>? PropertyGetIntercepting;
         public event EventHandler<FileSystemIntercept<T, TInfo>, IPropertyInterceptEventArgs>? PropertySetIntercepting;
         public event EventHandler<FileSystemIntercept<T, TInfo>, IPropertyInterceptEventArgs>? PropertyGetIntercepted;
         public event EventHandler<FileSystemIntercept<T, TInfo>, IPropertyInterceptEventArgs>? PropertySetIntercepted;
-        
+
         public event EventHandler<FileSystemIntercept<T, TInfo>, IMethodInterceptEventArgs>? MethodIntercept
         {
             add
@@ -131,10 +131,10 @@ namespace NetExtender.FileSystems
                 MethodIntercepted -= value;
             }
         }
-        
+
         public event EventHandler<FileSystemIntercept<T, TInfo>, IMethodInterceptEventArgs>? MethodIntercepting;
         public event EventHandler<FileSystemIntercept<T, TInfo>, IMethodInterceptEventArgs>? MethodIntercepted;
-        
+
         private protected String? _identifier;
         public virtual String Identifier
         {
@@ -148,7 +148,8 @@ namespace NetExtender.FileSystems
             }
         }
 
-        [Obsolete($"Use {nameof(IFileSystemIntercept)} as specified interface {nameof(IInterceptPathHandler)}; {nameof(IInterceptFileHandler)}; {nameof(IInterceptDirectoryHandler)}.")]
+        //TODO: all interfaces
+        [Obsolete($"Use IFileSystemIntercept as specified interface {nameof(IInterceptPathHandler)}; {nameof(IInterceptFileHandler)}; {nameof(IInterceptDirectoryHandler)}.")]
         IFileSystemIntercept IInterceptFileSystem.FileSystem
         {
             get
@@ -188,7 +189,7 @@ namespace NetExtender.FileSystems
             Interceptor = interceptor ?? throw new ArgumentNullException(nameof(interceptor));
         }
 #pragma warning restore CS0618
-        
+
         protected override IFileSystemInfo CreateSymbolicLink(String path, String target, FileSystemHandlerType handler)
         {
             return handler switch

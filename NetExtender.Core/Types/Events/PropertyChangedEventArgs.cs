@@ -47,7 +47,7 @@ namespace NetExtender.Types.Events
             return _new.Internal;
         }
     }
-    
+
     public abstract class PropertyValueChangedEventArgs : PropertyChangedEventArgs
     {
         public Object? Old

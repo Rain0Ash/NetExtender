@@ -10,6 +10,6 @@ namespace NetExtender.Patch
         Throw,
         Ignore,
         Log,
-        LogThrow,
+        LogThrow
     }
 }

@@ -21,7 +21,7 @@ namespace NetExtender.Utilities.Core
                 DebuggerPatch.IsAttached = value;
             }
         }
-        
+
         [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
         private static class DebuggerPatch
         {
@@ -57,7 +57,7 @@ namespace NetExtender.Utilities.Core
                     }
                 }
             }
-            
+
             private static HarmonyLib.Harmony Harmony { get; } = new HarmonyLib.Harmony($"{nameof(NetExtender)}.{nameof(System.Diagnostics.Debugger)}");
             private static PropertyInfo Debugger { get; }
             private static MethodInfo Getter { get; }

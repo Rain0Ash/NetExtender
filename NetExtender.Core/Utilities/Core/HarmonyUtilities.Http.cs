@@ -26,7 +26,7 @@ namespace NetExtender.Utilities.Core
                 public HttpInterceptEventHandler? Response { get; init; }
             }
         }
-        
+
         [SuppressMessage("ReSharper", "PublicConstructorInAbstractClass")]
         public abstract class HttpInterceptHarmonyClient : HttpInterceptClient, IInterceptIdentifierTarget<HttpInterceptHarmonyClient>
         {
@@ -38,7 +38,7 @@ namespace NetExtender.Utilities.Core
             {
                 Intercept<HttpInterceptHarmonyClient>.Regex = new Regex("(Http|Intercept|Client)", RegexOptions.Compiled);
             }
-            
+
             public sealed override String Identifier
             {
                 get
@@ -50,7 +50,7 @@ namespace NetExtender.Utilities.Core
                     throw new NotSupportedException();
                 }
             }
-            
+
             public HttpInterceptHarmonyClient()
             {
                 Initialize();
@@ -101,7 +101,7 @@ namespace NetExtender.Utilities.Core
                 {
                     base.ResponseReceived += handler.Response;
                 }
-                
+
                 base.Intercept += OnIntercept;
                 base.SendingRequest += OnSendingRequest;
                 base.ResponseReceived += OnResponseReceived;
@@ -116,7 +116,7 @@ namespace NetExtender.Utilities.Core
                 Intercept<HttpInterceptHarmonyClient>.Remove(this);
             }
         }
-        
+
         private static IEnumerable<CodeInstruction> HttpClientTranspiler(IEnumerable<CodeInstruction> instructions)
         {
             if (InstantiationMemory.New is not { } @new || @new != typeof(HttpInterceptHarmonyClient) || InstantiationMemory.Old is not { } old || InstantiationMemory.Method is not { } method)
@@ -132,7 +132,7 @@ namespace NetExtender.Utilities.Core
                     yield return instruction;
                     continue;
                 }
-                
+
                 constructor = FindConstructorForInstantiation(@new, constructor) ?? throw new NeverOperationException();
                 @new = Intercept<HttpInterceptHarmonyClient>.Seal(method);
                 constructor = FindConstructorForInstantiation(@new, constructor) ?? throw new NeverOperationException();
@@ -252,7 +252,7 @@ namespace NetExtender.Utilities.Core
 
             const BindingFlags binding = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
             List<Exception> exceptions = new List<Exception>();
-            
+
             foreach (ConstructorInfo constructor in type.GetConstructors(binding))
             {
                 try
@@ -264,7 +264,7 @@ namespace NetExtender.Utilities.Core
                     exceptions.Add(exception);
                 }
             }
-            
+
             foreach (MethodInfo method in type.GetMethods(binding))
             {
                 try

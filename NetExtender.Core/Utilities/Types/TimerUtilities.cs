@@ -6,7 +6,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using NetExtender.Types.Events;
 using NetExtender.Types.Timers;
-using NetExtender.Types.Timers.Interfaces;
 using NetExtender.Utilities.Numerics;
 
 namespace NetExtender.Utilities.Types
@@ -16,12 +15,12 @@ namespace NetExtender.Utilities.Types
 
     public static class TimerUtilities
     {
-        public static ITimer Create()
+        public static NetExtender.Types.Timers.Interfaces.ITimer Create()
         {
             return Create(Time.Second.One);
         }
 
-        public static ITimer Create(TimeSpan interval)
+        public static NetExtender.Types.Timers.Interfaces.ITimer Create(TimeSpan interval)
         {
             return new TimerWrapper(interval);
         }
@@ -52,12 +51,12 @@ namespace NetExtender.Utilities.Types
             return ToInterval(interval.TotalMilliseconds);
         }
 
-        public static ValueTask<Boolean> WaitForNextTickAsync(this ITimer timer)
+        public static ValueTask<Boolean> WaitForNextTickAsync(this NetExtender.Types.Timers.Interfaces.ITimer timer)
         {
             return WaitForNextTickAsync(timer, CancellationToken.None);
         }
 
-        public static ValueTask<Boolean> WaitForNextTickAsync(this ITimer timer, CancellationToken token)
+        public static ValueTask<Boolean> WaitForNextTickAsync(this NetExtender.Types.Timers.Interfaces.ITimer timer, CancellationToken token)
         {
             if (timer is null)
             {

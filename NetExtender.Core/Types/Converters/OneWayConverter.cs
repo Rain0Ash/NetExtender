@@ -11,7 +11,7 @@ namespace NetExtender.Types.Converters
     public abstract class OneWayConverter<TInput, TOutput> : IOneWayConverter<TInput, TOutput>
     {
         public static OneWayConverter<TInput, TOutput> Default { get; } = new OneWayConverterWrapper<TInput, TOutput>(ConvertUtilities.TryConvert);
-        
+
         public abstract TOutput Convert(TInput input);
         public abstract Boolean TryConvert(TInput input, [MaybeNullWhen(false)] out TOutput output);
     }

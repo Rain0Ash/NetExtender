@@ -31,7 +31,7 @@ namespace NetExtender.Newtonsoft.Types.Monads
             return true;
         }
     }
-    
+
     public sealed class MutableStateJsonConverter<T> : NewtonsoftJsonConverter<MutableState<T>>
     {
         protected internal override MutableState<T>? Read(in JsonReader reader, Type type, Maybe<MutableState<T>> exist, ref SerializerOptions options)
@@ -74,7 +74,7 @@ namespace NetExtender.Newtonsoft.Types.Monads
                     {
                         return default(T)!;
                     }
-                    
+
                     JToken jvalue = @object.GetValue(nameof(State<T>.Value), options) ?? throw new JsonSerializationException($"Missing required property '{nameof(State<T>.Value)}'.");
                     T? value = jvalue.ToObject<T>(options);
 
@@ -175,7 +175,7 @@ namespace NetExtender.Serialization.Json.Monads
             return true;
         }
     }
-    
+
     public sealed class StateJsonConverter<T> : TextJsonConverter<State<T>>
     {
         protected internal override State<T> Read(ref Utf8JsonReader reader, Type type, ref SerializerOptions options)
@@ -196,7 +196,7 @@ namespace NetExtender.Serialization.Json.Monads
                     {
                         return default(T)!;
                     }
-            
+
                     if (!root.TryGetProperty(nameof(State<T>.Value), options, out JsonElement jvalue))
                     {
                         throw new JsonException($"Missing required property '{nameof(State<T>.Value)}'.");
@@ -231,7 +231,7 @@ namespace NetExtender.Serialization.Json.Monads
                     writer.WriteObject();
                     return true;
                 }
-                
+
                 JsonSerializer.Serialize(writer, value.Value, options);
                 return true;
             }

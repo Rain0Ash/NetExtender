@@ -114,7 +114,7 @@ namespace NetExtender.Types.History
         {
             Internal.TrimExcess();
         }
-        
+
         public sealed override Boolean Contains(T item)
         {
             return Internal.Contains(Universal(item));
@@ -154,7 +154,7 @@ namespace NetExtender.Types.History
         {
             return Internal.LastIndexOf(Universal(item), index, count);
         }
-        
+
         public Node Find(Predicate<Node> match)
         {
             return Internal.Find(match);
@@ -315,7 +315,7 @@ namespace NetExtender.Types.History
                 Clear();
                 return;
             }
-            
+
             Internal.RemoveRange(0, Math.Max(0, Internal.Count - size));
         }
 
@@ -372,7 +372,7 @@ namespace NetExtender.Types.History
             {
                 throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
-            
+
             using List<Node>.Enumerator enumerator = Internal.GetEnumerator();
 
             for (Int32 i = index; i < array.Length && enumerator.MoveNext(); i++)

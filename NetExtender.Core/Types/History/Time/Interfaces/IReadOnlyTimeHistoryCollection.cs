@@ -6,7 +6,7 @@ namespace NetExtender.Types.History.Interfaces
     public interface IReadOnlyTimeHistoryCollection<T> : IReadOnlyTimeHistoryCollection<T, TimeHistoryCollection<T>.Node>
     {
     }
-    
+
     public interface IReadOnlyTimeHistoryCollection<out T, in TNode> : IReadOnlyCollection<T> where TNode : struct, ITimeHistoryCollectionNode<T>
     {
         public IComparer<TNode> Comparer { get; }

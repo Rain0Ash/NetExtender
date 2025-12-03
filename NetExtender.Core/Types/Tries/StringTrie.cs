@@ -101,7 +101,7 @@ namespace NetExtender.Types.Tries
 
             return ContainsKey(key.AsSpan());
         }
-        
+
         public Boolean ContainsKey(ReadOnlySpan<Char> key)
         {
             return Trie.ContainsKey(key);
@@ -126,7 +126,7 @@ namespace NetExtender.Types.Tries
 
             return Get(prefix.AsSpan());
         }
-        
+
         public IEnumerable<StringTrieEntry<TValue>> Get(ReadOnlySpan<Char> prefix)
         {
             return Trie.Get(prefix).Select(entry => new StringTrieEntry<TValue>(new String(entry.Key.ToArray()), entry.Value));
@@ -150,7 +150,7 @@ namespace NetExtender.Types.Tries
 
             return TryGetValue(key.AsSpan(), out value);
         }
-        
+
         public Boolean TryGetValue(ReadOnlySpan<Char> key, [MaybeNullWhen(false)] out TValue value)
         {
             return Trie.TryGetValue(key, out value);
@@ -172,7 +172,7 @@ namespace NetExtender.Types.Tries
 
             Add(key.AsSpan(), value);
         }
-        
+
         public void Add(ReadOnlySpan<Char> key, TValue value)
         {
             Trie.Add(key, value);
@@ -195,7 +195,7 @@ namespace NetExtender.Types.Tries
                 Trie.Add(item.Key.AsSpan(), item.Value);
             }
         }
-        
+
         public void AddRange(ReadOnlySpan<StringTrieEntry<TValue>> collection)
         {
             foreach (StringTrieEntry<TValue> item in collection)
@@ -222,7 +222,7 @@ namespace NetExtender.Types.Tries
 
             return Remove(key.AsSpan());
         }
-        
+
         public Boolean Remove(ReadOnlySpan<Char> key)
         {
             return Trie.Remove(key);
@@ -301,7 +301,7 @@ namespace NetExtender.Types.Tries
                 this[key.AsSpan()] = value;
             }
         }
-        
+
         public TValue this[ReadOnlySpan<Char> key]
         {
             get

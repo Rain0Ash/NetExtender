@@ -120,7 +120,7 @@ namespace NetExtender.Configuration.Properties
                 return Property.IsAlwaysDefault;
             }
         }
-        
+
         public Boolean IsThreadSafe
         {
             get
@@ -139,7 +139,7 @@ namespace NetExtender.Configuration.Properties
             {
                 if (!SetValue(value) && IsThrowWhenValueSetInvalid)
                 {
-                    throw new InvalidOperationException($"Can't set value '{value}' to {Path}");
+                    throw new InvalidOperationException($"Can't set value '{value}' to '{Path}'.");
                 }
             }
         }
@@ -190,7 +190,7 @@ namespace NetExtender.Configuration.Properties
             Alternate = alternate;
             Validate = validate;
             Converter = converter is not null ? TwoWayConverter<String?, T>.Combine(converter, TwoWayConverter<T>.String()) : TwoWayConverter<T>.String().Reverse();
-            
+
             if (IsInitialize)
             {
                 Internal.TryInitialize();
@@ -259,7 +259,7 @@ namespace NetExtender.Configuration.Properties
             {
                 return Value = Alternate;
             }
-            
+
             return Property.GetValue(Alternate, Converter);
         }
 
@@ -502,11 +502,11 @@ namespace NetExtender.Configuration.Properties
             {
                 if (!SetValue(value) && IsThrowWhenValueSetInvalid)
                 {
-                    throw new InvalidOperationException($"Can't set value '{value}' to {Path}");
+                    throw new InvalidOperationException($"Can't set value '{value}' to '{Path}'.");
                 }
             }
         }
-        
+
         public sealed override Boolean IsThreadSafe
         {
             get
@@ -522,7 +522,7 @@ namespace NetExtender.Configuration.Properties
         {
             Config = config ?? throw new ArgumentNullException(nameof(config));
             Config.Changed += OnChanged;
-            
+
             if (IsInitialize)
             {
                 Internal.TryInitialize();

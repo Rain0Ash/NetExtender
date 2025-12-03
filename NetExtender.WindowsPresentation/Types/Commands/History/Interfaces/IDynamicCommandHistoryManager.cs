@@ -24,7 +24,7 @@ namespace NetExtender.WindowsPresentation.Types.Commands.History.Interfaces
         public new TNode Execute<T>(ICommand<T> command, T parameter) where T : class?;
         public new TNode Execute<T>(ICommand<T> command, T parameter, CommandHistoryEntryOptions options) where T : class?;
     }
-    
+
     public interface IDynamicCommandHistoryIdManager : IDynamicCommandHistoryManager
     {
         public ICommandHistoryLinkedContainer? Get<T, TId>(TId id, T parameter) where T : class? where TId : struct;
@@ -34,7 +34,7 @@ namespace NetExtender.WindowsPresentation.Types.Commands.History.Interfaces
         public ICommandHistoryLinkedEntry Execute<T, TId>(ICommand<T> command, TId id, T parameter, CommandHistoryEntryOptions options) where T : class? where TId : struct;
         public Boolean Clear<T, TId>(TId id, T parameter) where T : class? where TId : struct;
     }
-    
+
     public interface IDynamicCommandHistoryManager : ICommandHistoryManagerInfo
     {
         public ICommandHistoryLinkedContainer? Get(ICommandHistoryInfo node);

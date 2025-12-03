@@ -17,7 +17,7 @@ namespace NetExtender.JWT
     public abstract class JWTSerializer : IJWTSerializer
     {
         public abstract JWTSerializerType Type { get; }
-        
+
         public abstract String Serialize<T>(T value);
         public abstract Object Deserialize(Type type, String json);
         public abstract T Deserialize<T>(String json);

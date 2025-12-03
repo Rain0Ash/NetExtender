@@ -26,7 +26,7 @@ namespace NetExtender.AspNetCore.Identity
             return Options.IncludeAuthenticationScheme ? new ClaimsIdentity(claims, BearerScheme.Scheme) : new ClaimsIdentity(claims);
         }
     }
-    
+
     public abstract class IdentityJWTClaimsIdentityFactory<TId, TUser, TRole, TIdentity> : IdentityJWTClaimsIdentityFactory<TId, TUser, TRole, TIdentity, IEnumerable<KeyValuePair<String, Object?>>> where TId : struct, IEquatable<TId> where TUser : class, IUserInfo<TId, TRole> where TRole : IEquatable<TRole> where TIdentity : IIdentity
     {
         protected IdentityJWTClaimsIdentityFactory(JWTAuthenticationOptions options)

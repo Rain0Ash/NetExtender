@@ -15,7 +15,7 @@ namespace NetExtender.DependencyInjection
             Initializer.Initializer.Module(Patch);
         }
 #pragma warning restore CA2255
-        
+
         private static void Patch()
         {
             EntityFrameworkCoreZPatch.Auto();

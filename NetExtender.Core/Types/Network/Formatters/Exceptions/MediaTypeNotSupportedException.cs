@@ -17,33 +17,37 @@ namespace NetExtender.Types.Network.Formatters.Exceptions
             : base(typeof(T))
         {
         }
-        
+
         public MediaTypeNotSupportedException(String? message)
             : base(typeof(T), message)
         {
         }
-        
+
         public MediaTypeNotSupportedException(MediaTypeHeaderValue? media, String? message)
             : base(typeof(T), media, message)
         {
         }
-        
+
         public MediaTypeNotSupportedException(String? message, Exception? exception)
             : base(typeof(T), message, exception)
         {
         }
-        
+
         public MediaTypeNotSupportedException(MediaTypeHeaderValue? media, String? message, Exception? exception)
             : base(typeof(T), media, message, exception)
         {
         }
-        
+
+#if NET8_0_OR_GREATER
+        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
         protected MediaTypeNotSupportedException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
         }
     }
-    
+
     [Serializable]
     public class MediaTypeNotSupportedException : NotSupportedException
     {
@@ -51,7 +55,7 @@ namespace NetExtender.Types.Network.Formatters.Exceptions
         private const String TypeMessage = "Media type for type '{0}' not supported.";
         private const String MediaMessage = "Media type '{0}' not supported.";
         private const String MediaTypeMessage = "Media type '{0}' for type '{1}' not supported.";
-        
+
         public Type? Type { get; }
         public MediaTypeHeaderValue? MediaType { get; }
         public IReadOnlyMediaTypeFormatterCollection? Formatters { get; init; }
@@ -60,82 +64,90 @@ namespace NetExtender.Types.Network.Formatters.Exceptions
             : base(Format(null, null, null))
         {
         }
-        
+
         public MediaTypeNotSupportedException(Type? type)
             : base(Format(type, null, null))
         {
             Type = type;
         }
-        
+
         public MediaTypeNotSupportedException(String? message)
             : base(Format(null, null, message))
         {
         }
-        
+
         public MediaTypeNotSupportedException(MediaTypeHeaderValue? media, String? message)
             : base(Format(null, media, message))
         {
             MediaType = media;
         }
-        
+
         public MediaTypeNotSupportedException(Type? type, String? message)
             : base(Format(type, null, message))
         {
             Type = type;
         }
-        
+
         public MediaTypeNotSupportedException(Type? type, MediaTypeHeaderValue? media, String? message)
             : base(Format(type, media, message))
         {
             Type = type;
             MediaType = media;
         }
-        
+
         public MediaTypeNotSupportedException(String? message, Exception? exception)
             : base(Format(null, null, message), exception)
         {
         }
-        
+
         public MediaTypeNotSupportedException(MediaTypeHeaderValue? media, String? message, Exception? exception)
             : base(Format(null, media, message), exception)
         {
             MediaType = media;
         }
-        
+
         public MediaTypeNotSupportedException(Type? type, String? message, Exception? exception)
             : base(Format(type, null, message), exception)
         {
             Type = type;
         }
-        
+
         public MediaTypeNotSupportedException(Type? type, MediaTypeHeaderValue? media, String? message, Exception? exception)
             : base(Format(type, media, message), exception)
         {
             Type = type;
             MediaType = media;
         }
-        
+
+#if NET8_0_OR_GREATER
+        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
         protected MediaTypeNotSupportedException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
             Type = info.GetValueOrDefault<Type>(nameof(Type));
             MediaType = info.GetValueOrDefault<MediaTypeHeaderValue>(nameof(MediaType));
         }
-        
+
+#if NET8_0_OR_GREATER
+        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId = "SYSLIB0051", UrlFormat = "https://aka.ms/dotnet-warnings/{0}")]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             base.GetObjectData(info, context);
             info.AddValue(nameof(Type), Type);
             info.AddValue(nameof(MediaType), MediaType);
         }
-        
+
         private static String Format(Type? type, MediaTypeHeaderValue? media, String? message)
         {
             if (message is not null)
             {
                 return message;
             }
-            
+
             return media?.MediaType?.ToLowerInvariant() switch
             {
                 { Length: > 0 } value when type is not null => MediaTypeMessage.Format(value, type),

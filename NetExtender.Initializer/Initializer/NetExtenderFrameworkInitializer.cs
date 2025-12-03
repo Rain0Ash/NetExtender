@@ -97,7 +97,7 @@ namespace NetExtender.Initializer
                 return Initializer.Exclude;
             }
         }
-        
+
         public static ReflectionPatchCategory IncludePatchCategory
         {
             get

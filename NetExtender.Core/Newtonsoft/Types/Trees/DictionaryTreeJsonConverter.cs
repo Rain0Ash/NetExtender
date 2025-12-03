@@ -145,7 +145,7 @@ namespace NetExtender.Newtonsoft.Types.Trees
 
     public abstract class DictionaryTreeJsonConverter : NewtonsoftJsonConverter
     {
-        private static ConcurrentDictionary<Type, Boolean> Storage { get; } = new ConcurrentDictionary<Type, Boolean>();
+        private new static ConcurrentDictionary<Type, Boolean> Storage { get; } = new ConcurrentDictionary<Type, Boolean>();
 
         public override Boolean CanRead
         {

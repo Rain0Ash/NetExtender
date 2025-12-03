@@ -20,7 +20,7 @@ namespace NetExtender.Cryptography.Base.Alphabet
         /// also known as "btoa" encoding.
         /// </summary>
         public static Base85Alphabet Ascii85 { get; } = new Base85Alphabet("!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstu", 'z', 'y');
-        
+
         /// <summary>
         /// Gets the character to be used for "all zeros".
         /// </summary>
@@ -42,7 +42,7 @@ namespace NetExtender.Cryptography.Base.Alphabet
                 return SpaceShortcut.HasValue || ZeroShortcut.HasValue;
             }
         }
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Base85Alphabet"/> class
         /// using custom settings.

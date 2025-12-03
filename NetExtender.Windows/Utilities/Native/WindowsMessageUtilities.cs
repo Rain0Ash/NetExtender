@@ -43,7 +43,7 @@ namespace NetExtender.Windows.Utilities.Native
                 _ => false
             };
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsWheel(this WM value)
         {
@@ -54,7 +54,7 @@ namespace NetExtender.Windows.Utilities.Native
                 _ => false
             };
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsWheel(this MouseAction value)
         {
@@ -65,13 +65,13 @@ namespace NetExtender.Windows.Utilities.Native
                 _ => false
             };
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsMouse(this WM value)
         {
             return AsMouse(value) is not null;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsMouse(this WM value, out Boolean client)
         {
@@ -79,7 +79,7 @@ namespace NetExtender.Windows.Utilities.Native
             client = !IsNoClient(value);
             return result;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static MouseAction? AsMouse(this WM value)
         {
@@ -118,13 +118,13 @@ namespace NetExtender.Windows.Utilities.Native
                 _ => null
             };
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static MouseAction? AsMouse(this WM value, WindowsMessage message)
         {
             return AsMouse(value)?.X(message);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static MouseAction? AsMouse(this WM value, out Boolean client)
         {
@@ -132,25 +132,25 @@ namespace NetExtender.Windows.Utilities.Native
             client = !IsNoClient(value);
             return result;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static MouseAction? AsMouse(this WM value, WindowsMessage message, out Boolean client)
         {
             return AsMouse(value, out client)?.X(message);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static MouseAction ToMouse(this WM value)
         {
             return AsMouse(value) ?? throw new EnumUndefinedOrNotSupportedException<WM>(value, nameof(value), null);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static MouseAction ToMouse(this WM value, WindowsMessage message)
         {
             return ToMouse(value).X(message);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static MouseAction ToMouse(this WM value, out Boolean client)
         {
@@ -158,19 +158,19 @@ namespace NetExtender.Windows.Utilities.Native
             client = !IsNoClient(value);
             return result;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static MouseAction ToMouse(this WM value, WindowsMessage message, out Boolean client)
         {
             return ToMouse(value, out client).X(message);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static MouseAction X(this MouseAction value, WindowsMessage message)
         {
             return X(value, message.WParam);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static unsafe MouseAction X(this MouseAction value, IntPtr wparam)
         {
@@ -178,31 +178,31 @@ namespace NetExtender.Windows.Utilities.Native
             {
                 return value;
             }
-            
+
             value &= MouseAction.Modifiers;
-            
+
             switch (sizeof(IntPtr))
             {
                 case 4:
                 {
                     Int16 button = wparam.ToInt32().High().High();
-                    
+
                     if (!MathUtilities.IsZeroOrPowerOf2(unchecked((UInt32) button)))
                     {
                         return value;
                     }
-                    
+
                     return value | (MouseAction) ((UInt32) MouseAction.XButton << (button.ILogB() + 1));
                 }
                 case 8:
                 {
                     Int16 button = unchecked((Int32) wparam.ToInt64().Low()).High();
-                    
+
                     if (!MathUtilities.IsZeroOrPowerOf2(unchecked((UInt32) button)))
                     {
                         return value;
                     }
-                    
+
                     return value | (MouseAction) ((UInt32) MouseAction.XButton << (button.ILogB() + 1));
                 }
                 default:
@@ -211,13 +211,13 @@ namespace NetExtender.Windows.Utilities.Native
                 }
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Point Point(this MouseAction value, WindowsMessage message)
         {
             return Point(value, message.LParam);
         }
-        
+
         // ReSharper disable once UnusedParameter.Global
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static unsafe Point Point(this MouseAction value, IntPtr lparam)
@@ -240,14 +240,14 @@ namespace NetExtender.Windows.Utilities.Native
                 }
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static MouseAction Point(this MouseAction value, WindowsMessage message, out Point point)
         {
             point = Point(value, message);
             return value;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static MouseAction Point(this MouseAction value, IntPtr lparam, out Point point)
         {

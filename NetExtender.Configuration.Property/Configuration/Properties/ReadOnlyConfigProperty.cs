@@ -120,7 +120,7 @@ namespace NetExtender.Configuration.Properties
                 return Property.IsAlwaysDefault;
             }
         }
-        
+
         public Boolean IsThreadSafe
         {
             get
@@ -183,7 +183,7 @@ namespace NetExtender.Configuration.Properties
             Alternate = alternate;
             Validate = validate;
             Converter = converter is not null ? TwoWayConverter<String?, T>.Combine(converter, TwoWayConverter<T>.String()) : TwoWayConverter<T>.String().Reverse();
-            
+
             if (IsInitialize)
             {
                 Internal.TryInitialize();
@@ -199,7 +199,7 @@ namespace NetExtender.Configuration.Properties
             Alternate = alternate;
             Validate = validate;
             Converter = converter?.AsTwoWay(TwoWayConverter<T>.String()) ?? TwoWayConverter<T>.String().Reverse();
-            
+
             if (IsInitialize)
             {
                 Internal.TryInitialize();
@@ -407,7 +407,7 @@ namespace NetExtender.Configuration.Properties
                 return GetValue();
             }
         }
-        
+
         public sealed override Boolean IsThreadSafe
         {
             get
@@ -423,7 +423,7 @@ namespace NetExtender.Configuration.Properties
         {
             Config = config ?? throw new ArgumentNullException(nameof(config));
             Config.Changed += OnChanged;
-            
+
             if (IsInitialize)
             {
                 Internal.TryInitialize();

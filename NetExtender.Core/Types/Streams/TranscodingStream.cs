@@ -26,7 +26,7 @@ namespace NetExtender.Types.Streams
         private Byte[]? Buffer { get; set; }
         private Int32 BufferCount { get; set; }
         private Int32 BufferOffset { get; set; }
-        
+
         public override Boolean CanRead
         {
             get
@@ -35,7 +35,7 @@ namespace NetExtender.Types.Streams
                 {
                     throw new ThisObjectDisposedException(this);
                 }
-                
+
                 return Stream.CanRead;
             }
         }
@@ -48,7 +48,7 @@ namespace NetExtender.Types.Streams
                 {
                     throw new ThisObjectDisposedException(this);
                 }
-                
+
                 return false;
             }
         }
@@ -61,7 +61,7 @@ namespace NetExtender.Types.Streams
                 {
                     throw new ThisObjectDisposedException(this);
                 }
-                
+
                 return Stream.CanWrite;
             }
         }
@@ -120,12 +120,12 @@ namespace NetExtender.Types.Streams
             {
                 throw new ThisObjectDisposedException(this);
             }
-            
+
             if (!CanRead)
             {
                 throw new NotSupportedException("Stream does not support reading.");
             }
-            
+
             if (Encoder is null || Buffer is null || StreamDecoder is null)
             {
                 Encoder = Encoding.GetEncoder();
@@ -133,12 +133,12 @@ namespace NetExtender.Types.Streams
                 BufferMaxSize = StreamEncoding.GetMaxCharCount(4096);
                 Buffer = new Byte[Encoding.GetMaxByteCount(BufferMaxSize)];
             }
-            
+
             if (BufferCount <= 0)
             {
                 Byte[] array = ArrayPool<Byte>.Shared.Rent(4096);
                 Char[] characters = ArrayPool<Char>.Shared.Rent(BufferMaxSize);
-                
+
                 try
                 {
                     Boolean flush;
@@ -150,7 +150,7 @@ namespace NetExtender.Types.Streams
                         Int32 written = StreamDecoder.GetChars(array, 0, counter, characters, 0, flush);
                         read = Encoder.GetBytes(characters, 0, written, Buffer, 0, flush);
                     } while (!flush && read <= 0);
-                    
+
                     BufferOffset = 0;
                     BufferCount = read;
                 }
@@ -160,7 +160,7 @@ namespace NetExtender.Types.Streams
                     ArrayPool<Char>.Shared.Return(characters);
                 }
             }
-            
+
             Int32 count = Math.Min(BufferCount, buffer.Length);
             Buffer.AsSpan(BufferOffset, count).CopyTo(buffer);
             BufferOffset += count;
@@ -189,7 +189,7 @@ namespace NetExtender.Types.Streams
             {
                 throw new ArgumentOutOfRangeException(nameof(count), count, "Offset and length were out of bounds for the array or count is greater than the number of elements from index to the end of the source collection.");
             }
-            
+
             return Read(new Span<Byte>(buffer, offset, count));
         }
 
@@ -199,7 +199,7 @@ namespace NetExtender.Types.Streams
             {
                 throw new ThisObjectDisposedException(this);
             }
-            
+
             if (!CanRead)
             {
                 throw new NotSupportedException("Stream does not support reading.");
@@ -209,7 +209,7 @@ namespace NetExtender.Types.Streams
             {
                 return await Task.FromCanceled<Int32>(token);
             }
-            
+
             if (Encoder is null || Buffer is null || StreamDecoder is null)
             {
                 Encoder = Encoding.GetEncoder();
@@ -245,7 +245,7 @@ namespace NetExtender.Types.Streams
                     ArrayPool<Char>.Shared.Return(characters);
                 }
             }
-            
+
             count = Math.Min(BufferCount, buffer.Length);
             Buffer.AsSpan(BufferOffset, count).CopyTo(buffer.Span);
             BufferOffset += count;
@@ -259,7 +259,7 @@ namespace NetExtender.Types.Streams
             {
                 throw new ThisObjectDisposedException(this);
             }
-            
+
             if (!CanRead)
             {
                 throw new NotSupportedException("Stream does not support reading.");
@@ -283,14 +283,14 @@ namespace NetExtender.Types.Streams
             ByteBuffer[0] = value;
             Write(ByteBuffer, 0, 1);
         }
-        
+
         public override void Write(ReadOnlySpan<Byte> buffer)
         {
             if (Stream is null)
             {
                 throw new ThisObjectDisposedException(this);
             }
-    
+
             if (!CanRead)
             {
                 throw new NotSupportedException("Stream does not support reading.");
@@ -300,7 +300,7 @@ namespace NetExtender.Types.Streams
             {
                 return;
             }
-    
+
             if (StreamEncoder is null || Decoder is null)
             {
                 StreamEncoder = StreamEncoding.GetEncoder();
@@ -342,12 +342,12 @@ namespace NetExtender.Types.Streams
             {
                 throw new ThisObjectDisposedException(this);
             }
-            
+
             if (!CanWrite)
             {
                 throw new NotSupportedException("Stream does not support writing.");
             }
-            
+
             if (buffer is null)
             {
                 throw new ArgumentNullException(nameof(buffer));
@@ -357,7 +357,7 @@ namespace NetExtender.Types.Streams
             {
                 throw new ArgumentOutOfRangeException(nameof(offset), offset, null);
             }
-            
+
             if (count < 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(count), count, null);
@@ -367,12 +367,12 @@ namespace NetExtender.Types.Streams
             {
                 throw new ArgumentOutOfRangeException(nameof(count), count, "Offset and length were out of bounds for the array or count is greater than the number of elements from index to the end of the source collection.");
             }
-            
+
             if (count <= 0)
             {
                 return;
             }
-            
+
             if (StreamEncoder is null || Decoder is null)
             {
                 StreamEncoder = StreamEncoding.GetEncoder();
@@ -382,7 +382,7 @@ namespace NetExtender.Types.Streams
             Int32 length = Math.Clamp(buffer.Length, 4096, 1048576);
             Char[] characters = ArrayPool<Char>.Shared.Rent(length);
             Byte[] array = ArrayPool<Byte>.Shared.Rent(length);
-            
+
             try
             {
                 Boolean outer;
@@ -408,14 +408,14 @@ namespace NetExtender.Types.Streams
                 ArrayPool<Byte>.Shared.Return(array);
             }
         }
-        
+
         public override async ValueTask WriteAsync(ReadOnlyMemory<Byte> buffer, CancellationToken token = default)
         {
             if (Stream is null)
             {
                 throw new ThisObjectDisposedException(this);
             }
-    
+
             if (!CanWrite)
             {
                 throw new NotSupportedException("Stream does not support writing.");
@@ -425,7 +425,7 @@ namespace NetExtender.Types.Streams
             {
                 return;
             }
-    
+
             if (token.IsCancellationRequested)
             {
                 await Task.FromCanceled(token);
@@ -476,12 +476,12 @@ namespace NetExtender.Types.Streams
             {
                 throw new ThisObjectDisposedException(this);
             }
-            
+
             if (!CanWrite)
             {
                 throw new NotSupportedException("Stream does not support writing.");
             }
-            
+
             if (buffer is null)
             {
                 throw new ArgumentNullException(nameof(buffer));
@@ -491,7 +491,7 @@ namespace NetExtender.Types.Streams
             {
                 throw new ArgumentOutOfRangeException(nameof(offset), offset, null);
             }
-            
+
             if (count < 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(count), count, null);
@@ -501,18 +501,18 @@ namespace NetExtender.Types.Streams
             {
                 throw new ArgumentOutOfRangeException(nameof(count), count, "Offset and length were out of bounds for the array or count is greater than the number of elements from index to the end of the source collection.");
             }
-            
+
             if (token.IsCancellationRequested)
             {
                 await Task.FromCanceled<Int32>(token);
                 return;
             }
-            
+
             if (count <= 0)
             {
                 return;
             }
-            
+
             if (StreamEncoder is null || Decoder is null)
             {
                 StreamEncoder = StreamEncoding.GetEncoder();
@@ -549,14 +549,14 @@ namespace NetExtender.Types.Streams
                 ArrayPool<Byte>.Shared.Return(bytes);
             }
         }
-        
+
         public override void Flush()
         {
             if (Stream is null)
             {
                 throw new ThisObjectDisposedException(this);
             }
-            
+
             Stream.Flush();
         }
 
@@ -566,14 +566,14 @@ namespace NetExtender.Types.Streams
             {
                 throw new ThisObjectDisposedException(this);
             }
-            
+
             await Stream.FlushAsync(token);
         }
-        
+
         protected override void Dispose(Boolean disposing)
         {
             base.Dispose(disposing);
-            
+
             if (Stream is null)
             {
                 return;
@@ -593,7 +593,7 @@ namespace NetExtender.Types.Streams
                     characters = new Char[length];
                     length = Decoder.GetChars(Array.Empty<Byte>(), 0, 0, characters, 0, true);
                 }
-            
+
                 Byte[] array = Array.Empty<Byte>();
                 Int32 count = StreamEncoder.GetByteCount(characters, 0, length, true);
                 if (count <= 0)
@@ -616,7 +616,7 @@ namespace NetExtender.Types.Streams
             {
                 Stream.Dispose();
             }
-            
+
             Stream = null;
         }
     }

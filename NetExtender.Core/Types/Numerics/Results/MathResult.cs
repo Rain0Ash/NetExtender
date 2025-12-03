@@ -30,7 +30,7 @@ namespace NetExtender.Types.Numerics
         {
             return new Result<T, OverflowException>(value._internal);
         }
-        
+
         public static implicit operator Boolean(MathResult<T> value)
         {
             return value._internal;
@@ -100,7 +100,7 @@ namespace NetExtender.Types.Numerics
         {
             return first._internal != second;
         }
-        
+
         public static Boolean operator ==(MathResult<T> first, MathResult<T> second)
         {
             return first._internal == second._internal;
@@ -285,25 +285,25 @@ namespace NetExtender.Types.Numerics
                     Half value = UnsafeUtilities.As<T, Half>(_internal.Internal);
                     return Half.IsFinite(value);
                 }
-                
+
                 if (typeof(T) == typeof(Single))
                 {
                     Single value = UnsafeUtilities.As<T, Single>(_internal.Internal);
                     return Single.IsFinite(value);
                 }
-                
+
                 if (typeof(T) == typeof(Double))
                 {
                     Double value = UnsafeUtilities.As<T, Double>(_internal.Internal);
                     return Double.IsFinite(value);
                 }
-                
+
                 if (typeof(T) == typeof(Complex))
                 {
                     Complex value = UnsafeUtilities.As<T, Complex>(_internal.Internal);
                     return Complex.IsFinite(value);
                 }
-                
+
                 return true;
             }
         }
@@ -346,25 +346,25 @@ namespace NetExtender.Types.Numerics
                     Half value = UnsafeUtilities.As<T, Half>(_internal.Internal);
                     return Half.IsInfinity(value);
                 }
-                
+
                 if (typeof(T) == typeof(Single))
                 {
                     Single value = UnsafeUtilities.As<T, Single>(_internal.Internal);
                     return Single.IsInfinity(value);
                 }
-                
+
                 if (typeof(T) == typeof(Double))
                 {
                     Double value = UnsafeUtilities.As<T, Double>(_internal.Internal);
                     return Double.IsInfinity(value);
                 }
-                
+
                 if (typeof(T) == typeof(Complex))
                 {
                     Complex value = UnsafeUtilities.As<T, Complex>(_internal.Internal);
                     return Complex.IsInfinity(value);
                 }
-                
+
                 return Exception is INumericException { IsInfinity: true };
             }
         }
@@ -389,13 +389,13 @@ namespace NetExtender.Types.Numerics
                     Single value = UnsafeUtilities.As<T, Single>(_internal.Internal);
                     return Single.IsPositiveInfinity(value);
                 }
-                
+
                 if (typeof(T) == typeof(Double))
                 {
                     Double value = UnsafeUtilities.As<T, Double>(_internal.Internal);
                     return Double.IsPositiveInfinity(value);
                 }
-                
+
                 if (typeof(T) == typeof(Complex))
                 {
                     Complex value = UnsafeUtilities.As<T, Complex>(_internal.Internal);
@@ -426,13 +426,13 @@ namespace NetExtender.Types.Numerics
                     Single value = UnsafeUtilities.As<T, Single>(_internal.Internal);
                     return Single.IsNegativeInfinity(value);
                 }
-                
+
                 if (typeof(T) == typeof(Double))
                 {
                     Double value = UnsafeUtilities.As<T, Double>(_internal.Internal);
                     return Double.IsNegativeInfinity(value);
                 }
-                
+
                 if (typeof(T) == typeof(Complex))
                 {
                     Complex value = UnsafeUtilities.As<T, Complex>(_internal.Internal);
@@ -463,13 +463,13 @@ namespace NetExtender.Types.Numerics
                     Single value = UnsafeUtilities.As<T, Single>(_internal.Internal);
                     return Single.IsNaN(value);
                 }
-                
+
                 if (typeof(T) == typeof(Double))
                 {
                     Double value = UnsafeUtilities.As<T, Double>(_internal.Internal);
                     return Double.IsNaN(value);
                 }
-                
+
                 if (typeof(T) == typeof(Complex))
                 {
                     Complex value = UnsafeUtilities.As<T, Complex>(_internal.Internal);
@@ -574,12 +574,12 @@ namespace NetExtender.Types.Numerics
         {
             (value, exception) = _internal;
         }
-        
+
         private static MathResult.NumberPart Initialize(MathResult.NumberPart @operator)
         {
             return @operator;
         }
-        
+
         internal static Func<MathResult<T>, MathResult<T>> NoOperator { get; } = static value => value;
         internal static Func<MathResult<T>, MathResult<T>>? TryGetOperator(MathResult.NumberPart @operator)
         {
@@ -646,7 +646,7 @@ namespace NetExtender.Types.Numerics
                     return NumericException.From(exception);
                 }
             }
-            
+
             return Wrapper;
         }
 
@@ -669,7 +669,7 @@ namespace NetExtender.Types.Numerics
                     return NumericException.From(exception);
                 }
             }
-            
+
             return Wrapper;
         }
 
@@ -971,13 +971,13 @@ namespace NetExtender.Types.Numerics
         {
             MathResult<Single>.Register(NumberPart.IntegerReal, static value => value ? value.Internal.Truncate() : value);
             MathResult<Single>.Register(NumberPart.FractionalReal, static value => value ? value.Internal.DigitsAfterPoint() : value);
-            
+
             MathResult<Double>.Register(NumberPart.IntegerReal, static value => value ? value.Internal.Truncate() : value);
             MathResult<Double>.Register(NumberPart.FractionalReal, static value => value ? value.Internal.DigitsAfterPoint() : value);
-            
+
             MathResult<Decimal>.Register(NumberPart.IntegerReal, static value => value ? value.Internal.Truncate() : value);
             MathResult<Decimal>.Register(NumberPart.FractionalReal, static value => value ? value.Internal.DigitsAfterPoint() : value);
-            
+
             MathResult<Complex>.Register(NumberPart.Real, static value => value ? new MathResult<Complex>(value.Internal.Real) : value);
             MathResult<Complex>.Register(NumberPart.IntegerReal, static value => value ? new MathResult<Complex>(value.Internal.Real.Truncate()) : value);
             MathResult<Complex>.Register(NumberPart.FractionalReal, static value => value ? new MathResult<Complex>(value.Internal.Real.DigitsAfterPoint()) : value);
@@ -992,7 +992,7 @@ namespace NetExtender.Types.Numerics
             MathResult<BigComplex>.Register(NumberPart.IntegerImaginary, static value => value ? new MathResult<BigComplex>(value.Internal.Imaginary.Truncate()) : value);
             MathResult<BigComplex>.Register(NumberPart.FractionalImaginary, static value => value ? new MathResult<BigComplex>(value.Internal.Imaginary.DigitsAfterPoint()) : value);
         }
-        
+
         public enum NumberPart : Byte
         {
             Number = 0,

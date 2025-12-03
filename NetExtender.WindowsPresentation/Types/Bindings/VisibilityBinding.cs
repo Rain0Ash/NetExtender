@@ -21,7 +21,7 @@ namespace NetExtender.WindowsPresentation.Types.Bindings
         {
         }
     }
-    
+
     public sealed class VisibilityBinding : CustomBinding
     {
         public override IValueConverter? Converter
@@ -41,7 +41,7 @@ namespace NetExtender.WindowsPresentation.Types.Bindings
                 };
             }
         }
-        
+
         public Boolean FalseIsCollapsed
         {
             get
@@ -59,7 +59,7 @@ namespace NetExtender.WindowsPresentation.Types.Bindings
                 Converter = value ? BooleanToVisibilityConverter.Collapsed : BooleanToVisibilityConverter.Hidden;
             }
         }
-        
+
         public VisibilityBinding()
         {
             Converter = null;
@@ -71,7 +71,7 @@ namespace NetExtender.WindowsPresentation.Types.Bindings
             Converter = null;
         }
     }
-    
+
     public sealed class VisibilityNotBinding : CustomBinding
     {
         public override IValueConverter? Converter
@@ -91,7 +91,7 @@ namespace NetExtender.WindowsPresentation.Types.Bindings
                 };
             }
         }
-        
+
         public Boolean TrueIsCollapsed
         {
             get
@@ -109,7 +109,7 @@ namespace NetExtender.WindowsPresentation.Types.Bindings
                 Converter = value ? NotBooleanToVisibilityConverter.Collapsed : NotBooleanToVisibilityConverter.Hidden;
             }
         }
-        
+
         public VisibilityNotBinding()
         {
             Converter = null;
@@ -121,7 +121,7 @@ namespace NetExtender.WindowsPresentation.Types.Bindings
             Converter = null;
         }
     }
-    
+
     public sealed class NotNullVisibilityBinding : CustomBinding
     {
         public override IValueConverter? Converter
@@ -141,7 +141,7 @@ namespace NetExtender.WindowsPresentation.Types.Bindings
                 };
             }
         }
-        
+
         public Boolean NullIsCollapsed
         {
             get
@@ -159,7 +159,7 @@ namespace NetExtender.WindowsPresentation.Types.Bindings
                 Converter = value ? NotNullToVisibilityConverter.Collapsed : NotNullToVisibilityConverter.Hidden;
             }
         }
-        
+
         public NotNullVisibilityBinding()
         {
             Converter = null;
@@ -171,7 +171,7 @@ namespace NetExtender.WindowsPresentation.Types.Bindings
             Converter = null;
         }
     }
-    
+
     public sealed class NotNullOrEmptyVisibilityBinding : CustomBinding
     {
         public override IValueConverter? Converter
@@ -191,7 +191,7 @@ namespace NetExtender.WindowsPresentation.Types.Bindings
                 };
             }
         }
-        
+
         public Boolean NullIsCollapsed
         {
             get
@@ -209,7 +209,7 @@ namespace NetExtender.WindowsPresentation.Types.Bindings
                 Converter = value ? NotNullOrEmptyToVisibilityConverter.Collapsed : NotNullOrEmptyToVisibilityConverter.Hidden;
             }
         }
-        
+
         public NotNullOrEmptyVisibilityBinding()
         {
             Converter = null;
@@ -221,7 +221,7 @@ namespace NetExtender.WindowsPresentation.Types.Bindings
             Converter = null;
         }
     }
-    
+
     public sealed class NotNullOrDefaultVisibilityBinding : CustomBinding
     {
         public override IValueConverter? Converter
@@ -241,7 +241,7 @@ namespace NetExtender.WindowsPresentation.Types.Bindings
                 };
             }
         }
-        
+
         public Boolean NullIsCollapsed
         {
             get
@@ -259,7 +259,7 @@ namespace NetExtender.WindowsPresentation.Types.Bindings
                 Converter = value ? NotNullOrDefaultToVisibilityConverter.Collapsed : NotNullOrDefaultToVisibilityConverter.Hidden;
             }
         }
-        
+
         public NotNullOrDefaultVisibilityBinding()
         {
             Converter = null;

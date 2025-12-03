@@ -15,7 +15,7 @@ namespace NetExtender.Utilities.UserInterface
         {
             return RegisterHotKey(window, (WindowsHotKeyAction) hotkey, out id);
         }
-        
+
         public static Boolean RegisterHotKey(this Window window, WindowsHotKeyAction hotkey, out Int32 id)
         {
             return window switch
@@ -25,12 +25,12 @@ namespace NetExtender.Utilities.UserInterface
                 _ => HotKeyUtilities.RegisterHotKey(window.GetHandle(), hotkey, out id)
             };
         }
-        
+
         public static Boolean RegisterHotKey<T>(this Window window, HotKeyAction<T> hotkey) where T : unmanaged, IComparable<T>, IConvertible
         {
             return RegisterHotKey(window, (WindowsHotKeyAction<T>) hotkey);
         }
-        
+
         public static Boolean RegisterHotKey<T>(this Window window, WindowsHotKeyAction<T> hotkey) where T : unmanaged, IComparable<T>, IConvertible
         {
             return window switch
@@ -70,7 +70,7 @@ namespace NetExtender.Utilities.UserInterface
                 _ => HotKeyUtilities.RegisterHotKey(window.GetHandle(), hotkeys)
             };
         }
-        
+
         public static Int32?[] RegisterHotKey<T>(this Window window, params HotKeyAction<T>[] hotkeys) where T : unmanaged, IComparable<T>, IConvertible
         {
             if (window is null)
@@ -82,10 +82,10 @@ namespace NetExtender.Utilities.UserInterface
             {
                 throw new ArgumentNullException(nameof(hotkeys));
             }
-            
+
             return RegisterHotKey(window, hotkeys.Select(hotkey => (WindowsHotKeyAction<T>) hotkey).ToArray());
         }
-        
+
         public static Int32?[] RegisterHotKey<T>(this Window window, params WindowsHotKeyAction<T>[] hotkeys) where T : unmanaged, IComparable<T>, IConvertible
         {
             if (hotkeys is null)
@@ -100,7 +100,7 @@ namespace NetExtender.Utilities.UserInterface
                 _ => HotKeyUtilities.RegisterHotKey(window.GetHandle(), hotkeys)
             };
         }
-        
+
         public static Boolean UnregisterHotKey(this Window window, Int32 id)
         {
             return window switch
@@ -110,7 +110,7 @@ namespace NetExtender.Utilities.UserInterface
                 _ => HotKeyUtilities.UnregisterHotKey(window.GetHandle(), id)
             };
         }
-        
+
         public static Boolean UnregisterHotKey<T>(this Window window, T id) where T : unmanaged, IConvertible
         {
             return window switch

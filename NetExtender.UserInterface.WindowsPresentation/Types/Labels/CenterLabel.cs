@@ -16,7 +16,7 @@ namespace NetExtender.UserInterface.WindowsPresentation
             HorizontalContentAlignmentProperty.OverrideMetadataDefaultValue<CenterLabel, HorizontalAlignment>(HorizontalAlignment.Center);
             VerticalContentAlignmentProperty.OverrideMetadataDefaultValue<CenterLabel, VerticalAlignment>(VerticalAlignment.Center);
         }
-        
+
         public CenterLabel()
         {
             HorizontalContentAlignment = HorizontalAlignment.Center;

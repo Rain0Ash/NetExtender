@@ -65,13 +65,13 @@ namespace NetExtender.WindowsPresentation.Types.Commands
             ExecuteMultiHandler = multiexecute ?? DefaultExecute;
             RevertMultiHandler = multirevert ?? DefaultRevert;
         }
-        
+
         [return: NotNullIfNotNull("action")]
         protected static Action<T?>? ToSingle(Action<IEnumerable<T?>?>? action)
         {
             return action is not null ? parameter => action(EnumerableUtilities.Factory(parameter)) : null;
         }
-        
+
         protected void DefaultExecute(T? parameter)
         {
             base.Execute(parameter);
@@ -83,13 +83,13 @@ namespace NetExtender.WindowsPresentation.Types.Commands
             {
                 return;
             }
-            
+
             foreach (T? value in parameter)
             {
                 Execute(value);
             }
         }
-        
+
         protected void DefaultRevert(T? parameter)
         {
             base.Revert(parameter);
@@ -101,18 +101,18 @@ namespace NetExtender.WindowsPresentation.Types.Commands
             {
                 return;
             }
-            
+
             foreach (T? value in parameter)
             {
                 Revert(value);
             }
         }
-        
+
         public Boolean CanExecute(IEnumerable<T?>? parameter)
         {
             return CanExecute(null, parameter);
         }
-        
+
         [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
         public Boolean CanExecute(Object? sender, IEnumerable<T?>? parameter)
         {
@@ -127,38 +127,38 @@ namespace NetExtender.WindowsPresentation.Types.Commands
                 {
                     throw;
                 }
-                
+
                 return result;
             }
         }
-        
+
         public Boolean CanExecute(IEnumerable? parameter)
         {
             return CanExecute(null, parameter);
         }
-        
+
         public Boolean CanExecute(Object? sender, IEnumerable? parameter)
         {
             return CanExecute(sender, parameter?.OfType<T>());
         }
-        
+
         protected override Boolean CanExecuteImplementation(Object? sender, Object? parameter)
         {
             return parameter switch
             {
-                null => CanExecuteImplementation(sender, default(T)),
+                null => CanExecuteImplementation(sender, default),
                 T value => CanExecuteImplementation(sender, value),
                 IEnumerable<T> value => CanExecute(sender, value),
                 IEnumerable value => CanExecute(sender, value),
                 _ => base.CanExecuteImplementation(sender, parameter)
             };
         }
-        
+
         public void Execute(IEnumerable<T?>? parameter)
         {
             Execute(null, parameter);
         }
-        
+
         [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
         public void Execute(Object? sender, IEnumerable<T?>? parameter)
         {
@@ -175,23 +175,23 @@ namespace NetExtender.WindowsPresentation.Types.Commands
                 }
             }
         }
-        
+
         public void Execute(IEnumerable? parameter)
         {
             Execute(null, parameter);
         }
-        
+
         public void Execute(Object? sender, IEnumerable? parameter)
         {
             Execute(sender, parameter?.OfType<T>());
         }
-        
+
         protected override void ExecuteImplementation(Object? sender, Object? parameter)
         {
             switch (parameter)
             {
                 case null:
-                    ExecuteImplementation(sender, default(T));
+                    ExecuteImplementation(sender, default);
                     return;
                 case T value:
                     ExecuteImplementation(sender, value);
@@ -207,12 +207,12 @@ namespace NetExtender.WindowsPresentation.Types.Commands
                     return;
             }
         }
-        
+
         public Boolean CanRevert(IEnumerable<T?>? parameter)
         {
             return CanRevert(null, parameter);
         }
-        
+
         [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
         public Boolean CanRevert(Object? sender, IEnumerable<T?>? parameter)
         {
@@ -227,38 +227,38 @@ namespace NetExtender.WindowsPresentation.Types.Commands
                 {
                     throw;
                 }
-                
+
                 return result;
             }
         }
-        
+
         public Boolean CanRevert(IEnumerable? parameter)
         {
             return CanRevert(null, parameter);
         }
-        
+
         public Boolean CanRevert(Object? sender, IEnumerable? parameter)
         {
             return CanRevert(sender, parameter?.OfType<T>());
         }
-        
+
         protected override Boolean CanRevertImplementation(Object? sender, Object? parameter)
         {
             return parameter switch
             {
-                null => CanRevertImplementation(sender, default(T)),
+                null => CanRevertImplementation(sender, default),
                 T value => CanRevertImplementation(sender, value),
                 IEnumerable<T> value => CanRevert(sender, value),
                 IEnumerable value => CanRevert(sender, value),
                 _ => base.CanRevertImplementation(sender, parameter)
             };
         }
-        
+
         public void Revert(IEnumerable<T?>? parameter)
         {
             Revert(null, parameter);
         }
-        
+
         [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
         public void Revert(Object? sender, IEnumerable<T?>? parameter)
         {
@@ -275,23 +275,23 @@ namespace NetExtender.WindowsPresentation.Types.Commands
                 }
             }
         }
-        
+
         public void Revert(IEnumerable? parameter)
         {
             Revert(null, parameter);
         }
-        
+
         public void Revert(Object? sender, IEnumerable? parameter)
         {
             Revert(sender, parameter?.OfType<T>());
         }
-        
+
         protected override void RevertImplementation(Object? sender, Object? parameter)
         {
             switch (parameter)
             {
                 case null:
-                    RevertImplementation(sender, default(T));
+                    RevertImplementation(sender, default);
                     return;
                 case T value:
                     RevertImplementation(sender, value);
@@ -308,7 +308,7 @@ namespace NetExtender.WindowsPresentation.Types.Commands
             }
         }
     }
-    
+
     public class RelaySenderRevertMultiCommand<T> : RelaySenderRevertCommand<T>, IRevertMultiCommand<T>
     {
         public SenderAction<IEnumerable<T?>?> ExecuteMultiHandler { get; }
@@ -360,13 +360,13 @@ namespace NetExtender.WindowsPresentation.Types.Commands
             ExecuteMultiHandler = multiexecute ?? DefaultExecute;
             RevertMultiHandler = multirevert ?? DefaultRevert;
         }
-        
+
         [return: NotNullIfNotNull("action")]
         protected static SenderAction<T?>? ToSingle(SenderAction<IEnumerable<T?>?>? action)
         {
             return action is not null ? (sender, parameter) => action(sender, EnumerableUtilities.Factory(parameter)) : null;
         }
-        
+
         protected void DefaultExecute(Object? sender, T? parameter)
         {
             base.Execute(sender, parameter);
@@ -378,13 +378,13 @@ namespace NetExtender.WindowsPresentation.Types.Commands
             {
                 return;
             }
-            
+
             foreach (T? value in parameter)
             {
                 Execute(sender, value);
             }
         }
-        
+
         protected void DefaultRevert(Object? sender, T? parameter)
         {
             base.Revert(sender, parameter);
@@ -396,18 +396,18 @@ namespace NetExtender.WindowsPresentation.Types.Commands
             {
                 return;
             }
-            
+
             foreach (T? value in parameter)
             {
                 Revert(sender, value);
             }
         }
-        
+
         public Boolean CanExecute(IEnumerable<T?>? parameter)
         {
             return CanExecute(null, parameter);
         }
-        
+
         [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
         public Boolean CanExecute(Object? sender, IEnumerable<T?>? parameter)
         {
@@ -422,38 +422,38 @@ namespace NetExtender.WindowsPresentation.Types.Commands
                 {
                     throw;
                 }
-                
+
                 return result;
             }
         }
-        
+
         public Boolean CanExecute(IEnumerable? parameter)
         {
             return CanExecute(null, parameter);
         }
-        
+
         public Boolean CanExecute(Object? sender, IEnumerable? parameter)
         {
             return CanExecute(sender, parameter?.OfType<T>());
         }
-        
+
         protected override Boolean CanExecuteImplementation(Object? sender, Object? parameter)
         {
             return parameter switch
             {
-                null => CanExecuteImplementation(sender, default(T)),
+                null => CanExecuteImplementation(sender, default),
                 T value => CanExecuteImplementation(sender, value),
                 IEnumerable<T> value => CanExecute(sender, value),
                 IEnumerable value => CanExecute(sender, value),
                 _ => base.CanExecuteImplementation(sender, parameter)
             };
         }
-        
+
         public void Execute(IEnumerable<T?>? parameter)
         {
             Execute(null, parameter);
         }
-        
+
         [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
         public void Execute(Object? sender, IEnumerable<T?>? parameter)
         {
@@ -470,23 +470,23 @@ namespace NetExtender.WindowsPresentation.Types.Commands
                 }
             }
         }
-        
+
         public void Execute(IEnumerable? parameter)
         {
             Execute(null, parameter);
         }
-        
+
         public void Execute(Object? sender, IEnumerable? parameter)
         {
             Execute(sender, parameter?.OfType<T>());
         }
-        
+
         protected override void ExecuteImplementation(Object? sender, Object? parameter)
         {
             switch (parameter)
             {
                 case null:
-                    ExecuteImplementation(sender, default(T));
+                    ExecuteImplementation(sender, default);
                     return;
                 case T value:
                     ExecuteImplementation(sender, value);
@@ -502,12 +502,12 @@ namespace NetExtender.WindowsPresentation.Types.Commands
                     return;
             }
         }
-        
+
         public Boolean CanRevert(IEnumerable<T?>? parameter)
         {
             return CanRevert(null, parameter);
         }
-        
+
         [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
         public Boolean CanRevert(Object? sender, IEnumerable<T?>? parameter)
         {
@@ -522,38 +522,38 @@ namespace NetExtender.WindowsPresentation.Types.Commands
                 {
                     throw;
                 }
-                
+
                 return result;
             }
         }
-        
+
         public Boolean CanRevert(IEnumerable? parameter)
         {
             return CanRevert(null, parameter);
         }
-        
+
         public Boolean CanRevert(Object? sender, IEnumerable? parameter)
         {
             return CanRevert(sender, parameter?.OfType<T>());
         }
-        
+
         protected override Boolean CanRevertImplementation(Object? sender, Object? parameter)
         {
             return parameter switch
             {
-                null => CanRevertImplementation(sender, default(T)),
+                null => CanRevertImplementation(sender, default),
                 T value => CanRevertImplementation(sender, value),
                 IEnumerable<T> value => CanRevert(sender, value),
                 IEnumerable value => CanRevert(sender, value),
                 _ => base.CanRevertImplementation(sender, parameter)
             };
         }
-        
+
         public void Revert(IEnumerable<T?>? parameter)
         {
             Revert(null, parameter);
         }
-        
+
         [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
         public void Revert(Object? sender, IEnumerable<T?>? parameter)
         {
@@ -570,23 +570,23 @@ namespace NetExtender.WindowsPresentation.Types.Commands
                 }
             }
         }
-        
+
         public void Revert(IEnumerable? parameter)
         {
             Revert(null, parameter);
         }
-        
+
         public void Revert(Object? sender, IEnumerable? parameter)
         {
             Revert(sender, parameter?.OfType<T>());
         }
-        
+
         protected override void RevertImplementation(Object? sender, Object? parameter)
         {
             switch (parameter)
             {
                 case null:
-                    RevertImplementation(sender, default(T));
+                    RevertImplementation(sender, default);
                     return;
                 case T value:
                     RevertImplementation(sender, value);

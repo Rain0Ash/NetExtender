@@ -15,7 +15,7 @@ namespace NetExtender.Utilities.UserInterface.Types
         {
             return value ? DialogResult.Yes : DialogResult.No;
         }
-        
+
         public static DialogResult ToDialogResult(Boolean? value)
         {
             return value switch

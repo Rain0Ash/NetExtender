@@ -25,7 +25,7 @@ namespace NetExtender.Types.Monads
         {
             return new Result<T, Exception>(value.Internal);
         }
-        
+
         public static implicit operator Boolean(Result<T> value)
         {
             return value.Internal;
@@ -80,7 +80,7 @@ namespace NetExtender.Types.Monads
         {
             return first.Internal != second;
         }
-        
+
         public static Boolean operator ==(Result<T> first, Result<T> second)
         {
             return first.Internal == second.Internal;
@@ -152,7 +152,7 @@ namespace NetExtender.Types.Monads
         }
 
         private readonly Result<T, Exception> Internal;
-        
+
         public T Value
         {
             get
@@ -216,13 +216,13 @@ namespace NetExtender.Types.Monads
         {
             Internal = new Result<T, Exception>(info, context);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Result<T> Create(T value)
         {
             return new Result<T>(value);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Result<T> Create(Exception exception)
         {
@@ -526,7 +526,7 @@ namespace NetExtender.Types.Monads
         {
             return new Result<T>(new Result<T, Exception>(value.Internal, value.Exception));
         }
-        
+
         public static implicit operator Boolean(Result<T, TException> value)
         {
             return value.Exception is null;
@@ -581,7 +581,7 @@ namespace NetExtender.Types.Monads
         {
             return !(first == second);
         }
-        
+
         public static Boolean operator ==(Result<T, TException> first, Result<T, TException> second)
         {
             return first.Equals(second);
@@ -696,7 +696,7 @@ namespace NetExtender.Types.Monads
                 return Exception is null && !_value.HasValue;
             }
         }
-        
+
         public Result(T value)
             : this(value, null)
         {
@@ -724,13 +724,13 @@ namespace NetExtender.Types.Monads
             _value = info.GetValue<T>(nameof(Value));
             Exception = info.GetValue<TException>(nameof(Exception));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Result<T, TException> Create(T value)
         {
             return new Result<T, TException>(value);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Result<T, TException> Create(TException exception)
         {
@@ -807,7 +807,7 @@ namespace NetExtender.Types.Monads
             {
                 return Exception is not null ? other.Exception is not null ? 0 : 1 : -1;
             }
-            
+
             return comparer.SafeCompare(Internal, other.Value) ?? 0;
         }
 
@@ -822,7 +822,7 @@ namespace NetExtender.Types.Monads
             {
                 return Exception is not null ? other.Exception is not null ? 0 : 1 : -1;
             }
-            
+
             return comparer.SafeCompare(Internal, other.Internal) ?? 0;
         }
 
@@ -837,7 +837,7 @@ namespace NetExtender.Types.Monads
             {
                 return Exception is not null ? other.Exception is not null ? 0 : 1 : -1;
             }
-            
+
             return comparer.SafeCompare(Internal, other.Value) ?? 0;
         }
 
@@ -852,12 +852,12 @@ namespace NetExtender.Types.Monads
             {
                 return 1;
             }
-            
+
             if (Exception is not null || other.Exception is not null)
             {
                 return Exception is not null ? other.Exception is not null ? 0 : 1 : -1;
             }
-            
+
             return comparer.SafeCompare(Internal, other.Value) ?? 0;
         }
 
@@ -914,7 +914,7 @@ namespace NetExtender.Types.Monads
             {
                 return Equals(Exception, other.Exception);
             }
-            
+
             comparer ??= EqualityComparer<T>.Default;
             return comparer.Equals(Internal, other.Value);
         }
@@ -930,7 +930,7 @@ namespace NetExtender.Types.Monads
             {
                 return Equals(Exception, other.Exception);
             }
-            
+
             comparer ??= EqualityComparer<T>.Default;
             return comparer.Equals(Internal, other.Internal);
         }
@@ -946,7 +946,7 @@ namespace NetExtender.Types.Monads
             {
                 return Equals(Exception, other.Exception);
             }
-            
+
             comparer ??= EqualityComparer<T>.Default;
             return comparer.Equals(Internal, other.Value);
         }
@@ -967,7 +967,7 @@ namespace NetExtender.Types.Monads
             {
                 return Equals(Exception, other.Exception);
             }
-            
+
             comparer ??= EqualityComparer<T>.Default;
             return comparer.Equals(Internal, other.Value);
         }

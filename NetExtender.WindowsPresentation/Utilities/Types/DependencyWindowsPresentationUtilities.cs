@@ -17,7 +17,7 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
         {
             ReactiveWindowsPresentationServiceProviderUtilities.Initialize();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static IServiceScope CreateScope(this IServiceProvider provider)
         {
@@ -25,10 +25,10 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(provider));
             }
-            
+
             return ReactiveWindowsPresentationServiceProviderUtilities.CreateScope(provider);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static IAsyncServiceScope CreateAsyncScope(this IServiceProvider provider)
         {
@@ -36,7 +36,7 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(provider));
             }
-            
+
             return ReactiveWindowsPresentationServiceProviderUtilities.CreateAsyncScope(provider);
         }
 
@@ -45,28 +45,28 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
         private static class ReactiveWindowsPresentationServiceProviderUtilities
         {
             private const String ReactiveUI = nameof(ReactiveUI);
-            
+
             [ReflectionNaming]
             public static Func<IServiceProvider, IServiceScope> CreateScope { get; }
-            
+
             [ReflectionNaming]
             public static Func<IServiceProvider, IAsyncServiceScope> CreateAsyncScope { get; }
-            
+
             static ReactiveWindowsPresentationServiceProviderUtilities()
             {
                 if (!Initialize(out MethodInfo? scope, out MethodInfo? async))
                 {
                     throw new NotSupportedReflectionException($"Not supported. Please, check dependency '{nameof(NetExtender)}.{nameof(WindowsPresentation)}.{nameof(ReactiveUI)}.{nameof(DependencyInjection)}'.");
                 }
-                
+
                 CreateScope = scope.CreateDelegate<Func<IServiceProvider, IServiceScope>>();
                 CreateAsyncScope = async.CreateDelegate<Func<IServiceProvider, IAsyncServiceScope>>();
             }
-            
+
             public static void Initialize()
             {
             }
-            
+
             private static Boolean Initialize([MaybeNullWhen(false)] out MethodInfo scope, [MaybeNullWhen(false)] out MethodInfo async)
             {
                 try

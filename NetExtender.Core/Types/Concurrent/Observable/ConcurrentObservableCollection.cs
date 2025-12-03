@@ -66,11 +66,18 @@ namespace NetExtender.Types.Concurrent.Observable
         {
         }
 
+#if NET8_0_OR_GREATER
+        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
+#endif
         protected ConcurrentObservableCollection(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
         }
 
+#if NET8_0_OR_GREATER
+        [Obsolete("Formatter-based serialization is obsolete and should not be used.", DiagnosticId = "SYSLIB0050", UrlFormat = "https://aka.ms/dotnet-warnings/{0}")]
+#endif
         public sealed override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             base.GetObjectData(info, context);
@@ -168,7 +175,7 @@ namespace NetExtender.Types.Concurrent.Observable
             }
         }
     }
-    
+
     [Serializable]
     public abstract class ConcurrentObservableCollection<T, TSelf> : ConcurrentObservableBase<T, ImmutableList<T>, TSelf>, IConcurrentObservableList<T>, IReadOnlyList<T>, IList where TSelf : ConcurrentObservableCollection<T, TSelf>
     {
@@ -300,6 +307,10 @@ namespace NetExtender.Types.Concurrent.Observable
             PropertyChanged += OnViewChanged;
         }
 
+#if NET8_0_OR_GREATER
+        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
+#endif
         protected ConcurrentObservableCollection(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
@@ -309,6 +320,9 @@ namespace NetExtender.Types.Concurrent.Observable
             PropertyChanged += OnViewChanged;
         }
 
+#if NET8_0_OR_GREATER
+        [Obsolete("Formatter-based serialization is obsolete and should not be used.", DiagnosticId = "SYSLIB0050", UrlFormat = "https://aka.ms/dotnet-warnings/{0}")]
+#endif
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             base.GetObjectData(info, context);
@@ -344,7 +358,7 @@ namespace NetExtender.Types.Concurrent.Observable
                 _view.Freeze = true;
                 return;
             }
-            
+
             Lock.EnterWriteLock();
             _view.Freeze = true;
             Lock.ExitWriteLock();
@@ -357,7 +371,7 @@ namespace NetExtender.Types.Concurrent.Observable
                 _view.Freeze = false;
                 return;
             }
-            
+
             Lock.EnterWriteLock();
             _view.Freeze = false;
             Lock.ExitWriteLock();
@@ -434,7 +448,7 @@ namespace NetExtender.Types.Concurrent.Observable
             {
                 throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
-            
+
             Exception? exception = Notify((Index: index, Item: item),
                 static (_, modify, argument) => modify.Insert(argument.Index, argument.Item),
                 static (_, _, _, argument) => new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, argument.Item, argument.Index)
@@ -452,12 +466,12 @@ namespace NetExtender.Types.Concurrent.Observable
             {
                 throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
-            
+
             if (items is null || items.CountIfMaterialized() <= 0)
             {
                 return;
             }
-            
+
             Exception? exception = Notify((Index: index, Items: items),
                 static (_, modify, argument) => modify.InsertRange(argument.Index, argument.Items),
                 static (_, @new, old, argument) => @new.Count > old.Count ? new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, Source(@new.GetRange(argument.Index, @new.Count - old.Count)), argument.Index) : null
@@ -501,7 +515,7 @@ namespace NetExtender.Types.Concurrent.Observable
             {
                 throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
-            
+
             FlowResult<T> result = Notify(index,
                 static (_, modify, index) => modify[index].Flow(),
                 static (_, modify, index, _) => modify.RemoveAt(index),
@@ -568,7 +582,7 @@ namespace NetExtender.Types.Concurrent.Observable
             {
                 return;
             }
-            
+
             Exception? exception = Notify((Items: items, Comparer: comparer),
                 static (_, modify, argument) => modify.RemoveRange(argument.Items, argument.Comparer),
                 static (_, @new, old, argument) => @new.Count < old.Count ? new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, Source(@new.RemoveRange(old, argument.Comparer))) : null
@@ -587,7 +601,7 @@ namespace NetExtender.Types.Concurrent.Observable
                 Clear();
                 return;
             }
-            
+
             Exception? exception = Notify(items,
                 static (_, _, items) => ImmutableList.CreateRange(items),
                 static (_, _, old, _) => old.Count > 0 ? new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, Source(old), 0) : null,
@@ -711,7 +725,7 @@ namespace NetExtender.Types.Concurrent.Observable
                 {
                     throw new ArgumentOutOfRangeException(nameof(index), index, null);
                 }
-                
+
                 FlowResult<T> result = Notify((index, value),
                     static (TSelf _, ImmutableList<T> modify, (Int32 Index, T Value) argument) => modify[argument.Index].Flow(),
                     static (TSelf _, ImmutableList<T> modify, (Int32 Index, T Value) argument, T _) => modify.SetItem(argument.Index, argument.Value),

@@ -19,22 +19,22 @@ namespace NetExtender.Types.Reflection
         {
             return new ReflectionParameterSignature(value);
         }
-        
+
         public static implicit operator ReflectionParameterSignature(TypeSignature value)
         {
             return new ReflectionParameterSignature(value);
         }
-        
+
         public static implicit operator ReflectionParameterSignature(Type? value)
         {
             return new ReflectionParameterSignature(value);
         }
-        
+
         public static implicit operator ReflectionParameterSignature(ParameterInfo? value)
         {
             return new ReflectionParameterSignature(value);
         }
-        
+
         public static explicit operator ReflectionParameterSignature(Predicate<String>? value)
         {
             return new ReflectionParameterSignature(value);

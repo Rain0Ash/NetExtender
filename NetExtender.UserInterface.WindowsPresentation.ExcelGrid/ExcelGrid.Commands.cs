@@ -18,16 +18,16 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
         {
             Copy("\t");
         }
-        
+
         public virtual void Copy(String? separator)
         {
             ExcelCellRange range = SelectionRange;
-            
+
             if (!TryGet(range, out Object?[,]? values))
             {
                 return;
             }
-            
+
             DataObject data = new DataObject();
             if (TryGet(range, values, out String?[,]? strings))
             {
@@ -45,10 +45,10 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 {
                 }
             }
-            
+
             Clipboard.SetDataObject(data);
         }
-        
+
         public virtual void Cut()
         {
             if (IsReadOnly)
@@ -56,58 +56,58 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 Copy();
                 return;
             }
-            
+
             Copy();
             Clear();
         }
-        
+
         public virtual void Paste()
         {
             if (IsReadOnly)
             {
                 return;
             }
-            
+
             Object[,]? values = GetClipboardData();
-            
+
             if (values is null || !TrySet(SelectionRange, values, out ExcelCellRange range))
             {
                 return;
             }
-            
+
             SelectionCell = range.BottomRight;
             CurrentCell = range.TopLeft;
-            
+
             ScrollIntoView(CurrentCell);
         }
-        
+
         protected virtual Object[,]? GetClipboardData()
         {
             Object[,]? values = null;
-            
+
             if (Clipboard.GetDataObject() is { } data)
             {
                 values = data.GetData(typeof(ExcelGrid)) as Object[,];
             }
-            
+
             if (values is not null || !Clipboard.ContainsText())
             {
                 return values;
             }
-            
+
             String text = Clipboard.GetText().Trim();
             return TextToArray(text);
         }
-        
+
         private static Char[] Trim { get; } = " \r\n\t".ToCharArray();
-        
+
         protected virtual Object[,]? TextToArray(String value)
         {
             if (value is null)
             {
                 throw new ArgumentNullException(nameof(value));
             }
-            
+
             Int32 rows = 0;
             Int32 columns = 0;
             String[] lines = value.Split('\n');
@@ -120,12 +120,12 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                     columns = fields.Length;
                 }
             }
-            
+
             if (rows <= 0 || columns <= 0)
             {
                 return null;
             }
-            
+
             Int32 row = 0;
             Object[,] result = new Object[rows, columns];
             foreach (String line in lines)
@@ -175,112 +175,112 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
             {
                 args.CanExecute = sender is ExcelGrid { CanSort: true };
             }
-            
+
             private static void ExecuteSortAscending(Object? sender, ExecutedRoutedEventArgs args)
             {
                 (sender as ExcelGrid)?.Sort(ListSortDirection.Ascending);
             }
-            
+
             private static void CanExecuteSortDescending(Object? sender, CanExecuteRoutedEventArgs args)
             {
                 args.CanExecute = sender is ExcelGrid { CanSort: true };
             }
-            
+
             private static void ExecuteSortDescending(Object? sender, ExecutedRoutedEventArgs args)
             {
                 (sender as ExcelGrid)?.Sort(ListSortDirection.Descending);
             }
-            
+
             private static void CanExecuteClearSort(Object? sender, CanExecuteRoutedEventArgs args)
             {
                 args.CanExecute = sender is ExcelGrid { CanSort: true };
             }
-            
+
             private static void ExecuteClearSort(Object? sender, ExecutedRoutedEventArgs args)
             {
                 (sender as ExcelGrid)?.ClearSort();
             }
-            
+
             private static void CanExecuteInsertColumns(Object? sender, CanExecuteRoutedEventArgs args)
             {
                 args.CanExecute = sender is ExcelGrid { CanInsertColumns: true };
             }
-            
+
             private static void ExecuteInsertColumns(Object? sender, ExecutedRoutedEventArgs args)
             {
                 (sender as ExcelGrid)?.InsertColumns();
             }
-            
+
             private static void CanExecuteInsertRows(Object? sender, CanExecuteRoutedEventArgs args)
             {
                 args.CanExecute = sender is ExcelGrid { CanInsertRows: true };
             }
-            
+
             private static void ExecuteInsertRows(Object? sender, ExecutedRoutedEventArgs args)
             {
                 (sender as ExcelGrid)?.InsertRows();
             }
-            
+
             private static void CanExecuteDeleteColumns(Object? sender, CanExecuteRoutedEventArgs args)
             {
                 args.CanExecute = sender is ExcelGrid { CanDeleteColumns: true };
             }
-            
+
             private static void ExecuteDeleteColumns(Object? sender, ExecutedRoutedEventArgs args)
             {
                 (sender as ExcelGrid)?.DeleteColumns();
             }
-            
+
             private static void CanExecuteDeleteRows(Object? sender, CanExecuteRoutedEventArgs args)
             {
                 args.CanExecute = sender is ExcelGrid { CanDeleteRows: true };
             }
-            
+
             private static void ExecuteDeleteRows(Object? sender, ExecutedRoutedEventArgs args)
             {
                 (sender as ExcelGrid)?.DeleteRows();
             }
-            
+
             private static void CanExecuteCopy(Object? sender, CanExecuteRoutedEventArgs args)
             {
                 args.CanExecute = sender is ExcelGrid;
             }
-            
+
             private static void ExecuteCopy(Object? sender, ExecutedRoutedEventArgs args)
             {
                 (sender as ExcelGrid)?.Copy();
             }
-            
+
             private static void CanExecuteCut(Object? sender, CanExecuteRoutedEventArgs args)
             {
                 args.CanExecute = sender is ExcelGrid;
             }
-            
+
             private static void ExecuteCut(Object? sender, ExecutedRoutedEventArgs args)
             {
                 (sender as ExcelGrid)?.Cut();
             }
-            
+
             private static void CanExecutePaste(Object? sender, CanExecuteRoutedEventArgs args)
             {
                 args.CanExecute = sender is ExcelGrid;
             }
-            
+
             private static void ExecutePaste(Object? sender, ExecutedRoutedEventArgs args)
             {
                 (sender as ExcelGrid)?.Paste();
             }
-            
+
             private static void CanExecuteClear(Object? sender, CanExecuteRoutedEventArgs args)
             {
                 args.CanExecute = sender is ExcelGrid { CanClear: true };
             }
-            
+
             private static void ExecuteClear(Object? sender, ExecutedRoutedEventArgs args)
             {
                 (sender as ExcelGrid)?.Clear();
             }
-            
+
             public static void Setup(ExcelGrid excel)
             {
                 if (excel is null)

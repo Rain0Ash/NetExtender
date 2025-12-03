@@ -12,7 +12,7 @@ namespace NetExtender.JWT
             : this(new T())
         {
         }
-        
+
         public JWTSerializerInstanceFactory(T serializer)
             : base(serializer)
         {

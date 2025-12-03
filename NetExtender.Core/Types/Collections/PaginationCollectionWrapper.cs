@@ -10,7 +10,7 @@ namespace NetExtender.Types.Collections
     public class PaginationPartialCollectionWrapper<T, TCollection> : PaginationCollectionWrapper<T, TCollection> where TCollection : class, ICollection<T>
     {
         public override Int32 Count { get; }
-        
+
         public override Int32 Items
         {
             get
@@ -18,19 +18,19 @@ namespace NetExtender.Types.Collections
                 return base.Count;
             }
         }
-        
+
         public PaginationPartialCollectionWrapper(TCollection source, Int32 size, Int32 count)
             : this(source, 0, size, count)
         {
         }
-        
+
         public PaginationPartialCollectionWrapper(TCollection source, Int32 index, Int32 size, Int32 count)
             : base(source, index, size)
         {
             Count = count >= 0 ? count : throw new ArgumentOutOfRangeException(nameof(count), count, null);
         }
     }
-    
+
     public class PaginationCollectionWrapper<T, TCollection> : PaginationCollection<T, TCollection>, IPaginationCollection<T, TCollection> where TCollection : class, ICollection<T>
     {
         public override Int32 Count
@@ -40,7 +40,7 @@ namespace NetExtender.Types.Collections
                 return Source.Count;
             }
         }
-        
+
         public override Int32 Items
         {
             get
@@ -48,7 +48,7 @@ namespace NetExtender.Types.Collections
                 return Size;
             }
         }
-        
+
         public Boolean IsReadOnly
         {
             get
@@ -56,12 +56,12 @@ namespace NetExtender.Types.Collections
                 return Source.IsReadOnly;
             }
         }
-        
+
         public PaginationCollectionWrapper(TCollection source, Int32 size)
             : this(source, 0, size)
         {
         }
-        
+
         public PaginationCollectionWrapper(TCollection source, Int32 index, Int32 size)
             : base(source, index, size)
         {

@@ -83,7 +83,7 @@ namespace NetExtender.Utilities.Types
                 return false;
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean GetByteCount(String? first, String? second, Char? separator, out EncodingCount result)
         {
@@ -107,11 +107,11 @@ namespace NetExtender.Utilities.Types
                 result = default;
                 return false;
             }
-            
+
             result = new EncodingCount(encoding, (first?.Length ?? 0) + (second?.Length ?? 0) + (separator.HasValue ? 1 : 0), count);
             return true;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean GetByteCount(String? first, String? second, String? separator, out EncodingCount result)
         {
@@ -135,11 +135,11 @@ namespace NetExtender.Utilities.Types
                 result = default;
                 return false;
             }
-            
+
             result = new EncodingCount(encoding, (first?.Length ?? 0) + (second?.Length ?? 0) + (separator?.Length ?? 0), count);
             return true;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean GetByteCount(Char? separator, out EncodingCount result, params String?[]? values)
         {
@@ -170,7 +170,7 @@ namespace NetExtender.Utilities.Types
                     ++i;
                     length += value.Length;
                 }
-            
+
                 result = new EncodingCount(encoding, length + (--i > 0 ? i * (separator.HasValue ? 1 : 0) : 0), count);
                 return true;
             }
@@ -180,7 +180,7 @@ namespace NetExtender.Utilities.Types
                 return false;
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean GetByteCount(String? separator, out EncodingCount result, params String?[]? values)
         {
@@ -211,7 +211,7 @@ namespace NetExtender.Utilities.Types
                     ++i;
                     length += value.Length;
                 }
-            
+
                 result = new EncodingCount(encoding, length + (--i > 0 ? i * (separator?.Length ?? 0) : 0), count);
                 return true;
             }
@@ -290,7 +290,7 @@ namespace NetExtender.Utilities.Types
                 }
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Int32 GetByteCount(Char? separator, params String?[]? values)
         {
@@ -324,7 +324,7 @@ namespace NetExtender.Utilities.Types
                 {
                     Int32 i = 0;
                     Int32 count = 0;
-                    
+
                     foreach (String? value in values)
                     {
                         if (value is null)
@@ -335,12 +335,12 @@ namespace NetExtender.Utilities.Types
                         ++i;
                         count += encoding.GetByteCount(value);
                     }
-                    
+
                     return count + (separator is { } character && --i > 0 ? i * encoding.GetByteCount(stackalloc Char[] { character }) : 0);
                 }
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Int32 GetByteCount(String? separator, params String?[]? values)
         {
@@ -369,7 +369,7 @@ namespace NetExtender.Utilities.Types
                 {
                     Int32 i = 0;
                     Int32 count = 0;
-                    
+
                     foreach (String? value in values)
                     {
                         if (value is null)
@@ -380,7 +380,7 @@ namespace NetExtender.Utilities.Types
                         ++i;
                         count += encoding.GetByteCount(value);
                     }
-                    
+
                     return count + (!String.IsNullOrEmpty(separator) && --i > 0 ? i * encoding.GetByteCount(separator) : 0);
                 }
             }
@@ -393,7 +393,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(encoding));
             }
-            
+
             if (!encoding.Source.HasValue || encoding.Source.Value is not { } source)
             {
                 throw new InvalidOperationException("Result must have a source value.");
@@ -403,7 +403,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentException("Destination length does not match.", nameof(destination));
             }
-            
+
             encoding.Encoding.GetBytes(source, destination);
         }
 
@@ -419,7 +419,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentException("Destination length does not match.", nameof(destination));
             }
-            
+
             encoding.Encoding.GetBytes(source, destination);
         }
 
@@ -512,7 +512,7 @@ namespace NetExtender.Utilities.Types
 
             throw new InvalidOperationException("Unknown exception.");
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Byte[] GetBytes(String? first, String? second, Char? separator)
         {
@@ -533,7 +533,7 @@ namespace NetExtender.Utilities.Types
             }
 
             Byte[] result = new Byte[count];
-            
+
             Int32 offset = 0;
             if (!String.IsNullOrEmpty(first))
             {
@@ -554,7 +554,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new NeverOperationException("Count must match offset after encoding.");
             }
-            
+
             return result;
         }
 
@@ -574,7 +574,7 @@ namespace NetExtender.Utilities.Types
             {
                 return destination.Slice(written);
             }
-            
+
             if (written > destination.Length)
             {
                 throw new ArgumentOutOfRangeException(nameof(destination), destination.Length, $"The destination span is too small. Destination require length of at least '{written}'.");
@@ -582,7 +582,7 @@ namespace NetExtender.Utilities.Types
 
             throw new InvalidOperationException("Unknown exception.");
         }
-        
+
         public static void GetBytes(String? first, String? second, Char? separator, Span<Byte> destination, out Int32 written)
         {
             GetBytes(Default, first, second, separator, destination, out written);
@@ -599,7 +599,7 @@ namespace NetExtender.Utilities.Types
             {
                 return;
             }
-            
+
             if (written > destination.Length)
             {
                 throw new ArgumentOutOfRangeException(nameof(destination), destination.Length, $"The destination span is too small. Destination require length of at least '{written}'.");
@@ -787,7 +787,7 @@ namespace NetExtender.Utilities.Types
             return true;
         }
     }
-    
+
     [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
     public readonly struct EncodingCount : IEquatableStruct<EncodingCount>
     {

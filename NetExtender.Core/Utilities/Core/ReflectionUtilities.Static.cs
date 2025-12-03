@@ -77,7 +77,7 @@ namespace NetExtender.Utilities.Core
 
                 storage = new Dictionary<MemberInfo, Object>();
                 List<MemberInfo> members = new List<MemberInfo>();
-                
+
                 const BindingFlags binding = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
                 foreach (MemberInfo member in @base.GetMembers(binding))
                 {

@@ -41,7 +41,7 @@ namespace NetExtender.Serialization.Json
 {
     using System.Text.Json;
     using System.Text.Json.Serialization;
-    
+
     [StaticInitializerRequired]
     public static class DefaultJsonSerializerOptions
     {

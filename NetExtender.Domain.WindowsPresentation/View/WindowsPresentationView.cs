@@ -26,7 +26,7 @@ namespace NetExtender.Domains.WindowsPresentation.View
         {
         }
     }
-    
+
     public class WindowsPresentationView<T, TBuilder> : WindowsPresentationView where T : Window where TBuilder : IApplicationBuilder<T>, new()
     {
         protected sealed override Window? Context { get; set; }
@@ -41,7 +41,7 @@ namespace NetExtender.Domains.WindowsPresentation.View
         {
             Context = window ?? throw new ArgumentNullException(nameof(window));
         }
-        
+
         public WindowsPresentationView(TBuilder builder)
         {
             Builder = builder ?? throw new ArgumentNullException(nameof(builder));

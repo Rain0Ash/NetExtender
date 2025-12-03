@@ -46,7 +46,7 @@ namespace NetExtender.WindowsPresentation.Types.Commands
             {
                 return true;
             }
-            
+
             // ReSharper disable once LoopCanBeConvertedToQuery
             foreach (T? item in parameter)
             {
@@ -55,7 +55,7 @@ namespace NetExtender.WindowsPresentation.Types.Commands
                     return false;
                 }
             }
-            
+
             return true;
         }
 
@@ -68,7 +68,7 @@ namespace NetExtender.WindowsPresentation.Types.Commands
         {
             return CanExecute(sender, parameter?.OfType<T>());
         }
-        
+
         protected override Boolean CanExecuteImplementation(Object? sender, Object? parameter)
         {
             return parameter switch
@@ -80,12 +80,12 @@ namespace NetExtender.WindowsPresentation.Types.Commands
                 _ => base.CanExecuteImplementation(sender, parameter)
             };
         }
-        
+
         public void Execute(IEnumerable<T?>? parameter)
         {
             Execute(null, parameter);
         }
-        
+
         public virtual void Execute(Object? sender, IEnumerable<T?>? parameter)
         {
             if (parameter is null)
@@ -98,12 +98,12 @@ namespace NetExtender.WindowsPresentation.Types.Commands
                 Execute(sender, value);
             }
         }
-        
+
         public void Execute(IEnumerable? parameter)
         {
             Execute(null, parameter);
         }
-        
+
         public void Execute(Object? sender, IEnumerable? parameter)
         {
             Execute(sender, parameter?.OfType<T>());
@@ -130,19 +130,19 @@ namespace NetExtender.WindowsPresentation.Types.Commands
                     return;
             }
         }
-        
+
         public Boolean CanRevert(IEnumerable<T?>? parameter)
         {
             return CanRevert(null, parameter);
         }
-        
+
         public virtual Boolean CanRevert(Object? sender, IEnumerable<T?>? parameter)
         {
             if (parameter is null)
             {
                 return true;
             }
-            
+
             // ReSharper disable once LoopCanBeConvertedToQuery
             foreach (T? item in parameter)
             {
@@ -151,20 +151,20 @@ namespace NetExtender.WindowsPresentation.Types.Commands
                     return false;
                 }
             }
-            
+
             return true;
         }
-        
+
         public Boolean CanRevert(IEnumerable? parameter)
         {
             return CanRevert(null, parameter);
         }
-        
+
         public Boolean CanRevert(Object? sender, IEnumerable? parameter)
         {
             return CanRevert(sender, parameter?.OfType<T>());
         }
-        
+
         protected override Boolean CanRevertImplementation(Object? sender, Object? parameter)
         {
             return parameter switch
@@ -176,35 +176,35 @@ namespace NetExtender.WindowsPresentation.Types.Commands
                 _ => base.CanRevertImplementation(sender, parameter)
             };
         }
-        
+
         public void Revert(IEnumerable<T?>? parameter)
         {
             Revert(null, parameter);
         }
-        
+
         public virtual void Revert(Object? sender, IEnumerable<T?>? parameter)
         {
             if (parameter is null)
             {
                 return;
             }
-            
+
             foreach (T? value in parameter)
             {
                 Revert(sender, value);
             }
         }
-        
+
         public void Revert(IEnumerable? parameter)
         {
             Revert(null, parameter);
         }
-        
+
         public void Revert(Object? sender, IEnumerable? parameter)
         {
             Revert(sender, parameter?.OfType<T>());
         }
-        
+
         protected override void RevertImplementation(Object? sender, Object? parameter)
         {
             switch (parameter)
@@ -226,21 +226,21 @@ namespace NetExtender.WindowsPresentation.Types.Commands
                     return;
             }
         }
-        
+
         private sealed class None : RevertMultiCommand<T>
         {
             protected override void ExecuteImplementation(Object? sender, T? parameter)
             {
             }
-            
+
             public override void Execute(Object? sender, IEnumerable<T?>? parameter)
             {
             }
-            
+
             protected override void RevertImplementation(Object? sender, T? parameter)
             {
             }
-            
+
             public override void Revert(Object? sender, IEnumerable<T?>? parameter)
             {
             }
@@ -261,19 +261,19 @@ namespace NetExtender.WindowsPresentation.Types.Commands
                 });
             }
         }
-        
+
         public Boolean CanExecute(IEnumerable? parameter)
         {
             return CanExecute(null, parameter);
         }
-        
+
         public virtual Boolean CanExecute(Object? sender, IEnumerable? parameter)
         {
             if (parameter is null)
             {
                 return true;
             }
-            
+
             // ReSharper disable once LoopCanBeConvertedToQuery
             foreach (Object? value in parameter)
             {
@@ -282,40 +282,40 @@ namespace NetExtender.WindowsPresentation.Types.Commands
                     return false;
                 }
             }
-            
+
             return true;
         }
-        
+
         public void Execute(IEnumerable? parameter)
         {
             Execute(null, parameter);
         }
-        
+
         public virtual void Execute(Object? sender, IEnumerable? parameter)
         {
             if (parameter is null)
             {
                 return;
             }
-            
+
             foreach (Object? value in parameter)
             {
                 Execute(sender, value);
             }
         }
-        
+
         public Boolean CanRevert(IEnumerable? parameter)
         {
             return CanRevert(null, parameter);
         }
-        
+
         public virtual Boolean CanRevert(Object? sender, IEnumerable? parameter)
         {
             if (parameter is null)
             {
                 return true;
             }
-            
+
             // ReSharper disable once LoopCanBeConvertedToQuery
             foreach (Object? value in parameter)
             {
@@ -324,42 +324,42 @@ namespace NetExtender.WindowsPresentation.Types.Commands
                     return false;
                 }
             }
-            
+
             return true;
         }
-        
+
         public void Revert(IEnumerable? parameter)
         {
             Revert(null, parameter);
         }
-        
+
         public virtual void Revert(Object? sender, IEnumerable? parameter)
         {
             if (parameter is null)
             {
                 return;
             }
-            
+
             foreach (Object? value in parameter)
             {
                 Revert(sender, value);
             }
         }
-        
+
         private sealed class None : RevertMultiCommand
         {
             protected override void ExecuteImplementation(Object? sender, Object? parameter)
             {
             }
-            
+
             public override void Execute(Object? sender, IEnumerable? parameter)
             {
             }
-            
+
             protected override void RevertImplementation(Object? sender, Object? parameter)
             {
             }
-            
+
             public override void Revert(Object? sender, IEnumerable? parameter)
             {
             }

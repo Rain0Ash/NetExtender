@@ -14,7 +14,7 @@ namespace NetExtender.Utilities.Types
         {
             return new Result<T>(value);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Result<T> Result<T>(this Exception? value)
         {
@@ -104,7 +104,7 @@ namespace NetExtender.Utilities.Types
         {
             return value is not null ? new FlowResult<T, TException>(value) : default;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         private static void Verify<T>(ref Result<T> result, Span<Byte> bitmap, Byte index, ref Byte position, ref Byte count)
         {
@@ -116,7 +116,7 @@ namespace NetExtender.Utilities.Types
             bitmap[position = index] = position;
             ++count;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         private static void Verify<T, TException>(ref Result<T, TException> result, Span<Byte> bitmap, Byte index, ref Byte position, ref Byte count) where TException : Exception
         {
@@ -128,7 +128,7 @@ namespace NetExtender.Utilities.Types
             bitmap[position = index] = position;
             ++count;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         private static void Verify<T>(ref MathResult<T> result, Span<Byte> bitmap, Byte index, ref Byte position, ref Byte count) where T : struct, IEquatable<T>, IFormattable
         {
@@ -140,13 +140,13 @@ namespace NetExtender.Utilities.Types
             bitmap[position = index] = position;
             ++count;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Exception? Exception<T>(Result<T> result)
         {
             return result.Exception;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static Exception? Exception<T>(Result<T> first, Result<T> second)
         {
@@ -154,7 +154,7 @@ namespace NetExtender.Utilities.Types
             Span<Byte> bitmap = stackalloc Byte[size + 1];
             Byte position = 0;
             Byte count = 0;
-            
+
             Verify(ref second, bitmap, size, ref position, ref count);
             Verify(ref first, bitmap, size - 1, ref position, ref count);
 
@@ -183,7 +183,7 @@ namespace NetExtender.Utilities.Types
                         {
                             continue;
                         }
-                        
+
                         exceptions[position++] = (exception switch
                         {
                             1 => first,
@@ -196,7 +196,7 @@ namespace NetExtender.Utilities.Types
                 }
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static Exception? Exception<T>(Result<T> first, Result<T> second, Result<T> third)
         {
@@ -204,7 +204,7 @@ namespace NetExtender.Utilities.Types
             Span<Byte> bitmap = stackalloc Byte[size + 1];
             Byte position = 0;
             Byte count = 0;
-            
+
             Verify(ref third, bitmap, size, ref position, ref count);
             Verify(ref second, bitmap, size - 1, ref position, ref count);
             Verify(ref first, bitmap, size - 2, ref position, ref count);
@@ -235,7 +235,7 @@ namespace NetExtender.Utilities.Types
                         {
                             continue;
                         }
-                        
+
                         exceptions[position++] = (exception switch
                         {
                             1 => first,
@@ -249,7 +249,7 @@ namespace NetExtender.Utilities.Types
                 }
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static Exception? Exception<T>(Result<T> first, Result<T> second, Result<T> third, Result<T> fourth)
         {
@@ -257,7 +257,7 @@ namespace NetExtender.Utilities.Types
             Span<Byte> bitmap = stackalloc Byte[size + 1];
             Byte position = 0;
             Byte count = 0;
-            
+
             Verify(ref fourth, bitmap, size, ref position, ref count);
             Verify(ref third, bitmap, size - 1, ref position, ref count);
             Verify(ref second, bitmap, size - 2, ref position, ref count);
@@ -290,7 +290,7 @@ namespace NetExtender.Utilities.Types
                         {
                             continue;
                         }
-                        
+
                         exceptions[position++] = (exception switch
                         {
                             1 => first,
@@ -305,7 +305,7 @@ namespace NetExtender.Utilities.Types
                 }
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static Exception? Exception<T>(Result<T> first, Result<T> second, Result<T> third, Result<T> fourth, Result<T> fifth)
         {
@@ -313,7 +313,7 @@ namespace NetExtender.Utilities.Types
             Span<Byte> bitmap = stackalloc Byte[size + 1];
             Byte position = 0;
             Byte count = 0;
-            
+
             Verify(ref fifth, bitmap, size, ref position, ref count);
             Verify(ref fourth, bitmap, size - 1, ref position, ref count);
             Verify(ref third, bitmap, size - 2, ref position, ref count);
@@ -348,7 +348,7 @@ namespace NetExtender.Utilities.Types
                         {
                             continue;
                         }
-                        
+
                         exceptions[position++] = (exception switch
                         {
                             1 => first,
@@ -364,7 +364,7 @@ namespace NetExtender.Utilities.Types
                 }
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static Exception? Exception<T>(params Result<T>[]? result)
         {
@@ -386,40 +386,40 @@ namespace NetExtender.Utilities.Types
                     { Length: 0 } => null,
                     { Length: 1 } array => array[0],
                     { } array => ExceptionUtilities.FastAggregate(array)
-                },
+                }
             };
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TException? Exception<T, TException>(Result<T, TException> result) where TException : Exception
         {
             return result.Exception;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Exception? Exception<T, TException>(Result<T, TException> first, Result<T, TException> second) where TException : Exception
         {
             return Exception((Result<T>) first, second);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Exception? Exception<T, TException>(Result<T, TException> first, Result<T, TException> second, Result<T, TException> third) where TException : Exception
         {
             return Exception((Result<T>) first, second, third);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Exception? Exception<T, TException>(Result<T, TException> first, Result<T, TException> second, Result<T, TException> third, Result<T, TException> fourth) where TException : Exception
         {
             return Exception((Result<T>) first, second, third, fourth);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Exception? Exception<T, TException>(Result<T, TException> first, Result<T, TException> second, Result<T, TException> third, Result<T, TException> fourth, Result<T, TException> fifth) where TException : Exception
         {
             return Exception((Result<T>) first, second, third, fourth, fifth);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static Exception? Exception<T, TException>(params Result<T, TException>[]? result) where TException : Exception
         {
@@ -441,10 +441,10 @@ namespace NetExtender.Utilities.Types
                     { Length: 0 } => null,
                     { Length: 1 } array => array[0],
                     { } array => ExceptionUtilities.FastAggregate(array)
-                },
+                }
             };
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TNext Match<T, TNext>(this Result<T> value, Func<TNext> successful, Func<Exception, TNext> error)
         {
@@ -460,7 +460,7 @@ namespace NetExtender.Utilities.Types
 
             return value ? successful.Invoke() : error.Invoke(value.Exception!);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TNext Match<T, TNext>(this Result<T> value, Func<T, TNext> successful, Func<Exception, TNext> error)
         {
@@ -476,7 +476,7 @@ namespace NetExtender.Utilities.Types
 
             return value ? successful.Invoke(value) : error.Invoke(value.Exception!);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TNext Match<T, TNext, TException>(this Result<T, TException> value, Func<TNext> successful, Func<TException, TNext> error) where TException : Exception
         {
@@ -492,7 +492,7 @@ namespace NetExtender.Utilities.Types
 
             return value ? successful.Invoke() : error.Invoke(value.Exception!);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TNext Match<T, TNext, TException>(this Result<T, TException> value, Func<T, TNext> successful, Func<TException, TNext> error) where TException : Exception
         {
@@ -508,7 +508,7 @@ namespace NetExtender.Utilities.Types
 
             return value ? successful.Invoke(value) : error.Invoke(value.Exception!);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TNext Match<TNext>(this BusinessResult value, Func<TNext> successful, Func<BusinessException, TNext> error)
         {
@@ -524,7 +524,7 @@ namespace NetExtender.Utilities.Types
 
             return value ? successful.Invoke() : error.Invoke(value.Exception!);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TNext Match<T, TNext>(this BusinessResult<T> value, Func<TNext> successful, Func<BusinessException, TNext> error)
         {
@@ -540,7 +540,7 @@ namespace NetExtender.Utilities.Types
 
             return value ? successful.Invoke() : error.Invoke(value.Exception!);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TNext Match<T, TNext>(this BusinessResult<T> value, Func<T, TNext> successful, Func<BusinessException, TNext> error)
         {
@@ -556,7 +556,7 @@ namespace NetExtender.Utilities.Types
 
             return value ? successful.Invoke(value) : error.Invoke(value.Exception!);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TNext Match<T, TNext, TBusiness>(this BusinessResult<T, TBusiness> value, Func<TNext> successful, Func<BusinessException<TBusiness>, TNext> error)
         {
@@ -572,7 +572,7 @@ namespace NetExtender.Utilities.Types
 
             return value ? successful.Invoke() : error.Invoke(value.Exception!);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TNext Match<T, TNext, TBusiness>(this BusinessResult<T, TBusiness> value, Func<T, TNext> successful, Func<BusinessException<TBusiness>, TNext> error)
         {
@@ -588,7 +588,7 @@ namespace NetExtender.Utilities.Types
 
             return value ? successful.Invoke(value) : error.Invoke(value.Exception!);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TNext Switch<T, TNext>(this Result<T> value, Func<TNext> successful, Func<Exception, TNext> error)
         {
@@ -604,7 +604,7 @@ namespace NetExtender.Utilities.Types
 
             return value ? successful.Invoke() : error.Invoke(value.Exception!);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Switch<T>(this Result<T> value, Action<T>? successful, Action<Exception>? error)
         {
@@ -613,10 +613,10 @@ namespace NetExtender.Utilities.Types
                 successful?.Invoke(value);
                 return;
             }
-            
+
             error?.Invoke(value.Exception!);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Switch<T, TException>(this Result<T, TException> value, Action? successful, Action<TException>? error) where TException : Exception
         {
@@ -625,10 +625,10 @@ namespace NetExtender.Utilities.Types
                 successful?.Invoke();
                 return;
             }
-            
+
             error?.Invoke(value.Exception!);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Switch<T, TException>(this Result<T, TException> value, Action<T>? successful, Action<TException>? error) where TException : Exception
         {
@@ -637,10 +637,10 @@ namespace NetExtender.Utilities.Types
                 successful?.Invoke(value);
                 return;
             }
-            
+
             error?.Invoke(value.Exception!);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Switch(this BusinessResult value, Action? successful, Action<BusinessException>? error)
         {
@@ -649,10 +649,10 @@ namespace NetExtender.Utilities.Types
                 successful?.Invoke();
                 return;
             }
-            
+
             error?.Invoke(value.Exception!);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Switch<T>(this BusinessResult<T> value, Action? successful, Action<BusinessException>? error)
         {
@@ -661,10 +661,10 @@ namespace NetExtender.Utilities.Types
                 successful?.Invoke();
                 return;
             }
-            
+
             error?.Invoke(value.Exception!);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Switch<T>(this BusinessResult<T> value, Action<T>? successful, Action<BusinessException>? error)
         {
@@ -673,10 +673,10 @@ namespace NetExtender.Utilities.Types
                 successful?.Invoke(value);
                 return;
             }
-            
+
             error?.Invoke(value.Exception!);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Switch<T, TBusiness>(this BusinessResult<T, TBusiness> value, Action? successful, Action<BusinessException<TBusiness>>? error)
         {
@@ -685,10 +685,10 @@ namespace NetExtender.Utilities.Types
                 successful?.Invoke();
                 return;
             }
-            
+
             error?.Invoke(value.Exception!);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Switch<T, TBusiness>(this BusinessResult<T, TBusiness> value, Action<T>? successful, Action<BusinessException<TBusiness>>? error)
         {
@@ -697,7 +697,7 @@ namespace NetExtender.Utilities.Types
                 successful?.Invoke(value);
                 return;
             }
-            
+
             error?.Invoke(value.Exception!);
         }
 
@@ -843,7 +843,7 @@ namespace NetExtender.Utilities.Types
 
             return value ? next.Invoke(value) : value;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Result<T> Then<T>(this BusinessResult<T> value, Func<Result<T>> next)
         {
@@ -887,7 +887,7 @@ namespace NetExtender.Utilities.Types
 
             return value ? next.Invoke(value) : value;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Result<T> Then<T, TBusiness>(this BusinessResult<T, TBusiness> value, Func<Result<T>> next)
         {
@@ -997,7 +997,7 @@ namespace NetExtender.Utilities.Types
 
             return value ? next.Invoke(value) : value;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Result<T> Then<T>(this Result<T> value, Action? action)
         {
@@ -1005,10 +1005,10 @@ namespace NetExtender.Utilities.Types
             {
                 action?.Invoke();
             }
-            
+
             return value;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Result<T> Then<T>(this Result<T> value, Action<T>? action)
         {
@@ -1016,10 +1016,10 @@ namespace NetExtender.Utilities.Types
             {
                 action?.Invoke(value);
             }
-            
+
             return value;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Result<T, TException> Then<T, TException>(this Result<T, TException> value, Action? action) where TException : Exception
         {
@@ -1027,10 +1027,10 @@ namespace NetExtender.Utilities.Types
             {
                 action?.Invoke();
             }
-            
+
             return value;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Result<T, TException> Then<T, TException>(this Result<T, TException> value, Action<T>? action) where TException : Exception
         {
@@ -1038,10 +1038,10 @@ namespace NetExtender.Utilities.Types
             {
                 action?.Invoke(value);
             }
-            
+
             return value;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BusinessResult Then(this BusinessResult value, Action? action)
         {
@@ -1049,10 +1049,10 @@ namespace NetExtender.Utilities.Types
             {
                 action?.Invoke();
             }
-            
+
             return value;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BusinessResult<T> Then<T>(this BusinessResult<T> value, Action? action)
         {
@@ -1060,10 +1060,10 @@ namespace NetExtender.Utilities.Types
             {
                 action?.Invoke();
             }
-            
+
             return value;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BusinessResult<T> Then<T>(this BusinessResult<T> value, Action<T>? action)
         {
@@ -1071,10 +1071,10 @@ namespace NetExtender.Utilities.Types
             {
                 action?.Invoke(value);
             }
-            
+
             return value;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BusinessResult<T, TBusiness> Then<T, TBusiness>(this BusinessResult<T, TBusiness> value, Action? action)
         {
@@ -1082,10 +1082,10 @@ namespace NetExtender.Utilities.Types
             {
                 action?.Invoke();
             }
-            
+
             return value;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BusinessResult<T, TBusiness> Then<T, TBusiness>(this BusinessResult<T, TBusiness> value, Action<T>? action)
         {
@@ -1093,7 +1093,7 @@ namespace NetExtender.Utilities.Types
             {
                 action?.Invoke(value);
             }
-            
+
             return value;
         }
 
@@ -1410,7 +1410,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(result));
             }
-            
+
             return value ? value : result.Invoke();
         }
 
@@ -1421,7 +1421,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(result));
             }
-            
+
             return value ? value : result.Invoke(value.Exception!);
         }
 
@@ -1432,7 +1432,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(result));
             }
-            
+
             return value ? value : result.Invoke();
         }
 
@@ -1443,7 +1443,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(result));
             }
-            
+
             return value ? value : result.Invoke(value.Exception!);
         }
 
@@ -1454,7 +1454,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(result));
             }
-            
+
             return value ? value : result.Invoke();
         }
 
@@ -1465,7 +1465,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(result));
             }
-            
+
             return value ? value : result.Invoke(value.Exception!);
         }
 
@@ -1476,7 +1476,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(result));
             }
-            
+
             return value ? value : result.Invoke();
         }
 

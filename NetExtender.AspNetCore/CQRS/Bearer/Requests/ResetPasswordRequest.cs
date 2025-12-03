@@ -51,7 +51,7 @@ namespace Microsoft.AspNetCore.Identity.Data
             : this(String.Empty, String.Empty, String.Empty)
         {
         }
-        
+
         public ResetPasswordRequest(String email, String code, String password)
         {
             Email = email ?? throw new ArgumentNullException(nameof(email));

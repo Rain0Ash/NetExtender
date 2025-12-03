@@ -10,7 +10,7 @@ namespace NetExtender.UserInterface.WindowsPresentation
     {
         public String? Property { get; }
         public Object? Value { get; }
-        
+
         public PropertyEnableByAttribute(String? property)
             : this(property, null)
         {

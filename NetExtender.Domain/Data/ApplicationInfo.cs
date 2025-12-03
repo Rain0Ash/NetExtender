@@ -98,7 +98,7 @@ namespace NetExtender.Domains
             }
         }
 
-        private static Regex IdentifierRegex { get; } = new Regex(@"[^a-zA-Z0-9]", RegexOptions.Compiled);
+        private static Regex IdentifierRegex { get; } = new Regex("[^a-zA-Z0-9]", RegexOptions.Compiled);
 
         [return: NotNullIfNotNull("name")]
         protected static String? ToIdentifier(String? name)

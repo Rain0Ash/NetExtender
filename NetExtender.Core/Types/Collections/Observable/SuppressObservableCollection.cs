@@ -25,7 +25,7 @@ namespace NetExtender.Types.Collections
     public class SuppressObservableCollection<T> : ObservableCollection<T>, ISuppressObservableCollection<T>, IReadOnlySuppressObservableCollection<T>, ISuppressObservableCollectionHandler
     {
         protected SyncRoot SyncRoot { get; } = SyncRoot.Create();
-        
+
         private event PropertyChangingEventHandler? PropertyChanging;
         event PropertyChangingEventHandler? INotifyPropertyChanging.PropertyChanging
         {
@@ -84,13 +84,13 @@ namespace NetExtender.Types.Collections
             }
 
             using IDisposable? suppress = Suppress();
-            
+
             foreach (T item in source)
             {
                 Add(item);
             }
         }
-        
+
         public void RemoveRange(IEnumerable<T> source)
         {
             if (source is null)
@@ -99,7 +99,7 @@ namespace NetExtender.Types.Collections
             }
 
             using IDisposable? suppress = Suppress();
-            
+
             foreach (T item in source)
             {
                 Remove(item);
@@ -169,7 +169,7 @@ namespace NetExtender.Types.Collections
     {
         private ObservableCollection<T> Internal { get; }
         public event NotifyCollectionChangedEventHandler? CollectionChanged;
-        
+
         private event PropertyChangingEventHandler? PropertyChanging;
         event PropertyChangingEventHandler? INotifyPropertyChanging.PropertyChanging
         {
@@ -182,7 +182,7 @@ namespace NetExtender.Types.Collections
                 PropertyChanging -= value;
             }
         }
-        
+
         private event PropertyChangedEventHandler? PropertyChanged;
         event PropertyChangedEventHandler? INotifyPropertyChanged.PropertyChanged
         {
@@ -247,7 +247,7 @@ namespace NetExtender.Types.Collections
             {
                 changed.PropertyChanged += OnPropertyChanged;
             }
-            
+
             Suppression = new ObservableCollectionSuppressionHandler(this);
         }
 

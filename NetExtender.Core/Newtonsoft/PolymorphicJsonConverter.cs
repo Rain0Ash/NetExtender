@@ -18,7 +18,7 @@ namespace NetExtender.Newtonsoft
                 return false;
             }
         }
-        
+
         public override Boolean CanConvert(Type type)
         {
             return type.IsAssignableTo(typeof(Object));
@@ -53,7 +53,7 @@ namespace System.Text.Json.Serialization
         {
         }
     }
-    
+
     public sealed class PolymorphicJsonConverter : TextJsonConverter<Object?>
     {
         public override Boolean CanConvert(Type type)

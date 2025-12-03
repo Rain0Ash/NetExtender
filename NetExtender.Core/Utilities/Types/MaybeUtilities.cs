@@ -32,7 +32,7 @@ namespace NetExtender.Utilities.Types
         {
             return new WeakMaybe<T>(value);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T? Unwrap<T>(this Maybe<T> maybe)
         {
@@ -55,7 +55,7 @@ namespace NetExtender.Utilities.Types
 
             return maybe.HasValue ? maybe.Internal : alternate();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean Unwrap<T>(this Maybe<T> maybe, [MaybeNullWhen(false)] out T result)
         {
@@ -64,7 +64,7 @@ namespace NetExtender.Utilities.Types
                 result = maybe.Internal;
                 return true;
             }
-            
+
             result = default;
             return false;
         }
@@ -77,7 +77,7 @@ namespace NetExtender.Utilities.Types
                 result = maybe.Internal;
                 return true;
             }
-            
+
             result = alternate;
             return false;
         }
@@ -89,17 +89,17 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(alternate));
             }
-            
+
             if (maybe.HasValue)
             {
                 result = maybe.Internal;
                 return true;
             }
-            
+
             result = alternate();
             return false;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T? Unwrap<T>(this WeakMaybe<T> maybe) where T : class
         {
@@ -117,7 +117,7 @@ namespace NetExtender.Utilities.Types
         {
             return Unwrap(maybe.Maybe, alternate);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean Unwrap<T>(this WeakMaybe<T> maybe, [MaybeNullWhen(false)] out T result) where T : class
         {
@@ -135,7 +135,7 @@ namespace NetExtender.Utilities.Types
         {
             return Unwrap(maybe.Maybe, alternate, out result);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static async ValueTask<T?> Unwrap<T>(this Task<Maybe<T>> maybe)
         {

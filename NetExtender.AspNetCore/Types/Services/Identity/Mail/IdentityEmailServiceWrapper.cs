@@ -4,6 +4,7 @@
 #if NET8_0_OR_GREATER
 using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using NetExtender.AspNetCore.Identity.Interfaces;
 
 namespace NetExtender.AspNetCore.Identity
@@ -11,7 +12,7 @@ namespace NetExtender.AspNetCore.Identity
     public sealed class IdentityEmailServiceWrapper<TId, TUser, TRole> : IIdentityEmailService<TId, TUser, TRole> where TId : struct, IEquatable<TId> where TUser : class, IUserInfo<TId, TRole> where TRole : IEquatable<TRole>
     {
         private IEmailSender<TUser> Sender { get; }
-        
+
         public IdentityEmailServiceWrapper(IEmailSender<TUser> sender)
         {
             Sender = sender ?? throw new ArgumentNullException(nameof(sender));

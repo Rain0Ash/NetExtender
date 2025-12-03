@@ -14,22 +14,22 @@ namespace NetExtender.WindowsPresentation.Types
         {
             return new ControlLength(value);
         }
-        
+
         public static implicit operator GridLength(ControlLength value)
         {
             return value.Internal.ToGridLength();
         }
-        
+
         public static implicit operator DataGridLength(ControlLength value)
         {
             return value.Internal;
         }
-        
+
         public static implicit operator ControlLength(GridLength value)
         {
             return new ControlLength(value);
         }
-        
+
         public static implicit operator ControlLength(DataGridLength value)
         {
             return new ControlLength(value);
@@ -68,7 +68,7 @@ namespace NetExtender.WindowsPresentation.Types
                 return DataGridLength.SizeToHeader;
             }
         }
-        
+
         private DataGridLength Internal { get; }
 
         public Double DesiredValue

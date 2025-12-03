@@ -1,12 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net6.0-windows</TargetFramework>
+        <TargetFrameworks>net6.0-windows;net7.0-windows;net8.0-windows;net9.0-windows;net10.0-windows</TargetFrameworks>
         <Nullable>enable</Nullable>
         <ImplicitUsings>disable</ImplicitUsings>
         <OutputType>Library</OutputType>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-        <LangVersion>10</LangVersion>
         <Authors>Rain0Ash</Authors>
         <PackageProjectUrl>https://github.com/Rain0Ash/NetExtender</PackageProjectUrl>
         <Version>0.8.9</Version>
@@ -30,12 +29,18 @@
         <ProjectReference Include="..\NetExtender.Registry\NetExtender.Registry.csproj"/>
     </ItemGroup>
 
-    <ItemGroup>
+    <ItemGroup Condition="'$(TargetFramework)' == 'net6.0-windows' or '$(TargetFramework)' == 'net7.0-windows'">
         <PackageReference Include="Microsoft.Win32.SystemEvents" Version="8.0.0" />
-        <PackageReference Include="System.Drawing.Common" Version="8.0.14" />
-        <PackageReference Include="System.IO.FileSystem.AccessControl" Version="6.0.0-preview.5.21301.5"/>
+        <PackageReference Include="System.Drawing.Common" Version="8.0.22" />
         <PackageReference Include="System.Management" Version="8.0.0" />
         <PackageReference Include="System.Threading.AccessControl" Version="8.0.0" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(TargetFramework)' == 'net8.0-windows' or '$(TargetFramework)' == 'net9.0-windows' or '$(TargetFramework)' == 'net10.0-windows'">
+        <PackageReference Include="Microsoft.Win32.SystemEvents" Version="10.0.0" />
+        <PackageReference Include="System.Drawing.Common" Version="10.0.0" />
+        <PackageReference Include="System.Management" Version="10.0.0" />
+        <PackageReference Include="System.Threading.AccessControl" Version="10.0.0" />
     </ItemGroup>
 
     <ItemGroup>

@@ -135,7 +135,7 @@ namespace NetExtender.UserInterface.WindowsPresentation
                 ScaleTo(scale);
             }
         }
-        
+
         public void ScaleTo(Size scale)
         {
             ScaleTo(scale.Width, scale.Height);
@@ -147,7 +147,7 @@ namespace NetExtender.UserInterface.WindowsPresentation
             {
                 throw new ArgumentOutOfRangeException(nameof(width), width, null);
             }
-            
+
             if (height <= 1)
             {
                 throw new ArgumentOutOfRangeException(nameof(height), height, null);

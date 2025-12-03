@@ -9,7 +9,7 @@ namespace NetExtender.UserInterface.WindowsPresentation
     public class SelectedValuePathAttribute : Attribute
     {
         public String? Path { get; }
-        
+
         public SelectedValuePathAttribute(String? path)
         {
             Path = path;

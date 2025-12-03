@@ -26,7 +26,7 @@ namespace Microsoft.AspNetCore.Authentication.BearerToken
             return OnMessageReceived?.Invoke(context) ?? Task.CompletedTask;
         }
     }
-    
+
     public class MessageReceivedContext : ResultContext<BearerTokenOptions>
     {
         public String? Token { get; set; }
@@ -53,7 +53,7 @@ namespace NetExtender.AspNetCore.Identity
         public ISecureDataFormat<AuthenticationTicket> BearerTokenProtector { get; }
         public ISecureDataFormat<AuthenticationTicket> RefreshTokenProtector { get; }
     }
-    
+
     public abstract class BearerSchemeOptions : AuthenticationSchemeOptions, IBearerSchemeOptions
     {
 #if NET8_0_OR_GREATER
@@ -79,7 +79,7 @@ namespace NetExtender.AspNetCore.Identity
             } : null;
         }
 #endif
-        
+
         public new virtual BearerTokenEvents Events
         {
             get
@@ -94,7 +94,7 @@ namespace NetExtender.AspNetCore.Identity
 
         public virtual TimeSpan BearerTokenExpiration { get; set; } = TimeSpan.FromHours(1.0);
         public virtual TimeSpan RefreshTokenExpiration { get; set; } = TimeSpan.FromDays(14.0);
-        
+
         private ISecureDataFormat<AuthenticationTicket>? _token;
         public virtual ISecureDataFormat<AuthenticationTicket> BearerTokenProtector
         {

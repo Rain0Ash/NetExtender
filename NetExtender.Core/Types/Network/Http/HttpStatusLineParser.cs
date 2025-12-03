@@ -24,7 +24,7 @@ namespace NetExtender.Types.Network
         }
 
         private Int32 Length { get; }
-        
+
         private HttpStatusLineState _statusLineState;
         private HttpStatusLineState StatusLineState
         {
@@ -46,7 +46,7 @@ namespace NetExtender.Types.Network
             Response = response ?? throw new ArgumentNullException(nameof(response));
             Length = linesize >= 15 ? linesize : throw new ArgumentOutOfRangeException(nameof(linesize), linesize, null);
         }
-        
+
         public HttpParserState ParseBuffer(Byte[] buffer, Int32 ready, ref Int32 consumed)
         {
             if (buffer is null)
@@ -85,13 +85,13 @@ namespace NetExtender.Types.Network
             Int32 start = consumed;
             HttpParserState status = HttpParserState.DataTooBig;
             Int32 end = header <= 0 ? Int32.MaxValue : header - total + consumed;
-            
+
             if (ready < end)
             {
                 status = HttpParserState.NeedMoreData;
                 end = ready;
             }
-            
+
             switch (state)
             {
                 case HttpStatusLineState.BeforeVersionNumbers:
@@ -116,13 +116,13 @@ namespace NetExtender.Types.Network
                         total += consumed - start;
                         return status;
                     }
-                    
+
                     if (consumed > index)
                     {
                         String value = Encoding.UTF8.GetString(buffer, index, consumed - index);
                         current.Append(value);
                     }
-                    
+
                     String version = current.ToString();
                     if (String.CompareOrdinal("HTTP", version) != 0)
                     {
@@ -131,7 +131,7 @@ namespace NetExtender.Types.Network
 
                     current.Clear();
                     state = HttpStatusLineState.MajorVersionNumber;
-                    
+
                     if (++consumed == end)
                     {
                         break;
@@ -161,16 +161,16 @@ namespace NetExtender.Types.Network
                         total += consumed - start;
                         return status;
                     }
-                    
+
                     if (consumed > index)
                     {
                         String value = Encoding.UTF8.GetString(buffer, index, consumed - index);
                         current.Append(value);
                     }
-                    
+
                     current.Append('.');
                     state = HttpStatusLineState.MinorVersionNumber;
-                    
+
                     if (++consumed == end)
                     {
                         break;
@@ -200,17 +200,17 @@ namespace NetExtender.Types.Network
                         total += consumed - start;
                         return status;
                     }
-                    
+
                     if (consumed > index)
                     {
                         String value = Encoding.UTF8.GetString(buffer, index, consumed - index);
                         current.Append(value);
                     }
-                    
+
                     response.Version = Version.Parse(current.ToString());
                     current.Clear();
                     state = HttpStatusLineState.StatusCode;
-                    
+
                     if (++consumed == end)
                     {
                         break;
@@ -240,18 +240,18 @@ namespace NetExtender.Types.Network
                         total += consumed - start;
                         return status;
                     }
-                    
+
                     if (consumed > index)
                     {
                         String value = Encoding.UTF8.GetString(buffer, index, consumed - index);
                         current.Append(value);
                     }
-                    
+
                     Int32 code = Int32.Parse(current.ToString(), CultureInfo.InvariantCulture);
                     response.StatusCode = code >= 100 && code <= 1000 ? (HttpStatusCode) code : throw new FormatException($"Invalid HTTP status code: '{code}'. The status code must be between {100} and {1000}.");
                     current.Clear();
                     state = HttpStatusLineState.ReasonPhrase;
-                    
+
                     if (++consumed == end)
                     {
                         break;
@@ -281,17 +281,17 @@ namespace NetExtender.Types.Network
                         total += consumed - start;
                         return status;
                     }
-                    
+
                     if (consumed > index)
                     {
                         String value = Encoding.UTF8.GetString(buffer, index, consumed - index);
                         current.Append(value);
                     }
-                    
+
                     response.ReasonPhrase = current.ToString();
                     current.Clear();
                     state = HttpStatusLineState.AfterCarriageReturn;
-                    
+
                     if (++consumed == end)
                     {
                         break;
@@ -306,7 +306,7 @@ namespace NetExtender.Types.Network
                         status = HttpParserState.Invalid;
                         break;
                     }
-                    
+
                     status = HttpParserState.Done;
                     ++consumed;
                     break;

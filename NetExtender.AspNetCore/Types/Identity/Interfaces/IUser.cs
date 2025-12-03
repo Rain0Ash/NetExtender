@@ -15,10 +15,10 @@ namespace NetExtender.AspNetCore.Identity.Interfaces
     {
         [ProtectedPersonalData]
         public new String? Login { get; set; }
-        
+
         [PersonalData]
         public new String? UserName { get; set; }
-        
+
         [ProtectedPersonalData]
         public new MailAddress? Email { get; set; }
 
@@ -31,10 +31,10 @@ namespace NetExtender.AspNetCore.Identity.Interfaces
 
         [PersonalData]
         public new IdentityUser.UserConfirmation Confirmation { get; }
-        
+
         [PersonalData]
         public new IdentityUser.UserRestriction Restriction { get; }
-        
+
         [ProtectedPersonalData]
         public new IdentityUser.UserPassword Password { get; }
     }
@@ -49,7 +49,7 @@ namespace NetExtender.AspNetCore.Identity.Interfaces
     {
         [PersonalData]
         public Boolean IsConfirm { get; set; }
-        
+
         [PersonalData]
         public Boolean EmailConfirmed { get; set; }
 
@@ -84,13 +84,13 @@ namespace NetExtender.AspNetCore.Identity.Interfaces
 
         [PersonalData]
         public Object Id { get; }
-        
+
         [ProtectedPersonalData]
         public String? Login { get; }
-        
+
         [PersonalData]
         public String? UserName { get; }
- 
+
         [ProtectedPersonalData]
         public MailAddress? Email { get; }
 
@@ -105,7 +105,7 @@ namespace NetExtender.AspNetCore.Identity.Interfaces
 
         [ProtectedPersonalData]
         public IdentityUser.Password Password { get; }
-        
+
         [PersonalData]
         public String? SecurityStamp { get; }
 

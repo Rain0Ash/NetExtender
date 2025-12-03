@@ -13,7 +13,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.Types.Comparers
     {
         public SortDescriptionCollection Descriptions { get; }
         protected IComparer<IEnumerable<Object?>> Comparer { get; }
-        
+
         public NaturalSortDescriptionComparer()
             : this(null)
         {
@@ -32,7 +32,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.Types.Comparers
 
             return Comparer.Compare(first, second);
         }
-        
+
         private static Object? GetValue(SortDescription description, Object? x, Object? y)
         {
             Object? result = description.Direction == ListSortDirection.Ascending ? x : y;

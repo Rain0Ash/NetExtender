@@ -20,7 +20,7 @@ namespace NetExtender.Types.Sets.Interfaces
     {
         public Object? Min { get; }
         public Object? Max { get; }
-        
+
         public IEnumerable Reverse();
     }
 }

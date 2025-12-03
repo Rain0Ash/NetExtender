@@ -32,7 +32,7 @@ namespace NetExtender.WindowsPresentation.Types.Converters
     {
         public TWindow Window { get; } = WindowStorageUtilities<TWindow>.Require();
     }
-    
+
     public abstract class WindowConverter : ValueConverter
     {
     }

@@ -14,7 +14,7 @@ namespace NetExtender.Windows.Utilities
         Title,
         Content
     }
-    
+
     public static class WindowsScreenshotUtilities
     {
         [DllImport("user32.dll", SetLastError = true)]
@@ -128,7 +128,7 @@ namespace NetExtender.Windows.Utilities
                 content = default;
                 return false;
             }
-            
+
             switch (type)
             {
                 case ScreenshotType.Full:
@@ -141,7 +141,7 @@ namespace NetExtender.Windows.Utilities
                 case ScreenshotType.Title:
                 {
                     client = false;
-                    
+
                     if (!GetWindowRect(handle, out WinRectangle rect) || !GetWindowInformation(handle, out WinWindowInfo info))
                     {
                         bounds = default;
@@ -157,7 +157,7 @@ namespace NetExtender.Windows.Utilities
                 case ScreenshotType.Content:
                 {
                     client = true;
-                    
+
                     if (!GetWindowRect(handle, out WinRectangle rect) || !GetWindowInformation(handle, out WinWindowInfo info))
                     {
                         bounds = default;
@@ -206,7 +206,7 @@ namespace NetExtender.Windows.Utilities
             graphics.CopyFromScreen(rectangle.Left, rectangle.Top, 0, 0, new Size(rectangle.Width, rectangle.Height), CopyPixelOperation.SourceCopy);
             return raw.Clone(content, raw.PixelFormat);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryMakeScreenshot(IntPtr handle, [MaybeNullWhen(false)] out Bitmap screenshot)
         {

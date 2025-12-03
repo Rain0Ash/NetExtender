@@ -21,7 +21,7 @@ namespace NetExtender.Domains.WindowsPresentation.AspNetCore.Builder
         {
             return Host(New<THostBuilder>(arguments));
         }
-        
+
         protected virtual THost Host(THostBuilder builder)
         {
             if (builder is null)
@@ -33,14 +33,14 @@ namespace NetExtender.Domains.WindowsPresentation.AspNetCore.Builder
             return builder.Build() is THost host ? Host(host) : throw new InvalidOperationException();
         }
     }
-    
+
     public class WindowsPresentationAspNetCoreBuilder<TWindow, THost> : WindowsPresentationAspNetCoreBuilder<TWindow>, IAspNetCoreBuilder<WindowsPresentationAspNetCoreContext<TWindow, THost>> where TWindow : Window where THost : class, IHost
     {
         protected override THost Host(ImmutableArray<String> arguments)
         {
             return Host(New<THost>(arguments));
         }
-        
+
         protected virtual THost Host(THost host)
         {
             return host ?? throw new ArgumentNullException(nameof(host));
@@ -50,7 +50,7 @@ namespace NetExtender.Domains.WindowsPresentation.AspNetCore.Builder
         {
             return Build(ImmutableArray<String>.Empty);
         }
-        
+
         public override WindowsPresentationAspNetCoreContext<TWindow, THost> Build(String[]? arguments)
         {
             return Build(arguments?.ToImmutableArray() ?? ImmutableArray<String>.Empty);
@@ -61,7 +61,7 @@ namespace NetExtender.Domains.WindowsPresentation.AspNetCore.Builder
             return new WindowsPresentationAspNetCoreContext<TWindow, THost>(Window(arguments), Host(arguments));
         }
     }
-    
+
     public abstract class WindowsPresentationAspNetCoreBuilder<TWindow> : WindowsPresentationAspNetCoreBuilder, IAspNetCoreBuilder<WindowsPresentationAspNetCoreContext<TWindow>> where TWindow : Window
     {
         protected override TWindow Window(ImmutableArray<String> arguments)
@@ -88,9 +88,9 @@ namespace NetExtender.Domains.WindowsPresentation.AspNetCore.Builder
     public abstract class WindowsPresentationAspNetCoreBuilder : ApplicationBuilder<WindowsPresentationAspNetCoreContext>
     {
         public virtual Boolean UseDefaultHostBuilder { get; init; } = true;
-        
+
         protected abstract Window Window(ImmutableArray<String> arguments);
-        
+
         protected virtual IHost Host(ImmutableArray<String> arguments)
         {
             IHostBuilder builder = new HostBuilder();
@@ -99,7 +99,7 @@ namespace NetExtender.Domains.WindowsPresentation.AspNetCore.Builder
             {
                 builder.ConfigureDefaults(arguments.ToArray());
             }
-            
+
             // ReSharper disable once VariableHidesOuterVariable
             void Handler(IWebHostBuilder builder)
             {
@@ -109,44 +109,44 @@ namespace NetExtender.Domains.WindowsPresentation.AspNetCore.Builder
 
             return builder.ConfigureWebHostDefaults(Handler).Build();
         }
-        
+
         public override WindowsPresentationAspNetCoreContext Build(ImmutableArray<String> arguments)
         {
             Manager?.Invoke(this, this);
             return new WindowsPresentationAspNetCoreContext<Window, IHost>(Window(arguments), Host(arguments));
         }
-        
+
         protected virtual void Build(IWebHostBuilder builder)
         {
         }
     }
-    
+
     public class WindowsPresentationAspNetCoreWebBuilder<TWindow, THost, THostBuilder> : WindowsPresentationAspNetCoreWebBuilder<TWindow, THost> where TWindow : Window where THost : class, IWebHost where THostBuilder : class, IWebHostBuilder
     {
         protected override THost Host(ImmutableArray<String> arguments)
         {
             return Host(New<THostBuilder>(arguments));
         }
-        
+
         protected virtual THost Host(THostBuilder builder)
         {
             if (builder is null)
             {
                 throw new ArgumentNullException(nameof(builder));
             }
-            
+
             Manager?.Invoke(this, builder);
             return builder.Build() is THost host ? Host(host) : throw new InvalidOperationException();
         }
     }
-    
+
     public class WindowsPresentationAspNetCoreWebBuilder<TWindow, THost> : WindowsPresentationAspNetCoreWebBuilder<TWindow>, IAspNetCoreBuilder<WindowsPresentationAspNetCoreWebContext<TWindow, THost>> where TWindow : Window where THost : class, IWebHost
     {
         protected override THost Host(ImmutableArray<String> arguments)
         {
             return Host(New<THost>(arguments));
         }
-        
+
         protected virtual THost Host(THost host)
         {
             return host ?? throw new ArgumentNullException(nameof(host));
@@ -156,7 +156,7 @@ namespace NetExtender.Domains.WindowsPresentation.AspNetCore.Builder
         {
             return Build(ImmutableArray<String>.Empty);
         }
-        
+
         public override WindowsPresentationAspNetCoreWebContext<TWindow, THost> Build(String[]? arguments)
         {
             return Build(arguments?.ToImmutableArray() ?? ImmutableArray<String>.Empty);
@@ -167,7 +167,7 @@ namespace NetExtender.Domains.WindowsPresentation.AspNetCore.Builder
             return new WindowsPresentationAspNetCoreWebContext<TWindow, THost>(Window(arguments), Host(arguments));
         }
     }
-    
+
     public abstract class WindowsPresentationAspNetCoreWebBuilder<TWindow> : WindowsPresentationAspNetCoreWebBuilder, IAspNetCoreBuilder<WindowsPresentationAspNetCoreWebContext<TWindow>> where TWindow : Window
     {
         protected override TWindow Window(ImmutableArray<String> arguments)
@@ -206,7 +206,7 @@ namespace NetExtender.Domains.WindowsPresentation.AspNetCore.Builder
             {
                 throw new ArgumentNullException(nameof(builder));
             }
-            
+
             Build(builder);
             Manager?.Invoke(this, builder);
             return builder.Build() is { } application ? Host(application) : throw new InvalidOperationException();
@@ -216,18 +216,18 @@ namespace NetExtender.Domains.WindowsPresentation.AspNetCore.Builder
         {
             return application ?? throw new ArgumentNullException(nameof(application));
         }
-        
+
         public override WindowsPresentationAspNetCoreWebContext Build(ImmutableArray<String> arguments)
         {
             Manager?.Invoke(this, this);
             return new WindowsPresentationAspNetCoreWebContext<Window, IWebHost>(Window(arguments), Host(arguments));
         }
-        
+
         protected virtual void Build(IWebHostBuilder builder)
         {
         }
     }
-    
+
     public abstract class WindowsPresentationAspNetCoreWebApplicationBuilder<TWindow> : WindowsPresentationAspNetCoreBuilder<TWindow, WebApplication, WebApplicationBuilderWrapper>, IAspNetCoreBuilder<WindowsPresentationAspNetCoreWebApplicationContext<TWindow>> where TWindow : Window
     {
         public override WindowsPresentationAspNetCoreWebApplicationContext<TWindow> Build()
@@ -245,7 +245,7 @@ namespace NetExtender.Domains.WindowsPresentation.AspNetCore.Builder
             return new WindowsPresentationAspNetCoreWebApplicationContext<TWindow>(Window(arguments), Host(arguments));
         }
     }
-    
+
     public abstract class WindowsPresentationAspNetCoreWebApplicationBuilder : WindowsPresentationAspNetCoreBuilder<Window, WebApplication, WebApplicationBuilderWrapper>, IAspNetCoreBuilder<WindowsPresentationAspNetCoreWebApplicationContext<Window>>
     {
         public override WindowsPresentationAspNetCoreWebApplicationContext<Window> Build()

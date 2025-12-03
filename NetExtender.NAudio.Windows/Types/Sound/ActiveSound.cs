@@ -42,9 +42,9 @@ namespace NetExtender.NAudio.Types.Sound
             {
                 throw new ThisObjectDisposedException(this, $"Can't play disposed sound '{Sound.Path}'");
             }
-            
+
             Device.Volume = Volume ?? 0;
-            
+
             switch (State)
             {
                 case PlaybackState.Playing:

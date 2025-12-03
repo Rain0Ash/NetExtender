@@ -4,10 +4,10 @@
 using System;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using Asp.Versioning;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Http;
@@ -27,28 +27,28 @@ namespace NetExtender.Utilities.AspNetCore.Types
             {
                 throw new ArgumentNullException(nameof(services));
             }
-            
+
             return services.AddControllers().AddControllersAsServices();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IMvcBuilder AddControllers<TId, TUser, TRole, TFilter>(this IServiceCollection services) where TId : struct, IEquatable<TId> where TUser : class, IUserInfo<TId, TRole>, new() where TRole : IEquatable<TRole> where TFilter : IdentityServiceFilter<TId, TUser, TRole>
         {
             return AddControllers<TId, TUser, TRole, TFilter>(services, null);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IMvcBuilder AddControllers<TId, TUser, TRole, TFilter>(this IServiceCollection services, Action<MvcOptions>? options) where TId : struct, IEquatable<TId> where TUser : class, IUserInfo<TId, TRole>, new() where TRole : IEquatable<TRole> where TFilter : IdentityServiceFilter<TId, TUser, TRole>
         {
             return AddControllers<TId, TUser, TRole, ActionInfoServiceFilter<TId, TUser, TRole>, TFilter>(services, options);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IMvcBuilder AddControllers<TId, TUser, TRole, TActionFilter, TIdentityFilter>(this IServiceCollection services) where TId : struct, IEquatable<TId> where TUser : class, IUserInfo<TId, TRole>, new() where TRole : IEquatable<TRole> where TIdentityFilter : IdentityServiceFilter<TId, TUser, TRole> where TActionFilter : ActionInfoServiceFilter<TId, TUser, TRole>
         {
             return AddControllers<TId, TUser, TRole, TActionFilter, TIdentityFilter>(services, null);
         }
-        
+
         public static IMvcBuilder AddControllers<TId, TUser, TRole, TActionFilter, TIdentityFilter>(this IServiceCollection services, Action<MvcOptions>? options) where TId : struct, IEquatable<TId> where TUser : class, IUserInfo<TId, TRole>, new() where TRole : IEquatable<TRole> where TIdentityFilter : IdentityServiceFilter<TId, TUser, TRole> where TActionFilter : ActionInfoServiceFilter<TId, TUser, TRole>
         {
             if (services is null)
@@ -63,25 +63,25 @@ namespace NetExtender.Utilities.AspNetCore.Types
                 options?.Invoke(mvc);
             });
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IMvcBuilder AddControllersWithViews<TId, TUser, TRole, TFilter>(this IServiceCollection services) where TId : struct, IEquatable<TId> where TUser : class, IUserInfo<TId, TRole>, new() where TRole : IEquatable<TRole> where TFilter : IdentityServiceFilter<TId, TUser, TRole>
         {
             return AddControllersWithViews<TId, TUser, TRole, TFilter>(services, null);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IMvcBuilder AddControllersWithViews<TId, TUser, TRole, TFilter>(this IServiceCollection services, Action<MvcOptions>? options) where TId : struct, IEquatable<TId> where TUser : class, IUserInfo<TId, TRole>, new() where TRole : IEquatable<TRole> where TFilter : IdentityServiceFilter<TId, TUser, TRole>
         {
             return AddControllersWithViews<TId, TUser, TRole, ActionInfoServiceFilter<TId, TUser, TRole>, TFilter>(services, options);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IMvcBuilder AddControllersWithViews<TId, TUser, TRole, TActionFilter, TIdentityFilter>(this IServiceCollection services) where TId : struct, IEquatable<TId> where TUser : class, IUserInfo<TId, TRole>, new() where TRole : IEquatable<TRole> where TIdentityFilter : IdentityServiceFilter<TId, TUser, TRole> where TActionFilter : ActionInfoServiceFilter<TId, TUser, TRole>
         {
             return AddControllersWithViews<TId, TUser, TRole, TActionFilter, TIdentityFilter>(services, null);
         }
-        
+
         public static IMvcBuilder AddControllersWithViews<TId, TUser, TRole, TActionFilter, TIdentityFilter>(this IServiceCollection services, Action<MvcOptions>? options) where TId : struct, IEquatable<TId> where TUser : class, IUserInfo<TId, TRole>, new() where TRole : IEquatable<TRole> where TIdentityFilter : IdentityServiceFilter<TId, TUser, TRole> where TActionFilter : ActionInfoServiceFilter<TId, TUser, TRole>
         {
             if (services is null)
@@ -96,7 +96,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
                 options?.Invoke(mvc);
             });
         }
-        
+
         public static IServiceCollection AddContextAccessor(this IServiceCollection services)
         {
             if (services is null)
@@ -144,12 +144,12 @@ namespace NetExtender.Utilities.AspNetCore.Types
 
             services.AddApiVersioning(options =>
             {
-                options.DefaultApiVersion = ApiVersion.TryParse(version, out ApiVersion? api) ? api : ApiVersion.Default;
+                options.DefaultApiVersion = ApiVersionParser.Default.TryParse(version, out ApiVersion? api) ? api : ApiVersion.Default;
                 options.AssumeDefaultVersionWhenUnspecified = true;
                 options.ReportApiVersions = true;
                 options.ApiVersionReader = Activator.CreateInstance<T>();
             });
-            
+
             return services;
         }
 

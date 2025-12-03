@@ -232,7 +232,7 @@ namespace NetExtender.Types.Streams
         {
             Internal = new Lazy<Stream>(() => new FileStream(handle, access, bufferSize, isAsync));
         }
-        
+
         [UnsupportedOSPlatform("ios")]
         [UnsupportedOSPlatform("macos")]
         [UnsupportedOSPlatform("tvos")]
@@ -347,7 +347,7 @@ namespace NetExtender.Types.Streams
                 stream.Flush(disk);
                 return;
             }
-            
+
             Stream.Flush();
         }
 

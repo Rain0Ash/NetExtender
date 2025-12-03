@@ -26,7 +26,7 @@ namespace NetExtender.Domains.Service.Views
         {
         }
     }
-    
+
     public class WindowsServiceView<T, TBuilder> : WindowsServiceView where T : class, IWindowsService where TBuilder : IApplicationBuilder<T>, new()
     {
         protected T? Internal { get; set; }
@@ -54,7 +54,7 @@ namespace NetExtender.Domains.Service.Views
         {
             Context = service ?? throw new ArgumentNullException(nameof(service));
         }
-        
+
         public WindowsServiceView(TBuilder builder)
         {
             Builder = builder ?? throw new ArgumentNullException(nameof(builder));

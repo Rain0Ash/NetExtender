@@ -2,7 +2,7 @@
 [*]
 charset = utf-8
 end_of_line = crlf
-trim_trailing_whitespace = false
+trim_trailing_whitespace = true
 insert_final_newline = false
 indent_style = space
 indent_size = 4
@@ -152,6 +152,7 @@ resharper_struct_member_can_be_made_read_only_highlighting = hint
 resharper_suggest_discard_declaration_var_style_highlighting = warning
 resharper_switch_statement_handles_some_known_enum_values_with_default_highlighting = none
 resharper_unused_auto_property_accessor_global_highlighting = none
+resharper_redundant_type_declaration_body_highlighting = none
 resharper_unused_auto_property_accessor_local_highlighting = none
 resharper_unused_member_global_highlighting = none
 resharper_unused_member_local_highlighting = none
@@ -165,6 +166,9 @@ resharper_web_config_type_not_resolved_highlighting = warning
 resharper_web_config_wrong_module_highlighting = warning
 resharper_default_private_modifier = explicit
 resharper_default_internal_modifier = explicit
+resharper_replace_with_field_keyword_highlighting = none
+resharper_redundant_type_arguments_inside_nameof_highlighting = none
+resharper_redundant_lambda_parameter_type_highlighting = none
 
 [{*.har,*.inputactions,*.json}]
 indent_style = space

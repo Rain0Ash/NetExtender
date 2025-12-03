@@ -49,12 +49,12 @@ namespace NetExtender.Utilities.UserInterface.Winforms.ListView
 
             foreach (String? key in images.Keys)
             {
-                if (images[key] != image)
+                if (images[key!] != image)
                 {
                     continue;
                 }
 
-                index = images.IndexOfKey(key);
+                index = images.IndexOfKey(key!);
                 return key;
             }
 
@@ -138,10 +138,12 @@ namespace NetExtender.Utilities.UserInterface.Winforms.ListView
             {
                 throw new ArgumentNullException(nameof(item));
             }
+            if (item.ImageList?.Images is not { } images)
+            {
+                return null;
+            }
 
             Int32 index = item.ImageIndex;
-            ImageList.ImageCollection images = item.ImageList.Images;
-
             return images[item.ImageKey] ?? (index >= 0 && index < images.Count ? images[index] : null);
         }
 
@@ -152,7 +154,12 @@ namespace NetExtender.Utilities.UserInterface.Winforms.ListView
                 throw new ArgumentNullException(nameof(item));
             }
 
-            item.ImageKey = GetOrSetImageKey(item.ImageList, image);
+            if (item.ImageList is null)
+            {
+                return;
+            }
+
+            item.ImageKey = GetOrSetImageKey(item.ImageList, image)!;
         }
     }
 }

@@ -52,12 +52,12 @@ namespace NetExtender.JWT.Algorithms
             public sealed class Instance : Factory
             {
                 private IJWTAlgorithm Algorithm { get; }
-                
+
                 public Instance(IJWTAlgorithm algorithm)
                 {
                     Algorithm = algorithm ?? throw new ArgumentNullException(nameof(algorithm));
                 }
-                
+
                 public override IJWTAlgorithm Create()
                 {
                     return Algorithm;

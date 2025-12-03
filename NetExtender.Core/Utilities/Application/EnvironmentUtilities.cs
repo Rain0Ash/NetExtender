@@ -18,7 +18,7 @@ namespace NetExtender.Utilities.Application
     public static class EnvironmentUtilities
     {
         // TODO: extension environment
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static ImmutableDictionary<String, String?> WrapEnvironmentVariables(IDictionary variables)
         {
@@ -41,7 +41,7 @@ namespace NetExtender.Utilities.Application
 
             return builder.ToImmutable();
         }
-        
+
         [return: NotNullIfNotNull("value")]
         public static String? ExpandEnvironmentVariables(String? value)
         {
@@ -56,7 +56,7 @@ namespace NetExtender.Utilities.Application
             {
                 return value;
             }
-            
+
             Int32 position = 0;
             StringBuilder result = new StringBuilder(value.Length * 2);
             while (position < value.Length)
@@ -80,7 +80,7 @@ namespace NetExtender.Utilities.Application
 
                 String variable = value.Substring(start + 1, end - start - 1);
                 position = end + 1;
-                
+
                 if (variables.TryGetValue(variable, out String? replacement))
                 {
                     result.Append(replacement);

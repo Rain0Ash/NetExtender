@@ -33,7 +33,7 @@ namespace NetExtender.Utilities.Application
                 BuildTime = GetBuildDateTime(Path);
             }
         }
-        
+
         public static ImmutableArray<String> Arguments
         {
             get

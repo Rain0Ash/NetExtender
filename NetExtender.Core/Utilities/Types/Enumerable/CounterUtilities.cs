@@ -27,54 +27,54 @@ namespace NetExtender.Utilities.Types
                 return INetExtenderComparisonOperators<TCount>.GreaterThanOrEqual(value, One);
             }
         }
-        
+
         public static IEnumerable<KeyValuePair<T, TCount>> Unique<T, TCount>(this IEnumerable<KeyValuePair<T, TCount>> counter) where TCount : unmanaged, IConvertible
         {
             if (counter is null)
             {
                 throw new ArgumentNullException(nameof(counter));
             }
-            
+
             return counter.Where(static pair => Equality<TCount>.Unique(pair.Value));
         }
-        
+
         public static IEnumerable<KeyValuePair<TKey, TValue>> Unique<TKey, TValue, TCount>(this IEnumerable<KeyValuePair<TKey, TValue>> source, Func<KeyValuePair<TKey, TValue>, TCount> selector) where TCount : unmanaged, IConvertible
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (selector is null)
             {
                 throw new ArgumentNullException(nameof(selector));
             }
-            
+
             return source.Where(pair => Equality<TCount>.Unique(selector(pair)));
         }
-        
+
         public static IEnumerable<KeyValuePair<T, TCount>> NotUnique<T, TCount>(this IEnumerable<KeyValuePair<T, TCount>> counter) where TCount : unmanaged, IConvertible
         {
             if (counter is null)
             {
                 throw new ArgumentNullException(nameof(counter));
             }
-            
+
             return counter.Where(static pair => Equality<TCount>.NotUnique(pair.Value));
         }
-        
+
         public static IEnumerable<KeyValuePair<TKey, TValue>> NotUnique<TKey, TValue, TCount>(this IEnumerable<KeyValuePair<TKey, TValue>> source, Func<KeyValuePair<TKey, TValue>, TCount> selector) where TCount : unmanaged, IConvertible
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (selector is null)
             {
                 throw new ArgumentNullException(nameof(selector));
             }
-            
+
             return source.Where(pair => Equality<TCount>.NotUnique(selector(pair)));
         }
     }

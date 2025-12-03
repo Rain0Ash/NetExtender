@@ -12,7 +12,7 @@ namespace NetExtender.Configuration.Interfaces
     public interface IConfigInfo
     {
         public event ConfigurationChangedEventHandler Changed;
-        
+
         public String Path { get; }
         public ConfigOptions Options { get; }
         public Boolean IsReadOnly { get; }

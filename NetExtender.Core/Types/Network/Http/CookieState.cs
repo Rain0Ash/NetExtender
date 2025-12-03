@@ -13,7 +13,7 @@ namespace NetExtender.Types.Network
     public class CookieState : ICloneable<CookieState>
     {
         private static ImmutableHashSet<Char> InvalidHeader { get; } = ImmutableHashSet<Char>.Empty.Union("()<>@,;:\\\"/[]?={}");
-        
+
         private readonly String? _key;
         public String Key
         {
@@ -32,7 +32,7 @@ namespace NetExtender.Types.Network
                 {
                     throw new ArgumentException("The specified value is not a valid cookie key.", nameof(value));
                 }
-                
+
                 _key = value;
             }
         }
@@ -59,7 +59,7 @@ namespace NetExtender.Types.Network
                 Values.AllKeys[0] = value;
             }
         }
-        
+
         public NameValueCollection Values { get; } = HttpUtility.ParseQueryString(String.Empty);
 
         public CookieState(String key)
@@ -79,7 +79,7 @@ namespace NetExtender.Types.Network
             {
                 throw new ArgumentNullException(nameof(values));
             }
-            
+
             Key = key ?? throw new ArgumentNullException(nameof(key));
             Values.Add(values);
         }
@@ -104,7 +104,7 @@ namespace NetExtender.Types.Network
         {
             return new CookieState(this);
         }
-        
+
         public String? this[String key]
         {
             get

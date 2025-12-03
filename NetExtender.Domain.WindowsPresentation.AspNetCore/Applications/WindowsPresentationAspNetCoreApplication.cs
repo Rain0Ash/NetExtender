@@ -42,7 +42,7 @@ namespace NetExtender.Domains.WindowsPresentation.AspNetCore.Applications
 
             return AspNetCoreApplicationServerBase<T>.Create(host);
         }
-        
+
         public override Task<IApplication> RunAsync(CancellationToken token)
         {
             return RunAsync(null, null, token);
@@ -83,7 +83,7 @@ namespace NetExtender.Domains.WindowsPresentation.AspNetCore.Applications
             }
         }
     }
-    
+
     public class WindowsPresentationAspNetCoreApplication<TApplication> : WindowsPresentationAspNetCoreApplication where TApplication : Application, new()
     {
         public WindowsPresentationAspNetCoreApplication()
@@ -102,13 +102,13 @@ namespace NetExtender.Domains.WindowsPresentation.AspNetCore.Applications
         public WindowsPresentationAspNetCoreApplication()
         {
         }
-        
+
         public WindowsPresentationAspNetCoreApplication(Application application)
             : base(application)
         {
         }
     }
-    
+
     public class WindowsPresentationAspNetCoreWebApplication<TApplication> : WindowsPresentationAspNetCoreWebApplication where TApplication : Application, new()
     {
         public WindowsPresentationAspNetCoreWebApplication()
@@ -127,7 +127,7 @@ namespace NetExtender.Domains.WindowsPresentation.AspNetCore.Applications
         public WindowsPresentationAspNetCoreWebApplication()
         {
         }
-        
+
         public WindowsPresentationAspNetCoreWebApplication(Application application)
             : base(application)
         {

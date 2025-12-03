@@ -94,17 +94,17 @@ namespace NetExtender.Types.Immutable.Dictionaries
 
             return Internal.ContainsKey(key);
         }
-        
+
         public Boolean TryGetKey(TKey equalKey, out TKey actualKey)
         {
             if (equalKey is null)
             {
                 throw new ArgumentNullException(nameof(equalKey));
             }
-            
+
             return Internal.TryGetKey(equalKey, out actualKey);
         }
-        
+
         public Boolean TryGetValue(TKey key, [MaybeNullWhen(false)] out TValue value)
         {
             if (key is null)
@@ -121,7 +121,7 @@ namespace NetExtender.Types.Immutable.Dictionaries
             value = default;
             return false;
         }
-        
+
         public Boolean TryGetValue(TKey key, [MaybeNullWhen(false)] out ImmutableHashSet<TValue> value)
         {
             if (key is null)
@@ -131,7 +131,7 @@ namespace NetExtender.Types.Immutable.Dictionaries
 
             return Internal.TryGetValue(key, out value);
         }
-        
+
         public ImmutableMultiDictionary<TKey, TValue> Add(TKey key, ImmutableHashSet<TValue> value)
         {
             if (key is null)

@@ -13,7 +13,7 @@ namespace NetExtender.Utilities.Core
     public class ReflectionNamingAttribute : Attribute
     {
         public Type? Reference { get; }
-        
+
         public Assembly? Assembly
         {
             get
@@ -21,18 +21,18 @@ namespace NetExtender.Utilities.Core
                 return Reference?.Assembly;
             }
         }
-        
+
         public ReflectionNamingAttribute()
             : this(null)
         {
         }
-        
+
         public ReflectionNamingAttribute(Type? reference)
         {
             Reference = reference;
         }
     }
-    
+
     [Browsable(true)]
     [EditorBrowsable(EditorBrowsableState.Always)]
     [AttributeUsage(AttributeTargets.All, AllowMultiple = true)]
@@ -45,7 +45,7 @@ namespace NetExtender.Utilities.Core
                 return base.Reference ?? throw new InvalidOperationException();
             }
         }
-        
+
         public new Assembly Assembly
         {
             get
@@ -53,7 +53,7 @@ namespace NetExtender.Utilities.Core
                 return base.Assembly ?? throw new InvalidOperationException();
             }
         }
-        
+
         public ReflectionSystemResourceAttribute(Type reference)
             : base(reference ?? throw new ArgumentNullException(nameof(reference)))
         {

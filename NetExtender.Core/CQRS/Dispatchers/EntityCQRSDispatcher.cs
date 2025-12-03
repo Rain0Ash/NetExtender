@@ -14,14 +14,14 @@ namespace NetExtender.CQRS.Dispatchers
         {
             return DispatchAsync(entity, CancellationToken.None);
         }
-        
+
         public abstract Task DispatchAsync<TEntity>(TEntity entity, CancellationToken token) where TEntity : IEntityCQRS;
 
         public virtual Task<TResult> DispatchAsync<TEntity, TResult>(TEntity entity) where TEntity : IEntityCQRS<TResult>
         {
             return DispatchAsync<TEntity, TResult>(entity, CancellationToken.None);
         }
-        
+
         public abstract Task<TResult> DispatchAsync<TEntity, TResult>(TEntity entity, CancellationToken token) where TEntity : IEntityCQRS<TResult>;
     }
 }

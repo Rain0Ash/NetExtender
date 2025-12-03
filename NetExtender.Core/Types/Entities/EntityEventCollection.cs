@@ -16,7 +16,7 @@ namespace NetExtender.Types.Entities
         public static IEntityEventCollection Empty { get; } = new None();
 
         private List<IEventCQRS> Events { get; } = new List<IEventCQRS>(4);
-        
+
         public Int32 Count
         {
             get
@@ -50,7 +50,7 @@ namespace NetExtender.Types.Entities
 
             Events.Add(@event);
         }
-    
+
         public Boolean AddUnique<T>(T @event) where T : IEventCQRS
         {
             if (@event is null)
@@ -76,7 +76,7 @@ namespace NetExtender.Types.Entities
 
             return Events.Remove(@event);
         }
-    
+
         public Boolean Remove<T>() where T : IEventCQRS
         {
             Boolean successful = false;
@@ -85,7 +85,7 @@ namespace NetExtender.Types.Entities
                 Events.Remove(@event);
                 successful = true;
             }
-            
+
             return successful;
         }
 

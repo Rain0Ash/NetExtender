@@ -9,7 +9,7 @@ namespace NetExtender.Types.Lists.Interfaces
     public interface IPaginationReadOnlyList<out T, out TCollection> : IPaginationReadOnlyList<T>, IPaginationReadOnlyCollection<T, TCollection> where TCollection : class, IReadOnlyList<T>
     {
     }
-    
+
     public interface IPaginationReadOnlyList<out T> : IPaginationReadOnlyCollection<T>, IReadOnlyList<T>
     {
     }

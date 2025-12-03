@@ -16,7 +16,7 @@ namespace NetExtender.Types.Intercept
         Set,
         Init
     }
-    
+
     public class PropertyInterceptEventArgs<T> : MemberInterceptEventArgs<PropertyInfo, PropertyInterceptEventArgs<T>.Information>, IPropertyInterceptEventArgs<T>
     {
         public readonly struct Information : IMemberInterceptArgumentInfo<PropertyInfo, T>
@@ -64,12 +64,12 @@ namespace NetExtender.Types.Intercept
                 {
                     throw new InvalidOperationException("Cannot change value when intercept is seal.");
                 }
-                
+
                 _value = value;
                 Seal();
             }
         }
-        
+
         Object? ISimpleInterceptEventArgs.Value
         {
             get

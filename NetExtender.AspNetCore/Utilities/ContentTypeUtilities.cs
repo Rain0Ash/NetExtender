@@ -18,32 +18,32 @@ namespace NetExtender.Utilities.AspNetCore.Types
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             return GetFileExtension(type, new FileExtensionContentTypeProvider());
         }
-        
+
         public static String GetFileExtension(this ContentType type, FileExtensionContentTypeProvider provider)
         {
             if (type is null)
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             if (provider is null)
             {
                 throw new ArgumentNullException(nameof(provider));
             }
-            
+
             Boolean Predicate(KeyValuePair<String, String> pair)
             {
                 return String.Equals(pair.Value, type.MediaType, StringComparison.Ordinal);
             }
-            
+
             if (provider.Mappings.Where(Predicate).Keys().FirstOrDefault() is not { } mapping)
             {
                 throw new InvalidOperationException($"Unable to map file extension for Media Type: {type.MediaType}");
             }
-            
+
             return mapping;
         }
     }

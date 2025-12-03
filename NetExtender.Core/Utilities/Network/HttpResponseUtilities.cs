@@ -20,7 +20,7 @@ namespace NetExtender.Utilities.Network
             {
                 throw new ArgumentNullException(nameof(response));
             }
-            
+
             return response.Headers.ToHeaderString(response.Content.Headers);
         }
 
@@ -31,10 +31,10 @@ namespace NetExtender.Utilities.Network
             {
                 throw new ArgumentNullException(nameof(response));
             }
-            
+
             return response.Headers.ToHeaderString(response.Content.Headers, buffer);
         }
-        
+
         public static void AddCookies(this HttpResponseHeaders source, IEnumerable<CookieHeaderValue?>? values)
         {
             if (source is null)

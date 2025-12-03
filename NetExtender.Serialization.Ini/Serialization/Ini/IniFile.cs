@@ -85,7 +85,7 @@ namespace NetExtender.Serialization.Ini
             {
                 throw new ArgumentNullOrEmptyStringException(key, nameof(key));
             }
-            
+
             return Sections.ContainsKey(key);
         }
 
@@ -108,14 +108,14 @@ namespace NetExtender.Serialization.Ini
 
             return Sections.TryGetValue(key, out result);
         }
-        
+
         public Int32 IndexOf(String key)
         {
             if (String.IsNullOrEmpty(key))
             {
                 throw new ArgumentNullOrEmptyStringException(key, nameof(key));
             }
-            
+
             return Sections.IndexOf(key);
         }
 
@@ -125,7 +125,7 @@ namespace NetExtender.Serialization.Ini
             {
                 throw new ArgumentNullOrEmptyStringException(key, nameof(key));
             }
-            
+
             return Sections.IndexOf(key, index);
         }
 
@@ -135,7 +135,7 @@ namespace NetExtender.Serialization.Ini
             {
                 throw new ArgumentNullOrEmptyStringException(key, nameof(key));
             }
-            
+
             return Sections.IndexOf(key, index, count);
         }
 
@@ -145,7 +145,7 @@ namespace NetExtender.Serialization.Ini
             {
                 throw new ArgumentNullOrEmptyStringException(key, nameof(key));
             }
-            
+
             return Sections.LastIndexOf(key);
         }
 
@@ -155,7 +155,7 @@ namespace NetExtender.Serialization.Ini
             {
                 throw new ArgumentNullOrEmptyStringException(key, nameof(key));
             }
-            
+
             return Sections.LastIndexOf(key, index);
         }
 
@@ -165,7 +165,7 @@ namespace NetExtender.Serialization.Ini
             {
                 throw new ArgumentNullOrEmptyStringException(key, nameof(key));
             }
-            
+
             return Sections.LastIndexOf(key, index, count);
         }
 
@@ -231,17 +231,17 @@ namespace NetExtender.Serialization.Ini
 
             ((IDictionary<String, IniSection>) Sections).Add(item);
         }
-        
+
         public void Insert(Int32 index, String key, IniSection value)
         {
             if (String.IsNullOrEmpty(key))
             {
                 throw new ArgumentNullOrEmptyStringException(key, nameof(key));
             }
-            
+
             Sections.Insert(index, key, value);
         }
-        
+
         public void Sort()
         {
             Sections.Sort();
@@ -286,7 +286,7 @@ namespace NetExtender.Serialization.Ini
 
             return ((IDictionary<String, IniSection>) Sections).Remove(item);
         }
-        
+
         public Boolean RemoveAt(Int32 index)
         {
             return Sections.RemoveAt(index);
@@ -467,7 +467,7 @@ namespace NetExtender.Serialization.Ini
                 {
                     writer.WriteLine(String.Empty);
                 }
-                
+
                 writer.WriteLine($"[{ini.Trim()}]");
 
                 foreach ((String key, IniValue value) in section)
@@ -509,7 +509,7 @@ namespace NetExtender.Serialization.Ini
                 {
                     await writer.WriteLineAsync(String.Empty).ConfigureAwait(false);
                 }
-                
+
                 await writer.WriteLineAsync($"[{ini.Trim()}]").ConfigureAwait(false);
 
                 foreach ((String key, IniValue value) in section)
@@ -567,7 +567,7 @@ namespace NetExtender.Serialization.Ini
                 Sections[key] = value;
             }
         }
-        
+
         public IniSection this[Int32 index]
         {
             get

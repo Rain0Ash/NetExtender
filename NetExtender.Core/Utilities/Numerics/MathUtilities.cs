@@ -12,8 +12,6 @@ using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using NetExtender.Types.Exceptions;
 using NetExtender.Types.Numerics;
-using NetExtender.Types.Reflection;
-using NetExtender.Utilities.Core;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Utilities.Numerics
@@ -53,7 +51,7 @@ namespace NetExtender.Utilities.Numerics
         Acsc,
         Acsch
     }
-    
+
     public enum RomanDigit : UInt16
     {
         I = 1,
@@ -69,7 +67,7 @@ namespace NetExtender.Utilities.Numerics
     public sealed class RoundingAttribute : Attribute
     {
         private const MidpointRounding Default = MidpointRounding.ToEven;
-        
+
         public Byte Digits { get; }
         public MidpointRounding Rounding { get; }
 
@@ -103,17 +101,17 @@ namespace NetExtender.Utilities.Numerics
             public static class Single
             {
                 public const System.Single Epsilon = System.Single.Epsilon;
-                
+
                 public const System.Single Zero = 0F;
                 public const System.Single Half = 0.5F;
                 public const System.Single One = 1F;
-                
+
                 public const System.Single Tau = PIx2;
                 public const System.Single PI = MathF.PI;
                 public const System.Single PIx2 = PI * 2;
                 public const System.Single E = MathF.E;
                 public const System.Single Radian = PI / AngleUtilities.Degree.Single.Straight;
-                
+
                 public const System.Single Sqrt2 = (System.Single) Decimal.Sqrt2;
                 public const System.Single ISqrt2 = (System.Single) Decimal.ISqrt2;
                 public const System.Single Sqrt3 = (System.Single) Decimal.Sqrt3;
@@ -130,21 +128,21 @@ namespace NetExtender.Utilities.Numerics
                 public const System.Single Log3 = (System.Single) Decimal.Log3;
                 public const System.Single ILog3 = (System.Single) Decimal.ILog3;
             }
-            
+
             public static class Double
             {
                 public const System.Double Epsilon = System.Double.Epsilon;
-                
+
                 public const System.Double Zero = 0D;
                 public const System.Double Half = 0.5D;
                 public const System.Double One = 1D;
-                
+
                 public const System.Double Tau = PIx2;
                 public const System.Double PI = Math.PI;
                 public const System.Double PIx2 = PI * 2;
                 public const System.Double E = Math.E;
                 public const System.Double Radian = PI / AngleUtilities.Degree.Double.Straight;
-                
+
                 public const System.Double Sqrt2 = (System.Double) Decimal.Sqrt2;
                 public const System.Double ISqrt2 = (System.Double) Decimal.ISqrt3;
                 public const System.Double Sqrt3 = (System.Double) Decimal.Sqrt3;
@@ -161,7 +159,7 @@ namespace NetExtender.Utilities.Numerics
                 public const System.Double Log3 = (System.Double) Decimal.Log3;
                 public const System.Double ILog3 = (System.Double) Decimal.ILog3;
             }
-            
+
             public static class Decimal
             {
                 /// <summary>
@@ -190,7 +188,7 @@ namespace NetExtender.Utilities.Numerics
                 public const System.Decimal SqrtRescaleThreshold = System.Decimal.MaxValue / (Sqrt2 + One);
 
                 public const System.Decimal Tau = PIx2;
-                
+
                 /// <summary>
                 /// Represents PI
                 /// </summary>
@@ -615,7 +613,7 @@ namespace NetExtender.Utilities.Numerics
         {
             return NotEquals(value, other);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static Boolean NotEquals(Single value, Single other)
         {
@@ -2129,12 +2127,12 @@ namespace NetExtender.Utilities.Numerics
                 {
                     return MathF.Cbrt(value);
                 }
-                
+
                 return MathF.Pow(value, 1 / @base);
             }
 
             value = MathF.Abs(value);
-            
+
             if (value < Single.Epsilon)
             {
                 return 0;
@@ -2248,12 +2246,12 @@ namespace NetExtender.Utilities.Numerics
                 {
                     return Math.Cbrt(value);
                 }
-                
+
                 return Math.Pow(value, 1 / @base);
             }
 
             value = Math.Abs(value);
-            
+
             if (value < Double.Epsilon)
             {
                 return 0;
@@ -2331,17 +2329,17 @@ namespace NetExtender.Utilities.Numerics
                 {
                     return Decimal.One;
                 }
-                
+
                 return value < Constants.Decimal.Epsilon ? Decimal.Zero : Pow(value, Decimal.One / @base);
             }
 
             value = Math.Abs(value);
-            
+
             if (value - Decimal.One < Constants.Decimal.Epsilon)
             {
                 return -Decimal.One;
             }
-            
+
             return value < Constants.Decimal.Epsilon ? Decimal.Zero : -Pow(value, Decimal.One / @base);
         }
 
@@ -3604,7 +3602,7 @@ namespace NetExtender.Utilities.Numerics
                 <= AngleUtilities.Degree.Int32.ThreeQuarter => AngleUtilities.Degree.Int32.Straight - angle,
                 _ => angle - AngleUtilities.Degree.Int32.Full
             };
-            
+
             quarter = (Quarter) (angle / AngleUtilities.Degree.Int32.Quarter + 1);
             return degree;
         }
@@ -3626,20 +3624,20 @@ namespace NetExtender.Utilities.Numerics
         {
             return ToQuarterDegree((Int32) (value % AngleUtilities.Degree.Int32.Full), out quarter);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static Single ToQuarterDegree(this Single value, out Quarter quarter)
         {
             value %= AngleUtilities.Degree.Single.Full;
             Single angle = value < AngleUtilities.Degree.Single.Zero ? AngleUtilities.Degree.Single.Full + value % AngleUtilities.Degree.Single.Full : value % AngleUtilities.Degree.Single.Full;
-            
+
             Single degree = angle switch
             {
                 <= AngleUtilities.Degree.Single.Quarter => angle,
                 <= AngleUtilities.Degree.Single.ThreeQuarter => AngleUtilities.Degree.Single.Straight - angle,
                 _ => angle - AngleUtilities.Degree.Single.Full
             };
-            
+
             quarter = (Quarter) (Int32) (angle / AngleUtilities.Degree.Single.Quarter + 1);
             return degree;
         }
@@ -3649,14 +3647,14 @@ namespace NetExtender.Utilities.Numerics
         {
             value %= AngleUtilities.Degree.Double.Full;
             Double angle = value < AngleUtilities.Degree.Double.Zero ? AngleUtilities.Degree.Double.Full + value % AngleUtilities.Degree.Double.Full : value % AngleUtilities.Degree.Double.Full;
-            
+
             Double degree = angle switch
             {
                 <= AngleUtilities.Degree.Double.Quarter => angle,
                 <= AngleUtilities.Degree.Double.ThreeQuarter => AngleUtilities.Degree.Double.Straight - angle,
                 _ => angle - AngleUtilities.Degree.Double.Full
             };
-            
+
             quarter = (Quarter) (Int32) (angle / AngleUtilities.Degree.Double.Quarter + 1);
             return degree;
         }
@@ -3666,14 +3664,14 @@ namespace NetExtender.Utilities.Numerics
         {
             value %= AngleUtilities.Degree.Decimal.Full;
             Decimal angle = value < AngleUtilities.Degree.Decimal.Zero ? AngleUtilities.Degree.Decimal.Full + value % AngleUtilities.Degree.Decimal.Full : value % AngleUtilities.Degree.Decimal.Full;
-            
+
             Decimal degree = angle switch
             {
                 <= AngleUtilities.Degree.Decimal.Quarter => angle,
                 <= AngleUtilities.Degree.Decimal.ThreeQuarter => AngleUtilities.Degree.Decimal.Straight - angle,
                 _ => angle - AngleUtilities.Degree.Decimal.Full
             };
-            
+
             quarter = (Quarter) (Int32) (angle / AngleUtilities.Degree.Decimal.Quarter + 1);
             return degree;
         }
@@ -4091,7 +4089,7 @@ namespace NetExtender.Utilities.Numerics
         {
             return value * Constants.Decimal.Radian;
         }
-        
+
         /// <summary>
         /// Truncates to  [-2*PI;2*PI]
         /// </summary>
@@ -4102,7 +4100,7 @@ namespace NetExtender.Utilities.Numerics
             TruncateToPeriodicInterval(ref value);
             return value;
         }
-        
+
         /// <summary>
         /// Truncates to  [-2*PI;2*PI]
         /// </summary>
@@ -4122,7 +4120,7 @@ namespace NetExtender.Utilities.Numerics
                 value += divide * Constants.Single.PIx2;
             }
         }
-        
+
         /// <summary>
         /// Truncates to  [-2*PI;2*PI]
         /// </summary>
@@ -4184,7 +4182,7 @@ namespace NetExtender.Utilities.Numerics
                 value += divide * Constants.Decimal.PIx2;
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static Boolean IsSignOfSinPositive(this Single value)
         {
@@ -4204,7 +4202,7 @@ namespace NetExtender.Utilities.Numerics
             Single module = MathF.Sqrt(1 - cos * cos);
             return IsSignOfSinPositive(value) ? module : -module;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static Boolean IsSignOfSinPositive(this Double value)
         {
@@ -4656,7 +4654,7 @@ namespace NetExtender.Utilities.Numerics
                     return 1 - second / first;
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static Double Distance(Int32 x1, Int32 y1, Int32 x2, Int32 y2)
         {
@@ -4664,7 +4662,7 @@ namespace NetExtender.Utilities.Numerics
             Double dy = y1 - y2;
             return Math.Sqrt(dx * dx + dy * dy);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static Double Distance(Int64 x1, Int64 y1, Int64 x2, Int64 y2)
         {
@@ -4867,7 +4865,7 @@ namespace NetExtender.Utilities.Numerics
         {
             return Factorial((UInt32) value);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Int64 Factorial(this Int32 value)
         {
@@ -4908,7 +4906,7 @@ namespace NetExtender.Utilities.Numerics
                 _ => throw new OverflowException()
             };
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Int64 Factorial(this Int64 value)
         {
@@ -4983,7 +4981,7 @@ namespace NetExtender.Utilities.Numerics
         {
             return DecimalFactorial((UInt32) value);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Decimal DecimalFactorial(this Int32 value)
         {
@@ -5031,7 +5029,7 @@ namespace NetExtender.Utilities.Numerics
                 _ => throw new OverflowException()
             };
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Decimal DecimalFactorial(this Int64 value)
         {
@@ -5087,7 +5085,7 @@ namespace NetExtender.Utilities.Numerics
             {
                 throw new ArgumentOutOfRangeException(nameof(value), value, null);
             }
-            
+
             return value.ThrowIfDigitsAfterPoint() switch
             {
                 0 => 1M,
@@ -5181,7 +5179,7 @@ namespace NetExtender.Utilities.Numerics
 
             return result > 0;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean Factorial(this Byte value, out Decimal result)
         {
@@ -5217,7 +5215,7 @@ namespace NetExtender.Utilities.Numerics
 
             return result > 0;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean Factorial(this Int16 value, out Decimal result)
         {
@@ -5253,7 +5251,7 @@ namespace NetExtender.Utilities.Numerics
 
             return result > 0;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean Factorial(this UInt16 value, out Decimal result)
         {
@@ -5289,7 +5287,7 @@ namespace NetExtender.Utilities.Numerics
 
             return result > 0;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean Factorial(this Int32 value, out Decimal result)
         {
@@ -5325,7 +5323,7 @@ namespace NetExtender.Utilities.Numerics
 
             return result > 0;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean Factorial(this UInt32 value, out Decimal result)
         {
@@ -5361,7 +5359,7 @@ namespace NetExtender.Utilities.Numerics
 
             return result > 0;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean Factorial(this Int64 value, out Decimal result)
         {
@@ -5397,7 +5395,7 @@ namespace NetExtender.Utilities.Numerics
 
             return result > 0;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean Factorial(this UInt64 value, out Decimal result)
         {
@@ -5698,7 +5696,7 @@ namespace NetExtender.Utilities.Numerics
             {
                 if (Math.Abs(b) < Double.Epsilon)
                 {
-                    real = (Math.Abs(c) < Double.Epsilon) ? 1 : 0;
+                    real = Math.Abs(c) < Double.Epsilon ? 1 : 0;
                     return (new Complex(0, 0), Complex.NaN);
                 }
 
@@ -5731,7 +5729,7 @@ namespace NetExtender.Utilities.Numerics
                 return root1 == root2 ? (root1, root2) : (root1, Complex.NaN);
             }
         }
-        
+
         public enum IntegrationMethod
         {
             Default,
@@ -5794,14 +5792,14 @@ namespace NetExtender.Utilities.Numerics
 
             Double interval = (upper - lower) / intervals;
             Double sum = 0;
-            
+
             for (Int32 i = 0; i < intervals; i++)
             {
                 Double x = lower + (i + 0.5) * interval;
                 Double y = function(x);
                 sum += y * interval;
             }
-            
+
             return sum;
         }
 
@@ -5821,16 +5819,16 @@ namespace NetExtender.Utilities.Numerics
 
             Double interval = (upper - lower) / intervals;
             Double sum = 0.5 * (function(lower) + function(upper));
-            
+
             for (Int32 i = 1; i < intervals; i++)
             {
                 Double x = lower + i * interval;
                 sum += function(x);
             }
-            
+
             return sum * interval;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double IntegrateSimpson(Double lower, Double upper, Func<Double, Double> function)
         {
@@ -5852,7 +5850,7 @@ namespace NetExtender.Utilities.Numerics
 
             Double interval = (upper - lower) / intervals;
             Double subinterval = interval / 2;
-            
+
             Double sum = 0;
             for (Int32 i = 0; i < intervals; i += 2)
             {
@@ -6249,7 +6247,7 @@ namespace NetExtender.Utilities.Numerics
         {
             value = Round(value, digits, rounding);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Round(ref Single value, Int32 digits, MidpointRounding rounding)
         {
@@ -6435,7 +6433,7 @@ namespace NetExtender.Utilities.Numerics
         {
             return Math.Round(value, digits.Clamp(0, 28), rounding);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Round(this RoundingAttribute attribute, ref Single value)
         {
@@ -6463,7 +6461,7 @@ namespace NetExtender.Utilities.Numerics
 
             return Round(value, attribute.Digits, attribute.Rounding);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Round(this RoundingAttribute attribute, ref Double value)
         {
@@ -6491,7 +6489,7 @@ namespace NetExtender.Utilities.Numerics
 
             return Round(value, attribute.Digits, attribute.Rounding);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Round(this RoundingAttribute attribute, ref Decimal value)
         {
@@ -7255,13 +7253,13 @@ namespace NetExtender.Utilities.Numerics
         {
             return ConvertBase(value.ToString(CultureInfo.InvariantCulture), from, to);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static RomanDigit ToRoman(this Char character)
         {
             return ToRoman(character, out RomanDigit result) ? result : throw new ArgumentException($"Invalid Roman digit '{character}'.", nameof(character));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static Boolean ToRoman(this Char character, out RomanDigit result)
         {
@@ -7276,16 +7274,16 @@ namespace NetExtender.Utilities.Numerics
                 'm' or 'M' => RomanDigit.M,
                 _ => default
             };
-            
+
             return result != default;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static UInt16 FromRoman(this Char character)
         {
             return (UInt16) ToRoman(character);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean FromRoman(this Char character, out UInt16 result)
         {
@@ -7294,11 +7292,11 @@ namespace NetExtender.Utilities.Numerics
                 result = (UInt16) digit;
                 return true;
             }
-            
+
             result = default;
             return false;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean FromRoman(this Char character, out Int32 result)
         {
@@ -7307,11 +7305,11 @@ namespace NetExtender.Utilities.Numerics
                 result = (UInt16) digit;
                 return true;
             }
-            
+
             result = default;
             return false;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Int32 FromRoman(this String value)
         {
@@ -7319,23 +7317,23 @@ namespace NetExtender.Utilities.Numerics
             {
                 throw new ArgumentNullException(nameof(value));
             }
-            
+
             return FromRoman((ReadOnlySpan<Char>) value);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Int32 FromRoman(this Span<Char> value)
         {
             return FromRoman((ReadOnlySpan<Char>) value);
         }
-        
+
         //TODO: ToRoman
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static Int32 FromRoman(this ReadOnlySpan<Char> value)
         {
             value = value.Trim();
-            
+
             switch (value.Length)
             {
                 case 0:
@@ -7345,29 +7343,29 @@ namespace NetExtender.Utilities.Numerics
                 case 2 when value[0] is '-':
                     return -FromRoman(value[1]);
             }
-            
+
             Boolean negative = value[0] is '-';
             Int32 start = negative ? 1 : 0;
-            
+
             Int32 result = 0;
             Int32 previous = FromRoman(value[start]);
-            
+
             for (Int32 i = start; i < value.Length; i++)
             {
                 Int32 current = FromRoman(value[i]);
-                
+
                 result += current;
                 if (previous < current)
                 {
                     result -= previous * 2;
                 }
-                
+
                 previous = current;
             }
-            
+
             return negative ? -result : result;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean FromRoman(this String value, out Int32 result)
         {
@@ -7375,21 +7373,21 @@ namespace NetExtender.Utilities.Numerics
             {
                 throw new ArgumentNullException(nameof(value));
             }
-            
+
             return FromRoman((ReadOnlySpan<Char>) value, out result);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean FromRoman(this Span<Char> value, out Int32 result)
         {
             return FromRoman((ReadOnlySpan<Char>) value, out result);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static Boolean FromRoman(this ReadOnlySpan<Char> value, out Int32 result)
         {
             value = value.Trim();
-            
+
             result = 0;
             switch (value.Length)
             {
@@ -7402,20 +7400,20 @@ namespace NetExtender.Utilities.Numerics
                     {
                         return false;
                     }
-                    
+
                     result = -result;
                     return true;
             }
-            
+
             Boolean negative = value[0] is '-';
             Int32 start = negative ? 1 : 0;
-            
+
             if (!FromRoman(value[start], out Int32 previous))
             {
                 result = 0;
                 return false;
             }
-            
+
             for (Int32 i = start; i < value.Length; i++)
             {
                 if (!FromRoman(value[i], out Int32 current))
@@ -7423,24 +7421,24 @@ namespace NetExtender.Utilities.Numerics
                     result = 0;
                     return false;
                 }
-                
+
                 result += current;
                 if (previous < current)
                 {
                     result -= previous * 2;
                 }
-                
+
                 previous = current;
             }
-            
+
             if (negative)
             {
                 result = -result;
             }
-            
+
             return true;
         }
-        
+
         /// <summary>
         /// Returns the quartile values of an ordered set of doubles. The provided list must be already ordered. If it is not, please use method <see cref="FindQuartiles"/>.
         /// <para>
@@ -7586,11 +7584,15 @@ namespace NetExtender.Utilities.Numerics
         {
         }
 
+#if NET8_0_OR_GREATER
+        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
         private ValueHasDigitsAfterPointException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
         }
-        
+
         private protected override Object? GetValue()
         {
             return Value;
@@ -7607,7 +7609,7 @@ namespace NetExtender.Utilities.Numerics
                 return GetValue();
             }
         }
-        
+
         private protected ValueHasDigitsAfterPointException()
         {
         }
@@ -7622,6 +7624,10 @@ namespace NetExtender.Utilities.Numerics
         {
         }
 
+#if NET8_0_OR_GREATER
+        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
         private protected ValueHasDigitsAfterPointException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {

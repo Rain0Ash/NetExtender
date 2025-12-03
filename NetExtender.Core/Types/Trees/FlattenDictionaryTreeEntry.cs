@@ -27,11 +27,11 @@ namespace NetExtender.Types.Trees
 
         public TKey Key { get; }
         public TValue Value { get; }
-        
+
         [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public String? Section { get; }
-        
+
         [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public String Separator { get; }
@@ -70,22 +70,22 @@ namespace NetExtender.Types.Trees
             value = Value;
             section = Section;
         }
-        
+
         public override Int32 GetHashCode()
         {
             return HashCode.Combine(Key, Value, Section);
         }
-        
+
         public override Boolean Equals(Object? other)
         {
             return other is FlattenDictionaryTreeEntry<TKey, TValue> entry && Equals(entry);
         }
-        
+
         public Boolean Equals(FlattenDictionaryTreeEntry<TKey, TValue> other)
         {
             return Equals(Key, other.Key) && Equals(Value, other.Value) && Section == other.Section && Separator == other.Separator;
         }
-        
+
         public override String ToString()
         {
             return this.JsonSerializeObject();

@@ -175,7 +175,7 @@ namespace NetExtender.Types.Sets
 
             return Indexer.ValueOf(index, out value);
         }
-        
+
         public Boolean TryGetValue(T equal, [MaybeNullWhen(false)] out T actual)
         {
             return Internal.TryGetValue(equal, out actual);
@@ -330,7 +330,7 @@ namespace NetExtender.Types.Sets
             Rebuild = true;
             return true;
         }
-        
+
         public virtual Int32 RemoveWhere(Predicate<T> match)
         {
             if (match is null)

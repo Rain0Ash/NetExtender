@@ -18,7 +18,7 @@ namespace NetExtender.Types.Middlewares
     public delegate Task MiddlewareSenderDelegateAsync<in T>(Object? sender, T argument);
     public delegate ValueTask MiddlewareDelegateValueAsync<in T>(T argument);
     public delegate ValueTask MiddlewareSenderDelegateValueAsync<in T>(Object? sender, T argument);
-    
+
     public enum MiddlewareExecutionContext : Byte
     {
         Parallel,
@@ -33,7 +33,7 @@ namespace NetExtender.Types.Middlewares
         Argument,
         SenderArgument
     }
-    
+
     public abstract class AsyncValueMiddleware<T> : AsyncMiddleware<T>
     {
         [return: NotNullIfNotNull("value")]
@@ -41,13 +41,13 @@ namespace NetExtender.Types.Middlewares
         {
             return value is not null ? new AsyncValueHandler(value) : null;
         }
-        
+
         [return: NotNullIfNotNull("value")]
         public static implicit operator AsyncValueMiddleware<T>?(MiddlewareSenderDelegateValueAsync<T>? value)
         {
             return value is not null ? new AsyncValueSenderHandler(value) : null;
         }
-        
+
         public override Boolean IsValue
         {
             get
@@ -55,33 +55,33 @@ namespace NetExtender.Types.Middlewares
                 return true;
             }
         }
-        
+
         public override Task InvokeAsync(T argument)
         {
             return InvokeValueAsync(argument).AsTask();
         }
-        
+
         public override Task InvokeAsync(Object? sender, T argument)
         {
             return InvokeValueAsync(sender, argument).AsTask();
         }
-        
+
         public override ValueTask InvokeValueAsync(T argument)
         {
             return InvokeValueAsync(null, argument);
         }
-        
+
         public abstract override ValueTask InvokeValueAsync(Object? sender, T argument);
-        
+
         internal sealed class AsyncValueHandler : AsyncValueMiddleware<T>
         {
             private MiddlewareDelegateValueAsync<T> Delegate { get; }
-            
+
             public AsyncValueHandler(MiddlewareDelegateValueAsync<T> @delegate)
             {
                 Delegate = @delegate ?? throw new ArgumentNullException(nameof(@delegate));
             }
-            
+
             public override async ValueTask InvokeValueAsync(T argument)
             {
                 if (!Memorize(argument))
@@ -99,37 +99,37 @@ namespace NetExtender.Types.Middlewares
                     throw;
                 }
             }
-            
+
             public override ValueTask InvokeValueAsync(Object? sender, T argument)
             {
                 return InvokeValueAsync(argument);
             }
-            
+
             public override Int32 GetHashCode()
             {
                 return Delegate.GetHashCode();
             }
-            
+
             public override Boolean Equals(Object? other)
             {
                 return ReferenceEquals(this, other) || Delegate.Equals(other);
             }
-            
+
             public override String? ToString()
             {
                 return Delegate.ToString();
             }
         }
-        
+
         internal sealed class AsyncValueSenderHandler : AsyncValueMiddleware<T>
         {
             private MiddlewareSenderDelegateValueAsync<T> Delegate { get; }
-            
+
             public AsyncValueSenderHandler(MiddlewareSenderDelegateValueAsync<T> @delegate)
             {
                 Delegate = @delegate ?? throw new ArgumentNullException(nameof(@delegate));
             }
-            
+
             public override async ValueTask InvokeValueAsync(Object? sender, T argument)
             {
                 if (!Memorize(sender, argument))
@@ -147,24 +147,24 @@ namespace NetExtender.Types.Middlewares
                     throw;
                 }
             }
-            
+
             public override Int32 GetHashCode()
             {
                 return Delegate.GetHashCode();
             }
-            
+
             public override Boolean Equals(Object? other)
             {
                 return ReferenceEquals(this, other) || Delegate.Equals(other);
             }
-            
+
             public override String? ToString()
             {
                 return Delegate.ToString();
             }
         }
     }
-    
+
     public abstract class AsyncMiddleware<T> : Middleware, IAsyncMiddleware<T>, IMiddlewareConverter<T, T>, IMiddlewareAsyncConverter<T, T>
     {
         [return: NotNullIfNotNull("value")]
@@ -172,15 +172,15 @@ namespace NetExtender.Types.Middlewares
         {
             return value is not null ? new AsyncHandler(value) : null;
         }
-        
+
         [return: NotNullIfNotNull("value")]
         public static implicit operator AsyncMiddleware<T>?(MiddlewareSenderDelegateAsync<T>? value)
         {
             return value is not null ? new AsyncSenderHandler(value) : null;
         }
-        
+
         protected ConcurrentHashSet<(Object? Sender, T Argument)> Memory { get; } = new ConcurrentHashSet<(Object? Sender, T Argument)>();
-        
+
         public Boolean IsAsync
         {
             get
@@ -188,7 +188,7 @@ namespace NetExtender.Types.Middlewares
                 return true;
             }
         }
-        
+
         public virtual Boolean IsValue
         {
             get
@@ -216,15 +216,15 @@ namespace NetExtender.Types.Middlewares
         {
             return Forget(Memory, sender, argument);
         }
-        
+
         //TODO: в DomainBuilder везде расставить Manager.Invoke, добавить рефлексивную проверку, что Domain устанавливает правила патчей ранее, чем происходит ModuleInitializer
         public virtual Task InvokeAsync(T argument)
         {
             return InvokeAsync(null, argument);
         }
-        
+
         public abstract Task InvokeAsync(Object? sender, T argument);
-        
+
         public async Task<Boolean> InvokeAsync<TArgument>(TArgument argument)
         {
             try
@@ -246,7 +246,7 @@ namespace NetExtender.Types.Middlewares
                 return true;
             }
         }
-        
+
         public async Task<Boolean> InvokeAsync<TArgument>(Object? sender, TArgument argument)
         {
             try
@@ -268,17 +268,17 @@ namespace NetExtender.Types.Middlewares
                 return true;
             }
         }
-        
+
         public virtual async ValueTask InvokeValueAsync(T argument)
         {
             await InvokeAsync(argument);
         }
-        
+
         public virtual async ValueTask InvokeValueAsync(Object? sender, T argument)
         {
             await InvokeAsync(sender, argument);
         }
-        
+
         public async ValueTask<Boolean> InvokeValueAsync<TArgument>(TArgument argument)
         {
             try
@@ -300,7 +300,7 @@ namespace NetExtender.Types.Middlewares
                 return true;
             }
         }
-        
+
         public async ValueTask<Boolean> InvokeValueAsync<TArgument>(Object? sender, TArgument argument)
         {
             try
@@ -325,26 +325,26 @@ namespace NetExtender.Types.Middlewares
                 return true;
             }
         }
-        
+
         T IMiddlewareConverter<T, T>.Convert(Object? sender, T argument)
         {
             return argument;
         }
-        
+
         ValueTask<T> IMiddlewareAsyncConverter<T, T>.ConvertAsync(Object? sender, T argument)
         {
             return ValueTask.FromResult(argument);
         }
-        
+
         internal sealed class AsyncHandler : AsyncMiddleware<T>
         {
             private MiddlewareDelegateAsync<T> Delegate { get; }
-            
+
             public AsyncHandler(MiddlewareDelegateAsync<T> @delegate)
             {
                 Delegate = @delegate ?? throw new ArgumentNullException(nameof(@delegate));
             }
-            
+
             public override async Task InvokeAsync(T argument)
             {
                 if (!Memorize(argument))
@@ -362,37 +362,37 @@ namespace NetExtender.Types.Middlewares
                     throw;
                 }
             }
-            
+
             public override Task InvokeAsync(Object? sender, T argument)
             {
                 return InvokeAsync(argument);
             }
-            
+
             public override Int32 GetHashCode()
             {
                 return Delegate.GetHashCode();
             }
-            
+
             public override Boolean Equals(Object? other)
             {
                 return ReferenceEquals(this, other) || Delegate.Equals(other);
             }
-            
+
             public override String? ToString()
             {
                 return Delegate.ToString();
             }
         }
-        
+
         internal sealed class AsyncSenderHandler : AsyncMiddleware<T>
         {
             private MiddlewareSenderDelegateAsync<T> Delegate { get; }
-            
+
             public AsyncSenderHandler(MiddlewareSenderDelegateAsync<T> @delegate)
             {
                 Delegate = @delegate ?? throw new ArgumentNullException(nameof(@delegate));
             }
-            
+
             public override async Task InvokeAsync(Object? sender, T argument)
             {
                 if (!Memorize(sender, argument))
@@ -410,24 +410,24 @@ namespace NetExtender.Types.Middlewares
                     throw;
                 }
             }
-            
+
             public override Int32 GetHashCode()
             {
                 return Delegate.GetHashCode();
             }
-            
+
             public override Boolean Equals(Object? other)
             {
                 return ReferenceEquals(this, other) || Delegate.Equals(other);
             }
-            
+
             public override String? ToString()
             {
                 return Delegate.ToString();
             }
         }
     }
-    
+
     public abstract class Middleware<T> : Middleware, IMiddleware<T>, IMiddlewareConverter<T, T>
     {
         [return: NotNullIfNotNull("value")]
@@ -435,15 +435,15 @@ namespace NetExtender.Types.Middlewares
         {
             return value is not null ? new Handler(value) : null;
         }
-        
+
         [return: NotNullIfNotNull("value")]
         public static implicit operator Middleware<T>?(MiddlewareSenderDelegate<T>? value)
         {
             return value is not null ? new SenderHandler(value) : null;
         }
-        
+
         protected ConcurrentHashSet<(Object? Sender, T Argument)> Memory { get; } = new ConcurrentHashSet<(Object? Sender, T Argument)>();
-        
+
         public Boolean IsAsync
         {
             get
@@ -471,14 +471,14 @@ namespace NetExtender.Types.Middlewares
         {
             return Forget(Memory, sender, argument);
         }
-        
+
         public virtual void Invoke(T argument)
         {
             Invoke(null, argument);
         }
-        
+
         public abstract void Invoke(Object? sender, T argument);
-        
+
         public Boolean Invoke<TArgument>(TArgument argument)
         {
             switch (this)
@@ -493,7 +493,7 @@ namespace NetExtender.Types.Middlewares
                     return false;
             }
         }
-        
+
         public Boolean Invoke<TArgument>(Object? sender, TArgument argument)
         {
             switch (this)
@@ -508,21 +508,21 @@ namespace NetExtender.Types.Middlewares
                     return false;
             }
         }
-        
+
         T IMiddlewareConverter<T, T>.Convert(Object? sender, T argument)
         {
             return argument;
         }
-        
+
         internal sealed class Handler : Middleware<T>
         {
             private MiddlewareDelegate<T> Delegate { get; }
-            
+
             public Handler(MiddlewareDelegate<T> @delegate)
             {
                 Delegate = @delegate ?? throw new ArgumentNullException(nameof(@delegate));
             }
-            
+
             public override void Invoke(T argument)
             {
                 if (!Memorize(argument))
@@ -540,37 +540,37 @@ namespace NetExtender.Types.Middlewares
                     throw;
                 }
             }
-            
+
             public override void Invoke(Object? sender, T argument)
             {
                 Invoke(argument);
             }
-            
+
             public override Int32 GetHashCode()
             {
                 return Delegate.GetHashCode();
             }
-            
+
             public override Boolean Equals(Object? other)
             {
                 return ReferenceEquals(this, other) || Delegate.Equals(other);
             }
-            
+
             public override String? ToString()
             {
                 return Delegate.ToString();
             }
         }
-        
+
         internal sealed class SenderHandler : Middleware<T>
         {
             private MiddlewareSenderDelegate<T> Delegate { get; }
-            
+
             public SenderHandler(MiddlewareSenderDelegate<T> @delegate)
             {
                 Delegate = @delegate ?? throw new ArgumentNullException(nameof(@delegate));
             }
-            
+
             public override void Invoke(Object? sender, T argument)
             {
                 if (!Memorize(sender, argument))
@@ -588,24 +588,24 @@ namespace NetExtender.Types.Middlewares
                     throw;
                 }
             }
-            
+
             public override Int32 GetHashCode()
             {
                 return Delegate.GetHashCode();
             }
-            
+
             public override Boolean Equals(Object? other)
             {
                 return ReferenceEquals(this, other) || Delegate.Equals(other);
             }
-            
+
             public override String? ToString()
             {
                 return Delegate.ToString();
             }
         }
     }
-    
+
     public abstract class Middleware : IMiddlewareInfo
     {
         internal MiddlewareExecutionOptions Options
@@ -666,10 +666,10 @@ namespace NetExtender.Types.Middlewares
             {
                 throw new ArgumentNullException(nameof(@delegate));
             }
-            
+
             return new Middleware<T>.Handler(@delegate);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IMiddleware<T> Create<T>(MiddlewareDelegate<T> @delegate, MiddlewareExecutionOptions options)
         {
@@ -680,7 +680,7 @@ namespace NetExtender.Types.Middlewares
 
             return new Middleware<T>.Handler(@delegate) { Options = options };
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IMiddleware<T> Create<T>(MiddlewareSenderDelegate<T> @delegate)
         {
@@ -691,7 +691,7 @@ namespace NetExtender.Types.Middlewares
 
             return new Middleware<T>.SenderHandler(@delegate);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IMiddleware<T> Create<T>(MiddlewareSenderDelegate<T> @delegate, MiddlewareExecutionOptions options)
         {
@@ -702,7 +702,7 @@ namespace NetExtender.Types.Middlewares
 
             return new Middleware<T>.SenderHandler(@delegate) { Options = options };
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IAsyncMiddleware<T> Create<T>(MiddlewareDelegateAsync<T> @delegate)
         {
@@ -710,10 +710,10 @@ namespace NetExtender.Types.Middlewares
             {
                 throw new ArgumentNullException(nameof(@delegate));
             }
-            
+
             return new AsyncMiddleware<T>.AsyncHandler(@delegate);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IAsyncMiddleware<T> Create<T>(MiddlewareDelegateAsync<T> @delegate, MiddlewareExecutionOptions options)
         {
@@ -721,10 +721,10 @@ namespace NetExtender.Types.Middlewares
             {
                 throw new ArgumentNullException(nameof(@delegate));
             }
-            
+
             return new AsyncMiddleware<T>.AsyncHandler(@delegate) { Options = options };
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IAsyncMiddleware<T> Create<T>(MiddlewareSenderDelegateAsync<T> @delegate)
         {
@@ -735,7 +735,7 @@ namespace NetExtender.Types.Middlewares
 
             return new AsyncMiddleware<T>.AsyncSenderHandler(@delegate);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IAsyncMiddleware<T> Create<T>(MiddlewareSenderDelegateAsync<T> @delegate, MiddlewareExecutionOptions options)
         {
@@ -746,7 +746,7 @@ namespace NetExtender.Types.Middlewares
 
             return new AsyncMiddleware<T>.AsyncSenderHandler(@delegate) { Options = options };
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IAsyncMiddleware<T> Create<T>(MiddlewareDelegateValueAsync<T> @delegate)
         {
@@ -754,10 +754,10 @@ namespace NetExtender.Types.Middlewares
             {
                 throw new ArgumentNullException(nameof(@delegate));
             }
-            
+
             return new AsyncValueMiddleware<T>.AsyncValueHandler(@delegate);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IAsyncMiddleware<T> Create<T>(MiddlewareDelegateValueAsync<T> @delegate, MiddlewareExecutionOptions options)
         {
@@ -765,10 +765,10 @@ namespace NetExtender.Types.Middlewares
             {
                 throw new ArgumentNullException(nameof(@delegate));
             }
-            
+
             return new AsyncValueMiddleware<T>.AsyncValueHandler(@delegate) { Options = options };
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IAsyncMiddleware<T> Create<T>(MiddlewareSenderDelegateValueAsync<T> @delegate)
         {
@@ -776,10 +776,10 @@ namespace NetExtender.Types.Middlewares
             {
                 throw new ArgumentNullException(nameof(@delegate));
             }
-            
+
             return new AsyncValueMiddleware<T>.AsyncValueSenderHandler(@delegate);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IAsyncMiddleware<T> Create<T>(MiddlewareSenderDelegateValueAsync<T> @delegate, MiddlewareExecutionOptions options)
         {
@@ -787,7 +787,7 @@ namespace NetExtender.Types.Middlewares
             {
                 throw new ArgumentNullException(nameof(@delegate));
             }
-            
+
             return new AsyncValueMiddleware<T>.AsyncValueSenderHandler(@delegate) { Options = options };
         }
     }

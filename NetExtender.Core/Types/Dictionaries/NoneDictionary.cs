@@ -13,7 +13,7 @@ namespace NetExtender.Types.Dictionaries
     {
         public new static NoneDictionary Empty { get; } = new NoneDictionary();
     }
-    
+
     public class NoneDictionary<TKey, TValue> : NoneDictionary<TKey, TValue, NoneCollection<KeyValuePair<TKey, TValue>>>
     {
         public static NoneDictionary<TKey, TValue> Empty { get; } = new NoneDictionary<TKey, TValue>();
@@ -28,7 +28,7 @@ namespace NetExtender.Types.Dictionaries
             return Internal.GetEnumerator();
         }
     }
-    
+
     public abstract class NoneDictionary<TKey, TValue, TCollection> : IDictionary, IReadOnlyDictionary<TKey, TValue> where TCollection : class, ICollection, IReadOnlyCollection<KeyValuePair<TKey, TValue>>
     {
         protected TCollection Internal { get; }
@@ -40,7 +40,7 @@ namespace NetExtender.Types.Dictionaries
                 return Internal;
             }
         }
-        
+
         public Int32 Count
         {
             get

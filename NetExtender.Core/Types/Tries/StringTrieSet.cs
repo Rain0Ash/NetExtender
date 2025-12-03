@@ -47,7 +47,7 @@ namespace NetExtender.Types.Tries
 
             return Get(prefix.AsSpan());
         }
-        
+
         public IEnumerable<String> Get(ReadOnlySpan<Char> prefix)
         {
             return Trie.Get(prefix).Select(entry => new String(entry.ToArray()));

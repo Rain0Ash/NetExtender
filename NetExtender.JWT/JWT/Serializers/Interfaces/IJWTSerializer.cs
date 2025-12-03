@@ -8,7 +8,7 @@ namespace NetExtender.JWT.Interfaces
     public interface IJWTSerializer
     {
         public JWTSerializerType Type { get; }
-        
+
         public String Serialize<T>(T value);
         public Object Deserialize(Type type, String json);
         public T Deserialize<T>(String json);

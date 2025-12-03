@@ -15,7 +15,7 @@ namespace NetExtender.Utilities.Types
         {
             ConvertUtilities.RegisterStringHandler<ServiceDescriptor>(GetString);
         }
-        
+
         [SuppressMessage("ReSharper", "InvokeAsExtensionMethod")]
         private static String? GetString(ServiceDescriptor? value, EscapeType escape, IFormatProvider? provider)
         {

@@ -6,14 +6,17 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Data;
+
+#if !NET8_0_OR_GREATER
 using NetExtender.Utilities.Types;
+#endif
 
 namespace NetExtender.WindowsPresentation.Types.Converters
 {
     public abstract class CustomTypeConverter : IValueConverter
     {
         protected delegate Object Handler(Object @object, Object? parameter, CultureInfo? culture);
-        
+
         private Dictionary<Type, Handler>? _cache;
         protected virtual Dictionary<Type, Handler> Cache
         {

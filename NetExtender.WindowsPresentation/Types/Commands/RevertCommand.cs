@@ -13,7 +13,7 @@ namespace NetExtender.WindowsPresentation.Types.Commands
     public abstract class RevertCommand<T> : Command<T>, IRevertCommand<T>
     {
         public new static Command Empty { get; } = new None();
-        
+
         private protected ICommand<T>? _reverter;
         public virtual ICommand<T> Reverter
         {
@@ -30,12 +30,12 @@ namespace NetExtender.WindowsPresentation.Types.Commands
                 return Reverter;
             }
         }
-        
+
         public Boolean CanRevert(T? parameter)
         {
             return CanRevert(null, parameter);
         }
-        
+
         public Boolean CanRevert(Object? sender, T? parameter)
         {
             try
@@ -49,22 +49,22 @@ namespace NetExtender.WindowsPresentation.Types.Commands
                 {
                     throw;
                 }
-                
+
                 return result;
             }
         }
-        
+
         protected virtual Boolean CanRevertImplementation(Object? sender, T? parameter)
         {
             return true;
         }
-        
+
         public Boolean CanRevert(Object? parameter)
         {
             Sender(out Object? sender, ref parameter);
             return CanRevert(sender, parameter);
         }
-        
+
         public Boolean CanRevert(Object? sender, Object? parameter)
         {
             try
@@ -82,11 +82,11 @@ namespace NetExtender.WindowsPresentation.Types.Commands
                 {
                     throw;
                 }
-                
+
                 return result;
             }
         }
-        
+
         protected virtual Boolean CanRevertImplementation(Object? sender, Object? parameter)
         {
             return parameter switch
@@ -96,12 +96,12 @@ namespace NetExtender.WindowsPresentation.Types.Commands
                 _ => false
             };
         }
-        
+
         public void Revert(T? parameter)
         {
             Revert(null, parameter);
         }
-        
+
         public void Revert(Object? sender, T? parameter)
         {
             try
@@ -117,15 +117,15 @@ namespace NetExtender.WindowsPresentation.Types.Commands
                 }
             }
         }
-        
+
         protected abstract void RevertImplementation(Object? sender, T? parameter);
-        
+
         public void Revert(Object? parameter)
         {
             Sender(out Object? sender, ref parameter);
             Revert(sender, parameter);
         }
-        
+
         public void Revert(Object? sender, Object? parameter)
         {
             try
@@ -145,7 +145,7 @@ namespace NetExtender.WindowsPresentation.Types.Commands
                 }
             }
         }
-        
+
         protected virtual void RevertImplementation(Object? sender, Object? parameter)
         {
             switch (parameter)
@@ -160,23 +160,23 @@ namespace NetExtender.WindowsPresentation.Types.Commands
                     throw new CommandParameterTypeException($"Argument is not of type '{typeof(T).Name}' for {GetType().Name}.", nameof(parameter));
             }
         }
-        
+
         protected virtual Boolean? HandleCanRevert(ExceptionHandlerAction action, Exception? exception)
         {
             return HandleCanExecute(action, exception);
         }
-        
+
         protected virtual Boolean HandleRevert(ExceptionHandlerAction action, Exception? exception)
         {
             return HandleExecute(action, exception);
         }
-        
+
         private sealed class None : RevertCommand<T>
         {
             protected override void ExecuteImplementation(Object? sender, T? parameter)
             {
             }
-            
+
             protected override void RevertImplementation(Object? sender, T? parameter)
             {
             }
@@ -186,7 +186,7 @@ namespace NetExtender.WindowsPresentation.Types.Commands
     public abstract class RevertCommand : Command, IRevertCommand
     {
         public new static Command Empty { get; } = new None();
-        
+
         private protected ICommand? _reverter;
         public virtual ICommand Reverter
         {
@@ -195,13 +195,13 @@ namespace NetExtender.WindowsPresentation.Types.Commands
                 return _reverter ??= new RelaySenderCommand<Object>(Revert) { CanExecuteHandler = CanRevert };
             }
         }
-        
+
         public Boolean CanRevert(Object? parameter)
         {
             Sender(out Object? sender, ref parameter);
             return CanRevert(sender, parameter);
         }
-        
+
         public Boolean CanRevert(Object? sender, Object? parameter)
         {
             try
@@ -219,22 +219,22 @@ namespace NetExtender.WindowsPresentation.Types.Commands
                 {
                     throw;
                 }
-                
+
                 return result;
             }
         }
-        
+
         protected virtual Boolean CanRevertImplementation(Object? sender, Object? parameter)
         {
             return true;
         }
-        
+
         public void Revert(Object? parameter)
         {
             Sender(out Object? sender, ref parameter);
             Revert(sender, parameter);
         }
-        
+
         public void Revert(Object? sender, Object? parameter)
         {
             try
@@ -254,25 +254,25 @@ namespace NetExtender.WindowsPresentation.Types.Commands
                 }
             }
         }
-        
+
         protected abstract void RevertImplementation(Object? sender, Object? parameter);
-        
+
         protected virtual Boolean? HandleCanRevert(ExceptionHandlerAction action, Exception? exception)
         {
             return HandleCanExecute(action, exception);
         }
-        
+
         protected virtual Boolean HandleRevert(ExceptionHandlerAction action, Exception? exception)
         {
             return HandleExecute(action, exception);
         }
-        
+
         private sealed class None : RevertCommand
         {
             protected override void ExecuteImplementation(Object? sender, Object? parameter)
             {
             }
-            
+
             protected override void RevertImplementation(Object? sender, Object? parameter)
             {
             }

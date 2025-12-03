@@ -28,7 +28,7 @@ namespace NetExtender.Types.Concurrent.Dictionaries
                 return base.Values;
             }
         }
-        
+
         IEnumerable<TKey> IReadOnlyDictionary<TKey, TValue>.Keys
         {
             get
@@ -36,7 +36,7 @@ namespace NetExtender.Types.Concurrent.Dictionaries
                 return Keys;
             }
         }
-        
+
         IEnumerable<TValue> IReadOnlyDictionary<TKey, TValue>.Values
         {
             get
@@ -44,7 +44,7 @@ namespace NetExtender.Types.Concurrent.Dictionaries
                 return Values;
             }
         }
-        
+
         Boolean ICollection<KeyValuePair<TKey, TValue>>.IsReadOnly
         {
             get
@@ -52,61 +52,61 @@ namespace NetExtender.Types.Concurrent.Dictionaries
                 return ((ICollection<KeyValuePair<NullMaybe<TKey>, TValue>>) this).IsReadOnly;
             }
         }
-        
+
         public NullableConcurrentDictionary()
         {
         }
-        
+
         public NullableConcurrentDictionary(IEnumerable<KeyValuePair<TKey, TValue>> collection)
             : base(collection is not null ? collection.KeyNullable() : throw new ArgumentNullException(nameof(collection)))
         {
         }
-        
+
         public NullableConcurrentDictionary(IEnumerable<KeyValuePair<NullMaybe<TKey>, TValue>> collection)
             : base(collection)
         {
         }
-        
+
         public NullableConcurrentDictionary(IEnumerable<KeyValuePair<NullMaybe<TKey>, TValue>> collection, IEqualityComparer<TKey>? comparer)
             : this(collection, comparer?.ToNullMaybeEqualityComparer())
         {
         }
-        
+
         public NullableConcurrentDictionary(IEnumerable<KeyValuePair<NullMaybe<TKey>, TValue>> collection, IEqualityComparer<NullMaybe<TKey>>? comparer)
             : base(collection, comparer)
         {
         }
-        
+
         public NullableConcurrentDictionary(IEqualityComparer<TKey>? comparer)
             : this(comparer?.ToNullMaybeEqualityComparer())
         {
         }
-        
+
         public NullableConcurrentDictionary(IEqualityComparer<NullMaybe<TKey>>? comparer)
             : base(comparer)
         {
         }
-        
+
         public NullableConcurrentDictionary(Int32 concurrencyLevel, IEnumerable<KeyValuePair<NullMaybe<TKey>, TValue>> collection, IEqualityComparer<TKey>? comparer)
             : this(concurrencyLevel, collection, comparer?.ToNullMaybeEqualityComparer())
         {
         }
-        
+
         public NullableConcurrentDictionary(Int32 concurrencyLevel, IEnumerable<KeyValuePair<NullMaybe<TKey>, TValue>> collection, IEqualityComparer<NullMaybe<TKey>>? comparer)
             : base(concurrencyLevel, collection, comparer)
         {
         }
-        
+
         public NullableConcurrentDictionary(Int32 concurrencyLevel, Int32 capacity)
             : base(concurrencyLevel, capacity)
         {
         }
-        
+
         public NullableConcurrentDictionary(Int32 concurrencyLevel, Int32 capacity, IEqualityComparer<TKey>? comparer)
             : this(concurrencyLevel, capacity, comparer?.ToNullMaybeEqualityComparer())
         {
         }
-        
+
         public NullableConcurrentDictionary(Int32 concurrencyLevel, Int32 capacity, IEqualityComparer<NullMaybe<TKey>>? comparer)
             : base(concurrencyLevel, capacity, comparer)
         {
@@ -116,37 +116,37 @@ namespace NetExtender.Types.Concurrent.Dictionaries
         {
             return ((IDictionary<NullMaybe<TKey>, TValue>) this).Contains(item.KeyNullable());
         }
-        
+
         public Boolean ContainsKey(TKey key)
         {
             return base.ContainsKey(key);
         }
-        
+
         public Boolean TryGetValue(TKey key, [MaybeNullWhen(false)] out TValue value)
         {
             return base.TryGetValue(key, out value);
         }
-        
+
         void ICollection<KeyValuePair<TKey, TValue>>.Add(KeyValuePair<TKey, TValue> item)
         {
             ((IDictionary<NullMaybe<TKey>, TValue>) this).Add(item.KeyNullable());
         }
-        
+
         void IDictionary<TKey, TValue>.Add(TKey key, TValue value)
         {
             ((IDictionary<NullMaybe<TKey>, TValue>) this).Add(key, value);
         }
-        
+
         public Boolean TryAdd(TKey key, TValue value)
         {
             return base.TryAdd(key, value);
         }
-        
+
         public Boolean TryUpdate(TKey key, TValue newValue, TValue comparisonValue)
         {
             return base.TryUpdate(key, newValue, comparisonValue);
         }
-        
+
         public TValue GetOrAdd(TKey key, TValue value)
         {
             return base.GetOrAdd(key, value);
@@ -161,47 +161,47 @@ namespace NetExtender.Types.Concurrent.Dictionaries
         {
             return base.GetOrAdd(key, static (@null, argument) => argument.Factory(@null, argument.Argument), (Factory: valueFactory, Argument: factoryArgument));
         }
-        
+
         public TValue AddOrUpdate(TKey key, TValue addValue, Func<TKey, TValue, TValue> updateValueFactory)
         {
             return base.AddOrUpdate(key, addValue, (@null, value) => updateValueFactory(@null, value));
         }
-        
+
         public TValue AddOrUpdate(TKey key, Func<TKey, TValue> addValueFactory, Func<TKey, TValue, TValue> updateValueFactory)
         {
             return base.AddOrUpdate(key, static (@null, argument) => argument.Value(@null), static (@null, value, argument) => argument.Update(@null, value), (Value: addValueFactory, Update: updateValueFactory));
         }
-        
+
         public TValue AddOrUpdate<TArg>(TKey key, Func<TKey, TArg, TValue> addValueFactory, Func<TKey, TValue, TArg, TValue> updateValueFactory, TArg factoryArgument)
         {
             return base.AddOrUpdate(key, static (@null, argument) => argument.Value(@null, argument.Argument), static (@null, value, argument) => argument.Update(@null, value, argument.Argument), (Value: addValueFactory, Update: updateValueFactory, Argument: factoryArgument));
         }
-        
+
         public Boolean TryRemove(KeyValuePair<TKey, TValue> item)
         {
             return base.TryRemove(item.KeyNullable());
         }
-        
+
         public Boolean TryRemove(TKey key, [MaybeNullWhen(false)] out TValue value)
         {
             return base.TryRemove(key, out value);
         }
-        
+
         Boolean ICollection<KeyValuePair<TKey, TValue>>.Remove(KeyValuePair<TKey, TValue> item)
         {
             return ((IDictionary<NullMaybe<TKey>, TValue>) this).Remove(item.KeyNullable());
         }
-        
+
         Boolean IDictionary<TKey, TValue>.Remove(TKey key)
         {
             return ((IDictionary<NullMaybe<TKey>, TValue>) this).Remove(key);
         }
-        
+
         public void CopyTo(KeyValuePair<TKey, TValue>[] array, Int32 index)
         {
             CollectionUtilities.CopyTo(this, array, index);
         }
-        
+
         public new IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
         {
             foreach ((NullMaybe<TKey> key, TValue value) in (IEnumerable<KeyValuePair<NullMaybe<TKey>, TValue>>) this)
@@ -209,7 +209,7 @@ namespace NetExtender.Types.Concurrent.Dictionaries
                 yield return new KeyValuePair<TKey, TValue>(key, value);
             }
         }
-        
+
         public TValue this[TKey key]
         {
             get

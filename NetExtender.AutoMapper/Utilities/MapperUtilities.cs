@@ -12,12 +12,27 @@ namespace NetExtender.Utilities
 {
     public static class MapperUtilities
     {
-        private static IMapper Mapper { get; }
+        private static IMapper instance;
+        public static IMapper Mapper
+        {
+            get
+            {
+                return instance;
+            }
+            set
+            {
+                instance = value ?? throw new ArgumentNullException(nameof(value));
+            }
+        }
 
         static MapperUtilities()
         {
+#if NET8_0_OR_GREATER
+            MapperConfiguration config = new MapperConfiguration(_ => { }, null);
+#else
             MapperConfiguration config = new MapperConfiguration(_ => { });
-            Mapper = config.CreateMapper();
+#endif
+            instance = config.CreateMapper();
         }
 
         public static T Map<T>(this Object? value)

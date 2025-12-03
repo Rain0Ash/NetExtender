@@ -109,9 +109,9 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             T[] rent = pool.Rent(count);
-            
+
             try
             {
                 Array.Copy(source, offset, rent, 0, count);

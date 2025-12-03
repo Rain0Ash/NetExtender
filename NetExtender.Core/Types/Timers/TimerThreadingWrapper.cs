@@ -7,13 +7,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using NetExtender.Types.Events;
 using NetExtender.Types.Exceptions;
-using NetExtender.Types.Timers.Interfaces;
 using NetExtender.Types.Times;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Timers
 {
-    public sealed class TimerThreadingWrapper : ITimer
+    public sealed class TimerThreadingWrapper : Interfaces.ITimer
     {
         [return: NotNullIfNotNull("wrapper")]
         public static explicit operator Timer?(TimerThreadingWrapper? wrapper)
@@ -23,9 +22,9 @@ namespace NetExtender.Types.Timers
 
         private Timer? Timer { get; set; }
         public event TickHandler? Tick;
-        
+
         public Boolean IsStarted { get; private set; }
-        
+
         private DateTimeProvider _provider = DateTimeProvider.Provider;
 
         public DateTime Now
@@ -35,7 +34,7 @@ namespace NetExtender.Types.Timers
                 return _provider.Now;
             }
         }
-        
+
         public DateTimeKind Kind
         {
             get
@@ -63,7 +62,7 @@ namespace NetExtender.Types.Timers
                 }
 
                 _interval = TimerUtilities.CheckInterval(value);
-                
+
                 if (IsStarted && Timer is not null)
                 {
                     Timer.Change(Interval, Interval);
@@ -106,7 +105,7 @@ namespace NetExtender.Types.Timers
             {
                 Tick += handler;
             }
-            
+
             try
             {
                 Timer.Change(dueTime, period);

@@ -20,7 +20,6 @@ using Unit = System.Reactive.Unit;
 #pragma warning disable CA1061
 
 #if NET7_0_OR_GREATER
-using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Http.HttpResults;
 #endif
 
@@ -31,7 +30,7 @@ namespace NetExtender.AspNetCore.Types.Monads
         public T Result { get; }
         public new IAspResult<T> Clone();
     }
-    
+
     public class AspResult : Microsoft.AspNetCore.Http.IResult, IAspResult<BusinessResult>, ICloneable<AspResult>
     {
 #if NET7_0_OR_GREATER
@@ -41,57 +40,57 @@ namespace NetExtender.AspNetCore.Types.Monads
             return value is not null ? None : null;
         }
 #endif
-        
+
         public static implicit operator AspResult(BusinessException? value)
         {
             return new AspResult(value);
         }
-        
+
         public static implicit operator AspResult(BusinessResult value)
         {
             return new AspResult(value);
         }
-        
+
         public static implicit operator AspResult(BusinessResult<Unit> value)
         {
             return new AspResult(value);
         }
-        
+
         public static implicit operator Boolean(AspResult value)
         {
             return value.Result;
         }
-        
+
         public static implicit operator HttpStatusCode(AspResult value)
         {
             return value.Result;
         }
-        
+
         public static implicit operator AspResult(HttpStatusCode value)
         {
             return new AspResult(value);
         }
-        
+
         public static implicit operator AspResult((HttpStatusCode Status, String? Message) value)
         {
             return new AspResult(value);
         }
-        
+
         public static implicit operator AspResult((HttpStatusCode Status, String? Message, String? Description) value)
         {
             return new AspResult(value);
         }
-        
+
         public static implicit operator AspResult((HttpStatusCode Status, Exception? Exception) value)
         {
             return new AspResult(value);
         }
-        
+
         public static implicit operator AspResult((HttpStatusCode Status, String? Message, Exception? Exception) value)
         {
             return new AspResult(value);
         }
-        
+
         public static implicit operator AspResult((HttpStatusCode Status, String? Message, String? Description, Exception? Exception) value)
         {
             return new AspResult(value);
@@ -99,7 +98,7 @@ namespace NetExtender.AspNetCore.Types.Monads
 
         public static AspResult Default { get; } = new AspResult(HttpStatusCode.OK);
         public static AspResult None { get; } = new NoneAspResult();
-        
+
         [System.Text.Json.Serialization.JsonIgnore]
         [JsonIgnore]
         public BusinessResult Result { get; }
@@ -111,7 +110,7 @@ namespace NetExtender.AspNetCore.Types.Monads
                 return Result.Value;
             }
         }
-        
+
         public Int32? StatusCode { get; init; }
 
         HttpStatusCode IBusinessResult.Status
@@ -165,7 +164,7 @@ namespace NetExtender.AspNetCore.Types.Monads
         protected AspResult()
         {
         }
-        
+
         public AspResult(BusinessResult result)
         {
             Result = result;
@@ -202,7 +201,7 @@ namespace NetExtender.AspNetCore.Types.Monads
             {
                 context.Response.StatusCode = code;
             }
-            
+
             return Task.CompletedTask;
         }
 
@@ -367,42 +366,42 @@ namespace NetExtender.AspNetCore.Types.Monads
         {
             return new AspResult<T>(value);
         }
-        
+
         public static implicit operator Boolean(AspResult<T> value)
         {
             return value.Result;
         }
-        
+
         public static implicit operator HttpStatusCode(AspResult<T> value)
         {
             return value.Result;
         }
-        
+
         public static implicit operator AspResult<T>(HttpStatusCode value)
         {
             return new AspResult<T>(value);
         }
-        
+
         public static implicit operator AspResult<T>((HttpStatusCode Status, String? Message) value)
         {
             return new AspResult<T>(value);
         }
-        
+
         public static implicit operator AspResult<T>((HttpStatusCode Status, String? Message, String? Description) value)
         {
             return new AspResult<T>(value);
         }
-        
+
         public static implicit operator AspResult<T>((HttpStatusCode Status, Exception? Exception) value)
         {
             return new AspResult<T>(value);
         }
-        
+
         public static implicit operator AspResult<T>((HttpStatusCode Status, String? Message, Exception? Exception) value)
         {
             return new AspResult<T>(value);
         }
-        
+
         public static implicit operator AspResult<T>((HttpStatusCode Status, String? Message, String? Description, Exception? Exception) value)
         {
             return new AspResult<T>(value);
@@ -415,12 +414,12 @@ namespace NetExtender.AspNetCore.Types.Monads
                 return Result.Value;
             }
         }
-        
+
         public AspResult(T result)
             : base(result)
         {
         }
-        
+
         public AspResult(BusinessResult<T> result)
             : base(result)
         {
@@ -645,7 +644,7 @@ namespace NetExtender.AspNetCore.Types.Monads
         {
             return value?.Result ?? default;
         }
-        
+
         [System.Text.Json.Serialization.JsonIgnore]
         [JsonIgnore]
         public T Result { get; }
@@ -729,7 +728,7 @@ namespace NetExtender.AspNetCore.Types.Monads
             value = Exception;
             return value is not null;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public Boolean Unwrap(out T value)
         {

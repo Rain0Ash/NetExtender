@@ -19,7 +19,7 @@ namespace NetExtender.Types.Numerics
         {
             return angle.Radian;
         }
-        
+
         /// <summary>
         /// Represents the zero <see cref="AngleRadian"/> value (0 degrees).
         /// </summary>
@@ -39,7 +39,7 @@ namespace NetExtender.Types.Numerics
         /// Represents the straight <see cref="AngleRadian"/> value (180 degrees).
         /// </summary>
         public static AngleRadian Straight { get; } = new AngleRadian(AngleUtilities.Radian.Double.Straight);
-        
+
         /// <summary>
         /// Represents the three quarter <see cref="AngleRadian"/> value (270 degrees).
         /// </summary>

@@ -50,7 +50,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
             {
                 properties = GetPropertiesFromInstance(source, type);
             }
-            
+
             if (properties.Count <= 0)
             {
                 yield return new ExcelColumnDefinition
@@ -59,10 +59,10 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                     HorizontalAlignment = DefaultHorizontalAlignment,
                     Width = DefaultColumnWidth
                 };
-                
+
                 yield break;
             }
-            
+
             foreach (PropertyDescriptor descriptor in properties.OfType<PropertyDescriptor>().Where(static descriptor => descriptor.IsBrowsable))
             {
                 yield return new ExcelColumnDefinition
@@ -74,19 +74,19 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 };
             }
         }
-        
+
         protected virtual PropertyDescriptorCollection GetPropertiesFromInstance(IList source, Type type)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (type is null)
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             foreach (Object? item in source)
             {
                 if (item is not null && item.GetType() == type)
@@ -97,7 +97,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
 
             return new PropertyDescriptorCollection(Array.Empty<PropertyDescriptor>());
         }
-        
+
         public override Object? GetItem(ExcelCell cell)
         {
             if (Excel.ItemsSource is not { Count: > 0 } source)
@@ -113,32 +113,32 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
 
             return null;
         }
-        
+
         public override String GetBindingPath(ExcelCell cell)
         {
             return GetPropertyDefinition(cell)?.PropertyName ?? $"[{GetItemIndex(cell)}]";
         }
-        
+
         public override Boolean SetValue(ExcelCell cell, Object? value)
         {
             if (Excel.ItemsSource is not { } source || cell is not { Column: >= 0, Row: >= 0 })
             {
                 return false;
             }
-            
+
             source[GetItemIndex(cell)] = value;
             return true;
         }
-        
+
         public override Int32 InsertItem(Int32 index)
         {
             if (Excel.ItemsSource is not { } source)
             {
                 return -1;
             }
-            
+
             Type type = GetItemType(source);
-            
+
             try
             {
                 Object? item = CreateItem(type);
@@ -146,7 +146,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 {
                     return source.Add(item);
                 }
-                
+
                 source.Insert(index, item);
                 return index;
             }

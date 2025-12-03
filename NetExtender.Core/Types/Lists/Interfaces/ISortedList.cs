@@ -7,7 +7,7 @@ namespace NetExtender.Types.Lists.Interfaces
     {
         public IComparer<T> Comparer { get; }
     }
-    
+
     public interface ISortedList : IList
     {
     }

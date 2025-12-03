@@ -161,7 +161,7 @@ namespace NetExtender.Newtonsoft.Types.Monads
                         Guid id = @object.TryGetValue(nameof(Box<T>.Id), options, out JToken? jid) && jid.Type is JTokenType.Guid or JTokenType.String ? jid.ToObject<Guid>(options) : Guid.Empty;
                         T? value = @object.TryGetValue(nameof(Box<T>.Value), options, out JToken? jvalue) ? jvalue.ToObject<T>(options) : default;
                         Boolean mutable = @object.TryGetValue(nameof(Box<T>.IsReadOnly), options, out JToken? jmutable) && !jmutable.Value<Boolean>();
-                        
+
                         return new Box<T>(id, value!, mutable);
                     }
                     default:
@@ -188,16 +188,16 @@ namespace NetExtender.Newtonsoft.Types.Monads
                     default:
                     {
                         writer.WriteStartObject();
-                
+
                         writer.WritePropertyName(nameof(Box<T>.Value), options);
                         options.Serialize(writer, value.Value);
-                
+
                         if (!value.IsReadOnly)
                         {
                             writer.WritePropertyName(nameof(Box<T>.IsReadOnly), options);
                             writer.WriteValue(false);
                         }
-                
+
                         writer.WriteEndObject();
                         return true;
                     }
@@ -210,12 +210,12 @@ namespace NetExtender.Newtonsoft.Types.Monads
 namespace NetExtender.Serialization.Json.Monads
 {
     using System.Text.Json;
-    
+
     public static class BoxJsonConverter
     {
         public static Boolean Id { get; set; } = true;
     }
-    
+
     public sealed class BoxJsonConverter<T> : TextJsonConverter<Box<T>>
     {
         private static TextJsonConverter<Box<T>> Converter
@@ -225,7 +225,7 @@ namespace NetExtender.Serialization.Json.Monads
                 return Id ? IdBoxJsonConverter.Instance : NoIdBoxJsonConverter.Instance;
             }
         }
-        
+
         [SuppressMessage("ReSharper", "StaticMemberInGenericType")]
         private static Boolean? id;
         public static Boolean Id

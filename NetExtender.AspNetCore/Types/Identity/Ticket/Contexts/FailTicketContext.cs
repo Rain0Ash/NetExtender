@@ -41,7 +41,7 @@ namespace NetExtender.AspNetCore.Identity
                 return Context ?? throw new IdentityNoContextException();
             }
         }
-        
+
         public JWTAuthenticationOptions? Options { get; private init; }
         public Exception Exception { get; private init; }
 

@@ -27,7 +27,7 @@ namespace NetExtender.Types.Exceptions
             Exception = exception ?? throw new ArgumentNullException(nameof(exception));
         }
     }
-    
+
     public class ExceptionWrapper
     {
         [return: NotNullIfNotNull("exception")]

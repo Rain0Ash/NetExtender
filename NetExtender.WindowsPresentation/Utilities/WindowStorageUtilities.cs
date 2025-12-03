@@ -20,7 +20,7 @@ namespace NetExtender.WindowsPresentation.Utilities
                 return Get();
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TWindow? Get()
         {
@@ -32,7 +32,7 @@ namespace NetExtender.WindowsPresentation.Utilities
         {
             return WindowStorageUtilities.Get<TWindow>(seed);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TWindow Require()
         {

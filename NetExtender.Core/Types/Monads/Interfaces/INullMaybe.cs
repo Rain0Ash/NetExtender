@@ -12,12 +12,12 @@ namespace NetExtender.Types.Monads.Interfaces
 
         public new INullMaybe<T> Clone();
     }
-    
+
     public interface INullMaybe : IMonad, ICloneable<INullMaybe>
     {
         public Object? Value { get; }
         public Boolean IsNull { get; }
-        
+
         public new INullMaybe Clone();
     }
 }

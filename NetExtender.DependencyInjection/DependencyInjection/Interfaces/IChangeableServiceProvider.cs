@@ -11,7 +11,7 @@ namespace NetExtender.DependencyInjection.Interfaces
         public event ServiceProviderChangedEventHandler? Changed;
         public Boolean IsStable { get; }
         public Boolean IsFinal { get; }
-        
+
         public IServiceProvider? Rebuild();
         public void Final();
     }

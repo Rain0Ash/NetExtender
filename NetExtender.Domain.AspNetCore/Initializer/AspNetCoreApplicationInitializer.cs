@@ -18,73 +18,73 @@ namespace NetExtender.Domains.Initializer
         public abstract class Builder : AspNetCoreBuilder<T>
         {
         }
-        
+
         public abstract class Middleware<TBuilder> : NetExtender.Types.Middlewares.Middleware<TBuilder> where TBuilder : Builder
         {
         }
     }
-    
+
     public abstract class AspNetCoreApplicationInitializer<T, TBuilder> : ApplicationInitializer<AspNetCoreApplication, AspNetCoreView<T, TBuilder>> where T : class, IHost where TBuilder : IApplicationBuilder<T>, new()
     {
         public abstract class Builder : AspNetCoreBuilder<T>
         {
         }
-        
+
         public abstract class Middleware : Middleware<TBuilder>
         {
         }
     }
-    
+
     public abstract class AspNetCoreApplicationInitializer<T, TBuilder, TApplicationBuilder> : AspNetCoreApplicationInitializer<T, TApplicationBuilder> where T : class, IHost where TBuilder : class, IHostBuilder where TApplicationBuilder : IApplicationBuilder<T>, new()
     {
         public new abstract class Builder : AspNetCoreBuilder<T, TBuilder>
         {
         }
-        
+
         public new abstract class Middleware : Middleware<TBuilder>
         {
         }
     }
-    
+
     public abstract class AspNetCoreWebApplicationInitializer<T> : ApplicationInitializer<AspNetCoreWebApplication, AspNetCoreWebView<T>> where T : class, IWebHost, new()
     {
         public abstract class Builder : AspNetCoreWebBuilder<T>
         {
         }
-        
+
         public abstract class Middleware<TBuilder> : NetExtender.Types.Middlewares.Middleware<TBuilder> where TBuilder : Builder
         {
         }
     }
-    
+
     public abstract class AspNetCoreWebApplicationInitializer<T, TBuilder> : ApplicationInitializer<AspNetCoreWebApplication, AspNetCoreWebView<T, TBuilder>> where T : class, IWebHost where TBuilder : IApplicationBuilder<T>, new()
     {
         public abstract class Builder : AspNetCoreWebBuilder<T>
         {
         }
-        
+
         public abstract class Middleware : Middleware<TBuilder>
         {
         }
     }
-    
+
     public abstract class AspNetCoreWebApplicationInitializer<T, TBuilder, TApplicationBuilder> : AspNetCoreWebApplicationInitializer<T, TApplicationBuilder> where T : class, IWebHost where TBuilder : class, IWebHostBuilder where TApplicationBuilder : IApplicationBuilder<T>, new()
     {
         public new abstract class Builder : AspNetCoreWebBuilder<T, TBuilder>
         {
         }
-        
+
         public new abstract class Middleware : Middleware<TBuilder>
         {
         }
     }
-    
+
     public abstract class AspNetCoreWebApplicationWrapperInitializer<TBuilder> : AspNetCoreApplicationInitializer<WebApplication, WebApplicationBuilderWrapper, TBuilder> where TBuilder : IApplicationBuilder<WebApplication>, new()
     {
         public new abstract class Builder : AspNetCoreWebApplicationBuilder
         {
         }
-        
+
         public new abstract class Middleware : Middleware<TBuilder>
         {
         }

@@ -16,7 +16,7 @@ namespace NetExtender.Types.Banking.Cards
                 return SimpleValidator.Instance;
             }
         }
-        
+
         public static IBankingCardValidator AmericanExpress
         {
             get
@@ -147,7 +147,7 @@ namespace NetExtender.Types.Banking.Cards
 
         public abstract BankingCardType Type { get; }
         protected IBankingCardChecksumValidator? Validator { get; }
-        
+
         protected virtual Regex? Pattern
         {
             get
@@ -195,11 +195,11 @@ namespace NetExtender.Types.Banking.Cards
         {
             return With(validator);
         }
-        
+
         private sealed class SimpleValidator : BankingCardValidator
         {
             public static SimpleValidator Instance { get; } = new SimpleValidator();
-            
+
             public override BankingCardType Type
             {
                 get
@@ -223,11 +223,11 @@ namespace NetExtender.Types.Banking.Cards
                 return validator is not null ? new SimpleValidator(validator) : Instance;
             }
         }
-        
+
         private sealed class AmericanExpressValidator : BankingCardValidator
         {
             public static AmericanExpressValidator Instance { get; } = new AmericanExpressValidator();
-            
+
             public override BankingCardType Type
             {
                 get
@@ -235,7 +235,7 @@ namespace NetExtender.Types.Banking.Cards
                     return BankingCardType.AmericanExpress;
                 }
             }
-            
+
             private static readonly Regex pattern = new Regex(@"^3[47][0-9]", RegexOptions.Compiled);
             protected override Regex Pattern
             {
@@ -264,17 +264,17 @@ namespace NetExtender.Types.Banking.Cards
                     _ => false
                 };
             }
-            
+
             protected override AmericanExpressValidator With(IBankingCardChecksumValidator? validator)
             {
                 return validator is not null ? new AmericanExpressValidator(validator) : Instance;
             }
         }
-        
+
         private sealed class DankortValidator : BankingCardValidator
         {
             public static DankortValidator Instance { get; } = new DankortValidator();
-            
+
             public override BankingCardType Type
             {
                 get
@@ -282,7 +282,7 @@ namespace NetExtender.Types.Banking.Cards
                     return BankingCardType.Dankort;
                 }
             }
-            
+
             private static readonly Regex pattern = new Regex(@"^5019", RegexOptions.Compiled);
             protected override Regex Pattern
             {
@@ -310,17 +310,17 @@ namespace NetExtender.Types.Banking.Cards
                     _ => false
                 };
             }
-            
+
             protected override DankortValidator With(IBankingCardChecksumValidator? validator)
             {
                 return validator is not null ? new DankortValidator(validator) : Instance;
             }
         }
-        
+
         private sealed class DinersClubValidator : BankingCardValidator
         {
             public static DinersClubValidator Instance { get; } = new DinersClubValidator();
-            
+
             public override BankingCardType Type
             {
                 get
@@ -328,7 +328,7 @@ namespace NetExtender.Types.Banking.Cards
                     return BankingCardType.DinersClub;
                 }
             }
-            
+
             private static readonly Regex pattern = new Regex(@"^3(0[0-5]|[68][0-9])[0-9]", RegexOptions.Compiled);
             protected override Regex Pattern
             {
@@ -356,17 +356,17 @@ namespace NetExtender.Types.Banking.Cards
                     _ => false
                 };
             }
-            
+
             protected override DinersClubValidator With(IBankingCardChecksumValidator? validator)
             {
                 return validator is not null ? new DinersClubValidator(validator) : Instance;
             }
         }
-        
+
         private sealed class DiscoveryValidator : BankingCardValidator
         {
             public static DiscoveryValidator Instance { get; } = new DiscoveryValidator();
-            
+
             public override BankingCardType Type
             {
                 get
@@ -374,7 +374,7 @@ namespace NetExtender.Types.Banking.Cards
                     return BankingCardType.Discovery;
                 }
             }
-            
+
             private static readonly Regex pattern = new Regex(@"^6(011|22126|22925|4[4-9]|5)", RegexOptions.Compiled);
             protected override Regex Pattern
             {
@@ -402,17 +402,17 @@ namespace NetExtender.Types.Banking.Cards
                     _ => false
                 };
             }
-            
+
             protected override DiscoveryValidator With(IBankingCardChecksumValidator? validator)
             {
                 return validator is not null ? new DiscoveryValidator(validator) : Instance;
             }
         }
-        
+
         private sealed class ForbrugsforeningenValidator : BankingCardValidator
         {
             public static ForbrugsforeningenValidator Instance { get; } = new ForbrugsforeningenValidator();
-            
+
             public override BankingCardType Type
             {
                 get
@@ -420,7 +420,7 @@ namespace NetExtender.Types.Banking.Cards
                     return BankingCardType.Forbrugsforeningen;
                 }
             }
-            
+
             private static readonly Regex pattern = new Regex(@"^600", RegexOptions.Compiled);
             protected override Regex Pattern
             {
@@ -448,17 +448,17 @@ namespace NetExtender.Types.Banking.Cards
                     _ => false
                 };
             }
-            
+
             protected override ForbrugsforeningenValidator With(IBankingCardChecksumValidator? validator)
             {
                 return validator is not null ? new ForbrugsforeningenValidator(validator) : Instance;
             }
         }
-        
+
         private sealed class HiperCardValidator : BankingCardValidator
         {
             public static HiperCardValidator Instance { get; } = new HiperCardValidator();
-            
+
             public override BankingCardType Type
             {
                 get
@@ -466,7 +466,7 @@ namespace NetExtender.Types.Banking.Cards
                     return BankingCardType.HiperCard;
                 }
             }
-            
+
             private static readonly Regex pattern = new Regex(@"^(606282\d{7}(\d{3})?)|(3841\d{15})", RegexOptions.Compiled);
             protected override Regex Pattern
             {
@@ -496,17 +496,17 @@ namespace NetExtender.Types.Banking.Cards
                     _ => false
                 };
             }
-            
+
             protected override HiperCardValidator With(IBankingCardChecksumValidator? validator)
             {
                 return validator is not null ? new HiperCardValidator(validator) : Instance;
             }
         }
-        
+
         private sealed class JcbValidator : BankingCardValidator
         {
             public static JcbValidator Instance { get; } = new JcbValidator();
-            
+
             public override BankingCardType Type
             {
                 get
@@ -514,7 +514,7 @@ namespace NetExtender.Types.Banking.Cards
                     return BankingCardType.Jcb;
                 }
             }
-            
+
             private static readonly Regex pattern = new Regex(@"^(?:2131|1800|35\d{3})", RegexOptions.Compiled);
             protected override Regex Pattern
             {
@@ -545,17 +545,17 @@ namespace NetExtender.Types.Banking.Cards
                     _ => false
                 };
             }
-            
+
             protected override JcbValidator With(IBankingCardChecksumValidator? validator)
             {
                 return validator is not null ? new JcbValidator(validator) : Instance;
             }
         }
-        
+
         private sealed class MaestroValidator : BankingCardValidator
         {
             public static MaestroValidator Instance { get; } = new MaestroValidator();
-            
+
             public override BankingCardType Type
             {
                 get
@@ -563,7 +563,7 @@ namespace NetExtender.Types.Banking.Cards
                     return BankingCardType.Maestro;
                 }
             }
-            
+
             private static readonly Regex pattern = new Regex(@"^(5(018|0[235]|[678])|6(1|39|7|8|9))", RegexOptions.Compiled);
             protected override Regex Pattern
             {
@@ -598,17 +598,17 @@ namespace NetExtender.Types.Banking.Cards
                     _ => false
                 };
             }
-            
+
             protected override MaestroValidator With(IBankingCardChecksumValidator? validator)
             {
                 return validator is not null ? new MaestroValidator(validator) : Instance;
             }
         }
-        
+
         private sealed class MasterCardValidator : BankingCardValidator
         {
             public static MasterCardValidator Instance { get; } = new MasterCardValidator();
-            
+
             public override BankingCardType Type
             {
                 get
@@ -616,7 +616,7 @@ namespace NetExtender.Types.Banking.Cards
                     return BankingCardType.MasterCard;
                 }
             }
-            
+
             private static readonly Regex pattern = new Regex(@"^(5[0-5]|2(2(2[1-9]|[3-9])|[3-6]|7(0|1|20)))", RegexOptions.Compiled);
             protected override Regex Pattern
             {
@@ -644,17 +644,17 @@ namespace NetExtender.Types.Banking.Cards
                     _ => false
                 };
             }
-            
+
             protected override MasterCardValidator With(IBankingCardChecksumValidator? validator)
             {
                 return validator is not null ? new MasterCardValidator(validator) : Instance;
             }
         }
-        
+
         private sealed class MirValidator : BankingCardValidator
         {
             public static MirValidator Instance { get; } = new MirValidator();
-            
+
             public override BankingCardType Type
             {
                 get
@@ -662,7 +662,7 @@ namespace NetExtender.Types.Banking.Cards
                     return BankingCardType.Mir;
                 }
             }
-            
+
             private static readonly Regex pattern = new Regex(@"^220", RegexOptions.Compiled);
             protected override Regex Pattern
             {
@@ -691,17 +691,17 @@ namespace NetExtender.Types.Banking.Cards
                     _ => false
                 };
             }
-            
+
             protected override MirValidator With(IBankingCardChecksumValidator? validator)
             {
                 return validator is not null ? new MirValidator(validator) : Instance;
             }
         }
-        
+
         private sealed class RalfRingerValidator : BankingCardValidator
         {
             public static RalfRingerValidator Instance { get; } = new RalfRingerValidator();
-            
+
             public override BankingCardType Type
             {
                 get
@@ -709,7 +709,7 @@ namespace NetExtender.Types.Banking.Cards
                     return BankingCardType.RalfRinger;
                 }
             }
-            
+
             private static readonly Regex pattern = new Regex(@"^20(\d{11})", RegexOptions.Compiled);
             protected override Regex Pattern
             {
@@ -737,17 +737,17 @@ namespace NetExtender.Types.Banking.Cards
                     _ => false
                 };
             }
-            
+
             protected override RalfRingerValidator With(IBankingCardChecksumValidator? validator)
             {
                 return validator is not null ? new RalfRingerValidator(validator) : Instance;
             }
         }
-        
+
         private sealed class TroyValidator : BankingCardValidator
         {
             public static TroyValidator Instance { get; } = new TroyValidator();
-            
+
             public override BankingCardType Type
             {
                 get
@@ -755,7 +755,7 @@ namespace NetExtender.Types.Banking.Cards
                     return BankingCardType.Troy;
                 }
             }
-            
+
             private static readonly Regex pattern = new Regex(@"^9(?!(79200|79289))", RegexOptions.Compiled);
             protected override Regex Pattern
             {
@@ -783,17 +783,17 @@ namespace NetExtender.Types.Banking.Cards
                     _ => false
                 };
             }
-            
+
             protected override TroyValidator With(IBankingCardChecksumValidator? validator)
             {
                 return validator is not null ? new TroyValidator(validator) : Instance;
             }
         }
-        
+
         private sealed class UnionPayValidator : BankingCardValidator
         {
             public static UnionPayValidator Instance { get; } = new UnionPayValidator();
-            
+
             public override BankingCardType Type
             {
                 get
@@ -801,7 +801,7 @@ namespace NetExtender.Types.Banking.Cards
                     return BankingCardType.UnionPay;
                 }
             }
-            
+
             private static readonly Regex pattern = new Regex(@"^62(?!(2126|2925))", RegexOptions.Compiled);
             protected override Regex Pattern
             {
@@ -832,17 +832,17 @@ namespace NetExtender.Types.Banking.Cards
                     _ => false
                 };
             }
-            
+
             protected override UnionPayValidator With(IBankingCardChecksumValidator? validator)
             {
                 return validator is not null ? new UnionPayValidator(validator) : Instance;
             }
         }
-        
+
         private sealed class VisaValidator : BankingCardValidator
         {
             public static VisaValidator Instance { get; } = new VisaValidator();
-            
+
             public override BankingCardType Type
             {
                 get
@@ -850,7 +850,7 @@ namespace NetExtender.Types.Banking.Cards
                     return BankingCardType.Visa;
                 }
             }
-            
+
             private static readonly Regex pattern = new Regex(@"^4", RegexOptions.Compiled);
             protected override Regex Pattern
             {
@@ -879,17 +879,17 @@ namespace NetExtender.Types.Banking.Cards
                     _ => false
                 };
             }
-            
+
             protected override VisaValidator With(IBankingCardChecksumValidator? validator)
             {
                 return validator is not null ? new VisaValidator(validator) : Instance;
             }
         }
-        
+
         private sealed class VisaElectronValidator : BankingCardValidator
         {
             public static VisaElectronValidator Instance { get; } = new VisaElectronValidator();
-            
+
             public override BankingCardType Type
             {
                 get
@@ -897,7 +897,7 @@ namespace NetExtender.Types.Banking.Cards
                     return BankingCardType.VisaElectron;
                 }
             }
-            
+
             private static readonly Regex pattern = new Regex(@"^4(026|17500|405|508|844|91[37])", RegexOptions.Compiled);
             protected override Regex Pattern
             {
@@ -926,7 +926,7 @@ namespace NetExtender.Types.Banking.Cards
                     _ => false
                 };
             }
-            
+
             protected override VisaElectronValidator With(IBankingCardChecksumValidator? validator)
             {
                 return validator is not null ? new VisaElectronValidator(validator) : Instance;

@@ -29,12 +29,12 @@ namespace NetExtender.Types.Sets
             : base(collection is not null ? new HashSetCollection<T>(collection, comparer) : throw new ArgumentNullException(nameof(collection)))
         {
         }
-        
+
         protected ObservableHashSet(HashSetCollection<T> set)
             : base(set)
         {
         }
-        
+
         protected sealed override HashSetCollection<T> Clone()
         {
             return new HashSetCollection<T>(Internal, Internal.Comparer);
@@ -50,7 +50,7 @@ namespace NetExtender.Types.Sets
                 return Internal.Comparer;
             }
         }
-        
+
         protected ObservableHashSet(TSet set)
             : base(set)
         {

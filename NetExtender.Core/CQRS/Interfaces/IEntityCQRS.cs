@@ -16,7 +16,7 @@ namespace NetExtender.CQRS.Interfaces
             }
         }
     }
-    
+
     public interface IEntityCQRS : IEntity
     {
     }

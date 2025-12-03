@@ -44,7 +44,7 @@ namespace NetExtender.Types.Network.Formatters
         }
 
         protected internal OrderedSet<MediaTypeHeader> SupportedMediaType { get; }
-        
+
         ICollection<MediaTypeHeader> IMediaTypeFormatter.SupportedMediaType
         {
             get
@@ -52,7 +52,7 @@ namespace NetExtender.Types.Network.Formatters
                 return SupportedMediaType;
             }
         }
-        
+
         IReadOnlyCollection<MediaTypeHeader> IReadOnlyMediaTypeFormatter.SupportedMediaType
         {
             get
@@ -60,9 +60,9 @@ namespace NetExtender.Types.Network.Formatters
                 return SupportedMediaType;
             }
         }
-        
+
         protected internal OrderedSet<Encoding> SupportedEncoding { get; }
-        
+
         ICollection<Encoding> IMediaTypeFormatter.SupportedEncoding
         {
             get
@@ -70,7 +70,7 @@ namespace NetExtender.Types.Network.Formatters
                 return SupportedEncoding;
             }
         }
-        
+
         IReadOnlyCollection<Encoding> IReadOnlyMediaTypeFormatter.SupportedEncoding
         {
             get
@@ -78,9 +78,9 @@ namespace NetExtender.Types.Network.Formatters
                 return SupportedEncoding;
             }
         }
-        
+
         protected internal OrderedSet<MediaTypeMapping> MediaTypeFormatterMapping { get; }
-        
+
         ICollection<MediaTypeMapping> IMediaTypeFormatter.MediaTypeFormatterMapping
         {
             get
@@ -88,7 +88,7 @@ namespace NetExtender.Types.Network.Formatters
                 return MediaTypeFormatterMapping;
             }
         }
-        
+
         IReadOnlyCollection<MediaTypeMapping> IReadOnlyMediaTypeFormatter.MediaTypeFormatterMapping
         {
             get
@@ -96,9 +96,9 @@ namespace NetExtender.Types.Network.Formatters
                 return MediaTypeFormatterMapping;
             }
         }
-        
+
         public IFormatterMemberSelector? Selector { get; set; }
-        
+
         internal virtual Boolean CanWriteAnyTypes
         {
             get
@@ -106,9 +106,9 @@ namespace NetExtender.Types.Network.Formatters
                 return true;
             }
         }
-        
+
         public abstract Int32 MaxDepth { get; set; }
-        
+
         protected MediaTypeFormatter()
             : this(null)
         {
@@ -121,27 +121,27 @@ namespace NetExtender.Types.Network.Formatters
             MediaTypeFormatterMapping = formatter?.MediaTypeFormatterMapping ?? new OrderedSet<MediaTypeMapping>();
             Selector = formatter?.Selector;
         }
-        
+
         public Boolean Contains(MediaTypeHeader header)
         {
             return SupportedMediaType.Contains(header);
         }
-        
+
         public Boolean Contains(MediaTypeHeader header, Encoding encoding)
         {
             return Contains(header) && Contains(encoding);
         }
-        
+
         public Boolean Contains(Encoding encoding)
         {
             return SupportedEncoding.Contains(encoding);
         }
-        
+
         public Boolean Contains(MediaTypeMapping mapping)
         {
             return MediaTypeFormatterMapping.Contains(mapping);
         }
-        
+
         public abstract Boolean CanReadType(Type type);
         public abstract Boolean CanWriteType(Type type);
 
@@ -202,7 +202,7 @@ namespace NetExtender.Types.Network.Formatters
             {
                 throw new ArgumentNullException(nameof(content));
             }
-            
+
             throw new MediaTypeFormatterOperationNotSupportedException($"The media type formatter of type '{GetType()}' does not support reading because it does not implement the {nameof(ReadFromStreamAsync)} method.");
         }
 
@@ -217,17 +217,17 @@ namespace NetExtender.Types.Network.Formatters
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             if (stream is null)
             {
                 throw new ArgumentNullException(nameof(stream));
             }
-            
+
             if (content is null)
             {
                 throw new ArgumentNullException(nameof(content));
             }
-            
+
             throw new MediaTypeFormatterOperationNotSupportedException($"The media type formatter of type '{GetType()}' does not support writing because it does not implement the {nameof(WriteToStreamAsync)} method.");
         }
 
@@ -251,7 +251,7 @@ namespace NetExtender.Types.Network.Formatters
                     }
                 }
             }
-            
+
             if (encoding is null && SupportedEncoding.Count > 0)
             {
                 encoding = SupportedEncoding.First;
@@ -291,7 +291,7 @@ namespace NetExtender.Types.Network.Formatters
                     headers.ContentType = value.Clone();
                 }
             }
-            
+
             if (headers.ContentType is not { CharSet: null })
             {
                 return false;

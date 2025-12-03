@@ -10,22 +10,22 @@ namespace NetExtender.DependencyInjection.Exceptions
     public class ServiceProviderFinalException : InvalidOperationException
     {
         private new const String Message = "Service provider is final and cannot be changed.";
-        
+
         public ServiceProviderFinalException()
             : base(Message)
         {
         }
-        
+
         public ServiceProviderFinalException(String? message)
             : base(message ?? Message)
         {
         }
-        
+
         public ServiceProviderFinalException(String? message, Exception? exception)
             : base(message ?? Message, exception)
         {
         }
-        
+
         protected ServiceProviderFinalException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {

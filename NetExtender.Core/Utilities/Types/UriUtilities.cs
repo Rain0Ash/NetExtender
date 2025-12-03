@@ -329,7 +329,7 @@ namespace NetExtender.Utilities.Types
 
             return new Uri(uristring);
         }
-        
+
         public static Uri ToUri(Boolean https, String address, UInt16 port)
         {
             if (String.IsNullOrEmpty(address))
@@ -339,7 +339,7 @@ namespace NetExtender.Utilities.Types
 
             return new Uri($"{(https ? "https" : "http")}://{address}:{port}");
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Uri ToUri(Boolean https, String address, Int32 port)
         {
@@ -357,7 +357,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(address));
             }
-            
+
             return ToUri(https.Get(), address.Get(), port);
         }
 
@@ -377,7 +377,7 @@ namespace NetExtender.Utilities.Types
             {
                 return ToUri(https.Get(), address.Get(), (UInt16) port);
             }
-            
+
             throw new ArgumentOutOfRangeException(nameof(port), port, $"The port must be between {UInt16.MinValue} and {UInt16.MaxValue}.");
         }
 
@@ -397,10 +397,10 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(port));
             }
-            
+
             return ToUri(https, address, port.Get());
         }
-        
+
         public static Uri ToUri(IGetter<Boolean> https, IGetter<String> address, IGetter<Int32> port)
         {
             if (https is null)
@@ -417,7 +417,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(port));
             }
-            
+
             return ToUri(https, address, port.Get());
         }
     }

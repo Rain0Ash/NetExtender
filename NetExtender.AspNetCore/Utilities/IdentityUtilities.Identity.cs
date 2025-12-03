@@ -21,7 +21,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
     public static partial class IdentityUtilities
     {
     }
-    
+
     public class IdentityOptions
     {
         public Maybe<String?> AuthenticationScheme { get; init; } = new Maybe<String?>(null);
@@ -57,7 +57,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
             _confirm = confirm ?? throw new ArgumentNullException(nameof(confirm));
         }
     }
-    
+
     public record IdentityRoute : RouteHandler
     {
         public IdentityRoute(HttpMethod method, [CallerMemberName] String? route = null)
@@ -85,7 +85,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
                 _arguments = value ?? throw new ArgumentNullException(nameof(value));
             }
         }
-        
+
         private JsonNamingPolicy _controllers = JsonKnownNamingPolicy.Unspecified.ToNamingPolicy();
         public JsonNamingPolicy Controllers
         {
@@ -98,7 +98,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
                 _controllers = value ?? throw new ArgumentNullException(nameof(value));
             }
         }
-        
+
         private JsonNamingPolicy _routes = JsonKnownNamingPolicy.Unspecified.ToNamingPolicy();
         public JsonNamingPolicy Routes
         {
@@ -111,7 +111,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
                 _routes = value ?? throw new ArgumentNullException(nameof(value));
             }
         }
-        
+
         private JsonNamingPolicy _endpoints = JsonKnownNamingPolicy.Unspecified.ToNamingPolicy();
         public JsonNamingPolicy Endpoints
         {
@@ -192,7 +192,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
     {
         private Dictionary<String, String> Map { get; } = new Dictionary<String, String>(8);
         private HashSet<String> Routes { get; } = new HashSet<String>(StringComparer.OrdinalIgnoreCase);
-        
+
         public String ChangeEmail
         {
             get
@@ -262,7 +262,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
                 {
                     Routes.Remove(old);
                 }
-                
+
                 return;
             }
 

@@ -82,7 +82,7 @@ namespace NetExtender.FileSystems
             return Interceptor.Intercept(this, default, File.ReadAllText, path);
         }
 
-        public override String ReadAllText(String path, Encoding encoding)
+        public override String ReadAllText(String path, Encoding? encoding)
         {
             return Interceptor.Intercept(this, default, File.ReadAllText, path, encoding);
         }
@@ -92,7 +92,7 @@ namespace NetExtender.FileSystems
             return Interceptor.Intercept(this, default, File.ReadAllTextAsync, path, token);
         }
 
-        public override Task<String> ReadAllTextAsync(String path, Encoding encoding, CancellationToken token)
+        public override Task<String> ReadAllTextAsync(String path, Encoding? encoding, CancellationToken token)
         {
             return Interceptor.Intercept(this, default, File.ReadAllTextAsync, path, encoding, token);
         }
@@ -102,7 +102,7 @@ namespace NetExtender.FileSystems
             return Interceptor.Intercept(this, default, File.ReadAllLines, path);
         }
 
-        public override IEnumerable<String> ReadLines(String path, Encoding encoding)
+        public override IEnumerable<String> ReadLines(String path, Encoding? encoding)
         {
             return Interceptor.Intercept(this, default, File.ReadAllLines, path, encoding);
         }
@@ -112,7 +112,7 @@ namespace NetExtender.FileSystems
             return Interceptor.Intercept(this, default, File.ReadAllLines, path);
         }
 
-        public override String[] ReadAllLines(String path, Encoding encoding)
+        public override String[] ReadAllLines(String path, Encoding? encoding)
         {
             return Interceptor.Intercept(this, default, File.ReadAllLines, path, encoding);
         }
@@ -122,7 +122,7 @@ namespace NetExtender.FileSystems
             return Interceptor.Intercept(this, default, File.ReadAllLinesAsync, path, token);
         }
 
-        public override Task<String[]> ReadAllLinesAsync(String path, Encoding encoding, CancellationToken token)
+        public override Task<String[]> ReadAllLinesAsync(String path, Encoding? encoding, CancellationToken token)
         {
             return Interceptor.Intercept(this, default, File.ReadAllLinesAsync, path, encoding, token);
         }
@@ -132,7 +132,7 @@ namespace NetExtender.FileSystems
             Interceptor.Intercept(this, default, File.AppendAllText, path, contents);
         }
 
-        public override void AppendAllText(String path, String? contents, Encoding encoding)
+        public override void AppendAllText(String path, String? contents, Encoding? encoding)
         {
             Interceptor.Intercept(this, default, File.AppendAllText, path, contents, encoding);
         }
@@ -142,27 +142,27 @@ namespace NetExtender.FileSystems
             return Interceptor.Intercept(this, default, File.AppendAllTextAsync, path, contents, token);
         }
 
-        public override Task AppendAllTextAsync(String path, String? contents, Encoding encoding, CancellationToken token)
+        public override Task AppendAllTextAsync(String path, String? contents, Encoding? encoding, CancellationToken token)
         {
             return Interceptor.Intercept(this, default, File.AppendAllTextAsync, path, contents, encoding, token);
         }
 
-        public override void AppendAllLines(String path, IEnumerable<String> contents)
+        public override void AppendAllLines(String path, IEnumerable<String?>? contents)
         {
             Interceptor.Intercept(this, default, File.AppendAllLines, path, contents);
         }
 
-        public override void AppendAllLines(String path, IEnumerable<String> contents, Encoding encoding)
+        public override void AppendAllLines(String path, IEnumerable<String?>? contents, Encoding? encoding)
         {
             Interceptor.Intercept(this, default, File.AppendAllLines, path, contents, encoding);
         }
 
-        public override Task AppendAllLinesAsync(String path, IEnumerable<String> contents, CancellationToken token)
+        public override Task AppendAllLinesAsync(String path, IEnumerable<String?>? contents, CancellationToken token)
         {
             return Interceptor.Intercept(this, default, File.AppendAllLinesAsync, path, contents, token);
         }
 
-        public override Task AppendAllLinesAsync(String path, IEnumerable<String> contents, Encoding encoding, CancellationToken token)
+        public override Task AppendAllLinesAsync(String path, IEnumerable<String?>? contents, Encoding? encoding, CancellationToken token)
         {
             return Interceptor.Intercept(this, default, File.AppendAllLinesAsync, path, contents, encoding, token);
         }
@@ -175,7 +175,7 @@ namespace NetExtender.FileSystems
             }
         }
 
-        public override Task WriteAllBytesAsync(String path, Byte[] bytes, CancellationToken token)
+        public override Task WriteAllBytesAsync(String path, Byte[]? bytes, CancellationToken token)
         {
             return Interceptor.Intercept(this, default, File.WriteAllBytesAsync, path, bytes, token);
         }
@@ -185,7 +185,7 @@ namespace NetExtender.FileSystems
             Interceptor.Intercept(this, default, File.WriteAllText, path, contents);
         }
 
-        public override void WriteAllText(String path, String? contents, Encoding encoding)
+        public override void WriteAllText(String path, String? contents, Encoding? encoding)
         {
             Interceptor.Intercept(this, default, File.WriteAllText, path, contents, encoding);
         }
@@ -195,12 +195,12 @@ namespace NetExtender.FileSystems
             return Interceptor.Intercept(this, default, File.WriteAllTextAsync, path, contents, token);
         }
 
-        public override Task WriteAllTextAsync(String path, String? contents, Encoding encoding, CancellationToken token)
+        public override Task WriteAllTextAsync(String path, String? contents, Encoding? encoding, CancellationToken token)
         {
             return Interceptor.Intercept(this, default, File.WriteAllTextAsync, path, contents, encoding, token);
         }
 
-        public override void WriteAllLines(String path, params String[]? contents)
+        public override void WriteAllLines(String path, params String?[]? contents)
         {
             if (contents is not null)
             {
@@ -208,27 +208,27 @@ namespace NetExtender.FileSystems
             }
         }
 
-        public override void WriteAllLines(String path, IEnumerable<String> contents)
+        public override void WriteAllLines(String path, IEnumerable<String?>? contents)
         {
             Interceptor.Intercept(this, default, File.WriteAllLines, path, contents);
         }
 
-        public override void WriteAllLines(String path, String[] contents, Encoding encoding)
+        public override void WriteAllLines(String path, String?[]? contents, Encoding? encoding)
         {
             Interceptor.Intercept(this, default, File.WriteAllLines, path, contents, encoding);
         }
 
-        public override void WriteAllLines(String path, IEnumerable<String> contents, Encoding encoding)
+        public override void WriteAllLines(String path, IEnumerable<String?>? contents, Encoding? encoding)
         {
             Interceptor.Intercept(this, default, File.WriteAllLines, path, contents, encoding);
         }
 
-        public override Task WriteAllLinesAsync(String path, IEnumerable<String> contents, CancellationToken token)
+        public override Task WriteAllLinesAsync(String path, IEnumerable<String?>? contents, CancellationToken token)
         {
             return Interceptor.Intercept(this, default, File.WriteAllLinesAsync, path, contents, token);
         }
 
-        public override Task WriteAllLinesAsync(String path, IEnumerable<String> contents, Encoding encoding, CancellationToken token)
+        public override Task WriteAllLinesAsync(String path, IEnumerable<String?>? contents, Encoding? encoding, CancellationToken token)
         {
             return Interceptor.Intercept(this, default, File.WriteAllLinesAsync, path, contents, encoding, token);
         }

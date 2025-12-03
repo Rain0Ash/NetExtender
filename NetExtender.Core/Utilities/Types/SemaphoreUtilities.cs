@@ -25,7 +25,7 @@ namespace NetExtender.Utilities.Types
                 return false;
             }
         }
-        
+
         public static Boolean TryWaitOne(this Semaphore semaphore, Int32 timeout, Boolean exit)
         {
             if (semaphore is null)
@@ -42,7 +42,7 @@ namespace NetExtender.Utilities.Types
                 return false;
             }
         }
-        
+
         public static Boolean TryWaitOne(this Semaphore semaphore, TimeSpan timeout)
         {
             if (semaphore is null)
@@ -59,7 +59,7 @@ namespace NetExtender.Utilities.Types
                 return false;
             }
         }
-        
+
         public static Boolean TryWaitOne(this Semaphore semaphore, TimeSpan timeout, Boolean exit)
         {
             if (semaphore is null)
@@ -76,7 +76,7 @@ namespace NetExtender.Utilities.Types
                 return false;
             }
         }
-        
+
         public static Boolean TryRelease(this Semaphore semaphore)
         {
             if (semaphore is null)
@@ -102,7 +102,7 @@ namespace NetExtender.Utilities.Types
                 return false;
             }
         }
-        
+
         public static Boolean TryRelease(this Semaphore semaphore, Int32 count)
         {
             if (semaphore is null)

@@ -21,7 +21,7 @@ namespace NetExtender.Types.Collections
     public class ObservableAutoUnpackCollection<T>
     {
     }
-    
+
     //TODO:
     // Подумать над ячейками длин с индексами и обновлениям по ячейкам. Подумать над множественным вхождением
     internal class ObservableAutoUnpackCollectionBase<T> : ItemObservableCollection<ObservableAutoUnpackCollectionBase<T>.Unpack>, IItemObservableCollection<T>, IReadOnlyItemObservableCollection<T> where T : class?
@@ -33,9 +33,9 @@ namespace NetExtender.Types.Collections
         protected IStorage<T, Dictionary<Select, NotifyCollectionChangedEventHandler>> CollectionChangedEventHandlers { get; } = new WeakStorage<T, Dictionary<Select, NotifyCollectionChangedEventHandler>>();
         protected IStorage<T, Dictionary<Select, PropertyChangedEventHandler>> PropertyChangedEventHandlers { get; } = new WeakStorage<T, Dictionary<Select, PropertyChangedEventHandler>>();
 #pragma warning restore CS8634
-        
+
         public Int32 MaxDepth { get; init; } = 1;
-        
+
         Boolean ICollection<T>.IsReadOnly
         {
             get
@@ -43,27 +43,27 @@ namespace NetExtender.Types.Collections
                 return ((ICollection<Unpack>) this).IsReadOnly;
             }
         }
-        
+
         public ObservableAutoUnpackCollectionBase(params Expression<Func<T, IEnumerable<T>>>?[]? selectors)
         {
             Wrapper = new SelectorCollectionWrapper<Unpack, T>(this, static unpack => unpack.Item);
             Selectors = ToSelectors(selectors);
         }
-        
+
         public ObservableAutoUnpackCollectionBase(IEnumerable<T> collection, params Expression<Func<T, IEnumerable<T>>>?[]? selectors)
             : base(collection is not null ? Convert(collection) : throw new ArgumentNullException(nameof(collection)))
         {
             Wrapper = new SelectorCollectionWrapper<Unpack, T>(this, static unpack => unpack.Item);
             Selectors = ToSelectors(selectors);
         }
-        
+
         public ObservableAutoUnpackCollectionBase(List<T> list, params Expression<Func<T, IEnumerable<T>>>?[]? selectors)
             : base(list is not null ? Convert(list) : throw new ArgumentNullException(nameof(list)))
         {
             Wrapper = new SelectorCollectionWrapper<Unpack, T>(this, static unpack => unpack.Item);
             Selectors = ToSelectors(selectors);
         }
-        
+
         [return: NotNullIfNotNull("collection")]
         protected static IEnumerable<Unpack>? Convert(IEnumerable<T>? collection)
         {
@@ -71,7 +71,7 @@ namespace NetExtender.Types.Collections
             {
                 return null;
             }
-            
+
             return collection switch
             {
                 ICollection<T> convert => new SelectorCollectionWrapper<T, Unpack>(convert, Unpack.Create),
@@ -79,7 +79,7 @@ namespace NetExtender.Types.Collections
                 _ => collection.Select(Unpack.Create)
             };
         }
-        
+
         protected OrderedSet<Select>? ToSelectors(params Expression<Func<T, IEnumerable<T>>>?[]? selectors)
         {
             return selectors?.WhereNotNull().Distinct()
@@ -95,33 +95,33 @@ namespace NetExtender.Types.Collections
             {
                 return;
             }
-            
+
             (sender, Unpack item) = tuple;
             if (sender is not INotifyCollectionChanged || sender is not IEnumerable<T> source)
             {
                 return;
             }
-            
+
             Int32 index = base.IndexOf(item);
-            
+
             sender.ToConsole();
             item.ToConsole();
             args.ToConsole();
         }
-        
+
         protected virtual void SubCollectionPropertyChanged(Object? sender, PropertyChangedEventArgs args)
         {
             if (args.PropertyName != nameof(Count) && args.PropertyName != nameof(Array.Length) || sender is not ValueTuple<Object?, T> tuple)
             {
                 return;
             }
-            
+
             (sender, T item) = tuple;
             if (sender is INotifyCollectionChanged || sender is not IEnumerable<T> source)
             {
                 return;
             }
-            
+
             sender.ToConsole();
             item.ToConsole();
             args.ToConsole();
@@ -130,12 +130,12 @@ namespace NetExtender.Types.Collections
         protected override void Subscribe<TItem>(TItem? item) where TItem : default
         {
             base.Subscribe(item);
-            
+
             if (item is not Unpack unpack || Selectors is not { Count: > 0 })
             {
                 return;
             }
-            
+
             Boolean recursive = unpack.Depth < MaxDepth;
 
             foreach (Select? selector in Selectors)
@@ -192,57 +192,57 @@ namespace NetExtender.Types.Collections
         {
             return base.Contains(item);
         }
-        
+
         public Int32 IndexOf(T item)
         {
             return base.IndexOf(item);
         }
-        
+
         public void Add(T item)
         {
             base.Add(item);
         }
-        
+
         public void AddRange(IEnumerable<T> source)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             base.AddRange(source.Select(Unpack.Create));
         }
-        
+
         public void Insert(Int32 index, T item)
         {
             base.Insert(index, item);
         }
-        
+
         public Boolean Remove(T item)
         {
             return base.Remove(item);
         }
-        
+
         public void RemoveRange(IEnumerable<T> source)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             base.RemoveRange(source.Select(Unpack.Create));
         }
-        
+
         public void CopyTo(T[] array, Int32 index)
         {
             Wrapper.CopyTo(array, index);
         }
-        
+
         public new IEnumerator<T> GetEnumerator()
         {
             return Wrapper.GetEnumerator();
         }
-        
+
         public new T this[Int32 index]
         {
             get
@@ -254,7 +254,7 @@ namespace NetExtender.Types.Collections
                 base[index] = value;
             }
         }
-        
+
         public sealed record Unpack : IEquatable<T>
         {
             [return: NotNullIfNotNull("value")]
@@ -262,15 +262,15 @@ namespace NetExtender.Types.Collections
             {
                 return value?.Item;
             }
-            
+
             public static implicit operator Unpack(T value)
             {
                 return new Unpack(value);
             }
-            
+
             public Unpack? Parent { get; init; }
             public T Item { get; }
-            
+
             public Int32 Depth
             {
                 get
@@ -281,68 +281,68 @@ namespace NetExtender.Types.Collections
                     {
                         ++i;
                     }
-                    
+
                     return i;
                 }
             }
-            
+
             public Unpack(T item)
             {
                 Item = item;
             }
-            
+
             public static Unpack Create(T item)
             {
                 return new Unpack(item);
             }
-            
+
             public override Int32 GetHashCode()
             {
                 return HashCode.Combine(Parent, Item, Depth);
             }
-            
+
             public Boolean Equals(T? other)
             {
                 return EqualityComparer<T>.Default.Equals(Item, other);
             }
-            
+
             public Boolean Equals(Unpack? other)
             {
                 if (ReferenceEquals(null, other))
                 {
                     return false;
                 }
-                
+
                 if (ReferenceEquals(this, other))
                 {
                     return true;
                 }
-                
+
                 return Equals(Parent, other.Parent) && Equals(other.Item) && Depth == other.Depth;
             }
-            
+
             public override String? ToString()
             {
                 return Item?.ToString();
             }
         }
-        
+
         protected sealed class Select : IEquatable<String>
         {
             public String Name { get; }
             public Func<T, IEnumerable<T>> Selector { get; }
-            
+
             public Select(String name, Func<T, IEnumerable<T>> selector)
             {
                 Name = name ?? throw new ArgumentNullException(nameof(name));
                 Selector = selector ?? throw new ArgumentNullException(nameof(selector));
             }
-            
+
             public override Int32 GetHashCode()
             {
                 return Name.GetHashCode();
             }
-            
+
             public override Boolean Equals(Object? other)
             {
                 return other switch
@@ -352,17 +352,17 @@ namespace NetExtender.Types.Collections
                     _ => false
                 };
             }
-            
+
             public Boolean Equals(String? other)
             {
                 return Name == other;
             }
-            
+
             public Boolean Equals(Select? other)
             {
                 return Equals(other?.Name);
             }
-            
+
             public override String ToString()
             {
                 return Name;

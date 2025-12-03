@@ -35,7 +35,7 @@ namespace NetExtender.JWT.Algorithms
                 {
                     throw new ArgumentNullException(nameof(key));
                 }
-                
+
                 return new HMACSHA256(key.ToArray());
             }
 
@@ -45,7 +45,7 @@ namespace NetExtender.JWT.Algorithms
                 {
                     throw new ArgumentNullException(nameof(key));
                 }
-                
+
                 return new HMACSHA256((Byte[]) key);
             }
         }

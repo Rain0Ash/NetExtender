@@ -110,14 +110,14 @@ namespace NetExtender.Utilities.Types
                 }
             }
         }
-        
+
         public static void Clear<T>(this BlockingCollection<T> collection)
         {
             if (collection is null)
             {
                 throw new ArgumentNullException(nameof(collection));
             }
-            
+
             while (collection.TryTake(out _)) { }
         }
 

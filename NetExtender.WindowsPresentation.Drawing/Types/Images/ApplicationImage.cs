@@ -27,7 +27,7 @@ namespace NetExtender.WindowsPresentation.Types.Images
                 return Internal.Value;
             }
         }
-        
+
         public ApplicationImage(String path)
         {
             if (String.IsNullOrEmpty(path))
@@ -94,22 +94,22 @@ namespace NetExtender.WindowsPresentation.Types.Images
 
             return Initialize(@namespace, PathUtilities.AddEndSeparator(directory) + filename);
         }
-        
+
         protected virtual BitmapImage Initialize(String @namespace, String path)
         {
             if (@namespace is null)
             {
                 throw new ArgumentNullException(nameof(@namespace));
             }
-            
+
             if (path is null)
             {
                 throw new ArgumentNullException(nameof(path));
             }
-            
+
             return Initialize(new Uri($"pack://application:,,,/{@namespace};component/{path}"));
         }
-        
+
         protected virtual BitmapImage Initialize(Uri uri)
         {
             return uri is not null ? new BitmapImage(uri) : throw new ArgumentNullException(nameof(uri));

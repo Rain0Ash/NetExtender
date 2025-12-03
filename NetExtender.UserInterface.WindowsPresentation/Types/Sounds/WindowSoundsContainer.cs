@@ -25,7 +25,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.Sounds
 
             @default = Activator.CreateInstance(type) as WindowSoundsContainer;
         }
-        
+
         public static WindowSoundsContainer Null
         {
             get
@@ -53,13 +53,13 @@ namespace NetExtender.UserInterface.WindowsPresentation.Sounds
         private sealed class WindowSoundsNullContainer : WindowSoundsContainer
         {
             public static WindowSoundsNullContainer Instance { get; } = new WindowSoundsNullContainer();
-            
+
             public override ValueTask Play(String? value)
             {
                 return ValueTask.CompletedTask;
             }
         }
-        
+
         private static class EnumHandler<T> where T : unmanaged, Enum
         {
             private delegate ValueTask PlayDelegate(Object instance, T value);
@@ -79,7 +79,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.Sounds
                 {
                     return null;
                 }
-                
+
                 ParameterExpression instance = Expression.Parameter(typeof(Object), nameof(instance));
                 ParameterExpression value = Expression.Parameter(typeof(T), nameof(value));
                 UnaryExpression convert = Expression.Convert(instance, type);
@@ -98,7 +98,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.Sounds
                 {
                     return @delegate.Invoke(container, value);
                 }
-                
+
                 return container.Play(value.ToString());
             }
         }

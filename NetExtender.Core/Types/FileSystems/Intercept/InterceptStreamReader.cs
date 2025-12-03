@@ -19,9 +19,9 @@ namespace NetExtender.FileSystems
     {
         private const Int32 DefaultBufferSize = 1024;
         private const Int32 DefaultFileStreamBufferSize = 4096;
-        
+
         protected IAnyMemberInterceptor<InterceptStreamReader, IPropertyInterceptEventArgs, FileStreamInterceptEventArgs, Any.Value> Interceptor { get; }
-        
+
         public event EventHandler<InterceptStreamReader, IPropertyInterceptEventArgs>? PropertyIntercept
         {
             add
@@ -35,7 +35,7 @@ namespace NetExtender.FileSystems
                 PropertySetIntercept -= value;
             }
         }
-        
+
         public event EventHandler<InterceptStreamReader, IPropertyInterceptEventArgs>? PropertyIntercepting
         {
             add
@@ -49,7 +49,7 @@ namespace NetExtender.FileSystems
                 PropertySetIntercepting -= value;
             }
         }
-        
+
         public event EventHandler<InterceptStreamReader, IPropertyInterceptEventArgs>? PropertyIntercepted
         {
             add
@@ -63,7 +63,7 @@ namespace NetExtender.FileSystems
                 PropertySetIntercepted -= value;
             }
         }
-        
+
         public event EventHandler<InterceptStreamReader, IPropertyInterceptEventArgs>? PropertyGetIntercept
         {
             add
@@ -77,7 +77,7 @@ namespace NetExtender.FileSystems
                 PropertyGetIntercepted -= value;
             }
         }
-        
+
         public event EventHandler<InterceptStreamReader, IPropertyInterceptEventArgs>? PropertySetIntercept
         {
             add
@@ -91,12 +91,12 @@ namespace NetExtender.FileSystems
                 PropertySetIntercepted -= value;
             }
         }
-        
+
         public event EventHandler<InterceptStreamReader, IPropertyInterceptEventArgs>? PropertyGetIntercepting;
         public event EventHandler<InterceptStreamReader, IPropertyInterceptEventArgs>? PropertySetIntercepting;
         public event EventHandler<InterceptStreamReader, IPropertyInterceptEventArgs>? PropertyGetIntercepted;
         public event EventHandler<InterceptStreamReader, IPropertyInterceptEventArgs>? PropertySetIntercepted;
-        
+
         public event EventHandler<InterceptStreamReader, IMethodInterceptEventArgs>? MethodIntercept
         {
             add
@@ -110,10 +110,10 @@ namespace NetExtender.FileSystems
                 MethodIntercepted -= value;
             }
         }
-        
+
         public event EventHandler<InterceptStreamReader, IMethodInterceptEventArgs>? MethodIntercepting;
         public event EventHandler<InterceptStreamReader, IMethodInterceptEventArgs>? MethodIntercepted;
-        
+
         private protected String? _identifier;
         public virtual String Identifier
         {
@@ -126,7 +126,7 @@ namespace NetExtender.FileSystems
                 _identifier = value ?? throw new ArgumentNullException(nameof(value));
             }
         }
-        
+
         public override Stream BaseStream
         {
             get
@@ -142,7 +142,7 @@ namespace NetExtender.FileSystems
                 return Interceptor.InterceptGet<Encoding>(this);
             }
         }
-        
+
         public InterceptStreamReader(Stream stream)
             : base(stream)
         {
@@ -230,7 +230,7 @@ namespace NetExtender.FileSystems
             {
                 throw new ArgumentNullException(nameof(options));
             }
-            
+
             if ((options.Access & FileAccess.Read) == 0)
             {
                 throw new ArgumentException("Stream not readable.", nameof(options));
@@ -263,7 +263,7 @@ namespace NetExtender.FileSystems
                 Share = FileShare.Read,
                 BufferSize = DefaultFileStreamBufferSize
             };
-            
+
             return ValidateArgsAndOpenPath(path, encoding, options);
         }
 
@@ -297,7 +297,7 @@ namespace NetExtender.FileSystems
             {
                 return reader.ReadCore(buffer.Span);
             }
-            
+
             return Interceptor.Intercept(this, default, Core, this, buffer);
         }
 
@@ -346,7 +346,7 @@ namespace NetExtender.FileSystems
             {
                 return reader.ReadBlockCore(buffer.Span);
             }
-            
+
             return Interceptor.Intercept(this, default, Core, this, buffer);
         }
 
@@ -429,9 +429,9 @@ namespace NetExtender.FileSystems
             MethodIntercepted?.Invoke(this, args);
         }
     }
-    
+
     public delegate Stream InterceptStreamReaderOpen(String path, Encoding encoding, FileStreamOptions options);
-    
+
     public static class InterceptStreamReaderUtilities
     {
         public static event InterceptStreamReaderOpen? FileStream;

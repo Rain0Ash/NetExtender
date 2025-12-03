@@ -17,19 +17,19 @@ namespace NetExtender.Types.Reflection
         Successful,
         Failed
     }
-    
+
     public class WeakDependencyLoader : WeakDependencyLoader<WeakDependency.Factory>
     {
         public WeakDependencyLoader(String assembly)
             : base(assembly)
         {
         }
-        
+
         public WeakDependencyLoader(AssemblyName name)
             : base(name)
         {
         }
-        
+
         public WeakDependencyLoader(Assembly assembly)
             : base(assembly)
         {
@@ -39,7 +39,7 @@ namespace NetExtender.Types.Reflection
     public class WeakDependencyLoader<TFactory> : IWeakDependencyLoader<TFactory> where TFactory : class, IWeakDependencyFactory, new()
     {
         public SyncRoot SyncRoot { get; } = SyncRoot.Create();
-        
+
         private Assembly? _assembly;
         public Assembly? Assembly
         {
@@ -51,7 +51,7 @@ namespace NetExtender.Types.Reflection
                     {
                         return _assembly;
                     }
-                    
+
                     return Reload() ? _assembly : null;
                 }
             }
@@ -63,7 +63,7 @@ namespace NetExtender.Types.Reflection
                 }
             }
         }
-        
+
         private readonly AssemblyName _name;
         public AssemblyName Name
         {
@@ -75,9 +75,9 @@ namespace NetExtender.Types.Reflection
                 }
             }
         }
-        
+
         public WeakDependencyState State { get; protected set; }
-        
+
         private TFactory? _factory;
         public virtual TFactory Factory
         {
@@ -93,7 +93,7 @@ namespace NetExtender.Types.Reflection
                 _factory = value;
             }
         }
-        
+
         IWeakDependencyFactory IWeakDependencyLoader.Factory
         {
             get
@@ -101,7 +101,7 @@ namespace NetExtender.Types.Reflection
                 return Factory;
             }
         }
-        
+
         public WeakDependencyLoader(String assembly)
             : this(new AssemblyName(assembly))
         {
@@ -111,13 +111,13 @@ namespace NetExtender.Types.Reflection
         {
             _name = name ?? throw new ArgumentNullException(nameof(name));
         }
-        
+
         public WeakDependencyLoader(Assembly assembly)
             : this(assembly is not null ? assembly.GetName() : throw new ArgumentNullException(nameof(assembly)))
         {
             _assembly = assembly;
         }
-        
+
         protected virtual Assembly? Load()
         {
             try
@@ -130,7 +130,7 @@ namespace NetExtender.Types.Reflection
                 return null;
             }
         }
-        
+
         public Boolean Reload()
         {
             lock (SyncRoot)
@@ -140,7 +140,7 @@ namespace NetExtender.Types.Reflection
                 return State == WeakDependencyState.Successful;
             }
         }
-        
+
         public Boolean TryGet([MaybeNullWhen(false)] out Assembly assembly)
         {
             assembly = Assembly;

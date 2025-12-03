@@ -23,7 +23,7 @@ namespace NetExtender.Types.Network.Formatters
                 return MediaTypeFormatterUtilities.ApplicationFormUrlEncodedMediaType;
             }
         }
-        
+
         private Int32 _maxdepth = 256;
         public override Int32 MaxDepth
         {
@@ -37,7 +37,7 @@ namespace NetExtender.Types.Network.Formatters
                 {
                     throw new ArgumentOutOfRangeException(nameof(value), value, null);
                 }
-                
+
                 _maxdepth = value;
             }
         }
@@ -70,7 +70,7 @@ namespace NetExtender.Types.Network.Formatters
             ReadBufferSize = formatter.ReadBufferSize;
             CanWriteAnyTypes = GetType() != typeof(FormUrlEncodedMediaTypeFormatter);
         }
-        
+
         public override Boolean CanReadType(Type? type)
         {
             return type is not null && (type == typeof(FormDataCollection) || typeof(JToken).IsAssignableFrom(type));
@@ -147,7 +147,7 @@ namespace NetExtender.Types.Network.Formatters
             Boolean final = false;
             List<KeyValuePair<String, String>> result = new List<KeyValuePair<String, String>>();
             FormUrlEncodedParser parser = new FormUrlEncodedParser(result, Int64.MaxValue);
-            
+
             do
             {
                 Int32 read;
@@ -163,7 +163,7 @@ namespace NetExtender.Types.Network.Formatters
                 {
                     throw new InvalidOperationException("Error reading HTML form URL-encoded data stream.", exception);
                 }
-                
+
                 Int32 consumed = 0;
                 switch (parser.ParseBuffer(buffer, read, ref consumed, final))
                 {

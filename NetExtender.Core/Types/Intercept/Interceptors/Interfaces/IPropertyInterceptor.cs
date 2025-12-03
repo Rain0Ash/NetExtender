@@ -9,7 +9,7 @@ namespace NetExtender.Types.Intercept.Interfaces
     public interface IPropertyInterceptor<in TSender, in TInfo> : IPropertyInterceptor<TSender, IPropertyInterceptEventArgs, TInfo>
     {
     }
-    
+
     public interface IPropertyInterceptor<in TSender, in TArgument, in TInfo>
     {
         public T InterceptGet<T>(TSender sender, [CallerMemberName] String? property = null);

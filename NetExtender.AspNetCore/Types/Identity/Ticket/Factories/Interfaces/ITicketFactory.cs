@@ -10,7 +10,7 @@ namespace NetExtender.AspNetCore.Identity.Interfaces
     {
         public AuthenticationTicket CreateTicket(TIdentity identity, AuthenticationScheme scheme);
     }
-    
+
     public interface ITicketFactory
     {
         public AuthenticationTicket CreateTicket(IIdentity identity, AuthenticationScheme scheme);

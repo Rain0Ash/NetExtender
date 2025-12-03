@@ -105,7 +105,7 @@ namespace NetExtender.Utilities.Core
         NotStrict = Name | In | Out,
         All = Name | Attribute | Optional | DefaultValueEquals
     }
-    
+
     public static partial class ReflectionUtilities
     {
         // ReSharper disable once CognitiveComplexity
@@ -120,9 +120,9 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(member));
             }
-            
+
             List<T> members = new List<T>(4);
-            
+
             // ReSharper disable once LoopCanBeConvertedToQuery
             foreach (T info in source)
             {
@@ -130,7 +130,7 @@ namespace NetExtender.Utilities.Core
                 {
                     continue;
                 }
-                
+
                 members.Add(info);
             }
 
@@ -159,7 +159,7 @@ namespace NetExtender.Utilities.Core
 
                         type = type?.BaseType;
                     } while (type is not null);
-            
+
                     return null;
                 }
             }
@@ -199,7 +199,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(field));
             }
-            
+
             const BindingFlags binding = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy;
             return Find(type, type.GetFields(binding), field);
         }
@@ -215,7 +215,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(property));
             }
-            
+
             const BindingFlags binding = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy;
             return Find(type, type.GetProperties(binding), property);
         }
@@ -231,7 +231,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(method));
             }
-            
+
             const BindingFlags binding = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy;
             return Find(type, type.GetMethods(binding), method);
         }
@@ -247,7 +247,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(constructor));
             }
-            
+
             const BindingFlags binding = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy;
             return Find(type, type.GetConstructors(binding), constructor);
         }
@@ -263,7 +263,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(@event));
             }
-            
+
             const BindingFlags binding = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy;
             return Find(type, type.GetEvents(binding), @event);
         }
@@ -353,7 +353,7 @@ namespace NetExtender.Utilities.Core
             {
                 return Equality((EventInfo) (Object) source, (EventInfo) (Object) other, strict);
             }
-            
+
             return Equality((MemberInfo) source, other);
         }
 
@@ -437,7 +437,7 @@ namespace NetExtender.Utilities.Core
             {
                 return new ReflectionDifferenceItem<ConstructorInfo>(source, other, ReflectionEqualityType.NameNotEquals);
             }
-            
+
             if (strict.HasFlag(ConstructorDifferenceStrictMode.CallingConvention) && source.CallingConvention != other.CallingConvention)
             {
                 return new ReflectionDifferenceItem<ConstructorInfo>(source, other, ReflectionEqualityType.CallingConventionNotEquals);
@@ -768,7 +768,7 @@ namespace NetExtender.Utilities.Core
         {
             return Difference(source, other, strict ? EventDifferenceStrictMode.Strict : EventDifferenceStrictMode.NotStrict);
         }
-        
+
         // ReSharper disable once CognitiveComplexity
         public static ReflectionDifferenceItem<EventInfo> Difference(this EventInfo source, EventInfo other, EventDifferenceStrictMode strict)
         {
@@ -806,14 +806,14 @@ namespace NetExtender.Utilities.Core
             {
                 return new ReflectionDifferenceItem<EventInfo>(source, other, ReflectionEqualityType.SignatureNotEquals);
             }
-            
+
             MethodDifferenceStrictMode difference = strict.ToMethodDifferenceStrictMode();
-            
+
             if (source.AddMethod is { } fadd && other.AddMethod is { } sadd && !Equality(fadd, sadd, difference))
             {
                 return new ReflectionDifferenceItem<EventInfo>(source, other, ReflectionEqualityType.AccessorNotEquals);
             }
-            
+
             if (source.RemoveMethod is { } fremove && other.RemoveMethod is { } sremove && !Equality(fremove, sremove, difference))
             {
                 return new ReflectionDifferenceItem<EventInfo>(source, other, ReflectionEqualityType.AccessorNotEquals);

@@ -14,7 +14,7 @@ using NetExtender.Utilities.Types;
 namespace NetExtender.Types.Flags
 {
     [Serializable]
-    [StructLayout(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential, Size = 8)]
     public readonly unsafe struct Flag64 : IFlag, IEquatable<Flag64>
     {
         public static implicit operator UInt64(Flag64 value)
@@ -66,7 +66,7 @@ namespace NetExtender.Types.Flags
         {
             fixed (void* pointer = &value)
             {
-                return new ReadOnlySpan<Byte>(pointer, sizeof(UInt64) / sizeof(Byte));
+                return new ReadOnlySpan<Byte>(pointer, sizeof(Flag64) / sizeof(Byte));
             }
         }
 
@@ -74,7 +74,7 @@ namespace NetExtender.Types.Flags
         {
             fixed (void* pointer = &value)
             {
-                return new ReadOnlySpan<UInt16>(pointer, sizeof(UInt64) / sizeof(UInt16));
+                return new ReadOnlySpan<UInt16>(pointer, sizeof(Flag64) / sizeof(UInt16));
             }
         }
 
@@ -82,7 +82,7 @@ namespace NetExtender.Types.Flags
         {
             fixed (void* pointer = &value)
             {
-                return new ReadOnlySpan<UInt32>(pointer, sizeof(UInt64) / sizeof(UInt32));
+                return new ReadOnlySpan<UInt32>(pointer, sizeof(Flag64) / sizeof(UInt32));
             }
         }
 
@@ -90,7 +90,7 @@ namespace NetExtender.Types.Flags
         {
             fixed (void* pointer = &value)
             {
-                return new ReadOnlySpan<UInt64>(pointer, sizeof(UInt64) / sizeof(UInt64));
+                return new ReadOnlySpan<UInt64>(pointer, sizeof(Flag64) / sizeof(UInt64));
             }
         }
 
@@ -167,7 +167,10 @@ namespace NetExtender.Types.Flags
 
         public ReadOnlySpan<Byte> AsSpan()
         {
-            return this;
+            fixed (void* pointer = &this)
+            {
+                return new ReadOnlySpan<Byte>(pointer, sizeof(Flag64) / sizeof(Byte));
+            }
         }
 
         public Boolean HasFlag(ReadOnlySpan<Byte> value)

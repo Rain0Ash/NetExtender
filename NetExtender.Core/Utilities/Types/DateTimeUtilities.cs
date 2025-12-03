@@ -60,6 +60,7 @@ namespace NetExtender.Utilities.Types
     {
         public static DateTime Epoch
         {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
                 return new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
@@ -97,18 +98,6 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static DateTime DateTimeFrom(this Month month, Int32 year, Int32 day, Int32 hour, Int32 minute, Int32 second, Int32 millisecond)
-        {
-            return DateTimeFrom(month, year, day, hour, minute, second, millisecond, DateTimeKind.Unspecified);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static DateTime DateTimeFrom(this Month month, Int32 year, Int32 day, Int32 hour, Int32 minute, Int32 second, Int32 millisecond, DateTimeKind kind)
-        {
-            return new DateTime(year, (Int32) month, day, hour, minute, second, millisecond, kind);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static DateTime DateTimeFrom(this Month month, Int32 year, Int32 day, Int32 hour = 0, Int32 minute = 0, Int32 second = 0)
         {
             return DateTimeFrom(month, year, day, hour, minute, second, DateTimeKind.Unspecified);
@@ -118,6 +107,18 @@ namespace NetExtender.Utilities.Types
         public static DateTime DateTimeFrom(this Month month, Int32 year, Int32 day, Int32 hour, Int32 minute, Int32 second, DateTimeKind kind)
         {
             return new DateTime(year, (Int32) month, day, hour, minute, second, kind);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DateTime DateTimeFrom(this Month month, Int32 year, Int32 day, Int32 hour, Int32 minute, Int32 second, Int32 millisecond)
+        {
+            return DateTimeFrom(month, year, day, hour, minute, second, millisecond, DateTimeKind.Unspecified);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DateTime DateTimeFrom(this Month month, Int32 year, Int32 day, Int32 hour, Int32 minute, Int32 second, Int32 millisecond, DateTimeKind kind)
+        {
+            return new DateTime(year, (Int32) month, day, hour, minute, second, millisecond, kind);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -131,6 +132,32 @@ namespace NetExtender.Utilities.Types
         {
             return new DateTime(year, (Int32) month, day, hour, minute, second, millisecond, calendar, kind);
         }
+
+#if NET7_0_OR_GREATER
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DateTime DateTimeFrom(this Month month, Int32 year, Int32 day, Int32 hour, Int32 minute, Int32 second, Int32 millisecond, Int32 microsecond)
+        {
+            return DateTimeFrom(month, year, day, hour, minute, second, millisecond, microsecond, DateTimeKind.Unspecified);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DateTime DateTimeFrom(this Month month, Int32 year, Int32 day, Int32 hour, Int32 minute, Int32 second, Int32 millisecond, Int32 microsecond, DateTimeKind kind)
+        {
+            return new DateTime(year, (Int32) month, day, hour, minute, second, millisecond, microsecond, kind);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DateTime DateTimeFrom(this Month month, Int32 year, Int32 day, Int32 hour, Int32 minute, Int32 second, Int32 millisecond, Int32 microsecond, Calendar calendar)
+        {
+            return new DateTime(year, (Int32) month, day, hour, minute, second, millisecond, microsecond, calendar);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DateTime DateTimeFrom(this Month month, Int32 year, Int32 day, Int32 hour, Int32 minute, Int32 second, Int32 millisecond, Int32 microsecond, Calendar calendar, DateTimeKind kind)
+        {
+            return new DateTime(year, (Int32) month, day, hour, minute, second, millisecond, microsecond, calendar, kind);
+        }
+#endif
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static DateTime ToKind(this DateTime value, DateTimeKind kind)
@@ -234,12 +261,7 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Int32 Age(this DateTime date, DateTime at)
         {
-            if (at < date)
-            {
-                throw new ArgumentOutOfRangeException(nameof(at), at, null);
-            }
-
-            return (at - date).Years();
+            return at >= date ? (at - date).Years() : throw new ArgumentOutOfRangeException(nameof(at), at, null);
         }
 
         /// <summary>
@@ -645,7 +667,7 @@ namespace NetExtender.Utilities.Types
         /// <param name="date">Date to get the offset of</param>
         /// <returns>UTC offset</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Double UTCOffset(this DateTime date)
+        public static Double UtcOffset(this DateTime date)
         {
             return (date - date.ToUniversalTime()).TotalHours;
         }
@@ -707,7 +729,7 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsWeekend(this DateTime date)
         {
-            return date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday;
+            return date.DayOfWeek is DayOfWeek.Saturday or DayOfWeek.Sunday;
         }
 
         /// <summary>
@@ -723,16 +745,6 @@ namespace NetExtender.Utilities.Types
         }
 
         /// <summary>
-        /// Determines whether this date is in the future. Ignores time.
-        /// </summary>
-        /// <param name="date">The source date.</param>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean IsFutureDate(this DateTime date)
-        {
-            return date.Date.CompareTo(DateTime.Today) > 0;
-        }
-
-        /// <summary>
         /// Determines whether this datetime is in the future.
         /// </summary>
         /// <param name="date">The source date.</param>
@@ -740,6 +752,16 @@ namespace NetExtender.Utilities.Types
         public static Boolean IsFuture(this DateTime date)
         {
             return date.CompareTo(DateTime.Now) > 0;
+        }
+
+        /// <summary>
+        /// Determines whether this date is in the future. Ignores time.
+        /// </summary>
+        /// <param name="date">The source date.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsFutureDate(this DateTime date)
+        {
+            return date.Date.CompareTo(DateTime.Today) > 0;
         }
 
         /// <summary>
@@ -1059,48 +1081,6 @@ namespace NetExtender.Utilities.Types
         }
 
         /// <summary>
-        /// Set time of date
-        /// </summary>
-        /// <param name="date">Date to add time</param>
-        /// <param name="hour">Hours to add</param>
-        /// <param name="minute">Minutes to add</param>
-        /// <param name="second">Seconds to add</param>
-        /// <param name="millisecond">Milliseconds to add</param>
-        /// <returns>Date with new time</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static DateTime SetTime(this DateTime date, Int32 hour, Int32 minute, Int32 second, Int32 millisecond)
-        {
-            return new DateTime(date.Year, date.Month, date.Day, hour, minute, second, millisecond, date.Kind);
-        }
-
-        /// <summary>
-        /// Set time of date
-        /// </summary>
-        /// <param name="date">Date to add time</param>
-        /// <param name="hour">Hours to add</param>
-        /// <param name="minute">Minutes to add</param>
-        /// <param name="second">Seconds to add</param>
-        /// <returns>Date with new time</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static DateTime SetTime(this DateTime date, Int32 hour, Int32 minute, Int32 second)
-        {
-            return SetTime(date, hour, minute, second, date.Millisecond);
-        }
-
-        /// <summary>
-        /// Set time of date
-        /// </summary>
-        /// <param name="date">Date to add time</param>
-        /// <param name="hour">Hours to add</param>
-        /// <param name="minute">Minutes to add</param>
-        /// <returns>Date with new time</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static DateTime SetTime(this DateTime date, Int32 hour, Int32 minute)
-        {
-            return SetTime(date, hour, minute, date.Second, date.Millisecond);
-        }
-
-        /// <summary>
         /// Set hour of date
         /// </summary>
         /// <param name="date">Date to set time</param>
@@ -1109,7 +1089,11 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static DateTime SetHour(this DateTime date, Int32 hour)
         {
+#if NET7_0_OR_GREATER
+            return SetTime(date, hour, date.Minute, date.Second, date.Millisecond, date.Microsecond);
+#else
             return SetTime(date, hour, date.Minute, date.Second, date.Millisecond);
+#endif
         }
 
         /// <summary>
@@ -1121,7 +1105,11 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static DateTime SetMinute(this DateTime date, Int32 minute)
         {
+#if NET7_0_OR_GREATER
+            return SetTime(date, date.Hour, minute, date.Second, date.Millisecond, date.Microsecond);
+#else
             return SetTime(date, date.Hour, minute, date.Second, date.Millisecond);
+#endif
         }
 
         /// <summary>
@@ -1133,7 +1121,11 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static DateTime SetSecond(this DateTime date, Int32 second)
         {
+#if NET7_0_OR_GREATER
+            return SetTime(date, date.Hour, date.Minute, second, date.Millisecond, date.Microsecond);
+#else
             return SetTime(date, date.Hour, date.Minute, second, date.Millisecond);
+#endif
         }
 
         /// <summary>
@@ -1145,8 +1137,94 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static DateTime SetMillisecond(this DateTime date, Int32 millisecond)
         {
+#if NET7_0_OR_GREATER
+            return SetTime(date, date.Hour, date.Minute, date.Second, millisecond, date.Microsecond);
+#else
             return SetTime(date, date.Hour, date.Minute, date.Second, millisecond);
+#endif
         }
+
+#if NET7_0_OR_GREATER
+        /// <summary>
+        /// Set microsecond of date
+        /// </summary>
+        /// <param name="date">Date to set time</param>
+        /// <param name="microsecond">Microsecond to set</param>
+        /// <returns>Date with new time</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DateTime SetMicrosecond(this DateTime date, Int32 microsecond)
+        {
+            return SetTime(date, date.Hour, date.Minute, date.Second, date.Millisecond, microsecond);
+        }
+#endif
+
+        /// <summary>
+        /// Set time of date
+        /// </summary>
+        /// <param name="date">Date to set time</param>
+        /// <param name="hour">Hours to set</param>
+        /// <param name="minute">Minutes to set</param>
+        /// <returns>Date with new time</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DateTime SetTime(this DateTime date, Int32 hour, Int32 minute)
+        {
+#if NET7_0_OR_GREATER
+            return SetTime(date, hour, minute, date.Second, date.Millisecond, date.Microsecond);
+#else
+            return SetTime(date, hour, minute, date.Second, date.Millisecond);
+#endif
+        }
+
+        /// <summary>
+        /// Set time of date
+        /// </summary>
+        /// <param name="date">Date to set time</param>
+        /// <param name="hour">Hours to set</param>
+        /// <param name="minute">Minutes to set</param>
+        /// <param name="second">Seconds to set</param>
+        /// <returns>Date with new time</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DateTime SetTime(this DateTime date, Int32 hour, Int32 minute, Int32 second)
+        {
+#if NET7_0_OR_GREATER
+            return SetTime(date, hour, minute, second, date.Millisecond, date.Microsecond);
+#else
+            return SetTime(date, hour, minute, second, date.Millisecond);
+#endif
+        }
+
+        /// <summary>
+        /// Set time of date
+        /// </summary>
+        /// <param name="date">Date to set time</param>
+        /// <param name="hour">Hours to set</param>
+        /// <param name="minute">Minutes to set</param>
+        /// <param name="second">Seconds to set</param>
+        /// <param name="millisecond">Milliseconds to set</param>
+        /// <returns>Date with new time</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DateTime SetTime(this DateTime date, Int32 hour, Int32 minute, Int32 second, Int32 millisecond)
+        {
+            return new DateTime(date.Year, date.Month, date.Day, hour, minute, second, millisecond, date.Kind);
+        }
+
+#if NET7_0_OR_GREATER
+        /// <summary>
+        /// Set time of date
+        /// </summary>
+        /// <param name="date">Date to set time</param>
+        /// <param name="hour">Hours to set</param>
+        /// <param name="minute">Minutes to set</param>
+        /// <param name="second">Seconds to set</param>
+        /// <param name="millisecond">Milliseconds to set</param>
+        /// <param name="microsecond">Microseconds to set</param>
+        /// <returns>Date with new time</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DateTime SetTime(this DateTime date, Int32 hour, Int32 minute, Int32 second, Int32 millisecond, Int32 microsecond)
+        {
+            return new DateTime(date.Year, date.Month, date.Day, hour, minute, second, millisecond, microsecond, date.Kind);
+        }
+#endif
 
         /// <summary>
         /// Sets the time portion of a specific date
@@ -1161,34 +1239,62 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static DateTime TruncateToMilliseconds(this DateTime date)
+        public static DateTime TruncateToDays(this DateTime date)
         {
-            return new DateTime(date.Year, date.Month, date.Day, date.Hour, date.Minute, date.Second, date.Millisecond);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static DateTime TruncateToSeconds(this DateTime date)
-        {
-            return new DateTime(date.Year, date.Month, date.Day, date.Hour, date.Minute, date.Second, 0);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static DateTime TruncateToMinutes(this DateTime date)
-        {
-            return new DateTime(date.Year, date.Month, date.Day, date.Hour, date.Minute, 0, 0);
+#if NET7_0_OR_GREATER
+            return new DateTime(date.Year, date.Month, date.Day, 0, 0, 0, 0, 0, date.Kind);
+#else
+            return new DateTime(date.Year, date.Month, date.Day, 0, 0, 0, 0, date.Kind);
+#endif
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static DateTime TruncateToHours(this DateTime date)
         {
-            return new DateTime(date.Year, date.Month, date.Day, date.Hour, 0, 0, 0);
+#if NET7_0_OR_GREATER
+            return new DateTime(date.Year, date.Month, date.Day, date.Hour, 0, 0, 0, 0, date.Kind);
+#else
+            return new DateTime(date.Year, date.Month, date.Day, date.Hour, 0, 0, 0, date.Kind);
+#endif
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static DateTime TruncateToDays(this DateTime date)
+        public static DateTime TruncateToMinutes(this DateTime date)
         {
-            return new DateTime(date.Year, date.Month, date.Day, 0, 0, 0, 0);
+#if NET7_0_OR_GREATER
+            return new DateTime(date.Year, date.Month, date.Day, date.Hour, date.Minute, 0, 0, 0, date.Kind);
+#else
+            return new DateTime(date.Year, date.Month, date.Day, date.Hour, date.Minute, 0, 0, date.Kind);
+#endif
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DateTime TruncateToSeconds(this DateTime date)
+        {
+#if NET7_0_OR_GREATER
+            return new DateTime(date.Year, date.Month, date.Day, date.Hour, date.Minute, date.Second, 0, 0, date.Kind);
+#else
+            return new DateTime(date.Year, date.Month, date.Day, date.Hour, date.Minute, date.Second, 0, date.Kind);
+#endif
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DateTime TruncateToMilliseconds(this DateTime date)
+        {
+#if NET7_0_OR_GREATER
+            return new DateTime(date.Year, date.Month, date.Day, date.Hour, date.Minute, date.Second, date.Millisecond, 0, date.Kind);
+#else
+            return new DateTime(date.Year, date.Month, date.Day, date.Hour, date.Minute, date.Second, date.Millisecond, date.Kind);
+#endif
+        }
+
+#if NET7_0_OR_GREATER
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DateTime TruncateToMicroseconds(this DateTime date)
+        {
+            return new DateTime(date.Year, date.Month, date.Day, date.Hour, date.Minute, date.Second, date.Millisecond, date.Microsecond, date.Kind);
+        }
+#endif
 
         /// <summary>
         /// Checks if <paramref name="value" /> is between 1/1/1753 12:00:00 AM and 12/31/9999 11:59:59 PM.

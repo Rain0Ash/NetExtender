@@ -30,11 +30,11 @@ namespace NetExtender.Patch
 
             [ReflectionSignature(typeof(ActivatorUtilities))]
             public delegate Object CreateConstructorCallSite(Object lifetime, Type serviceType, Type implementationType, Object callSiteChain);
-            
+
             [ReflectionSignature(typeof(Type))]
             public delegate ConstructorInfo[] GetConstructor(Type type);
         }
-        
+
         [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
         protected class Patch : AutoReflectionPatch
         {
@@ -48,7 +48,7 @@ namespace NetExtender.Patch
                     return result ?? throw new ReflectionOperationException($"Can't get type '{nameof(CallSiteFactory)}' from '{@namespace}'.");
                 }
             }
-            
+
             [ReflectionNaming(typeof(ActivatorUtilities))]
             protected static Type ActivatorUtilities
             {
@@ -107,10 +107,10 @@ namespace NetExtender.Patch
                         {
                             throw new ArgumentNullException(nameof(instructions));
                         }
-                        
+
                         MethodInfo? original = typeof(Type).GetMethod(nameof(Type.GetConstructors), Type.EmptyTypes);
                         Signature.GetConstructor signature = GetConstructors;
-                        
+
                         Boolean successful = false;
                         foreach (CodeInstruction instruction in instructions)
                         {
@@ -123,13 +123,13 @@ namespace NetExtender.Patch
                             yield return new CodeInstruction(OpCodes.Call, signature.Method);
                             successful = true;
                         }
-                        
+
                         if (!successful)
                         {
                             throw new ReflectionPatchSignatureMissingException(nameof(Transpiler));
                         }
                     }
-                    
+
                     return Factory;
                 }
             }
@@ -141,7 +141,7 @@ namespace NetExtender.Patch
                     return GetName(typeof(DependencyInjectionPatch));
                 }
             }
-            
+
             public sealed override ReflectionPatchCategory Category
             {
                 get
@@ -149,9 +149,9 @@ namespace NetExtender.Patch
                     return ReflectionPatchCategory.Capability;
                 }
             }
-            
+
             public sealed override ReflectionPatchState State { get; protected set; }
-            
+
             public override ReflectionPatchThrow IsThrow
             {
                 get
@@ -166,17 +166,17 @@ namespace NetExtender.Patch
                 {
                     return ReflectionPatchState.Failed;
                 }
-                
+
                 Harmony harmony = new Harmony($"{nameof(NetExtender)}.{nameof(DependencyInjection)}.{nameof(DependencyInjectionPatch)}");
                 HarmonyMethod transpiler = new HarmonyMethod(Transpiler);
-                
+
                 if (instance.Method.DeclaringType?.Assembly.GetName().Version?.Major >= 9)
                 {
                     if (CreateConstructorInfoExs is not { } constructor)
                     {
                         return ReflectionPatchState.Failed;
                     }
-                    
+
                     harmony.Transpiler(transpiler, constructor.Method);
                 }
                 else if (TryFindPreferredConstructor is not { } constructor)
@@ -186,13 +186,13 @@ namespace NetExtender.Patch
                 else
                 {
                     harmony.Transpiler(transpiler, constructor.Method);
-                
+
                     if (instance.Method.DeclaringType?.Assembly.GetName().Version?.Major <= 7)
                     {
                         harmony.Transpiler(transpiler, instance.Method);
                     }
                 }
-                
+
                 harmony.Transpiler(transpiler, callsite);
                 return ReflectionPatchState.Apply;
             }
@@ -229,7 +229,7 @@ namespace NetExtender.Patch
 
                 return type.GetConstructors(binding);
             }
-            
+
             protected override void Dispose(Boolean disposing)
             {
             }

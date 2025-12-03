@@ -36,12 +36,12 @@ namespace NetExtender.Types.Sets
             : base(set)
         {
         }
-        
+
         protected sealed override SortedSetCollection<T> Clone()
         {
             return new SortedSetCollection<T>(Internal, Internal.Comparer);
         }
-        
+
         public override ObservableSortedSet<T> GetViewBetween(T? lower, T? upper)
         {
             return new ObservableSortedSet<T>(Internal.GetViewBetween(lower, upper));
@@ -91,10 +91,10 @@ namespace NetExtender.Types.Sets
                 Handle(step, @new);
                 return;
             }
-            
+
             base.Handle(step, state);
         }
-        
+
         protected virtual void Handle(Step step, State? state)
         {
             if (state is null)
@@ -111,12 +111,12 @@ namespace NetExtender.Types.Sets
                     {
                         state.PropertyChanging(nameof(Min));
                     }
-                    
+
                     if (state.Max.HasDifference())
                     {
                         state.PropertyChanging(nameof(Max));
                     }
-                    
+
                     goto default;
                 }
                 case Step.Collection:
@@ -125,12 +125,12 @@ namespace NetExtender.Types.Sets
                     {
                         state.PropertyChanged(nameof(Min));
                     }
-                    
+
                     if (state.Max.HasDifference())
                     {
                         state.PropertyChanged(nameof(Max));
                     }
-                    
+
                     goto default;
                 }
                 default:
@@ -213,7 +213,7 @@ namespace NetExtender.Types.Sets
         {
             return Internal.GetEnumerator();
         }
-        
+
         protected new record State : ObservableSet<T, TSet>.State
         {
             public State<T?> Min { get; protected set; }
@@ -228,13 +228,13 @@ namespace NetExtender.Types.Sets
             {
                 Min = new State<T?>(Current.Min);
                 Max = new State<T?>(Current.Max);
-                
+
                 if (Next is { } next)
                 {
                     Min = Min.Update(next.Min);
                     Max = Max.Update(next.Max);
                 }
-                
+
                 base.Prepare();
             }
 
@@ -244,10 +244,10 @@ namespace NetExtender.Types.Sets
                 {
                     return base.Update(@internal, reference, argument, @new, old);
                 }
-                
+
                 Min = Min.Update(reference.Min);
                 Max = Max.Update(reference.Max);
-                
+
                 return base.Update(@internal, reference, argument, @new, old);
             }
         }

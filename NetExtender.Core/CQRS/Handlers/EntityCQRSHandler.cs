@@ -17,14 +17,14 @@ namespace NetExtender.CQRS.Handlers
 
         public abstract override Task<TResult> HandleAsync(TEntity entity, CancellationToken token);
     }
-    
+
     public abstract class EntityCQRSHandler<TEntity> : IEntityCQRSHandler<TEntity> where TEntity : IEntityCQRS
     {
         public virtual Task HandleAsync(TEntity entity)
         {
             return HandleAsync(entity, CancellationToken.None);
         }
-        
+
         public abstract Task HandleAsync(TEntity entity, CancellationToken token);
     }
 }

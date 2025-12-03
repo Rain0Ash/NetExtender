@@ -12,7 +12,7 @@ namespace NetExtender.FileSystems.Interfaces
         public void OnPropertyChanging(String property);
         public void OnPropertyChanged(String property);
     }
-    
+
     public interface IFileSystemStorageInfo : IEquatable<IFileSystemStorageInfo>, ISerializable
     {
         public IFileSystem FileSystem { get; }

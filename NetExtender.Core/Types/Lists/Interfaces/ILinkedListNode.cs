@@ -13,35 +13,35 @@ namespace NetExtender.Types.Lists.Interfaces
     {
         public TList? List { get; }
     }
-    
+
     public interface IReadOnlyLinkedListNode<T, out TNode, out TList> : ILinkedListNode<T, TNode> where TNode : class, IReadOnlyLinkedListNode<T, TNode, TList> where TList : class, IReadOnlyLinkedList<T, TNode, TList>
     {
         public TList? List { get; }
     }
-    
+
     public interface ILinkedListNode<T, out TNode> : ILinkedNode<T, TNode>, ILinkedListNode<T> where TNode : class, ILinkedListNode<T, TNode>
     {
         /// <inheritdoc cref="LinkedListNode{T,TNode,TList}.First"/>
         public new TNode? First { get; }
-        
+
         /// <inheritdoc cref="LinkedListNode{T,TNode,TList}.Last"/>
         public new TNode? Last { get; }
-        
+
         /// <inheritdoc cref="LinkedListNode{T,TNode,TList}.Next"/>
         public new TNode? Next { get; }
-        
+
         /// <inheritdoc cref="LinkedListNode{T,TNode,TList}.Previous"/>
         public new TNode? Previous { get; }
-        
+
         /// <inheritdoc cref="LinkedListNode{T,TNode,TList}.Find(T)"/>
         public new TNode? Find(T value);
 
         /// <inheritdoc cref="LinkedListNode{T,TNode,TList}.Find(T,System.Collections.Generic.IEqualityComparer{T})"/>
         public new TNode? Find(T value, IEqualityComparer<T>? comparer);
-        
+
         /// <inheritdoc cref="LinkedListNode{T,TNode,TList}.Find(System.Predicate{T})"/>
         public new TNode? Find(Predicate<T> predicate);
-        
+
         /// <inheritdoc cref="LinkedListNode{T,TNode,TList}.Find(System.Predicate{TNode})"/>
         public new TNode? Find(Predicate<TNode> predicate);
 
@@ -50,10 +50,10 @@ namespace NetExtender.Types.Lists.Interfaces
 
         /// <inheritdoc cref="LinkedListNode{T,TNode,TList}.FindLast(T,System.Collections.Generic.IEqualityComparer{T})"/>
         public new TNode? FindLast(T value, IEqualityComparer<T>? comparer);
-        
+
         /// <inheritdoc cref="LinkedListNode{T,TNode,TList}.FindLast(System.Predicate{T})"/>
         public new TNode? FindLast(Predicate<T> predicate);
-        
+
         /// <inheritdoc cref="LinkedListNode{T,TNode,TList}.FindLast(System.Predicate{TNode})"/>
         public new TNode? FindLast(Predicate<TNode> predicate);
 
@@ -113,19 +113,19 @@ namespace NetExtender.Types.Lists.Interfaces
     {
         /// <inheritdoc cref="LinkedListNode{T,TNode,TList}.Value"/>
         public T Value { get; }
-        
+
         /// <inheritdoc cref="LinkedListNode{T,TNode,TList}.First"/>
         public new ILinkedListNode<T>? First { get; }
-        
+
         /// <inheritdoc cref="LinkedListNode{T,TNode,TList}.Last"/>
         public new ILinkedListNode<T>? Last { get; }
-        
+
         /// <inheritdoc cref="LinkedListNode{T,TNode,TList}.Next"/>
         public new ILinkedListNode<T>? Next { get; }
-        
+
         /// <inheritdoc cref="LinkedListNode{T,TNode,TList}.Previous"/>
         public new ILinkedListNode<T>? Previous { get; }
-        
+
         /// <inheritdoc cref="LinkedListNode{T,TNode,TList}.Find(T)"/>
         public ILinkedListNode<T>? Find(T value);
 
@@ -201,24 +201,24 @@ namespace NetExtender.Types.Lists.Interfaces
         /// <inheritdoc cref="LinkedListNode{T,TNode,TList}.GetEnumerator()"/>
         public new IEnumerator<T> GetEnumerator();
     }
-    
+
     public interface ILinkedListNode : ILinkedNode
     {
         /// <inheritdoc cref="LinkedListNode{T,TNode,TList}.First"/>
         public new ILinkedListNode? First { get; }
-        
+
         /// <inheritdoc cref="LinkedListNode{T,TNode,TList}.Last"/>
         public new ILinkedListNode? Last { get; }
-        
+
         /// <inheritdoc cref="LinkedListNode{T,TNode,TList}.Next"/>
         public new ILinkedListNode? Next { get; }
-        
+
         /// <inheritdoc cref="LinkedListNode{T,TNode,TList}.Previous"/>
         public new ILinkedListNode? Previous { get; }
-        
+
         /// <inheritdoc cref="IEquatable{ILinkedListNode}.Equals(ILinkedListNode)"/>
         public Boolean Equals(ILinkedListNode? other);
-        
+
         /// <inheritdoc cref="LinkedListNode{T,TNode,TList}.GetEnumerator()"/>
         public new IEnumerator<ILinkedListNode> GetEnumerator();
     }

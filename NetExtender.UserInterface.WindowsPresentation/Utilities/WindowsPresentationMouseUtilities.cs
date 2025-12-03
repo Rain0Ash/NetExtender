@@ -18,7 +18,7 @@ namespace NetExtender.Utilities.UserInterface
         {
             return AsMouseButton(value) is not null;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsMouseButton(this WM value, out Boolean client)
         {
@@ -26,7 +26,7 @@ namespace NetExtender.Utilities.UserInterface
             client = !value.IsNoClient();
             return result;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static MouseButton? AsMouseButton(this WM value)
         {
@@ -59,7 +59,7 @@ namespace NetExtender.Utilities.UserInterface
                 _ => null
             };
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static MouseButton? AsMouseButton(this WM value, out Boolean client)
         {
@@ -73,7 +73,7 @@ namespace NetExtender.Utilities.UserInterface
         {
             return AsMouseButton(value) ?? throw new EnumUndefinedOrNotSupportedException<WM>(value, nameof(value), null);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static MouseButton ToMouseButton(this WM value, out Boolean client)
         {
@@ -81,13 +81,13 @@ namespace NetExtender.Utilities.UserInterface
             client = !value.IsNoClient();
             return result;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsMouseAction(this WM value)
         {
             return AsMouseAction(value) is not null;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsMouseAction(this WM value, out Boolean client)
         {
@@ -95,7 +95,7 @@ namespace NetExtender.Utilities.UserInterface
             client = !value.IsNoClient();
             return result;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static MouseAction? AsMouseAction(this WM value)
         {
@@ -124,7 +124,7 @@ namespace NetExtender.Utilities.UserInterface
                 _ => null
             };
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static MouseAction? AsMouseAction(this WM value, out Boolean client)
         {
@@ -138,7 +138,7 @@ namespace NetExtender.Utilities.UserInterface
         {
             return AsMouseAction(value) ?? throw new EnumUndefinedOrNotSupportedException<WM>(value, nameof(value), null);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static MouseAction ToMouseAction(this WM value, out Boolean client)
         {
@@ -146,19 +146,19 @@ namespace NetExtender.Utilities.UserInterface
             client = !value.IsNoClient();
             return result;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsMouseAction(this NetExtenderMouseAction value)
         {
             return AsMouseAction(value) is not null;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsMouseAction(this NetExtenderMouseAction value, out Boolean client)
         {
             return AsMouseAction(value, out client) is not null;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static MouseAction? AsMouseAction(this NetExtenderMouseAction value)
         {
@@ -177,7 +177,7 @@ namespace NetExtender.Utilities.UserInterface
                 _ => null
             };
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static MouseAction? AsMouseAction(this NetExtenderMouseAction value, out Boolean client)
         {
@@ -191,25 +191,25 @@ namespace NetExtender.Utilities.UserInterface
         {
             return AsMouseAction(value) ?? throw new EnumUndefinedOrNotSupportedException<NetExtenderMouseAction>(value, nameof(value), null);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static MouseAction ToMouseAction(this NetExtenderMouseAction value, out Boolean client)
         {
             return AsMouseAction(value, out client) ?? throw new EnumUndefinedOrNotSupportedException<NetExtenderMouseAction>(value, nameof(value), null);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsMouseButton(this NetExtenderMouseAction value)
         {
             return AsMouseButton(value) is not null;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsMouseButton(this NetExtenderMouseAction value, out Boolean client)
         {
             return AsMouseButton(value, out client) is not null;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static MouseButton? AsMouseButton(this NetExtenderMouseAction value)
         {
@@ -223,7 +223,7 @@ namespace NetExtender.Utilities.UserInterface
                 _ => null
             };
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static MouseButton? AsMouseButton(this NetExtenderMouseAction value, out Boolean client)
         {
@@ -237,7 +237,7 @@ namespace NetExtender.Utilities.UserInterface
         {
             return AsMouseButton(value) ?? throw new EnumUndefinedOrNotSupportedException<NetExtenderMouseAction>(value, nameof(value), null);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static MouseButton ToMouseButton(this NetExtenderMouseAction value, out Boolean client)
         {

@@ -12,45 +12,45 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
         {
             return column >= 0 && column < ColumnDefinitions.Count && ColumnDefinitions[column] is ExcelColumnDefinition { Width: { Value: >= 0 } width } ? width : DefaultColumnWidth;
         }
-        
+
         protected GridLength RowHeight(Int32 row)
         {
             return row >= 0 && row < RowDefinitions.Count && RowDefinitions[row] is ExcelRowDefinition { Height: { Value: >= 0 } height } ? height : DefaultRowHeight;
         }
-        
+
         protected void AutoSizeAllColumns()
         {
             SheetGrid?.UpdateLayout();
             ColumnGrid.UpdateLayout();
-            
+
             for (Int32 column = 0; column < Columns; column++)
             {
                 AutoSizeColumn(column);
             }
         }
-        
+
         private Boolean TrySetColumnWidth(Int32 column, GridLength width)
         {
             if (SheetGrid is not { } grid || column < 0 || column >= grid.ColumnDefinitions.Count)
             {
                 return false;
             }
-            
+
             grid.ColumnDefinitions[column].Width = width;
             return true;
         }
-        
+
         protected void AutoSizeAllRows()
         {
             SheetGrid?.UpdateLayout();
             RowGrid.UpdateLayout();
-            
+
             for (Int32 row = 0; row < Rows; row++)
             {
                 AutoSizeRow(row);
             }
         }
-        
+
         protected virtual Double? AutoSizeColumn(Int32 column)
         {
             if (SheetGrid is not { } grid || column < 0 || column >= Columns)
@@ -72,14 +72,14 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
             TrySetColumnWidth(column, new GridLength(width));
             return width;
         }
-        
+
         protected virtual void AutoSizeRow(Int32 row)
         {
             if (SheetGrid is not { } grid || row < 0 || row >= SheetGrid.RowDefinitions.Count)
             {
                 return;
             }
-            
+
             FrameworkElement? header = GetRowElement(row);
             Double height = header is not null ? header.ActualHeight + header.Margin.Top + header.Margin.Bottom : 0;
 
@@ -93,7 +93,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
 
             grid.RowDefinitions[row].Height = new GridLength((Int32) height + 2);
         }
-        
+
         // ReSharper disable once CognitiveComplexity
         private void UpdateGridSize()
         {
@@ -101,14 +101,14 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
             {
                 return;
             }
-            
+
             /*using StackOverflowCounter overflow = new StackOverflowCounter(nameof(UpdateGridSize)) { Limit = 3 };
-            
+
             if (!overflow)
             {
                 return;
             }*/
-            
+
             grid.UpdateLayout();
             ColumnGrid.UpdateLayout();
             RowGrid.UpdateLayout();
@@ -120,7 +120,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                     AutoSizeRow(row);
                 }
             }
-            
+
             Double width = 0;
             Double stars = 0;
             for (Int32 column = 0; column < Columns; column++)

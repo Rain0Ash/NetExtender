@@ -3195,7 +3195,7 @@ namespace NetExtender.Utilities.Types
         {
             return value > TimeSpan.Zero || value == Timeout.InfiniteTimeSpan ? Task.Delay(value).GetAwaiter() : Task.CompletedTask.GetAwaiter();
         }
-        
+
         public static Task Run(this TaskFactory factory, Action action)
         {
             if (factory is null)

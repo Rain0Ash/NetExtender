@@ -22,7 +22,7 @@ namespace NetExtender.Utilities.Types
     internal sealed class NullObject
     {
         public static NullObject Instance { get; } = new NullObject();
-        
+
         private NullObject()
         {
         }

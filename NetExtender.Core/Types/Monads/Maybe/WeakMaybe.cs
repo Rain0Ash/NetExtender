@@ -48,7 +48,7 @@ namespace NetExtender.Types.Monads
         {
             return value.Reference;
         }
-        
+
         public static Boolean operator ==(T? first, WeakMaybe<T> second)
         {
             return second == first;
@@ -68,7 +68,7 @@ namespace NetExtender.Types.Monads
         {
             return !(first == second);
         }
-        
+
         public static Boolean operator ==(WeakMaybe<T> first, WeakMaybe<T> second)
         {
             return first.Equals(second);
@@ -170,7 +170,7 @@ namespace NetExtender.Types.Monads
         }
 
         private readonly Maybe<WeakReference<T>?> _value;
-        
+
         public Boolean HasValue
         {
             get
@@ -272,12 +272,12 @@ namespace NetExtender.Types.Monads
         {
             _value = value;
         }
-        
+
         private WeakMaybe(SerializationInfo info, StreamingContext context)
         {
             _value = new Maybe<T>(info, context) is { HasValue: true, Internal: var @object } ? @object is not null ? new WeakReference<T>(@object) : null : default(Maybe<WeakReference<T>?>);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static WeakMaybe<T> Create(T value)
         {
@@ -301,12 +301,12 @@ namespace NetExtender.Types.Monads
             value = null;
             return false;
         }
-        
+
         public Boolean Unwrap([MaybeNullWhen(false)] out T value)
         {
             return Maybe.Unwrap(out value);
         }
-        
+
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             Maybe.GetObjectData(info, context);

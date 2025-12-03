@@ -27,7 +27,7 @@ namespace NetExtender.AspNetCore.Types.Wrappers
         }
 
         public WebApplicationBuilder Builder { get; }
-        
+
         public IDictionary<Object, Object> Properties
         {
             get
@@ -35,12 +35,12 @@ namespace NetExtender.AspNetCore.Types.Wrappers
                 return ImmutableDictionary<Object, Object>.Empty;
             }
         }
-        
+
         public WebApplicationBuilderWrapper(String[] arguments)
         {
             Builder = WebApplication.CreateBuilder(arguments);
         }
-        
+
         public WebApplicationBuilderWrapper(WebApplicationOptions options)
         {
             Builder = WebApplication.CreateBuilder(options);

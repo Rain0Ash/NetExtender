@@ -30,7 +30,7 @@ namespace NetExtender.JWT
             return Factory.Invoke();
         }
     }
-    
+
     public sealed class InstanceJWTSerializerFactory : JWTSerializerFactory
     {
         private IJWTSerializer Serializer { get; }

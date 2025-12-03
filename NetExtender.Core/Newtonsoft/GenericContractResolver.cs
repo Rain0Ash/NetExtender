@@ -21,7 +21,7 @@ namespace NetExtender.Newtonsoft
             : base(resolver)
         {
         }
-        
+
         protected override JsonConverter? ResolveContractConverter(Type type)
         {
             return TryResolveGenericContractConverter(type, out JsonConverter? converter) ? converter : base.ResolveContractConverter(type);
@@ -53,7 +53,7 @@ namespace NetExtender.Serialization.Json
 {
     using System.Text.Json;
     using System.Text.Json.Serialization;
-    
+
     public sealed class GenericJsonConverterFactory : TextJsonConverterFactoryWrapper
     {
         public GenericJsonConverterFactory()
@@ -64,7 +64,7 @@ namespace NetExtender.Serialization.Json
             : base(factory)
         {
         }
-        
+
         public override Boolean CanConvert(Type type)
         {
             return type is { IsGenericType: true, IsGenericTypeDefinition: false };

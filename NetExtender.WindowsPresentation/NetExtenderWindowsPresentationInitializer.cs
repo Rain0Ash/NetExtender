@@ -14,7 +14,7 @@ namespace NetExtender.DependencyInjection
         {
             Initializer.Initializer.Module(Patch);
         }
-        
+
         private static void Patch()
         {
             WindowsPresentationFusionPatch.Auto();

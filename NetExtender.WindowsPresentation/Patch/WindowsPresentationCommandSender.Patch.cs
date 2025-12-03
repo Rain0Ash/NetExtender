@@ -21,11 +21,11 @@ namespace NetExtender.Patch
         {
             [ReflectionSignature]
             public delegate Boolean CanExecuteCommandSource(ICommandSource commandSource);
-            
+
             [ReflectionSignature]
             public delegate void CriticalExecuteCommandSource(ICommandSource commandSource, Boolean userInitiated);
         }
-        
+
         [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
         protected class Patch : AutoReflectionPatch
         {
@@ -40,7 +40,7 @@ namespace NetExtender.Patch
                     return result ?? throw new ReflectionOperationException($"Can't get type '{nameof(CommandHelpers)}' from '{assembly}'.");
                 }
             }
-            
+
             [ReflectionNaming]
             protected virtual Signature.CanExecuteCommandSource? CanExecuteCommandSource
             {
@@ -51,7 +51,7 @@ namespace NetExtender.Patch
                     return parameters is not null ? CommandHelpers.GetMethod(nameof(Signature.CanExecuteCommandSource), binding, parameters)?.CreateDelegate<Signature.CanExecuteCommandSource>() : null;
                 }
             }
-            
+
             [ReflectionNaming]
             protected virtual Signature.CriticalExecuteCommandSource? CriticalExecuteCommandSource
             {
@@ -84,12 +84,12 @@ namespace NetExtender.Patch
                             successful = true;
                             break;
                         }
-                        
+
                         if (!successful)
                         {
                             throw new ReflectionPatchSignatureMissingException(nameof(CanExecuteTranspiler));
                         }
-                        
+
                         return result;
                     }
 
@@ -111,14 +111,14 @@ namespace NetExtender.Patch
                             {
                                 continue;
                             }
-                            
+
                             result[i + 1].opcode = OpCodes.Ldarg_0;
                             result[i + 2].opcode = OpCodes.Call;
                             result[i + 2].operand = CodeInstruction.Call(typeof(Patch), nameof(Execute), new[] { typeof(ICommand), typeof(ICommandSource) }).operand;
                             successful = true;
                             break;
                         }
-                        
+
                         if (!successful)
                         {
                             throw new ReflectionPatchSignatureMissingException(nameof(ExecuteTranspiler));
@@ -126,7 +126,7 @@ namespace NetExtender.Patch
 
                         return result;
                     }
-                    
+
                     return Factory;
                 }
             }
@@ -138,7 +138,7 @@ namespace NetExtender.Patch
                     return GetName(typeof(WindowsPresentationCommandSenderPatch));
                 }
             }
-            
+
             public sealed override ReflectionPatchCategory Category
             {
                 get
@@ -171,19 +171,19 @@ namespace NetExtender.Patch
 
                 return ReflectionPatchState.Apply;
             }
-            
+
             [ReflectionSignature]
             protected static Boolean CanExecute(ICommand command, ICommandSource? source)
             {
                 Object? parameter = source?.CommandParameter;
                 return command.CanExecute(new CommandSenderArgs(source, parameter)) || command.CanExecute(parameter);
             }
-            
+
             [ReflectionSignature]
             protected static Boolean Execute(ICommand command, ICommandSource? source)
             {
                 const Boolean result = false;
-                
+
                 Object? parameter = source?.CommandParameter;
                 CommandSenderArgs args = new CommandSenderArgs(source, parameter);
                 if (command.CanExecute(args))
@@ -191,15 +191,15 @@ namespace NetExtender.Patch
                     command.Execute(args);
                     return result;
                 }
-                
+
                 if (command.CanExecute(parameter))
                 {
                     command.Execute(parameter);
                 }
-                
+
                 return result;
             }
-            
+
             protected override void Dispose(Boolean disposing)
             {
             }

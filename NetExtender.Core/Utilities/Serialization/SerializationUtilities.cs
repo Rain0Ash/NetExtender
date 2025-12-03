@@ -22,6 +22,10 @@ namespace NetExtender.Utilities.Serialization
             GetValueNoThrow = method?.CreateTargetDelegate<SerializationInfo, Func<SerializationInfo, String, Type, Object?>>();
         }
 
+#if NET8_0_OR_GREATER
+        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
         public static void GetObjectData<T>(T value, SerializationInfo info, StreamingContext context) where T : ISerializable
         {
             if (value is null)

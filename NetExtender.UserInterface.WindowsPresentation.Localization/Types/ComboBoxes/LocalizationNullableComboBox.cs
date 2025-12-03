@@ -12,12 +12,12 @@ namespace NetExtender.UserInterface.WindowsPresentation.Localization.Types.Combo
 
             Update<T, View<T>>();
         }
-        
+
         public virtual void SetItemsSource<T>(IEnumerable<View<T>> source)
         {
             SetItemsSource(null, source);
         }
-        
+
         public void SetItemsSource<T>(View<T>? nullable, IEnumerable<View<T>> source)
         {
             if (source is null)
@@ -29,7 +29,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.Localization.Types.Combo
             Values = source.ToArray();
             Update<T>();
         }
-        
+
         public new class View<T> : View, IView<T>
         {
             [return: NotNullIfNotNull("value")]
@@ -37,7 +37,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.Localization.Types.Combo
             {
                 return value is not null ? value.Value : default;
             }
-            
+
             public T Value { get; }
 
             public View(ILocalizationPropertyInfo display)
@@ -52,7 +52,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.Localization.Types.Combo
                 Value = value;
             }
         }
-        
+
         public new class View : ViewBase
         {
             private ILocalizationPropertyInfo _display;

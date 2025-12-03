@@ -249,12 +249,12 @@ namespace NetExtender.Types.Comparers
             {
                 return new Any(value);
             }
-            
+
             public static implicit operator EnumComparer<T>(Any value)
             {
                 return value.Comparer;
             }
-            
+
             private readonly EnumComparer<T> Comparer;
 
             public Any(EnumComparer<T> comparer)
@@ -389,7 +389,7 @@ namespace NetExtender.Types.Comparers
                 return this;
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static TUnderlying Avoid(T value)
         {
@@ -422,7 +422,7 @@ namespace NetExtender.Types.Comparers
         {
             return NullableCompareCore(first, second);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static Int32 AnyCompareCore(Enum? first, Enum? second)
         {
@@ -437,7 +437,7 @@ namespace NetExtender.Types.Comparers
                 _ => EnumComparer.From(first).Compare(first, second)
             };
         }
-        
+
         public Int32 Compare(Enum? first, Enum? second)
         {
             return AnyCompareCore(first, second);
@@ -571,12 +571,12 @@ namespace NetExtender.Types.Comparers
             {
                 return new Any(value);
             }
-            
+
             public static implicit operator EnumComparer<T, TUnderlying>(Any value)
             {
                 return value.Comparer;
             }
-            
+
             private readonly EnumComparer<T, TUnderlying> Comparer;
 
             public Any(EnumComparer<T, TUnderlying> comparer)
@@ -753,7 +753,7 @@ namespace NetExtender.Types.Comparers
                     var value => throw new EnumUndefinedOrNotSupportedException<TypeCode>(value, nameof(type), null)
                 } : TypeCode.Empty;
             }
-            
+
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             private static TUnderlying Avoid<TUnderlying>(Enum value)
             {
@@ -802,7 +802,7 @@ namespace NetExtender.Types.Comparers
                     var value => throw new EnumUndefinedOrNotSupportedException<TypeCode>(value, nameof(type), null)
                 };
             }
-            
+
             public Boolean Equals(Enum? first, Enum? second)
             {
                 if (first is null)

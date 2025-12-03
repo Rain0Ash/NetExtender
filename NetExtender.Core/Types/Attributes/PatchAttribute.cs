@@ -13,7 +13,7 @@ namespace NetExtender.Patch
         public Type? Patch { get; }
         public ReflectionPatchCategory? Category { get; }
         public Boolean Exclude { get; init; }
-        
+
         public PatchAttribute()
             : this(null)
         {
@@ -62,7 +62,7 @@ namespace NetExtender.Patch
                 {
                     return false;
                 }
-                
+
                 category = Category.Value;
             }
 
@@ -74,7 +74,7 @@ namespace NetExtender.Patch
             {
                 Initializer.Initializer.PatchUtilities.AutoInitPatchCategory |= category;
             }
-            
+
             return true;
         }
 

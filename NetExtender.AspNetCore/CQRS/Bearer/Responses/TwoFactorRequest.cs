@@ -37,7 +37,7 @@ namespace Microsoft.AspNetCore.Identity.Data
                 {
                     throw new ArgumentException($"'{nameof(value)}' item cannot be null or whitespace.", nameof(value));
                 }
-                
+
                 _recovery = value;
             }
         }

@@ -19,22 +19,22 @@ namespace NetExtender.Types.Lists
         {
             return new ToNullable(source);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static NullableSelectorListWrapper<T> Create(IList<T> source, Boolean @null)
         {
             return @null ? new ToNullNullable(source) : new ToNullable(source);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static NullableSelectorListWrapper<T> Create(IList<NullMaybe<T>> source)
         {
             return new FromNullable(source);
         }
-        
+
         public abstract override IList<T> Source { get; }
         public abstract override IList<NullMaybe<T>> Nullable { get; }
-        
+
         public abstract Int32 IndexOf(T item);
         public abstract Int32 IndexOf(NullMaybe<T> item);
         public abstract void Insert(Int32 index, T item);
@@ -655,7 +655,7 @@ namespace NetExtender.Types.Lists
             }
         }
     }
-    
+
     public sealed class TwoWaySelectorListWrapper<T, TKey> : IList<TKey>
     {
         public IList<T> Source { get; }
@@ -792,7 +792,7 @@ namespace NetExtender.Types.Lists
             }
         }
     }
-    
+
     public sealed class SelectorListWrapper<T, TKey> : IList<TKey>
     {
         private IList<T> Internal { get; }
@@ -866,7 +866,7 @@ namespace NetExtender.Types.Lists
             {
                 throw new NotSupportedException();
             }
-            
+
             Internal.RemoveAt(index);
         }
 
@@ -922,7 +922,7 @@ namespace NetExtender.Types.Lists
                 {
                     throw new NotSupportedException();
                 }
-                
+
                 Internal[index] = (T) (Object) value!;
             }
         }
@@ -988,13 +988,13 @@ namespace NetExtender.Types.Lists
         {
             return NullableSelectorListWrapper<T>.Create(source ?? new List<T>());
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NullableSelectorListWrapper<T> Nullable<T>(IList<T>? source, Boolean @null)
         {
             return NullableSelectorListWrapper<T>.Create(source ?? new List<T>(), @null);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NullableSelectorListWrapper<T> Nullable<T>(IList<NullMaybe<T>>? source)
         {

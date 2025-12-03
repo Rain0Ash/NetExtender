@@ -39,7 +39,7 @@ namespace NetExtender.Types.Monads
         {
             return value.Value;
         }
-        
+
         public static Boolean operator ==(T? first, NullMaybe<T> second)
         {
             return second == first;
@@ -59,7 +59,7 @@ namespace NetExtender.Types.Monads
         {
             return !(first == second);
         }
-        
+
         public static Boolean operator ==(NullMaybe<T> first, NullMaybe<T> second)
         {
             return first.Equals(second);
@@ -201,12 +201,12 @@ namespace NetExtender.Types.Monads
         {
             _value = value;
         }
-        
+
         private NullMaybe(SerializationInfo info, StreamingContext context)
         {
             _value = info.GetValue<T>(nameof(Value));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NullMaybe<T> Create(T value)
         {
@@ -230,7 +230,7 @@ namespace NetExtender.Types.Monads
             value = null;
             return false;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public Boolean Unwrap([MaybeNullWhen(false)] out T value)
         {
@@ -243,7 +243,7 @@ namespace NetExtender.Types.Monads
             value = default;
             return false;
         }
-        
+
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue(nameof(Value), Value);
@@ -290,7 +290,7 @@ namespace NetExtender.Types.Monads
             {
                 return 1;
             }
-            
+
             return other.HasValue ? comparer.SafeCompare(Value, other.Value) ?? 0 : 1;
         }
 

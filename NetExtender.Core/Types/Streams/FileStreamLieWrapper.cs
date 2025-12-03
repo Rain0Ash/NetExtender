@@ -15,39 +15,39 @@ namespace NetExtender.Types.Streams
 {
     [return: NotNullIfNotNull("path")]
     public delegate String? FileStreamPathLieHandler2(String? path, ref FileMode mode);
-    
+
     [return: NotNullIfNotNull("path")]
     public delegate String? FileStreamPathLieHandler3(String? path, ref FileMode mode, ref FileAccess access);
-    
+
     [return: NotNullIfNotNull("path")]
     public delegate String? FileStreamPathLieHandler4(String? path, ref FileMode mode, ref FileAccess access, ref FileShare share);
-    
+
     [return: NotNullIfNotNull("path")]
     public delegate String? FileStreamPathLieHandler5(String? path, ref FileMode mode, ref FileAccess access, ref FileShare share, ref Int32 buffer);
-    
+
     [return: NotNullIfNotNull("path")]
     public delegate String? FileStreamPathLieHandler6(String? path, ref FileMode mode, ref FileAccess access, ref FileShare share, ref Int32 buffer, ref FileOptions options);
-    
+
     [return: NotNullIfNotNull("path")]
     public delegate String? FileStreamPathLieHandlerAsync(String? path, ref FileMode mode, ref FileAccess access, ref FileShare share, ref Int32 buffer, ref Boolean async);
 
     [return: NotNullIfNotNull("path")]
     public delegate String? FileStreamPathLieHandlerOptions(String? path, ref FileStreamOptions options);
-    
+
     public delegate IntPtr FileStreamHandleLieHandler2(IntPtr handle, ref FileAccess access);
-    
+
     public delegate IntPtr FileStreamHandleLieHandler3(IntPtr handle, ref FileAccess access, ref Boolean ownsHandle);
-    
+
     public delegate IntPtr FileStreamHandleLieHandler4(IntPtr handle, ref FileAccess access, ref Boolean ownsHandle, ref Int32 buffer);
-    
+
     public delegate IntPtr FileStreamHandleLieHandler5(IntPtr handle, ref FileAccess access, ref Boolean ownsHandle, ref Int32 buffer, ref Boolean async);
-    
+
     public delegate SafeFileHandle FileStreamSafeHandleLieHandler2(SafeFileHandle handle, ref FileAccess access);
-    
+
     public delegate SafeFileHandle FileStreamSafeHandleLieHandler3(SafeFileHandle handle, ref FileAccess access, ref Int32 buffer);
-    
+
     public delegate SafeFileHandle FileStreamSafeHandleLieHandler4(SafeFileHandle handle, ref FileAccess access, ref Int32 buffer, ref Boolean async);
-    
+
     public class FileStreamLieWrapper : CustomFileStreamWrapper
     {
         public override String Name
@@ -99,7 +99,7 @@ namespace NetExtender.Types.Streams
         {
             FileStreamLiePathWrapperStorage.Register(this, handler, base.Name, path);
         }
-        
+
         [Obsolete]
         public FileStreamLieWrapper(IntPtr handle, FileStreamHandleLieHandler2? handler, FileAccess access)
             : base(handler?.Invoke(handle, ref access) ?? handle, access)
@@ -127,7 +127,7 @@ namespace NetExtender.Types.Streams
         {
             FileStreamLiePathWrapperStorage.Register(this, handler, base.Name);
         }
-        
+
         public FileStreamLieWrapper(SafeFileHandle handle, FileStreamSafeHandleLieHandler2? handler, FileAccess access)
             : base(handler is not null ? handler(handle, ref access) : handle, access)
         {
@@ -146,7 +146,7 @@ namespace NetExtender.Types.Streams
             FileStreamLiePathWrapperStorage.Register(this, handler, base.Name);
         }
     }
-    
+
     internal static class FileStreamLiePathWrapperStorage
     {
         private static IStorage<FileStream, Delegate> Storage { get; } = new WeakStorage<FileStream, Delegate>();
@@ -170,7 +170,7 @@ namespace NetExtender.Types.Streams
             {
                 return;
             }
-            
+
             Storage.Add(stream, handler);
 
             if (name is null || path is null)

@@ -56,39 +56,39 @@ namespace NetExtender.Utilities.Delegates
             {
                 generic.Append("TResult");
             }
-            
+
             generic.Append('>');
         }
 
         String @delegate = name + generic;
         Boolean @readonly = argument <= 0;
-        
+
         WriteLine($"\tpublic {(@readonly ? "readonly" : String.Empty)} struct {fullname}{generic} : I{fullname}<{fullname}{generic}{(result ? ", TResult" : String.Empty)}>");
         WriteLine("\t{");
-        
+
         WriteLine($"\t\tpublic static implicit operator {@delegate}?({fullname}{generic} value)");
         WriteLine("\t\t{");
         WriteLine("\t\t\treturn value.Delegate;");
         WriteLine("\t\t}");
-        
+
         WriteLine(String.Empty);
-        
+
         WriteLine($"\t\tpublic static {nameof(Boolean)} operator ==({fullname}{generic} first, {fullname}{generic} second)");
         WriteLine("\t\t{");
         WriteLine($"\t\t\treturn first.{nameof(Equals)}(second);");
         WriteLine("\t\t}");
-        
+
         WriteLine(String.Empty);
-        
+
         WriteLine($"\t\tpublic static {nameof(Boolean)} operator !=({fullname}{generic} first, {fullname}{generic} second)");
         WriteLine("\t\t{");
         WriteLine("\t\t\treturn !(first == second);");
         WriteLine("\t\t}");
-        
+
         WriteLine(String.Empty);
 
         WriteLine($"\t\tpublic {@delegate}? Delegate {{ get; }}");
-        
+
         WriteLine(String.Empty);
         WriteLine($"\t\tpublic {(!@readonly ? "readonly " : String.Empty)}{nameof(Int32)} Arguments");
         WriteLine("\t\t{");
@@ -97,7 +97,7 @@ namespace NetExtender.Utilities.Delegates
         WriteLine($"\t\t\t\treturn {argument};");
         WriteLine("\t\t\t}");
         WriteLine("\t\t}");
-        
+
         WriteLine(String.Empty);
         WriteLine($"\t\tpublic {(!@readonly ? "readonly " : String.Empty)}{nameof(MethodInfo)}? Method");
         WriteLine("\t\t{");
@@ -106,7 +106,7 @@ namespace NetExtender.Utilities.Delegates
         WriteLine("\t\t\t\treturn Delegate?.Method;");
         WriteLine("\t\t\t}");
         WriteLine("\t\t}");
-        
+
         WriteLine(String.Empty);
 
         if (argument > 1)
@@ -118,9 +118,9 @@ namespace NetExtender.Utilities.Delegates
         {
             WriteLine($"\t\tpublic {(argument > 1 ? $"T{i}" : "T")} {(argument > 1 ? names[i - 1] : "Argument")} {{ get; set; }}");
         }
-        
+
         WriteLine(String.Empty);
-        
+
         StringBuilder arguments = new StringBuilder();
 
         if (argument > 0)
@@ -137,7 +137,7 @@ namespace NetExtender.Utilities.Delegates
                 }
             }
         }
-        
+
         WriteLine($"\t\tpublic {fullname}({@delegate} @delegate{(argument > 0 ? $", {arguments}" : String.Empty)})");
         WriteLine("\t\t{");
         WriteLine($"\t\t\tDelegate = @delegate ?? throw new {nameof(ArgumentNullException)}(nameof(@delegate));");
@@ -147,11 +147,11 @@ namespace NetExtender.Utilities.Delegates
             String parameter = argument > 1 ? names[i] : "Argument";
             WriteLine($"\t\t\t{parameter} = {parameter.ToLower()};");
         }
-        
+
         WriteLine("\t\t}");
-        
+
         WriteLine(String.Empty);
-        
+
         WriteLine($"\t\tpublic {(!@readonly ? "readonly " : String.Empty)}{nameof(Object)}?[] GetArguments()");
         WriteLine("\t\t{");
         if (argument > 0)
@@ -163,16 +163,16 @@ namespace NetExtender.Utilities.Delegates
             WriteLine($"\t\t\treturn {nameof(Array)}.{nameof(Array.Empty)}<{nameof(Object)}?>();");
         }
         WriteLine("\t\t}");
-        
+
         WriteLine(String.Empty);
-        
+
         WriteLine($"\t\tpublic {(!@readonly ? "readonly " : String.Empty)}{(result ? "TResult" : "void")} Invoke()");
         WriteLine("\t\t{");
         WriteLine($"\t\t\t{(result ? "return " : String.Empty)}{(result ? "Delegate is not null ? " : String.Empty)}Delegate{(!result ? "?" : String.Empty)}.Invoke({(argument > 0 ? argument > 1 ? String.Join(", ", names.Take(argument)) : "Argument" : String.Empty)}){(result ? " : default!" : String.Empty)};");
         WriteLine("\t\t}");
-        
+
         WriteLine(String.Empty);
-        
+
         WriteLine($"\t\t{(!@readonly ? "readonly " : String.Empty)}{nameof(Object)}? IValueDelegate<{fullname}{generic}>.Invoke()");
         WriteLine("\t\t{");
         if (result)
@@ -185,31 +185,31 @@ namespace NetExtender.Utilities.Delegates
             WriteLine("\t\t\treturn null;");
         }
         WriteLine("\t\t}");
-        
+
         WriteLine(String.Empty);
         WriteLine($"\t\tpublic override {(!@readonly ? "readonly " : String.Empty)}{nameof(Int32)} {nameof(GetHashCode)}()");
         WriteLine("\t\t{");
         WriteLine($"\t\t\treturn Delegate?.{nameof(GetHashCode)}() ?? 0;");
         WriteLine("\t\t}");
-        
+
         WriteLine(String.Empty);
         WriteLine($"\t\tpublic override {(!@readonly ? "readonly " : String.Empty)}{nameof(Boolean)} {nameof(Equals)}({nameof(Object)}? other)");
         WriteLine("\t\t{");
         WriteLine($"\t\t\treturn other is {fullname}{generic} @delegate && {nameof(Equals)}(@delegate);");
         WriteLine("\t\t}");
-        
+
         WriteLine(String.Empty);
         WriteLine($"\t\tpublic {(!@readonly ? "readonly " : String.Empty)}{nameof(Boolean)} {nameof(Equals)}({fullname}{generic} other)");
         WriteLine("\t\t{");
         WriteLine("\t\t\treturn Equals(Delegate, other.Delegate);");
         WriteLine("\t\t}");
-        
+
         WriteLine(String.Empty);
         WriteLine($"\t\tpublic override {(!@readonly ? "readonly " : String.Empty)}{nameof(String)}? {nameof(ToString)}()");
         WriteLine("\t\t{");
         WriteLine($"\t\t\treturn Delegate?.{nameof(ToString)}();");
         WriteLine("\t\t}");
-        
+
         WriteLine(String.Empty);
         WriteLine($"\t\tpublic {nameof(Object)}? this[{nameof(Int32)} {nameof(argument)}]");
         WriteLine("\t\t{");
@@ -264,11 +264,11 @@ namespace NetExtender.Utilities.Delegates
             CreateCore(i, false);
             WriteLine(String.Empty);
         }
-        
+
         for (Int32 i = 0; i <= names.Count; i++)
         {
             CreateCore(i, true);
-            
+
             if (i <= names.Count - 1)
             {
                 WriteLine(String.Empty);

@@ -11,7 +11,7 @@ namespace NetExtender.Types.Assemblies.Interfaces
     {
         public ConcurrentDictionary<Type, Type> Storage { get; }
     }
-    
+
     public interface IDynamicAssemblyStorage : IDynamicAssembly
     {
         public Boolean Contains(Type type);

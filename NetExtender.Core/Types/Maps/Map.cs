@@ -8,6 +8,7 @@ using System.Diagnostics.CodeAnalysis;
 using NetExtender.Types.Exceptions;
 using NetExtender.Types.Maps.Interfaces;
 using NetExtender.Utilities.Types;
+using TSR = System.Collections.Generic.Dictionary<NetExtender.Types.Entities.Any.Value, NetExtender.Types.Entities.Any.Value>;
 
 namespace NetExtender.Types.Maps
 {
@@ -383,12 +384,12 @@ namespace NetExtender.Types.Maps
 
             if (ContainsKey(key))
             {
-                throw new ArgumentException(DictionaryUtilities.SR.Argument_AddingDuplicateWithKey.Format(key), nameof(key));
+                throw new ArgumentAddingDuplicateWithKeyException<TKey, TSR>(key, nameof(key));
             }
 
             if (ContainsValue(value))
             {
-                throw new ArgumentException(DictionaryUtilities.SR.Argument_AddingDuplicateWithKey.Format(value), nameof(value));
+                throw new ArgumentAddingDuplicateWithKeyException<TValue, TSR>(value, nameof(value));
             }
 
             Base.Add(key, value);

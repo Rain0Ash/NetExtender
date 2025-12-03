@@ -21,14 +21,14 @@ namespace NetExtender.WindowsPresentation.Types.Converters
 
         public static NotNullToVisibilityConverter Collapsed { get; } = new CollapsedNotNullToVisibilityConverter();
         public static NotNullToVisibilityConverter Hidden { get; } = new HiddenNotNullToVisibilityConverter();
-        
+
         public virtual Boolean NullIsCollapsed { get; set; } = true;
 
         protected virtual Boolean IsNull(Object? value)
         {
             return value is null;
         }
-        
+
         public virtual Object? Convert(Object? value, Type? targetType, Object? parameter, CultureInfo? culture)
         {
             NotBooleanToVisibilityConverter converter = NullIsCollapsed ? NotBooleanToVisibilityConverter.Collapsed : NotBooleanToVisibilityConverter.Hidden;
@@ -39,7 +39,7 @@ namespace NetExtender.WindowsPresentation.Types.Converters
         {
             throw new NotSupportedException();
         }
-        
+
         private sealed class CollapsedNotNullToVisibilityConverter : NotNullToVisibilityConverter
         {
             public override Boolean NullIsCollapsed
@@ -70,7 +70,7 @@ namespace NetExtender.WindowsPresentation.Types.Converters
             }
         }
     }
-    
+
     public class NotNullOrEmptyToVisibilityConverter : NotNullToVisibilityConverter
     {
         public static implicit operator NotNullOrEmptyToVisibilityConverter(Boolean collapsed)
@@ -85,7 +85,7 @@ namespace NetExtender.WindowsPresentation.Types.Converters
         {
             return value is null || value is IEnumerable enumerable && enumerable.CountIfMaterializedByReflection() is 0;
         }
-        
+
         private sealed class CollapsedNotNullOrEmptyToVisibilityConverter : NotNullOrEmptyToVisibilityConverter
         {
             public override Boolean NullIsCollapsed
@@ -116,7 +116,7 @@ namespace NetExtender.WindowsPresentation.Types.Converters
             }
         }
     }
-    
+
     public class NotNullOrDefaultToVisibilityConverter : NotNullToVisibilityConverter
     {
         public static implicit operator NotNullOrDefaultToVisibilityConverter(Boolean collapsed)
@@ -131,7 +131,7 @@ namespace NetExtender.WindowsPresentation.Types.Converters
         {
             return value is null || Equals(value, ReflectionUtilities.Default(value.GetType())) || value is IEnumerable enumerable && enumerable.CountIfMaterializedByReflection() is 0;
         }
-        
+
         private sealed class CollapsedNotNullOrDefaultToVisibilityConverter : NotNullOrDefaultToVisibilityConverter
         {
             public override Boolean NullIsCollapsed

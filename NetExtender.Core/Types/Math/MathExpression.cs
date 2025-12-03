@@ -25,7 +25,7 @@ namespace NetExtender.Types.Mathematics
         {
             return value is not null ? value.Expression : default;
         }
-        
+
         public static implicit operator TOperator(MathExpression<T, TExpression, TOperator>? value)
         {
             return value?.Operator ?? default;
@@ -165,7 +165,7 @@ namespace NetExtender.Types.Mathematics
                 return MathUnaryExpression<T>.NoOperator;
             }
         }
-        
+
         private static ConcurrentDictionary<T, String> ValueToConstant { get; } = new ConcurrentDictionary<T, String>(EqualityComparer<T>.Default);
         private static ConcurrentDictionary<String, T> ConstantToValue { get; } = new ConcurrentDictionary<String, T>(StringComparer.OrdinalIgnoreCase);
 
@@ -189,7 +189,10 @@ namespace NetExtender.Types.Mathematics
                 return new MathUnaryNode<T>.Expression(MathUnaryOperator.Binary, default(T));
             }
         }
+
+#pragma warning disable CS0108
         protected internal abstract State State { get; }
+#pragma warning restore CS0108
 
         State IMathExpression.State
         {
@@ -198,7 +201,7 @@ namespace NetExtender.Types.Mathematics
                 return State;
             }
         }
-        
+
         public abstract MathResult<T> Result { get; }
         protected abstract Boolean Bool { get; }
 
@@ -330,7 +333,7 @@ namespace NetExtender.Types.Mathematics
             {
                 return false;
             }
-            
+
             ValueToConstant.TryRemove(value, constant);
             return true;
         }
@@ -340,7 +343,7 @@ namespace NetExtender.Types.Mathematics
         {
             return MathUnaryNode<T>.TryGetOperator(@operator);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected internal static Func<MathResult<T>, MathResult<T>, MathResult<T>>? TryGetOperator(MathBinaryOperator @operator)
         {
@@ -363,13 +366,13 @@ namespace NetExtender.Types.Mathematics
 
             return Register(@operator, selector(@operator));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected internal static Boolean Register(MathBinaryOperator @operator, Func<MathResult<T>, MathResult<T>, MathResult<T>> selector)
         {
             return MathBinaryNode<T>.Register(@operator, selector);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected internal static Boolean Register(MathBinaryOperator @operator, Func<MathBinaryOperator, Func<MathResult<T>, MathResult<T>, MathResult<T>>> selector)
         {
@@ -441,7 +444,7 @@ namespace NetExtender.Types.Mathematics
 
         public abstract override Int32 GetHashCode();
         public abstract override Boolean Equals(Object? other);
-        
+
         public virtual Boolean Equals(IMathExpression<T>? other)
         {
             return other is not null && Equals(other.Result);
@@ -490,64 +493,64 @@ namespace NetExtender.Types.Mathematics
 
             MathExpression<SByte>.Register(MathUnaryOperator.Module, static @operator => Wrap<SByte>(@operator, Math.Abs));
             MathExpression<SByte>.Register(MathUnaryOperator.UnaryNegation, static @operator => Wrap<SByte>(@operator, static value => (SByte) (-value)));
-            
+
             #endregion
-            
+
             #region Byte
 
             MathExpression<Byte>.Register(MathUnaryOperator.Module, MathExpression<Byte>.UnaryNoOperator);
-            
+
             #endregion
-            
+
             #region Int16
 
             MathExpression<Int16>.Register(MathUnaryOperator.Module, static @operator => Wrap<Int16>(@operator, Math.Abs));
             MathExpression<Int16>.Register(MathUnaryOperator.UnaryNegation, static @operator => Wrap<Int16>(@operator, static value => (Int16) (-value)));
-            
+
             #endregion
-            
+
             #region UInt16
 
             MathExpression<UInt16>.Register(MathUnaryOperator.Module, MathExpression<UInt16>.UnaryNoOperator);
-            
+
             #endregion
-            
+
             #region Int32
 
             MathExpression<Int32>.Register(MathUnaryOperator.Module, static @operator => Wrap<Int32>(@operator, Math.Abs));
             MathExpression<Int32>.Register(MathUnaryOperator.UnaryNegation, static @operator => Wrap<Int32>(@operator, static value => -value));
-            
+
             #endregion
-            
+
             #region UInt32
 
             MathExpression<UInt32>.Register(MathUnaryOperator.Module, MathExpression<UInt32>.UnaryNoOperator);
-            
+
             #endregion
-            
+
             #region Int64
 
             MathExpression<Int64>.Register(MathUnaryOperator.Module, static @operator => Wrap<Int64>(@operator, Math.Abs));
             MathExpression<Int64>.Register(MathUnaryOperator.UnaryNegation, static @operator => Wrap<Int64>(@operator, static value => -value));
-            
+
             #endregion
-            
+
             #region UInt64
 
             MathExpression<UInt64>.Register(MathUnaryOperator.Module, MathExpression<UInt64>.UnaryNoOperator);
             MathExpression<UInt64>.Register(MathUnaryOperator.Floor, MathExpression<UInt64>.UnaryNoOperator);
             MathExpression<UInt64>.Register(MathUnaryOperator.Ceiling, MathExpression<UInt64>.UnaryNoOperator);
             MathExpression<UInt64>.Register(MathUnaryOperator.Truncate, MathExpression<UInt64>.UnaryNoOperator);
-            
+
             #endregion
-            
+
             #region Single
-            
+
             MathExpression<Single>.Register("∞", Single.PositiveInfinity);
             MathExpression<Single>.Register("τ", MathUtilities.Constants.Single.Tau);
             MathExpression<Single>.Register("π", MathUtilities.Constants.Single.PI);
             MathExpression<Single>.Register("e", MathUtilities.Constants.Single.E);
-            
+
             MathExpression<Single>.Register(MathUnaryOperator.KelvinToCelsius, static @operator => Wrap<Single>(@operator, TemperatureUtilities.KelvinToCelsius));
             MathExpression<Single>.Register(MathUnaryOperator.KelvinToFahrenheit, static @operator => Wrap<Single>(@operator, TemperatureUtilities.KelvinToFahrenheit));
             MathExpression<Single>.Register(MathUnaryOperator.CelsiusToKelvin, static @operator => Wrap<Single>(@operator, TemperatureUtilities.CelsiusToKelvin));
@@ -559,7 +562,7 @@ namespace NetExtender.Types.Mathematics
             MathExpression<Single>.Register(MathUnaryOperator.Floor, static @operator => Wrap<Single>(@operator, MathF.Floor));
             MathExpression<Single>.Register(MathUnaryOperator.Ceiling, static @operator => Wrap<Single>(@operator, MathF.Ceiling));
             MathExpression<Single>.Register(MathUnaryOperator.Truncate, static @operator => Wrap<Single>(@operator, MathF.Truncate));
-            
+
             MathExpression<Single>.Register(MathUnaryOperator.Degree, static @operator => Wrap<Single>(@operator, MathUtilities.ToDegrees));
             MathExpression<Single>.Register(MathUnaryOperator.Radian, static @operator => Wrap<Single>(@operator, MathUtilities.ToRadians));
             MathExpression<Single>.Register(MathUnaryOperator.Sin, static @operator => Wrap<Single>(@operator, MathUtilities.Sin));
@@ -591,13 +594,13 @@ namespace NetExtender.Types.Mathematics
             MathExpression<Single>.Register(MathUnaryOperator.Csch, static @operator => Wrap<Single>(@operator, MathUtilities.Csch));
             MathExpression<Single>.Register(MathUnaryOperator.Acsc, static @operator => Wrap<Single>(@operator, MathUtilities.Acsc));
             MathExpression<Single>.Register(MathUnaryOperator.Acsch, static @operator => Wrap<Single>(@operator, MathUtilities.Acsch));
-            
+
             MathExpression<Single>.Register(MathUnaryOperator.UnaryNegation, static @operator => Wrap<Single>(@operator, static value => -value));
 
             #endregion
-            
+
             #region Double
-            
+
             MathExpression<Double>.Register("∞", Double.PositiveInfinity);
             MathExpression<Double>.Register("τ", MathUtilities.Constants.Single.Tau);
             MathExpression<Double>.Register("τ", MathUtilities.Constants.Double.Tau);
@@ -605,7 +608,7 @@ namespace NetExtender.Types.Mathematics
             MathExpression<Double>.Register("π", MathUtilities.Constants.Double.PI);
             MathExpression<Double>.Register("e", MathUtilities.Constants.Single.E);
             MathExpression<Double>.Register("e", MathUtilities.Constants.Double.E);
-            
+
             MathExpression<Double>.Register(MathUnaryOperator.KelvinToCelsius, static @operator => Wrap<Double>(@operator, TemperatureUtilities.KelvinToCelsius));
             MathExpression<Double>.Register(MathUnaryOperator.KelvinToFahrenheit, static @operator => Wrap<Double>(@operator, TemperatureUtilities.KelvinToFahrenheit));
             MathExpression<Double>.Register(MathUnaryOperator.CelsiusToKelvin, static @operator => Wrap<Double>(@operator, TemperatureUtilities.CelsiusToKelvin));
@@ -617,14 +620,14 @@ namespace NetExtender.Types.Mathematics
             MathExpression<Double>.Register(MathUnaryOperator.Floor, static @operator => Wrap<Double>(@operator, Math.Floor));
             MathExpression<Double>.Register(MathUnaryOperator.Ceiling, static @operator => Wrap<Double>(@operator, Math.Ceiling));
             MathExpression<Double>.Register(MathUnaryOperator.Truncate, static @operator => Wrap<Double>(@operator, Math.Truncate));
-            
+
             MathExpression<Double>.Register(MathUnaryOperator.Degree, static @operator => Wrap<Double>(@operator, MathUtilities.ToDegrees));
             MathExpression<Double>.Register(MathUnaryOperator.Radian, static @operator => Wrap<Double>(@operator, MathUtilities.ToRadians));
             MathExpression<Double>.Register(MathUnaryOperator.Sin, static @operator => Wrap<Double>(@operator, MathUtilities.Sin));
             MathExpression<Double>.Register(MathUnaryOperator.Sinh, static @operator => Wrap<Double>(@operator, MathUtilities.Sinh));
             MathExpression<Double>.Register(MathUnaryOperator.Asin, static @operator => Wrap<Double>(@operator, MathUtilities.Asin));
             MathExpression<Double>.Register(MathUnaryOperator.Asinh, static @operator => Wrap<Double>(@operator, MathUtilities.Asinh));
-            
+
             MathExpression<Double>.Register(MathUnaryOperator.Cos, static @operator => Wrap<Double>(@operator, MathUtilities.Cos));
             MathExpression<Double>.Register(MathUnaryOperator.Cosh, static @operator => Wrap<Double>(@operator, MathUtilities.Cosh));
             MathExpression<Double>.Register(MathUnaryOperator.Acos, static @operator => Wrap<Double>(@operator, MathUtilities.Acos));
@@ -649,13 +652,13 @@ namespace NetExtender.Types.Mathematics
             MathExpression<Double>.Register(MathUnaryOperator.Csch, static @operator => Wrap<Double>(@operator, MathUtilities.Csch));
             MathExpression<Double>.Register(MathUnaryOperator.Acsc, static @operator => Wrap<Double>(@operator, MathUtilities.Acsc));
             MathExpression<Double>.Register(MathUnaryOperator.Acsch, static @operator => Wrap<Double>(@operator, MathUtilities.Acsch));
-            
+
             MathExpression<Double>.Register(MathUnaryOperator.UnaryNegation, static @operator => Wrap<Double>(@operator, static value => -value));
 
             #endregion
-            
+
             #region Decimal
-            
+
             MathExpression<Decimal>.Register("τ", (Decimal) MathUtilities.Constants.Single.Tau);
             MathExpression<Decimal>.Register("τ", (Decimal) MathUtilities.Constants.Double.Tau);
             MathExpression<Decimal>.Register("τ", MathUtilities.Constants.Decimal.Tau);
@@ -665,14 +668,14 @@ namespace NetExtender.Types.Mathematics
             MathExpression<Decimal>.Register("e", (Decimal) MathUtilities.Constants.Single.E);
             MathExpression<Decimal>.Register("e", (Decimal) MathUtilities.Constants.Double.E);
             MathExpression<Decimal>.Register("e", MathUtilities.Constants.Decimal.E);
-            
+
             MathExpression<Decimal>.Register(MathUnaryOperator.KelvinToCelsius, static @operator => Wrap<Decimal>(@operator, TemperatureUtilities.KelvinToCelsius));
             MathExpression<Decimal>.Register(MathUnaryOperator.KelvinToFahrenheit, static @operator => Wrap<Decimal>(@operator, TemperatureUtilities.KelvinToFahrenheit));
             MathExpression<Decimal>.Register(MathUnaryOperator.CelsiusToKelvin, static @operator => Wrap<Decimal>(@operator, TemperatureUtilities.CelsiusToKelvin));
             MathExpression<Decimal>.Register(MathUnaryOperator.CelsiusToFahrenheit, static @operator => Wrap<Decimal>(@operator, TemperatureUtilities.CelsiusToFahrenheit));
             MathExpression<Decimal>.Register(MathUnaryOperator.FahrenheitToKelvin, static @operator => Wrap<Decimal>(@operator, TemperatureUtilities.FahrenheitToKelvin));
             MathExpression<Decimal>.Register(MathUnaryOperator.FahrenheitToCelcius, static @operator => Wrap<Decimal>(@operator, TemperatureUtilities.FahrenheitToCelsius));
-            
+
             MathExpression<Decimal>.Register(MathUnaryOperator.Module, static @operator => Wrap<Decimal>(@operator, MathUtilities.Abs));
             MathExpression<Decimal>.Register(MathUnaryOperator.Floor, static @operator => Wrap<Decimal>(@operator, MathUtilities.Floor));
             MathExpression<Decimal>.Register(MathUnaryOperator.Ceiling, static @operator => Wrap<Decimal>(@operator, MathUtilities.Ceiling));
@@ -684,7 +687,7 @@ namespace NetExtender.Types.Mathematics
             MathExpression<Decimal>.Register(MathUnaryOperator.Sinh, static @operator => Wrap<Decimal>(@operator, MathUtilities.Sinh));
             MathExpression<Decimal>.Register(MathUnaryOperator.Asin, static @operator => Wrap<Decimal>(@operator, MathUtilities.Asin));
             MathExpression<Decimal>.Register(MathUnaryOperator.Asinh, static @operator => Wrap<Decimal>(@operator, MathUtilities.Asinh));
-            
+
             MathExpression<Decimal>.Register(MathUnaryOperator.Cos, static @operator => Wrap<Decimal>(@operator, MathUtilities.Cos));
             MathExpression<Decimal>.Register(MathUnaryOperator.Cosh, static @operator => Wrap<Decimal>(@operator, MathUtilities.Cosh));
             MathExpression<Decimal>.Register(MathUnaryOperator.Acos, static @operator => Wrap<Decimal>(@operator, MathUtilities.Acos));
@@ -709,7 +712,7 @@ namespace NetExtender.Types.Mathematics
             MathExpression<Decimal>.Register(MathUnaryOperator.Csch, static @operator => Wrap<Decimal>(@operator, MathUtilities.Csch));
             MathExpression<Decimal>.Register(MathUnaryOperator.Acsc, static @operator => Wrap<Decimal>(@operator, MathUtilities.Acsc));
             MathExpression<Decimal>.Register(MathUnaryOperator.Acsch, static @operator => Wrap<Decimal>(@operator, MathUtilities.Acsch));
-            
+
             MathExpression<Decimal>.Register(MathUnaryOperator.Factorial, static @operator => Wrap<Decimal>(@operator, MathUtilities.Factorial));
             MathExpression<Decimal>.Register(MathUnaryOperator.Percent, static @operator => Wrap<Decimal>(@operator, static value => value / 100));
             MathExpression<Decimal>.Register(MathUnaryOperator.Promille, static @operator => Wrap<Decimal>(@operator, static value => value / 1000));
@@ -742,7 +745,7 @@ namespace NetExtender.Types.Mathematics
             MathExpression<Decimal>.Register(MathBinaryOperator.GreaterThan, static @operator => Wrap<Decimal>(@operator, static (first, second) => first > second));
             MathExpression<Decimal>.Register(MathBinaryOperator.GreaterThanOrEqual, static @operator => Wrap<Decimal>(@operator, static (first, second) => first >= second));
             MathExpression<Decimal>.RegisterLogical();
-            
+
             #endregion
         }
 
@@ -784,7 +787,7 @@ namespace NetExtender.Types.Mathematics
         {
             return @operator;
         }
-        
+
         protected const String NoneSymbol = "⌀";
 
         Boolean IMathExpression.IsReference
@@ -796,7 +799,7 @@ namespace NetExtender.Types.Mathematics
         }
 
         public Guid Id { get; }
-        
+
         State IMathExpression.State
         {
             get
@@ -804,10 +807,10 @@ namespace NetExtender.Types.Mathematics
                 return GetBaseState();
             }
         }
-        
+
         public abstract Boolean IsComplex { get; }
         protected internal abstract Boolean IsFunction { get; }
-        
+
         Boolean IMathExpression.IsFunction
         {
             get
@@ -815,7 +818,7 @@ namespace NetExtender.Types.Mathematics
                 return IsFunction;
             }
         }
-        
+
         public abstract Int32 Elements { get; }
 
         IMathExpression? IMathExpression.Inner
@@ -913,7 +916,7 @@ namespace NetExtender.Types.Mathematics
         }
 
         [return: NotNullIfNotNull("selector")]
-        private static Func<MathResult<T>, MathResult<T>>? Wrap<T>(MathUnaryOperator @operator, Func<T, T>? selector) where T : struct, IEquatable<T>, IFormattable
+        private static Func<MathResult<T>, MathResult<T>>? Wrap<T>([SuppressMessage("ReSharper", "UnusedParameter.Local")] MathUnaryOperator @operator, Func<T, T>? selector) where T : struct, IEquatable<T>, IFormattable
         {
             if (selector is null)
             {
@@ -936,7 +939,7 @@ namespace NetExtender.Types.Mathematics
         }
 
         [return: NotNullIfNotNull("selector")]
-        private static Func<MathResult<T>, MathResult<T>>? Wrap<T>(MathUnaryOperator @operator, Func<T, MathResult<T>>? selector) where T : struct, IEquatable<T>, IFormattable
+        private static Func<MathResult<T>, MathResult<T>>? Wrap<T>([SuppressMessage("ReSharper", "UnusedParameter.Local")] MathUnaryOperator @operator, Func<T, MathResult<T>>? selector) where T : struct, IEquatable<T>, IFormattable
         {
             if (selector is null)
             {
@@ -954,12 +957,12 @@ namespace NetExtender.Types.Mathematics
                     return NumericException.From(exception);
                 }
             }
-            
+
             return Wrapper;
         }
 
         [return: NotNullIfNotNull("selector")]
-        private static Func<MathResult<T>, MathResult<T>, MathResult<T>>? Wrap<T>(MathBinaryOperator @operator, Func<T, T, T>? selector) where T : struct, IEquatable<T>, IFormattable
+        private static Func<MathResult<T>, MathResult<T>, MathResult<T>>? Wrap<T>([SuppressMessage("ReSharper", "UnusedParameter.Local")] MathBinaryOperator @operator, Func<T, T, T>? selector) where T : struct, IEquatable<T>, IFormattable
         {
             if (selector is null)
             {
@@ -977,12 +980,12 @@ namespace NetExtender.Types.Mathematics
                     return NumericException.From(exception);
                 }
             }
-            
+
             return Wrapper;
         }
 
         [return: NotNullIfNotNull("selector")]
-        private static Func<MathResult<T>, MathResult<T>, MathResult<T>>? Wrap<T>(MathBinaryOperator @operator, Func<T, T, MathResult<T>>? selector) where T : struct, IEquatable<T>, IFormattable
+        private static Func<MathResult<T>, MathResult<T>, MathResult<T>>? Wrap<T>([SuppressMessage("ReSharper", "UnusedParameter.Local")] MathBinaryOperator @operator, Func<T, T, MathResult<T>>? selector) where T : struct, IEquatable<T>, IFormattable
         {
             if (selector is null)
             {
@@ -1000,7 +1003,7 @@ namespace NetExtender.Types.Mathematics
                     return NumericException.From(exception);
                 }
             }
-            
+
             return Wrapper;
         }
 
@@ -1080,7 +1083,7 @@ namespace NetExtender.Types.Mathematics
             {
                 throw new ArgumentNullException(nameof(alias));
             }
-            
+
             return Alias.TryGetValue(alias, out result);
         }
 
@@ -1095,7 +1098,7 @@ namespace NetExtender.Types.Mathematics
             {
                 throw new ArgumentNullOrWhiteSpaceStringException(constant, nameof(constant));
             }
-            
+
             return Alias.TryAdd(alias, constant);
         }
 
@@ -1154,7 +1157,7 @@ namespace NetExtender.Types.Mathematics
             String result = escape.HasValue ? expression.GetString(escape.Value, format, provider) ?? String.Empty : expression.ToString(format, provider);
             return new Wrapper(result) { State = expression.State };
         }
-        
+
         protected static Wrapper ToWrapper<T>(MathUnaryOperator @operator, MathResult<T> value, State state, String? format, IFormatProvider? provider, EscapeType? escape) where T : struct, IEquatable<T>, IFormattable
         {
             return value.Exception switch
@@ -1260,7 +1263,7 @@ namespace NetExtender.Types.Mathematics
                     "2" => $"√{first}",
                     "3" => $"∛{first}",
                     "4" => $"∜{first}",
-                    _ => $"[{second:w}]√{first}",
+                    _ => $"[{second:w}]√{first}"
                 },
                 MathBinaryOperator.Log => second.Value switch
                 {
@@ -1321,17 +1324,17 @@ namespace NetExtender.Types.Mathematics
             {
                 return State.Complex;
             }
-            
+
             if (@operator.IsSimpleFunction<T>())
             {
                 return State.SimpleFunction;
             }
-            
+
             if (@operator.IsLeftFunction<T>())
             {
                 return State.LeftFunction;
             }
-            
+
             if (@operator.IsRightFunction<T>())
             {
                 return State.RightFunction;
@@ -1366,7 +1369,7 @@ namespace NetExtender.Types.Mathematics
             {
                 return State.Complex;
             }
-            
+
             if (@operator.IsSimpleFunction<T>())
             {
                 return State.SimpleFunction;
@@ -1386,12 +1389,12 @@ namespace NetExtender.Types.Mathematics
             {
                 return new Wrapper(value);
             }
-            
+
             public static implicit operator String(Wrapper value)
             {
                 return value.ToString();
             }
-            
+
             public String? Value { get; }
             public State State { get; init; } = default;
 
@@ -1402,7 +1405,7 @@ namespace NetExtender.Types.Mathematics
                     return Value is null && State is default(State);
                 }
             }
-            
+
             public Wrapper(String? value)
             {
                 Value = value;
@@ -1446,7 +1449,7 @@ namespace NetExtender.Types.Mathematics
             {
                 return value.ToString();
             }
-            
+
             public MathResult<T> Value { get; }
             public State State { get; init; } = default;
             public String? Format { get; init; } = null;
@@ -1460,19 +1463,19 @@ namespace NetExtender.Types.Mathematics
                     return Value.IsEmpty;
                 }
             }
-            
+
             public Wrapper(T value)
             {
                 Value = value;
             }
-            
+
             public Wrapper(T value, String? format, IFormatProvider? provider)
             {
                 Value = value;
                 Format = format;
                 Provider = provider;
             }
-            
+
             public Wrapper(MathResult<T> value, String? format, IFormatProvider? provider)
             {
                 Value = value;

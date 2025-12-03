@@ -13,13 +13,13 @@ namespace NetExtender.Types.Monads.Interfaces
     {
         public new INotifyState<T> Clone();
     }
-    
+
     public interface IState<T> : IState, IMonad<T>, IStateEquality<T, T>, IStateEquality<T, IState<T>>, ICloneable<IState<T>>
     {
         public T Value { get; }
         public T Current { get; }
         public Maybe<T> Next { get; }
-        
+
         public Boolean HasDifference(IEqualityComparer<T>? comparer);
         public T Get();
         public T Get(StateEquality equality);
@@ -39,16 +39,16 @@ namespace NetExtender.Types.Monads.Interfaces
         public new IState<T> Clone();
         public Boolean Equals(Object? other, StateEquality equality, IEqualityComparer<T>? comparer);
     }
-    
+
     public interface INotifyState : IState, ICloneable<INotifyState>, INotifyProperty
     {
         public new INotifyState Clone();
     }
-    
+
     public interface IState : IMonad, ICloneable<IState>
     {
         public Boolean HasNext { get; }
-        
+
         public Boolean HasDifference();
         public IState Save();
         public IState Swap();
@@ -68,30 +68,30 @@ namespace NetExtender.Types.Monads.Interfaces
         public String? GetString(StateEquality equality, String? format, IFormatProvider? provider);
         public String? GetString(StateEquality equality, EscapeType escape, String? format, IFormatProvider? provider);
     }
-    
+
     public interface IStateEquality<out T, TState> : IStateEquality<TState>, IStateComparable<T, TState>, IStateEquatable<T, TState>, IMonadEquality<T, TState>
     {
     }
-    
+
     public interface IStateEquality<T> : IStateComparable<T>, IStateEquatable<T>, IMonadEquality<T>
     {
     }
-    
+
     public interface IStateEquatable<out T, TState> : IStateEquatable<TState>, IMonadEquatable<T, TState>
     {
         public Boolean Equals(TState? other, StateEquality equality, IEqualityComparer<T>? comparer);
     }
-    
+
     public interface IStateEquatable<T> : IMonadEquatable<T>
     {
         public Boolean Equals(T? other, StateEquality equality);
     }
-    
+
     public interface IStateComparable<out T, in TState> : IStateComparable<TState>, IMonadComparable<T, TState>
     {
         public Int32 CompareTo(TState? other, StateEquality equality, IComparer<T>? comparer);
     }
-    
+
     public interface IStateComparable<in T> : IMonadComparable<T>
     {
         public Int32 CompareTo(T? other, StateEquality equality);

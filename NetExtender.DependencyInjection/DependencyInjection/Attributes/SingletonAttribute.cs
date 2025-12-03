@@ -10,22 +10,22 @@ namespace NetExtender.DependencyInjection.Attributes
     public sealed class SingletonAttribute : ServiceDependencyAttribute
     {
         private new const ServiceLifetime Lifetime = ServiceLifetime.Singleton;
-        
+
         public SingletonAttribute()
             : base(Lifetime)
         {
         }
-        
+
         public SingletonAttribute(Object? key)
             : base(key, Lifetime)
         {
         }
-        
+
         public SingletonAttribute(Type @interface)
             : base(@interface ?? throw new ArgumentNullException(nameof(@interface)), Lifetime)
         {
         }
-        
+
         public SingletonAttribute(Type @interface, Object? key)
             : base(@interface ?? throw new ArgumentNullException(nameof(@interface)), key, Lifetime)
         {

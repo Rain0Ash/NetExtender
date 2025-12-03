@@ -13,7 +13,7 @@ namespace NetExtender.Types.Intercept
     public class AnyMemberInterceptor<TSender, TInfo> : AnyMemberInterceptor<TSender, IPropertyInterceptEventArgs, IMethodInterceptEventArgs, TInfo>, IAnyMemberInterceptor<TSender, TInfo> where TSender : IInterceptTargetRaise<IPropertyInterceptEventArgs>, IInterceptTargetRaise<IMethodInterceptEventArgs>
     {
         public static AnyMemberInterceptor<TSender, TInfo> Default { get; } = new AnyMemberInterceptor<TSender, TInfo>();
-        
+
         public AnyMemberInterceptor()
             : base(PropertyInterceptor<TSender, TInfo>.Default, MethodInterceptor<TSender, TInfo>.Default)
         {
@@ -24,7 +24,7 @@ namespace NetExtender.Types.Intercept
     {
         private IPropertyInterceptor<TSender, TPropertyArgument, TInfo> PropertyInterceptor { get; }
         private IAnyMethodInterceptor<TSender, TMethodArgument, TInfo> MethodInterceptor { get; }
-        
+
         public AnyMemberInterceptor(IPropertyInterceptEventArgsFactory<TPropertyArgument, TInfo>? property, IMethodInterceptEventArgsFactory<TMethodArgument, TInfo>? method)
         {
             PropertyInterceptor = new PropertyInterceptor<TSender, TPropertyArgument, TInfo> { Factory = property };
@@ -36,22 +36,22 @@ namespace NetExtender.Types.Intercept
             PropertyInterceptor = property ?? throw new ArgumentNullException(nameof(property));
             MethodInterceptor = method ?? throw new ArgumentNullException(nameof(method));
         }
-        
+
         public T InterceptGet<T>(TSender sender, String? property = null)
         {
             return PropertyInterceptor.InterceptGet<T>(sender, property);
         }
-        
+
         public T InterceptGet<T>(TSender sender, TInfo? info, String? property = null)
         {
             return PropertyInterceptor.InterceptGet<T>(sender, info, property);
         }
-        
+
         public T InterceptGet<T>(TSender sender, Boolean @base, String? property = null)
         {
             return PropertyInterceptor.InterceptGet<T>(sender, @base, property);
         }
-        
+
         public T InterceptGet<T>(TSender sender, TInfo? info, Boolean @base, String? property = null)
         {
             return PropertyInterceptor.InterceptGet<T>(sender, info, @base, property);
@@ -657,7 +657,7 @@ namespace NetExtender.Types.Intercept
             return MethodInterceptor.InterceptAsync(sender, info, method, first, second, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth, eleventh, twelfth, thirteenth, fourteenth, fifteenth, sixteenth);
         }
     }
-    
+
     public abstract class MemberInterceptor<TSender, TArgument, TMember> : Interceptor<TSender, TArgument> where TSender : IInterceptTargetRaise<TArgument> where TArgument : IMemberInterceptEventArgs<TMember> where TMember : MemberInfo
     {
     }

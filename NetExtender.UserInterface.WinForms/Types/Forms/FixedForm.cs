@@ -10,11 +10,13 @@ using NetExtender.Utilities.Numerics;
 using NetExtender.Utilities.UserInterface;
 using NetExtender.Utilities.UserInterface.Types;
 using NetExtender.Windows;
+using System.ComponentModel;
 
 namespace NetExtender.UserInterface.WinForms.Forms
 {
     public abstract class FixedForm : HotKeyForm, IWindow
     {
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public String Title
         {
             get
@@ -27,6 +29,7 @@ namespace NetExtender.UserInterface.WinForms.Forms
             }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public new Double Top
         {
             get
@@ -39,6 +42,7 @@ namespace NetExtender.UserInterface.WinForms.Forms
             }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         Double IWindow.Width
         {
             get
@@ -51,6 +55,7 @@ namespace NetExtender.UserInterface.WinForms.Forms
             }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         Double IWindow.Height
         {
             get
@@ -62,8 +67,10 @@ namespace NetExtender.UserInterface.WinForms.Forms
                 Height = (Int32) value.Round();
             }
         }
-        
+
         private CloseReason _reason;
+
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public CloseReason CloseReason
         {
             get
@@ -82,11 +89,14 @@ namespace NetExtender.UserInterface.WinForms.Forms
                 OnClosing(this, new FormClosingEventArgs(value, false));
             }
         }
-        
+
+        [DefaultValue(false)]
         public Boolean IsAltF4Enabled { get; set; }
 
+        [DefaultValue(false)]
         public Boolean IsExitOnFocusLost { get; set; }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Boolean? IsSystemMenuEnabled
         {
             get
@@ -102,6 +112,7 @@ namespace NetExtender.UserInterface.WinForms.Forms
             }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public WindowDisplayAffinity? DisplayAffinity
         {
             get
@@ -171,7 +182,7 @@ namespace NetExtender.UserInterface.WinForms.Forms
         {
             DoubleBuffered = true;
         }
-        
+
         private void OnDeactivated(Object? sender, EventArgs args)
         {
             if (!IsExitOnFocusLost)
@@ -193,7 +204,7 @@ namespace NetExtender.UserInterface.WinForms.Forms
             {
                 return;
             }
-            
+
             // TODO: ALT-F4
 
             if (args.CloseReason == CloseReason.UserClosing)

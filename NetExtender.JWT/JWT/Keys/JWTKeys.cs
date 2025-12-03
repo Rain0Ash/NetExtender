@@ -18,7 +18,7 @@ namespace NetExtender.JWT
         {
             return value.Primary;
         }
-        
+
         public static implicit operator ImmutableHashSet<JWTKey>?(JWTKeys value)
         {
             return value.Keys;
@@ -142,7 +142,7 @@ namespace NetExtender.JWT
                 {
                     return 0;
                 }
-                
+
                 Int32 count = 0;
                 foreach (JWTKey key in Keys)
                 {
@@ -151,7 +151,7 @@ namespace NetExtender.JWT
                         ++count;
                     }
                 }
-                
+
                 return count;
             }
         }
@@ -305,7 +305,7 @@ namespace NetExtender.JWT
             {
                 return this;
             }
-            
+
             ImmutableHashSet<JWTKey> keys = Keys ?? ImmutableHashSet<JWTKey>.Empty;
             return new JWTKeys(keys.Add(key)) { Primary = Primary };
         }
@@ -327,7 +327,7 @@ namespace NetExtender.JWT
             {
                 return 0;
             }
-            
+
             HashCode code = new HashCode();
             code.AddRange(Keys);
             return code.ToHashCode();
@@ -377,7 +377,7 @@ namespace NetExtender.JWT
                     return true;
                 }
             }
-            
+
             return false;
         }
 
@@ -410,7 +410,7 @@ namespace NetExtender.JWT
                     return true;
                 }
             }
-            
+
             return false;
         }
 
@@ -495,7 +495,7 @@ namespace NetExtender.JWT
         {
             return GetEnumerator();
         }
-        
+
         public struct Enumerator : IEnumerator<JWTKey>
         {
             private ImmutableHashSet<JWTKey>.Enumerator Internal;

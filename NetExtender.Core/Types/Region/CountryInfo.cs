@@ -136,7 +136,7 @@ namespace NetExtender.Types.Region
             Identifier = identifier;
             Subregion = subregion;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static CountryInfo Parse(CountryIdentifier identifier)
         {
@@ -226,10 +226,10 @@ namespace NetExtender.Types.Region
                 {
                     throw new InvalidOperationException($"Setter of {nameof(CountryInfo)}.{nameof(Border)} is null");
                 }
-                
+
                 ImmutableDictionary<CountryIdentifier, CountryInfoData> cache = EnumUtilities.GetValuesWithoutDefault<CountryIdentifier>().ToImmutableDictionary(identifier => identifier, Create);
                 IdentifierStorage = cache.ToImmutableDictionary(pair => pair.Key, pair => pair.Value.ToInfo());
-                
+
                 static CountryInfo Hack(CountryInfo info, CountryInfoData data, Action<CountryInfo, ImmutableHashSet<CountryInfo>> setter)
                 {
                     if (info is null)

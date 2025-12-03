@@ -11,7 +11,7 @@ namespace NetExtender.Domains.Service.Builder
     public abstract class WindowsServiceBuilder : ApplicationBuilder<IWindowsService>
     {
     }
-    
+
     public class WindowsServiceBuilder<T> : ApplicationBuilder<T> where T : class, IWindowsService
     {
         public override T Build(ImmutableArray<String> arguments)

@@ -30,7 +30,7 @@ namespace NetExtender.Domains.Builder
                 return IConsole.Default;
             }
         }
-        
+
         private IMiddlewareManager? _manager;
         public virtual IMiddlewareManager? Manager
         {
@@ -39,7 +39,7 @@ namespace NetExtender.Domains.Builder
                 return _manager ??= New(out MiddlewareManagerOptions? options) ? Scan(options.Create()) : null;
             }
         }
-        
+
         protected ImmutableArray<String>? Arguments
         {
             get
@@ -51,7 +51,7 @@ namespace NetExtender.Domains.Builder
                 NetExtender.Initializer.Initializer.Arguments = value;
             }
         }
-        
+
         protected virtual Boolean Confidential
         {
             get
@@ -59,7 +59,7 @@ namespace NetExtender.Domains.Builder
                 return false;
             }
         }
-        
+
         public virtual Boolean IsScan
         {
             get
@@ -67,7 +67,7 @@ namespace NetExtender.Domains.Builder
                 return true;
             }
         }
-        
+
         public virtual ReflectionPatchThrow Patch
         {
             get
@@ -87,14 +87,14 @@ namespace NetExtender.Domains.Builder
         protected virtual void Setup(ImmutableArray<String> arguments)
         {
             Arguments = arguments;
-            
+
             foreach (IInvokeAttribute attribute in ReflectionUtilities.GetCustomAttributes<PatchAttribute>(GetType()).OfType<IInvokeAttribute>())
             {
                 attribute.Invoke(this, null);
             }
 
             NetExtender.Initializer.Initializer.IsDomain = true;
-            
+
             switch (Patch)
             {
                 case ReflectionPatchThrow.Ignore:
@@ -169,7 +169,7 @@ namespace NetExtender.Domains.Builder
         protected virtual TType New<TType>(ImmutableArray<String> arguments) where TType : class
         {
             Setup(arguments);
-            
+
             try
             {
                 TType? instance = Activator.CreateInstance(typeof(TType), BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic) as TType;
@@ -184,28 +184,28 @@ namespace NetExtender.Domains.Builder
                 Finish();
             }
         }
-        
+
         protected virtual Boolean New([MaybeNullWhen(false)] out MiddlewareManagerOptions options)
         {
             options = new MiddlewareManagerOptions();
             return true;
         }
-        
+
         protected IMiddlewareManager Scan<TAttribute>(IMiddlewareManager manager) where TAttribute : ApplicationBuilderMiddlewareAttribute
         {
             if (manager is null)
             {
                 throw new ArgumentNullException(nameof(manager));
             }
-            
+
             return IsScan ? manager.Scan<TAttribute>() : manager;
         }
-        
+
         protected virtual IMiddlewareManager Scan(IMiddlewareManager manager)
         {
             return Scan<ApplicationBuilderMiddlewareAttribute>(manager);
         }
-        
+
         public virtual T Build()
         {
             return Build(ImmutableArray<String>.Empty);

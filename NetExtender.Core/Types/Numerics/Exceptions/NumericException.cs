@@ -55,7 +55,7 @@ namespace NetExtender.Types.Numerics.Exceptions
                 return false;
             }
         }
-        
+
         public NumericArgumentException()
         {
         }
@@ -75,7 +75,11 @@ namespace NetExtender.Types.Numerics.Exceptions
         {
         }
 
-        public NumericArgumentException(SerializationInfo info, StreamingContext context)
+#if NET8_0_OR_GREATER
+        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
+        private NumericArgumentException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
         }
@@ -95,7 +99,7 @@ namespace NetExtender.Types.Numerics.Exceptions
             return "⌀";
         }
     }
-    
+
     [Serializable]
     public sealed class NaNException : NumericException
     {
@@ -146,7 +150,7 @@ namespace NetExtender.Types.Numerics.Exceptions
                 return true;
             }
         }
-        
+
         public NaNException()
         {
         }
@@ -166,7 +170,11 @@ namespace NetExtender.Types.Numerics.Exceptions
         {
         }
 
-        public NaNException(SerializationInfo info, StreamingContext context)
+#if NET8_0_OR_GREATER
+        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
+        private NaNException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
         }
@@ -186,7 +194,7 @@ namespace NetExtender.Types.Numerics.Exceptions
             return "NaN";
         }
     }
-    
+
     [Serializable]
     public sealed class PositiveInfinityException : NumericInfinityException
     {
@@ -237,7 +245,7 @@ namespace NetExtender.Types.Numerics.Exceptions
                 return false;
             }
         }
-        
+
         public PositiveInfinityException()
         {
         }
@@ -257,7 +265,11 @@ namespace NetExtender.Types.Numerics.Exceptions
         {
         }
 
-        public PositiveInfinityException(SerializationInfo info, StreamingContext context)
+#if NET8_0_OR_GREATER
+        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
+        private PositiveInfinityException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
         }
@@ -288,7 +300,7 @@ namespace NetExtender.Types.Numerics.Exceptions
                 return false;
             }
         }
-        
+
         public override Boolean IsOverflow
         {
             get
@@ -348,7 +360,11 @@ namespace NetExtender.Types.Numerics.Exceptions
         {
         }
 
-        public NegativeInfinityException(SerializationInfo info, StreamingContext context)
+#if NET8_0_OR_GREATER
+        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
+        private NegativeInfinityException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
         }
@@ -368,7 +384,7 @@ namespace NetExtender.Types.Numerics.Exceptions
             return "-∞";
         }
     }
-    
+
     [Serializable]
     public class NumericInfinityException : NumericException
     {
@@ -381,7 +397,7 @@ namespace NetExtender.Types.Numerics.Exceptions
                 return false;
             }
         }
-        
+
         public override Boolean IsOverflow
         {
             get
@@ -421,7 +437,7 @@ namespace NetExtender.Types.Numerics.Exceptions
                 return false;
             }
         }
-        
+
         public NumericInfinityException()
         {
         }
@@ -441,6 +457,10 @@ namespace NetExtender.Types.Numerics.Exceptions
         {
         }
 
+#if NET8_0_OR_GREATER
+        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
         protected NumericInfinityException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
@@ -472,7 +492,7 @@ namespace NetExtender.Types.Numerics.Exceptions
                 return false;
             }
         }
-        
+
         public virtual Boolean IsOverflow
         {
             get
@@ -512,7 +532,7 @@ namespace NetExtender.Types.Numerics.Exceptions
                 return this is NaNException;
             }
         }
-        
+
         protected NumericException()
         {
         }
@@ -532,6 +552,10 @@ namespace NetExtender.Types.Numerics.Exceptions
         {
         }
 
+#if NET8_0_OR_GREATER
+        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
         protected NumericException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {

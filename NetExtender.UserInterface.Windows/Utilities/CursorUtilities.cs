@@ -11,10 +11,10 @@ namespace NetExtender.Utilities.UserInterface
     {
         [DllImport("user32.dll", ExactSpelling = true)]
         private static extern Boolean GetCursorPos(out Point point);
-        
+
         [DllImport("user32.dll", ExactSpelling = true)]
         private static extern Boolean SetCursorPos(Int32 x, Int32 y);
-        
+
         public static Point Position
         {
             get
@@ -29,12 +29,12 @@ namespace NetExtender.Utilities.UserInterface
                 }
             }
         }
-        
+
         public static Point GetCursorPosition()
         {
             return Position;
         }        
-        
+
         public static Point GetCursorPosition(Point size, Size resolution)
         {
             Point position = Position;

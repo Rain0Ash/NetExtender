@@ -20,7 +20,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
 
             return builder.UseAuthentication().UseAuthorization();
         }
-        
+
         public static IApplicationBuilder UseRoutingIdentity(this IApplicationBuilder builder)
         {
             if (builder is null)
@@ -30,7 +30,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
 
             return builder.UseRouting().UseIdentity();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IApplicationBuilder MapControllers(this IApplicationBuilder builder)
         {
@@ -41,7 +41,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
 
             return builder.UseEndpoints(static route => route.MapControllers());
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IApplicationBuilder RouteControllers(this IApplicationBuilder builder)
         {

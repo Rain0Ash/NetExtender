@@ -9,7 +9,7 @@ namespace NetExtender.FileSystems
             : base(name)
         {
         }
-        
+
         protected FileSystemDynamicStorage(Guid id, String name)
             : base(id, name)
         {

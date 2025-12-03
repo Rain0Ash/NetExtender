@@ -697,7 +697,7 @@ namespace NetExtender.Configuration.Cryptography.Behavior
         }
 
         // ReSharper disable once CognitiveComplexity
-        public async virtual Task<ConfigurationEntry[]?> GetExistsAsync(IStringCryptor? cryptor, IEnumerable<String>? sections, CancellationToken token)
+        public virtual async Task<ConfigurationEntry[]?> GetExistsAsync(IStringCryptor? cryptor, IEnumerable<String>? sections, CancellationToken token)
         {
             IConfigurationCryptor? configuration = cryptor?.AsCryptor(Cryptor.CryptographyOptions);
 

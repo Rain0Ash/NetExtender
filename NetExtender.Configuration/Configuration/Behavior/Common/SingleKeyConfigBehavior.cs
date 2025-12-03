@@ -20,7 +20,7 @@ namespace NetExtender.Configuration.Behavior
             : base(path, options)
         {
         }
-        
+
         [return: NotNullIfNotNull("key")]
         protected virtual String? Join(String? key, IEnumerable<String>? sections)
         {
@@ -31,7 +31,7 @@ namespace NetExtender.Configuration.Behavior
 
             return sections is not null ? Joiner.Join(sections.Append(key)) : key;
         }
-        
+
         protected virtual Boolean Deconstruct(String? entry, [NotNullIfNotNull("entry")] out String? key, out IEnumerable<String>? sections)
         {
             if (entry is null)
@@ -54,7 +54,7 @@ namespace NetExtender.Configuration.Behavior
                     return true;
                 default:
                     key = split[0];
-                    sections = split.Skip(1);
+                    sections = split.Skip(1).ToArray();
                     return true;
             }
         }
@@ -312,7 +312,7 @@ namespace NetExtender.Configuration.Behavior
             {
                 return false;
             }
-            
+
             Boolean result = false;
             // ReSharper disable once LoopCanBeConvertedToQuery
             foreach (ConfigurationEntry exist in exists)
@@ -415,7 +415,7 @@ namespace NetExtender.Configuration.Behavior
 
             return true;
         }
-        
+
         // ReSharper disable once CognitiveComplexity
         public override async Task<Boolean> MergeAsync(IEnumerable<ConfigurationValueEntry>? entries, CancellationToken token)
         {

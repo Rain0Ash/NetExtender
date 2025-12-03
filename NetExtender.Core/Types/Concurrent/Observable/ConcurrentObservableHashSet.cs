@@ -81,11 +81,18 @@ namespace NetExtender.Types.Concurrent.Observable
         {
         }
 
-        public ConcurrentObservableHashSet(SerializationInfo info, StreamingContext context)
+#if NET8_0_OR_GREATER
+        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
+        protected ConcurrentObservableHashSet(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
         }
 
+#if NET8_0_OR_GREATER
+        [Obsolete("Formatter-based serialization is obsolete and should not be used.", DiagnosticId = "SYSLIB0050", UrlFormat = "https://aka.ms/dotnet-warnings/{0}")]
+#endif
         public sealed override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             base.GetObjectData(info, context);
@@ -300,18 +307,25 @@ namespace NetExtender.Types.Concurrent.Observable
             Collection = source ?? ImmutableHashSet<T>.Empty;
         }
 
+#if NET8_0_OR_GREATER
+        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
         protected ConcurrentObservableHashSet(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
             Collection = info.GetValue(nameof(Collection), typeof(T[])) is T[] array ? ImmutableHashSet.CreateRange(array) : ImmutableHashSet<T>.Empty;
         }
 
+#if NET8_0_OR_GREATER
+        [Obsolete("Formatter-based serialization is obsolete and should not be used.", DiagnosticId = "SYSLIB0050", UrlFormat = "https://aka.ms/dotnet-warnings/{0}")]
+#endif
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             base.GetObjectData(info, context);
             info.AddValue(nameof(Collection), Immutable.ToArray());
         }
-        
+
         public override Boolean Contains(T item)
         {
             return Immutable.Contains(item);
@@ -360,7 +374,7 @@ namespace NetExtender.Types.Concurrent.Observable
             }
 
             Int32 count = 0;
-            
+
             Exception? exception = Notify((Items: other, Count: new UnsafePointer<Int32>(&count)),
                 static (_, modify, argument) =>
                 {
@@ -382,7 +396,7 @@ namespace NetExtender.Types.Concurrent.Observable
                 Clear(out count);
                 return count;
             }
-    
+
             Exception? exception = Notify((Items: other, Count: new UnsafePointer<Int32>(&count)),
                 static (_, modify, argument) =>
                 {
@@ -409,7 +423,7 @@ namespace NetExtender.Types.Concurrent.Observable
             }
 
             Int32 count = 0;
-    
+
             Exception? exception = Notify((Items: other, Count: new UnsafePointer<Int32>(&count)),
                 static (_, modify, argument) =>
                 {
@@ -434,9 +448,9 @@ namespace NetExtender.Types.Concurrent.Observable
             {
                 return 0;
             }
-    
+
             Int32 count = 0;
-    
+
             Exception? exception = Notify((Items: other, Count: new UnsafePointer<Int32>(&count)),
                 static (_, modify, argument) =>
                 {
@@ -447,7 +461,7 @@ namespace NetExtender.Types.Concurrent.Observable
                 static (_, @new, old, _) => old.Except(@new) is { Count: > 0 } set ? new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, Source(set)) : null,
                 static (_, @new, old, _) => @new.Except(old) is { Count: > 0 } set ? new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, Source(set)) : null
             );
-            
+
             return exception is null ? count : throw exception;
         }
 
@@ -469,7 +483,7 @@ namespace NetExtender.Types.Concurrent.Observable
                 },
                 static (_, _, _, argument) => argument.Result ? new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, argument.Value) : null
             );
-            
+
             return exception is null ? result : throw exception;
         }
 
@@ -503,7 +517,7 @@ namespace NetExtender.Types.Concurrent.Observable
         public override unsafe Boolean Remove(T value)
         {
             Boolean result = false;
-            
+
             Exception? exception = Notify((Value: value, Result: new UnsafePointer<Boolean>(&result)),
                 static (_, modify, argument) =>
                 {
@@ -513,7 +527,7 @@ namespace NetExtender.Types.Concurrent.Observable
                 },
                 static (_, _, _, argument) => argument.Result ? new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, argument.Value) : null
             );
-            
+
             return exception is null ? result : throw exception;
         }
 
@@ -521,11 +535,11 @@ namespace NetExtender.Types.Concurrent.Observable
         {
             return Except(other) ?? 0;
         }
-        
+
         protected override unsafe void Clear(out Int32 count)
         {
             Exception? exception;
-            
+
             fixed (Int32* pointer = &count)
             {
                  exception = Notify(new UnsafePointer<Int32>(pointer),

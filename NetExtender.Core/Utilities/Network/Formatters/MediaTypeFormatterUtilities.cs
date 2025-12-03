@@ -33,7 +33,7 @@ namespace NetExtender.Utilities.Network.Formatters
         OctetStream,
         FormUrlEncoded
     }
-    
+
     public static class MediaTypeFormatterUtilities
     {
         [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
@@ -103,7 +103,7 @@ namespace NetExtender.Utilities.Network.Formatters
                 }
             }
         }
-        
+
         public static MediaTypeHeaderValue ApplicationOctetStreamMediaType
         {
             get
@@ -310,7 +310,7 @@ namespace NetExtender.Utilities.Network.Formatters
             RequestHeaderMapping mapping = new RequestHeaderMapping(name, value, substring, media, comparison);
             formatter.MediaTypeFormatterMapping.Add(mapping);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsSubsetOf(this MediaTypeHeaderValue source, MediaTypeHeaderValue destination)
         {
@@ -325,11 +325,11 @@ namespace NetExtender.Utilities.Network.Formatters
                 result = MediaTypeHeaderValueRange.None;
                 return false;
             }
-            
+
             FormatterMediaTypeHeaderValue value = new FormatterMediaTypeHeaderValue(source);
             FormatterMediaTypeHeaderValue other = new FormatterMediaTypeHeaderValue(destination);
             result = other.IsAllMediaRange ? MediaTypeHeaderValueRange.AllMediaRange : other.IsSubtypeMediaRange ? MediaTypeHeaderValueRange.SubtypeMediaRange : MediaTypeHeaderValueRange.None;
-            
+
             if (!value.TypesEqual(other))
             {
                 if (result != MediaTypeHeaderValueRange.AllMediaRange)
@@ -344,7 +344,7 @@ namespace NetExtender.Utilities.Network.Formatters
 
             return source.Parameters.Select(item => Enumerable.Contains(destination.Parameters, item)).All(flag => flag);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableSortedSet<MediaTypeHeader> MediaType(this IReadOnlyMediaTypeFormatter source)
         {
@@ -355,7 +355,7 @@ namespace NetExtender.Utilities.Network.Formatters
 
             return source.SupportedMediaType.ToImmutableSortedSet();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableSortedSet<MediaTypeHeader> MediaType(this IEnumerable<IReadOnlyMediaTypeFormatter> source)
         {
@@ -363,16 +363,16 @@ namespace NetExtender.Utilities.Network.Formatters
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             return source.SelectMany(static formatter => formatter.SupportedMediaType).ToImmutableSortedSet();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String? Lower(this MediaTypeHeader source)
         {
             return source.ToString()?.ToLowerInvariant();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String Lower(this MediaTypeHeaderValue source)
         {
@@ -383,13 +383,13 @@ namespace NetExtender.Utilities.Network.Formatters
 
             return source.ToString().ToLowerInvariant();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String? Upper(this MediaTypeHeader source)
         {
             return source.ToString()?.ToUpperInvariant();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String Upper(this MediaTypeHeaderValue source)
         {
@@ -400,13 +400,13 @@ namespace NetExtender.Utilities.Network.Formatters
 
             return source.ToString().ToUpperInvariant();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String? LowerCharSet(this MediaTypeHeader source)
         {
             return source.CharSet?.ToLowerInvariant();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String? LowerCharSet(this MediaTypeHeaderValue source)
         {
@@ -417,13 +417,13 @@ namespace NetExtender.Utilities.Network.Formatters
 
             return source.CharSet?.ToLowerInvariant();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String? UpperCharSet(this MediaTypeHeader source)
         {
             return source.CharSet?.ToUpperInvariant();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String? UpperCharSet(this MediaTypeHeaderValue source)
         {
@@ -434,13 +434,13 @@ namespace NetExtender.Utilities.Network.Formatters
 
             return source.CharSet?.ToUpperInvariant();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String? LowerMediaType(this MediaTypeHeader source)
         {
             return source.MediaType?.ToLowerInvariant();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String? LowerMediaType(this MediaTypeHeaderValue source)
         {
@@ -451,13 +451,13 @@ namespace NetExtender.Utilities.Network.Formatters
 
             return source.MediaType?.ToLowerInvariant();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String? UpperMediaType(this MediaTypeHeader source)
         {
             return source.MediaType?.ToUpperInvariant();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String? UpperMediaType(this MediaTypeHeaderValue source)
         {
@@ -468,7 +468,7 @@ namespace NetExtender.Utilities.Network.Formatters
 
             return source.MediaType?.ToUpperInvariant();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String? Lower(this MediaTypeNotSupportedException exception)
         {
@@ -479,7 +479,7 @@ namespace NetExtender.Utilities.Network.Formatters
 
             return exception.MediaType is { } media ? Lower(media) : null;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String? Upper(this MediaTypeNotSupportedException exception)
         {
@@ -487,10 +487,10 @@ namespace NetExtender.Utilities.Network.Formatters
             {
                 throw new ArgumentNullException(nameof(exception));
             }
-            
+
             return exception.MediaType is { } media ? Upper(media) : null;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String? LowerCharSet(this MediaTypeNotSupportedException exception)
         {
@@ -498,10 +498,10 @@ namespace NetExtender.Utilities.Network.Formatters
             {
                 throw new ArgumentNullException(nameof(exception));
             }
-            
+
             return exception.MediaType is { } media ? LowerCharSet(media) : null;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String? UpperCharSet(this MediaTypeNotSupportedException exception)
         {
@@ -509,10 +509,10 @@ namespace NetExtender.Utilities.Network.Formatters
             {
                 throw new ArgumentNullException(nameof(exception));
             }
-            
+
             return exception.MediaType is { } media ? UpperCharSet(media) : null;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String? LowerMediaType(this MediaTypeNotSupportedException exception)
         {
@@ -520,10 +520,10 @@ namespace NetExtender.Utilities.Network.Formatters
             {
                 throw new ArgumentNullException(nameof(exception));
             }
-            
+
             return exception.MediaType is { } media ? LowerMediaType(media) : null;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String? UpperMediaType(this MediaTypeNotSupportedException exception)
         {
@@ -531,7 +531,7 @@ namespace NetExtender.Utilities.Network.Formatters
             {
                 throw new ArgumentNullException(nameof(exception));
             }
-            
+
             return exception.MediaType is { } media ? UpperMediaType(media) : null;
         }
     }

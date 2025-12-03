@@ -29,10 +29,10 @@ namespace NetExtender.Types.Sets
                 Handle(step, @new);
                 return;
             }
-            
+
             base.Handle(step, state);
         }
-        
+
         protected virtual void Handle(Step step, State? state)
         {
             base.Handle(step, state);
@@ -48,7 +48,7 @@ namespace NetExtender.Types.Sets
             State state = Factory();
             state.Invoke();
             state.PropertyChanging(nameof(Count));
-            
+
             static Boolean Handler(ref TSet @internal, T argument)
             {
                 return @internal.Add(argument);
@@ -58,7 +58,7 @@ namespace NetExtender.Types.Sets
             {
                 return state.Fallback();
             }
-            
+
             state.CollectionChanged(NotifyCollectionChangedAction.Add, item);
             state.PropertyChanged(nameof(Count));
             return state.Return();
@@ -100,7 +100,7 @@ namespace NetExtender.Types.Sets
             {
                 throw new ArgumentNullException(nameof(other));
             }
-            
+
             TSet @internal = Internal;
             TSet set = Clone();
             set.UnionWith(other);
@@ -201,7 +201,7 @@ namespace NetExtender.Types.Sets
                 state.Unchanged();
                 return;
             }
-            
+
             state.PropertyChanging(nameof(Count));
             state.Update();
             state.CollectionChanged();

@@ -17,7 +17,7 @@ namespace NetExtender.Types.Intercept
     public class PropertyInterceptor<TSender, TInfo> : PropertyInterceptor<TSender, IPropertyInterceptEventArgs, TInfo>, IPropertyInterceptor<TSender, TInfo> where TSender : IInterceptTargetRaise<IPropertyInterceptEventArgs>
     {
         public static PropertyInterceptor<TSender, TInfo> Default { get; } = new PropertyInterceptor<TSender, TInfo>();
-        
+
         public PropertyInterceptor()
         {
             Factory = PropertyInterceptorUtilities.Factory<TInfo>.Instance;
@@ -103,12 +103,12 @@ namespace NetExtender.Types.Intercept
 
             args.Token.ThrowIfCancellationRequested();
             sender.RaiseIntercepting(args);
-            
+
             if (args.Exception is not null)
             {
                 throw args.Exception;
             }
-            
+
             if (args.IsSeal)
             {
                 return argument.Value;
@@ -260,7 +260,7 @@ namespace NetExtender.Types.Intercept
             {
                 throw args.Exception;
             }
-            
+
             if (args.IsSeal)
             {
                 value = argument.Value;
@@ -309,7 +309,7 @@ namespace NetExtender.Types.Intercept
         internal record Info<T> : Info
         {
             private static ConcurrentDictionary<String, Info<T>?> Storage { get; } = new ConcurrentDictionary<String, Info<T>?>();
-            
+
             public Func<TSender, T>? Getter { get; }
             public Action<TSender, T>? Setter { get; }
 
@@ -326,7 +326,7 @@ namespace NetExtender.Types.Intercept
                     Setter = property.TryCreateSetExpression<TSender, T>(out Expression<Action<TSender, T>>? set) ? set.Compile() : null;
                 }
             }
-            
+
             public static Info<T>? Get(String property, Boolean @base)
             {
                 if (property is null)
@@ -336,7 +336,7 @@ namespace NetExtender.Types.Intercept
 
                 return Storage.GetOrAdd(property, static (property, @base) => PropertyInterceptorUtilities<TSender>.Get(property) is { } value ? new Info<T>(value, @base) : null, @base);
             }
-            
+
             public static Info<T>? Get(PropertyInfo property, Boolean @base)
             {
                 if (property is null)
@@ -347,17 +347,17 @@ namespace NetExtender.Types.Intercept
                 return Storage.GetOrAdd(property.Name, static (_, property) => new Info<T>(property.Property, property.Base), (Property: property, Base: @base));
             }
         }
-        
+
         internal record Info
         {
             public PropertyInfo Property { get; }
-            
+
             public Info(PropertyInfo property)
             {
                 Property = property ?? throw new ArgumentNullException(nameof(property));
             }
         }
-        
+
         private static ConcurrentDictionary<String, PropertyInfo?> Storage { get; } = new ConcurrentDictionary<String, PropertyInfo?>();
 
         internal static PropertyInfo? Get(String property)
@@ -401,7 +401,7 @@ namespace NetExtender.Types.Intercept
             private Factory()
             {
             }
-            
+
             public override IPropertyInterceptEventArgs Create<T>(PropertyInfo property, PropertyInterceptAccessor accessor, TInfo? info)
             {
                 return new PropertyInterceptEventArgs<T>(property, accessor);

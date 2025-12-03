@@ -32,7 +32,7 @@ namespace NetExtender.Utilities.Core
             Order = order;
         }
     }
-    
+
     public abstract class DelegateAttribute<T, TDelegate> where TDelegate : Delegate
     {
         protected static ConcurrentDictionary<String, TDelegate> Actions { get; } = new ConcurrentDictionary<String, TDelegate>();
@@ -87,7 +87,7 @@ namespace NetExtender.Utilities.Core
         {
             return Build(null);
         }
-        
+
         public abstract Expression<TDelegate> Build(String? name);
 
         protected readonly struct Member<TAttribute> : IEqualityStruct<Member<TAttribute>> where TAttribute : ComparisonAttribute
@@ -101,7 +101,7 @@ namespace NetExtender.Utilities.Core
             {
                 return !(first == second);
             }
-            
+
             public MemberInfo MemberInfo { get; }
             public TAttribute? Attribute { get; }
 

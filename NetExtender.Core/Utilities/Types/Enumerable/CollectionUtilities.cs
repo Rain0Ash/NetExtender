@@ -105,13 +105,13 @@ namespace NetExtender.Utilities.Types
 
             return ArrayAccessor<T>.Getter(collection);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ReadOnlySpan<T> AsReadOnlySpan<T>(this Collection<T> collection)
         {
             return AsSpan(collection);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Span<T> AsSpan<T>(this Collection<T> collection)
         {
@@ -183,7 +183,7 @@ namespace NetExtender.Utilities.Types
                 result = collection.Count;
                 return false;
             }
-            
+
             result = list.EnsureCapacity(capacity);
             return result > capacity;
         }
@@ -199,11 +199,11 @@ namespace NetExtender.Utilities.Types
             {
                 return false;
             }
-            
+
             list.TrimExcess();
             return true;
         }
-        
+
         public static T PopRandom<T>(this ICollection<T> collection)
         {
             if (collection is null)
@@ -320,7 +320,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(collection));
             }
-            
+
             if (index < 0 || index >= collection.Count)
             {
                 throw new ArgumentOutOfRangeException(nameof(index), index, null);
@@ -342,7 +342,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(collection));
             }
-            
+
             if (index < 0 || index >= collection.Count)
             {
                 throw new ArgumentOutOfRangeException(nameof(index), index, null);
@@ -549,17 +549,17 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(collection));
             }
-            
+
             if (collection.IsReadOnly)
             {
                 throw new NotSupportedException();
             }
-            
+
             if (source is null)
             {
                 return;
             }
-            
+
             if (collection is List<T> list)
             {
                 list.AddRange(source);
@@ -583,14 +583,14 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(collection));
             }
-            
+
             if (collection.IsReadOnly)
             {
                 throw new NotSupportedException();
             }
-            
+
             collection.Clear();
-            
+
             if (source is not null)
             {
                 collection.AddRange(source);
@@ -608,17 +608,17 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(collection));
             }
-            
+
             if (collection.IsReadOnly)
             {
                 throw new NotSupportedException();
             }
-            
+
             if (source is null)
             {
                 return;
             }
-            
+
             foreach (T item in source)
             {
                 collection.Remove(item);
@@ -657,17 +657,17 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(collection));
             }
-            
+
             if (collection.IsReadOnly)
             {
                 throw new NotSupportedException();
             }
-            
+
             if (source is null)
             {
                 return 0;
             }
-            
+
             Int32 count = 0;
             foreach (T item in source)
             {
@@ -701,7 +701,7 @@ namespace NetExtender.Utilities.Types
             {
                 return list.RemoveAll(match);
             }
-            
+
             List<T> remove = new List<T>();
 
             foreach (T item in collection)
@@ -768,7 +768,7 @@ namespace NetExtender.Utilities.Types
             {
                 array[i] = (T) enumerator.Current!;
             }
-            
+
             (enumerator as IDisposable)?.Dispose();
         }
 
@@ -814,7 +814,7 @@ namespace NetExtender.Utilities.Types
         {
             CopyTo(source, array, 0, selector);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static void CopyTo<TSource, TResult>(this IEnumerable<TSource> source, TResult[] array, Int32 index, Func<TSource, TResult> selector)
         {
@@ -827,22 +827,22 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(array));
             }
-            
+
             if (selector is null)
             {
                 throw new ArgumentNullException(nameof(selector));
             }
-            
+
             if (index < 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
-            
+
             if (source.CountIfMaterialized() is { } count && count + index > array.Length)
             {
                 throw new ArgumentOutOfRangeException(nameof(array), array.Length, null);
             }
-            
+
             using IEnumerator<TSource> enumerator = source.GetEnumerator();
 
             for (Int32 i = index; i < array.Length && enumerator.MoveNext(); i++)
@@ -856,7 +856,7 @@ namespace NetExtender.Utilities.Types
         {
             CopyTo(source, array, 0);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static void CopyTo<T>(this IEnumerable<T> source, Maybe<T>[] array, Int32 index)
         {
@@ -869,17 +869,17 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(array));
             }
-            
+
             if (index < 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
-            
+
             if (source.CountIfMaterialized() is { } count && count + index > array.Length)
             {
                 throw new ArgumentOutOfRangeException(nameof(array), array.Length, null);
             }
-            
+
             using IEnumerator<T> enumerator = source.GetEnumerator();
 
             for (Int32 i = index; i < array.Length && enumerator.MoveNext(); i++)
@@ -893,7 +893,7 @@ namespace NetExtender.Utilities.Types
         {
             CopyTo(source, array, 0);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static void CopyTo<T>(this IEnumerable<T> source, NullMaybe<T>[] array, Int32 index)
         {
@@ -906,17 +906,17 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(array));
             }
-            
+
             if (index < 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
-            
+
             if (source.CountIfMaterialized() is { } count && count + index > array.Length)
             {
                 throw new ArgumentOutOfRangeException(nameof(array), array.Length, null);
             }
-            
+
             using IEnumerator<T> enumerator = source.GetEnumerator();
 
             for (Int32 i = index; i < array.Length && enumerator.MoveNext(); i++)
@@ -930,7 +930,7 @@ namespace NetExtender.Utilities.Types
         {
             CopyTo(source, array, 0);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static void CopyTo<T>(this IEnumerable<NullMaybe<T>> source, T[] array, Int32 index)
         {
@@ -943,17 +943,17 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(array));
             }
-            
+
             if (index < 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
-            
+
             if (source.CountIfMaterialized() is { } count && count + index > array.Length)
             {
                 throw new ArgumentOutOfRangeException(nameof(array), array.Length, null);
             }
-            
+
             using IEnumerator<NullMaybe<T>> enumerator = source.GetEnumerator();
 
             for (Int32 i = index; i < array.Length && enumerator.MoveNext(); i++)
@@ -967,7 +967,7 @@ namespace NetExtender.Utilities.Types
         {
             CopyTo(source, array, 0);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static void CopyTo<T>(this IEnumerable<T> source, WeakMaybe<T>[] array, Int32 index) where T : class
         {
@@ -980,17 +980,17 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(array));
             }
-            
+
             if (index < 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
-            
+
             if (source.CountIfMaterialized() is { } count && count + index > array.Length)
             {
                 throw new ArgumentOutOfRangeException(nameof(array), array.Length, null);
             }
-            
+
             using IEnumerator<T> enumerator = source.GetEnumerator();
 
             for (Int32 i = index; i < array.Length && enumerator.MoveNext(); i++)
@@ -1004,7 +1004,7 @@ namespace NetExtender.Utilities.Types
         {
             CopyTo(source, array, 0);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static void CopyTo<T>(this IEnumerable<T> source, Box<T>[] array, Int32 index) where T : class
         {
@@ -1017,17 +1017,17 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(array));
             }
-            
+
             if (index < 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
-            
+
             if (source.CountIfMaterialized() is { } count && count + index > array.Length)
             {
                 throw new ArgumentOutOfRangeException(nameof(array), array.Length, null);
             }
-            
+
             using IEnumerator<T> enumerator = source.GetEnumerator();
 
             for (Int32 i = index; i < array.Length && enumerator.MoveNext(); i++)

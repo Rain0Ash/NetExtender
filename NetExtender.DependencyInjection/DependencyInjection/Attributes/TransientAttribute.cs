@@ -10,22 +10,22 @@ namespace NetExtender.DependencyInjection.Attributes
     public sealed class TransientAttribute : ServiceDependencyAttribute
     {
         private new const ServiceLifetime Lifetime = ServiceLifetime.Transient;
-        
+
         public TransientAttribute()
             : base(Lifetime)
         {
         }
-        
+
         public TransientAttribute(Object? key)
             : base(key, Lifetime)
         {
         }
-        
+
         public TransientAttribute(Type @interface)
             : base(@interface ?? throw new ArgumentNullException(nameof(@interface)), Lifetime)
         {
         }
-        
+
         public TransientAttribute(Type @interface, Object? key)
             : base(@interface ?? throw new ArgumentNullException(nameof(@interface)), key, Lifetime)
         {

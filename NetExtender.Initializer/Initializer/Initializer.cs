@@ -15,7 +15,7 @@ namespace NetExtender.Initializer
     public abstract partial class Initializer
     {
         public static ImmutableArray<String>? Arguments { get; internal set; }
-        
+
         private static Task Stop
         {
             get
@@ -55,7 +55,7 @@ namespace NetExtender.Initializer
                 return Stop.ContinueWith(_ => 2);
             }
         }
-        
+
         protected static Awaiter<Int32> Three
         {
             get
@@ -199,12 +199,12 @@ namespace NetExtender.Initializer
             {
                 throw new ArgumentException($"Method '{method}' must be static.", nameof(initializer));
             }
-            
+
             if (!type.IsAbstract || !type.IsSealed)
             {
                 throw new ArgumentException($"{type.FullName} is not a static class.", nameof(type));
             }
-            
+
             const BindingFlags binding = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
 
             static Boolean Predicate(MethodInfo method)
@@ -222,10 +222,10 @@ namespace NetExtender.Initializer
                 initializer.Invoke();
                 return;
             }
-            
+
             DomainInitialized += initializer;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected static Type Seal(Type type)
         {
@@ -291,7 +291,7 @@ namespace NetExtender.Initializer
         {
             UnhandledException<ExceptionHandler>(sender, exception, ref action);
         }
-        
+
         protected void UnhandledException<T>(Object? sender, Exception? exception, ref InitializerUnhandledExceptionState action) where T : ExceptionHandler, new()
         {
             T handler = new T();
@@ -392,7 +392,7 @@ namespace NetExtender.Initializer
         protected internal virtual void InitializeNetExtender(INetExtenderFrameworkInitializer initializer)
         {
         }
-        
+
         protected class ExceptionHandler
         {
             private Boolean DynamicHandle(Initializer initializer, Object? sender, Exception? exception, ref InitializerUnhandledExceptionState action)
@@ -417,7 +417,7 @@ namespace NetExtender.Initializer
 
                     type = type.BaseType;
                 }
-                
+
                 if (handler is null || handler.DeclaringType == typeof(ExceptionHandler))
                 {
                     return false;
@@ -440,7 +440,7 @@ namespace NetExtender.Initializer
                 {
                     return true;
                 }
-                
+
                 Handle(sender, exception, ref action);
                 return false;
             }
@@ -450,14 +450,14 @@ namespace NetExtender.Initializer
                 Console.WriteLine(exception);
             }
         }
-        
+
         public readonly struct Awaiter<T> : IEquatable<Awaiter<T>>
         {
             public static implicit operator Awaiter<T>(Task<T>? value)
             {
                 return value is not null ? new Awaiter<T>(value) : default;
             }
-            
+
             public static implicit operator Task<T>(Awaiter<T> value)
             {
                 return value.Internal ?? Task.FromResult(default(T)!);
@@ -467,7 +467,7 @@ namespace NetExtender.Initializer
             {
                 return Task.CompletedTask.ContinueWith<T>(_ => value);
             }
-            
+
             public static Boolean operator ==(Awaiter<T> first, Awaiter<T> second)
             {
                 return first.Equals(second);
@@ -477,7 +477,7 @@ namespace NetExtender.Initializer
             {
                 return !(first == second);
             }
-            
+
             private Task<T>? Internal { get; }
 
             public Boolean IsCompleted
@@ -511,12 +511,12 @@ namespace NetExtender.Initializer
                     return Internal?.IsFaulted ?? false;
                 }
             }
-            
+
             public Awaiter(Task<T> value)
             {
                 Internal = value ?? throw new ArgumentNullException(nameof(value));
             }
-            
+
             public TaskAwaiter<T> GetAwaiter()
             {
                 return Internal?.GetAwaiter() ?? Task.FromResult(default(T)!).GetAwaiter();
@@ -526,7 +526,7 @@ namespace NetExtender.Initializer
             {
                 return Internal?.ConfigureAwait(continueOnCapturedContext) ?? Task.FromResult(default(T)!).ConfigureAwait(continueOnCapturedContext);
             }
-        
+
             public override Int32 GetHashCode()
             {
                 return Internal?.GetHashCode() ?? 0;

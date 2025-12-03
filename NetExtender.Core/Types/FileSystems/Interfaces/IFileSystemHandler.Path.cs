@@ -32,15 +32,15 @@ namespace NetExtender.FileSystems.Interfaces
         public Char AltDirectorySeparatorChar { get; }
 
         /// <inheritdoc cref="System.IO.Path.InvalidPathChars" />
-        [Obsolete($"{nameof(InvalidPathChars)} has been deprecated. Use {nameof(GetInvalidPathChars)} instead.")]
+        [Obsolete($"InvalidPathChars has been deprecated. Use {nameof(GetInvalidPathChars)} instead.")]
         public Char[] InvalidPathChars { get; }
 
         /// <inheritdoc cref="System.IO.Path.GetInvalidPathChars()" />
         public ImmutableArray<Char> InvalidPathCharacters { get; }
 
-        [Obsolete($"{nameof(InvalidFileNameChars)} has been deprecated. Use {nameof(GetInvalidFileNameChars)} instead.")]
+        [Obsolete($"InvalidFileNameChars has been deprecated. Use {nameof(GetInvalidFileNameChars)} instead.")]
         public Char[] InvalidFileNameChars { get; }
-        
+
         /// <inheritdoc cref="System.IO.Path.GetInvalidFileNameChars()" />
         public ImmutableArray<Char> InvalidFileNameCharacters { get; }
 

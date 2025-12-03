@@ -19,12 +19,12 @@ namespace NetExtender.Types.Reflection
     public class UnaryReflectionOperator<TSelf, TResult> : UnaryReflectionOperator, IUnaryReflectionOperator<TSelf, TResult>
     {
         protected UnaryOperatorHandler<TSelf, TResult>? Handler { get; }
-        
+
         internal UnaryReflectionOperator(UnaryOperator @operator)
             : this(Find(typeof(TSelf), @operator), @operator)
         {
         }
-        
+
         [ReflectionSignature(typeof(UnaryReflectionOperator))]
         internal UnaryReflectionOperator(MethodInfo? method, UnaryOperator @operator)
             : base(method, @operator)
@@ -50,19 +50,19 @@ namespace NetExtender.Types.Reflection
         {
             return new NotImplemented(@operator);
         }
-        
+
         public virtual TResult Invoke(TSelf value)
         {
             return Handler is not null ? Handler.Invoke(value) : throw new UnaryOperatorNotImplementedException<TSelf, TResult>(Operator);
         }
-        
+
         public override Object? Invoke(Object? value)
         {
             if (value is not TSelf)
             {
                 value = value is not null ? (TSelf?) Convert.ChangeType(value, typeof(TSelf), CultureInfo.InvariantCulture)! : default!;
             }
-            
+
             return Invoke((TSelf) value);
         }
 
@@ -102,7 +102,7 @@ namespace NetExtender.Types.Reflection
             }
         }
     }
-    
+
     public abstract class UnaryReflectionOperator : ReflectionOperator, IUnaryReflectionOperator
     {
         protected static ConcurrentDictionary<(Type, UnaryOperator), IUnaryReflectionOperator?> Storage { get; } = new ConcurrentDictionary<(Type, UnaryOperator), IUnaryReflectionOperator?>();
@@ -163,7 +163,7 @@ namespace NetExtender.Types.Reflection
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             result = Storage.GetOrAdd((type, @operator), static key =>
             {
                 (Type type, UnaryOperator @operator) = key;
@@ -211,7 +211,7 @@ namespace NetExtender.Types.Reflection
         {
             return Get<TSelf, TSelf>(@operator);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public new static IUnaryReflectionOperator<TSelf, TResult>? Get<TSelf, TResult>(UnaryOperator @operator)
         {
@@ -266,12 +266,16 @@ namespace NetExtender.Types.Reflection
         {
         }
 
+#if NET8_0_OR_GREATER
+        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
         protected UnaryOperatorNotImplementedException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
         }
     }
-    
+
     public abstract class UnaryOperatorNotImplementedException : ReflectionOperatorNotImplementedException
     {
         public UnaryOperator Operator { get; }
@@ -300,12 +304,20 @@ namespace NetExtender.Types.Reflection
             Operator = @operator;
         }
 
+#if NET8_0_OR_GREATER
+        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
         protected UnaryOperatorNotImplementedException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
             Operator = (UnaryOperator) info.GetUInt32(nameof(Operator));
         }
 
+#if NET8_0_OR_GREATER
+        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId = "SYSLIB0051", UrlFormat = "https://aka.ms/dotnet-warnings/{0}")]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             base.GetObjectData(info, context);

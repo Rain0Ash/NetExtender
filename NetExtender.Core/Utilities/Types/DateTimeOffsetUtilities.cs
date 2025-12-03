@@ -21,7 +21,7 @@ namespace NetExtender.Utilities.Types
         {
             return calendar is not null ? new DateTimeOffset(1970, 1, 1, 0, 0, 0, 0, calendar, offset) : Epoch(offset);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static DateTimeOffset NowOffset(this DateTimeKind value)
         {
@@ -75,6 +75,26 @@ namespace NetExtender.Utilities.Types
         {
             return new DateTimeOffset(year, (Int32) month, day, hour, minute, second, millisecond, calendar, offset);
         }
+
+#if NET7_0_OR_GREATER
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DateTimeOffset DateTimeOffsetFrom(this Month month, Int32 year, Int32 day, Int32 hour, Int32 minute, Int32 second, Int32 millisecond, Int32 microsecond)
+        {
+            return DateTimeOffsetFrom(month, year, day, hour, minute, second, millisecond, microsecond, TimeSpan.Zero);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DateTimeOffset DateTimeOffsetFrom(this Month month, Int32 year, Int32 day, Int32 hour, Int32 minute, Int32 second, Int32 millisecond, Int32 microsecond, TimeSpan offset)
+        {
+            return new DateTimeOffset(year, (Int32) month, day, hour, minute, second, millisecond, microsecond, offset);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DateTimeOffset DateTimeOffsetFrom(this Month month, Int32 year, Int32 day, Int32 hour, Int32 minute, Int32 second, Int32 millisecond, Int32 microsecond, Calendar calendar, TimeSpan offset)
+        {
+            return new DateTimeOffset(year, (Int32) month, day, hour, minute, second, millisecond, microsecond, calendar, offset);
+        }
+#endif
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Int32 Age(this DateTimeOffset date)
@@ -130,9 +150,9 @@ namespace NetExtender.Utilities.Types
         /// <param name="day">Day to set</param>
         /// <returns>new date</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static DateTimeOffset SetDate(this DateTimeOffset date, Int32 year, Month month, Int32 day)
+        public static DateTimeOffset SetDate(this DateTimeOffset date, Int32 year, Int32 month, Int32 day)
         {
-            return SetDate(date, year, (Int32) month + 1, day);
+            return new DateTimeOffset(year, month, day, date.Hour, date.Minute, date.Second, date.Millisecond, date.Offset);
         }
 
         /// <summary>
@@ -144,9 +164,9 @@ namespace NetExtender.Utilities.Types
         /// <param name="day">Day to set</param>
         /// <returns>new date</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static DateTimeOffset SetDate(this DateTimeOffset date, Int32 year, Int32 month, Int32 day)
+        public static DateTimeOffset SetDate(this DateTimeOffset date, Int32 year, Month month, Int32 day)
         {
-            return new DateTimeOffset(year, month, day, date.Hour, date.Minute, date.Second, date.Millisecond, date.Offset);
+            return SetDate(date, year, (Int32) month + 1, day);
         }
 
         /// <summary>
@@ -198,48 +218,6 @@ namespace NetExtender.Utilities.Types
         }
 
         /// <summary>
-        /// Set time of date
-        /// </summary>
-        /// <param name="date">Date to add time</param>
-        /// <param name="hour">Hours to add</param>
-        /// <param name="minute">Minutes to add</param>
-        /// <param name="second">Seconds to add</param>
-        /// <param name="millisecond">Milliseconds to add</param>
-        /// <returns>Date with new time</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static DateTimeOffset SetTime(this DateTimeOffset date, Int32 hour, Int32 minute, Int32 second, Int32 millisecond)
-        {
-            return new DateTimeOffset(date.Year, date.Month, date.Day, hour, minute, second, millisecond, date.Offset);
-        }
-
-        /// <summary>
-        /// Set time of date
-        /// </summary>
-        /// <param name="date">Date to add time</param>
-        /// <param name="hour">Hours to add</param>
-        /// <param name="minute">Minutes to add</param>
-        /// <param name="second">Seconds to add</param>
-        /// <returns>Date with new time</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static DateTimeOffset SetTime(this DateTimeOffset date, Int32 hour, Int32 minute, Int32 second)
-        {
-            return SetTime(date, hour, minute, second, date.Millisecond);
-        }
-
-        /// <summary>
-        /// Set time of date
-        /// </summary>
-        /// <param name="date">Date to add time</param>
-        /// <param name="hour">Hours to add</param>
-        /// <param name="minute">Minutes to add</param>
-        /// <returns>Date with new time</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static DateTimeOffset SetTime(this DateTimeOffset date, Int32 hour, Int32 minute)
-        {
-            return SetTime(date, hour, minute, date.Second, date.Millisecond);
-        }
-
-        /// <summary>
         /// Set hour of date
         /// </summary>
         /// <param name="date">Date to set time</param>
@@ -248,7 +226,11 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static DateTimeOffset SetHour(this DateTimeOffset date, Int32 hour)
         {
+#if NET7_0_OR_GREATER
+            return SetTime(date, hour, date.Minute, date.Second, date.Millisecond, date.Microsecond);
+#else
             return SetTime(date, hour, date.Minute, date.Second, date.Millisecond);
+#endif
         }
 
         /// <summary>
@@ -260,7 +242,11 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static DateTimeOffset SetMinute(this DateTimeOffset date, Int32 minute)
         {
+#if NET7_0_OR_GREATER
+            return SetTime(date, date.Hour, minute, date.Second, date.Millisecond, date.Microsecond);
+#else
             return SetTime(date, date.Hour, minute, date.Second, date.Millisecond);
+#endif
         }
 
         /// <summary>
@@ -272,7 +258,11 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static DateTimeOffset SetSecond(this DateTimeOffset date, Int32 second)
         {
+#if NET7_0_OR_GREATER
+            return SetTime(date, date.Hour, date.Minute, second, date.Millisecond, date.Microsecond);
+#else
             return SetTime(date, date.Hour, date.Minute, second, date.Millisecond);
+#endif
         }
 
         /// <summary>
@@ -284,20 +274,94 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static DateTimeOffset SetMillisecond(this DateTimeOffset date, Int32 millisecond)
         {
+#if NET7_0_OR_GREATER
+            return SetTime(date, date.Hour, date.Minute, date.Second, millisecond, date.Microsecond);
+#else
             return SetTime(date, date.Hour, date.Minute, date.Second, millisecond);
+#endif
+        }
+
+#if NET7_0_OR_GREATER
+        /// <summary>
+        /// Set microsecond of date
+        /// </summary>
+        /// <param name="date">Date to set time</param>
+        /// <param name="microsecond">Microsecond to set</param>
+        /// <returns>Date with new time</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DateTimeOffset SetMicrosecond(this DateTimeOffset date, Int32 microsecond)
+        {
+            return SetTime(date, date.Hour, date.Minute, date.Second, date.Millisecond, microsecond);
+        }
+#endif
+
+        /// <summary>
+        /// Set time of date
+        /// </summary>
+        /// <param name="date">Date to set time</param>
+        /// <param name="hour">Hours to set</param>
+        /// <param name="minute">Minutes to set</param>
+        /// <returns>Date with new time</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DateTimeOffset SetTime(this DateTimeOffset date, Int32 hour, Int32 minute)
+        {
+#if NET7_0_OR_GREATER
+            return SetTime(date, hour, minute, date.Second, date.Millisecond, date.Microsecond);
+#else
+            return SetTime(date, hour, minute, date.Second, date.Millisecond);
+#endif
         }
 
         /// <summary>
-        /// Set offset of date
+        /// Set time of date
         /// </summary>
         /// <param name="date">Date to set time</param>
-        /// <param name="offset">Offset to set</param>
-        /// <returns>Date with new offset</returns>
+        /// <param name="hour">Hours to set</param>
+        /// <param name="minute">Minutes to set</param>
+        /// <param name="second">Seconds to set</param>
+        /// <returns>Date with new time</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static DateTimeOffset SetOffset(this DateTimeOffset date, TimeSpan offset)
+        public static DateTimeOffset SetTime(this DateTimeOffset date, Int32 hour, Int32 minute, Int32 second)
         {
-            return new DateTimeOffset(date.Year, date.Month, date.Day, date.Hour, date.Minute, date.Second, date.Millisecond, offset);
+#if NET7_0_OR_GREATER
+            return SetTime(date, hour, minute, second, date.Millisecond, date.Microsecond);
+#else
+            return SetTime(date, hour, minute, second, date.Millisecond);
+#endif
         }
+
+        /// <summary>
+        /// Set time of date
+        /// </summary>
+        /// <param name="date">Date to set time</param>
+        /// <param name="hour">Hours to set</param>
+        /// <param name="minute">Minutes to set</param>
+        /// <param name="second">Seconds to set</param>
+        /// <param name="millisecond">Milliseconds to set</param>
+        /// <returns>Date with new time</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DateTimeOffset SetTime(this DateTimeOffset date, Int32 hour, Int32 minute, Int32 second, Int32 millisecond)
+        {
+            return new DateTimeOffset(date.Year, date.Month, date.Day, hour, minute, second, millisecond, date.Offset);
+        }
+
+#if NET7_0_OR_GREATER
+        /// <summary>
+        /// Set time of date
+        /// </summary>
+        /// <param name="date">Date to set time</param>
+        /// <param name="hour">Hours to set</param>
+        /// <param name="minute">Minutes to set</param>
+        /// <param name="second">Seconds to set</param>
+        /// <param name="millisecond">Milliseconds to set</param>
+        /// <param name="microsecond">Microseconds to set</param>
+        /// <returns>Date with new time</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DateTimeOffset SetTime(this DateTimeOffset date, Int32 hour, Int32 minute, Int32 second, Int32 millisecond, Int32 microsecond)
+        {
+            return new DateTimeOffset(date.Year, date.Month, date.Day, hour, minute, second, millisecond, microsecond, date.Offset);
+        }
+#endif
 
         /// <summary>
         /// Sets the time portion of a specific date
@@ -311,34 +375,78 @@ namespace NetExtender.Utilities.Types
             return new DateTimeOffset(date.Year, date.Month, date.Day, 0, 0, 0, date.Offset).Add(time);
         }
 
+        /// <summary>
+        /// Set offset of date
+        /// </summary>
+        /// <param name="date">Date to set time</param>
+        /// <param name="offset">Offset to set</param>
+        /// <returns>Date with new offset</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static DateTimeOffset TruncateToMilliseconds(this DateTimeOffset date)
+        public static DateTimeOffset SetOffset(this DateTimeOffset date, TimeSpan offset)
         {
-            return new DateTimeOffset(date.Year, date.Month, date.Day, date.Hour, date.Minute, date.Second, date.Millisecond, date.Offset);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static DateTimeOffset TruncateToSeconds(this DateTimeOffset date)
-        {
-            return new DateTimeOffset(date.Year, date.Month, date.Day, date.Hour, date.Minute, date.Second, 0, date.Offset);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static DateTimeOffset TruncateToMinutes(this DateTimeOffset date)
-        {
-            return new DateTimeOffset(date.Year, date.Month, date.Day, date.Hour, date.Minute, 0, 0, date.Offset);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static DateTimeOffset TruncateToHours(this DateTimeOffset date)
-        {
-            return new DateTimeOffset(date.Year, date.Month, date.Day, date.Hour, 0, 0, 0, date.Offset);
+#if NET7_0_OR_GREATER
+            return new DateTimeOffset(date.Year, date.Month, date.Day, date.Hour, date.Minute, date.Second, date.Millisecond, date.Microsecond, offset);
+#else
+            return new DateTimeOffset(date.Year, date.Month, date.Day, date.Hour, date.Minute, date.Second, date.Millisecond, offset);
+#endif
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static DateTimeOffset TruncateToDays(this DateTimeOffset date)
         {
+#if NET7_0_OR_GREATER
+            return new DateTimeOffset(date.Year, date.Month, date.Day, 0, 0, 0, 0, 0, date.Offset);
+#else
             return new DateTimeOffset(date.Year, date.Month, date.Day, 0, 0, 0, 0, date.Offset);
+#endif
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DateTimeOffset TruncateToHours(this DateTimeOffset date)
+        {
+#if NET7_0_OR_GREATER
+            return new DateTimeOffset(date.Year, date.Month, date.Day, date.Hour, 0, 0, 0, 0, date.Offset);
+#else
+            return new DateTimeOffset(date.Year, date.Month, date.Day, date.Hour, 0, 0, 0, date.Offset);
+#endif
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DateTimeOffset TruncateToMinutes(this DateTimeOffset date)
+        {
+#if NET7_0_OR_GREATER
+            return new DateTimeOffset(date.Year, date.Month, date.Day, date.Hour, date.Minute, 0, 0, 0, date.Offset);
+#else
+            return new DateTimeOffset(date.Year, date.Month, date.Day, date.Hour, date.Minute, 0, 0, date.Offset);
+#endif
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DateTimeOffset TruncateToSeconds(this DateTimeOffset date)
+        {
+#if NET7_0_OR_GREATER
+            return new DateTimeOffset(date.Year, date.Month, date.Day, date.Hour, date.Minute, date.Second, 0, 0, date.Offset);
+#else
+            return new DateTimeOffset(date.Year, date.Month, date.Day, date.Hour, date.Minute, date.Second, 0, date.Offset);
+#endif
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DateTimeOffset TruncateToMilliseconds(this DateTimeOffset date)
+        {
+#if NET7_0_OR_GREATER
+            return new DateTimeOffset(date.Year, date.Month, date.Day, date.Hour, date.Minute, date.Second, date.Millisecond, 0, date.Offset);
+#else
+            return new DateTimeOffset(date.Year, date.Month, date.Day, date.Hour, date.Minute, date.Second, date.Millisecond, date.Offset);
+#endif
+        }
+
+#if NET7_0_OR_GREATER
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DateTimeOffset TruncateToMicroseconds(this DateTimeOffset date)
+        {
+            return new DateTimeOffset(date.Year, date.Month, date.Day, date.Hour, date.Minute, date.Second, date.Millisecond, date.Microsecond, date.Offset);
+        }
+#endif
     }
 }

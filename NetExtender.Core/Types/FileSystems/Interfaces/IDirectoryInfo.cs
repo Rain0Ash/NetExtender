@@ -8,13 +8,13 @@ namespace NetExtender.FileSystems.Interfaces
     {
         /// <inheritdoc cref="DirectoryInfo.Root"/>
         public new IDirectoryEntry Root { get; }
-        
+
         /// <inheritdoc cref="DirectoryInfo.Parent"/>
         public new IDirectoryEntry? Parent { get; }
-        
+
         /// <inheritdoc cref="DirectoryInfo.GetFileSystemInfos()"/>
         public new IFileSystemEntry[] GetFileSystemInfos();
-        
+
         /// <inheritdoc cref="DirectoryInfo.GetFileSystemInfos(System.String)"/>
         public new IFileSystemEntry[] GetFileSystemInfos(String? pattern);
 
@@ -26,13 +26,13 @@ namespace NetExtender.FileSystems.Interfaces
 
         /// <inheritdoc cref="DirectoryInfo.GetFiles()"/>
         public new IFileEntry[] GetFiles();
-        
+
         /// <inheritdoc cref="DirectoryInfo.GetFiles(System.String)"/>
         public new IFileEntry[] GetFiles(String? pattern);
-        
+
         /// <inheritdoc cref="DirectoryInfo.GetFiles(System.String, System.IO.SearchOption)"/>
         public new IFileEntry[] GetFiles(String? pattern, SearchOption option);
-        
+
         /// <inheritdoc cref="DirectoryInfo.GetFiles(System.String, System.IO.EnumerationOptions)"/>
         public new IFileEntry[] GetFiles(String? pattern, EnumerationOptions options);
 
@@ -83,24 +83,24 @@ namespace NetExtender.FileSystems.Interfaces
 
         /// <inheritdoc cref="DirectoryInfo.EnumerateDirectories(System.String, System.IO.EnumerationOptions)"/>
         public new IEnumerable<IDirectoryEntry> EnumerateDirectories(String? pattern, EnumerationOptions options);
-        
+
         /// <inheritdoc cref="DirectoryInfo.CreateSubdirectory(System.String)"/>
         public new IDirectoryEntry CreateSubdirectory(String path);
     }
-    
+
     public interface IDirectoryInfo : IFileSystemInfo, IEquatable<DirectoryInfo>, IEquatable<IDirectoryInfo>
     {
         public new DirectoryInfo? Info { get; }
-        
+
         /// <inheritdoc cref="DirectoryInfo.Root"/>
         public IDirectoryInfo Root { get; }
-        
+
         /// <inheritdoc cref="DirectoryInfo.Parent"/>
         public IDirectoryInfo? Parent { get; }
-        
+
         /// <inheritdoc cref="DirectoryInfo.GetFileSystemInfos()"/>
         public IFileSystemInfo[] GetFileSystemInfos();
-        
+
         /// <inheritdoc cref="DirectoryInfo.GetFileSystemInfos(System.String)"/>
         public IFileSystemInfo[] GetFileSystemInfos(String? pattern);
 
@@ -112,13 +112,13 @@ namespace NetExtender.FileSystems.Interfaces
 
         /// <inheritdoc cref="DirectoryInfo.GetFiles()"/>
         public IFileInfo[] GetFiles();
-        
+
         /// <inheritdoc cref="DirectoryInfo.GetFiles(System.String)"/>
         public IFileInfo[] GetFiles(String? pattern);
-        
+
         /// <inheritdoc cref="DirectoryInfo.GetFiles(System.String, System.IO.SearchOption)"/>
         public IFileInfo[] GetFiles(String? pattern, SearchOption option);
-        
+
         /// <inheritdoc cref="DirectoryInfo.GetFiles(System.String, System.IO.EnumerationOptions)"/>
         public IFileInfo[] GetFiles(String? pattern, EnumerationOptions options);
 
@@ -175,7 +175,7 @@ namespace NetExtender.FileSystems.Interfaces
 
         /// <inheritdoc cref="DirectoryInfo.Create()"/>
         public void Create();
-        
+
         /// <inheritdoc cref="DirectoryInfo.CreateSubdirectory(System.String)"/>
         public IDirectoryInfo CreateSubdirectory(String path);
 

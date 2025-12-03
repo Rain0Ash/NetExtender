@@ -9,26 +9,26 @@ namespace NetExtender.Types.Intercept.Interfaces
     public interface IAnyInterceptTarget<in TArgument> : IInterceptTarget<TArgument>, IAsyncInterceptTarget<TArgument>
     {
     }
-    
+
     public interface IAnyInterceptTarget<T, in TArgument> : IInterceptTarget<T, TArgument>, IAsyncInterceptTarget<T, TArgument>
     {
     }
-    
+
     public interface IAsyncInterceptTarget<in TArgument> : IInterceptTargetRaise<TArgument>
     {
         public Task InvokeAsync(TArgument argument);
     }
-    
+
     public interface IAsyncInterceptTarget<T, in TArgument> : IInterceptTargetResult<T, TArgument>
     {
         public ValueTask<T> InvokeAsync(TArgument argument);
     }
-    
+
     public interface IInterceptTarget<in TArgument> : IInterceptTargetRaise<TArgument>
     {
         public void Invoke(TArgument argument);
     }
-    
+
     public interface IInterceptTarget<out T, in TArgument> : IInterceptTargetResult<T, TArgument>
     {
         public T Invoke(TArgument argument);

@@ -94,7 +94,7 @@ namespace NetExtender.Types.Immutable.Dictionaries
     public sealed class ImmutableNullableSortedDictionary<TKey, TValue> : IImmutableDictionary<TKey, TValue>, IDictionary<TKey, TValue>, IDictionary
     {
         public static ImmutableNullableSortedDictionary<TKey, TValue> Empty { get; } = new ImmutableNullableSortedDictionary<TKey, TValue>(ImmutableSortedDictionary<NullMaybe<TKey>, TValue>.Empty);
-        
+
         private ImmutableSortedDictionary<NullMaybe<TKey>, TValue> Internal { get; }
 
         public Int32 Count
@@ -809,11 +809,11 @@ namespace NetExtender.Types.Immutable.Dictionaries
                 }
             }
         }
-        
+
         public struct Enumerator : IEnumerator<KeyValuePair<TKey, TValue>>
         {
             private ImmutableSortedDictionary<NullMaybe<TKey>, TValue>.Enumerator Internal;
-            
+
             public readonly KeyValuePair<TKey, TValue> Current
             {
                 get

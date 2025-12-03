@@ -58,7 +58,7 @@ namespace NetExtender.Utilities.Threading
                 return null;
             }
         }
-        
+
         public static Boolean IsAlive(this Process process)
         {
             if (process is null)
@@ -76,7 +76,7 @@ namespace NetExtender.Utilities.Threading
                 return false;
             }
         }
-        
+
         public static void OpenBrowser(String url)
         {
             if (String.IsNullOrEmpty(url))

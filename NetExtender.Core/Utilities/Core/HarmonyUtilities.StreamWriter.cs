@@ -31,7 +31,7 @@ namespace NetExtender.Utilities.Core
                 public EventHandler<InterceptStreamWriter, IMethodInterceptEventArgs>? MethodIntercepted { get; init; }
             }
         }
-        
+
         [SuppressMessage("ReSharper", "PublicConstructorInAbstractClass")]
         public abstract class InterceptHarmonyStreamWriter : InterceptStreamWriter, IInterceptIdentifierTarget<InterceptHarmonyStreamWriter>
         {
@@ -47,12 +47,12 @@ namespace NetExtender.Utilities.Core
             public new static event EventHandler<InterceptStreamWriter, IMethodInterceptEventArgs>? MethodIntercept;
             public new static event EventHandler<InterceptStreamWriter, IMethodInterceptEventArgs>? MethodIntercepting;
             public new static event EventHandler<InterceptStreamWriter, IMethodInterceptEventArgs>? MethodIntercepted;
-            
+
             static InterceptHarmonyStreamWriter()
             {
                 Intercept<InterceptHarmonyStreamWriter>.Regex = new Regex("(Intercept|StreamWriter)", RegexOptions.Compiled);
             }
-            
+
             public sealed override String Identifier
             {
                 get
@@ -64,7 +64,7 @@ namespace NetExtender.Utilities.Core
                     throw new NotSupportedException();
                 }
             }
-            
+
             protected InterceptHarmonyStreamWriter(Stream stream)
                 : base(stream)
             {

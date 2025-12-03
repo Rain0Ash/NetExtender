@@ -9,7 +9,7 @@ namespace NetExtender.Types.Middlewares.Interfaces
     public interface IMiddlewareManager : IMiddlewareInvoker, ICollection<IMiddlewareInfo>
     {
         public MiddlewareManagerContext Context { get; }
-        
+
         public Boolean Contains(Type type);
         public Boolean Contains<T>() where T : IMiddlewareInfo;
         public Boolean Contains<T>(MiddlewareDelegate<T> @delegate);

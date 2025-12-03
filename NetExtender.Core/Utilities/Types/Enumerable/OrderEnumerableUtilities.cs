@@ -400,7 +400,7 @@ namespace NetExtender.Utilities.Types
             }
 
             return sorted;
-            
+
             static void Visit(T root, ISet<T> visited, ISet<T> visiting, ICollection<T> sorted, Stack<(T, IEnumerator<T>)> stack, Func<T, IEnumerator<T>> dependencies, Boolean cyclic)
             {
                 if (!visited.Add(root))

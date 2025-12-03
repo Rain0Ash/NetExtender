@@ -14,7 +14,7 @@ namespace NetExtender.WindowsPresentation.ReactiveUI
     {
         public TWindow Window { get; } = WindowStorageUtilities<TWindow>.Require();
     }
-    
+
     public abstract class ReactiveViewModel : ReactiveObject
     {
         protected static WindowsPresentationServiceProvider Provider

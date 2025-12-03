@@ -17,7 +17,7 @@ namespace NetExtender.JWT
             {
                 return String.Empty;
             }
-            
+
             Span<Char> buffer = stackalloc Char[Algorithms.JWT.StackAlloc / sizeof(Char)];
             buffer = Convert.TryToBase64Chars(source, buffer, out Int32 written) ? buffer.Slice(0, written) : Convert.ToBase64String(source).ToCharArray();
             buffer = buffer.IndexOf('=') is var end and >= 0 ? buffer.Slice(0, end) : buffer;
@@ -77,7 +77,7 @@ namespace NetExtender.JWT
                 written = default;
                 return false;
             }
-            
+
             Span<Char> buffer = stackalloc Char[size];
             source.CopyTo(buffer);
             buffer.Slice(source.Length, buffer.Length - source.Length).Fill('=');

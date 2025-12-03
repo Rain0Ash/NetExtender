@@ -14,12 +14,12 @@ namespace NetExtender.Serialization.Ini
         {
             return new IniValue(value);
         }
-        
+
         public static implicit operator IniValue(Char value)
         {
             return new IniValue(value);
         }
-        
+
         public static implicit operator IniValue(Char32 value)
         {
             return new IniValue(value);

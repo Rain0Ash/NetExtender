@@ -88,7 +88,7 @@ namespace NetExtender.Utilities.Numerics
             {
                 throw new ArgumentNullException(nameof(random));
             }
-            
+
             random.NextBytes(value);
             return value;
         }
@@ -100,7 +100,7 @@ namespace NetExtender.Utilities.Numerics
             {
                 throw new ArgumentNullException(nameof(random));
             }
-            
+
             random.NextBytes(value);
             return value;
         }
@@ -112,7 +112,7 @@ namespace NetExtender.Utilities.Numerics
             {
                 throw new ArgumentNullException(nameof(random));
             }
-            
+
             random.NextBytes(value);
             return value;
         }
@@ -124,7 +124,7 @@ namespace NetExtender.Utilities.Numerics
             {
                 throw new ArgumentNullException(nameof(random));
             }
-            
+
             random.NextBytes(value);
             return value;
         }

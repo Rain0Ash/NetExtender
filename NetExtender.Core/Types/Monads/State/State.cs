@@ -20,7 +20,7 @@ namespace NetExtender.Types.Monads
         Current,
         Value
     }
-    
+
     [Serializable]
     [JsonConverter(typeof(StateJsonConverter<>))]
     [System.Text.Json.Serialization.JsonConverter(typeof(NetExtender.Serialization.Json.Monads.StateJsonConverter<>))]
@@ -35,7 +35,7 @@ namespace NetExtender.Types.Monads
         {
             return new State<T>(value);
         }
-        
+
         public static Boolean operator ==(T? first, State<T> second)
         {
             return second == first;
@@ -55,7 +55,7 @@ namespace NetExtender.Types.Monads
         {
             return !(first == second);
         }
-        
+
         public static Boolean operator ==(State<T> first, State<T> second)
         {
             return first.Equals(second);
@@ -142,7 +142,7 @@ namespace NetExtender.Types.Monads
                 return Next.Unwrap(out T? next) ? next : _value.Internal;
             }
         }
-        
+
         public Maybe<T> Next { get; init; }
 
         public Boolean HasNext
@@ -194,11 +194,11 @@ namespace NetExtender.Types.Monads
                 value = null;
                 return false;
             }
-            
+
             value = Current;
             return true;
         }
-        
+
         public Boolean Unwrap([MaybeNullWhen(false)] out T value)
         {
             if (IsEmpty)
@@ -206,11 +206,11 @@ namespace NetExtender.Types.Monads
                 value = default;
                 return false;
             }
-            
+
             value = Current;
             return true;
         }
-        
+
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue(nameof(Value), Value);
@@ -221,7 +221,7 @@ namespace NetExtender.Types.Monads
                 info.AddValue(nameof(Next), next);
                 return;
             }
-            
+
             info.AddValue(nameof(HasNext), false);
         }
 
@@ -254,7 +254,7 @@ namespace NetExtender.Types.Monads
         {
             return new State<T>(value) { Next = Next };
         }
-        
+
         IState<T> IState<T>.Set(T value)
         {
             return Set(value);
@@ -279,7 +279,7 @@ namespace NetExtender.Types.Monads
         {
             return new State<T>(Current) { Next = value };
         }
-        
+
         IState<T> IState<T>.Save(T value)
         {
             return Save(value);
@@ -289,7 +289,7 @@ namespace NetExtender.Types.Monads
         {
             return new State<T>(Value) { Next = value };
         }
-        
+
         IState<T> IState<T>.Update(T value)
         {
             return Update(value);
@@ -299,7 +299,7 @@ namespace NetExtender.Types.Monads
         {
             return new State<T>(Value) { Next = value };
         }
-        
+
         IState<T> IState<T>.Update(Maybe<T> value)
         {
             return Update(value);
@@ -564,7 +564,7 @@ namespace NetExtender.Types.Monads
         {
             return Equals(other, equality, null);
         }
-        
+
         public Boolean Equals(T? other, IEqualityComparer<T>? comparer)
         {
             return Equals(other, default, comparer);
@@ -585,7 +585,7 @@ namespace NetExtender.Types.Monads
         {
             return Equals(other, equality, null);
         }
-        
+
         public Boolean Equals(State<T> other, IEqualityComparer<T>? comparer)
         {
             return Equals(other, default, comparer);
@@ -615,7 +615,7 @@ namespace NetExtender.Types.Monads
         {
             return other is not null && Equals(other.Get(equality), equality, comparer);
         }
-        
+
         public State<T> Clone()
         {
             return this;

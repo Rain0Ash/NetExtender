@@ -71,7 +71,7 @@ namespace NetExtender.Utilities.Types
                 }
             }
         }
-        
+
         /// <summary>Invokes the dispose for each item in the <paramref name="source"/>.</summary>
         /// <param name="source">The multiple <see cref="IDisposable"/> instances.</param>
         public static ValueTask DisposeAllAsync<T>(this IEnumerable<T?> source) where T : IAsyncDisposable

@@ -12,9 +12,8 @@ namespace NetExtender.FileSystems.Interfaces
     {
     }
 #pragma warning restore CS0618
-    
-    //TODO: Change obsolete messages
-    [Obsolete($"Use {nameof(IFileSystemHandler)} as specified interface {nameof(IPathHandler)}; {nameof(IFileHandler)}; {nameof(IDirectoryHandler)}.")]
+
+    [Obsolete($"Use IFileSystemHandler as specified interface {nameof(IPathHandler)}; {nameof(ILinkHandler)}; {nameof(IFileHandler)}; {nameof(IDirectoryHandler)}; {nameof(IDriveHandler)}; {nameof(IEnvironmentHandler)}.")]
     public interface IFileSystemHandler : IPathHandler, ILinkHandler, IFileHandler, IDirectoryHandler, IDriveHandler, IEnvironmentHandler, IFileSystem
     {
         public new Object SyncRoot { get; }
@@ -26,7 +25,7 @@ namespace NetExtender.FileSystems.Interfaces
         public new Boolean IsReal { get; }
         public new StringComparer Comparer { get; }
         public new Boolean IsCaseSensitive { get; }
-        
+
         #region FileSystem
 
         public new IFileSystemInfo CreateSymbolicLink(String path, String target);
@@ -53,6 +52,8 @@ namespace NetExtender.FileSystems.Interfaces
 
         public new FileAttributes GetAttributes(String path);
         public new void SetAttributes(String path, FileAttributes attributes);
+        public new UnixFileMode GetUnixFileMode(String path);
+        public new void SetUnixFileMode(String path, UnixFileMode mode);
         public new FileStream Create(String path);
         public new void Move(String source, String destination, Boolean overwrite);
         public new void Copy(String source, String destination);

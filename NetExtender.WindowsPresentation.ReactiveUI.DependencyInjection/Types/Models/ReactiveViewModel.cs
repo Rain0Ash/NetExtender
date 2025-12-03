@@ -10,20 +10,20 @@ namespace NetExtender.WindowsPresentation.ReactiveUI
     {
         public TWindow Window { get; } = WindowStorageUtilities<TWindow>.Require();
     }
-    
+
     public abstract class TransientReactiveViewModel : ReactiveViewModel, ITransientReactiveViewModel
     {
     }
-    
+
     public abstract class ScopedReactiveViewModel<TWindow> : ScopedReactiveViewModel where TWindow : Window
     {
         public TWindow Window { get; } = WindowStorageUtilities<TWindow>.Require();
     }
-    
+
     public abstract class ScopedReactiveViewModel : ReactiveViewModel, IScopedReactiveViewModel
     {
     }
-    
+
     public abstract class SingletonReactiveViewModel<TWindow> : SingletonReactiveViewModel where TWindow : Window
     {
         public TWindow Window { get; } = WindowStorageUtilities<TWindow>.Require();

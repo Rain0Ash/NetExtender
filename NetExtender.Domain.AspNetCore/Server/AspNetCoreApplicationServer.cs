@@ -34,7 +34,7 @@ namespace NetExtender.Domains.AspNetCore.Server
                     throw new NotSupportedException();
             }
         }
-        
+
         public abstract T Context { get; }
         protected Task? Server { get; set; }
         protected CancellationTokenSource? Source { get; set; }
@@ -53,7 +53,7 @@ namespace NetExtender.Domains.AspNetCore.Server
             {
                 throw new InvalidOperationException();
             }
-            
+
             if (IsStarted)
             {
                 return;
@@ -116,7 +116,7 @@ namespace NetExtender.Domains.AspNetCore.Server
             return context.RunAsync(token);
         }
     }
-    
+
     public class AspNetCoreApplicationWebServer<T> : AspNetCoreApplicationServerBase<T>, IAspNetCoreApplicationServer<T> where T : class, IWebHost
     {
         public sealed override T Context { get; }

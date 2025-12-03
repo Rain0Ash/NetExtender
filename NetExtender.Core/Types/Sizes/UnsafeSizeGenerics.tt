@@ -35,7 +35,7 @@ namespace NetExtender.Types.Sizes
             }
         }
     }
-    
+
     void UnsafeSizeImplementation(String size)
     {
         WriteLine("\t[Serializable]");
@@ -471,7 +471,7 @@ namespace NetExtender.Types.Sizes
                 current += step;
             }
         }
-        
+
         ForEach(GenerateNumbers(4096).Select(number => number.ToString()), UnsafeSizeImplementation);
     }
 #>

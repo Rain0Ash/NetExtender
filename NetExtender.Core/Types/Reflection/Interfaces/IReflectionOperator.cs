@@ -27,7 +27,7 @@ namespace NetExtender.Types.Reflection.Interfaces
     public interface IUnaryReflectionOperator : IReflectionOperator
     {
         public UnaryOperator Operator { get; }
-        
+
         public Object? Invoke(Object? value);
     }
 

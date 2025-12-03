@@ -25,14 +25,14 @@ namespace NetExtender.Utilities.Types
         {
             public IServiceCollection Services { get; }
         }
-        
+
         [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
         private sealed class ServiceProvider : ICustomServiceProvider
         {
             private readonly ILazy<IServiceProvider> _provider;
-            
+
             public event ServiceProviderChangedEventHandler? Changed;
-            
+
             private Maybe<IServiceProvider> Provider
             {
                 get
@@ -40,7 +40,7 @@ namespace NetExtender.Utilities.Types
                     return _provider.IsValueCreated ? new Maybe<IServiceProvider>(_provider.Value) : default;
                 }
             }
-            
+
             IServiceCollection ICustomServiceProvider.Services
             {
                 get
@@ -48,7 +48,7 @@ namespace NetExtender.Utilities.Types
                     return (IServiceCollection) _provider.Value;
                 }
             }
-            
+
             IReadOnlyCollection<Assembly>? IAssemblyServiceProvider.Assemblies
             {
                 get
@@ -56,7 +56,7 @@ namespace NetExtender.Utilities.Types
                     return Storage.TryGetValue(this, out ConcurrentHashSet<Assembly>? result) ? result : null;
                 }
             }
-            
+
             public IServiceProvider Value
             {
                 get
@@ -64,7 +64,7 @@ namespace NetExtender.Utilities.Types
                     return _provider.Value;
                 }
             }
-            
+
             public Boolean IsValueCreated
             {
                 get
@@ -72,7 +72,7 @@ namespace NetExtender.Utilities.Types
                     return _provider.IsValueCreated;
                 }
             }
-            
+
             public Int32 Count
             {
                 get
@@ -80,7 +80,7 @@ namespace NetExtender.Utilities.Types
                     return ((IServiceCollection) _provider.Value).Count;
                 }
             }
-            
+
             public Boolean IsStable
             {
                 get
@@ -88,7 +88,7 @@ namespace NetExtender.Utilities.Types
                     return ((IChangeableServiceProvider?) Provider.Unwrap())?.IsStable ?? true;
                 }
             }
-            
+
             private volatile Boolean _final;
             public Boolean IsFinal
             {
@@ -97,7 +97,7 @@ namespace NetExtender.Utilities.Types
                     return ((IChangeableServiceProvider?) Provider.Unwrap())?.IsFinal ?? _final;
                 }
             }
-            
+
             public Boolean IsScan
             {
                 get
@@ -105,13 +105,13 @@ namespace NetExtender.Utilities.Types
                     return true;
                 }
             }
-            
+
             public ServiceProvider()
             {
                 IServiceProvider Factory()
                 {
                     IObservableServiceProvider provider = (IObservableServiceProvider) new DynamicServiceProvider { IsStable = true }.Scan();
-                    
+
                     if (_final)
                     {
                         provider.Final();
@@ -121,42 +121,42 @@ namespace NetExtender.Utilities.Types
                     provider.Changed += OnChanged;
                     return provider;
                 }
-                
+
                 _provider = new LazyWrapper<IServiceProvider>(Factory, LazyThreadSafetyMode.ExecutionAndPublication);
             }
-            
+
             private void OnChanged(Object? sender, ServiceProviderEventArgs args)
             {
                 Changed?.Invoke(this, args);
             }
-            
+
             public Object? GetService(Type service)
             {
                 return _provider.Value.GetService(service);
             }
-            
+
             IServiceProvider? IChangeableServiceProvider.Rebuild()
             {
                 return (Provider.Unwrap() as IChangeableServiceProvider)?.Rebuild();
             }
-            
+
             void IChangeableServiceProvider.Final()
             {
                 _final = true;
                 (Provider.Unwrap() as IChangeableServiceProvider)?.Final();
             }
-            
+
             public IEnumerator<ServiceDescriptor> GetEnumerator()
             {
                 return ((IEnumerable<ServiceDescriptor>) ((IServiceCollection) _provider.Value).ToArray()).GetEnumerator();
             }
-            
+
             IEnumerator IEnumerable.GetEnumerator()
             {
                 return GetEnumerator();
             }
         }
-        
+
         private sealed class ServiceProviderWrapper : DynamicServiceProviderWrapper, ICustomServiceProvider
         {
             IServiceCollection ICustomServiceProvider.Services
@@ -166,7 +166,7 @@ namespace NetExtender.Utilities.Types
                     return Collection;
                 }
             }
-            
+
             IReadOnlyCollection<Assembly>? IAssemblyServiceProvider.Assemblies
             {
                 get
@@ -174,7 +174,7 @@ namespace NetExtender.Utilities.Types
                     return Storage.TryGetValue(this, out ConcurrentHashSet<Assembly>? result) ? result : null;
                 }
             }
-            
+
             IServiceProvider ILazy<IServiceProvider>.Value
             {
                 get
@@ -182,7 +182,7 @@ namespace NetExtender.Utilities.Types
                     return Provider;
                 }
             }
-            
+
             public Boolean IsValueCreated
             {
                 get
@@ -190,7 +190,7 @@ namespace NetExtender.Utilities.Types
                     return true;
                 }
             }
-            
+
             public Boolean IsScan
             {
                 get
@@ -198,12 +198,12 @@ namespace NetExtender.Utilities.Types
                     return (Provider as IAssemblyServiceProvider)?.IsScan ?? true;
                 }
             }
-            
+
             public ServiceProviderWrapper(IServiceProvider provider)
                 : base(provider)
             {
             }
-            
+
             public ServiceProviderWrapper(IServiceProvider provider, IServiceCollection? collection)
                 : base(provider, collection)
             {

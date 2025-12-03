@@ -38,7 +38,7 @@ namespace NetExtender.Types.Monads
                 return new NotifyState<T?>(default(T));
             }
         }
-        
+
         protected internal override State<T> Internal
         {
             get
@@ -68,7 +68,7 @@ namespace NetExtender.Types.Monads
                 }
 
                 base.Internal = value;
-                
+
                 if (@internal)
                 {
                     OnPropertyChanged(nameof(Value));
@@ -127,7 +127,7 @@ namespace NetExtender.Types.Monads
             return Clone();
         }
     }
-    
+
     [Serializable]
     [JsonConverter(typeof(MutableStateJsonConverter<>))]
     [System.Text.Json.Serialization.JsonConverter(typeof(NetExtender.Serialization.Json.Monads.MutableStateJsonConverter<>))]
@@ -138,7 +138,7 @@ namespace NetExtender.Types.Monads
         {
             return value is not null ? value.Current : default;
         }
-        
+
         public static implicit operator State<T>(MutableState<T>? value)
         {
             return value?.Internal ?? default;
@@ -153,7 +153,7 @@ namespace NetExtender.Types.Monads
         {
             return new MutableState<T>(value);
         }
-        
+
         public static Boolean operator ==(T? first, MutableState<T>? second)
         {
             return second == first;
@@ -173,7 +173,7 @@ namespace NetExtender.Types.Monads
         {
             return !(first == second);
         }
-        
+
         public static Boolean operator ==(State<T> first, MutableState<T>? second)
         {
             return second == first;
@@ -193,7 +193,7 @@ namespace NetExtender.Types.Monads
         {
             return !(first == second);
         }
-        
+
         public static Boolean operator ==(MutableState<T>? first, MutableState<T>? second)
         {
             return ReferenceEquals(first, second) || first is not null && first.Equals(second);
@@ -311,10 +311,10 @@ namespace NetExtender.Types.Monads
                 return new MutableState<T?>(default(T));
             }
         }
-        
+
         public event PropertyChangingEventHandler? PropertyChanging;
         public event PropertyChangedEventHandler? PropertyChanged;
-        
+
         public Guid Id { get; } = Guid.NewGuid();
 
         private State<T> _internal;
@@ -421,11 +421,11 @@ namespace NetExtender.Types.Monads
                 value = null;
                 return false;
             }
-            
+
             value = Current;
             return true;
         }
-        
+
         public Boolean Unwrap([MaybeNullWhen(false)] out T value)
         {
             if (IsEmpty)
@@ -433,11 +433,11 @@ namespace NetExtender.Types.Monads
                 value = default;
                 return false;
             }
-            
+
             value = Current;
             return true;
         }
-        
+
         public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue(nameof(Value), _internal.Value);
@@ -448,7 +448,7 @@ namespace NetExtender.Types.Monads
                 info.AddValue(nameof(Next), next);
                 return;
             }
-            
+
             info.AddValue(nameof(HasNext), false);
         }
 
@@ -492,7 +492,7 @@ namespace NetExtender.Types.Monads
             Set(value);
             return this;
         }
-        
+
         public virtual void Save()
         {
             Internal = _internal.Save();
@@ -553,7 +553,7 @@ namespace NetExtender.Types.Monads
             Difference();
             return this;
         }
-        
+
         public virtual void Difference(IEqualityComparer<T>? comparer)
         {
             if (_internal.Difference(comparer, out State<T> result) is false)
@@ -603,7 +603,7 @@ namespace NetExtender.Types.Monads
             Difference(value);
             return this;
         }
-        
+
         public virtual void Difference(Maybe<T> value, IEqualityComparer<T>? comparer)
         {
             if (_internal.Difference(value, comparer, out State<T> result) is not null)
@@ -664,7 +664,7 @@ namespace NetExtender.Types.Monads
         {
             return _internal.CompareTo(other, equality);
         }
-        
+
         public Int32 CompareTo(T? other, IComparer<T>? comparer)
         {
             return _internal.CompareTo(other, comparer);
@@ -846,7 +846,7 @@ namespace NetExtender.Types.Monads
         {
             return _internal.Equals(other, equality, comparer);
         }
-        
+
         public virtual MutableState<T> Clone()
         {
             return new MutableState<T>(_internal);
@@ -921,7 +921,7 @@ namespace NetExtender.Types.Monads
         {
             return _internal.ToString(format, provider);
         }
-        
+
         public String? ToString(StateEquality equality)
         {
             return _internal.ToString(equality);

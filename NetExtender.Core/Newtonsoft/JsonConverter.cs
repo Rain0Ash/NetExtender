@@ -94,7 +94,7 @@ namespace NetExtender.Newtonsoft
             {
                 throw new ArgumentNullException(nameof(serializer));
             }
-            
+
             SerializerOptions options = serializer;
             Write(writer, value, ref options);
         }
@@ -115,7 +115,7 @@ namespace NetExtender.Newtonsoft
             {
                 return value.Serializer;
             }
-            
+
             public static Boolean operator ==(SerializerOptions first, SerializerOptions second)
             {
                 return first._options == second._options;
@@ -127,7 +127,7 @@ namespace NetExtender.Newtonsoft
             }
 
             private NewtonsoftJsonConverter.SerializerOptions _options;
-            
+
             public JsonSerializer Serializer
             {
                 get
@@ -337,7 +337,7 @@ namespace NetExtender.Newtonsoft
             {
                 return value.Serializer;
             }
-            
+
             public static Boolean operator ==(SerializerOptions first, SerializerOptions second)
             {
                 return first.Equals(second);
@@ -347,7 +347,7 @@ namespace NetExtender.Newtonsoft
             {
                 return !(first == second);
             }
-            
+
             private JsonSerializer? _serializer;
             public JsonSerializer Serializer
             {
@@ -395,7 +395,7 @@ namespace NetExtender.Newtonsoft
                 {
                     return false;
                 }
-                
+
                 Serializer.Serialize(writer, value);
                 return true;
             }
@@ -481,7 +481,7 @@ namespace NetExtender.Newtonsoft
 namespace NetExtender.Serialization.Json
 {
     using System.Text.Json;
-    
+
     public abstract class TextJsonConverter<T> : System.Text.Json.Serialization.JsonConverter<T>
     {
         public override Boolean HandleNull
@@ -562,6 +562,11 @@ namespace NetExtender.Serialization.Json
 
         protected internal virtual Boolean WriteAsPropertyName(in Utf8JsonWriter writer, T value, ref SerializerOptions options)
         {
+            if (value is null)
+            {
+                return false;
+            }
+
             base.WriteAsPropertyName(writer, value, options);
             return true;
         }
@@ -582,7 +587,7 @@ namespace NetExtender.Serialization.Json
             {
                 return value.Options;
             }
-            
+
             public static Boolean operator ==(SerializerOptions first, SerializerOptions second)
             {
                 return first.Equals(second);
@@ -592,7 +597,7 @@ namespace NetExtender.Serialization.Json
             {
                 return !(first == second);
             }
-            
+
             private JsonSerializerOptions? _options;
             public JsonSerializerOptions Options
             {

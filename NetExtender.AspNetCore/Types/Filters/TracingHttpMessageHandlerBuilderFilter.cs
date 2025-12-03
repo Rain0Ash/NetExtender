@@ -3,6 +3,7 @@ using System.Net.Http;
 using Microsoft.Extensions.Http;
 using Microsoft.Extensions.Logging;
 using NetExtender.Utilities.Network;
+using NetExtender.Utilities.Types;
 
 namespace NetExtender.AspNetCore.Filters
 {
@@ -53,8 +54,8 @@ namespace NetExtender.AspNetCore.Filters
 
                 DelegatingHandler? handler = Configurator?.Invoke(Provider, builder) switch
                 {
-                    null => new HttpTracingHandler(Logger.CreateLogger(HttpTracingHandler.LoggerCategory(builder.Name)), null, false),
-                    { IsEnabled: true } configuration => new HttpTracingHandler(Logger.CreateLogger(configuration.Category ?? HttpTracingHandler.LoggerCategory(builder.Name)), configuration.Validator, configuration.Buffering),
+                    null => new HttpTracingHandler(Logger.CreateLogger(HttpTracingHandler.LoggerCategory(builder.Name) ?? StringUtilities.NullString), null, false),
+                    { IsEnabled: true } configuration => new HttpTracingHandler(Logger.CreateLogger(configuration.Category ?? HttpTracingHandler.LoggerCategory(builder.Name) ?? StringUtilities.NullString), configuration.Validator, configuration.Buffering),
                     _ => null
                 };
 

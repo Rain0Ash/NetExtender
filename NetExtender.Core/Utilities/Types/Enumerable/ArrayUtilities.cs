@@ -24,7 +24,7 @@ namespace NetExtender.Utilities.Types
 
             return Unsafe.As<T[], TResult[]>(ref array);
         }
-        
+
         /// <summary>
         /// Adds the provided item to the end of the array.
         /// </summary>
@@ -616,7 +616,7 @@ namespace NetExtender.Utilities.Types
 
             return Array.FindAll(array, match.Invoke);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T[] NotNull<T>(this T?[] array) where T : class
         {
@@ -624,10 +624,10 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(array));
             }
-            
+
             return Array.FindAll(array, static item => item is not null)!;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T[] NotDefault<T>(this T?[] array)
         {
@@ -635,11 +635,11 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(array));
             }
-            
+
             // ReSharper disable once InvokeAsExtensionMethod
             return Array.FindAll(array, static item => GenericUtilities.IsNotDefault(item))!;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static T[] NotDefault<T>(this T?[] array) where T : struct
         {
@@ -647,15 +647,15 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(array));
             }
-            
+
             T?[] all = Array.FindAll(array, static item => item.HasValue);
             T[] result = new T[all.Length];
-            
+
             for (Int32 i = 0; i < all.Length; i++)
             {
                 result[i] = all[i]!.Value;
             }
-            
+
             return result;
         }
 
@@ -1019,7 +1019,7 @@ namespace NetExtender.Utilities.Types
                 return BitUtilities.BitwiseEquals(pf, ps, first.Length);
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ReadOnlyPaginationObserver<T> ReadOnlyPaginationObserver<T>(this T[] array, Int32 size)
         {
@@ -1027,10 +1027,10 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(array));
             }
-            
+
             return new ReadOnlyPaginationObserver<T>(array, size);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static PaginationObserver<T> PaginationObserver<T>(this T[] array, Int32 size)
         {
@@ -1038,7 +1038,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(array));
             }
-            
+
             return new PaginationObserver<T>(array, size);
         }
     }

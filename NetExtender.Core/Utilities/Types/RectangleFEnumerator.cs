@@ -17,7 +17,7 @@ namespace NetExtender.Utilities.Types
     public unsafe struct RectangleFEnumerator : IEnumerable<PointF>
     {
         private Point _iterator = Point.Empty;
-        
+
         private PointF _current;
         public readonly PointF Current
         {
@@ -39,7 +39,7 @@ namespace NetExtender.Utilities.Types
                 _rectangle = value;
             }
         }
-        
+
         private readonly SizeF _step;
         public readonly SizeF Step
         {
@@ -154,7 +154,7 @@ namespace NetExtender.Utilities.Types
             enumerator.Reset();
             return enumerator;
         }
-        
+
         readonly IEnumerator<PointF> IEnumerable<PointF>.GetEnumerator()
         {
             // ReSharper disable once ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator
@@ -178,7 +178,7 @@ namespace NetExtender.Utilities.Types
                 enumerator._current.X = x;
                 return true;
             }
-            
+
             Single y = enumerator._rectangle.Top + enumerator._step.Height * ++enumerator._iterator.Y;
             if (y <= enumerator._rectangle.Bottom)
             {
@@ -236,7 +236,7 @@ namespace NetExtender.Utilities.Types
                 enumerator._current.X = x;
                 return true;
             }
-            
+
             Single y = enumerator._rectangle.Top + enumerator._step.Height * ++enumerator._iterator.Y;
             if (y < enumerator._rectangle.Bottom || enumerator._current.Y < enumerator._rectangle.Bottom)
             {
@@ -258,7 +258,7 @@ namespace NetExtender.Utilities.Types
                 enumerator._current.X = x;
                 return true;
             }
-            
+
             Single y = enumerator._rectangle.Top + enumerator._step.Height * ++enumerator._iterator.Y;
             if (y < enumerator._rectangle.Bottom)
             {
@@ -280,7 +280,7 @@ namespace NetExtender.Utilities.Types
                 enumerator._current.Y = y;
                 return true;
             }
-            
+
             Single x = enumerator._rectangle.Left + enumerator._step.Width * ++enumerator._iterator.X;
             if (x <= enumerator._rectangle.Right)
             {
@@ -302,7 +302,7 @@ namespace NetExtender.Utilities.Types
                 enumerator._current.Y = y;
                 return true;
             }
-            
+
             if (y >= enumerator._rectangle.Bottom && enumerator._current.Y < enumerator._rectangle.Bottom)
             {
                 enumerator._current.Y = enumerator._rectangle.Bottom;
@@ -317,7 +317,7 @@ namespace NetExtender.Utilities.Types
                 enumerator._iterator.Y = 1;
                 return true;
             }
-            
+
             if (x >= enumerator._rectangle.Right && enumerator._current.X < enumerator._rectangle.Right)
             {
                 enumerator._current.Y = enumerator._rectangle.Top;
@@ -338,7 +338,7 @@ namespace NetExtender.Utilities.Types
                 enumerator._current.Y = y;
                 return true;
             }
-            
+
             Single x = enumerator._rectangle.Left + enumerator._step.Width * ++enumerator._iterator.X;
             if (x < enumerator._rectangle.Right || enumerator._current.X < enumerator._rectangle.Right)
             {
@@ -360,7 +360,7 @@ namespace NetExtender.Utilities.Types
                 enumerator._current.Y = y;
                 return true;
             }
-            
+
             Single x = enumerator._rectangle.Left + enumerator._step.Width * ++enumerator._iterator.X;
             if (x < enumerator._rectangle.Right)
             {

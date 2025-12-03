@@ -13,12 +13,12 @@ namespace NetExtender.DependencyInjection.Attributes
         public Type? Interface { get; }
         public Object? Key { get; }
         public ServiceLifetime Lifetime { get; }
-        
+
         public ServiceDependencyAttribute(ServiceLifetime lifetime)
             : this((Object?) null, lifetime)
         {
         }
-        
+
         public ServiceDependencyAttribute(Object? key, ServiceLifetime lifetime)
         {
             Key = key;
@@ -36,12 +36,12 @@ namespace NetExtender.DependencyInjection.Attributes
             {
                 throw new ArgumentNullException(nameof(@interface));
             }
-            
+
             if (!@interface.IsInterface)
             {
                 throw new TypeNotSupportedException(@interface, $"Type '{@interface.Name}' must be interface for {nameof(DependencyInjection)} registration.");
             }
-            
+
             Interface = @interface;
             Key = key;
             Lifetime = lifetime;

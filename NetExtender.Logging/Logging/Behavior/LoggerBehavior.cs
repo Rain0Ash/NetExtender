@@ -45,7 +45,7 @@ namespace NetExtender.Logging.Behavior
             {
                 return false;
             }
-            
+
             String message = value.GetString(escape, provider ?? CultureInfo.InvariantCulture) ?? StringUtilities.NullString;
             return Log(message, level, options, escape, offset, provider);
         }
@@ -56,7 +56,7 @@ namespace NetExtender.Logging.Behavior
             {
                 return false;
             }
-            
+
             String message = value.GetString(escape, format, provider ?? CultureInfo.InvariantCulture) ?? StringUtilities.NullString;
             return Log(message, level, options, escape, offset, provider);
         }

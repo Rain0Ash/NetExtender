@@ -21,7 +21,7 @@ namespace NetExtender.Localization.Behavior.Settings
             instance.Subscribe();
             return instance;
         }
-        
+
         private static Lazy<T> Internal { get; } = new Lazy<T>(Create, true);
 
         public static T Instance
@@ -31,7 +31,7 @@ namespace NetExtender.Localization.Behavior.Settings
                 return Internal.Value;
             }
         }
-        
+
         protected SettingsLocalizationSynchronizedBehavior()
         {
         }
@@ -76,7 +76,7 @@ namespace NetExtender.Localization.Behavior.Settings
         {
         }
     }
-    
+
     public abstract class SettingsLocalizationSynchronizedBehavior : SettingsSynchronizedBehavior
     {
         public abstract ILocalizationConfigInfo Localization { get; }

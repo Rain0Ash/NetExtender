@@ -20,7 +20,7 @@ namespace NetExtender.Utilities.Types
         private static Type TransientType { get; } = typeof(ITransient);
         private static Type ScopedType { get; } = typeof(IScoped);
         private static Type SingletonType { get; } = typeof(ISingleton);
-        
+
         private static Boolean GetServiceType(this Type type, out ServiceLifetime result)
         {
             if (type is null)
@@ -55,30 +55,30 @@ namespace NetExtender.Utilities.Types
             result = default;
             return false;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void InjectTo(this IServiceCollection source)
         {
             InjectTo(source, ServiceAmbiguousHandler.New);
         }
-        
+
         public static void InjectTo(this IServiceCollection source, ServiceAmbiguousHandler handler)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             ServiceProviderUtilities.ICustomServiceProvider provider = (ServiceProviderUtilities.ICustomServiceProvider) ServiceProviderUtilities.Provider;
             InjectTo(source, provider.Services, handler);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void InjectFrom(this IServiceCollection destination)
         {
             InjectFrom(destination, ServiceAmbiguousHandler.New);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void InjectFrom(this IServiceCollection destination, ServiceAmbiguousHandler handler)
         {
@@ -90,13 +90,13 @@ namespace NetExtender.Utilities.Types
             ServiceProviderUtilities.ICustomServiceProvider provider = (ServiceProviderUtilities.ICustomServiceProvider) ServiceProviderUtilities.Provider;
             InjectFrom(destination, provider.Services, handler);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IServiceCollection InjectTo(this IServiceCollection source, IServiceCollection destination)
         {
             return InjectTo(source, destination, ServiceAmbiguousHandler.New);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static IServiceCollection InjectTo(this IServiceCollection source, IServiceCollection destination, ServiceAmbiguousHandler handler)
         {
@@ -104,22 +104,22 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (destination is null)
             {
                 throw new ArgumentNullException(nameof(destination));
             }
-            
+
             ConcurrentHashSet<ServiceDescriptor> set = new ConcurrentHashSet<ServiceDescriptor>(source);
             return Verify(destination, set, handler);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IServiceCollection InjectFrom(this IServiceCollection destination, IServiceCollection source)
         {
             return InjectFrom(destination, source, ServiceAmbiguousHandler.New);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static IServiceCollection InjectFrom(this IServiceCollection destination, IServiceCollection source, ServiceAmbiguousHandler handler)
         {
@@ -127,12 +127,12 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(destination));
             }
-            
+
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             ConcurrentHashSet<ServiceDescriptor> set = new ConcurrentHashSet<ServiceDescriptor>(source);
             return Verify(destination, set, handler);
         }
@@ -148,7 +148,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             return type.GetServiceType(out ServiceLifetime lifetime) ? services.Add(type, lifetime) : services;
         }
 
@@ -157,17 +157,17 @@ namespace NetExtender.Utilities.Types
         {
             return Register(services, (IEnumerable<Type?>?) types);
         }
-        
+
         public static IServiceCollection Register(this IServiceCollection services, IEnumerable<Type?>? types)
         {
             if (services is null)
             {
                 throw new ArgumentNullException(nameof(services));
             }
-            
+
             return types is not null ? types.WhereNotNull().Aggregate(services, (current, type) => current.Register(type)) : services;
         }
-        
+
         public static IServiceCollection Register(this IServiceCollection services, Assembly assembly)
         {
             if (services is null)
@@ -182,13 +182,13 @@ namespace NetExtender.Utilities.Types
 
             return assembly.DefinedTypes.Aggregate(services, (current, type) => current.Register(type));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IServiceCollection Register(this IServiceCollection services, params Assembly?[]? assemblies)
         {
             return Register(services, (IEnumerable<Assembly?>?) assemblies);
         }
-        
+
         public static IServiceCollection Register(this IServiceCollection services, IEnumerable<Assembly?>? assemblies)
         {
             if (services is null)
@@ -198,7 +198,7 @@ namespace NetExtender.Utilities.Types
 
             return assemblies is not null ? assemblies.WhereNotNull().Aggregate(services, (current, assembly) => current.Register(assembly)) : services;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ServiceLifetime Find<TService>(this IServiceCollection services, ServiceLifetime alternate)
         {
@@ -234,7 +234,7 @@ namespace NetExtender.Utilities.Types
                 result = descriptor.Lifetime;
                 return true;
             }
-            
+
             result = default;
             return false;
         }

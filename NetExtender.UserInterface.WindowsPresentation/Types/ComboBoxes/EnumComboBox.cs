@@ -30,7 +30,7 @@ namespace NetExtender.UserInterface.WindowsPresentation
                 {
                     throw new ArgumentNullException(nameof(type));
                 }
-                
+
                 if (type.IsEnum)
                 {
                     type = typeof(Enum<>).MakeGenericType(type);
@@ -51,7 +51,7 @@ namespace NetExtender.UserInterface.WindowsPresentation
                 {
                     throw new ArgumentNullException(nameof(type));
                 }
-                
+
                 const BindingFlags binding = BindingFlags.FlattenHierarchy | BindingFlags.Public | BindingFlags.Static;
                 MethodInfo? method = type.GetMethod(nameof(Enum<Any.Value>.Get), 0, binding, Type.EmptyTypes);
 
@@ -69,10 +69,10 @@ namespace NetExtender.UserInterface.WindowsPresentation
                 {
                     throw new ArgumentNullException(nameof(type));
                 }
-                
+
                 const BindingFlags binding = BindingFlags.FlattenHierarchy | BindingFlags.NonPublic | BindingFlags.Instance;
                 MethodInfo? method = typeof(EnumComboBox).GetMethod(nameof(SetItemsSource), binding, new[] { typeof(Object) })?.MakeGenericMethod(type);
-                
+
                 if (method is null)
                 {
                     throw new InvalidOperationException($"Method '{nameof(SetItemsSource)}' not found for type '{type}'.");
@@ -81,9 +81,9 @@ namespace NetExtender.UserInterface.WindowsPresentation
                 return DelegateUtilities.CreateDelegate<SetItemsSourceDelegate>(method);
             }
         }
-        
+
         private static ConcurrentDictionary<Type, Methods> Storage { get; } = new ConcurrentDictionary<Type, Methods>();
-        
+
         private readonly Type _type = typeof(Enum<Any.Value>);
         public Type Type
         {
@@ -113,16 +113,16 @@ namespace NetExtender.UserInterface.WindowsPresentation
             HorizontalContentAlignment = HorizontalAlignment.Center;
             VerticalContentAlignment = VerticalAlignment.Center;
         }
-        
+
         public EnumComboBox(Type type)
         {
             Type = type ?? throw new ArgumentNullException(nameof(type));
-            
+
             Initialized += OnInitialized;
             HorizontalContentAlignment = HorizontalAlignment.Center;
             VerticalContentAlignment = VerticalAlignment.Center;
         }
-        
+
         protected virtual void OnInitialized(Object? sender, EventArgs args)
         {
             SetItemsSource();
@@ -144,11 +144,11 @@ namespace NetExtender.UserInterface.WindowsPresentation
             {
                 return;
             }
-            
+
             SetItemsSource(source);
         }
     }
-    
+
     public class EnumComboBox<T> : EnumComboBox where T : unmanaged, Enum
     {
         public new Type Type
@@ -167,19 +167,19 @@ namespace NetExtender.UserInterface.WindowsPresentation
             : base(typeof(Enum<T>))
         {
         }
-        
+
         protected EnumComboBox(Type type)
             : base(type)
         {
         }
-        
+
 #pragma warning disable CS0693
         protected override View<TEnum> Convert<TEnum>(TEnum value)
         {
             return value is T @enum ? Unsafe.As<View<TEnum>>(Convert(@enum)) : base.Convert(value);
         }
 #pragma warning restore CS0693
-        
+
         protected virtual View<T> Convert(T value)
         {
             return value;
@@ -201,7 +201,7 @@ namespace NetExtender.UserInterface.WindowsPresentation
             {
                 throw new ArgumentNullException(nameof(nullable));
             }
-            
+
             SetItemsSource(nullable, Enum<T>.Get());
         }
 
@@ -222,24 +222,24 @@ namespace NetExtender.UserInterface.WindowsPresentation
             : base(typeof(TEnum))
         {
         }
-        
+
         protected EnumComboBox(Type type)
             : base(type)
         {
         }
-        
+
 #pragma warning disable CS0693
         protected override View<T> Convert<T>(T value)
         {
             return value is TEnum @enum ? Unsafe.As<View<T>>(Convert(@enum)) : base.Convert(value);
         }
 #pragma warning restore CS0693
-        
+
         protected virtual View<TEnum> Convert(TEnum value)
         {
             return value;
         }
-        
+
         public override void SetItemsSource()
         {
             SetItemsSource(Enum<T>.Get<TEnum>());
@@ -256,7 +256,7 @@ namespace NetExtender.UserInterface.WindowsPresentation
             {
                 throw new ArgumentNullException(nameof(nullable));
             }
-            
+
             SetItemsSource(nullable.As<TEnum>());
         }
 
@@ -266,7 +266,7 @@ namespace NetExtender.UserInterface.WindowsPresentation
             {
                 throw new ArgumentNullException(nameof(nullable));
             }
-            
+
             SetItemsSource(nullable, Enum<T>.Get<TEnum>());
         }
 

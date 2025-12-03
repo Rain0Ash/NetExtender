@@ -10,7 +10,7 @@ namespace NetExtender.Types.HotKeys.Comparer.Interfaces
     public interface IWindowsHotKeyActionComparer<in T> : IHotKeyActionComparer<T, Char, HotKeyModifierKeys> where T : struct, IWindowsHotKeyAction<T>
     {
     }
-    
+
     public interface IWindowsHotKeyActionComparer<in T, TId> : IWindowsHotKeyActionComparer<T>, IHotKeyActionComparer<T, TId, Char, HotKeyModifierKeys> where T : struct, IWindowsHotKeyAction<T, TId> where TId : unmanaged, IComparable<TId>, IConvertible
     {
     }

@@ -20,15 +20,15 @@ namespace NetExtender.Utilities.Types
             {
                 return value.Method;
             }
-            
+
             public static implicit operator Object?[]?(Info value)
             {
                 return value.Arguments;
             }
-            
+
             public MethodInfo? Method { get; }
             public Object?[]? Arguments { get; }
-            
+
             public Info(MethodInfo? method, Object?[]? arguments)
             {
                 Method = method;

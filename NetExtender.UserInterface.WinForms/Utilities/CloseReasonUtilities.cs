@@ -24,7 +24,7 @@ namespace NetExtender.Utilities.UserInterface
                 _ => throw new EnumUndefinedOrNotSupportedException<InterfaceCloseReason>(value, nameof(value), null)
             };
         }
-        
+
         public static InterfaceCloseReason ToInterfaceCloseReason(this CloseReason value)
         {
             return value switch

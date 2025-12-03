@@ -30,10 +30,10 @@ namespace NetExtender.Types.Disposable
             {
                 collection.Add(item);
             }
-            
+
             return collection;
         }
-        
+
         private ConcurrentDictionary<T, Boolean> Internal { get; }
 
         public Boolean Active { get; set; }
@@ -135,10 +135,10 @@ namespace NetExtender.Types.Disposable
             {
                 collection.Add(item);
             }
-            
+
             return collection;
         }
-        
+
         private ConcurrentDictionary<T, Boolean> Internal { get; }
 
         public Int32 Count

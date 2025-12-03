@@ -6,9 +6,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
+using NetExtender.Types.Exceptions;
 using NetExtender.Types.Nodes;
 using NetExtender.Types.Lists.Interfaces;
 using NetExtender.Utilities.Core;
+using TSR = System.Collections.Generic.LinkedList<NetExtender.Types.Entities.Any.Value>;
 
 namespace NetExtender.Types.Lists
 {
@@ -16,10 +18,12 @@ namespace NetExtender.Types.Lists
     public class LinkedList<T, TNode> : LinkedList<T, TNode, LinkedList<T, TNode>> where TNode : LinkedListNode<T, TNode>
     {
     }
-    
+
     /// <inheritdoc cref="LinkedList{T}"/>
     public class LinkedList<T, TNode, TList> : LinkedContainer<TNode>, ILinkedList<T, TNode, TList>, IReadOnlyLinkedList<T, TNode, TList>, ISerializable, IDeserializationCallback where TNode : LinkedListNode<T, TNode, TList> where TList : LinkedList<T, TNode, TList>
     {
+        private const String Data = nameof(Data);
+
         private static Func<TList?, T, TNode>? factory;
         private static Func<TList?, T, TNode> Factory
         {
@@ -28,7 +32,7 @@ namespace NetExtender.Types.Lists
                 return factory ??= ReflectionUtilities.New<TNode, TList?, T>();
             }
         }
-        
+
         protected TList This
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -37,7 +41,7 @@ namespace NetExtender.Types.Lists
                 return (TList) this;
             }
         }
-        
+
         /// <inheritdoc cref="LinkedList{T}.First"/>
         ILinkedListNode<T>? ILinkedList<T>.First
         {
@@ -46,7 +50,7 @@ namespace NetExtender.Types.Lists
                 return First;
             }
         }
-        
+
         /// <inheritdoc cref="LinkedList{T}.First"/>
         ILinkedListNode<T>? IReadOnlyLinkedList<T>.First
         {
@@ -55,7 +59,7 @@ namespace NetExtender.Types.Lists
                 return First;
             }
         }
-        
+
         /// <inheritdoc cref="LinkedList{T}.First"/>
         ILinkedListNode? ILinkedList.First
         {
@@ -64,7 +68,7 @@ namespace NetExtender.Types.Lists
                 return First;
             }
         }
-        
+
         /// <inheritdoc cref="LinkedList{T}.First"/>
         ILinkedListNode? IReadOnlyLinkedList.First
         {
@@ -73,7 +77,7 @@ namespace NetExtender.Types.Lists
                 return First;
             }
         }
-        
+
         /// <inheritdoc cref="LinkedList{T}.Last"/>
         ILinkedListNode<T>? ILinkedList<T>.Last
         {
@@ -82,7 +86,7 @@ namespace NetExtender.Types.Lists
                 return Last;
             }
         }
-        
+
         /// <inheritdoc cref="LinkedList{T}.Last"/>
         ILinkedListNode<T>? IReadOnlyLinkedList<T>.Last
         {
@@ -91,7 +95,7 @@ namespace NetExtender.Types.Lists
                 return Last;
             }
         }
-        
+
         /// <inheritdoc cref="LinkedList{T}.Last"/>
         ILinkedListNode? ILinkedList.Last
         {
@@ -100,7 +104,7 @@ namespace NetExtender.Types.Lists
                 return Last;
             }
         }
-        
+
         /// <inheritdoc cref="LinkedList{T}.Last"/>
         ILinkedListNode? IReadOnlyLinkedList.Last
         {
@@ -111,7 +115,7 @@ namespace NetExtender.Types.Lists
         }
 
         private SerializationInfo? _serialization;
-        
+
         Boolean ICollection<T>.IsReadOnly
         {
             get
@@ -119,12 +123,12 @@ namespace NetExtender.Types.Lists
                 return false;
             }
         }
-        
+
         /// <inheritdoc cref="LinkedList{T}()"/>
         public LinkedList()
         {
         }
-        
+
         /// <inheritdoc cref="LinkedList{T}(System.Collections.Generic.IEnumerable{T})"/>
         public LinkedList(IEnumerable<T> collection)
         {
@@ -132,20 +136,20 @@ namespace NetExtender.Types.Lists
             {
                 throw new ArgumentNullException(nameof(collection));
             }
-            
+
             foreach (T item in collection)
             {
                 AddLast(item);
             }
         }
-        
+
         // ReSharper disable once UnusedParameter.Local
         /// <inheritdoc cref="LinkedList{T}(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)"/>
         protected LinkedList(SerializationInfo info, StreamingContext context)
         {
             _serialization = info;
         }
-        
+
         /// <inheritdoc cref="LinkedList{T}.GetObjectData(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)"/>
         public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
         {
@@ -153,20 +157,20 @@ namespace NetExtender.Types.Lists
             {
                 throw new ArgumentNullException(nameof(info));
             }
-            
+
             info.AddValue(nameof(Version), Version);
             info.AddValue(nameof(Count), Count);
-            
+
             if (Count <= 0)
             {
                 return;
             }
-            
+
             T[] array = new T[Count];
             CopyTo(array, 0);
             info.AddValue(nameof(Data), array, typeof(T[]));
         }
-        
+
         /// <inheritdoc cref="LinkedList{T}.OnDeserialization(System.Object)"/>
         public virtual void OnDeserialization(Object? sender)
         {
@@ -174,15 +178,15 @@ namespace NetExtender.Types.Lists
             {
                 return;
             }
-            
+
             Head = null;
             Int32 version = _serialization.GetInt32(nameof(Version));
-            
+
             if (_serialization.GetInt32(nameof(Count)) > 0)
             {
                 if (_serialization.GetValue(nameof(Data), typeof(T[])) is not T[] array)
                 {
-                    throw new SerializationException(SR.Serialization_MissingValues);
+                    throw new SerializationMissingValuesException<TSR>();
                 }
 
                 foreach (T item in array)
@@ -190,11 +194,11 @@ namespace NetExtender.Types.Lists
                     AddLast(item);
                 }
             }
-            
+
             Version = version;
             _serialization = null;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected TNode Create(in T value)
         {
@@ -205,33 +209,33 @@ namespace NetExtender.Types.Lists
         {
             return Factory(list, value);
         }
-        
+
         protected override void ValidateNewNode(TNode node)
         {
             if (node is null)
             {
                 throw new ArgumentNullException(nameof(node));
             }
-            
+
             if (node.List is not null)
             {
-                throw new InvalidOperationException(SR.LinkedListNodeIsAttached);
+                throw new LinkedListNodeIsAttachedException<TSR>();
             }
         }
-        
+
         protected override void ValidateNode(TNode node)
         {
             if (node is null)
             {
                 throw new ArgumentNullException(nameof(node));
             }
-            
+
             if (node.List != this)
             {
-                throw new InvalidOperationException(SR.ExternalLinkedListNode);
+                throw new ExternalLinkedListNodeException<TSR>();
             }
         }
-        
+
         protected override void MakeLink(TNode? node)
         {
             if (node is not null)
@@ -239,31 +243,31 @@ namespace NetExtender.Types.Lists
                 node.List = This;
             }
         }
-        
+
         /// <inheritdoc cref="LinkedList{T}.Contains(T)"/>
         public Boolean Contains(T value)
         {
             return Find(value) is not null;
         }
-        
+
         /// <inheritdoc cref="LinkedList{T}.Find(T)"/>
         public TNode? Find(T value)
         {
             return Find(value, null);
         }
-        
+
         /// <inheritdoc cref="LinkedList{T}.Find(T)"/>
         ILinkedListNode<T>? ILinkedList<T>.Find(T value)
         {
             return Find(value);
         }
-        
+
         /// <inheritdoc cref="LinkedList{T}.Find(T)"/>
         ILinkedListNode<T>? IReadOnlyLinkedList<T>.Find(T value)
         {
             return Find(value);
         }
-        
+
         // ReSharper disable once CognitiveComplexity
         /// <inheritdoc cref="LinkedList{T}.Find(T)"/>
         public virtual TNode? Find(T value, IEqualityComparer<T>? comparer)
@@ -272,48 +276,48 @@ namespace NetExtender.Types.Lists
             {
                 return null;
             }
-            
+
             if (value is not null)
             {
                 comparer ??= EqualityComparer<T>.Default;
                 while (node is not null && !comparer.Equals(node.ValueRef, value))
                 {
                     node = node.Next;
-                    
+
                     if (ReferenceEquals(Head, node))
                     {
                         return null;
                     }
                 }
-                
+
                 return node;
             }
-            
+
             while (node is not null && node.ValueRef is not null)
             {
                 node = node.Next;
-                
+
                 if (ReferenceEquals(Head, node))
                 {
                     return null;
                 }
             }
-            
+
             return node;
         }
-        
+
         /// <inheritdoc cref="LinkedList{T}.Find(T)"/>
         ILinkedListNode<T>? ILinkedList<T>.Find(T value, IEqualityComparer<T>? comparer)
         {
             return Find(value, comparer);
         }
-        
+
         /// <inheritdoc cref="LinkedList{T}.Find(T)"/>
         ILinkedListNode<T>? IReadOnlyLinkedList<T>.Find(T value, IEqualityComparer<T>? comparer)
         {
             return Find(value, comparer);
         }
-        
+
         /// <inheritdoc cref="LinkedList{T}.Find(T)"/>
         public virtual TNode? Find(Predicate<T> predicate)
         {
@@ -330,7 +334,7 @@ namespace NetExtender.Types.Lists
             while (node is not null && !predicate(node.ValueRef))
             {
                 node = node.Next;
-                
+
                 if (ReferenceEquals(Head, node))
                 {
                     return null;
@@ -339,49 +343,49 @@ namespace NetExtender.Types.Lists
 
             return node;
         }
-        
+
         /// <inheritdoc cref="LinkedList{T}.Find(T)"/>
         ILinkedListNode<T>? ILinkedList<T>.Find(Predicate<T> predicate)
         {
             return Find(predicate);
         }
-        
+
         /// <inheritdoc cref="LinkedList{T}.Find(T)"/>
         ILinkedListNode<T>? IReadOnlyLinkedList<T>.Find(Predicate<T> predicate)
         {
             return Find(predicate);
         }
-        
+
         /// <inheritdoc cref="LinkedList{T}.Find(T)"/>
         ILinkedListNode<T>? ILinkedList<T>.Find(Predicate<ILinkedListNode<T>> predicate)
         {
             return Find(predicate);
         }
-        
+
         /// <inheritdoc cref="LinkedList{T}.Find(T)"/>
         ILinkedListNode<T>? IReadOnlyLinkedList<T>.Find(Predicate<ILinkedListNode<T>> predicate)
         {
             return Find(predicate);
         }
-        
+
         /// <inheritdoc cref="LinkedList{T}.FindLast(T)"/>
         public TNode? FindLast(T value)
         {
             return FindLast(value, null);
         }
-        
+
         /// <inheritdoc cref="LinkedList{T}.FindLast(T)"/>
         ILinkedListNode<T>? ILinkedList<T>.FindLast(T value)
         {
             return FindLast(value);
         }
-        
+
         /// <inheritdoc cref="LinkedList{T}.FindLast(T)"/>
         ILinkedListNode<T>? IReadOnlyLinkedList<T>.FindLast(T value)
         {
             return FindLast(value);
         }
-        
+
         // ReSharper disable once CognitiveComplexity
         /// <inheritdoc cref="LinkedList{T}.FindLast(T)"/>
         public virtual TNode? FindLast(T value, IEqualityComparer<T>? comparer)
@@ -390,7 +394,7 @@ namespace NetExtender.Types.Lists
             {
                 return null;
             }
-            
+
             TNode? node = link;
             if (value is not null)
             {
@@ -398,7 +402,7 @@ namespace NetExtender.Types.Lists
                 while (node is not null && !comparer.Equals(node.ValueRef, value))
                 {
                     node = node.Link;
-                    
+
                     if (ReferenceEquals(node, link))
                     {
                         return null;
@@ -407,11 +411,11 @@ namespace NetExtender.Types.Lists
 
                 return node;
             }
-            
+
             while (node is not null && node.ValueRef is not null)
             {
                 node = node.Link;
-                
+
                 if (ReferenceEquals(node, link))
                 {
                     return null;
@@ -420,19 +424,19 @@ namespace NetExtender.Types.Lists
 
             return node;
         }
-        
+
         /// <inheritdoc cref="LinkedList{T}.FindLast(T)"/>
         ILinkedListNode<T>? ILinkedList<T>.FindLast(T value, IEqualityComparer<T>? comparer)
         {
             return FindLast(value, comparer);
         }
-        
+
         /// <inheritdoc cref="LinkedList{T}.FindLast(T)"/>
         ILinkedListNode<T>? IReadOnlyLinkedList<T>.FindLast(T value, IEqualityComparer<T>? comparer)
         {
             return FindLast(value, comparer);
         }
-        
+
         /// <inheritdoc cref="LinkedList{T}.FindLast(T)"/>
         public virtual TNode? FindLast(Predicate<T> predicate)
         {
@@ -440,12 +444,12 @@ namespace NetExtender.Types.Lists
             {
                 return null;
             }
-            
+
             TNode? node = link;
             while (node is not null && !predicate(node.ValueRef))
             {
                 node = node.Link;
-                
+
                 if (ReferenceEquals(node, link))
                 {
                     return null;
@@ -454,41 +458,41 @@ namespace NetExtender.Types.Lists
 
             return node;
         }
-        
+
         /// <inheritdoc cref="LinkedList{T}.FindLast(T)"/>
         ILinkedListNode<T>? ILinkedList<T>.FindLast(Predicate<T> predicate)
         {
             return FindLast(predicate);
         }
-        
+
         /// <inheritdoc cref="LinkedList{T}.FindLast(T)"/>
         ILinkedListNode<T>? IReadOnlyLinkedList<T>.FindLast(Predicate<T> predicate)
         {
             return FindLast(predicate);
         }
-        
+
         /// <inheritdoc cref="LinkedList{T}.FindLast(T)"/>
         ILinkedListNode<T>? ILinkedList<T>.FindLast(Predicate<ILinkedListNode<T>> predicate)
         {
             return FindLast(predicate);
         }
-        
+
         /// <inheritdoc cref="LinkedList{T}.FindLast(T)"/>
         ILinkedListNode<T>? IReadOnlyLinkedList<T>.FindLast(Predicate<ILinkedListNode<T>> predicate)
         {
             return FindLast(predicate);
         }
-        
+
         void ICollection<T>.Add(T value)
         {
             AddLast(value);
         }
-        
+
         /// <inheritdoc cref="LinkedList{T}.AddFirst(T)"/>
         public TNode AddFirst(T value)
         {
             TNode @new = Create(in value);
-            
+
             if (Head is null)
             {
                 InsertNodeToEmptyListCore(@new);
@@ -498,34 +502,34 @@ namespace NetExtender.Types.Lists
             InsertNodeBeforeCore(Head, @new);
             return Head = @new;
         }
-        
+
         /// <inheritdoc cref="LinkedList{T}.AddFirst(T)"/>
         ILinkedListNode<T> ILinkedList<T>.AddFirst(T value)
         {
             return AddFirst(value);
         }
-        
+
         /// <inheritdoc cref="LinkedList{T}.AddLast(T)"/>
         public TNode AddLast(T value)
         {
             TNode @new = Create(in value);
-            
+
             if (Head is null)
             {
                 InsertNodeToEmptyListCore(@new);
                 return @new;
             }
-            
+
             InsertNodeBeforeCore(Head, @new);
             return @new;
         }
-        
+
         /// <inheritdoc cref="LinkedList{T}.AddLast(T)"/>
         ILinkedListNode<T> ILinkedList<T>.AddLast(T value)
         {
             return AddLast(value);
         }
-        
+
         /// <inheritdoc cref="LinkedList{T}.AddBefore(LinkedListNode{T},T)"/>
         public TNode AddBefore(TNode node, T value)
         {
@@ -535,7 +539,7 @@ namespace NetExtender.Types.Lists
             InsertNodeBeforeCore(node, @new);
             return ReferenceEquals(Head, node) ? Head = @new : @new;
         }
-        
+
         /// <inheritdoc cref="LinkedList{T}.AddAfter(LinkedListNode{T},T)"/>
         public TNode AddAfter(TNode node, T value)
         {
@@ -544,7 +548,7 @@ namespace NetExtender.Types.Lists
             InsertNodeBeforeCore(node.Next, @new);
             return @new;
         }
-        
+
         /// <inheritdoc cref="LinkedList{T}.Remove(T)"/>
         public Boolean Remove(T value)
         {
@@ -552,50 +556,50 @@ namespace NetExtender.Types.Lists
             {
                 return false;
             }
-            
+
             RemoveNodeCore(node);
             return true;
         }
-        
+
         /// <inheritdoc cref="LinkedContainer{TNode}.Remove(TNode)"/>
         Boolean ILinkedList<T>.Remove(ILinkedListNode<T> node)
         {
             return base.Remove(node as TNode);
         }
-        
+
         Boolean ILinkedList.Remove(ILinkedListNode node)
         {
             return base.Remove(node as TNode);
         }
-        
+
         // ReSharper disable once CognitiveComplexity
         protected override void CopyTo(Array array, Int32 index)
         {
             if (array is null)
             {
-                throw new ArgumentNullException(nameof (array));
+                throw new ArgumentNullException(nameof(array));
             }
-            
+
             if (array.Rank != 1)
             {
-                throw new ArgumentException(SR.Arg_RankMultiDimNotSupported, nameof(array));
+                throw new ArgumentRankMultiDimNotSupportedException<TSR>(nameof(array));
             }
-            
+
             if (array.GetLowerBound(0) != 0)
             {
-                throw new ArgumentException(SR.Arg_NonZeroLowerBound, nameof(array));
+                throw new ArgumentNonZeroLowerBoundException<TSR>(nameof(array));
             }
-            
+
             if (index < 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(index), index, SR.ArgumentOutOfRange_NeedNonNegNum);
+                throw new ArgumentOutOfRangeNeedNonNegativeNumberException<TSR>(nameof(index), index);
             }
-            
+
             if (array.Length - index < Count)
             {
-                throw new ArgumentException(SR.Arg_InsufficientSpace);
+                throw new ArgumentInsufficientSpaceException<TSR>(nameof(array));
             }
-            
+
             switch (array)
             {
                 case TNode[] nodes:
@@ -608,37 +612,37 @@ namespace NetExtender.Types.Lists
                     CopyTo(objects, index);
                     return;
                 default:
-                    throw new ArgumentException(SR.Argument_InvalidArrayType, nameof(array));
+                    throw new ArgumentInvalidArrayTypeException<TSR>(nameof(array));
             }
         }
-        
+
         protected override void CopyTo(Object?[] array, Int32 index)
         {
             if (array is null)
             {
                 throw new ArgumentNullException(nameof(array));
             }
-            
+
             if (index < 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(index), index, SR.ArgumentOutOfRange_NeedNonNegNum);
+                throw new ArgumentOutOfRangeNeedNonNegativeNumberException<TSR>(nameof(index), index);
             }
-            
+
             if (index > array.Length)
             {
-                throw new ArgumentOutOfRangeException(nameof(index), index, SR.ArgumentOutOfRange_BiggerThanCollection);
+                throw new ArgumentOutOfRangeBiggerThanCollectionException<TSR>(nameof(index), index);
             }
-            
+
             if (array.Length - index < Count)
             {
-                throw new ArgumentException(SR.Arg_InsufficientSpace);
+                throw new ArgumentInsufficientSpaceException<TSR>(nameof(array));
             }
-            
+
             if (Head is not { } node)
             {
                 return;
             }
-            
+
             try
             {
                 do
@@ -649,10 +653,10 @@ namespace NetExtender.Types.Lists
             }
             catch (ArrayTypeMismatchException)
             {
-                throw new ArgumentException(SR.Argument_InvalidArrayType, nameof(array));
+                throw new ArgumentInvalidArrayTypeException<TSR>(nameof(array));
             }
         }
-        
+
         /// <inheritdoc cref="LinkedList{T}.CopyTo(T[],System.Int32)"/>
         public virtual void CopyTo(T[] array, Int32 index)
         {
@@ -660,50 +664,50 @@ namespace NetExtender.Types.Lists
             {
                 throw new ArgumentNullException(nameof(array));
             }
-            
+
             if (index < 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(index), index, SR.ArgumentOutOfRange_NeedNonNegNum);
+                throw new ArgumentOutOfRangeNeedNonNegativeNumberException<TSR>(nameof(index), index);
             }
-            
+
             if (index > array.Length)
             {
-                throw new ArgumentOutOfRangeException(nameof(index), index, SR.ArgumentOutOfRange_BiggerThanCollection);
+                throw new ArgumentOutOfRangeBiggerThanCollectionException<TSR>(nameof(index), index);
             }
-            
+
             if (array.Length - index < Count)
             {
-                throw new ArgumentException(SR.Arg_InsufficientSpace);
+                throw new ArgumentInsufficientSpaceException<TSR>(nameof(array));
             }
-            
+
             if (Head is not { } node)
             {
                 return;
             }
-            
+
             do
             {
                 array[index++] = node.ValueRef;
                 node = node.Next;
             } while (node is not null && !ReferenceEquals(Head, node));
         }
-        
+
         /// <inheritdoc cref="LinkedList{T}.GetEnumerator"/>
         public new Enumerator GetEnumerator()
         {
             return new Enumerator(This);
         }
-        
+
         IEnumerator<T> IEnumerable<T>.GetEnumerator()
         {
             return GetEnumerator();
         }
-        
+
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
         }
-        
+
         /// <inheritdoc cref="LinkedList{T}.Enumerator"/>
         public new struct Enumerator : IEnumerator<T>, ISerializable, IDeserializationCallback
         {
@@ -711,7 +715,7 @@ namespace NetExtender.Types.Lists
             private TNode? _node;
             private readonly Int32 _version;
             private T? _current;
-            
+
             /// <inheritdoc cref="LinkedList{T}.Enumerator.Current"/>
             public readonly T Current
             {
@@ -720,7 +724,7 @@ namespace NetExtender.Types.Lists
                     return _current!;
                 }
             }
-            
+
             /// <inheritdoc cref="LinkedList{T}.Enumerator.Current"/>
             readonly Object? IEnumerator.Current
             {
@@ -728,13 +732,13 @@ namespace NetExtender.Types.Lists
                 {
                     if (_index <= 0 || _index == _list.Count + 1)
                     {
-                        throw new InvalidOperationException(SR.InvalidOperation_EnumOpCantHappen);
+                        throw new EnumOperationCantHappenException<TSR>();
                     }
-                    
+
                     return Current;
                 }
             }
-            
+
             private Int32 _index;
 
             internal Enumerator(TList list)
@@ -745,23 +749,23 @@ namespace NetExtender.Types.Lists
                 _current = default;
                 _index = 0;
             }
-            
+
             void ISerializable.GetObjectData(SerializationInfo info, StreamingContext context)
             {
                 throw new PlatformNotSupportedException();
             }
-            
+
             void IDeserializationCallback.OnDeserialization(Object? sender)
             {
                 throw new PlatformNotSupportedException();
             }
-            
+
             /// <inheritdoc cref="LinkedList{T}.Enumerator.MoveNext"/>
             public Boolean MoveNext()
             {
                 if (_version != _list.Version)
                 {
-                    throw new InvalidOperationException(SR.InvalidOperation_EnumFailedVersion);
+                    throw new EnumFailedVersionException<TSR>();
                 }
 
                 if (_node is null)
@@ -778,15 +782,15 @@ namespace NetExtender.Types.Lists
                 {
                     _node = null;
                 }
-                
+
                 return true;
             }
-            
+
             void IEnumerator.Reset()
             {
                 if (_version != _list.Version)
                 {
-                    throw new InvalidOperationException(SR.InvalidOperation_EnumFailedVersion);
+                    throw new EnumFailedVersionException<TSR>();
                 }
 
                 _current = default;

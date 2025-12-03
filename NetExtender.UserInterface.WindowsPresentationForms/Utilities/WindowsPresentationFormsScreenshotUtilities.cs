@@ -22,7 +22,7 @@ namespace NetExtender.Utilities.UserInterface
 
             return WindowsScreenshotUtilities.MakeScreenshot(window.GetHandle());
         }
-        
+
         public static Bitmap? MakeScreenshot(this Window window, ScreenshotType type)
         {
             if (window is null)
@@ -32,7 +32,7 @@ namespace NetExtender.Utilities.UserInterface
 
             return WindowsScreenshotUtilities.MakeScreenshot(window.GetHandle(), type);
         }
-        
+
         public static Boolean TryMakeScreenshot(this Window window, [MaybeNullWhen(false)] out Bitmap screenshot)
         {
             if (window is null)
@@ -42,7 +42,7 @@ namespace NetExtender.Utilities.UserInterface
 
             return WindowsScreenshotUtilities.TryMakeScreenshot(window.GetHandle(), out screenshot);
         }
-        
+
         public static Boolean TryMakeScreenshot(this Window window, ScreenshotType type, [MaybeNullWhen(false)] out Bitmap screenshot)
         {
             if (window is null)

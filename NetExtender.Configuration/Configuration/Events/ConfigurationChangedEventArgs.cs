@@ -17,7 +17,7 @@ namespace NetExtender.Configuration
         {
             return value?.Value ?? default;
         }
-        
+
         public ConfigurationChangedEventArgs(ConfigurationValueEntry value)
             : base(value)
         {
@@ -41,12 +41,12 @@ namespace NetExtender.Configuration
         {
             return value is not null ? value.Value.Value : default;
         }
-        
+
         public static implicit operator ConfigurationValueEntry<T>(ConfigurationChangedEventArgs<T>? value)
         {
             return value?.Value ?? default;
         }
-        
+
         public ConfigurationChangedEventArgs(ConfigurationValueEntry<T> value)
             : base(value)
         {
@@ -56,7 +56,7 @@ namespace NetExtender.Configuration
             : base(value, handled)
         {
         }
-        
+
         public override String? ToString()
         {
             return Value.Value?.ToString();

@@ -15,17 +15,17 @@ namespace NetExtender.CQRS.Requests.Handlers
         {
             return HandleAsync(request, CancellationToken.None);
         }
-        
+
         public abstract override Task<TResult> HandleAsync(TRequest request, CancellationToken token);
     }
-    
+
     public abstract class RequestCQRSHandler<TRequest> : EntityCQRSHandler<TRequest>, IRequestCQRSHandler<TRequest> where TRequest : IRequestCQRS
     {
         public override Task HandleAsync(TRequest request)
         {
             return HandleAsync(request, CancellationToken.None);
         }
-        
+
         public abstract override Task HandleAsync(TRequest request, CancellationToken token);
     }
 }

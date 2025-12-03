@@ -13,13 +13,13 @@ namespace NetExtender.UserInterface.WindowsPresentation
     {
         private static Style Right { get; }
         public static readonly DependencyProperty IsRightProperty = DependencyProperty.Register(nameof(IsRight), typeof(Boolean), typeof(RightCheckBox), new PropertyMetadata(true, OnRightChanged));
-        
+
         static RightCheckBox()
         {
             Right = new Style(typeof(Path));
             Right.Setters.Add(new Setter(FlowDirectionProperty, FlowDirection.LeftToRight));
         }
-        
+
         public Boolean IsRight
         {
             [System.Diagnostics.DebuggerStepThrough]
@@ -33,17 +33,17 @@ namespace NetExtender.UserInterface.WindowsPresentation
                 SetValue(IsRightProperty, value);
             }
         }
-        
+
         public RightCheckBox()
         {
             Loaded += OnLoaded;
         }
-        
+
         private void OnLoaded(Object? sender, RoutedEventArgs args)
         {
             UpdateFlowDirection();
         }
-        
+
         private void UpdateFlowDirection()
         {
             if (IsRight)
@@ -57,14 +57,14 @@ namespace NetExtender.UserInterface.WindowsPresentation
                 Resources.RemoveStyle(Right);
             }
         }
-        
+
         private static void OnRightChanged(DependencyObject @object, DependencyPropertyChangedEventArgs args)
         {
             if (@object is not RightCheckBox checkbox)
             {
                 return;
             }
-            
+
             checkbox.UpdateFlowDirection();
         }
     }

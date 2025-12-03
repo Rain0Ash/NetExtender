@@ -16,17 +16,17 @@ namespace NetExtender.WindowsPresentation.Types.Bindings.Interfaces
         public new ICollection<Key> Keys { get; }
         public new ICollection<KeyboardBindingHandler<T>> Values { get; }
         public new Boolean IsReadOnly { get; }
-        
+
         public new Boolean ContainsKey(Key key);
         public new void Add(Key key, KeyboardBindingHandler<T> value);
         public Boolean TryAdd(Key key, KeyboardBindingHandler<T>? value);
         public new Boolean Remove(Key key);
-        
+
         public new void Clear();
         public new IEnumerator<KeyValuePair<Key, KeyboardBindingHandler<T>>> GetEnumerator();
         public new IKeyboardBinding<T> Clone();
     }
-    
+
     public interface IKeyboardBinding : IKeyboardBindingInfo, ICollection, ICloneable<IKeyboardBinding>
     {
         public new Int32 Count { get; }

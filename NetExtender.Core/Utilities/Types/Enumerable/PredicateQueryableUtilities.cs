@@ -180,13 +180,13 @@ namespace NetExtender.Utilities.Types
 
             return source;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IQueryable<T> Index<T>(this IQueryable<T> source, Int32 size)
         {
             return Index(source, 0, size);
         }
-        
+
         /// <summary>
         /// Extracts <paramref name="size"/> elements from a sequence at a particular one-based page number.
         /// </summary>
@@ -216,13 +216,13 @@ namespace NetExtender.Utilities.Types
 
             return source;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IQueryable<T> Page<T>(this IQueryable<T> source, Int32 size)
         {
             return Page(source, 1, size);
         }
-        
+
         /// <summary>
         /// Extracts <paramref name="size"/> elements from a sequence at a particular one-based page number.
         /// </summary>

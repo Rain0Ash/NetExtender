@@ -14,7 +14,7 @@ namespace NetExtender.AspNetCore.Identity
     {
         private IJWTSerializerFactory Factory { get; }
         private ConditionalWeakTable<IJWTSerializer, IIdentityJWTSerializer<TId, TUser, TRole>> Storage { get; } = new ConditionalWeakTable<IJWTSerializer, IIdentityJWTSerializer<TId, TUser, TRole>>();
-        
+
         public JWTSerializerType Type
         {
             get
@@ -49,7 +49,7 @@ namespace NetExtender.AspNetCore.Identity
         {
             return Factory.Create() is { } serializer ? Storage.GetValue(serializer, static serializer => serializer.Identity<TId, TUser, TRole>()) : null!;
         }
-        
+
         internal sealed class None : IdentityTextJsonJWTSerializerFactory<TId, TUser, TRole>
         {
             private static TextJsonJWTSerializer Throw
@@ -59,7 +59,7 @@ namespace NetExtender.AspNetCore.Identity
                     throw new NotSupportedException();
                 }
             }
-        
+
             private None()
                 : base(Throw)
             {
@@ -82,7 +82,7 @@ namespace NetExtender.AspNetCore.Identity
             }
         }
     }
-    
+
     public class IdentityTextJsonJWTSerializerFactory<TId, TUser, TRole> : TextJsonJWTSerializerFactory.Factory, IIdentityJWTSerializerFactory<TId, TUser, TRole> where TId : struct, IEquatable<TId> where TUser : class, IUserInfo<TId, TRole> where TRole : IEquatable<TRole>
     {
         public IdentityTextJsonJWTSerializerFactory(TextJsonJWTSerializer serializer)
@@ -90,7 +90,7 @@ namespace NetExtender.AspNetCore.Identity
         {
         }
     }
-    
+
     public class IdentityNewtonsoftJWTSerializerFactory<TId, TUser, TRole> : NewtonsoftJWTSerializerFactory.Factory, IIdentityJWTSerializerFactory<TId, TUser, TRole> where TId : struct, IEquatable<TId> where TUser : class, IUserInfo<TId, TRole> where TRole : IEquatable<TRole>
     {
         public IdentityNewtonsoftJWTSerializerFactory(NewtonsoftJWTSerializer serializer)

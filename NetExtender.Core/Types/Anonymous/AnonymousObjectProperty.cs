@@ -147,14 +147,14 @@ namespace NetExtender.Types.Anonymous
             }
         }
     }
-    
+
     public readonly ref struct AnonymousObjectProperty<T>
     {
         public static implicit operator AnonymousObjectProperty(AnonymousObjectProperty<T> property)
         {
             return property.Anonymous;
         }
-        
+
         public static implicit operator Maybe<T?>(AnonymousObjectProperty<T> property)
         {
             return property.Maybe;
@@ -227,7 +227,7 @@ namespace NetExtender.Types.Anonymous
         {
             Anonymous = anonymous;
         }
-        
+
         public AnonymousObjectProperty<TConvert> To<TConvert>()
         {
             return new AnonymousObjectProperty<TConvert>(Anonymous);

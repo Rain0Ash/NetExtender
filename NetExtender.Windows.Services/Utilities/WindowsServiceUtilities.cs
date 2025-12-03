@@ -320,7 +320,7 @@ namespace NetExtender.Windows.Services.Utilities
             // ReSharper disable once CollectionNeverQueried.Local
             using FilterTextWriterWrapper filter = new ConsoleOutLockedFilterTextWriter();
             filter.Add(ServiceRunMessage);
-            
+
             ServiceBase.Run(service);
             return service;
         }

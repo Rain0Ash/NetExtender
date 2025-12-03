@@ -58,12 +58,12 @@ namespace NetExtender.WindowsPresentation.Types.Bindings
     public class EqualBinding : OperationBinding
     {
         private new const ConverterMathOperation Operation = ConverterMathOperation.Equal;
-        
+
         public EqualBinding()
             : base(Operation)
         {
         }
-        
+
         public EqualBinding(String path)
             : base(path, Operation)
         {
@@ -73,12 +73,12 @@ namespace NetExtender.WindowsPresentation.Types.Bindings
     public class NotEqualBinding : OperationBinding
     {
         private new const ConverterMathOperation Operation = ConverterMathOperation.NotEqual;
-    
+
         public NotEqualBinding()
             : base(Operation)
         {
         }
-    
+
         public NotEqualBinding(String path)
             : base(path, Operation)
         {
@@ -88,12 +88,12 @@ namespace NetExtender.WindowsPresentation.Types.Bindings
     public class LessBinding : OperationBinding
     {
         private new const ConverterMathOperation Operation = ConverterMathOperation.Less;
-    
+
         public LessBinding()
             : base(Operation)
         {
         }
-    
+
         public LessBinding(String path)
             : base(path, Operation)
         {
@@ -103,12 +103,12 @@ namespace NetExtender.WindowsPresentation.Types.Bindings
     public class LessOrEqualBinding : OperationBinding
     {
         private new const ConverterMathOperation Operation = ConverterMathOperation.LessOrEqual;
-    
+
         public LessOrEqualBinding()
             : base(Operation)
         {
         }
-    
+
         public LessOrEqualBinding(String path)
             : base(path, Operation)
         {
@@ -118,12 +118,12 @@ namespace NetExtender.WindowsPresentation.Types.Bindings
     public class GreaterBinding : OperationBinding
     {
         private new const ConverterMathOperation Operation = ConverterMathOperation.Greater;
-    
+
         public GreaterBinding()
             : base(Operation)
         {
         }
-    
+
         public GreaterBinding(String path)
             : base(path, Operation)
         {
@@ -133,12 +133,12 @@ namespace NetExtender.WindowsPresentation.Types.Bindings
     public class GreaterOrEqualBinding : OperationBinding
     {
         private new const ConverterMathOperation Operation = ConverterMathOperation.GreaterOrEqual;
-    
+
         public GreaterOrEqualBinding()
             : base(Operation)
         {
         }
-    
+
         public GreaterOrEqualBinding(String path)
             : base(path, Operation)
         {
@@ -148,12 +148,12 @@ namespace NetExtender.WindowsPresentation.Types.Bindings
     public class NotBinding : OperationBinding
     {
         private new const ConverterMathOperation Operation = ConverterMathOperation.Not;
-    
+
         public NotBinding()
             : base(Operation)
         {
         }
-    
+
         public NotBinding(String path)
             : base(path, Operation)
         {

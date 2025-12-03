@@ -25,7 +25,7 @@ namespace NetExtender.Utilities.Network
         Patch,
         Delete
     }
-    
+
     public static class HttpMethodUtilities
     {
         [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
@@ -42,7 +42,7 @@ namespace NetExtender.Utilities.Network
             public const String Patch = "PATCH";
             public const String Delete = "DELETE";
         }
-        
+
         static HttpMethodUtilities()
         {
             connect = GetUndefinedMethod(nameof(Connect)) ?? (static () => throw new InvalidOperationException());
@@ -55,7 +55,7 @@ namespace NetExtender.Utilities.Network
             {
                 throw new ArgumentNullException(nameof(name));
             }
-            
+
             const BindingFlags binding = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
 
             try
@@ -68,7 +68,7 @@ namespace NetExtender.Utilities.Network
                 return null;
             }
         }
-        
+
         private static readonly Func<HttpMethod> connect;
         public static HttpMethod Connect
         {
@@ -78,7 +78,7 @@ namespace NetExtender.Utilities.Network
                 return connect();
             }
         }
-        
+
         public static HttpMethod Head
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -87,7 +87,7 @@ namespace NetExtender.Utilities.Network
                 return HttpMethod.Head;
             }
         }
-        
+
         public static HttpMethod Trace
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -96,7 +96,7 @@ namespace NetExtender.Utilities.Network
                 return HttpMethod.Trace;
             }
         }
-        
+
         public static HttpMethod Options
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -124,7 +124,7 @@ namespace NetExtender.Utilities.Network
                 return query();
             }
         }
-        
+
         public static HttpMethod Post
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -133,7 +133,7 @@ namespace NetExtender.Utilities.Network
                 return HttpMethod.Post;
             }
         }
-        
+
         public static HttpMethod Put
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -142,7 +142,7 @@ namespace NetExtender.Utilities.Network
                 return HttpMethod.Put;
             }
         }
-        
+
         public static HttpMethod Patch
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -151,7 +151,7 @@ namespace NetExtender.Utilities.Network
                 return HttpMethod.Patch;
             }
         }
-        
+
         public static HttpMethod Delete
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -160,7 +160,7 @@ namespace NetExtender.Utilities.Network
                 return HttpMethod.Delete;
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static Boolean TryParse(String? value, out HttpMethodType result)
         {
@@ -178,7 +178,7 @@ namespace NetExtender.Utilities.Network
                 Methods.Delete => HttpMethodType.Delete,
                 _ => HttpMethodType.None
             };
-            
+
             return result != HttpMethodType.None;
         }
 
@@ -199,7 +199,7 @@ namespace NetExtender.Utilities.Network
                 Methods.Delete => Delete,
                 _ => null
             };
-            
+
             return result is not null;
         }
 
@@ -241,7 +241,7 @@ namespace NetExtender.Utilities.Network
             {
                 throw new ArgumentNullException(nameof(method));
             }
-            
+
             return method switch
             {
                 Methods.Connect => false,
@@ -257,7 +257,7 @@ namespace NetExtender.Utilities.Network
                 _ => throw new ArgumentException($"Invalid HTTP method '{method}'.", nameof(method))
             };
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static Boolean IsSafe(this HttpMethodType method)
         {
@@ -277,7 +277,7 @@ namespace NetExtender.Utilities.Network
                 _ => throw new EnumUndefinedOrNotSupportedException<HttpMethodType>(method, nameof(method), null)
             };
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static Boolean IsSafe(this HttpMethod method)
         {
@@ -285,10 +285,10 @@ namespace NetExtender.Utilities.Network
             {
                 throw new ArgumentNullException(nameof(method));
             }
-            
+
             return IsSafe(method.Method);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static Boolean IsIdempotent(String method)
         {
@@ -296,7 +296,7 @@ namespace NetExtender.Utilities.Network
             {
                 throw new ArgumentNullException(nameof(method));
             }
-            
+
             return method switch
             {
                 Methods.Connect => false,
@@ -312,7 +312,7 @@ namespace NetExtender.Utilities.Network
                 _ => throw new ArgumentException($"Invalid HTTP method '{method}'.", nameof(method))
             };
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static Boolean IsIdempotent(this HttpMethodType method)
         {
@@ -332,7 +332,7 @@ namespace NetExtender.Utilities.Network
                 _ => throw new EnumUndefinedOrNotSupportedException<HttpMethodType>(method, nameof(method), null)
             };
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static Boolean IsIdempotent(this HttpMethod method)
         {
@@ -340,7 +340,7 @@ namespace NetExtender.Utilities.Network
             {
                 throw new ArgumentNullException(nameof(method));
             }
-            
+
             return IsIdempotent(method.Method);
         }
     }

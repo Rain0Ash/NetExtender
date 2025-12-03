@@ -8,7 +8,7 @@ namespace NetExtender.Types.Numerics.Interfaces
     public interface IMathResult<T> : IResult<T, OverflowException>, IResultEquality<IMathResult<T>>, ICloneable<IMathResult<T>> where T : struct, IEquatable<T>, IFormattable
     {
         public Result<T, OverflowException> Result { get; }
-        
+
         public MathResult<T> Real { get; }
         public MathResult<T> IntegerReal { get; }
         public MathResult<T> FractionalReal { get; }

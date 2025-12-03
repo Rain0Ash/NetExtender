@@ -10,7 +10,7 @@ namespace NetExtender.Types.Banking.Cards
     {
         public abstract String Get();
     }
-    
+
     public class BankingCardCustomerFactory : BankingCardFactory
     {
         protected String? Level { get; set; }
@@ -34,7 +34,7 @@ namespace NetExtender.Types.Banking.Cards
             return this;
         }
     }
-    
+
     public class BankingCardBankFactory : BankingCardFactory
     {
         protected String? PaymentType { get; set; }

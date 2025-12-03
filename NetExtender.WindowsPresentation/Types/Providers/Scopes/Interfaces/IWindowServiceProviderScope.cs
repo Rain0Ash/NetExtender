@@ -10,7 +10,7 @@ namespace NetExtender.WindowsPresentation.Types.Scopes.Interfaces
     {
         public IWindowServiceProvider Provider { get; }
     }
-    
+
     public interface IAsyncWindowServiceProviderScope : IWindowServiceProviderScope, IAsyncDisposable
     {
     }

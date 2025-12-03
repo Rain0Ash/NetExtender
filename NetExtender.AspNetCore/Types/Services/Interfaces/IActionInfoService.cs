@@ -9,10 +9,10 @@ namespace NetExtender.AspNetCore.Types.Services.Interfaces
     internal interface IUnsafeActionInfoService : IActionInfoService
     {
         public ActionDescriptor? Descriptor { get; }
-        
+
         public void Set(String? current, ActionDescriptor? descriptor);
     }
-    
+
     public interface IActionInfoService
     {
         internal IUnsafeActionInfoService? Unsafe
@@ -22,7 +22,7 @@ namespace NetExtender.AspNetCore.Types.Services.Interfaces
                 return this as IUnsafeActionInfoService;
             }
         }
-        
+
         public String? Id { get; }
         public String? Current { get; }
     }

@@ -10,7 +10,7 @@ namespace NetExtender.Types.Expressions.Interfaces
     {
         public new T Expression { get; }
     }
-    
+
     public interface IReadableExpression : IEquatable<Expression>, IEquatable<IReadableExpression>
     {
         public Expression Expression { get; }

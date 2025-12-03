@@ -193,11 +193,11 @@ namespace NetExtender.Types.Dictionaries
                 {
                     Counter.Add(key);
                 }
-                
+
                 Internal[key] = value;
             }
         }
-        
+
         public readonly struct Entry : IComparable<Entry>
         {
             private static IComparer<TKey>? Comparer { get; }
@@ -214,7 +214,7 @@ namespace NetExtender.Types.Dictionaries
                     Comparer = null;
                 }
             }
-            
+
             public static implicit operator KeyValuePair<TKey, TValue>(Entry value)
             {
                 return new KeyValuePair<TKey, TValue>(value.Key, value.Value);
@@ -235,12 +235,12 @@ namespace NetExtender.Types.Dictionaries
             }
 
             public readonly Int64 LongTouch;
-            
+
             public Entry(KeyValuePair<TKey, TValue> pair, Int64 touch)
                 : this(pair.Key, pair.Value, touch)
             {
             }
-            
+
             public Entry(TKey key, TValue value, Int64 touch)
             {
                 Key = key;

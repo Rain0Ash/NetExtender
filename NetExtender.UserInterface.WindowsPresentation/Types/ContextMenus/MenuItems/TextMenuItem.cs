@@ -13,12 +13,12 @@ namespace NetExtender.UserInterface.WindowsPresentation
     {
         public static readonly DependencyProperty TextProperty = TextBlock.TextProperty.AddOwner(typeof(TextMenuItem), new FrameworkPropertyMetadata(String.Empty, FrameworkPropertyMetadataOptions.None));
         public static readonly DependencyProperty TextAlignmentProperty = TextBlock.TextAlignmentProperty.AddOwner(typeof(TextMenuItem), new FrameworkPropertyMetadata(TextAlignment.Center, FrameworkPropertyMetadataOptions.None));
-        
+
         protected static RelativeSource RelativeSource { get; } = new RelativeSource(RelativeSourceMode.FindAncestor, typeof(TextMenuItem), 1);
         protected static Binding TextBinding { get; } = new TwoWayBinding(nameof(Text), RelativeSource);
         protected static Binding TextAlignmentBinding { get; } = new TwoWayBinding(nameof(TextAlignment), RelativeSource);
         protected static Binding IsEnabledBinding { get; } = new TwoWayBinding(nameof(IsEnabled), RelativeSource);
-        
+
         public String Text
         {
             [System.Diagnostics.DebuggerStepThrough]
@@ -32,7 +32,7 @@ namespace NetExtender.UserInterface.WindowsPresentation
                 SetValue(TextProperty, value);
             }
         }
-        
+
         public TextAlignment TextAlignment
         {
             [System.Diagnostics.DebuggerStepThrough]
@@ -46,17 +46,17 @@ namespace NetExtender.UserInterface.WindowsPresentation
                 SetValue(TextAlignmentProperty, value);
             }
         }
-        
+
         public TextMenuItem()
         {
             Loaded += OnLoaded;
         }
-        
+
         private void OnLoaded(Object sender, RoutedEventArgs args)
         {
             Header ??= CreateHeader();
         }
-        
+
         protected virtual Object CreateHeader()
         {
             TextBlock header = new TextBlock
@@ -65,7 +65,7 @@ namespace NetExtender.UserInterface.WindowsPresentation
                 HorizontalAlignment = HorizontalAlignment.Stretch,
                 VerticalAlignment = VerticalAlignment.Stretch
             };
-            
+
             header.SetBinding(TextBlock.TextProperty, TextBinding);
             header.SetBinding(TextBlock.TextAlignmentProperty, TextAlignmentBinding);
             header.SetBinding(IsEnabledProperty, IsEnabledBinding);

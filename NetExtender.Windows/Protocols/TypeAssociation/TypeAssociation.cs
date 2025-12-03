@@ -37,7 +37,7 @@ namespace NetExtender.Windows.Protocols
         {
             return GetFileTypeAssociation(extension).Value;
         }
-        
+
         public static KeyValuePair<String?, String?> GetFileTypeAssociation(String extension)
         {
             if (String.IsNullOrEmpty(extension))
@@ -52,7 +52,7 @@ namespace NetExtender.Windows.Protocols
 
             return new KeyValuePair<String?, String?>(progid, hash);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<KeyValuePair<String?, String?>> GetFileTypeAssociationProgId()
         {
@@ -102,7 +102,7 @@ namespace NetExtender.Windows.Protocols
                 yield return new KeyValuePair<String, KeyValuePair<String?, String?>>(entry, new KeyValuePair<String?, String?>(progid, hash));
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String? GetProtocolTypeAssociationProgId(String protocol)
         {
@@ -129,7 +129,7 @@ namespace NetExtender.Windows.Protocols
 
             return new KeyValuePair<String?, String?>(progid, hash);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<KeyValuePair<String?, String?>> GetProtocolTypeAssociationProgId()
         {
@@ -234,7 +234,7 @@ namespace NetExtender.Windows.Protocols
 
             return SetFileTypeAssociation(progid, extension, icon, sid);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean RegisterProtocolTypeAssociation(String path, String protocol)
         {
@@ -566,7 +566,7 @@ namespace NetExtender.Windows.Protocols
                 return Convert.ToBase64String(outhashbase);
             }
         }
-        
+
         [DllImport("shell32.dll")]
         private static extern void SHChangeNotify(Int32 eventId, Int32 flags, IntPtr item1, IntPtr item2);
 

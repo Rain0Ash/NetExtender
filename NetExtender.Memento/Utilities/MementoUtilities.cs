@@ -39,7 +39,7 @@ namespace NetExtender.Utilities.Memento
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             static void Core(T item)
             {
                 item.Update();

@@ -24,7 +24,7 @@ namespace NetExtender.Types.Middlewares
 
         public MiddlewareExecutionContext Context { get; init; }
         public MiddlewareIdempotencyMode Idempotency { get; init; }
-        
+
         public MiddlewareExecutionOptions(MiddlewareExecutionContext context)
             : this(context, MiddlewareIdempotencyMode.None)
         {

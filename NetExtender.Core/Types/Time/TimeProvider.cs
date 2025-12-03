@@ -15,7 +15,7 @@ namespace System
     public class TimeProvider : ITimeProvider
     {
         public static TimeProvider System { get; } = new SystemTimeProvider();
-        
+
         private static readonly Int64 minimum = DateTime.MinValue.Ticks;
         private static readonly Int64 maximum = DateTime.MaxValue.Ticks;
 
@@ -56,7 +56,7 @@ namespace System
             DateTimeOffset now = GetUtcNow();
             TimeZoneInfo zone = LocalTimeZone;
             TimeSpan offset = zone.GetUtcOffset(now);
-            
+
             if (offset.Ticks <= 0)
             {
                 return now;

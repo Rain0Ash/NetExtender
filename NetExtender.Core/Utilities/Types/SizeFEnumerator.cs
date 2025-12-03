@@ -17,7 +17,7 @@ namespace NetExtender.Utilities.Types
     public unsafe struct SizeFEnumerator : IEnumerable<PointF>
     {
         private Point _iterator = Point.Empty;
-        
+
         private PointF _current;
         public readonly PointF Current
         {
@@ -39,7 +39,7 @@ namespace NetExtender.Utilities.Types
                 _size = value;
             }
         }
-        
+
         private readonly SizeF _step;
         public readonly SizeF Step
         {
@@ -154,7 +154,7 @@ namespace NetExtender.Utilities.Types
             enumerator.Reset();
             return enumerator;
         }
-        
+
         readonly IEnumerator<PointF> IEnumerable<PointF>.GetEnumerator()
         {
             // ReSharper disable once ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator
@@ -178,7 +178,7 @@ namespace NetExtender.Utilities.Types
                 enumerator._current.X = x;
                 return true;
             }
-            
+
             Single y = enumerator._step.Height * ++enumerator._iterator.Y;
             if (y <= enumerator._size.Height)
             {
@@ -236,7 +236,7 @@ namespace NetExtender.Utilities.Types
                 enumerator._current.X = x;
                 return true;
             }
-            
+
             Single y = enumerator._step.Height * ++enumerator._iterator.Y;
             if (y < enumerator._size.Height || enumerator._current.Y < enumerator._size.Height)
             {
@@ -258,7 +258,7 @@ namespace NetExtender.Utilities.Types
                 enumerator._current.X = x;
                 return true;
             }
-            
+
             Single y = enumerator._step.Height * ++enumerator._iterator.Y;
             if (y < enumerator._size.Height)
             {
@@ -280,7 +280,7 @@ namespace NetExtender.Utilities.Types
                 enumerator._current.Y = y;
                 return true;
             }
-            
+
             Single x = enumerator._step.Width * ++enumerator._iterator.X;
             if (x <= enumerator._size.Width)
             {
@@ -302,7 +302,7 @@ namespace NetExtender.Utilities.Types
                 enumerator._current.Y = y;
                 return true;
             }
-            
+
             if (y >= enumerator._size.Height && enumerator._current.Y < enumerator._size.Height)
             {
                 enumerator._current.Y = enumerator._size.Height;
@@ -317,7 +317,7 @@ namespace NetExtender.Utilities.Types
                 enumerator._iterator.Y = 1;
                 return true;
             }
-            
+
             if (x >= enumerator._size.Width && enumerator._current.X < enumerator._size.Width)
             {
                 enumerator._current.Y = 0;
@@ -338,7 +338,7 @@ namespace NetExtender.Utilities.Types
                 enumerator._current.Y = y;
                 return true;
             }
-            
+
             Single x = enumerator._step.Width * ++enumerator._iterator.X;
             if (x < enumerator._size.Width || enumerator._current.X < enumerator._size.Width)
             {
@@ -360,7 +360,7 @@ namespace NetExtender.Utilities.Types
                 enumerator._current.Y = y;
                 return true;
             }
-            
+
             Single x = enumerator._step.Width * ++enumerator._iterator.X;
             if (x < enumerator._size.Width)
             {

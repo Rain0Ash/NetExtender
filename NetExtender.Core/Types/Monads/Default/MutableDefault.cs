@@ -26,7 +26,7 @@ namespace NetExtender.Types.Monads
         {
             return new NotifyMutableValueDefault<T>(value);
         }
-        
+
         public override T Value
         {
             get
@@ -50,14 +50,14 @@ namespace NetExtender.Types.Monads
                 {
                     this.RaiseProperty(nameof(IsEmpty));
                 }
-                
+
                 if (@default != IsDefault)
                 {
                     this.RaiseProperty(nameof(IsDefault));
                 }
             }
         }
-        
+
         public override T Default
         {
             get
@@ -74,12 +74,12 @@ namespace NetExtender.Types.Monads
                 }
             }
         }
-        
+
         public NotifyMutableValueDefault(T @default)
             : base(@default)
         {
         }
-        
+
         public NotifyMutableValueDefault(T @default, T value)
             : base(@default, value)
         {
@@ -94,7 +94,7 @@ namespace NetExtender.Types.Monads
             : base(info, context)
         {
         }
-        
+
         public override Boolean Reset()
         {
             if (IsEmpty)
@@ -122,7 +122,7 @@ namespace NetExtender.Types.Monads
             {
                 this.RaisePropertyChanged(nameof(IsDefault));
             }
-            
+
             return true;
         }
 
@@ -131,7 +131,7 @@ namespace NetExtender.Types.Monads
             return new NotifyMutableValueDefault<T>(_default, _value);
         }
     }
-    
+
     [Serializable]
     [JsonConverter(typeof(MutableValueDefaultJsonConverter<>))]
     [System.Text.Json.Serialization.JsonConverter(typeof(Serialization.Json.Monads.MutableValueDefaultJsonConverter<>))]
@@ -162,12 +162,12 @@ namespace NetExtender.Types.Monads
                 return _value.IsEmpty || EqualityComparer<T>.Default.Equals(Default, Value);
             }
         }
-        
+
         public MutableValueDefault(T @default)
         {
             _default = @default;
         }
-        
+
         public MutableValueDefault(T @default, T value)
             : base(value)
         {
@@ -196,7 +196,7 @@ namespace NetExtender.Types.Monads
         {
             return Default;
         }
-        
+
         protected sealed override void SetDefault(T value)
         {
             Default = value;
@@ -223,7 +223,7 @@ namespace NetExtender.Types.Monads
                 Boolean has = HasValue;
                 Boolean empty = IsEmpty;
                 Boolean @default = IsDefault;
-                
+
                 this.RaiseAndSetIfChanged(ref _value, value);
 
                 if (has != HasValue)
@@ -242,7 +242,7 @@ namespace NetExtender.Types.Monads
                 }
             }
         }
-        
+
         public override Func<T> Default
         {
             get
@@ -255,7 +255,7 @@ namespace NetExtender.Types.Monads
                 {
                     throw new ArgumentNullException(nameof(value));
                 }
-                
+
                 this.RaiseAndSetIfChanged(ref _default, value);
 
                 if (IsEmpty)
@@ -269,7 +269,7 @@ namespace NetExtender.Types.Monads
             : base(@default)
         {
         }
-        
+
         public NotifyMutableDynamicDefault(Func<T> @default, T value)
             : base(@default, value)
         {
@@ -284,7 +284,7 @@ namespace NetExtender.Types.Monads
             : base(info, context)
         {
         }
-        
+
         public override Boolean Reset()
         {
             if (IsEmpty)
@@ -312,7 +312,7 @@ namespace NetExtender.Types.Monads
             {
                 this.RaiseProperty(nameof(IsDefault));
             }
-            
+
             return true;
         }
 
@@ -321,7 +321,7 @@ namespace NetExtender.Types.Monads
             return new NotifyMutableDynamicDefault<T>(Default, Maybe);
         }
     }
-    
+
     [JsonConverter(typeof(MutableDynamicDefaultJsonConverter<>))]
     [System.Text.Json.Serialization.JsonConverter(typeof(Serialization.Json.Monads.MutableDynamicDefaultJsonConverter<>))]
     public class MutableDynamicDefault<T> : MutableDefault<T>, ICloneable<MutableDynamicDefault<T>>
@@ -351,7 +351,7 @@ namespace NetExtender.Types.Monads
         {
             _default = @default ?? throw new ArgumentNullException(nameof(@default));
         }
-        
+
         public MutableDynamicDefault(Func<T> @default, T value)
             : base(value)
         {
@@ -370,12 +370,12 @@ namespace NetExtender.Types.Monads
             T @default = info.GetValue<T>(nameof(Default));
             _default = () => @default;
         }
-        
+
         protected sealed override T GetDefault()
         {
             return Default();
         }
-        
+
         protected sealed override void SetDefault(T value)
         {
             Default = () => value;
@@ -391,7 +391,7 @@ namespace NetExtender.Types.Monads
             return Clone();
         }
     }
-    
+
     [Serializable]
     [JsonConverter(typeof(MutableDefaultJsonConverter<>))]
     [System.Text.Json.Serialization.JsonConverter(typeof(Serialization.Json.Monads.MutableDefaultJsonConverter<>))]
@@ -402,7 +402,7 @@ namespace NetExtender.Types.Monads
         {
             return value is not null ? value.Value : default;
         }
-        
+
         public static Boolean operator ==(T? first, MutableDefault<T>? second)
         {
             return second == first;
@@ -422,7 +422,7 @@ namespace NetExtender.Types.Monads
         {
             return !(first == second);
         }
-        
+
         public static Boolean operator ==(MutableDefault<T>? first, MutableDefault<T>? second)
         {
             return ReferenceEquals(first, second) || first is not null && first.Equals(second);
@@ -493,9 +493,11 @@ namespace NetExtender.Types.Monads
             return ReferenceEquals(first, second) || first is not null && (second is null || first.CompareTo(second) >= 0);
         }
 
-        public event PropertyChangingEventHandler? PropertyChanging;
-        public event PropertyChangedEventHandler? PropertyChanged;
-        
+#pragma warning disable CS0067
+        public virtual event PropertyChangingEventHandler? PropertyChanging;
+        public virtual event PropertyChangedEventHandler? PropertyChanged;
+#pragma warning restore CS0067
+
         private protected Maybe<T> _value;
         protected internal Maybe<T> Maybe
         {
@@ -546,16 +548,16 @@ namespace NetExtender.Types.Monads
                 return _value.IsEmpty;
             }
         }
-        
+
         protected MutableDefault()
         {
         }
-        
+
         protected MutableDefault(T value)
         {
             _value = value;
         }
-        
+
         private protected MutableDefault(Maybe<T> value)
         {
             _value = value;
@@ -645,11 +647,11 @@ namespace NetExtender.Types.Monads
                 value = null;
                 return false;
             }
-            
+
             value = Value;
             return true;
         }
-        
+
         public Boolean Unwrap([MaybeNullWhen(false)] out T value)
         {
             if (IsEmpty)
@@ -657,7 +659,7 @@ namespace NetExtender.Types.Monads
                 value = default;
                 return false;
             }
-            
+
             value = Value;
             return true;
         }
@@ -671,107 +673,107 @@ namespace NetExtender.Types.Monads
                 info.AddValue(nameof(Value), _value.Value);
             }
         }
-        
+
         protected abstract T GetDefault();
         protected abstract void SetDefault(T value);
-        
+
         public Boolean Set(T value)
         {
             if (_value == value)
             {
                 return false;
             }
-            
+
             Value = value;
             return true;
         }
-        
+
         IDefault<T> IDefault<T>.Set(T value)
         {
             Set(value);
             return this;
         }
-        
+
         Boolean IDefault<T>.Set(T value, [MaybeNullWhen(false)] out IDefault<T> result)
         {
             result = this;
             return Set(value);
         }
-        
+
         public virtual Boolean Swap()
         {
             Maybe<T> value = _value;
-            
+
             if (!value.HasValue)
             {
                 return false;
             }
-            
+
             _value = GetDefault();
             SetDefault(value.Unwrap()!);
             return true;
         }
-        
+
         IDefault<T> IDefault<T>.Swap()
         {
             Swap();
             return this;
         }
-        
+
         IDefault IDefault.Swap()
         {
             Swap();
             return this;
         }
-        
+
         public virtual Boolean Reset()
         {
             if (IsEmpty)
             {
                 return false;
             }
-            
+
             _value = default;
             return true;
         }
-        
+
         IDefault<T> IDefault<T>.Reset()
         {
             Reset();
             return this;
         }
-        
+
         IDefault IDefault.Reset()
         {
             Reset();
             return this;
         }
-        
+
         public Int32 CompareTo(T? other)
         {
             return CompareTo(other, null);
         }
-        
+
         public Int32 CompareTo(T? other, IComparer<T>? comparer)
         {
             return comparer.SafeCompare(Value, other) ?? 0;
         }
-        
+
         public Int32 CompareTo(MutableDefault<T>? other)
         {
             return CompareTo(other, null);
         }
-        
+
         public Int32 CompareTo(MutableDefault<T>? other, IComparer<T>? comparer)
         {
             return other is not null ? CompareTo(other.Value, comparer) : 1;
         }
-        
+
         public Int32 CompareTo(IDefault<T>? other)
         {
             return CompareTo(other, null);
         }
-        
+
         public Int32 CompareTo(IDefault<T>? other, IComparer<T>? comparer)
         {
             return other is not null ? CompareTo(other.Value, comparer) : 1;
@@ -798,12 +800,12 @@ namespace NetExtender.Types.Monads
                 _ => false
             };
         }
-        
+
         public Boolean Equals(T? other)
         {
             return Equals(other, null);
         }
-        
+
         public Boolean Equals(T? other, IEqualityComparer<T>? comparer)
         {
             comparer ??= EqualityComparer<T>.Default;

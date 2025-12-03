@@ -27,27 +27,27 @@ namespace NetExtender.Types.Monads
         {
             return value.Internal;
         }
-        
+
         public static implicit operator Result<Unit, BusinessException>(BusinessResult value)
         {
             return value.Internal;
         }
-        
+
         public static implicit operator BusinessResult<Unit>(BusinessResult value)
         {
             return value.Internal;
         }
-        
+
         public static implicit operator Boolean(BusinessResult value)
         {
             return value.Internal;
         }
-        
+
         public static implicit operator HttpStatusCode(BusinessResult value)
         {
             return value.Status;
         }
-        
+
         public static implicit operator BusinessResult(HttpStatusCode value)
         {
             return value.IsError() ? new BusinessResult<Unit>((BusinessException) value) : new BusinessResult<Unit> { Status = value };
@@ -57,22 +57,22 @@ namespace NetExtender.Types.Monads
         {
             return new BusinessResult((BusinessException) value);
         }
-        
+
         public static implicit operator BusinessResult((HttpStatusCode Status, String? Message, String? Description) value)
         {
             return new BusinessResult((BusinessException) value);
         }
-        
+
         public static implicit operator BusinessResult((HttpStatusCode Status, Exception? Exception) value)
         {
             return new BusinessResult((BusinessException) value);
         }
-        
+
         public static implicit operator BusinessResult((HttpStatusCode Status, String? Message, Exception? Exception) value)
         {
             return new BusinessResult((BusinessException) value);
         }
-        
+
         public static implicit operator BusinessResult((HttpStatusCode Status, String? Message, String? Description, Exception? Exception) value)
         {
             return new BusinessResult((BusinessException) value);
@@ -228,13 +228,13 @@ namespace NetExtender.Types.Monads
         {
             Internal = new BusinessResult<Unit>(info, context);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static BusinessResult Create(Unit value)
         {
             return new BusinessResult(value);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BusinessResult Create(BusinessException exception)
         {
@@ -572,7 +572,7 @@ namespace NetExtender.Types.Monads
         {
             return new Result<T>(new Result<T, Exception>(value.Internal.Internal, value.Exception));
         }
-        
+
         public static implicit operator Result<T, BusinessException>(BusinessResult<T> value)
         {
             return new Result<T, BusinessException>(value.Internal.Internal, value.Exception);
@@ -582,42 +582,42 @@ namespace NetExtender.Types.Monads
         {
             return new BusinessResult(Unit.Default, value.Exception);
         }
-        
+
         public static implicit operator Boolean(BusinessResult<T> value)
         {
             return value.Internal;
         }
-        
+
         public static implicit operator HttpStatusCode(BusinessResult<T> value)
         {
             return value.Status;
         }
-        
+
         public static implicit operator BusinessResult<T>(HttpStatusCode value)
         {
             return new BusinessResult<T>((BusinessException) value);
         }
-        
+
         public static implicit operator BusinessResult<T>((HttpStatusCode Status, String? Message) value)
         {
             return new BusinessResult<T>((BusinessException) value);
         }
-        
+
         public static implicit operator BusinessResult<T>((HttpStatusCode Status, String? Message, String? Description) value)
         {
             return new BusinessResult<T>((BusinessException) value);
         }
-        
+
         public static implicit operator BusinessResult<T>((HttpStatusCode Status, Exception? Exception) value)
         {
             return new BusinessResult<T>((BusinessException) value);
         }
-        
+
         public static implicit operator BusinessResult<T>((HttpStatusCode Status, String? Message, Exception? Exception) value)
         {
             return new BusinessResult<T>((BusinessException) value);
         }
-        
+
         public static implicit operator BusinessResult<T>((HttpStatusCode Status, String? Message, String? Description, Exception? Exception) value)
         {
             return new BusinessResult<T>((BusinessException) value);
@@ -672,7 +672,7 @@ namespace NetExtender.Types.Monads
         {
             return first.Internal != second;
         }
-        
+
         public static Boolean operator ==(BusinessResult<T> first, BusinessResult<T> second)
         {
             return first.Internal == second.Internal;
@@ -767,7 +767,7 @@ namespace NetExtender.Types.Monads
                 _status = value;
             }
         }
-        
+
         public T Value
         {
             get
@@ -829,7 +829,7 @@ namespace NetExtender.Types.Monads
                 return Internal.IsEmpty;
             }
         }
-        
+
         public BusinessResult(T value)
         {
             Internal = new Result<T, BusinessException>(value);
@@ -860,13 +860,13 @@ namespace NetExtender.Types.Monads
             Internal = new Result<T, BusinessException>(info, context);
             Status = (HttpStatusCode) info.GetInt32(nameof(Status));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BusinessResult<T> Create(T value)
         {
             return new BusinessResult<T>(value);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BusinessResult<T> Create(BusinessException exception)
         {
@@ -1203,12 +1203,12 @@ namespace NetExtender.Types.Monads
         {
             return new Result<T>(new Result<T, Exception>(value.Internal.Internal, value.Exception));
         }
-        
+
         public static implicit operator Result<T, BusinessException>(BusinessResult<T, TBusiness> value)
         {
             return new Result<T, BusinessException>(value.Internal.Internal, value.Exception);
         }
-        
+
         public static implicit operator Result<T, BusinessException<TBusiness>>(BusinessResult<T, TBusiness> value)
         {
             return new Result<T, BusinessException<TBusiness>>(value.Internal);
@@ -1218,47 +1218,47 @@ namespace NetExtender.Types.Monads
         {
             return new BusinessResult(Unit.Default, value.Exception);
         }
-        
+
         public static implicit operator BusinessResult<T>(BusinessResult<T, TBusiness> value)
         {
             return new BusinessResult<T>(value.Internal.Internal, value.Exception);
         }
-        
+
         public static implicit operator Boolean(BusinessResult<T, TBusiness> value)
         {
             return value.Internal;
         }
-        
+
         public static implicit operator HttpStatusCode(BusinessResult<T, TBusiness> value)
         {
             return value.Status;
         }
-        
+
         public static implicit operator BusinessResult<T, TBusiness>((HttpStatusCode Status, TBusiness Code) value)
         {
             return new BusinessResult<T, TBusiness>(value);
         }
-        
+
         public static implicit operator BusinessResult<T, TBusiness>((HttpStatusCode Status, TBusiness Code, String? Message) value)
         {
             return new BusinessResult<T, TBusiness>(value);
         }
-        
+
         public static implicit operator BusinessResult<T, TBusiness>((HttpStatusCode Status, TBusiness Code, String? Message, String? Description) value)
         {
             return new BusinessResult<T, TBusiness>(value);
         }
-        
+
         public static implicit operator BusinessResult<T, TBusiness>((HttpStatusCode Status, TBusiness Code, Exception? Exception) value)
         {
             return new BusinessResult<T, TBusiness>(value);
         }
-        
+
         public static implicit operator BusinessResult<T, TBusiness>((HttpStatusCode Status, TBusiness Code, String? Message, Exception? Exception) value)
         {
             return new BusinessResult<T, TBusiness>(value);
         }
-        
+
         public static implicit operator BusinessResult<T, TBusiness>((HttpStatusCode Status, TBusiness Code, String? Message, String? Description, Exception? Exception) value)
         {
             return new BusinessResult<T, TBusiness>(value);
@@ -1313,7 +1313,7 @@ namespace NetExtender.Types.Monads
         {
             return first.Internal != second;
         }
-        
+
         public static Boolean operator ==(BusinessResult<T, TBusiness> first, BusinessResult<T, TBusiness> second)
         {
             return first.Internal == second.Internal;
@@ -1510,7 +1510,7 @@ namespace NetExtender.Types.Monads
                 return Internal.IsEmpty;
             }
         }
-        
+
         public BusinessResult(T value)
         {
             Internal = new Result<T, BusinessException<TBusiness>>(value);
@@ -1536,13 +1536,13 @@ namespace NetExtender.Types.Monads
             Internal = new Result<T, BusinessException<TBusiness>>(info, context);
             Status = (HttpStatusCode) info.GetInt32(nameof(Status));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BusinessResult<T, TBusiness> Create(T value)
         {
             return new BusinessResult<T, TBusiness>(value);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BusinessResult<T, TBusiness> Create(BusinessException<TBusiness> exception)
         {

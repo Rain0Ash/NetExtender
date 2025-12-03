@@ -20,7 +20,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 this.RaiseAndSetIfChanged(ref _cell, value);
             }
         }
-        
+
         private DataTemplate? _editcell;
         public DataTemplate? EditCellTemplate
         {

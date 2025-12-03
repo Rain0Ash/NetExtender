@@ -522,7 +522,7 @@ namespace NetExtender.UserInterface.Console
         private sealed class Seal : WindowConsoleHandler
         {
             public static Seal Instance { get; } = new Seal();
-            
+
             private Seal()
             {
             }

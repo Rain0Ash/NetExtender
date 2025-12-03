@@ -9,7 +9,7 @@ namespace NetExtender.Types.Behavior.Interfaces
     {
         public TOptions Options { get; }
     }
-    
+
     public interface IBehavior
     {
         public Boolean IsThreadSafe { get; }

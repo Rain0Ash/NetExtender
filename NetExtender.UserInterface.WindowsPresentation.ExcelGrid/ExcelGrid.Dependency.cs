@@ -90,16 +90,16 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
         public static readonly DependencyProperty EasyInsertByMouseProperty = DependencyProperty.Register(nameof(EasyInsertByMouse), typeof(Boolean), typeof(ExcelGrid), new UIPropertyMetadata(true));
         public static readonly DependencyProperty EasyInsertByKeyboardProperty = DependencyProperty.Register(nameof(EasyInsertByKeyboard), typeof(Boolean), typeof(ExcelGrid), new UIPropertyMetadata(true));
         public static readonly DependencyProperty IsMoveAfterEnterProperty = DependencyProperty.Register(nameof(IsMoveAfterEnter), typeof(Boolean), typeof(ExcelGrid), new PropertyMetadata(true));
-        
+
         private static VisibilityToValueConverter HorizontalScrollBarVisibilityConverter { get; } = new VisibilityToValueConverter { Visible = SystemParameters.HorizontalScrollBarHeight, Hidden = default(Double), Collapsed = default(Double) };
         private static VisibilityToValueConverter VerticalScrollBarVisibilityConverter { get; } = new VisibilityToValueConverter { Visible = SystemParameters.VerticalScrollBarWidth, Hidden = default(Double), Collapsed = default(Double) };
-        
+
         static ExcelGrid()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(ExcelGrid), new FrameworkPropertyMetadata(typeof(ExcelGrid)));
             IsEnabledProperty.OverrideMetadata(typeof(ExcelGrid), new FrameworkPropertyMetadata(HandleIsEnabledChanged));
         }
-        
+
         public Boolean AutoGenerateColumns
         {
             get
@@ -111,7 +111,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 SetValue(AutoGenerateColumnsProperty, value);
             }
         }
-        
+
         public Boolean AutoInsert
         {
             get
@@ -123,7 +123,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 SetValue(AutoInsertProperty, value);
             }
         }
-        
+
         public Boolean IsAutoFill
         {
             get
@@ -135,7 +135,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 SetValue(IsAutoFillProperty, value);
             }
         }
-        
+
         public Boolean IsReadOnly
         {
             get
@@ -147,7 +147,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 SetValue(IsReadOnlyProperty, value);
             }
         }
-        
+
         public Boolean WrapItems
         {
             get
@@ -159,7 +159,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 SetValue(WrapItemsProperty, value);
             }
         }
-        
+
         public IList? ItemsSource
         {
             get
@@ -171,7 +171,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 SetValue(ItemsSourceProperty, value);
             }
         }
-        
+
         public HorizontalAlignment DefaultHorizontalAlignment
         {
             get
@@ -183,7 +183,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 SetValue(DefaultHorizontalAlignmentProperty, value);
             }
         }
-        
+
         public IList? ColumnHeadersSource
         {
             get
@@ -195,7 +195,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 SetValue(ColumnHeadersSourceProperty, value);
             }
         }
-        
+
         public String ColumnHeadersFormatString
         {
             get
@@ -207,7 +207,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 SetValue(ColumnHeadersFormatStringProperty, value);
             }
         }
-        
+
         public IList? RowHeadersSource
         {
             get
@@ -219,7 +219,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 SetValue(RowHeadersSourceProperty, value);
             }
         }
-        
+
         public String RowHeadersFormatString
         {
             get
@@ -231,7 +231,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 SetValue(RowHeadersFormatStringProperty, value);
             }
         }
-        
+
         public Boolean CanResizeColumns
         {
             get
@@ -243,7 +243,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 SetValue(CanResizeColumnsProperty, value);
             }
         }
-        
+
         public Boolean CanResizeRows
         {
             get
@@ -255,7 +255,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 SetValue(CanResizeRowsProperty, value);
             }
         }
-        
+
         public Boolean CanInsert
         {
             get
@@ -267,7 +267,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 SetValue(CanInsertProperty, value);
             }
         }
-        
+
         public Boolean CanDelete
         {
             get
@@ -279,7 +279,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 SetValue(CanDeleteProperty, value);
             }
         }
-        
+
         public Boolean CanClear
         {
             get
@@ -291,7 +291,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 SetValue(CanClearProperty, value);
             }
         }
-        
+
         public IComparer? CustomSort
         {
             get
@@ -303,7 +303,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 SetValue(CustomSortProperty, value);
             }
         }
-        
+
         public InputDirection InputDirection
         {
             get
@@ -315,7 +315,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 SetValue(InputDirectionProperty, value);
             }
         }
-        
+
         public ExcelCell CurrentCell
         {
             get
@@ -327,7 +327,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 SetValue(CurrentCellProperty, value);
             }
         }
-        
+
         public ExcelCell SelectionCell
         {
             get
@@ -340,7 +340,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 SelectionCollection?.Clear();
             }
         }
-        
+
         public ExcelSelectionType SelectionType
         {
             get
@@ -352,7 +352,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 SetValue(SelectionTypeProperty, value);
             }
         }
-        
+
         public IEnumerable SelectedItems
         {
             get
@@ -364,7 +364,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 SetValue(SelectedItemsProperty, value);
             }
         }
-        
+
         public IExcelGridControlFactory ControlFactory
         {
             get
@@ -376,7 +376,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 SetValue(ControlFactoryProperty, value);
             }
         }
-        
+
         public Func<Int32, Object> CreateColumnHeader
         {
             get
@@ -388,7 +388,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 SetValue(CreateColumnHeaderProperty, value);
             }
         }
-        
+
         public Func<Object>? CreateItem
         {
             get
@@ -400,7 +400,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 SetValue(CreateItemProperty, value);
             }
         }
-        
+
         public String? AddItemHeader
         {
             get
@@ -412,7 +412,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 SetValue(AddItemHeaderProperty, value);
             }
         }
-        
+
         public String ItemHeaderPath
         {
             get
@@ -424,7 +424,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 SetValue(ItemHeaderPathProperty, value);
             }
         }
-        
+
         public GridLength ColumnHeaderHeight
         {
             get
@@ -436,7 +436,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 SetValue(ColumnHeaderHeightProperty, value);
             }
         }
-        
+
         public GridLength RowHeaderWidth
         {
             get
@@ -448,7 +448,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 SetValue(RowHeaderWidthProperty, value);
             }
         }
-        
+
         public GridLength DefaultColumnWidth
         {
             get
@@ -460,7 +460,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 SetValue(DefaultColumnWidthProperty, value);
             }
         }
-        
+
         public GridLength DefaultRowHeight
         {
             get
@@ -472,7 +472,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 SetValue(DefaultRowHeightProperty, value);
             }
         }
-        
+
         public ContextMenu? SheetContextMenu
         {
             get
@@ -484,7 +484,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 SetValue(SheetContextMenuProperty, value);
             }
         }
-        
+
         public ContextMenu? ColumnsContextMenu
         {
             get
@@ -496,7 +496,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 SetValue(ColumnsContextMenuProperty, value);
             }
         }
-        
+
         public ContextMenu? RowsContextMenu
         {
             get
@@ -508,7 +508,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 SetValue(RowsContextMenuProperty, value);
             }
         }
-        
+
         public Boolean MultiChangeInChangedColumnOnly
         {
             get
@@ -520,7 +520,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 SetValue(MultiChangeInChangedColumnOnlyProperty, value);
             }
         }
-        
+
         public Brush GridLineBrush
         {
             get
@@ -532,7 +532,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 SetValue(GridLineBrushProperty, value);
             }
         }
-        
+
         public Brush HeaderBorderBrush
         {
             get
@@ -544,7 +544,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 SetValue(HeaderBorderBrushProperty, value);
             }
         }
-        
+
         public Brush AlternatingRowsBackground
         {
             get
@@ -556,7 +556,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 SetValue(AlternatingRowsBackgroundProperty, value);
             }
         }
-        
+
         public Boolean EasyInsertByMouse
         {
             get
@@ -568,7 +568,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 SetValue(EasyInsertByMouseProperty, value);
             }
         }
-        
+
         public Boolean EasyInsertByKeyboard
         {
             get
@@ -580,7 +580,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 SetValue(EasyInsertByKeyboardProperty, value);
             }
         }
-        
+
         public Boolean IsMoveAfterEnter
         {
             get
@@ -592,47 +592,47 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 SetValue(IsMoveAfterEnterProperty, value);
             }
         }
-        
+
         protected static void HandleIsEnabledChanged(DependencyObject? sender, DependencyPropertyChangedEventArgs args)
         {
             if (sender is not ExcelGrid excel)
             {
                 return;
             }
-            
+
             excel.UpdateSelectionVisibility();
         }
-        
+
         protected static void OnIsReadOnlyChanged(DependencyObject? sender, DependencyPropertyChangedEventArgs args)
         {
             if (sender is not ExcelGrid excel || args.NewValue is not Boolean @readonly)
             {
                 return;
             }
-            
+
             excel.OnIsReadOnlyChanged(@readonly);
         }
-        
+
         protected static void CurrentCellChanged(DependencyObject? sender, DependencyPropertyChangedEventArgs args)
         {
             if (sender is not ExcelGrid excel)
             {
                 return;
             }
-            
+
             excel.CurrentCellChanged();
         }
-        
+
         private static Object? CoerceCurrentCell(DependencyObject? sender, Object? value)
         {
             if (sender is not ExcelGrid excel || value is not ExcelCell cell)
             {
                 return null;
             }
-            
+
             Int32 row = cell.Row;
             Int32 column = cell.Column;
-            
+
             if (excel.AutoInsert)
             {
                 column = Clamp(column, 0, excel.Columns - 1 + (excel.CanInsertColumns ? 1 : 0));
@@ -643,27 +643,27 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 column = Clamp(column, 0, excel.Columns - 1);
                 row = Clamp(row, 0, excel.Rows - 1);
             }
-            
+
             return new ExcelCell(column, row);
         }
-        
+
         protected static void SelectionCellChanged(DependencyObject? sender, DependencyPropertyChangedEventArgs args)
         {
             if (sender is not ExcelGrid excel)
             {
                 return;
             }
-            
+
             excel.SelectionCellChanged();
         }
-        
+
         private static Object? CoerceSelectionCell(DependencyObject? sender, Object? value)
         {
             if (sender is not ExcelGrid excel || value is not ExcelCell cell)
             {
                 return null;
             }
-            
+
             Int32 column = Clamp(cell.Column, 0, excel.Columns - 1);
             Int32 row = Clamp(cell.Row, 0, excel.Rows - 1);
             return new ExcelCell(column, row);
@@ -675,10 +675,10 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
             {
                 return;
             }
-            
+
             excel.ItemsSourceChanged();
         }
-        
+
         private static Int32 Clamp(Int32 value, Int32 min, Int32 max)
         {
             Int32 result = value;
@@ -686,22 +686,22 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
             {
                 result = max;
             }
-            
+
             if (result < min)
             {
                 result = min;
             }
-            
+
             return result;
         }
-        
+
         protected static void Reload(DependencyObject? sender, DependencyPropertyChangedEventArgs args)
         {
             if (sender is not ExcelGrid excel)
             {
                 return;
             }
-            
+
             excel.Update();
         }
     }

@@ -160,9 +160,9 @@ namespace NetExtender.Newtonsoft.Types.Enums
             {
                 throw new JsonSerializationException($"Unsupported type '{type.Name}' for '{GetType().Name}'.");
             }
-            
+
             writer.WriteStartObject();
-            
+
             writer.WritePropertyName(nameof(Enum<Any.Value>.Id), options);
             writer.WriteValue(properties.GetId(value));
 

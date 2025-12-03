@@ -10,7 +10,7 @@ namespace NetExtender.WindowsPresentation.Types.Commands.History.Interfaces
     {
         public new TContainer? this[TId id, T parameter] { get; }
     }
-    
+
     public interface ICommandHistoryManager<T, TNode, out TContainer> : ICommandHistoryManager<T, TNode> where T : class? where TNode : class, ICommandHistoryLink<TNode> where TContainer : class, ICommandHistoryLinkedContainer<TNode>
     {
         public new TContainer? this[TNode node] { get; }
@@ -26,7 +26,7 @@ namespace NetExtender.WindowsPresentation.Types.Commands.History.Interfaces
         public new Boolean Clear(TId id, T parameter);
         public new ICommandHistoryLinkedContainer<TNode>? this[TId id, T parameter] { get; }
     }
-    
+
     public interface ICommandHistoryManager<T, TNode> : ICommandHistoryManager<T> where T : class? where TNode : class, ICommandHistoryLink<TNode>
     {
         public new TNode Create(ICommand<T> command, T parameter);
@@ -47,7 +47,7 @@ namespace NetExtender.WindowsPresentation.Types.Commands.History.Interfaces
         public Boolean Clear(TId id, T parameter);
         public ICommandHistoryLinkedContainer? this[TId id, T parameter] { get; }
     }
-    
+
     public interface ICommandHistoryManager<T> : ICommandHistoryManagerInfo where T : class?
     {
         public ICommandHistoryLinkedEntry Create(ICommand<T> command, T parameter);

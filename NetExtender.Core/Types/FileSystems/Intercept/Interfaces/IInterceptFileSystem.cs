@@ -7,7 +7,8 @@ namespace NetExtender.FileSystems.Interfaces
 {
     public interface IInterceptFileSystem : IFileSystem
     {
-        [Obsolete($"Use {nameof(IFileSystemIntercept)} as specified interface {nameof(IInterceptPathHandler)}; {nameof(IInterceptFileHandler)}; {nameof(IInterceptDirectoryHandler)}.")]
+        //TODO: all interfaces
+        [Obsolete($"Use IFileSystemIntercept as specified interface {nameof(IInterceptPathHandler)}; {nameof(IInterceptFileHandler)}; {nameof(IInterceptDirectoryHandler)}.")]
         public new IFileSystemIntercept FileSystem { get; }
         public new IInterceptPathHandler Path { get; }
         public new IInterceptFileHandler File { get; }

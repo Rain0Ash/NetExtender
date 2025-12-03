@@ -13,7 +13,7 @@ namespace NetExtender.AspNetCore.Identity
         [JsonIgnore]
         [System.Text.Json.Serialization.JsonIgnore]
         private TUser User { get; }
-        
+
         [JsonProperty]
         public TId Id
         {
@@ -46,7 +46,7 @@ namespace NetExtender.AspNetCore.Identity
                 return User is null;
             }
         }
-        
+
         public IdentityJWTPayload(TUser user, DateTime expire)
         {
             User = user ?? throw new ArgumentNullException(nameof(user));

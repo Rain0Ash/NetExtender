@@ -459,7 +459,7 @@ namespace NetExtender.Utilities.Types
 
             return source.SelectManyWhere(static item => item != null, selector);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IQueryable<T> TakeMany<T>(this IQueryable<IQueryable<T>?> source, Int32 count)
         {
@@ -467,10 +467,10 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             return source.WhereNotNull().Take(count).SelectMany();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IQueryable<T> TakeMany<T>(this IQueryable<IQueryable<T>?> source, Range count)
         {
@@ -478,10 +478,10 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             return source.WhereNotNull().Take(count).SelectMany();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IQueryable<T> TakeManyLast<T>(this IQueryable<IQueryable<T>?> source, Int32 count)
         {
@@ -489,10 +489,10 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             return source.WhereNotNull().TakeLast(count).SelectMany();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IQueryable<TResult> TakeMany<T, TResult>(this IQueryable<T> source, Expression<Func<T, IEnumerable<TResult>>> selector, Int32 count)
         {
@@ -500,15 +500,15 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (selector is null)
             {
                 throw new ArgumentNullException(nameof(selector));
             }
-            
+
             return source.Take(count).SelectMany(selector);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IQueryable<TResult> TakeMany<T, TResult>(this IQueryable<T> source, Expression<Func<T, IEnumerable<TResult>>> selector, Range count)
         {
@@ -516,15 +516,15 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (selector is null)
             {
                 throw new ArgumentNullException(nameof(selector));
             }
-            
+
             return source.Take(count).SelectMany(selector);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IQueryable<TResult> TakeManyLast<T, TResult>(this IQueryable<T> source, Expression<Func<T, IEnumerable<TResult>>> selector, Int32 count)
         {
@@ -532,15 +532,15 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (selector is null)
             {
                 throw new ArgumentNullException(nameof(selector));
             }
-            
+
             return source.TakeLast(count).SelectMany(selector);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IQueryable<TResult> TakeMany<T, TResult>(this IQueryable<T> source, Expression<Func<T, Int32, IEnumerable<TResult>>> selector, Int32 count)
         {
@@ -548,15 +548,15 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (selector is null)
             {
                 throw new ArgumentNullException(nameof(selector));
             }
-            
+
             return source.Take(count).SelectMany(selector);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IQueryable<TResult> TakeMany<T, TResult>(this IQueryable<T> source, Expression<Func<T, Int32, IEnumerable<TResult>>> selector, Range count)
         {
@@ -564,15 +564,15 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (selector is null)
             {
                 throw new ArgumentNullException(nameof(selector));
             }
-            
+
             return source.Take(count).SelectMany(selector);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IQueryable<TResult> TakeManyLast<T, TResult>(this IQueryable<T> source, Expression<Func<T, Int32, IEnumerable<TResult>>> selector, Int32 count)
         {
@@ -580,15 +580,15 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (selector is null)
             {
                 throw new ArgumentNullException(nameof(selector));
             }
-            
+
             return source.TakeLast(count).SelectMany(selector);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IQueryable<TResult> TakeMany<T, TResult>(this IQueryable<T> source, Expression<Func<T, IEnumerable<TResult>>> collection, Expression<Func<T, TResult, TResult>> selector, Int32 count)
         {
@@ -596,20 +596,20 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (collection is null)
             {
                 throw new ArgumentNullException(nameof(collection));
             }
-            
+
             if (selector is null)
             {
                 throw new ArgumentNullException(nameof(selector));
             }
-            
+
             return source.Take(count).SelectMany(collection, selector);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IQueryable<TResult> TakeMany<T, TResult>(this IQueryable<T> source, Expression<Func<T, IEnumerable<TResult>>> collection, Expression<Func<T, TResult, TResult>> selector, Range count)
         {
@@ -617,20 +617,20 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (collection is null)
             {
                 throw new ArgumentNullException(nameof(collection));
             }
-            
+
             if (selector is null)
             {
                 throw new ArgumentNullException(nameof(selector));
             }
-            
+
             return source.Take(count).SelectMany(collection, selector);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IQueryable<TResult> TakeManyLast<T, TResult>(this IQueryable<T> source, Expression<Func<T, IEnumerable<TResult>>> collection, Expression<Func<T, TResult, TResult>> selector, Int32 count)
         {
@@ -638,20 +638,20 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (collection is null)
             {
                 throw new ArgumentNullException(nameof(collection));
             }
-            
+
             if (selector is null)
             {
                 throw new ArgumentNullException(nameof(selector));
             }
-            
+
             return source.TakeLast(count).SelectMany(collection, selector);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IQueryable<TResult> TakeMany<T, TResult>(this IQueryable<T> source, Expression<Func<T, Int32, IEnumerable<TResult>>> collection, Expression<Func<T, TResult, TResult>> selector, Int32 count)
         {
@@ -659,20 +659,20 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (collection is null)
             {
                 throw new ArgumentNullException(nameof(collection));
             }
-            
+
             if (selector is null)
             {
                 throw new ArgumentNullException(nameof(selector));
             }
-            
+
             return source.Take(count).SelectMany(collection, selector);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IQueryable<TResult> TakeMany<T, TResult>(this IQueryable<T> source, Expression<Func<T, Int32, IEnumerable<TResult>>> collection, Expression<Func<T, TResult, TResult>> selector, Range count)
         {
@@ -680,20 +680,20 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (collection is null)
             {
                 throw new ArgumentNullException(nameof(collection));
             }
-            
+
             if (selector is null)
             {
                 throw new ArgumentNullException(nameof(selector));
             }
-            
+
             return source.Take(count).SelectMany(collection, selector);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IQueryable<TResult> TakeManyLast<T, TResult>(this IQueryable<T> source, Expression<Func<T, Int32, IEnumerable<TResult>>> collection, Expression<Func<T, TResult, TResult>> selector, Int32 count)
         {
@@ -701,17 +701,17 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (collection is null)
             {
                 throw new ArgumentNullException(nameof(collection));
             }
-            
+
             if (selector is null)
             {
                 throw new ArgumentNullException(nameof(selector));
             }
-            
+
             return source.TakeLast(count).SelectMany(collection, selector);
         }
     }

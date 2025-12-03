@@ -9,7 +9,7 @@ namespace NetExtender.UserInterface.WindowsPresentation
     public class ItemsSourcePropertyAttribute : Attribute
     {
         public String? Property { get; }
-        
+
         public ItemsSourcePropertyAttribute(String? property)
         {
             Property = property;

@@ -13,7 +13,7 @@ namespace NetExtender.WindowsPresentation.Types.DataTriggers
             Value = null;
         }
     }
-    
+
     public class TrueDataTrigger : ValueDataTrigger<Boolean>
     {
         public TrueDataTrigger()
@@ -21,7 +21,7 @@ namespace NetExtender.WindowsPresentation.Types.DataTriggers
         {
         }
     }
-    
+
     public class FalseDataTrigger : ValueDataTrigger<Boolean>
     {
         public FalseDataTrigger()

@@ -106,7 +106,7 @@ namespace NetExtender.Utilities.Types
                 _ => new SuppressObservableCollectionWrapper<T>(collection)
             };
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void AddRange<T>(this IObservableCollection<T> collection, params T[]? source)
         {
@@ -120,11 +120,11 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(collection));
             }
-            
+
             using IDisposable? suppress = collection.Suppress();
             CollectionUtilities.AddRange(collection, source);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Replace<T>(this IObservableCollection<T> collection, params T[]? source)
         {
@@ -132,11 +132,11 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(collection));
             }
-            
+
             using IDisposable? suppress = collection.Suppress();
             ListUtilities.Replace(collection, source);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Replace<T>(this IObservableCollection<T> collection, IEnumerable<T>? source)
         {
@@ -148,7 +148,7 @@ namespace NetExtender.Utilities.Types
             using IDisposable? suppress = collection.Suppress();
             ListUtilities.Replace(collection, source);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Replace<T>(this IObservableCollection<T> collection, Int32 start, params T[]? source)
         {
@@ -156,11 +156,11 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(collection));
             }
-            
+
             using IDisposable? suppress = collection.Suppress();
             ListUtilities.Replace(collection, start, source);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Replace<T>(this IObservableCollection<T> collection, Int32 start, IEnumerable<T>? source)
         {
@@ -172,7 +172,7 @@ namespace NetExtender.Utilities.Types
             using IDisposable? suppress = collection.Suppress();
             ListUtilities.Replace(collection, start, source);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void FullReplace<T>(this IObservableCollection<T> collection, params T[]? source)
         {
@@ -180,11 +180,11 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(collection));
             }
-            
+
             using IDisposable? suppress = collection.Suppress();
             ListUtilities.FullReplace(collection, source);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void FullReplace<T>(this IObservableCollection<T> collection, IEnumerable<T>? source)
         {
@@ -196,7 +196,7 @@ namespace NetExtender.Utilities.Types
             using IDisposable? suppress = collection.Suppress();
             ListUtilities.FullReplace(collection, source);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void FullReplace<T>(this IObservableCollection<T> collection, Int32 start, params T[]? source)
         {
@@ -204,11 +204,11 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(collection));
             }
-            
+
             using IDisposable? suppress = collection.Suppress();
             ListUtilities.FullReplace(collection, start, source);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void FullReplace<T>(this IObservableCollection<T> collection, Int32 start, IEnumerable<T>? source)
         {
@@ -220,13 +220,13 @@ namespace NetExtender.Utilities.Types
             using IDisposable? suppress = collection.Suppress();
             ListUtilities.FullReplace(collection, start, source);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Reload<T>(this IObservableCollection<T> collection, params T[]? source)
         {
             Reload(collection, (IEnumerable<T>?) source);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Reload<T>(this IObservableCollection<T> collection, IEnumerable<T>? source)
         {
@@ -245,7 +245,7 @@ namespace NetExtender.Utilities.Types
             collection.Clear();
             CollectionUtilities.AddRange(collection, source);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void RemoveRange<T>(this IObservableCollection<T> collection, params T[]? source)
         {
@@ -257,7 +257,7 @@ namespace NetExtender.Utilities.Types
             using IDisposable? suppress = collection.Suppress();
             CollectionUtilities.RemoveRange(collection, source);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void RemoveRange<T>(this IObservableCollection<T> collection, IEnumerable<T>? source)
         {

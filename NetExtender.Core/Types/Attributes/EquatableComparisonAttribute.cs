@@ -54,12 +54,12 @@ namespace NetExtender.Utilities.Core
         {
             return typeof(T) == typeof(String) ? Equals(Unsafe.As<T?, String?>(ref x), Unsafe.As<T?, String?>(ref y)) : EqualityComparer<T>.Default.Equals(x, y);
         }
-        
+
         public Boolean Equals(String? x, String? y)
         {
             return Equals(x, y, Comparison);
         }
-        
+
         public virtual Boolean Equals(String? x, String? y, StringComparison comparison)
         {
             return String.Equals(x, y, comparison);

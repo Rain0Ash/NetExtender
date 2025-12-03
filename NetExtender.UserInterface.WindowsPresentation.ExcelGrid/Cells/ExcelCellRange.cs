@@ -9,7 +9,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
     {
         public ExcelCell TopLeft { get; }
         public ExcelCell BottomRight { get; }
-        
+
         public Int32 Columns
         {
             get
@@ -17,7 +17,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 return RightColumn - LeftColumn + 1;
             }
         }
-        
+
         public Int32 Rows
         {
             get
@@ -25,7 +25,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 return BottomRow - TopRow + 1;
             }
         }
-        
+
         public Int32 TopRow
         {
             get
@@ -33,7 +33,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 return TopLeft.Row;
             }
         }
-        
+
         public Int32 BottomRow
         {
             get
@@ -41,7 +41,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 return BottomRight.Row;
             }
         }
-        
+
         public Int32 LeftColumn
         {
             get
@@ -49,7 +49,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 return TopLeft.Column;
             }
         }
-        
+
         public Int32 RightColumn
         {
             get
@@ -57,18 +57,18 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 return BottomRight.Column;
             }
         }
-        
+
         public ExcelCellRange(ExcelCell first, ExcelCell second)
         {
             TopLeft = new ExcelCell(Math.Min(first.Column, second.Column), Math.Min(first.Row, second.Row));
             BottomRight = new ExcelCell(Math.Max(first.Column, second.Column), Math.Max(first.Row, second.Row));
         }
-        
+
         public override Int32 GetHashCode()
         {
             return HashCode.Combine(TopLeft, BottomRight);
         }
-        
+
         public override Boolean Equals(Object? other)
         {
             return other switch
@@ -77,22 +77,22 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 _ => false
             };
         }
-        
+
         public Boolean Equals(ExcelCellRange? other)
         {
             if (ReferenceEquals(null, other))
             {
                 return false;
             }
-            
+
             if (ReferenceEquals(this, other))
             {
                 return true;
             }
-            
+
             return TopLeft.Equals(other.TopLeft) && BottomRight.Equals(other.BottomRight);
         }
-        
+
         public override String ToString()
         {
             return $"{TopLeft}:{BottomRight}";

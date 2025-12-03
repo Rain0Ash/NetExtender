@@ -14,7 +14,7 @@ namespace Microsoft.AspNetCore.Identity.Data
             : this(String.Empty)
         {
         }
-        
+
         public RefreshRequest(String refresh)
         {
             RefreshToken = refresh ?? throw new ArgumentNullException(nameof(refresh));

@@ -15,15 +15,15 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
         {
             return left.Equals(right);
         }
-        
+
         public static Boolean operator !=(ExcelCell left, ExcelCell right)
         {
             return !(left == right);
         }
-        
+
         public Int32 Column { get; }
         public Int32 Row { get; }
-        
+
         public Boolean IsEmpty
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -32,13 +32,13 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 return Column < 0 || Row < 0;
             }
         }
-        
+
         public ExcelCell(Int32 column, Int32 row)
         {
             Column = column;
             Row = row;
         }
-        
+
         public static String ToColumn(Int32 column)
         {
             const Int32 alphabet = 'Z' - 'A' + 1;
@@ -49,16 +49,16 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 result += ((Char) ('A' + i - 1)).ToString(CultureInfo.InvariantCulture);
                 column -= i * alphabet;
             }
-            
+
             result += ((Char) ('A' + column)).ToString(CultureInfo.InvariantCulture);
             return result;
         }
-        
+
         public static String ToRow(Int32 row)
         {
             return (row + 1).ToString(CultureInfo.InvariantCulture);
         }
-        
+
         public override Int32 GetHashCode()
         {
             return unchecked((Int32) (((Int64) Column << 16) + Row));

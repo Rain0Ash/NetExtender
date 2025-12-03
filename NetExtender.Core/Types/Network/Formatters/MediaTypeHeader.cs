@@ -19,14 +19,14 @@ namespace NetExtender.Types.Network.Formatters
         {
             return first.Equals(second);
         }
-        
+
         public static Boolean operator !=(MediaTypeHeader first, MediaTypeHeader second)
         {
             return !(first == second);
         }
-        
+
         internal MediaTypeHeaderValue Value { get; }
-        
+
         public String? CharSet
         {
             get
@@ -34,7 +34,7 @@ namespace NetExtender.Types.Network.Formatters
                 return Value?.CharSet;
             }
         }
-        
+
         public String? MediaType
         {
             get
@@ -42,7 +42,7 @@ namespace NetExtender.Types.Network.Formatters
                 return Value?.MediaType;
             }
         }
-        
+
         public Boolean IsEmpty
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -51,32 +51,32 @@ namespace NetExtender.Types.Network.Formatters
                 return Value is null;
             }
         }
-        
+
         public MediaTypeHeader(MediaTypeHeaderValue value)
         {
             Value = value ?? throw new ArgumentNullException(nameof(value));
         }
-        
+
         public MediaTypeHeaderValue? Clone()
         {
             return Value?.Clone();
         }
-        
+
         public Int32 CompareTo(MediaTypeHeader other)
         {
             return CompareTo(other.Value);
         }
-        
+
         public Int32 CompareTo(MediaTypeHeaderValue? other)
         {
             return String.Compare(Value?.MediaType, other?.MediaType, StringComparison.OrdinalIgnoreCase);
         }
-        
+
         public override Int32 GetHashCode()
         {
             return Value?.GetHashCode() ?? 0;
         }
-        
+
         public override Boolean Equals(Object? other)
         {
             return other switch
@@ -87,7 +87,7 @@ namespace NetExtender.Types.Network.Formatters
                 _ => false
             };
         }
-        
+
         public Boolean Equals(MediaTypeHeader other)
         {
             return Equals(other.Value);
@@ -97,7 +97,7 @@ namespace NetExtender.Types.Network.Formatters
         {
             return ReferenceEquals(Value, other) || Value is not null && Value.Equals(other);
         }
-        
+
         public override String? ToString()
         {
             return Value?.ToString();

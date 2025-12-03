@@ -17,7 +17,7 @@ namespace NetExtender.Domains.WinForms.AspNetCore.Applications
     public class WinFormsAspNetCoreApplicationBase<THost> : WinFormsApplication where THost : class
     {
         protected IAspNetCoreApplicationServer<THost>? Server { get; set; }
-        
+
         protected IAspNetCoreApplicationServer<THost> Create(THost host)
         {
             return Create<THost>(host);
@@ -74,11 +74,11 @@ namespace NetExtender.Domains.WinForms.AspNetCore.Applications
             }
         }
     }
-    
+
     public class WinFormsAspNetCoreApplication : WinFormsAspNetCoreApplicationBase<IHost>
     {
     }
-    
+
     public class WinFormsAspNetCoreWebApplication : WinFormsAspNetCoreApplicationBase<IWebHost>
     {
     }

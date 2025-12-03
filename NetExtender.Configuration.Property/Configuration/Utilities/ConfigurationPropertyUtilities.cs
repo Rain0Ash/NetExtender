@@ -334,7 +334,7 @@ namespace NetExtender.Configuration.Utilities
 
             return GetValue(property, converter?.Invoke(property.Alternate, out T? result) is true ? result : default, converter!);
         }
-        
+
         public static T? GetValue<T>(this IConfigProperty property, IOneWayConverter<String?, T>? converter)
         {
             if (property is null)
@@ -487,7 +487,7 @@ namespace NetExtender.Configuration.Utilities
             String? convert = value.GetString();
             return convert is not null && property.SetValue(convert);
         }
-        
+
         public static Boolean SetValue<T>(this IConfigProperty property, T value, TryConverter<T, String?>? converter)
         {
             if (property is null)
@@ -508,7 +508,7 @@ namespace NetExtender.Configuration.Utilities
             convert = value.GetString();
             return convert is not null && property.SetValue(convert);
         }
-        
+
         public static Boolean SetValue<T>(this IConfigProperty property, T value, IOneWayConverter<T, String?>? converter)
         {
             if (property is null)
@@ -529,7 +529,7 @@ namespace NetExtender.Configuration.Utilities
             convert = value.GetString();
             return convert is not null && property.SetValue(convert);
         }
-        
+
         public static Boolean SetValue<T>(this IConfigProperty property, T value, ITwoWayConverter<String?, T>? converter)
         {
             if (property is null)
@@ -550,7 +550,7 @@ namespace NetExtender.Configuration.Utilities
             convert = value.GetString();
             return convert is not null && property.SetValue(convert);
         }
-        
+
         public static Task<Boolean> SetValueAsync<T>(this IConfigProperty property, T value)
         {
             return SetValueAsync(property, value, CancellationToken.None);
@@ -588,7 +588,7 @@ namespace NetExtender.Configuration.Utilities
             {
                 return await property.SetValueAsync(null, token).ConfigureAwait(false);
             }
-            
+
             if (converter is not null && converter.Invoke(value, out String? convert))
             {
                 return convert is not null && await property.SetValueAsync(convert, token).ConfigureAwait(false);
@@ -614,7 +614,7 @@ namespace NetExtender.Configuration.Utilities
             {
                 return await property.SetValueAsync(null, token).ConfigureAwait(false);
             }
-            
+
             if (converter is not null && converter.TryConvert(value, out String? convert))
             {
                 return convert is not null && await property.SetValueAsync(convert, token).ConfigureAwait(false);
@@ -640,7 +640,7 @@ namespace NetExtender.Configuration.Utilities
             {
                 return await property.SetValueAsync(null, token).ConfigureAwait(false);
             }
-            
+
             if (converter is not null && converter.TryConvertBack(value, out String? convert))
             {
                 return convert is not null && await property.SetValueAsync(convert, token).ConfigureAwait(false);
@@ -991,7 +991,7 @@ namespace NetExtender.Configuration.Utilities
             {
                 throw new ArgumentNullException(nameof(synchronizer));
             }
-            
+
             synchronizer.Add(property);
             return property;
         }

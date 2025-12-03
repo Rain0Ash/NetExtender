@@ -61,7 +61,7 @@ namespace NetExtender.JWT
         {
             algorithm = null;
             payload = null;
-            
+
             if ((validator = Validator) is null)
             {
                 exception = new InvalidOperationException("Cannot validate the JWT token. Validator is not available.");
@@ -115,10 +115,10 @@ namespace NetExtender.JWT
             {
                 source = Algorithms.JWT.Encoding.GetBytes(jwt.Header, jwt.Payload, '.');
             }
-            
+
             return algorithm is IJWTAsymmetricAlgorithm asymmetric ? validator.TryValidate(asymmetric, payload, source, signature) : ValidateSymmetricAlgorithm(algorithm, validator, key, payload, source, signature);
         }
-        
+
         public virtual Exception? TryValidate(JWTToken jwt, JWTKey key)
         {
             return TryValidate(jwt, (ReadOnlySpan<Byte>) key);
@@ -150,7 +150,7 @@ namespace NetExtender.JWT
 
             return algorithm is IJWTAsymmetricAlgorithm asymmetric ? validator.TryValidate(asymmetric, payload, source, signature) : ValidateSymmetricAlgorithm(algorithm, validator, keys, payload, source, signature);
         }
-        
+
         protected virtual Exception? ValidateSymmetricAlgorithm(IJWTAlgorithm algorithm, IJWTValidator? validator, ReadOnlySpan<Byte> key, String payload, ReadOnlySpan<Byte> source, ReadOnlySpan<Byte> signature)
         {
             if (validator is null)
@@ -174,7 +174,7 @@ namespace NetExtender.JWT
             String @new = Convert.ToBase64String(buffer);
             return validator.TryValidate(payload, raw, @new);
         }
-        
+
         protected virtual Exception? ValidateSymmetricAlgorithm(IJWTAlgorithm algorithm, IJWTValidator? validator, JWTKeys keys, String payload, ReadOnlySpan<Byte> source, ReadOnlySpan<Byte> signature)
         {
             if (validator is null)
@@ -192,7 +192,7 @@ namespace NetExtender.JWT
             Span<Byte> buffer = stackalloc Byte[Algorithms.JWT.StackAlloc];
             Span<Byte> slice = buffer;
             Byte[]? array = null;
-            
+
             String[] signatures = new String[keys.Count];
 
             Int32 i = 0;
@@ -203,7 +203,7 @@ namespace NetExtender.JWT
                     array ??= signature.ToArray();
                     slice = algorithm.Sign(key, array);
                 }
-                
+
                 signatures[i++] = Convert.ToBase64String(slice);
                 slice = buffer;
             }
@@ -234,9 +234,9 @@ namespace NetExtender.JWT
             {
                 throw new ArgumentNullException(nameof(jwt));
             }
-            
+
             Span<Byte> buffer = stackalloc Byte[Algorithms.JWT.StackAlloc];
-            
+
             if (!Url.TryDecode(jwt.Header, ref buffer))
             {
                 buffer = Url.Decode(jwt.Header);
@@ -244,7 +244,7 @@ namespace NetExtender.JWT
 
             return Algorithms.JWT.Encoding.GetString(buffer);
         }
-        
+
         public Object DecodeHeader(Type type, JWTToken jwt)
         {
             if (type is null)
@@ -261,7 +261,7 @@ namespace NetExtender.JWT
             String payload = DecodeHeader(jwt);
             return Deserialize<T>(payload);
         }
-        
+
         public String Decode(JWTToken jwt)
         {
             return Decode(jwt, true);
@@ -298,7 +298,7 @@ namespace NetExtender.JWT
             this.Validate(jwt, key);
             return Decode(jwt);
         }
-        
+
         public String Decode(JWTToken jwt, JWTKey key)
         {
             return Decode(jwt, key, true);
@@ -335,7 +335,7 @@ namespace NetExtender.JWT
             this.Validate(jwt, keys);
             return Decode(jwt);
         }
-        
+
         public Object Decode(Type type, JWTToken jwt)
         {
             return Decode(type, jwt, true);
@@ -399,7 +399,7 @@ namespace NetExtender.JWT
             String payload = Decode(jwt, keys, verify);
             return Deserialize(type, payload);
         }
-        
+
         public T Decode<T>(JWTToken jwt)
         {
             return Decode<T>(jwt, true);

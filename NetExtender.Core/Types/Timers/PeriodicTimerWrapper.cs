@@ -4,7 +4,6 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using NetExtender.Types.Timers.Interfaces;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Timers
@@ -36,7 +35,7 @@ namespace NetExtender.Types.Timers
     }
 #endif
 
-    public sealed class PeriodicTimerWrapper : ITimer
+    public sealed class PeriodicTimerWrapper : Interfaces.ITimer
     {
         private TimerWrapper Timer { get; }
 
@@ -59,7 +58,7 @@ namespace NetExtender.Types.Timers
                 return Timer.IsStarted;
             }
         }
-        
+
         public DateTime Now
         {
             get

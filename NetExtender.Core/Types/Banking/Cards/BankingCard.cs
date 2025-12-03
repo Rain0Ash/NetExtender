@@ -15,7 +15,7 @@ namespace NetExtender.Types.Banking.Cards
         {
             return value.Type;
         }
-        
+
         public static implicit operator String(BankingCard value)
         {
             return value.Number ?? String.Empty;
@@ -164,7 +164,7 @@ namespace NetExtender.Types.Banking.Cards
 
             return new BankingCardGenerator(formatter ?? BankingCardFormatter.Default).Generate(number);
         }
-        
+
         public Boolean TryFormat(IBankingCardFormatter formatter, [MaybeNullWhen(false)] out String result)
         {
             if (formatter is null)
@@ -205,12 +205,12 @@ namespace NetExtender.Types.Banking.Cards
                 _ => false
             };
         }
-        
+
         public Boolean Equals(String? other)
         {
             return Number == other;
         }
-        
+
         public Boolean Equals(BankingCard other)
         {
             return Type == other.Type && Number == other.Number;

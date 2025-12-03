@@ -94,7 +94,7 @@ namespace NetExtender.Types.Counters
             return first - second;
         }
     }
-    
+
     public class SortedCounter64<T> : SortedCounter<T, Int64>
     {
         public SortedCounter64()
@@ -181,7 +181,7 @@ namespace NetExtender.Types.Counters
             return first - second;
         }
     }
-    
+
     public class DecimalSortedCounter<T> : SortedCounter<T, Decimal>
     {
         public DecimalSortedCounter()
@@ -268,7 +268,7 @@ namespace NetExtender.Types.Counters
             return first - second;
         }
     }
-    
+
     public class SortedCounter<T, TCount> : CounterBase<T, TCount> where TCount : unmanaged, IConvertible
     {
         protected sealed override NullableSortedDictionary<T, TCount> Internal { get; }
@@ -369,7 +369,7 @@ namespace NetExtender.Types.Counters
             Internal = new NullableSortedDictionary<T, TCount>(comparer);
             AddRange(collection);
         }
-        
+
         public sealed override KeyValuePair<T, TCount>[] ToArray()
         {
             return base.ToArray();

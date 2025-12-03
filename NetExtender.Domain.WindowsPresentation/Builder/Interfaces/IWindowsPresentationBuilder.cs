@@ -10,7 +10,7 @@ namespace NetExtender.Domains.WindowsPresentation.Builder.Interfaces
     public interface IWindowsPresentationBuilder<out T> : IWindowsPresentationBuilder, IApplicationBuilder<T> where T : Window
     {
     }
-    
+
     public interface IWindowsPresentationBuilder : IApplicationBuilder
     {
         public new IWindowConsole Console { get; }

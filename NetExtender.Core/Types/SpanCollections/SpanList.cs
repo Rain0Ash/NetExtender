@@ -109,7 +109,7 @@ namespace NetExtender.Types.SpanCollections
 
             return -1;
         }
-        
+
         public Int32 LastIndexOf(T item)
         {
             return Count > 0 ? LastIndexOf(item, Count - 1, Count) : -1;
@@ -121,10 +121,10 @@ namespace NetExtender.Types.SpanCollections
             {
                 throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
-            
+
             return LastIndexOf(item, index, index + 1);
         }
-        
+
         public Int32 LastIndexOf(T item, Int32 index, Int32 count)
         {
             if (index < 0 || index >= Count)
@@ -136,7 +136,7 @@ namespace NetExtender.Types.SpanCollections
             {
                 throw new ArgumentOutOfRangeException(nameof(count), count, null);
             }
-            
+
             for (Int32 i = index + count - 1; i >= index; i--)
             {
                 if (EqualityComparer<T>.Default.Equals(Internal[i], item))
@@ -342,7 +342,7 @@ namespace NetExtender.Types.SpanCollections
             Count = count;
             Version++;
         }
-        
+
         public void Insert(Int32 index, T item)
         {
             if (index < 0 || index > Count)
@@ -364,7 +364,7 @@ namespace NetExtender.Types.SpanCollections
             Count++;
             Version++;
         }
-        
+
         public void InsertRange(Int32 index, ReadOnlySpan<T> source)
         {
             if (index < 0 || index > Count)
@@ -386,7 +386,7 @@ namespace NetExtender.Types.SpanCollections
             Count += source.Length;
             Version++;
         }
-        
+
         public void InsertRange(Int32 index, IEnumerable<T> source)
         {
             if (source is null)
@@ -457,12 +457,12 @@ namespace NetExtender.Types.SpanCollections
             {
                 throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
-            
+
             if (count < 0 || index + count > Count)
             {
                 throw new ArgumentOutOfRangeException(nameof(count), count, null);
             }
-            
+
             Internal.Slice(index, count).Reverse();
         }
 

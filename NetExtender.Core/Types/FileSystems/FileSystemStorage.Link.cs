@@ -13,54 +13,54 @@ namespace NetExtender.FileSystems
     {
 #region Storage
         protected internal abstract FileSystemInfo? Info(TLink node);
-        
+
         FileSystemInfo? IFileSystemStorage.Info(ILinkEntry entry)
         {
             return Info(Verify<TLink, ILinkEntry>(entry));
         }
-        
+
         protected internal abstract void GetObjectData(TLink node, SerializationInfo info, StreamingContext context);
-        
+
         void IFileSystemStorage.GetObjectData(ILinkEntry entry, SerializationInfo info, StreamingContext context)
         {
             GetObjectData(Verify<TLink, ILinkEntry>(entry), info, context);
         }
-        
+
         protected internal new abstract String Name(TLink node);
 
         String IFileSystemStorage.Name(ILinkEntry entry)
         {
             return Name(Verify<TLink, ILinkEntry>(entry));
         }
-        
+
         protected internal abstract String FullName(TLink node);
 
         String IFileSystemStorage.FullName(ILinkEntry entry)
         {
             return FullName(Verify<TLink, ILinkEntry>(entry));
         }
-        
+
         protected internal abstract String Extension(TLink node);
 
         String IFileSystemStorage.Extension(ILinkEntry entry)
         {
             return Extension(Verify<TLink, ILinkEntry>(entry));
         }
-        
+
         protected internal new abstract Boolean IsReal(TLink node);
 
         Boolean IFileSystemStorage.IsReal(ILinkEntry entry)
         {
             return IsReal(Verify<TLink, ILinkEntry>(entry));
         }
-        
+
         protected internal abstract Boolean Exists(TLink node);
 
         Boolean IFileSystemStorage.Exists(ILinkEntry entry)
         {
             return Exists(Verify<TLink, ILinkEntry>(entry));
         }
-        
+
         protected internal abstract FileAttributes Attributes(TLink node);
 
         FileAttributes IFileSystemStorage.Attributes(ILinkEntry entry)
@@ -74,182 +74,196 @@ namespace NetExtender.FileSystems
         {
             Attributes(Verify<TLink, ILinkEntry>(entry), value);
         }
-        
+
+        protected internal abstract UnixFileMode UnixFileMode(TLink node);
+
+        UnixFileMode IFileSystemStorage.UnixFileMode(ILinkEntry entry)
+        {
+            return UnixFileMode(Verify<TLink, ILinkEntry>(entry));
+        }
+
+        protected internal abstract void UnixFileMode(TLink node, UnixFileMode value);
+
+        void IFileSystemStorage.UnixFileMode(ILinkEntry entry, UnixFileMode value)
+        {
+            UnixFileMode(Verify<TLink, ILinkEntry>(entry), value);
+        }
+
         protected internal abstract String? LinkTarget(TLink node);
-        
+
         String? IFileSystemStorage.LinkTarget(ILinkEntry entry)
         {
             return LinkTarget(Verify<TLink, ILinkEntry>(entry));
         }
-        
+
         protected internal new abstract DateTime CreationTime(TLink node);
 
         DateTime IFileSystemStorage.CreationTime(ILinkEntry entry)
         {
             return CreationTime(Verify<TLink, ILinkEntry>(entry));
         }
-        
+
         protected internal new abstract void CreationTime(TLink node, DateTime value);
 
         void IFileSystemStorage.CreationTime(ILinkEntry entry, DateTime value)
         {
             CreationTime(Verify<TLink, ILinkEntry>(entry), value);
         }
-        
+
         protected internal new abstract DateTime CreationTimeUtc(TLink node);
 
         DateTime IFileSystemStorage.CreationTimeUtc(ILinkEntry entry)
         {
             return CreationTimeUtc(Verify<TLink, ILinkEntry>(entry));
         }
-        
+
         protected internal new abstract void CreationTimeUtc(TLink node, DateTime value);
 
         void IFileSystemStorage.CreationTimeUtc(ILinkEntry entry, DateTime value)
         {
             CreationTimeUtc(Verify<TLink, ILinkEntry>(entry), value);
         }
-        
+
         protected internal abstract DateTime LastAccessTime(TLink node);
 
         DateTime IFileSystemStorage.LastAccessTime(ILinkEntry entry)
         {
             return LastAccessTime(Verify<TLink, ILinkEntry>(entry));
         }
-        
+
         protected internal abstract void LastAccessTime(TLink node, DateTime value);
 
         void IFileSystemStorage.LastAccessTime(ILinkEntry entry, DateTime value)
         {
             LastAccessTime(Verify<TLink, ILinkEntry>(entry), value);
         }
-        
+
         protected internal abstract DateTime LastAccessTimeUtc(TLink node);
 
         DateTime IFileSystemStorage.LastAccessTimeUtc(ILinkEntry entry)
         {
             return LastAccessTimeUtc(Verify<TLink, ILinkEntry>(entry));
         }
-        
+
         protected internal abstract void LastAccessTimeUtc(TLink node, DateTime value);
 
         void IFileSystemStorage.LastAccessTimeUtc(ILinkEntry entry, DateTime value)
         {
             LastAccessTimeUtc(Verify<TLink, ILinkEntry>(entry), value);
         }
-        
+
         protected internal abstract DateTime LastWriteTime(TLink node);
 
         DateTime IFileSystemStorage.LastWriteTime(ILinkEntry entry)
         {
             return LastWriteTime(Verify<TLink, ILinkEntry>(entry));
         }
-        
+
         protected internal abstract void LastWriteTime(TLink node, DateTime value);
 
         void IFileSystemStorage.LastWriteTime(ILinkEntry entry, DateTime value)
         {
             LastWriteTime(Verify<TLink, ILinkEntry>(entry), value);
         }
-        
+
         protected internal abstract DateTime LastWriteTimeUtc(TLink node);
 
         DateTime IFileSystemStorage.LastWriteTimeUtc(ILinkEntry entry)
         {
             return LastWriteTimeUtc(Verify<TLink, ILinkEntry>(entry));
         }
-        
+
         protected internal abstract void LastWriteTimeUtc(TLink node, DateTime value);
 
         void IFileSystemStorage.LastWriteTimeUtc(ILinkEntry entry, DateTime value)
         {
             LastWriteTimeUtc(Verify<TLink, ILinkEntry>(entry), value);
         }
-        
+
         protected internal abstract String? DirectoryName(TLink node);
 
         String? IFileSystemStorage.DirectoryName(ILinkEntry entry)
         {
             return DirectoryName(Verify<TLink, ILinkEntry>(entry));
         }
-        
+
         protected internal abstract TDirectory? GetDirectory(TLink node);
 
         IDirectoryEntry? IFileSystemStorage.GetDirectory(ILinkEntry entry)
         {
             return GetDirectory(Verify<TLink, ILinkEntry>(entry));
         }
-        
+
         protected internal new abstract TDrive? Drive(TLink node);
 
         IDriveEntry? IFileSystemStorage.Drive(ILinkEntry entry)
         {
             return Drive(Verify<TLink, ILinkEntry>(entry));
         }
-        
+
         protected internal abstract Boolean CreateAsSymbolicLink(TLink node, String target);
 
         Boolean IFileSystemStorage.CreateAsSymbolicLink(ILinkEntry entry, String target)
         {
             return CreateAsSymbolicLink(Verify<TLink, ILinkEntry>(entry), target);
         }
-        
+
         protected internal abstract IFileSystemNode? ResolveLinkTarget(TLink node);
 
         IFileSystemEntry? IFileSystemStorage.ResolveLinkTarget(ILinkEntry entry)
         {
             return ResolveLinkTarget(Verify<TLink, ILinkEntry>(entry))?.This;
         }
-        
+
         protected internal abstract IFileSystemNode? ResolveLinkTarget(TLink node, Boolean final);
 
         IFileSystemEntry? IFileSystemStorage.ResolveLinkTarget(ILinkEntry entry, Boolean final)
         {
             return ResolveLinkTarget(Verify<TLink, ILinkEntry>(entry), final)?.This;
         }
-        
+
         protected internal abstract void Create(TLink node);
 
         void IFileSystemStorage.Create(ILinkEntry entry)
         {
             Create(Verify<TLink, ILinkEntry>(entry));
         }
-        
+
         protected internal abstract void Delete(TLink node);
 
         void IFileSystemStorage.Delete(ILinkEntry entry)
         {
             Delete(Verify<TLink, ILinkEntry>(entry));
         }
-        
+
         protected internal abstract void Refresh(TLink node);
 
         void IFileSystemStorage.Refresh(ILinkEntry entry)
         {
             Refresh(Verify<TLink, ILinkEntry>(entry));
         }
-        
+
         protected internal abstract Int32 GetHashCode(TLink? node);
 
         Int32 IFileSystemStorage.GetHashCode(ILinkEntry? entry)
         {
             return GetHashCode(Verify<TLink, ILinkEntry>(entry));
         }
-        
+
         protected internal abstract Boolean Equals(TLink? node, FileSystemInfo? other);
 
         Boolean IFileSystemStorage.Equals(ILinkEntry? entry, FileSystemInfo? other)
         {
             return Equals(Verify<TLink, ILinkEntry>(entry), other);
         }
-        
+
         protected internal abstract Boolean Equals(TLink? node, IFileSystemInfo? other);
 
         Boolean IFileSystemStorage.Equals(ILinkEntry? entry, IFileSystemInfo? other)
         {
             return Equals(Verify<TLink, ILinkEntry>(entry), other);
         }
-        
+
         [return: NotNullIfNotNull("node")]
         protected internal abstract String? ToString(TLink? node);
 
@@ -272,7 +286,7 @@ namespace NetExtender.FileSystems
                     return (TDirectory?) base.Directory;
                 }
             }
-            
+
             public override TDrive? Drive
             {
                 get
@@ -315,7 +329,7 @@ namespace NetExtender.FileSystems
                 return ref INode<TInitializer>.Verify(this, ref initializer);
             }
         }
-        
+
         public abstract class LinkNode : LinkInfoEntry, ILinkNode
         {
             public Guid Id { get; }
@@ -331,7 +345,7 @@ namespace NetExtender.FileSystems
                     Storage = value;
                 }
             }
-            
+
             IFileSystemStorage INode.Storage
             {
                 get

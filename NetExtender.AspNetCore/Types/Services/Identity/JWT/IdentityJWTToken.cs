@@ -13,7 +13,7 @@ namespace NetExtender.AspNetCore.Identity
         public String RefreshToken { get; set; } = default!;
         public DateTime AccessTokenExpiration { get; set; }
         public DateTime RefreshTokenExpiration { get; set; }
-        
+
         public Boolean Equals(TId other)
         {
             return EqualityComparer<TId>.Default.Equals(Id, other);

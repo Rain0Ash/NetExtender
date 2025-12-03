@@ -22,7 +22,7 @@ namespace NetExtender.DependencyInjection.Interfaces
             }
         }
     }
-    
+
     public interface IDependencyService
     {
         public static ImmutableDictionary<Type, ServiceLifetime> Services { get; } = new Dictionary<Type, ServiceLifetime>
@@ -31,14 +31,14 @@ namespace NetExtender.DependencyInjection.Interfaces
             { typeof(IScoped), ServiceLifetime.Scoped },
             { typeof(ISingleton), ServiceLifetime.Singleton }
         }.ToImmutableDictionary();
-        
+
         public ServiceLifetime Lifetime
         {
             get
             {
                 Type type = GetType();
                 ImmutableHashSet<Type> interfaces = ReflectionUtilities.Inherit[typeof(IDependencyService)].Interfaces.Intersect(type.GetInterfaces()).Intersect(Services.Keys);
-                
+
                 return interfaces.Count switch
                 {
                     0 => throw new InvalidOperationException($"Can't find any of '{nameof(ITransient)}; {nameof(IScoped)}; {nameof(ISingleton)}' interface implementations for type '{type}'."),

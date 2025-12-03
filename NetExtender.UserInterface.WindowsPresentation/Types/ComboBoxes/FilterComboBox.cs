@@ -34,7 +34,7 @@ namespace NetExtender.UserInterface.WindowsPresentation
                 SetValue(IsCaseSensitiveProperty, value);
             }
         }
-        
+
         [Description("The way the combo box behaves when it receives focus")]
         [Category("AutoFiltered ComboBox")]
         [DefaultValue(true)]
@@ -51,7 +51,7 @@ namespace NetExtender.UserInterface.WindowsPresentation
                 SetValue(DropDownOnFocusProperty, value);
             }
         }
-        
+
         private Int32 SilenceEventsCount { get; set; }
         private ICollectionView? CollectionView { get; set; }
         private String? CurrentText  { get; set; }
@@ -66,7 +66,7 @@ namespace NetExtender.UserInterface.WindowsPresentation
             text.AddValueChanged(this, OnTextChanged);
             RegisterIsCaseSensitiveChangeNotification();
         }
-        
+
         private void RegisterIsCaseSensitiveChangeNotification()
         {
             DependencyPropertyDescriptor.FromProperty(IsCaseSensitiveProperty, typeof(FilterComboBox)).AddValueChanged(this, OnIsCaseSensitiveChanged);

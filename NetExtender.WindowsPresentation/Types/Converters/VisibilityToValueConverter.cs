@@ -12,7 +12,7 @@ namespace NetExtender.WindowsPresentation.Types.Converters
     public class VisibilityToValueConverter : VisibilityToValueConverter<Object>
     {
     }
-    
+
     [SuppressMessage("ReSharper", "HeapView.PossibleBoxingAllocation")]
     public class VisibilityToValueConverter<T> : ValueConverter
     {
@@ -27,7 +27,7 @@ namespace NetExtender.WindowsPresentation.Types.Converters
             {
                 return Default;
             }
-            
+
             return visibility switch
             {
                 Visibility.Visible => Visible,
@@ -43,17 +43,17 @@ namespace NetExtender.WindowsPresentation.Types.Converters
             {
                 return Visibility.Visible;
             }
-            
+
             if (Equals(value, Hidden))
             {
                 return Visibility.Hidden;
             }
-            
+
             if (Equals(value, Collapsed))
             {
                 return Visibility.Collapsed;
             }
-            
+
             return Default;
         }
     }

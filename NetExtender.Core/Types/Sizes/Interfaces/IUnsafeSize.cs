@@ -11,7 +11,7 @@ namespace NetExtender
         public Boolean HasLength { get; }
         public Int32 Length { get; set; }
     }
-    
+
     public interface IUnsafeSize<T> : IUnsafeSize, IEqualityStruct<T> where T : struct, IUnsafeSize<T>
     {
         public ref T This { get; }
@@ -56,7 +56,7 @@ namespace NetExtender
     {
         public Type Type { get; }
         public Int32 Size { get; }
-        
+
         public ref Byte GetPinnableReference();
     }
 }

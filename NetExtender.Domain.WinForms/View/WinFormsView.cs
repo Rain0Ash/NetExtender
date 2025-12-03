@@ -26,7 +26,7 @@ namespace NetExtender.Domains.WinForms.View
         {
         }
     }
-    
+
     public class WinFormsView<T, TBuilder> : WinFormsView where T : Form where TBuilder : IApplicationBuilder<T>, new()
     {
         protected sealed override Form? Context { get; set; }
@@ -41,7 +41,7 @@ namespace NetExtender.Domains.WinForms.View
         {
             Context = form ?? throw new ArgumentNullException(nameof(form));
         }
-        
+
         public WinFormsView(TBuilder builder)
         {
             Builder = builder ?? throw new ArgumentNullException(nameof(builder));

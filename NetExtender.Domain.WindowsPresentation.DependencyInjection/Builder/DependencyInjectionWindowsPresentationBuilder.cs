@@ -27,7 +27,7 @@ namespace NetExtender.Domains.WindowsPresentation.Builder
                 return ServiceProviderUtilities.Provider;
             }
         }
-        
+
         protected virtual IReadOnlyCollection<Assembly>? Assemblies
         {
             get
@@ -35,19 +35,19 @@ namespace NetExtender.Domains.WindowsPresentation.Builder
                 return Provider is IAssemblyServiceProvider provider ? provider.Assemblies : null;
             }
         }
-        
+
         protected override TType New<TType>(ImmutableArray<String> arguments)
         {
             Setup(arguments);
-            
+
             try
             {
                 typeof(ServiceProviderUtilities).CallStaticConstructor();
-                
+
                 Int32 tries = 0;
                 TType? service = null;
                 Exception? issue = null;
-                
+
                 do
                 {
                     try
@@ -61,7 +61,7 @@ namespace NetExtender.Domains.WindowsPresentation.Builder
                     }
 
                 } while (service is null && tries++ < 10);
-                
+
                 return service ?? throw new InitializeException($"Can't get instance of '{typeof(TType).Name}' for builder '{GetType().Name}'.", issue);
             }
             catch (InitializeException)
@@ -77,7 +77,7 @@ namespace NetExtender.Domains.WindowsPresentation.Builder
                 Finish();
             }
         }
-        
+
         public override T Build(ImmutableArray<String> arguments)
         {
             Manager?.Invoke(this, this);

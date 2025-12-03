@@ -26,7 +26,7 @@ namespace NetExtender.AspNetCore.Identity
         {
             return !(first == second);
         }
-        
+
         public ILogger? Logger { get; private init; }
         public HttpContext Context { get; private init; }
 
@@ -80,7 +80,7 @@ namespace NetExtender.AspNetCore.Identity
             Ticket = ticket ?? throw new ArgumentNullException(nameof(ticket));
             Options = options;
         }
-        
+
         public static SuccessTicketContext From<T>(InvalidTicketContext<T> context, AuthenticationTicket ticket)
         {
             return new SuccessTicketContext

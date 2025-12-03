@@ -13,7 +13,7 @@ namespace NetExtender.Logging.Interfaces
         public Boolean Enable(TLevel level);
         public Boolean Disable(TLevel level);
     }
-    
+
     public interface ILoggerInfo
     {
         public LoggingMessageOptions Options { get; }

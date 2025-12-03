@@ -11,20 +11,20 @@ namespace NetExtender.Types.Nodes.Interfaces
     {
         /// <inheritdoc cref="ICollection{T}.Count"/>
         public new Int32 Count { get; }
-        
+
         /// <inheritdoc cref="LinkedContainer{TNode}.First"/>
         public new TNode? First { get; }
-        
+
         /// <inheritdoc cref="LinkedContainer{TNode}.First"/>
         public new TNode? Last { get; }
-        
+
         /// <inheritdoc cref="LinkedContainer{TNode}.Find(System.Predicate{TNode})"/>
         public TNode? Find(Predicate<TNode> predicate);
-        
+
         /// <inheritdoc cref="LinkedContainer{TNode}.FindLast(System.Predicate{TNode})"/>
         public TNode? FindLast(Predicate<TNode> predicate);
     }
-    
+
     public interface IReadOnlyLinkedContainer : ICollection
     {
         /// <inheritdoc cref="LinkedContainer{TNode}.First"/>

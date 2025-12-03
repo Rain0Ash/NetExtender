@@ -14,7 +14,7 @@ namespace NetExtender.CQRS.Commands.Dispatchers
         {
             return DispatchAsync(command);
         }
-        
+
         Task ICommandCQRSDispatcher.DispatchAsync<TCommand>(TCommand command, CancellationToken token)
         {
             return DispatchAsync(command, token);

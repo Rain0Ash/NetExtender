@@ -16,25 +16,25 @@ namespace NetExtender.Types.Handlers.Chain
         {
             return value is not null ? new DynamicChainHandler<T>(value) : null;
         }
-        
+
         private static Func<T, T> Default { get; } = static value => value;
         private Maybe<Func<T, T>> Handler { get; }
-        
+
         public DynamicChainHandler(Func<T, T> handler)
         {
             Handler = handler ?? throw new ArgumentNullException(nameof(handler));
         }
-        
+
         public T Handle(T value)
         {
             return Handler.Unwrap(Default).Invoke(value);
         }
-        
+
         public override Int32 GetHashCode()
         {
             return Handler.GetHashCode();
         }
-        
+
         public override Boolean Equals(Object? other)
         {
             return other switch
@@ -44,23 +44,23 @@ namespace NetExtender.Types.Handlers.Chain
                 _ => false
             };
         }
-        
+
         public Boolean Equals(DynamicChainHandler<T> other)
         {
             return Handler.Equals(other.Handler);
         }
-        
+
         public Boolean Equals(Func<T, T>? other)
         {
             return Handler.Equals(other);
         }
-        
+
         public override String? ToString()
         {
             return Handler.ToString();
         }
     }
-    
+
     public abstract class ChainHandler<T> : IChainHandler<T>
     {
         public abstract T Handle(T value);

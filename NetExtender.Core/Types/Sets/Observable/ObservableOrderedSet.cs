@@ -39,7 +39,7 @@ namespace NetExtender.Types.Sets
             return new OrderedSet<T>(Internal, Internal.Comparer);
         }
     }
-    
+
     public abstract class ObservableOrderedSet<T, TSet> : ObservableSet<T, TSet> where TSet : OrderedSet<T>
     {
         public virtual IEqualityComparer<NullMaybe<T>> Comparer

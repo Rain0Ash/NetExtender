@@ -14,7 +14,7 @@ namespace NetExtender.Types.Disposable
         {
             return value?.Alive ?? false;
         }
-        
+
         private WeakMaybe<T> _object;
         private volatile Action<T>? _dispose;
 
@@ -66,14 +66,14 @@ namespace NetExtender.Types.Disposable
             Dispose(false);
         }
     }
-    
+
     public sealed class AnonymousDisposable<T> : IAnonymousDisposable<T>
     {
         public static implicit operator Boolean(AnonymousDisposable<T>? value)
         {
             return value?.Alive ?? false;
         }
-        
+
         private Maybe<T> _object;
         private volatile Action<T>? _dispose;
 
@@ -124,14 +124,14 @@ namespace NetExtender.Types.Disposable
             Dispose(false);
         }
     }
-    
+
     public sealed class AnonymousDisposable : IAnonymousDisposable
     {
         public static implicit operator Boolean(AnonymousDisposable? value)
         {
             return value?.Alive ?? false;
         }
-        
+
         public static IDisposable Null { get; } = new AnonymousDisposable();
         private volatile Action? _dispose;
 

@@ -391,7 +391,7 @@ namespace NetExtender.Utilities.Numerics
                 return GreaterLazy.Value;
             }
         }
-        
+
         private static Lazy<Func<T, T, Boolean>> GreaterOrEqualsLazy { get; }
 
         public static Func<T, T, Boolean> GreaterOrEquals

@@ -14,7 +14,7 @@ namespace Microsoft.AspNetCore.Identity.Data
             : this(String.Empty)
         {
         }
-        
+
         public ResendConfirmationEmailRequest(String email)
         {
             Email = email ?? throw new ArgumentNullException(nameof(email));

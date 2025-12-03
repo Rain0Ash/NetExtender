@@ -18,12 +18,12 @@ namespace NetExtender.Utilities.Network
         ServerError,
         CustomError
     }
-    
+
     [SuppressMessage("ReSharper", "RedundantIsBeforeRelationalPattern")]
     public static class HttpUtilities
     {
         private const HttpStatusCode Custom = (HttpStatusCode) 600;
-        
+
         public static HttpStatusCategory Category(this HttpStatusCode code)
         {
             return code switch
@@ -37,7 +37,7 @@ namespace NetExtender.Utilities.Network
                 _ => HttpStatusCategory.CustomError
             };
         }
-        
+
         public static HttpStatusCategory? Category(this HttpStatusCode? code)
         {
             return code switch
@@ -52,49 +52,49 @@ namespace NetExtender.Utilities.Network
                 _ => HttpStatusCategory.CustomError
             };
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsError(this HttpStatusCode code)
         {
             return code is >= HttpStatusCode.Ambiguous;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsError(this HttpStatusCode? code)
         {
             return code is >= HttpStatusCode.Ambiguous;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsClientError(this HttpStatusCode code)
         {
             return code is >= HttpStatusCode.BadRequest and < HttpStatusCode.InternalServerError;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsClientError(this HttpStatusCode? code)
         {
             return code is >= HttpStatusCode.BadRequest and < HttpStatusCode.InternalServerError;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsServerError(this HttpStatusCode code)
         {
             return code is >= HttpStatusCode.InternalServerError and < Custom;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsServerError(this HttpStatusCode? code)
         {
             return code is >= HttpStatusCode.InternalServerError and < Custom;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsCustomError(this HttpStatusCode code)
         {
             return code >= Custom;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsCustomError(this HttpStatusCode? code)
         {

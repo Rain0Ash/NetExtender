@@ -11,7 +11,7 @@ namespace NetExtender.Types.Intercept
     public abstract class AnyInterceptor<T, TSender, TArgument> : Interceptor<TSender, TArgument>, IAnyInterceptor<T, TSender, TArgument> where TSender : IInterceptTarget<T, TArgument>, IAsyncInterceptTarget<T, TArgument> where TArgument : class, ISimpleInterceptEventArgs<T>
     {
         public static AnyInterceptor<T, TSender, TArgument> Default { get; } = new Any();
-        
+
         public abstract T Intercept(TSender sender, TArgument args);
         public abstract ValueTask<T> InterceptAsync(TSender sender, TArgument args);
 
@@ -28,11 +28,11 @@ namespace NetExtender.Types.Intercept
             }
         }
     }
-    
+
     public class AsyncInterceptor<T, TSender, TArgument> : Interceptor<TSender, TArgument>, IAsyncInterceptor<T, TSender, TArgument> where TSender : IAsyncInterceptTarget<T, TArgument> where TArgument : class, ISimpleInterceptEventArgs<T>
     {
         public static AsyncInterceptor<T, TSender, TArgument> Default { get; } = new AsyncInterceptor<T, TSender, TArgument>();
-        
+
         // ReSharper disable once CognitiveComplexity
         public virtual async ValueTask<T> InterceptAsync(TSender sender, TArgument args)
         {
@@ -49,12 +49,12 @@ namespace NetExtender.Types.Intercept
             args.Token.ThrowIfCancellationRequested();
             sender.RaiseIntercepting(args);
             await Wait(args);
-            
+
             if (args.Exception is not null)
             {
                 throw args.Exception;
             }
-            
+
             if (sender.HasResult(args))
             {
                 return sender.Result(args);
@@ -93,11 +93,11 @@ namespace NetExtender.Types.Intercept
             return sender.Result(args);
         }
     }
-    
+
     public class Interceptor<T, TSender, TArgument> : Interceptor<TSender, TArgument>, IInterceptor<T, TSender, TArgument> where TSender : IInterceptTarget<T, TArgument> where TArgument : ISimpleInterceptEventArgs<T>
     {
         public static Interceptor<T, TSender, TArgument> Default { get; } = new Interceptor<T, TSender, TArgument>();
-        
+
         public virtual T Intercept(TSender sender, TArgument args)
         {
             if (sender is null)
@@ -112,12 +112,12 @@ namespace NetExtender.Types.Intercept
 
             args.Token.ThrowIfCancellationRequested();
             sender.RaiseIntercepting(args);
-            
+
             if (args.Exception is not null)
             {
                 throw args.Exception;
             }
-            
+
             if (sender.HasResult(args))
             {
                 return sender.Result(args);

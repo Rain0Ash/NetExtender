@@ -61,7 +61,7 @@ namespace NetExtender.Types.Lists
             return new ItemObservableSortedList<T>(collection, comparer);
         }
     }
-    
+
     public class ObservableSortedList<T> : SuppressObservableSortedList<T, SuppressObservableCollection<T>, ObservableSortedList<T>>
     {
         public ObservableSortedList()
@@ -242,19 +242,19 @@ namespace NetExtender.Types.Lists
             Internal.ItemChanging += OnItemChanging;
             Internal.ItemChanged += OnItemChanged;
         }
-        
+
         protected ItemObservableSortedList(TCollection collection, IComparer<T>? comparer)
             : base(collection, comparer)
         {
             Internal.ItemChanging += OnItemChanging;
             Internal.ItemChanged += OnItemChanged;
         }
-        
+
         private void OnItemChanging(Object? sender, PropertyChangingEventArgs args)
         {
             ItemChanging?.Invoke(sender, args);
         }
-        
+
         private void OnItemChanged(Object? sender, PropertyChangedEventArgs args)
         {
             ItemChanged?.Invoke(sender, args);
@@ -387,7 +387,7 @@ namespace NetExtender.Types.Lists
             : base(list, comparison)
         {
         }
-        
+
         protected SuppressObservableSortedList(TCollection collection, IComparer<T>? comparer)
             : base(collection, comparer)
         {
@@ -463,7 +463,7 @@ namespace NetExtender.Types.Lists
         public event NotifyCollectionChangedEventHandler? CollectionChanged;
         public event PropertyChangingEventHandler? PropertyChanging;
         public event PropertyChangedEventHandler? PropertyChanged;
-        
+
         private protected TCollection Internal { get; }
 
         private List<T> List
@@ -501,7 +501,7 @@ namespace NetExtender.Types.Lists
         {
             Internal = new TCollection();
             Comparer = comparer ?? Comparer<T>.Default;
-            
+
             Internal.CollectionChanged += OnCollectionChanged;
 
             if (Internal is INotifyPropertyChanging changing)
@@ -601,7 +601,7 @@ namespace NetExtender.Types.Lists
 
             return constructor.Invoke(collection);
         }
-        
+
         private static TCollection Initialize(List<T>? list)
         {
             if (list is null)
@@ -677,7 +677,7 @@ namespace NetExtender.Types.Lists
         public Int32 IndexOf(T item)
         {
             Int32 index = BinarySearch(item);
-            
+
             if (index < 0)
             {
                 return -1;
@@ -696,7 +696,7 @@ namespace NetExtender.Types.Lists
             {
                 return IndexOf(item);
             }
-            
+
             index = BinarySearch(index, item);
 
             if (index < 0)
@@ -714,7 +714,7 @@ namespace NetExtender.Types.Lists
         public Int32 IndexOf(T item, Int32 index, Int32 count)
         {
             index = BinarySearch(index, count, item);
-            
+
             if (index < 0)
             {
                 return -1;
@@ -730,7 +730,7 @@ namespace NetExtender.Types.Lists
         public Int32 LastIndexOf(T item)
         {
             Int32 index = BinarySearch(item);
-            
+
             if (index < 0)
             {
                 return -1;
@@ -749,9 +749,9 @@ namespace NetExtender.Types.Lists
             {
                 return IndexOf(item);
             }
-            
+
             index = BinarySearch(index, item);
-            
+
             if (index < 0)
             {
                 return -1;
@@ -767,7 +767,7 @@ namespace NetExtender.Types.Lists
         public Int32 LastIndexOf(T item, Int32 index, Int32 count)
         {
             index = BinarySearch(index, count, item);
-            
+
             if (index < 0)
             {
                 return -1;
@@ -807,7 +807,7 @@ namespace NetExtender.Types.Lists
             }
 
             TCollection collection = new TCollection();
-            
+
             for (Int32 i = 0; i < Internal.Count; i++)
             {
                 T item = Internal[i];
@@ -844,7 +844,7 @@ namespace NetExtender.Types.Lists
                     return i;
                 }
             }
-            
+
             return -1;
         }
 
@@ -854,7 +854,7 @@ namespace NetExtender.Types.Lists
             {
                 throw new ArgumentNullException(nameof(match));
             }
-            
+
             if (index < 0 || index >= Internal.Count)
             {
                 throw new ArgumentOutOfRangeException(nameof(index), index, null);
@@ -891,7 +891,7 @@ namespace NetExtender.Types.Lists
                     return item;
                 }
             }
-            
+
             return default;
         }
 
@@ -906,7 +906,7 @@ namespace NetExtender.Types.Lists
             {
                 throw new ArgumentNullException(nameof(match));
             }
-            
+
             if (index < 0 || index >= Internal.Count)
             {
                 throw new ArgumentOutOfRangeException(nameof(index), index, null);
@@ -1007,7 +1007,7 @@ namespace NetExtender.Types.Lists
             {
                 throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
-            
+
             Add(item);
         }
 
@@ -1092,7 +1092,7 @@ namespace NetExtender.Types.Lists
             {
                 collection.Add(Internal[i]);
             }
-            
+
             return This(collection, Comparer);
         }
 
@@ -1150,7 +1150,7 @@ namespace NetExtender.Types.Lists
             {
                 result.Add(Internal[i]);
             }
-            
+
             return This(result, Comparer);
         }
 
@@ -1186,7 +1186,7 @@ namespace NetExtender.Types.Lists
         {
             return Internal.GetEnumerator();
         }
-        
+
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
@@ -1204,7 +1204,7 @@ namespace NetExtender.Types.Lists
                 {
                     throw new ArgumentOutOfRangeException(nameof(index), index, null);
                 }
-                
+
                 RemoveAt(index);
                 Add(value);
             }

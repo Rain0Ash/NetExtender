@@ -85,7 +85,7 @@ namespace NetExtender.Types.Concurrent.Counters
             return first - second;
         }
     }
-    
+
     public class ConcurrentCounter64<T> : ConcurrentCounter<T, Int64> where T : notnull
     {
         public ConcurrentCounter64()
@@ -162,7 +162,7 @@ namespace NetExtender.Types.Concurrent.Counters
             return first - second;
         }
     }
-    
+
     public class ConcurrentDecimalCounter<T> : ConcurrentCounter<T, Decimal> where T : notnull
     {
         public ConcurrentDecimalCounter()
@@ -239,7 +239,7 @@ namespace NetExtender.Types.Concurrent.Counters
             return first - second;
         }
     }
-    
+
     public class ConcurrentCounter<T, TCount> : CounterBase<T, TCount> where T : notnull where TCount : unmanaged, IConvertible
     {
         protected sealed override ConcurrentDictionary<T, TCount> Internal { get; }

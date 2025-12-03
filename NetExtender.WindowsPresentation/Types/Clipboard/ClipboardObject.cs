@@ -20,19 +20,19 @@ namespace NetExtender.WindowsPresentation.Types.Clipboard
         Raw,
         Data
     }
-    
+
     public readonly struct ClipboardObject : IEqualityStruct<ClipboardObject>, IComparable
     {
         public static Boolean operator ==(ClipboardObject first, ClipboardObject second)
         {
             return first.Equals(second);
         }
-        
+
         public static Boolean operator !=(ClipboardObject first, ClipboardObject second)
         {
             return !(second == first);
         }
-        
+
         public ClipboardType Type { get; }
         public Object? Value { get; }
 
@@ -50,17 +50,17 @@ namespace NetExtender.WindowsPresentation.Types.Clipboard
             Type = type;
             Value = value;
         }
-        
+
         public Int32 CompareTo(Object? other)
         {
             if (other is ClipboardObject @object)
             {
                 return CompareTo(@object);
             }
-            
+
             return Comparer.Default.SafeCompare(Value, other) ?? 0;
         }
-        
+
         public Int32 CompareTo(ClipboardObject other)
         {
             return Comparer.Default.SafeCompare(Value, other) ?? 0;
@@ -70,7 +70,7 @@ namespace NetExtender.WindowsPresentation.Types.Clipboard
         {
             return HashCode.Combine(Type, Value);
         }
-        
+
         public override Boolean Equals(Object? other)
         {
             return other switch
@@ -79,22 +79,22 @@ namespace NetExtender.WindowsPresentation.Types.Clipboard
                 _ => Equals(Value, other)
             };
         }
-        
+
         public Boolean Equals(ClipboardObject other)
         {
             if (Type != other.Type)
             {
                 return false;
             }
-            
+
             if (Value is IEnumerable first && other.Value is IEnumerable second)
             {
                 return EnumerableEqualityComparer.Default.Equals(first, second);
             }
-            
+
             return Equals(Value, other.Value);
         }
-        
+
         public override String ToString()
         {
             return $"{{ {nameof(Type)}: {Type}, {nameof(Value)}: {(Value is Delegate ? "?" : Value)} }}";

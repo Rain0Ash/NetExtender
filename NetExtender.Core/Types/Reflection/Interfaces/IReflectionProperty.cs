@@ -10,20 +10,20 @@ namespace NetExtender.Types.Reflection.Interfaces
         public new TProperty GetValue(in TSource source);
         public void SetValue(in TSource source, TProperty value);
     }
-    
+
     public interface IReflectionProperty<TSource> : IReflectionProperty where TSource : notnull
     {
         public Object? GetValue(in TSource source);
         public void SetValue(in TSource source, Object? value);
     }
-    
+
     public interface IReflectionProperty
     {
         public String Name { get; }
         public ReflectionPropertyType Type { get; }
         public Type Source { get; }
         public Type Property { get; }
-        
+
         public Object? GetValue(in Object source);
         public void SetValue(in Object source, Object? value);
     }

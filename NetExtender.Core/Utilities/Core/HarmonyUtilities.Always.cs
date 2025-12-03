@@ -51,7 +51,7 @@ namespace NetExtender.Utilities.Core
                     throw operation;
                 }
             }
-            
+
             public static MethodInfo? Apply(HarmonyLib.Harmony harmony, MethodInfo original, Object? @return, params Object?[]? values)
             {
                 if (harmony is null)
@@ -97,7 +97,7 @@ namespace NetExtender.Utilities.Core
                     yield return new CodeInstruction(OpCodes.Call, AccessTools.PropertyGetter(typeof(AlwaysPatchInfo), nameof(AlwaysPatchInfo.Values)));
                     yield return new CodeInstruction(OpCodes.Ldc_I4, index++);
                     yield return new CodeInstruction(OpCodes.Ldelem_Ref);
-                    
+
                     if (parameter.ParameterType.GetElementType() is not { } element)
                     {
                         throw new InvalidOperationException($"Element type for parameter type '{parameter.ParameterType}' cannot be null.");
@@ -178,10 +178,10 @@ namespace NetExtender.Utilities.Core
                     {
                         return new ArgumentException($"Return value type '{Return.GetType()}' cannot be assigned to method return type '{@return}'.");
                     }
-                    
+
                     Object?[] values = Values ?? Array.Empty<Object?>();
                     reference = Parameters.Where(static parameter => parameter.ParameterType.IsByRef).ToArray();
-                    
+
                     if (reference.Length != values.Length)
                     {
                         return new ArgumentException("The number of values for ref/out parameters does not match the number of such parameters in the method.");
@@ -202,7 +202,7 @@ namespace NetExtender.Utilities.Core
                     {
                         return null;
                     }
-                    
+
                     for (Int32 i = 0; i < reference.Length; i++)
                     {
                         ParameterInfo parameter = reference[i];

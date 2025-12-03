@@ -10,7 +10,7 @@ namespace NetExtender.Types.Collections.Interfaces
     public interface IPaginationCollection<T, out TCollection> : IPaginationEnumerable<T, TCollection>, IPaginationCollection<T> where TCollection : class, ICollection<T>
     {
     }
-    
+
     public interface IPaginationCollection<T> : IPaginationEnumerable<T>, ICollection<T>
     {
         public new Int32 Count { get; }

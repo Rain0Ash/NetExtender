@@ -27,7 +27,7 @@ namespace NetExtender.Cryptography.Base.Interfaces
         /// <param name="buffer">Bytes to be encoded.</param>
         /// <returns>Number of estimated characters, or zero if the input length is invalid.</returns>
         public Int32 SafeCharCountForEncoding(ReadOnlySpan<Byte> buffer);
-        
+
         /// <summary>
         /// Encode a buffer into a base-encoded representation using pre-allocated buffers.
         /// </summary>

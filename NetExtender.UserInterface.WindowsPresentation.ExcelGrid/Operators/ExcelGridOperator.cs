@@ -22,10 +22,10 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
     {
         protected IExcelGrid Excel { get; }
         private Dictionary<ExcelPropertyDefinition, PropertyDescriptor> Descriptors { get; } = new Dictionary<ExcelPropertyDefinition, PropertyDescriptor>();
-        
+
         public HorizontalAlignment DefaultHorizontalAlignment { get; set; } = HorizontalAlignment.Center;
         public GridLength DefaultColumnWidth { get; set; } = new GridLength(1, GridUnitType.Star);
-        
+
         public virtual Int32 ItemCount
         {
             get
@@ -33,7 +33,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 return Excel.View?.Cast<Object>().Count() ?? 0;
             }
         }
-        
+
         public virtual Int32 ColumnCount
         {
             get
@@ -41,7 +41,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 return Excel.ItemsInRows ? Excel.ColumnDefinitions.Count : ItemCount;
             }
         }
-        
+
         public virtual Int32 RowCount
         {
             get
@@ -49,7 +49,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 return Excel.ItemsInRows ? ItemCount : Excel.RowDefinitions.Count;
             }
         }
-        
+
         public virtual Boolean CanInsertRows
         {
             get
@@ -57,7 +57,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 return Excel is { ItemsInRows: true, CanInsert: true, ItemsSource.IsFixedSize: false };
             }
         }
-        
+
         public virtual Boolean CanInsertColumns
         {
             get
@@ -65,7 +65,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 return Excel is { ItemsInColumns: true, CanInsert: true, ItemsSource.IsFixedSize: false };
             }
         }
-        
+
         public virtual Boolean CanDeleteRows
         {
             get
@@ -73,7 +73,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 return Excel is { CanDelete: true, ItemsInRows: true, ItemsSource.IsFixedSize: false };
             }
         }
-        
+
         public virtual Boolean CanDeleteColumns
         {
             get
@@ -86,105 +86,105 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
         {
             Excel = excel ?? throw new ArgumentNullException(nameof(excel));
         }
-        
+
         public virtual IEnumerable<ExcelColumnDefinition> AutoGenerateColumns()
         {
             return AutoGenerateColumns(Excel.ItemsSource);
         }
-        
+
         protected abstract IEnumerable<ExcelColumnDefinition> AutoGenerateColumns(IList? source);
-        
+
         protected virtual void UpdatePropertyDefinitions(IEnumerable<ExcelPropertyDefinition> definitions, PropertyDescriptorCollection properties)
         {
             if (definitions is null)
             {
                 throw new ArgumentNullException(nameof(definitions));
             }
-            
+
             if (properties is null)
             {
                 throw new ArgumentNullException(nameof(properties));
             }
-            
+
             foreach (ExcelPropertyDefinition definition in definitions)
             {
                 if (String.IsNullOrEmpty(definition.PropertyName))
                 {
                     continue;
                 }
-                
+
                 if (properties[definition.PropertyName] is not { } descriptor)
                 {
                     continue;
                 }
-                
+
                 SetPropertiesFromDescriptor(definition, descriptor);
                 Descriptors[definition] = descriptor;
             }
         }
-        
+
         public virtual void UpdatePropertyDefinitions()
         {
             Descriptors.Clear();
-            
+
             if (GetItemType(Excel.ItemsSource) is not { } type)
             {
                 return;
             }
-            
+
             PropertyDescriptorCollection properties = TypeDescriptor.GetProperties(type);
-            
+
             ICollection<ExcelPropertyDefinition> columns = Excel.ColumnDefinitions;
             ICollection<ExcelPropertyDefinition> rows = Excel.RowDefinitions;
-            
+
             UpdatePropertyDefinitions(columns, properties);
-            
+
             if (!ReferenceEquals(columns, rows))
             {
                 UpdatePropertyDefinitions(rows, properties);
             }
         }
-        
+
         public virtual Boolean CanSort(Int32 index)
         {
             return Excel.ColumnDefinitions[index].CanSort;
         }
-        
+
         public abstract Object? GetItem(ExcelCell cell);
-        
+
         [return: NotNullIfNotNull("source")]
         protected virtual Type? GetItemType(IList? source)
         {
             return source.BiggestCommonType();
         }
-        
+
         protected virtual Int32 GetItemIndex(ExcelCell cell)
         {
             return Excel.ItemsInRows ? Excel.FindSourceIndex(cell.Row) : cell.Column;
         }
-        
+
         protected virtual Object? CreateItem(Type? type)
         {
             if (type is null)
             {
                 return null;
             }
-            
+
             if (Excel.CreateItem is { } factory)
             {
                 return factory.Invoke();
             }
-            
+
             if (type == typeof(String))
             {
                 return String.Empty;
             }
-            
+
             if (type.IsValueType)
             {
                 return ReflectionUtilities.Default(type)!;
             }
-            
+
             try
             {
                 return Activator.CreateInstance(type);
@@ -198,57 +198,57 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
 #endif
             }
         }
-        
+
         public virtual Object? GetCellValue(ExcelCell cell)
         {
             if (GetItem(cell) is { } item && GetPropertyDefinition(cell) is { } definition)
             {
                 return GetPropertyDescriptor(definition, item, null) is { } descriptor ? descriptor.GetValue(item) : item;
             }
-            
+
             return null;
         }
-        
+
         public virtual Type GetPropertyType(ExcelCell cell)
         {
             ExcelPropertyDefinition? definition = GetPropertyDefinition(cell);
             Object? value = GetCellValue(cell);
             return GetPropertyType(definition, cell, value);
         }
-        
+
         public virtual Type GetPropertyType(ExcelPropertyDefinition? definition, ExcelCell cell, Object? value)
         {
             PropertyDescriptor? descriptor = GetPropertyDescriptor(definition, null, cell);
             return descriptor?.PropertyType is not null ? descriptor.PropertyType : value?.GetType() ?? typeof(Object);
         }
-        
+
         public abstract String GetBindingPath(ExcelCell cell);
-        
+
         public virtual Object? GetDataContext(ExcelCell cell)
         {
             return GetPropertyDefinition(cell)?.PropertyName is not null ? GetItem(cell) : Excel.ItemsSource;
         }
-        
+
         public abstract Boolean SetValue(ExcelCell cell, Object? value);
-        
+
         public virtual Boolean TrySetCellValue(ExcelCell cell, Object? value)
         {
             if (Excel.ItemsSource is null)
             {
                 return false;
             }
-            
+
             if (GetItem(cell) is not { } item || GetPropertyDefinition(cell) is not { } definition || definition.IsReadOnly)
             {
                 return false;
             }
-            
+
             Type target = GetPropertyType(cell);
             if (!TryConvert(value, target, out Object? convert))
             {
                 return false;
             }
-            
+
             try
             {
                 if (GetPropertyDescriptor(definition, item, null) is { } descriptor)
@@ -256,7 +256,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                     descriptor.SetValue(item, convert);
                     return true;
                 }
-                
+
                 SetValue(cell, convert);
                 return true;
             }
@@ -265,7 +265,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 return false;
             }
         }
-        
+
         public ExcelCellDescriptor CreateCellDescriptor(ExcelCell cell)
         {
             return new ExcelCellDescriptor
@@ -276,7 +276,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 BindingSource = GetDataContext(cell)
             };
         }
-        
+
         protected virtual PropertyDescriptor? GetPropertyDescriptor(ExcelPropertyDefinition? definition, Object? item, ExcelCell? cell)
         {
             if (definition is null)
@@ -288,50 +288,50 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
             {
                 return descriptor;
             }
-            
+
             if (cell is not null)
             {
                 item = GetItem(cell.Value);
             }
-            
+
             return item is not null ? TypeDescriptor.GetProperties(item).OfType<PropertyDescriptor>().FirstOrDefault(property => property.Name == definition.PropertyName) : null;
         }
-        
+
         public virtual ExcelPropertyDefinition? GetPropertyDefinition(ExcelCell cell)
         {
             return Excel.GetPropertyDefinition(cell);
         }
-        
+
         protected static Type? MostGenericType(IList? source)
         {
             if (source is null)
             {
                 return null;
             }
-            
+
             Type[] generic = source.GetType().GetGenericArguments();
             Type? type = generic.Length > 0 ? generic[0] : null;
             return type is { IsGenericType: true } ? generic.Length > 0 ? type.GetGenericArguments()[0] : null : type;
         }
-        
+
         protected static Type? Type(IList? source)
         {
             if (source is null)
             {
                 return null;
             }
-            
+
             Type? type = MostGenericType(source);
             if (type is not { IsInterface: true })
             {
                 return type;
             }
-            
+
             return source.Count > 0 ? source[0] is IList { Count: > 0 } row ? row[0]?.GetType() : type : null;
         }
-        
+
         public abstract Int32 InsertItem(Int32 index);
-        
+
         public virtual void InsertRows(Int32 index, Int32 count)
         {
             for (Int32 i = 0; i < count; i++)
@@ -339,7 +339,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 InsertItem(index);
             }
         }
-        
+
         public virtual void InsertColumns(Int32 index, Int32 count)
         {
             if (!Excel.ItemsInColumns)
@@ -358,17 +358,17 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
             {
                 return false;
             }
-            
+
             index = Excel.FindSourceIndex(index);
             if (index < 0 || index >= source.Count)
             {
                 return false;
             }
-            
+
             source.RemoveAt(index);
             return true;
         }
-        
+
         public virtual void DeleteRows(Int32 index, Int32 count)
         {
             for (Int32 i = index + count - 1; i >= index; i--)
@@ -376,14 +376,14 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 DeleteItem(i);
             }
         }
-        
+
         public virtual void DeleteColumns(Int32 index, Int32 count)
         {
             if (!Excel.ItemsInColumns)
             {
                 return;
             }
-            
+
             for (Int32 i = index + count - 1; i >= index; i--)
             {
                 DeleteItem(i);
@@ -396,12 +396,12 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
             {
                 throw new ArgumentNullException(nameof(definition));
             }
-            
+
             if (descriptor is null)
             {
                 throw new ArgumentNullException(nameof(descriptor));
             }
-            
+
             if (descriptor.GetAttributeValue<System.ComponentModel.ReadOnlyAttribute, Boolean>(static attribute => attribute.IsReadOnly) || descriptor.GetAttributeValue<NetExtender.Utilities.Core.ReadOnlyAttribute, Boolean>(a => a.IsReadOnly) || descriptor.IsReadOnly)
             {
                 definition.IsReadOnly = true;
@@ -411,18 +411,18 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
             {
                 definition.IsEditable = true;
             }
-            
+
             definition.ItemsSourceProperty ??= descriptor.GetFirstAttributeOrDefault<ItemsSourcePropertyAttribute>()?.Property;
             definition.SelectedValuePath ??= descriptor.GetFirstAttributeOrDefault<SelectedValuePathAttribute>()?.Path;
             definition.DisplayMemberPath ??= descriptor.GetFirstAttributeOrDefault<DisplayMemberPathAttribute>()?.Path;
             definition.SetNullable(descriptor.GetFirstAttributeOrDefault<PropertyEnableByAttribute>());
         }
-        
+
         private static Boolean TryConvert(Object? value, Type type, out Object? result)
         {
             return TryConvert(value, type, null, out result);
         }
-        
+
         private static Boolean TryConvert(Object? value, Type type, IFormatProvider? provider, out Object? result)
         {
             try
@@ -432,30 +432,30 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                     result = ReflectionUtilities.Default(type);
                     return true;
                 }
-                
+
                 if (value.GetType() == type)
                 {
                     result = value;
                     return true;
                 }
-                
+
                 if (type == typeof(String))
                 {
                     result = value?.ToString();
                     return true;
                 }
-                
+
                 if (type == typeof(Boolean) && value is String @string)
                 {
                     result = @string.ToBoolean();
                     return true;
                 }
-                
+
                 if (ConvertUtilities.TryChangeType(value, type, provider, out result))
                 {
                     return true;
                 }
-                
+
                 TypeConverter converter = TypeDescriptor.GetConverter(type);
                 if (converter.CanConvertFrom(value.GetType()))
                 {

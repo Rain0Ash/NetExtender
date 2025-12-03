@@ -898,7 +898,7 @@ namespace NetExtender.Types.Mathematics
         {
             return MathBinaryNode<T>.TryGetOperator(@operator);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected internal new static Boolean Register(MathBinaryOperator @operator, Func<MathResult<T>, MathResult<T>, MathResult<T>> selector)
         {
@@ -1095,7 +1095,7 @@ namespace NetExtender.Types.Mathematics
             };
         }
     }
-    
+
     public class MathBinaryNode<T> : MathBinaryNode<T, MathBinaryNode<T>.Expression, MathUnaryNode<T>.Expression>, IMutableMathBinaryExpression<T, MathUnaryNode<T>.Expression>, ICloneable<MathBinaryNode<T>> where T : struct, IEquatable<T>, IFormattable
     {
         public static explicit operator MathBinaryNode<T>?(Expression value)
@@ -1444,7 +1444,7 @@ namespace NetExtender.Types.Mathematics
                 _ => Operators.TryGetValue(@operator, out Func<MathResult<T>, MathResult<T>, MathResult<T>>? result) ? result : null
             };
         }
-        
+
         protected internal new static Boolean Register(MathBinaryOperator @operator, Func<MathResult<T>, MathResult<T>, MathResult<T>> selector)
         {
             if (selector is null)
@@ -1644,7 +1644,7 @@ namespace NetExtender.Types.Mathematics
                     return false;
                 }
             }
-            
+
             public MathBinaryOperator Operator { get; }
 
             internal State State
@@ -2250,7 +2250,7 @@ namespace NetExtender.Types.Mathematics
                 return GetBaseFirstExpression();
             }
         }
-        
+
         public abstract MathResult<T> Second { get; set; }
 
         IMathExpression<T> IMathBinaryExpression<T>.SecondInner
@@ -2281,7 +2281,7 @@ namespace NetExtender.Types.Mathematics
 
         protected abstract override IMathExpression<T> GetBaseFirstExpression();
         protected abstract override IMathExpression<T> GetBaseSecondExpression();
-        
+
         public abstract IMutableMathBinaryExpression<T>? ApplyToFirst(MathUnaryOperator @operator);
         public abstract IMutableMathBinaryExpression<T>? ApplyToSecond(MathUnaryOperator @operator);
         public abstract IMutableMathBinaryExpression<T>? ApplyToFirst(MathBinaryOperator @operator);
@@ -2355,7 +2355,7 @@ namespace NetExtender.Types.Mathematics
         }
 
         public abstract override MathBinaryExpression<T, TExpression> Clone();
-        
+
         IMutableMathBinaryExpression<T> IMutableMathBinaryExpression<T>.Clone()
         {
             return Clone();

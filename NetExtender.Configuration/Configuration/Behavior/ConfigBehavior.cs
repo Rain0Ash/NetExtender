@@ -46,7 +46,7 @@ namespace NetExtender.Configuration.Behavior
             {
                 return GetDefaultPath(extension);
             }
-            
+
             if (!String.IsNullOrWhiteSpace(extension) && !PathUtilities.HasExtension(path))
             {
                 path = PathUtilities.ChangeExtension(path, extension);
@@ -106,7 +106,7 @@ namespace NetExtender.Configuration.Behavior
                 {
                     throw new ArgumentNullException(nameof(value));
                 }
-                
+
                 _joiner = IsJoiner(value) ? value : throw new ArgumentException("This joiner not supported", nameof(value));
             }
         }
@@ -121,7 +121,7 @@ namespace NetExtender.Configuration.Behavior
         {
             return Regex.IsMatch(joiner, "^[.-_\\w]*$");
         }
-        
+
         protected virtual String? PopKeyFromSection(ref IEnumerable<String>? sections)
         {
             if (sections is null)

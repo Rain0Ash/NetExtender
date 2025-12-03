@@ -15,7 +15,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid.Interfaces
         public Boolean CanInsertColumns { get; }
         public Boolean CanDeleteRows { get; }
         public Boolean CanDeleteColumns { get; }
-        
+
         public IEnumerable<ExcelColumnDefinition> AutoGenerateColumns();
         public void UpdatePropertyDefinitions();
         public Boolean CanSort(Int32 index);

@@ -18,7 +18,7 @@ namespace NetExtender.Localization.Property.Localization.Initializers
     {
         public sealed override event PropertyChangedEventHandler? PropertyChanged;
         protected IndexDictionary<ILocalizationPropertyInfo, PropertyInfo> Storage { get; } = new IndexDictionary<ILocalizationPropertyInfo, PropertyInfo>();
-        
+
         protected LocalizationAutoInitializer()
         {
             foreach (PropertyInfo property in GetType().GetProperties().Where(IsProperty))
@@ -36,7 +36,7 @@ namespace NetExtender.Localization.Property.Localization.Initializers
                 info.PropertyChanged += OnPropertyChanged;
             }
         }
-        
+
         private static Boolean IsProperty(PropertyInfo property)
         {
             if (property is null)
@@ -46,7 +46,7 @@ namespace NetExtender.Localization.Property.Localization.Initializers
 
             return property.PropertyType.HasInterface(typeof(ILocalizationPropertyInfo));
         }
-        
+
         private void OnPropertyChanged(Object? sender, PropertyChangedEventArgs args)
         {
             if (args.PropertyName != nameof(ILocalizationPropertyInfo.Current))
@@ -58,7 +58,7 @@ namespace NetExtender.Localization.Property.Localization.Initializers
             {
                 return;
             }
-            
+
             PropertyChanged?.Invoke(this, new PropertyChanged(property.Name));
         }
     }
@@ -93,7 +93,7 @@ namespace NetExtender.Localization.Property.Localization.Initializers
             Storage.Add(value, name);
             value.PropertyChanged += OnPropertyChanged;
         }
-        
+
         private void OnPropertyChanged(Object? sender, PropertyChangedEventArgs args)
         {
             if (args.PropertyName != nameof(ILocalizationPropertyInfo.Current))
@@ -105,7 +105,7 @@ namespace NetExtender.Localization.Property.Localization.Initializers
             {
                 return;
             }
-            
+
             PropertyChanged?.Invoke(this, new PropertyChanged(name));
         }
     }

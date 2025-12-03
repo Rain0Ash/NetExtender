@@ -43,7 +43,7 @@ namespace NetExtender.AspNetCore.Identity
             {
                 SuccessTicketHandler?.Invoke(logger, null);
             }
-            
+
             return ValueTask.FromResult(AuthenticateResult.Success(context.Ticket));
         }
 
@@ -53,7 +53,7 @@ namespace NetExtender.AspNetCore.Identity
             {
                 InvalidTicketHandler?.Invoke(logger, context.Exception.Message, (Exception) context.Exception);
             }
-            
+
             return ValueTask.FromResult(AuthenticateResult.Fail((Exception) context.Exception));
         }
 
@@ -63,7 +63,7 @@ namespace NetExtender.AspNetCore.Identity
             {
                 FailTicketHandler?.Invoke(logger, context.Exception.Message, context.Exception);
             }
-            
+
             return ValueTask.FromResult(AuthenticateResult.Fail(context.Exception));
         }
 
@@ -78,7 +78,7 @@ namespace NetExtender.AspNetCore.Identity
             {
                 MissingHeaderHandler?.Invoke(logger, null);
             }
-            
+
             return ValueTask.FromResult(AuthenticateResult.NoResult());
         }
 
@@ -93,7 +93,7 @@ namespace NetExtender.AspNetCore.Identity
             {
                 InvalidHeaderHandler?.Invoke(logger, null);
             }
-            
+
             return ValueTask.FromResult(AuthenticateResult.NoResult());
         }
 
@@ -111,7 +111,7 @@ namespace NetExtender.AspNetCore.Identity
 
             return ValueTask.FromResult(AuthenticateResult.NoResult());
         }
-        
+
         private static class Events
         {
             [ReflectionSignature]

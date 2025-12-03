@@ -29,12 +29,12 @@ namespace NetExtender.AspNetCore.Identity.Interfaces
                 return this as IUnsafeIdentityUserService<TId, TUser, TRole>;
             }
         }
-        
+
         public TUser? User { get; }
         public IReadOnlySet<TRole> Roles { get; }
 
         public TUser New();
-        
+
         public Boolean HasAccess(TRole? role);
         public Boolean HasAccess(params TRole[]? roles);
         public TUser? Find();
@@ -51,7 +51,7 @@ namespace NetExtender.AspNetCore.Identity.Interfaces
         public ValueTask<TUser?> FindAsync(MailAddress address, CancellationToken token);
         public TUser? FromContext(HttpContext context);
     }
-    
+
     public interface IIdentityUserService
     {
     }

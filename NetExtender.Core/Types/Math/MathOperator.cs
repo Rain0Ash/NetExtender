@@ -126,7 +126,7 @@ namespace NetExtender.Types.Mathematics
                 _ => false
             };
         }
-        
+
         public static Boolean IsNumeric<T>(this MathUnaryOperator @operator) where T : struct, IEquatable<T>, IFormattable
         {
             return @operator switch

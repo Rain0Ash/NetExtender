@@ -16,7 +16,7 @@ namespace NetExtender.Types.Network.Formatters
         public String Value { get; }
         public StringComparison Comparison { get; }
         public Boolean IsSubstring { get; }
-        
+
         public RequestHeaderMapping(String name, String value, Boolean substring, String media, StringComparison comparison)
             : base(media)
         {

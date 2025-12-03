@@ -12,7 +12,7 @@ namespace NetExtender.Types.Immutable.Bags.Interfaces
     {
         public new IImmutableDictionary<T, Int32> Constraints { get; }
         public new IImmutableList<T> Bag { get; }
-        
+
         public IImmutableCompressionBag<T> Add(T item);
         public IImmutableCompressionBag<T> Add(T item, Int32 count);
         public IImmutableCompressionBag<T> AddRange(IEnumerable<T> source);

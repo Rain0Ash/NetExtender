@@ -24,20 +24,20 @@ namespace NetExtender.Types.Parsers
             StyleTryParseHandler = typeof(T).GetMethod(nameof(TryParse), binding, new [] { typeof(T), typeof(NumberStyles), typeof(TResult).MakeByRefType() })?.CreateDelegate<StyleTryParseHandler<T?, TResult>>();
             FormatTryParseHandler = typeof(T).GetMethod(nameof(TryParse), binding, new [] { typeof(T), typeof(IFormatProvider), typeof(TResult).MakeByRefType() })?.CreateDelegate<FormatTryParseHandler<T?, TResult>>();
             NumericTryParseHandler = typeof(T).GetMethod(nameof(TryParse), binding, new [] { typeof(T), typeof(NumberStyles), typeof(IFormatProvider), typeof(TResult).MakeByRefType() })?.CreateDelegate<NumericTryParseHandler<T?, TResult>>();
-            
+
             if (GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public).All(property => property.GetValue(this) is null))
             {
                 throw new NotSupportedException();
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IParser<T, TResult>? Get()
         {
             return AutoParser.Get<T, TResult>();
         }
     }
-    
+
     public sealed class AutoParser<T> : StringRelayParser<T>
     {
         internal AutoParser()
@@ -59,25 +59,25 @@ namespace NetExtender.Types.Parsers
             FormatTryParseSpanHandler = typeof(T).GetMethod(nameof(TryParse), binding, new [] { typeof(ReadOnlySpan<Char>), typeof(IFormatProvider), typeof(T).MakeByRefType() })?.CreateDelegate<FormatTryParseHandler<T>>();
             NumericTryParseHandler = typeof(T).GetMethod(nameof(TryParse), binding, new [] { typeof(String), typeof(NumberStyles), typeof(IFormatProvider), typeof(T).MakeByRefType() })?.CreateDelegate<NumericTryParseHandler<String?, T>>();
             NumericTryParseSpanHandler = typeof(T).GetMethod(nameof(TryParse), binding, new [] { typeof(ReadOnlySpan<Char>), typeof(NumberStyles), typeof(IFormatProvider), typeof(T).MakeByRefType() })?.CreateDelegate<NumericTryParseHandler<T>>();
-            
+
             if (GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public).All(property => property.GetValue(this) is null))
             {
                 throw new NotSupportedException();
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IStringParser<T>? Get()
         {
             return AutoParser.Get<T>();
         }
     }
-    
+
     public static class AutoParser
     {
         private static ConcurrentDictionary<Type, IStringParser?> Storage { get; } = new ConcurrentDictionary<Type, IStringParser?>();
         private static ConcurrentDictionary<(Type, Type), IParser?> DynamicStorage { get; } = new ConcurrentDictionary<(Type, Type), IParser?>();
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IStringParser? Get(Type type)
         {
@@ -85,7 +85,7 @@ namespace NetExtender.Types.Parsers
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             return Storage.GetOrAdd(type, static type =>
             {
                 try
@@ -98,7 +98,7 @@ namespace NetExtender.Types.Parsers
                 }
             });
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IStringParser<T>? Get<T>()
         {
@@ -114,7 +114,7 @@ namespace NetExtender.Types.Parsers
                 }
             });
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IParser? Get(Type type, Type result)
         {
@@ -122,17 +122,17 @@ namespace NetExtender.Types.Parsers
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             if (result is null)
             {
                 throw new ArgumentNullException(nameof(result));
             }
-            
+
             if (type == typeof(String))
             {
                 return Get(result);
             }
-            
+
             return DynamicStorage.GetOrAdd((type, result), static key =>
             {
                 try
@@ -146,7 +146,7 @@ namespace NetExtender.Types.Parsers
                 }
             });
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IParser<T, TResult>? Get<T, TResult>()
         {
@@ -154,7 +154,7 @@ namespace NetExtender.Types.Parsers
             {
                 return (IParser<T, TResult>?) Get<TResult>();
             }
-            
+
             return (IParser<T, TResult>?) DynamicStorage.GetOrAdd((typeof(T), typeof(TResult)), static _ =>
             {
                 try

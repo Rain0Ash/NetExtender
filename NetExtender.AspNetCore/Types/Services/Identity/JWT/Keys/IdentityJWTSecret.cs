@@ -99,7 +99,7 @@ namespace NetExtender.AspNetCore.Identity
         {
             return Internal.Equals(other);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public IEnumerator<JWTKey> GetEnumerator()
         {
@@ -200,7 +200,7 @@ namespace NetExtender.AspNetCore.Identity
         {
             return Internal.Equals(other);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public IEnumerator<JWTKey> GetEnumerator()
         {

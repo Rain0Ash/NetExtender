@@ -13,7 +13,7 @@ namespace NetExtender.Types.Concurrent.Dictionaries
     public class ConcurrentWeakDictionary<TKey, TValue> : IWeakDictionary<TKey, TValue>, IReadOnlyWeakDictionary<TKey, TValue> where TKey : class where TValue : class?
     {
         protected IWeakDictionary<TKey, TValue> Internal { get; } = new ConditionalWeakTableWrapper<TKey, TValue>();
-        
+
         public Boolean Contains(TKey key)
         {
             lock (Internal)

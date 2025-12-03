@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Runtime.Versioning;
 using NetExtender.Interfaces.Notify;
 
 namespace NetExtender.FileSystems.Interfaces
@@ -35,6 +36,11 @@ namespace NetExtender.FileSystems.Interfaces
 
         /// <inheritdoc cref="System.IO.Directory.CreateDirectory(System.String)" />
         public IDirectoryInfo CreateDirectory(String path);
+
+#if NET7_0_OR_GREATER
+        /// <inheritdoc cref="System.IO.Directory.CreateDirectory(System.String, System.IO.UnixFileMode)" />
+#endif
+        public IDirectoryInfo CreateDirectory(String path, UnixFileMode mode);
 
         /// <inheritdoc cref="System.IO.Directory.CreateSymbolicLink(System.String, System.String)" />
         public IFileSystemInfo CreateSymbolicLink(String path, String target);

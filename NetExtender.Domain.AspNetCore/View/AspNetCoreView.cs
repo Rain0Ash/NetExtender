@@ -27,7 +27,7 @@ namespace NetExtender.Domains.AspNetCore.View
         {
         }
     }
-    
+
     public class AspNetCoreView<T, TBuilder> : AspNetCoreView where T : class, IHost where TBuilder : IApplicationBuilder<T>, new()
     {
         protected T? Internal { get; set; }
@@ -55,7 +55,7 @@ namespace NetExtender.Domains.AspNetCore.View
         {
             Context = host ?? throw new ArgumentNullException(nameof(host));
         }
-        
+
         public AspNetCoreView(TBuilder builder)
         {
             Builder = builder ?? throw new ArgumentNullException(nameof(builder));
@@ -77,7 +77,7 @@ namespace NetExtender.Domains.AspNetCore.View
             }
         }
     }
-    
+
     public class AspNetCoreWebView<T> : AspNetCoreWebView<T, AspNetCoreWebBuilder<T>> where T : class, IWebHost, new()
     {
         public AspNetCoreWebView()
@@ -90,7 +90,7 @@ namespace NetExtender.Domains.AspNetCore.View
         {
         }
     }
-    
+
     public class AspNetCoreWebView<T, TBuilder> : AspNetCoreWebView where T : class, IWebHost where TBuilder : IApplicationBuilder<T>, new()
     {
         protected T? Internal { get; set; }
@@ -118,7 +118,7 @@ namespace NetExtender.Domains.AspNetCore.View
         {
             Context = host ?? throw new ArgumentNullException(nameof(host));
         }
-        
+
         public AspNetCoreWebView(TBuilder builder)
         {
             Builder = builder ?? throw new ArgumentNullException(nameof(builder));

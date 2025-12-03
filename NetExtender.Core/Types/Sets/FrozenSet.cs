@@ -17,22 +17,22 @@ namespace NetExtender.Types.Sets
             }
         }
 
-        public FrozenSet()
+        public FrozenHashSet()
             : this(Array.Empty<T>(), null)
         {
         }
 
-        public FrozenSet(IEqualityComparer<T>? comparer)
+        public FrozenHashSet(IEqualityComparer<T>? comparer)
             : this(Array.Empty<T>(), comparer)
         {
         }
 
-        public FrozenSet(IEnumerable<T> collection)
+        public FrozenHashSet(IEnumerable<T> collection)
             : this(collection, null)
         {
         }
 
-        public FrozenSet(IEnumerable<T> collection, IEqualityComparer<T>? comparer)
+        public FrozenHashSet(IEnumerable<T> collection, IEqualityComparer<T>? comparer)
             : base(collection is not null ? System.Collections.Frozen.FrozenSet.ToFrozenSet(collection, comparer) : throw new ArgumentNullException(nameof(collection)), true)
         {
         }
@@ -64,7 +64,7 @@ namespace NetExtender.Types.Sets
         }
     }
 #endif
-    
+
     public abstract class FrozenSortedSet<T, TSet> : FrozenSet<T, TSet, SortedSetCollection<T>>, ISortedSet, ISortedSet<T> where TSet : class, ISortedSet<T>
     {
         protected override ISortedSet<T> Set
@@ -150,7 +150,7 @@ namespace NetExtender.Types.Sets
             return Set.GetEnumerator();
         }
     }
-    
+
     public abstract class FrozenHashSet<T, TSet> : FrozenSet<T, TSet, HashSetCollection<T>>, IHashSet<T>, IReadOnlyHashSet<T> where TSet : class, IHashSet<T>
     {
         protected override IHashSet<T> Set
@@ -184,7 +184,7 @@ namespace NetExtender.Types.Sets
             return Set.GetEnumerator();
         }
     }
-    
+
     public abstract class FrozenSet<T, TSet, TModify> : ISet, ISet<T>, IReadOnlySet<T> where TSet : class, ISet<T> where TModify : class, ISet<T>
     {
         protected TSet Internal { get; private set; }

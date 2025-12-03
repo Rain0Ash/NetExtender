@@ -50,9 +50,9 @@ namespace NetExtender.Domains.WindowsPresentation.AspNetCore.View
             {
                 return await RunAsync(window, token).ConfigureAwait(false);
             }
-            
+
             TApplication application = Domain.Current.Application.As<TApplication>();
-            
+
             if (window is null)
             {
                 await RunAsync(application, host, token).ConfigureAwait(false);
@@ -79,7 +79,7 @@ namespace NetExtender.Domains.WindowsPresentation.AspNetCore.View
 
         protected abstract Task RunAsync(TApplication application, T host, CancellationToken token);
         protected abstract Task RunAsync(TApplication application, Window window, T host, CancellationToken token);
-        
+
         protected Task<IApplicationView> RunAsync<TWindow, THost>() where TWindow : Window, new() where THost : class, T, new()
         {
             return RunAsync<TWindow, THost>(CancellationToken.None);
@@ -113,11 +113,11 @@ namespace NetExtender.Domains.WindowsPresentation.AspNetCore.View
         {
         }
     }
-    
+
     public class WindowsPresentationAspNetCoreView<TWindow, THost, TBuilder> : WindowsPresentationAspNetCoreView<TBuilder> where TWindow : Window where THost : class, IHost where TBuilder : IApplicationBuilder<WindowsPresentationAspNetCoreContext<TWindow, THost>>, new()
     {
         protected THost? Internal { get; set; }
-        
+
         protected sealed override IHost? Host
         {
             get
@@ -144,18 +144,18 @@ namespace NetExtender.Domains.WindowsPresentation.AspNetCore.View
             : base(window, host)
         {
         }
-        
+
         public WindowsPresentationAspNetCoreView(TBuilder builder)
             : base(builder)
         {
         }
     }
-    
+
     public class WindowsPresentationAspNetCoreView<TBuilder> : WindowsPresentationAspNetCoreView where TBuilder : IApplicationBuilder<WindowsPresentationAspNetCoreContext>, new()
     {
         protected sealed override Window? Context { get; set; }
         protected override IHost? Host { get; set; }
-        
+
         protected TBuilder? Builder { get; }
 
         public WindowsPresentationAspNetCoreView()
@@ -181,7 +181,7 @@ namespace NetExtender.Domains.WindowsPresentation.AspNetCore.View
             Window = window;
             Host = host;
         }
-        
+
         public WindowsPresentationAspNetCoreView(TBuilder builder)
         {
             Builder = builder ?? throw new ArgumentNullException(nameof(builder));
@@ -197,12 +197,12 @@ namespace NetExtender.Domains.WindowsPresentation.AspNetCore.View
             (Window? window, IHost? host) = Builder.Build(Arguments);
             return RunAsync(Window ?? window, Host ?? host, token);
         }
-        
+
         protected override Task<IApplicationView> RunAsync(Window? window, CancellationToken token)
         {
             return RunAsync(window, Host ?? Builder?.Build(Arguments).Host, token);
         }
-        
+
         protected override Task<IApplicationView> RunAsync(IHost? host, CancellationToken token)
         {
             return RunAsync(Window ?? Builder?.Build(Arguments).Window, host, token);
@@ -246,7 +246,7 @@ namespace NetExtender.Domains.WindowsPresentation.AspNetCore.View
             return application.RunAsync(window, host, token);
         }
     }
-    
+
     public class WindowsPresentationAspNetCoreWebView<TWindow, THost> : WindowsPresentationAspNetCoreWebView<TWindow, THost, WindowsPresentationAspNetCoreWebBuilder<TWindow, THost>> where TWindow : Window, new() where THost : class, IWebHost, new()
     {
         public WindowsPresentationAspNetCoreWebView()
@@ -269,11 +269,11 @@ namespace NetExtender.Domains.WindowsPresentation.AspNetCore.View
         {
         }
     }
-    
+
     public class WindowsPresentationAspNetCoreWebView<TWindow, THost, TBuilder> : WindowsPresentationAspNetCoreWebView<TBuilder> where TWindow : Window where THost : class, IWebHost where TBuilder : IApplicationBuilder<WindowsPresentationAspNetCoreWebContext<TWindow, THost>>, new()
     {
         protected THost? Internal { get; set; }
-        
+
         protected sealed override IWebHost? Host
         {
             get
@@ -300,18 +300,18 @@ namespace NetExtender.Domains.WindowsPresentation.AspNetCore.View
             : base(window, host)
         {
         }
-        
+
         public WindowsPresentationAspNetCoreWebView(TBuilder builder)
             : base(builder)
         {
         }
     }
-    
+
     public class WindowsPresentationAspNetCoreWebView<TBuilder> : WindowsPresentationAspNetCoreWebView where TBuilder : IApplicationBuilder<WindowsPresentationAspNetCoreWebContext>, new()
     {
         protected sealed override Window? Context { get; set; }
         protected override IWebHost? Host { get; set; }
-        
+
         protected TBuilder? Builder { get; }
 
         public WindowsPresentationAspNetCoreWebView()
@@ -337,7 +337,7 @@ namespace NetExtender.Domains.WindowsPresentation.AspNetCore.View
             Window = window;
             Host = host;
         }
-        
+
         public WindowsPresentationAspNetCoreWebView(TBuilder builder)
         {
             Builder = builder ?? throw new ArgumentNullException(nameof(builder));
@@ -353,12 +353,12 @@ namespace NetExtender.Domains.WindowsPresentation.AspNetCore.View
             (Window? window, IWebHost? host) = Builder.Build(Arguments);
             return RunAsync(Window ?? window, Host ?? host, token);
         }
-        
+
         protected override Task<IApplicationView> RunAsync(Window? window, CancellationToken token)
         {
             return RunAsync(window, Host ?? Builder?.Build(Arguments).Host, token);
         }
-        
+
         protected override Task<IApplicationView> RunAsync(IWebHost? host, CancellationToken token)
         {
             return RunAsync(Window ?? Builder?.Build(Arguments).Window, host, token);

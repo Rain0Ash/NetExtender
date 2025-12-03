@@ -17,9 +17,9 @@ namespace NetExtender.WindowsPresentation.Types.Applications
                 return WindowsPresentationServiceProvider.Internal;
             }
         }
-        
+
         private readonly IDispatcher _dispatcher;
-        
+
         IDispatcher IDependencyApplication.Dispatcher
         {
             get
@@ -27,7 +27,7 @@ namespace NetExtender.WindowsPresentation.Types.Applications
                 return _dispatcher;
             }
         }
-        
+
         public DependencyApplication()
         {
             _dispatcher = new DispatcherWrapper(Dispatcher);

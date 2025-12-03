@@ -28,7 +28,7 @@ namespace NetExtender.Windows.Protocols
                 {
                     return null;
                 }
-                
+
                 return (progid, hash);
             }
         }
@@ -37,7 +37,7 @@ namespace NetExtender.Windows.Protocols
             : base(extension)
         {
         }
-        
+
         public override Boolean Register()
         {
             ProtocolStatus status = Status;
@@ -54,7 +54,7 @@ namespace NetExtender.Windows.Protocols
                     {
                         return SetFileTypeAssociation(progid, Extension, Icon, Sid);
                     }
-                    
+
                     return Path is not null && RegisterFileTypeAssociation(Path, Extension, null, Icon, Sid);
                 case ProtocolStatus.Unregister:
                     return Path is not null && RegisterFileTypeAssociation(Path, Extension, null, Icon, Sid);
@@ -69,7 +69,7 @@ namespace NetExtender.Windows.Protocols
             {
                 return true;
             }
-            
+
             if (!force && IsAnother)
             {
                 return false;
@@ -95,12 +95,12 @@ namespace NetExtender.Windows.Protocols
             get
             {
                 (String? progid, String? hash) = GetProtocolTypeAssociation(Protocol);
-                
+
                 if (progid is null && hash is null)
                 {
                     return null;
                 }
-                
+
                 return (progid, hash);
             }
         }
@@ -114,7 +114,7 @@ namespace NetExtender.Windows.Protocols
             : base(path, protocol)
         {
         }
-        
+
         public override Boolean Register()
         {
             ProtocolStatus status = Status;
@@ -131,7 +131,7 @@ namespace NetExtender.Windows.Protocols
                     {
                         return SetProtocolTypeAssociation(progid, Protocol, Icon, Sid);
                     }
-                    
+
                     return Path is not null && RegisterProtocolTypeAssociation(Path, Protocol, null, Icon, Sid);
                 case ProtocolStatus.Unregister:
                     return Path is not null && RegisterProtocolTypeAssociation(Path, Protocol, null, Icon, Sid);
@@ -146,7 +146,7 @@ namespace NetExtender.Windows.Protocols
             {
                 return true;
             }
-            
+
             if (!force && IsAnother)
             {
                 return false;
@@ -201,7 +201,7 @@ namespace NetExtender.Windows.Protocols
         public String? Path { get; }
         public String? Icon { get; init; }
         public String? Sid { get; init; } = WorkStation.CurrentUserSID;
-        
+
         public override ProtocolStatus Status
         {
             get

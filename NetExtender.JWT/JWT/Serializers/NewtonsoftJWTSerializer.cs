@@ -46,7 +46,7 @@ namespace NetExtender.JWT
             StringBuilder builder = new StringBuilder(256);
             using StringWriter @string = new StringWriter(builder);
             using JsonTextWriter writer = new JsonTextWriter(@string);
-            
+
             Json.Serialize(writer, value);
             return builder.ToString();
         }

@@ -42,9 +42,9 @@ namespace NetExtender.Types.Network
                 return DateTimeOffset.TryParseExact(input, Formats, provider, styles, out result);
             }
         }
-        
+
         public static CookieHeaderValueBuilder Default { get; } = new CookieHeaderValueBuilder();
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected virtual Boolean TryParseExact(String? input, out DateTimeOffset result)
         {
@@ -56,7 +56,7 @@ namespace NetExtender.Types.Network
         {
             return Parser.TryParseExact(input, provider, styles, out result);
         }
-        
+
         public virtual Boolean TryParse(String? input, [MaybeNullWhen(false)] out CookieHeaderValue result)
         {
             if (String.IsNullOrEmpty(input))
@@ -167,7 +167,7 @@ namespace NetExtender.Types.Network
                 instance.HttpOnly = true;
                 return true;
             }
-            
+
             try
             {
                 NameValueCollection values = new FormDataCollection(GetSegmentValue(pair, null));

@@ -248,7 +248,7 @@ namespace NetExtender.Localization.Properties
 
             return Internal.Value;
         }
-        
+
         ILocalizationString? IGetter<ILocalizationString?>.Get()
         {
             return GetValue();
@@ -269,7 +269,7 @@ namespace NetExtender.Localization.Properties
         {
             return GetValueAsync(CancellationToken.None);
         }
-        
+
         async ValueTask<ILocalizationString?> IAsyncGetter<ILocalizationString?>.GetAsync()
         {
             return await GetValueAsync();
@@ -289,7 +289,7 @@ namespace NetExtender.Localization.Properties
 
             return Internal.Value;
         }
-        
+
         async ValueTask<ILocalizationString?> IAsyncGetter<ILocalizationString?>.GetAsync(CancellationToken token)
         {
             return await GetValueAsync(token);
@@ -415,7 +415,7 @@ namespace NetExtender.Localization.Properties
 
         public override event LocalizationValueChangedEventHandler? Changed;
         public override event LocalizationChangedEventHandler? LocalizationChanged;
-        
+
         private event ConfigurationChangedEventHandler? ConfigurationChanged;
         event ConfigurationChangedEventHandler? IConfigPropertyValueInfo.Changed
         {
@@ -436,7 +436,7 @@ namespace NetExtender.Localization.Properties
                 return Config.Path;
             }
         }
-        
+
         public sealed override Boolean IsThreadSafe
         {
             get

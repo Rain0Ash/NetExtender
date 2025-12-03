@@ -91,10 +91,10 @@ namespace NetExtender.Types.Dictionaries
                 BoxPropertyChanged(box);
             }
         }
-        
+
         protected virtual void BoxPropertyChanged(TValue value)
         {
-            
+
         }
 
         protected Box New(TValue value)
@@ -111,7 +111,7 @@ namespace NetExtender.Types.Dictionaries
                 Internal.Clear();
 
                 List<Exception> exceptions = new List<Exception>(4);
-                
+
                 foreach ((_, Box box) in entries)
                 {
                     try
@@ -190,7 +190,7 @@ namespace NetExtender.Types.Dictionaries
             {
                 throw new CollectionSynchronizationException();
             }
-            
+
             value = box.Value;
             return true;
         }
@@ -256,7 +256,7 @@ namespace NetExtender.Types.Dictionaries
             {
                 throw new ArgumentException($"The value '{value}' property '{Property}' is null.", nameof(value));
             }
-            
+
             AddCore(key, value);
         }
 
@@ -277,7 +277,7 @@ namespace NetExtender.Types.Dictionaries
             {
                 Resync();
             }
-            
+
             return Internal.Remove(getter);
         }
 
@@ -365,7 +365,7 @@ namespace NetExtender.Types.Dictionaries
 
         public void CopyTo(KeyValuePair<TKey, TValue>[] array, Int32 index)
         {
-            
+
         }
 
         public virtual IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
@@ -416,7 +416,7 @@ namespace NetExtender.Types.Dictionaries
             {
                 return value?.Value;
             }
-            
+
             public event PropertyChangingEventHandler? PropertyChanging;
             public event PropertyChangedEventHandler? PropertyChanged;
             private AutoKeyDictionary<TKey, TValue, TDictionary> Internal { get; }

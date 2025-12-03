@@ -50,7 +50,7 @@ namespace NetExtender.Types.Timers
                 return _provider.Now;
             }
         }
-        
+
         public DateTimeKind Kind
         {
             get
@@ -100,7 +100,7 @@ namespace NetExtender.Types.Timers
         {
             Tick?.Invoke(sender, new TimeEventArgs(Now));
         }
-        
+
         public Boolean TrySetKind(DateTimeKind kind)
         {
             Kind = kind;

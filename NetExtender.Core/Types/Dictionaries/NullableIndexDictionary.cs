@@ -46,7 +46,7 @@ namespace NetExtender.Types.Dictionaries
                 return base.Values;
             }
         }
-        
+
         Boolean ICollection<KeyValuePair<TKey, TValue>>.IsReadOnly
         {
             get

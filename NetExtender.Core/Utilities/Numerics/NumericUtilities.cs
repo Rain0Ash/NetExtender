@@ -26,6 +26,10 @@ namespace NetExtender.Utilities.Numerics
             typeof(UInt32),
             typeof(Int64),
             typeof(UInt64),
+#if NET7_0_OR_GREATER
+            typeof(Int128),
+            typeof(UInt128),
+#endif
             typeof(Half),
             typeof(Single),
             typeof(Double),
@@ -36,12 +40,44 @@ namespace NetExtender.Utilities.Numerics
             typeof(UIntPtr)
         );
 
+        private static ImmutableHashSet<Type> Integer { get; } = ImmutableHashSet.Create
+        (
+            typeof(Char),
+            typeof(SByte),
+            typeof(Byte),
+            typeof(Int16),
+            typeof(UInt16),
+            typeof(Int32),
+            typeof(UInt32),
+            typeof(Int64),
+            typeof(UInt64),
+#if NET7_0_OR_GREATER
+            typeof(Int128),
+            typeof(UInt128),
+#endif
+            typeof(BigInteger),
+            typeof(IntPtr),
+            typeof(UIntPtr)
+        );
+
+        private static ImmutableHashSet<Type> Floating { get; } = ImmutableHashSet.Create
+        (
+            typeof(Half),
+            typeof(Single),
+            typeof(Double),
+            typeof(Decimal),
+            typeof(Complex)
+        );
+
         private static ImmutableHashSet<Type> Signed { get; } = ImmutableHashSet.Create
         (
             typeof(SByte),
             typeof(Int16),
             typeof(Int32),
             typeof(Int64),
+#if NET7_0_OR_GREATER
+            typeof(Int128),
+#endif
             typeof(Half),
             typeof(Single),
             typeof(Double),
@@ -58,31 +94,9 @@ namespace NetExtender.Utilities.Numerics
             typeof(UInt16),
             typeof(UInt32),
             typeof(UInt64),
-            typeof(UIntPtr)
-        );
-
-        private static ImmutableHashSet<Type> Floating { get; } = ImmutableHashSet.Create
-        (
-            typeof(Half),
-            typeof(Single),
-            typeof(Double),
-            typeof(Decimal),
-            typeof(Complex)
-        );
-
-        private static ImmutableHashSet<Type> Integer { get; } = ImmutableHashSet.Create
-        (
-            typeof(Char),
-            typeof(SByte),
-            typeof(Byte),
-            typeof(Int16),
-            typeof(UInt16),
-            typeof(Int32),
-            typeof(UInt32),
-            typeof(Int64),
-            typeof(UInt64),
-            typeof(BigInteger),
-            typeof(IntPtr),
+#if NET7_0_OR_GREATER
+            typeof(UInt128),
+#endif
             typeof(UIntPtr)
         );
 

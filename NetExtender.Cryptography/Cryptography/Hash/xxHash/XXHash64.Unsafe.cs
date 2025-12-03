@@ -29,7 +29,7 @@ namespace NetExtender.Cryptography.Hash.XXHash
             {
                 return 0;
             }
-            
+
             unchecked
             {
                 Byte* end = pointer + length;
@@ -159,7 +159,7 @@ namespace NetExtender.Cryptography.Hash.XXHash
             {
                 return;
             }
-            
+
             unchecked
             {
                 fixed (Byte* pointer = &data[0])
@@ -212,7 +212,7 @@ namespace NetExtender.Cryptography.Hash.XXHash
             {
                 return 0;
             }
-            
+
             unchecked
             {
                 fixed (Byte* pointer = &data[0])

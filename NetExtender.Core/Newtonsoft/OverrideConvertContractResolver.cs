@@ -4,9 +4,14 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using NetExtender.Utilities.Types;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+
+#if NET8_0_OR_GREATER
+using System.Linq;
+#else
+using NetExtender.Utilities.Types;
+#endif
 
 namespace NetExtender.Newtonsoft
 {
@@ -42,7 +47,7 @@ namespace NetExtender.Newtonsoft
             : this((DefaultContractResolver?) null)
         {
         }
-        
+
         public OverrideConvertContractResolver(DefaultContractResolver? resolver)
             : base(resolver)
         {

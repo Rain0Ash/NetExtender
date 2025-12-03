@@ -30,7 +30,7 @@ namespace NetExtender.Types.Concurrent.Observable
                 return base.IsEmpty;
             }
         }
-        
+
         public ConcurrentObservableSortedCollection()
         {
         }
@@ -90,11 +90,18 @@ namespace NetExtender.Types.Concurrent.Observable
         {
         }
 
+#if NET8_0_OR_GREATER
+        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
         protected ConcurrentObservableSortedCollection(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
         }
 
+#if NET8_0_OR_GREATER
+        [Obsolete("Formatter-based serialization is obsolete and should not be used.", DiagnosticId = "SYSLIB0050", UrlFormat = "https://aka.ms/dotnet-warnings/{0}")]
+#endif
         public sealed override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             base.GetObjectData(info, context);
@@ -259,7 +266,11 @@ namespace NetExtender.Types.Concurrent.Observable
         {
             Sorter = new BinarySorter<T>(comparer);
         }
-        
+
+#if NET8_0_OR_GREATER
+        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
         protected ConcurrentObservableSortedCollection(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
@@ -273,7 +284,7 @@ namespace NetExtender.Types.Concurrent.Observable
             {
                 return;
             }
-            
+
             FlowResult<ImmutableList<T>> result = Notify<IEnumerable<T>, ImmutableList<T>>(items,
                 static (_, modify, items) => modify.AddRange(items).Flow(),
                 static (@this, _, _, modify) => modify.Sort(@this.Sorter),
@@ -314,7 +325,7 @@ namespace NetExtender.Types.Concurrent.Observable
                 Clear();
                 return;
             }
-            
+
             Exception? exception = Notify(items,
                 static (@this, _, items) => ImmutableList.CreateRange(items.OrderBy(static item => item, @this.Sorter)),
                 static (_, _, old, _) => old.Count > 0 ? new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, Source(old), 0) : null,

@@ -30,7 +30,7 @@ namespace NetExtender.Utilities.Numerics
         {
             return Complex.IsNaN(value);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsComplex(this Complex value)
         {
@@ -42,7 +42,7 @@ namespace NetExtender.Utilities.Numerics
         {
             return value.Imaginary != 0;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsProperComplex(this Complex value)
         {
@@ -54,13 +54,13 @@ namespace NetExtender.Utilities.Numerics
         {
             return value.Real != 0 && value.Imaginary != 0;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Complex AsComplex(this Double value)
         {
             return value;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BigComplex AsComplex(this Decimal value)
         {
@@ -602,13 +602,13 @@ namespace NetExtender.Utilities.Numerics
                 _ => throw new EnumUndefinedOrNotSupportedException<TrigonometryType>(type, nameof(type), null)
             };
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Enumerator2 GetEnumerator(this (Complex, Complex) value)
         {
             return new Enumerator2(value);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Enumerator3 GetEnumerator(this (Complex, Complex, Complex) value)
         {
@@ -656,7 +656,7 @@ namespace NetExtender.Utilities.Numerics
                         return true;
                     }
                 }
-                
+
                 return false;
             }
 
@@ -670,7 +670,7 @@ namespace NetExtender.Utilities.Numerics
             }
         }
     }
-    
+
     public struct Enumerator3 : IEnumerator<Complex>
     {
         private (Complex, Complex, Complex) Value { get; }
@@ -713,7 +713,7 @@ namespace NetExtender.Utilities.Numerics
                     return true;
                 }
             }
-                
+
             return false;
         }
 

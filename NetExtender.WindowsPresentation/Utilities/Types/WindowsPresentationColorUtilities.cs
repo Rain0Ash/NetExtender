@@ -27,72 +27,72 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
         {
             return System.Drawing.Color.FromArgb(value.A, value.R, value.G, value.B);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Color ToMediaColor(this ConsoleColor color)
         {
             return color.ToColor().ToMediaColor();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Color ToMediaColor(this System.Drawing.Color value)
         {
             return Color.FromArgb(value.A, value.R, value.G, value.B);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static SolidColorBrush ToBrush(this ConsoleColor color)
         {
             return ToBrush(color.ToColor());
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static SolidColorBrush ToBrush(this System.Drawing.Color color)
         {
             return ToBrush(color.ToMediaColor());
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static SolidColorBrush ToBrush(this Color color)
         {
             return Storage.TryGetValue(color, out SolidColorBrush? brush) ? brush : new SolidColorBrush(color);
         }
-        
+
         /// <inheritdoc cref="ColorUtilities.ToConsoleColor(System.Drawing.Color)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ConsoleColor? ToConsoleColor(this Color color)
         {
             return color.ToColor().ToConsoleColor();
         }
-        
+
         /// <inheritdoc cref="ColorUtilities.ToConsoleColor(System.Drawing.Color, out ConsoleColor)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean ToConsoleColor(this Color color, out ConsoleColor result)
         {
             return color.ToColor().ToConsoleColor(out result);
         }
-        
+
         /// <inheritdoc cref="ColorUtilities.ToConsoleColor(System.Drawing.Color, out ConsoleColor?)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean ToConsoleColor(this Color color, out ConsoleColor? result)
         {
             return color.ToColor().ToConsoleColor(out result);
         }
-        
+
         /// <inheritdoc cref="ColorUtilities.TryGetConsoleColor(System.Drawing.Color, out ConsoleColor)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryGetConsoleColor(this Color color, out ConsoleColor result)
         {
             return color.ToColor().TryGetConsoleColor(out result);
         }
-        
+
         /// <inheritdoc cref="ColorUtilities.NearestConsoleColor(System.Drawing.Color, out ConsoleColor)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean NearestConsoleColor(this Color color, out ConsoleColor result)
         {
             return color.ToColor().NearestConsoleColor(out result);
         }
-        
+
         /// <inheritdoc cref="ColorUtilities.NearestConsoleColor(System.Drawing.Color, out ConsoleColor?)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean NearestConsoleColor(this Color color, out ConsoleColor? result)
@@ -125,7 +125,7 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
             result = color.ToMediaColor();
             return successful;
         }
-        
+
         /// <inheritdoc cref="ColorUtilities.IsAccessibilityContrast(System.Drawing.Color, System.Drawing.Color)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsAccessibilityContrast(this Color color, Color other)
@@ -190,7 +190,7 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
             ColorUtilities.HSVToRGB(h, s, v, out Byte r, out Byte g, out Byte b);
             return Color.FromRgb(r, g, b);
         }
-        
+
         /// <inheritdoc cref="ColorUtilities.ToHSL(System.Drawing.Color, out Int32, out Byte, out Byte)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void ToHSL(this Color color, out Int32 h, out Byte s, out Byte l)
@@ -205,14 +205,14 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
             ColorUtilities.HSLToRGB(h, s, l, out Byte r, out Byte g, out Byte b);
             return Color.FromRgb(r, g, b);
         }
-        
+
         /// <inheritdoc cref="ColorUtilities.ToCIELAB(System.Drawing.Color, out Double, out Double, out Double)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void ToCIELAB(this Color color, out Double l, out Double a, out Double b)
         {
             ColorUtilities.RGBToCIELAB(color.R, color.G, color.B, out l, out a, out b);
         }
-        
+
         /// <inheritdoc cref="ColorUtilities.CIELABToRGB(Double, Double, Double)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Color CIELABToRGB(Double l, Double a, Double cb)
@@ -220,14 +220,14 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
             ColorUtilities.CIELABToRGB(l, a, cb, out Byte r, out Byte g, out Byte b);
             return Color.FromRgb(r, g, b);
         }
-        
+
         /// <inheritdoc cref="ColorUtilities.ToXYZ(System.Drawing.Color, out Double, out Double, out Double)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void ToXYZ(this Color color, out Double x, out Double y, out Double z)
         {
             ColorUtilities.RGBToXYZ(color.R, color.G, color.B, out x, out y, out z);
         }
-        
+
         /// <inheritdoc cref="ColorUtilities.XYZToRGB(Double, Double, Double)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Color XYZToRGB(Double x, Double y, Double z)
@@ -265,7 +265,7 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
         {
             return color.ToColor().ToHEX();
         }
-        
+
         /// <inheritdoc cref="ColorUtilities.ToColor(System.Drawing.Color, Type)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IColor ToColor(this Color color, Type type)
@@ -284,7 +284,7 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
 
             return color.ToColor().ToColor(type, out result);
         }
-        
+
         /// <inheritdoc cref="ColorUtilities.ToColor{TColor}(System.Drawing.Color)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TColor ToColor<TColor>(this Color color) where TColor : IColor
@@ -424,7 +424,7 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
         {
             return ColorUtilities.WaveLengthToRGB(wavelength, out Byte red, out Byte green, out Byte blue) ? Color.FromRgb(red, green, blue) : Colors.Black;
         }
-        
+
         /// <inheritdoc cref="ColorUtilities.WaveLengthToRGB(Single, out System.Drawing.Color)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean WaveLengthToRGB(Single wavelength, out Color result)
@@ -451,7 +451,7 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
             result = color.ToMediaColor();
             return successful;
         }
-        
+
         /// <inheritdoc cref="ColorUtilities.ConvertToColorType(System.Drawing.Color, ColorType)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IColor ConvertToColorType(this Color color, ColorType type)
@@ -500,7 +500,7 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
         {
             return random.GetRandomAlphaColor().ToMediaColor();
         }
-        
+
         /// <inheritdoc cref="ColorUtilities.GetRandomLightColor()"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Color GetRandomLightMediaColor()
@@ -542,7 +542,7 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
         {
             return random.GetRandomLightAlphaColor().ToMediaColor();
         }
-        
+
         /// <inheritdoc cref="ColorUtilities.GetRandomDarkColor()"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Color GetRandomDarkMediaColor()

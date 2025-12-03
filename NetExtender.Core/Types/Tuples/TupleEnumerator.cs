@@ -64,7 +64,7 @@ namespace NetExtender.Types.Tuples
                 {
                     throw new ArgumentOutOfRangeException(nameof(index), index, null);
                 }
-                
+
                 return Value[index];
             }
         }

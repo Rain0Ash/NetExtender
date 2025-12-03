@@ -17,14 +17,14 @@ namespace NetExtender.Domains.Initializer
     public abstract class WinFormsAspNetCoreApplicationInitializer : WinFormsApplicationInitializer
     {
     }
-    
+
     public abstract class WinFormsAspNetCoreApplicationInitializer<TBuilder> : ApplicationInitializer<WinFormsAspNetCoreApplication, WinFormsAspNetCoreView<TBuilder>> where TBuilder : IApplicationBuilder<WinFormsAspNetCoreContext>, new()
     {
         public abstract class Builder : WinFormsAspNetCoreBuilder
         {
         }
     }
-    
+
     public abstract class WinFormsAspNetCoreApplicationInitializer<TForm, THost> : ApplicationInitializer<WinFormsAspNetCoreApplication, WinFormsAspNetCoreView<TForm, THost>> where TForm : Form, new() where THost : class, IHost, new()
     {
     }
@@ -42,18 +42,18 @@ namespace NetExtender.Domains.Initializer
         {
         }
     }
-    
+
     public abstract class WinFormsAspNetCoreWebApplicationInitializer : WinFormsApplicationInitializer
     {
     }
-    
+
     public abstract class WinFormsAspNetCoreWebApplicationInitializer<TBuilder> : ApplicationInitializer<WinFormsAspNetCoreWebApplication, WinFormsAspNetCoreWebView<TBuilder>> where TBuilder : IApplicationBuilder<WinFormsAspNetCoreWebContext>, new()
     {
         public abstract class Builder : WinFormsAspNetCoreWebBuilder
         {
         }
     }
-    
+
     public abstract class WinFormsAspNetCoreWebApplicationInitializer<TForm, THost> : ApplicationInitializer<WinFormsAspNetCoreWebApplication, WinFormsAspNetCoreWebView<TForm, THost>> where TForm : Form, new() where THost : class, IWebHost, new()
     {
     }
@@ -71,14 +71,14 @@ namespace NetExtender.Domains.Initializer
         {
         }
     }
-    
+
     public abstract class WinFormsAspNetCoreWebApplicationWrapperInitializer<TBuilder> : WinFormsAspNetCoreApplicationInitializer<Form, WebApplication, WebApplicationBuilderWrapper, TBuilder> where TBuilder : IApplicationBuilder<WinFormsAspNetCoreContext<Form, WebApplication>>, new()
     {
         public new abstract class Builder : WinFormsAspNetCoreWebApplicationBuilder
         {
         }
     }
-    
+
     public abstract class WinFormsAspNetCoreWebApplicationWrapperInitializer<TForm, TBuilder> : WinFormsAspNetCoreApplicationInitializer<TForm, WebApplication, WebApplicationBuilderWrapper, TBuilder> where TForm : Form where TBuilder : IApplicationBuilder<WinFormsAspNetCoreContext<TForm, WebApplication>>, new()
     {
         public new abstract class Builder : WinFormsAspNetCoreWebApplicationBuilder<TForm>

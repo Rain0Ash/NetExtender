@@ -32,7 +32,7 @@ namespace NetExtender.Domains.WindowsPresentation.Applications
     public class WindowsPresentationApplication : Application<Window>, IDependencyApplication
     {
         public System.Windows.Application Application { get; }
-        
+
         public WindowsPresentationServiceProvider Provider
         {
             get
@@ -42,7 +42,7 @@ namespace NetExtender.Domains.WindowsPresentation.Applications
         }
 
         public override IDispatcher Dispatcher { get; }
-        
+
         public override ApplicationShutdownMode ShutdownMode
         {
             get
@@ -66,7 +66,7 @@ namespace NetExtender.Domains.WindowsPresentation.Applications
                 }
             }
         }
-        
+
         ShutdownMode IDependencyApplication.ShutdownMode
         {
             get
@@ -99,7 +99,7 @@ namespace NetExtender.Domains.WindowsPresentation.Applications
             {
                 InitializeComponent();
             }
-            
+
             Application.Dispatcher.Invoke(() => Application.Run(Context));
             return Task.FromResult<IApplication>(this);
         }

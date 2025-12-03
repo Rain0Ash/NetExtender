@@ -18,7 +18,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
                 await @delegate();
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String? Authorization(this ActionContext context)
         {
@@ -26,7 +26,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
             {
                 throw new ArgumentNullException(nameof(context));
             }
-            
+
             return context.HttpContext.Authorization();
         }
 
@@ -37,10 +37,10 @@ namespace NetExtender.Utilities.AspNetCore.Types
             {
                 throw new ArgumentNullException(nameof(context));
             }
-            
+
             return context.HttpContext.Authorization(out authorization);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ValueTask Exception(this ActionContext context, BusinessException exception)
         {
@@ -51,7 +51,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
 
             return context.HttpContext.Exception(exception);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ValueTask Exception<T>(this ActionContext context) where T : BusinessException, new()
         {
@@ -59,7 +59,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
             {
                 throw new ArgumentNullException(nameof(context));
             }
-            
+
             return context.HttpContext.Exception<T>();
         }
     }

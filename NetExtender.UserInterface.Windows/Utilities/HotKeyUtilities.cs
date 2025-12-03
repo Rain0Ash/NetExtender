@@ -40,11 +40,11 @@ namespace NetExtender.Utilities.UserInterface
         {
             [DllImport("user32.dll")]
             public static extern Boolean RegisterHotKey(IntPtr handle, Int32 id, Int32 modifiers, Int32 key);
-        
+
             [DllImport("user32.dll")]
             public static extern Boolean UnregisterHotKey(IntPtr handle, Int32 id);
         }
-        
+
         private static ConcurrentDictionary<IntPtr, Int32> Counter { get; }
         private static ConcurrentDictionary<IntPtr, ConcurrentDictionary<Int32, WindowsHotKeyAction<Int32>>> HotKeys { get; }
 
@@ -87,7 +87,7 @@ namespace NetExtender.Utilities.UserInterface
             Internal.UnregisterHotKey(handle, id);
             return false;
         }
-        
+
         public static Boolean RegisterHotKey(IntPtr handle, WindowsHotKeyAction hotkey, out Int32 id)
         {
             if (handle == IntPtr.Zero)
@@ -114,7 +114,7 @@ namespace NetExtender.Utilities.UserInterface
         {
             return handle != IntPtr.Zero && RegisterHotKey(handle, hotkey.Id.ToInt32(CultureInfo.InvariantCulture), hotkey.Key, hotkey.Modifier);
         }
-        
+
         public static Boolean RegisterHotKey<T>(this IUserInterfaceHandle handle, WindowsHotKeyAction<T> hotkey) where T : unmanaged, IComparable<T>, IConvertible
         {
             if (handle is null)
@@ -183,7 +183,7 @@ namespace NetExtender.Utilities.UserInterface
 
             return array;
         }
-        
+
         public static Int32?[] RegisterHotKey<T>(this IUserInterfaceHandle handle, params WindowsHotKeyAction<T>[] hotkeys) where T : unmanaged, IComparable<T>, IConvertible
         {
             if (handle is null)
@@ -215,7 +215,7 @@ namespace NetExtender.Utilities.UserInterface
             {
                 HotKeys.TryRemove(handle, out _);
             }
-            
+
             return Internal.UnregisterHotKey(handle, id);
         }
 
@@ -233,7 +233,7 @@ namespace NetExtender.Utilities.UserInterface
         {
             return handle != IntPtr.Zero && UnregisterHotKey(handle, id.ToInt32(CultureInfo.InvariantCulture));
         }
-        
+
         public static Boolean UnregisterHotKey<T>(this IUserInterfaceHandle handle, T id) where T : unmanaged, IConvertible
         {
             if (handle is null)

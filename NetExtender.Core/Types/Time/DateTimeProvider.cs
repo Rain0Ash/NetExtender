@@ -116,6 +116,10 @@ namespace NetExtender.Types.Times
             };
         }
 
+#if NET8_0_OR_GREATER
+        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
         private DateTimeProvider(SerializationInfo info, StreamingContext context)
         {
             _unsafe = new Unsafe(info, context);
@@ -134,14 +138,14 @@ namespace NetExtender.Types.Times
                 return ref *pointer;
             }
         }
-        
+
         [Serializable]
         [StructLayout(LayoutKind.Sequential)]
         private readonly unsafe struct Unsafe : IUnsafeSize, IStruct<Unsafe>
         {
             public static Unsafe Now { get; } = new Unsafe(DateTimeKind.Local, &GetNow, &GetOffsetNow);
             public static Unsafe UtcNow { get; } = new Unsafe(DateTimeKind.Utc, &GetUtcNow, &GetOffsetUtcNow);
-            
+
             public Type Type
             {
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -180,6 +184,10 @@ namespace NetExtender.Types.Times
                 _offset = offset;
             }
 
+#if NET8_0_OR_GREATER
+            [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+            [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
             internal Unsafe(SerializationInfo info, StreamingContext context)
             {
                 (Kind, _now, _offset) = info.GetByte(nameof(Kind)) switch
@@ -214,31 +222,31 @@ namespace NetExtender.Types.Times
             {
                 return _offset();
             }
-            
+
             [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
             private static DateTime GetNow()
             {
                 return DateTime.Now;
             }
-        
+
             [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
             private static DateTime GetUtcNow()
             {
                 return DateTime.UtcNow;
             }
-        
+
             [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
             private static DateTimeOffset GetOffsetNow()
             {
                 return DateTimeOffset.Now;
             }
-        
+
             [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
             private static DateTimeOffset GetOffsetUtcNow()
             {
                 return DateTimeOffset.UtcNow;
             }
-            
+
             public ref Byte GetPinnableReference()
             {
                 fixed (Byte* pointer = this)

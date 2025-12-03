@@ -14,7 +14,7 @@ namespace NetExtender.WindowsPresentation.Types.Exceptions
             return Exception(sender, exception);
         }
     }
-    
+
     public interface IWindowsPresentationExceptionHandler
     {
         public ExceptionHandlerAction Exception(Object? sender, Exception? exception);

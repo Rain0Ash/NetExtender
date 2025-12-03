@@ -13,11 +13,11 @@ namespace NetExtender.WindowsPresentation.ReactiveUI
     {
         public TWindow Window { get; } = WindowStorageUtilities<TWindow>.Require();
     }
-    
+
     public abstract class ReactiveDisposeViewModel : ReactiveDisposeObject
     {
     }
-    
+
     public abstract class ReactiveDisposeViewModel<T> : ReactiveDisposeObject<T> where T : ReactiveDisposeViewModel<T>
     {
     }

@@ -11,7 +11,7 @@ namespace NetExtender.Types.Intercept.Interfaces
         public new T Value { get; set; }
         public void Intercept(T value);
     }
-    
+
     public interface ISimpleInterceptEventArgs : IInterceptEventArgs
     {
         public Object? Value { get; set; }
@@ -28,7 +28,7 @@ namespace NetExtender.Types.Intercept.Interfaces
     public interface IInterceptionEventArgs
     {
         public event EventHandler? Intercepted;
-        
+
         public Exception? Exception { get; }
         public Boolean IsIntercept { get; }
         public Boolean IsCancel { get; }

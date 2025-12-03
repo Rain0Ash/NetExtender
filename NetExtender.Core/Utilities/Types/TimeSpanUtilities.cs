@@ -49,6 +49,7 @@ namespace NetExtender.Utilities.Types
             return IsPositive(value) || IsInfinity(value);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TimeSpan From(this TimeType type)
         {
             return From(type, 1);
@@ -58,11 +59,18 @@ namespace NetExtender.Utilities.Types
         {
             return type switch
             {
-                TimeType.Milliseconds => TimeSpan.FromMilliseconds(count),
-                TimeType.Seconds => TimeSpan.FromSeconds(count),
-                TimeType.Minutes => TimeSpan.FromMinutes(count),
-                TimeType.Hours => TimeSpan.FromHours(count),
                 TimeType.Days => TimeSpan.FromDays(count),
+                TimeType.Hours => TimeSpan.FromHours(count),
+                TimeType.Minutes => TimeSpan.FromMinutes(count),
+                TimeType.Seconds => TimeSpan.FromSeconds(count),
+                TimeType.Milliseconds => TimeSpan.FromMilliseconds(count),
+#if NET7_0_OR_GREATER
+                TimeType.Microseconds => TimeSpan.FromMicroseconds(count),
+                TimeType.Nanoseconds => TimeSpan.FromMicroseconds(count / 1000),
+#else
+                TimeType.Microseconds => TimeSpan.FromMilliseconds(count / 1000),
+                TimeType.Nanoseconds => TimeSpan.FromMilliseconds(count / 1000000),
+#endif
                 _ => throw new EnumUndefinedOrNotSupportedException<TimeType>(type, nameof(type), null)
             };
         }
@@ -112,56 +120,67 @@ namespace NetExtender.Utilities.Types
             return source.Aggregate(TimeSpan.Zero, (current, next) => current + selector(next));
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TimeSpan Multiply(this TimeSpan value, Int32 factor)
         {
             return new TimeSpan(value.Ticks * factor);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TimeSpan Multiply(this TimeSpan value, UInt32 factor)
         {
             return new TimeSpan(value.Ticks * factor);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TimeSpan Multiply(this TimeSpan value, Int64 factor)
         {
             return new TimeSpan(value.Ticks * factor);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TimeSpan Multiply(this TimeSpan value, Double factor)
         {
             return new TimeSpan((Int64) (value.Ticks * factor));
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TimeSpan Divide(this TimeSpan value, Int32 factor)
         {
             return new TimeSpan(value.Ticks / factor);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TimeSpan Divide(this TimeSpan value, UInt32 factor)
         {
             return new TimeSpan(value.Ticks / factor);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TimeSpan Divide(this TimeSpan value, Int64 factor)
         {
             return new TimeSpan(value.Ticks / factor);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TimeSpan Divide(this TimeSpan value, Double factor)
         {
             return new TimeSpan((Int64) (value.Ticks / factor));
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Divide(this TimeSpan value, TimeSpan other)
         {
             return (Double) value.Ticks / other.Ticks;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<TimeSpan> Range(TimeSpan stop)
         {
             return Range(TimeSpan.Zero, stop);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<TimeSpan> Range(TimeSpan start, TimeSpan stop, TimeType type = TimeType.Minutes)
         {
             return Range(start, stop, From(type));
@@ -192,13 +211,14 @@ namespace NetExtender.Utilities.Types
         }
 
         /// <summary>
-        /// Days in the TimeSpan minus the months and years
+        /// Years in the TimeSpan
         /// </summary>
-        /// <param name="span">TimeSpan to get the days from</param>
-        /// <returns>The number of days minus the months and years that the TimeSpan has</returns>
-        public static Int32 DaysRemainder(this TimeSpan span)
+        /// <param name="span">TimeSpan to get the years from</param>
+        /// <returns>The number of years that the TimeSpan has</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int32 Years(this TimeSpan span)
         {
-            return (DateTime.MinValue + span).Day - 1;
+            return (DateTime.MinValue + span).Year - 1;
         }
 
         /// <summary>
@@ -206,19 +226,21 @@ namespace NetExtender.Utilities.Types
         /// </summary>
         /// <param name="span">TimeSpan to get the months from</param>
         /// <returns>The number of months that the TimeSpan has</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Int32 Months(this TimeSpan span)
         {
             return (DateTime.MinValue + span).Month - 1;
         }
 
         /// <summary>
-        /// Years in the TimeSpan
+        /// Days in the TimeSpan minus the months and years
         /// </summary>
-        /// <param name="span">TimeSpan to get the years from</param>
-        /// <returns>The number of years that the TimeSpan has</returns>
-        public static Int32 Years(this TimeSpan span)
+        /// <param name="span">TimeSpan to get the days from</param>
+        /// <returns>The number of days minus the months and years that the TimeSpan has</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int32 DaysRemainder(this TimeSpan span)
         {
-            return (DateTime.MinValue + span).Year - 1;
+            return (DateTime.MinValue + span).Day - 1;
         }
 
         /// <summary>
@@ -228,6 +250,7 @@ namespace NetExtender.Utilities.Types
         /// Use case scenario: methods that accept timeout often accept only <see cref="Timeout.InfiniteTimeSpan"/>
         /// but not other negative values.
         /// </remarks>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TimeSpan AdjustTimeout(this TimeSpan timeout)
         {
             return AdjustTimeout(timeout, false);
@@ -261,6 +284,7 @@ namespace NetExtender.Utilities.Types
         /// Use case scenario: methods that accept timeout often accept only <see cref="Timeout.InfiniteTimeSpan"/>
         /// but not other negative values.
         /// </remarks>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TimeSpan AdjustTimeout(this TimeSpan timeout, TimeSpan upper)
         {
             return AdjustTimeout(timeout, upper, false);

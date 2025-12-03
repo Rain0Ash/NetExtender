@@ -16,7 +16,7 @@ namespace NetExtender.Localization.Common.Interfaces
         public String? Get(LocalizationIdentifier identifier);
         public Boolean Get(LocalizationIdentifier identifier, [MaybeNullWhen(false)] out String result);
     }
-    
+
     public interface ILocalizationString : ILocalizableString, IFormatString, IReadOnlyDictionary<LocalizationIdentifier, String>, ICloneable<ILocalizationString>
     {
         public new IEnumerable<LocalizationIdentifier> Keys { get; }

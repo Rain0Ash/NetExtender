@@ -27,7 +27,7 @@ namespace NetExtender.UserInterface.WindowsPresentation
             Closed += OnClosed;
             Sound += OnSound;
         }
-        
+
         private void OnActivated(Object? sender, EventArgs args)
         {
             Sound?.Invoke(sender, new WindowSoundEventArgs(nameof(Activate)));

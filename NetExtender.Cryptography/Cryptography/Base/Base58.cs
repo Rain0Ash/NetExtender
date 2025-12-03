@@ -34,7 +34,7 @@ namespace NetExtender.Cryptography.Base
         {
             Alphabet = alphabet ?? throw new ArgumentNullException(nameof(alphabet));
         }
-        
+
         private static unsafe Int32 ZeroCount(ReadOnlySpan<Byte> value)
         {
             unchecked
@@ -117,7 +117,7 @@ namespace NetExtender.Cryptography.Base
                 Int32 zeroes = ZeroCount(value);
                 Int32 length = SafeCharCountForEncoding(value.Length, zeroes);
                 String output = new String('\0', length);
-                
+
                 fixed (Byte* pinput = value)
                 fixed (Char* poutput = output)
                 {
@@ -239,7 +239,7 @@ namespace NetExtender.Cryptography.Base
 
                 Int32 count = SafeByteCountForDecoding(value);
                 Int32 zeroes = GetPrefixCount(value, value.Length, Alphabet.Value[0]);
-                
+
                 Byte[] output = new Byte[count];
                 fixed (Char* pinput = value)
                 fixed (Byte* poutput = output)
@@ -266,7 +266,7 @@ namespace NetExtender.Cryptography.Base
                 }
 
                 Int32 zeroes = GetPrefixCount(input, input.Length, Alphabet.Value[0]);
-                
+
                 fixed (Char* pinput = input)
                 fixed (Byte* poutput = output)
                 {
@@ -284,7 +284,7 @@ namespace NetExtender.Cryptography.Base
                 Byte* poutputstart = poutput;
                 Char* pinputend = pinput + inputlength;
                 pinput += zeroes;
-                
+
                 if (pinput == pinputend)
                 {
                     if (zeroes > outputlength)

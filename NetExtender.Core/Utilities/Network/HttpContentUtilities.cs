@@ -37,7 +37,7 @@ namespace NetExtender.Utilities.Network
                 return collection ??= new MediaTypeFormatterCollection();
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T AddHeaders<T>(this T content, IEnumerable<KeyValuePair<String, String>>? source) where T : HttpContent
         {
@@ -49,7 +49,7 @@ namespace NetExtender.Utilities.Network
             content.Headers.AddRange(source);
             return content;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T AddHeaders<T>(this T content, IEnumerable<KeyValuePair<String, IEnumerable<String>>>? source) where T : HttpContent
         {
@@ -61,7 +61,7 @@ namespace NetExtender.Utilities.Network
             content.Headers.AddRange(source);
             return content;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T AddHeaders<T>(this T content, HttpHeaders? source) where T : HttpContent
         {
@@ -73,7 +73,7 @@ namespace NetExtender.Utilities.Network
             content.Headers.AddRange(source);
             return content;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T WithHeaders<T>(this T content, IEnumerable<KeyValuePair<String, String>>? source) where T : HttpContent
         {
@@ -85,7 +85,7 @@ namespace NetExtender.Utilities.Network
             content.Headers.With(source);
             return content;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T WithHeaders<T>(this T content, IEnumerable<KeyValuePair<String, IEnumerable<String>>>? source) where T : HttpContent
         {
@@ -97,7 +97,7 @@ namespace NetExtender.Utilities.Network
             content.Headers.With(source);
             return content;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T WithHeaders<T>(this T content, HttpHeaders? source) where T : HttpContent
         {
@@ -109,7 +109,7 @@ namespace NetExtender.Utilities.Network
             content.Headers.With(source);
             return content;
         }
-        
+
         public static void CopyTo(this HttpContentHeaders source, HttpContentHeaders destination)
         {
             if (source is null)
@@ -302,7 +302,7 @@ namespace NetExtender.Utilities.Network
         {
             return ReadAsAsync(content, type, formatters, CancellationToken.None);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<Object?> ReadAsAsync(this HttpContent content, Type type, MediaTypeFormatter formatter, CancellationToken token)
         {
@@ -320,7 +320,7 @@ namespace NetExtender.Utilities.Network
         {
             return ReadAsAsync<Object>(content, type, formatters, null, token);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<Object?> ReadAsAsync(this HttpContent content, Type type, MediaTypeFormatter formatter, ILogger? logger)
         {
@@ -338,7 +338,7 @@ namespace NetExtender.Utilities.Network
         {
             return ReadAsAsync(content, type, formatters, logger, CancellationToken.None);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<Object?> ReadAsAsync(this HttpContent content, Type type, MediaTypeFormatter formatter, ILogger? logger, CancellationToken token)
         {
@@ -482,9 +482,9 @@ namespace NetExtender.Utilities.Network
             {
                 return Task.FromResult<T?>(media);
             }
-            
+
             MediaTypeHeaderValue header = content.Headers.ContentType ?? MediaTypeFormatterUtilities.ApplicationOctetStreamMediaType;
-            
+
             // ReSharper disable once LocalVariableHidesMember
             MediaTypeFormatterCollection collection = formatters as MediaTypeFormatterCollection ?? new MediaTypeFormatterCollection(formatters);
             if (collection.FindReader(type, header) is { } reader)
@@ -520,9 +520,9 @@ namespace NetExtender.Utilities.Network
             token.ThrowIfCancellationRequested();
             return (T?) await formatter.ReadFromStreamAsync(type, await content.ReadAsStreamAsync(token), content, logger, token);
         }
-        
+
         private static Regex BinaryMimeRegex { get; } = new Regex("(image/*|audio/*|video/*|application/octet-stream|multipart/form-data)", RegexOptions.IgnoreCase | RegexOptions.Compiled | RegexOptions.CultureInvariant);
-        
+
         public static Boolean IsBinary(this HttpContent content)
         {
             if (content is null)
@@ -564,7 +564,7 @@ namespace NetExtender.Utilities.Network
             {
                 new FormUrlEncodedMediaTypeFormatter()
             };
-            
+
             return ReadAsAsyncCore(content, formatters, token);
         }
 
@@ -578,7 +578,7 @@ namespace NetExtender.Utilities.Network
 
             return (await ReadAsAsync<FormDataCollection>(content, formatters, token))?.Collection;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsHttpRequestMessageContent(this HttpContent content)
         {
@@ -707,7 +707,7 @@ namespace NetExtender.Utilities.Network
             Byte[] buffer = new Byte[size];
             Int32 consumed = 0;
             Int32 ready;
-            
+
             do
             {
                 try
@@ -718,7 +718,7 @@ namespace NetExtender.Utilities.Network
                 {
                     throw new HttpMessageReadingException(null, exception);
                 }
-                
+
                 HttpParserState state;
                 try
                 {
@@ -728,7 +728,7 @@ namespace NetExtender.Utilities.Network
                 {
                     state = HttpParserState.Invalid;
                 }
-                
+
                 switch (state)
                 {
                     case HttpParserState.NeedMoreData:
@@ -739,7 +739,7 @@ namespace NetExtender.Utilities.Network
                         throw new HttpMessageHeaderParsingException($"Error parsing HTTP message header byte {consumed} of message {buffer}.");
                 }
             } while (ready > 0);
-            
+
             throw new HttpMessageUnexpectedEndException("Unexpected end of HTTP message stream. HTTP message is not complete.");
         }
 
@@ -819,7 +819,7 @@ namespace NetExtender.Utilities.Network
                 {
                     throw new HttpMessageReadingException(null, exception);
                 }
-                
+
                 HttpParserState state;
                 try
                 {
@@ -829,7 +829,7 @@ namespace NetExtender.Utilities.Network
                 {
                     state = HttpParserState.Invalid;
                 }
-                
+
                 switch (state)
                 {
                     case HttpParserState.NeedMoreData:
@@ -840,7 +840,7 @@ namespace NetExtender.Utilities.Network
                         throw new HttpMessageHeaderParsingException($"Error parsing HTTP message header byte {consumed} of message {buffer}.");
                 }
             } while (ready != 0);
-            
+
             throw new HttpMessageUnexpectedEndException("Unexpected end of HTTP message stream. HTTP message is not complete.");
         }
 
@@ -944,7 +944,7 @@ namespace NetExtender.Utilities.Network
                 RequestUri = CreateRequestUri(scheme, request),
                 Version = request.Version ?? new Version()
             };
-            
+
             message.Content = CreateHeaderFields(request.HttpHeaders, message.Headers, stream, rewind);
             return message;
         }
@@ -962,11 +962,11 @@ namespace NetExtender.Utilities.Network
                 Version = response.Version ?? new Version(),
                 ReasonPhrase = response.ReasonPhrase
             };
-            
+
             message.Content = CreateHeaderFields(response.HttpHeaders, message.Headers, stream, rewind);
             return message;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsMimeMultipartContent(this HttpContent content)
         {
@@ -1143,7 +1143,7 @@ namespace NetExtender.Utilities.Network
             public MimeMultipartBodyPartParser Parser { get; }
             public Byte[] Data { get; }
             public ICollection<HttpContent> Result { get; }
-            
+
             public MultipartAsyncContext(Stream stream, MimeMultipartBodyPartParser parser, Byte[] data, ICollection<HttpContent> result)
             {
                 Stream = stream ?? throw new ArgumentNullException(nameof(stream));

@@ -9,7 +9,7 @@ namespace NetExtender.CQRS.Events.Interfaces
     public interface IBeforeSaveEventCQRS : IBeforeEventCQRS
     {
     }
-    
+
     public interface IBeforeEventCQRS : IEventCQRS
     {
     }
@@ -21,7 +21,7 @@ namespace NetExtender.CQRS.Events.Interfaces
     public interface IAfterEventCQRS : IEventCQRS
     {
     }
-    
+
     public interface IEventCQRS : IEntityCQRS
     {
         public Boolean Resolved { get; set; }

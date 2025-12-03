@@ -15,7 +15,7 @@ namespace NetExtender.Utilities.Network
     {
         public static String LogCategoryPrefix { get; set; } = "System.Net.Http.HttpClient";
         public static String LogCategorySuffix { get; set; } = "TraceHandler";
-        
+
         private static Action<ILogger, HttpMethod, Uri?, String, String, String, Exception?> DefaultRequestSuccessHandler { get; }
         private static Action<ILogger, String, HttpStatusCode, String?, String, String, Exception?> DefaultResponseSuccessHandler { get; }
         private static Action<ILogger, HttpMethod, Uri?, String, String, String, Exception?> DefaultRequestFailHandler { get; }
@@ -33,7 +33,7 @@ namespace NetExtender.Utilities.Network
 
         protected Predicate<HttpResponseMessage>? Validator { get; }
         public Boolean Buffering { get; init; }
-        
+
         public Action<ILogger, HttpMethod, Uri?, String, String, String, Exception?>? RequestSuccessHandler { get; init; } = DefaultRequestSuccessHandler;
         public Action<ILogger, String, HttpStatusCode, String?, String, String, Exception?>? ResponseSuccessHandler { get; init; } = DefaultResponseSuccessHandler;
         public Action<ILogger, HttpMethod, Uri?, String, String, String, Exception?>? RequestFailHandler { get; init; } = DefaultRequestFailHandler;
@@ -86,14 +86,10 @@ namespace NetExtender.Utilities.Network
             return Validator?.Invoke(response) ?? response.IsSuccessStatusCode;
         }
 
-        public static String LoggerCategory(String name)
+        [return: NotNullIfNotNull("name")]
+        public static String? LoggerCategory(String? name)
         {
-            if (name is null)
-            {
-                throw new ArgumentNullException(nameof(name));
-            }
-
-            return $"{LogCategoryPrefix}.{name}.{LogCategorySuffix}";
+            return name is not null ? $"{LogCategoryPrefix}.{name}.{LogCategorySuffix}" : null;
         }
 
         public static String LoggerCategory<T>()
@@ -110,7 +106,7 @@ namespace NetExtender.Utilities.Network
                     Stream stream = await request.Content.ReadAsStreamAsync(token).ConfigureAwait(false);
                     request.Content = new StreamContent(stream).AddHeaders(request.Content.Headers);
                 }
-                
+
                 HttpResponseMessage response = await base.SendAsync(request, token).ConfigureAwait(false);
 
                 if (Logger is null)
@@ -196,7 +192,7 @@ namespace NetExtender.Utilities.Network
             String content = response.Content is not null ? await response.Content.ReadAsStringAsync().ConfigureAwait(false) : String.Empty;
             ResponseFailHandler(logger, $"HTTP/{response.Version}", response.StatusCode, response.ReasonPhrase, response.ToHeaderString(), content, exception);
         }
-        
+
         private static class Events
         {
             [ReflectionSignature]
@@ -236,7 +232,7 @@ namespace NetExtender.Utilities.Network
             }
         }
     }
-    
+
     public class HttpTracingHandler<T> : HttpTracingHandler
     {
         public HttpTracingHandler(ILoggerFactory logger)

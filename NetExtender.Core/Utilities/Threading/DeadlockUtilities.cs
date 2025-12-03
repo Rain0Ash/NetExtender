@@ -29,7 +29,7 @@ namespace NetExtender.Utilities.Threading
         {
         }
     }
-    
+
     public static class DeadlockUtilities
     {
         public static event DeadlockHandler? Deadlock;
@@ -49,7 +49,7 @@ namespace NetExtender.Utilities.Threading
             {
                 return false;
             }
-            
+
             Context.Dispose();
             Context = null;
             return true;
@@ -97,7 +97,7 @@ namespace NetExtender.Utilities.Threading
             {
                 Mode = mode;
                 SynchronizationContext? current = SynchronizationContext.Current;
-                
+
                 if (current is null && mode == Threading.Deadlock.Mode.Actual)
                 {
                     return;
@@ -119,7 +119,7 @@ namespace NetExtender.Utilities.Threading
             }
         }
     }
-    
+
     public static class Deadlock
     {
         public enum Mode : Byte
@@ -152,7 +152,7 @@ namespace NetExtender.Utilities.Threading
                 {
                     throw new DeadlockException(StackTrace) { IsPotential = Context is not null };
                 }
-                
+
                 try
                 {
                     lock (SyncRoot)
@@ -248,7 +248,7 @@ namespace NetExtender.Utilities.Threading
             public override System.Threading.SynchronizationContext CreateCopy()
             {
                 SynchronizationContext copy = new SynchronizationContext(Context?.CreateCopy());
-                
+
                 lock (SyncRoot)
                 {
                     copy.StackTrace = StackTrace;
@@ -265,7 +265,7 @@ namespace NetExtender.Utilities.Threading
     {
         public StackTrace? Trace { get; }
         public Boolean IsPotential { get; init; }
-        
+
         public DeadlockException(StackTrace? trace)
             : base(Format(trace))
         {
@@ -284,7 +284,11 @@ namespace NetExtender.Utilities.Threading
             Trace = trace;
         }
 
-        public DeadlockException(SerializationInfo info, StreamingContext context)
+#if NET8_0_OR_GREATER
+        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
+#endif
+        private DeadlockException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
         }

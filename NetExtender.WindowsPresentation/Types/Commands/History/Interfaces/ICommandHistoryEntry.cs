@@ -10,14 +10,14 @@ namespace NetExtender.WindowsPresentation.Types.Commands.History.Interfaces
     {
         public new ICommand<T> Command { get; }
     }
-    
+
     public interface ICommandHistoryEntry : ICommandHistoryInfo, IEquatable<ICommandHistoryEntry>
     {
         public ICommand Command { get; }
         public Boolean Execute();
         public Boolean Revert();
     }
-    
+
     public interface ICommandHistoryInfo
     {
         public CommandHistoryEntryState State { get; }

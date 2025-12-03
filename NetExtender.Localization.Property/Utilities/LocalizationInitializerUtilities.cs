@@ -20,11 +20,11 @@ namespace NetExtender.Localization.Utilities
             {
                 throw new ArgumentNullException(nameof(initializer));
             }
-            
+
             initializer.Subscribe(value);
             return value;
         }
-        
+
         public static T Subscribe<T>(this T value, String name, LocalizationInitializer initializer) where T : ILocalizationPropertyInfo
         {
             if (value is null)
@@ -41,7 +41,7 @@ namespace NetExtender.Localization.Utilities
             {
                 throw new ArgumentNullException(nameof(initializer));
             }
-            
+
             initializer.Subscribe(value, name);
             return value;
         }

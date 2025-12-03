@@ -46,7 +46,7 @@ namespace NetExtender.Utilities.Numerics
                 public const System.Int32 ThreeQuarter = 270;
                 public const System.Int32 Full = 360;
             }
-            
+
             public static class Single
             {
                 public const System.Single Zero = 0F;
@@ -55,7 +55,7 @@ namespace NetExtender.Utilities.Numerics
                 public const System.Single ThreeQuarter = 270F;
                 public const System.Single Full = 360F;
             }
-            
+
             public static class Double
             {
                 public const System.Double Zero = 0D;
@@ -64,7 +64,7 @@ namespace NetExtender.Utilities.Numerics
                 public const System.Double ThreeQuarter = 270D;
                 public const System.Double Full = 360D;
             }
-            
+
             public static class Decimal
             {
                 public const System.Decimal Zero = 0M;
@@ -74,7 +74,7 @@ namespace NetExtender.Utilities.Numerics
                 public const System.Decimal Full = 360M;
             }
         }
-        
+
         public static class Radian
         {
             public static class Single
@@ -85,7 +85,7 @@ namespace NetExtender.Utilities.Numerics
                 public const System.Single ThreeQuarter = MathF.PI * 1.5F;
                 public const System.Single Full = MathF.PI * 2.0F;
             }
-            
+
             public static class Double
             {
                 public const System.Double Zero = 0.0D;
@@ -94,7 +94,7 @@ namespace NetExtender.Utilities.Numerics
                 public const System.Double ThreeQuarter = Math.PI * 1.5D;
                 public const System.Double Full = Math.PI * 2.0D;
             }
-            
+
             public static class Decimal
             {
                 public const System.Decimal Zero = 0.0M;
@@ -104,7 +104,7 @@ namespace NetExtender.Utilities.Numerics
                 public const System.Decimal Full = MathUtilities.Constants.Decimal.PI * 2.0M;
             }
         }
-        
+
         public static class Gradian
         {
             public static class Int32
@@ -115,7 +115,7 @@ namespace NetExtender.Utilities.Numerics
                 public const System.Int32 ThreeQuarter = 300;
                 public const System.Int32 Full = 400;
             }
-            
+
             public static class Single
             {
                 public const System.Single Zero = 0F;
@@ -124,7 +124,7 @@ namespace NetExtender.Utilities.Numerics
                 public const System.Single ThreeQuarter = 300F;
                 public const System.Single Full = 400F;
             }
-            
+
             public static class Double
             {
                 public const System.Double Zero = 0D;
@@ -133,7 +133,7 @@ namespace NetExtender.Utilities.Numerics
                 public const System.Double ThreeQuarter = 300D;
                 public const System.Double Full = 400D;
             }
-            
+
             public static class Decimal
             {
                 public const System.Decimal Zero = 0M;
@@ -143,7 +143,7 @@ namespace NetExtender.Utilities.Numerics
                 public const System.Decimal Full = 400M;
             }
         }
-        
+
         public static class Revolution
         {
             public static class Single
@@ -154,7 +154,7 @@ namespace NetExtender.Utilities.Numerics
                 public const System.Single ThreeQuarter = 0.75F;
                 public const System.Single Full = 1.0F;
             }
-            
+
             public static class Double
             {
                 public const System.Double Zero = 0.0D;
@@ -163,7 +163,7 @@ namespace NetExtender.Utilities.Numerics
                 public const System.Double ThreeQuarter = 0.75D;
                 public const System.Double Full = 1.0D;
             }
-            
+
             public static class Decimal
             {
                 public const System.Decimal Zero = 0.0M;
@@ -173,7 +173,7 @@ namespace NetExtender.Utilities.Numerics
                 public const System.Decimal Full = 1.0M;
             }
         }
-        
+
         public static class Relations
         {
             public static class Single
@@ -182,14 +182,14 @@ namespace NetExtender.Utilities.Numerics
                 public const System.Single GradianInRadian = Gradian.Single.Full / Radian.Single.Full;
                 public const System.Single GradianInDegree = Gradian.Single.Full / Degree.Single.Full;
             }
-            
+
             public static class Double
             {
                 public const System.Double DegreeInRadian = Degree.Double.Full / Radian.Double.Full;
                 public const System.Double GradianInRadian = Gradian.Double.Full / Radian.Double.Full;
                 public const System.Double GradianInDegree = Gradian.Double.Full / Degree.Double.Full;
             }
-            
+
             public static class Decimal
             {
                 public const System.Decimal DegreeInRadian = Degree.Decimal.Full / Radian.Decimal.Full;

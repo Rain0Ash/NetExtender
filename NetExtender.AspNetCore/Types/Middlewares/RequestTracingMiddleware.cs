@@ -80,7 +80,7 @@ namespace NetExtender.AspNetCore.Types.Middlewares
 
             HttpStatusCode status = (HttpStatusCode) context.Response.StatusCode;
             HttpStatusCategory category = status.Category();
-            
+
             switch (category)
             {
                 case HttpStatusCategory.Unknown:
@@ -100,7 +100,7 @@ namespace NetExtender.AspNetCore.Types.Middlewares
                     throw new EnumUndefinedOrNotSupportedException<HttpStatusCategory>(category, nameof(category), null);
             }
         }
-        
+
         protected virtual Boolean IsMatch(HttpRequest request, ImmutableArray<Regex> rules)
         {
             if (request is null)
@@ -134,13 +134,13 @@ namespace NetExtender.AspNetCore.Types.Middlewares
             }
 
             String address = $"{request.Scheme}://{request.Host}{request.Path}{request.QueryString}";
-            
+
             if (request.Body is not { CanSeek: true } body)
             {
                 RequestTraceHandler(logger, request.Method, address, request.Protocol, request.Headers.ToHeaderString(), String.Empty, null);
                 return;
             }
-            
+
             body.Seek(0, SeekOrigin.Begin);
             String content = await new StreamReader(body).ReadToEndAsync();
             RequestTraceHandler(logger, request.Method, address, request.Protocol, request.Headers.ToHeaderString(), content, null);
@@ -179,7 +179,7 @@ namespace NetExtender.AspNetCore.Types.Middlewares
             body.Seek(0, SeekOrigin.Begin);
             ResponseErrorHandler(logger, protocol, (HttpStatusCode) response.StatusCode, response.Headers.ToHeaderString(), await new StreamReader(body).ReadToEndAsync(), null);
         }
-        
+
         private static class Events
         {
             [ReflectionSignature]

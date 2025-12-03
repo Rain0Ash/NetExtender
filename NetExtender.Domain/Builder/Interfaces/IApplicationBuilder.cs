@@ -16,7 +16,7 @@ namespace NetExtender.Domains.Builder.Interfaces
         public T Build(String[] arguments);
         public T Build(ImmutableArray<String> arguments);
     }
-    
+
     public interface IApplicationBuilder : IScannable
     {
         public IConsole Console { get; }

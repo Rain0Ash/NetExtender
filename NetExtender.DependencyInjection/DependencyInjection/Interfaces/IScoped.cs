@@ -8,7 +8,7 @@ namespace NetExtender.DependencyInjection.Interfaces
     public interface IScoped<T> : IDependencyService<T>, IScoped where T : class
     {
     }
-    
+
     public interface IScoped : IDependencyService
     {
         public new ServiceLifetime Lifetime

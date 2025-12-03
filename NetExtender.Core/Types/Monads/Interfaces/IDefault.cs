@@ -18,37 +18,37 @@ namespace NetExtender.Types.Monads.Interfaces
         public new IDefault<T> Reset();
         public new IDefault<T> Clone();
     }
-    
+
     public interface IDefault : IMonad, ICloneable<IDefault>
     {
         public Boolean HasValue { get; }
         public Boolean IsDefault { get; }
-        
+
         public IDefault Swap();
         public IDefault Reset();
         public new IDefault Clone();
     }
-    
+
     public interface IDefaultEquality<out T, TDefault> : IDefaultEquality<TDefault>, IDefaultComparable<T, TDefault>, IDefaultEquatable<T, TDefault>, IMonadEquality<T, TDefault>
     {
     }
-    
+
     public interface IDefaultEquality<T> : IDefaultComparable<T>, IDefaultEquatable<T>, IMonadEquality<T>
     {
     }
-    
+
     public interface IDefaultEquatable<out T, TDefault> : IDefaultEquatable<TDefault>, IMonadEquatable<T, TDefault>
     {
     }
-    
+
     public interface IDefaultEquatable<T> : IMonadEquatable<T>
     {
     }
-    
+
     public interface IDefaultComparable<out T, in TDefault> : IDefaultComparable<TDefault>, IMonadComparable<T, TDefault>
     {
     }
-    
+
     public interface IDefaultComparable<in T> : IMonadComparable<T>
     {
     }

@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Identity;
 using NetExtender.AspNetCore.Identity.Interfaces;
 

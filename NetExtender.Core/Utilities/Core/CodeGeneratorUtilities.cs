@@ -30,7 +30,7 @@ namespace NetExtender.Utilities.Core
         Branching,
         ConstantLoading
     }
-    
+
     public static partial class CodeGeneratorUtilities
     {
         private static ImmutableDictionary<OpCode, OpCodeCategory> OpCodeCategoryStorage { get; } = new Dictionary<OpCode, OpCodeCategory>
@@ -120,9 +120,9 @@ namespace NetExtender.Utilities.Core
             [OpCodes.Ldc_R4] = OpCodeCategory.ConstantLoading,
             [OpCodes.Ldc_R8] = OpCodeCategory.ConstantLoading
         }.ToImmutableDictionary();
-        
+
         private static ImmutableMultiDictionary<OpCodeCategory, OpCode> CategoryOpCodeStorage { get; } = ImmutableMultiDictionary<OpCodeCategory, OpCode>.Empty.AddRange(Initialize(OpCodeCategoryStorage));
-        
+
         internal static class Storage
         {
             public static class Parameters
@@ -132,7 +132,7 @@ namespace NetExtender.Utilities.Core
                 public static IStorage<PropertyBuilder, ParameterInfo[]> PropertyBuilder { get; } = new WeakStorage<PropertyBuilder, ParameterInfo[]>();
             }
         }
-        
+
         private static IEnumerable<KeyValuePair<OpCodeCategory, ImmutableHashSet<OpCode>>> Initialize(ImmutableDictionary<OpCode, OpCodeCategory> storage)
         {
             if (storage is null)
@@ -144,16 +144,16 @@ namespace NetExtender.Utilities.Core
             {
                 return new KeyValuePair<OpCodeCategory, ImmutableHashSet<OpCode>>(group.Key, group.Select(pair => pair.Key).ToImmutableHashSet());
             }
-            
+
             return storage.GroupBy(static pair => pair.Value).Select(Selector);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static OpCodeCategory Category(this OpCode code)
         {
             return OpCodeCategoryStorage.TryGetValue(code, out OpCodeCategory category) ? category : OpCodeCategory.Unknown;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableHashSet<OpCode> Get(this OpCodeCategory category)
         {
@@ -169,7 +169,7 @@ namespace NetExtender.Utilities.Core
         {
             return label.GetHashCode();
         }
-        
+
         public static void EmitInstance(this ILGenerator generator, Type type)
         {
             if (generator is null)
@@ -185,25 +185,25 @@ namespace NetExtender.Utilities.Core
             generator.Emit(OpCodes.Ldarg_0);
             generator.EmitUnbox(type);
         }
-        
+
         public static void EmitDefault(this ILGenerator generator, Type type)
         {
             if (generator is null)
             {
                 throw new ArgumentNullException(nameof(generator));
             }
-            
+
             if (type is null)
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             if (!type.IsValueType)
             {
                 generator.Emit(OpCodes.Ldnull);
                 return;
             }
-            
+
             LocalBuilder local = generator.DeclareLocal(type);
             generator.Emit(OpCodes.Ldloca, local);
             generator.Emit(OpCodes.Initobj, type);
@@ -302,7 +302,7 @@ namespace NetExtender.Utilities.Core
 
             if (type.IsByRef || type.IsPointer)
             {
-                generator.Emit(OpCodes.Box, typeof(nint));
+                generator.Emit(OpCodes.Box, typeof(IntPtr));
                 return;
             }
 
@@ -332,7 +332,7 @@ namespace NetExtender.Utilities.Core
 
             if (type.IsByRef || type.IsPointer)
             {
-                generator.Emit(OpCodes.Unbox_Any, typeof(nint));
+                generator.Emit(OpCodes.Unbox_Any, typeof(IntPtr));
                 return;
             }
 
@@ -347,7 +347,7 @@ namespace NetExtender.Utilities.Core
                 generator.Emit(OpCodes.Castclass, type);
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Return(this ILGenerator generator)
         {
@@ -358,13 +358,13 @@ namespace NetExtender.Utilities.Core
 
             generator.Emit(OpCodes.Ret);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ConstructorBuilder DefineConstructor(this TypeBuilder builder)
         {
             return DefineConstructor(builder, MethodAttributes.Public | MethodAttributes.HideBySig);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ConstructorBuilder DefineConstructor(this TypeBuilder builder, MethodAttributes attributes)
         {
@@ -375,31 +375,31 @@ namespace NetExtender.Utilities.Core
 
             return builder.DefineDefaultConstructor(attributes);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ConstructorBuilder DefineConstructor(this TypeBuilder builder, KeyValuePair<String, FieldBuilder>[] parameters)
         {
             return DefineConstructor(builder, (Type?) null, parameters);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ConstructorBuilder DefineConstructor(this TypeBuilder builder, Type? parent, KeyValuePair<String, FieldBuilder>[] parameters)
         {
             return DefineConstructor(builder, parent, parameters, MethodAttributes.Public | MethodAttributes.HideBySig);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ConstructorBuilder DefineConstructor(this TypeBuilder builder, ConstructorInfo parent, KeyValuePair<String, FieldBuilder>[] parameters)
         {
             return DefineConstructor(builder, parent, parameters, MethodAttributes.Public | MethodAttributes.HideBySig);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ConstructorBuilder DefineConstructor(this TypeBuilder builder, KeyValuePair<String, FieldBuilder>[] parameters, MethodAttributes attributes)
         {
             return DefineConstructor(builder, (Type?) null, parameters, attributes);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static ConstructorBuilder DefineConstructor(this TypeBuilder builder, Type? parent, KeyValuePair<String, FieldBuilder>[] parameters, MethodAttributes attributes)
         {
@@ -461,7 +461,7 @@ namespace NetExtender.Utilities.Core
 
             return constructor;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [SuppressMessage("Usage", "CA2200")]
         [SuppressMessage("ReSharper", "PossibleIntendedRethrow")]
@@ -471,12 +471,12 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(builder));
             }
-            
+
             if (type is null)
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             try
             {
                 Initializer.Initializer.ReflectionUtilities.InheritConstructor(builder, type);
@@ -496,7 +496,7 @@ namespace NetExtender.Utilities.Core
                 Constructor = typeof(System.Runtime.CompilerServices.IgnoresAccessChecksToAttribute).GetConstructor(new[] { typeof(String) }) ?? throw new MissingMethodException(nameof(System.Runtime.CompilerServices.IgnoresAccessChecksToAttribute), ".ctor");
             }
         }
-        
+
         public static void IgnoreAccessChecksTo(this AssemblyBuilder builder, Assembly assembly)
         {
             if (builder is null)
@@ -508,7 +508,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(assembly));
             }
-            
+
             IgnoreAccessChecksTo(builder, assembly.Name());
         }
 
@@ -528,7 +528,7 @@ namespace NetExtender.Utilities.Core
             CustomAttributeBuilder attribute = new CustomAttributeBuilder(constructor, new Object[] { assembly });
             builder.SetCustomAttribute(attribute);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static ILGenerator DefineGetMethod(this ILGenerator generator, FieldBuilder field)
         {
@@ -693,13 +693,13 @@ namespace NetExtender.Utilities.Core
             property.SetSetMethod(accessor);
             return accessor;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void OverrideToString(this TypeBuilder builder, Type type)
         {
             OverrideToString(builder, type, Initializer.Initializer.ReflectionUtilities.Any);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [SuppressMessage("Usage", "CA2200")]
         [SuppressMessage("ReSharper", "PossibleIntendedRethrow")]
@@ -709,7 +709,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(builder));
             }
-            
+
             if (type is null)
             {
                 throw new ArgumentNullException(nameof(type));

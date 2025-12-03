@@ -1,11 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
+        <TargetFrameworks>net6.0;net7.0;net8.0;net9.0;net10.0</TargetFrameworks>
         <Nullable>enable</Nullable>
         <ImplicitUsings>disable</ImplicitUsings>
         <OutputType>Library</OutputType>
-        <LangVersion>10</LangVersion>
         <Authors>Rain0Ash</Authors>
         <PackageProjectUrl>https://github.com/Rain0Ash/NetExtender</PackageProjectUrl>
         <Version>0.8.9</Version>

@@ -40,7 +40,7 @@ namespace NetExtender.AspNetCore.Identity.Interfaces
 
         /// <inheritdoc cref="Microsoft.AspNetCore.Authentication.AuthenticationSchemeOptions.Validate()"/>
         public void Validate();
-        
+
         /// <inheritdoc cref="Microsoft.AspNetCore.Authentication.AuthenticationSchemeOptions.Validate(System.String)"/>
         public void Validate(String scheme);
     }

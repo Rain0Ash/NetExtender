@@ -29,12 +29,12 @@ namespace NetExtender.Utilities.NAudio
             }
 
             IWaveStreamPlaylist playlist = new WaveStreamPlaylist(stream);
-            
+
             if (items is not null)
             {
                 playlist.AddRange(items);
             }
-            
+
             return playlist;
         }
 
@@ -66,12 +66,12 @@ namespace NetExtender.Utilities.NAudio
             }
 
             WaveStreamPlaylist playlist = new WaveStreamPlaylist(stream);
-            
+
             if (items is not null)
             {
                 playlist.AddRange(items);
             }
-            
+
             return playlist;
         }
 
@@ -103,12 +103,12 @@ namespace NetExtender.Utilities.NAudio
             }
 
             WaveStreamPlaylist<T> playlist = new WaveStreamPlaylist<T>(stream);
-            
+
             if (items is not null)
             {
                 playlist.AddRange(items);
             }
-            
+
             return playlist;
         }
 
@@ -140,12 +140,12 @@ namespace NetExtender.Utilities.NAudio
             }
 
             IWaveStreamPlaylist<T> playlist = new WaveStreamPlaylist<T>(stream);
-            
+
             if (items is not null)
             {
                 playlist.AddRange(items);
             }
-            
+
             return playlist;
         }
 
@@ -177,12 +177,12 @@ namespace NetExtender.Utilities.NAudio
             }
 
             IWaveStreamPlaylist playlist = new RepeatWaveStreamPlaylist(stream);
-            
+
             if (items is not null)
             {
                 playlist.AddRange(items);
             }
-            
+
             return playlist;
         }
 
@@ -214,12 +214,12 @@ namespace NetExtender.Utilities.NAudio
             }
 
             RepeatWaveStreamPlaylist playlist = new RepeatWaveStreamPlaylist(stream);
-            
+
             if (items is not null)
             {
                 playlist.AddRange(items);
             }
-            
+
             return playlist;
         }
 
@@ -251,12 +251,12 @@ namespace NetExtender.Utilities.NAudio
             }
 
             RepeatWaveStreamPlaylist<T> playlist = new RepeatWaveStreamPlaylist<T>(stream);
-            
+
             if (items is not null)
             {
                 playlist.AddRange(items);
             }
-            
+
             return playlist;
         }
 
@@ -293,7 +293,7 @@ namespace NetExtender.Utilities.NAudio
             {
                 playlist.AddRange(items);
             }
-            
+
             return playlist;
         }
 

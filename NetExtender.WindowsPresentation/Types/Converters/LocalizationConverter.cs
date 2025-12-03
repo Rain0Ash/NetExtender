@@ -13,7 +13,7 @@ namespace NetExtender.WindowsPresentation.Types.Converters
     public sealed class LocalizationConverter : IValueConverter
     {
         public static IValueConverter Instance { get; } = new LocalizationConverter();
-        
+
         private LocalizationConverter()
         {
         }
@@ -42,7 +42,7 @@ namespace NetExtender.WindowsPresentation.Types.Converters
         {
             Converter = converter ?? throw new ArgumentNullException(nameof(converter));
         }
-        
+
         [return: NotNullIfNotNull("value")]
         public Object? Convert(Object? value, Type? targetType, Object? parameter, CultureInfo? culture)
         {

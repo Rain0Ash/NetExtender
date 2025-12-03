@@ -19,33 +19,33 @@ namespace NetExtender.WindowsPresentation.Types.Commands
             ExecuteHandler = execute ?? throw new ArgumentNullException(nameof(execute));
             RevertHandler = revert ?? throw new ArgumentNullException(nameof(revert));
         }
-        
+
         protected sealed override Boolean CanExecuteImplementation(Object? sender, T? parameter)
         {
             return CanExecuteHandler?.Invoke(parameter) is not false;
         }
-        
+
         protected sealed override void ExecuteImplementation(Object? sender, T? parameter)
         {
             ExecuteHandler.Invoke(parameter);
         }
-        
+
         protected sealed override Boolean CanRevertImplementation(Object? sender, T? parameter)
         {
             return CanRevertHandler?.Invoke(parameter) is not false;
         }
-        
+
         protected sealed override void RevertImplementation(Object? sender, T? parameter)
         {
             RevertHandler.Invoke(parameter);
         }
-        
+
         public override String? ToString()
         {
             return Name ?? (ExecuteHandler.Method is { DeclaringType: { } declaring } method ? $"{declaring}: {method.Name}" : ExecuteHandler.ToString());
         }
     }
-    
+
     public class RelaySenderRevertCommand<T> : RevertCommand<T>
     {
         public SenderAction<T?> ExecuteHandler { get; }
@@ -58,7 +58,7 @@ namespace NetExtender.WindowsPresentation.Types.Commands
             ExecuteHandler = execute ?? throw new ArgumentNullException(nameof(execute));
             RevertHandler = revert ?? throw new ArgumentNullException(nameof(revert));
         }
-        
+
         protected sealed override Boolean CanExecuteImplementation(Object? sender, T? parameter)
         {
             return CanExecuteHandler?.Invoke(sender, parameter) is not false;
@@ -68,17 +68,17 @@ namespace NetExtender.WindowsPresentation.Types.Commands
         {
             ExecuteHandler.Invoke(sender, parameter);
         }
-        
+
         protected sealed override Boolean CanRevertImplementation(Object? sender, T? parameter)
         {
             return CanRevertHandler?.Invoke(sender, parameter) is not false;
         }
-        
+
         protected sealed override void RevertImplementation(Object? sender, T? parameter)
         {
             RevertHandler.Invoke(sender, parameter);
         }
-        
+
         public override String? ToString()
         {
             return Name ?? (ExecuteHandler.Method is { DeclaringType: { } declaring } method ? $"{declaring}: {method.Name}" : ExecuteHandler.ToString());

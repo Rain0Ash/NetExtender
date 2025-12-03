@@ -21,7 +21,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
         {
             return AddJWTTimeService<TId, TUser, TRole, IdentityJWTTimeService<TId, TUser, TRole>>(services);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IServiceCollection AddJWTTimeService<TId, TUser, TRole, TTime>(this IServiceCollection services) where TId : struct, IEquatable<TId> where TUser : class, IUserInfo<TId, TRole> where TRole : IEquatable<TRole> where TTime : class, IIdentityJWTTimeService<TId, TUser, TRole>
         {
@@ -48,13 +48,13 @@ namespace NetExtender.Utilities.AspNetCore.Types
 
             return services.AddSingleton(service);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IServiceCollection TryAddJWTTimeService<TId, TUser, TRole>(this IServiceCollection services) where TId : struct, IEquatable<TId> where TUser : class, IUserInfo<TId, TRole> where TRole : IEquatable<TRole>
         {
             return TryAddJWTTimeService<TId, TUser, TRole, IdentityJWTTimeService<TId, TUser, TRole>>(services);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IServiceCollection TryAddJWTTimeService<TId, TUser, TRole, TTime>(this IServiceCollection services) where TId : struct, IEquatable<TId> where TUser : class, IUserInfo<TId, TRole> where TRole : IEquatable<TRole> where TTime : class, IIdentityJWTTimeService<TId, TUser, TRole>
         {
@@ -83,7 +83,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
             services.TryAddSingleton(service);
             return services;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IServiceCollection AddJWTSecret<TId, TUser, TRole, TSecret>(this IServiceCollection services) where TId : struct, IEquatable<TId> where TUser : class, IUserInfo<TId, TRole> where TRole : IEquatable<TRole> where TSecret : class, IIdentityJWTSecret<TId, TUser, TRole>
         {
@@ -121,7 +121,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
 
             return services.AddSingleton<IIdentityJWTSecret<TId, TUser, TRole>>(secret);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IServiceCollection TryAddJWTSecret<TId, TUser, TRole, TSecret>(this IServiceCollection services) where TId : struct, IEquatable<TId> where TUser : class, IUserInfo<TId, TRole> where TRole : IEquatable<TRole> where TSecret : class, IIdentityJWTSecret<TId, TUser, TRole>
         {
@@ -480,7 +480,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
             {
                 throw new ArgumentNullException(nameof(serializer));
             }
-            
+
             return AddJWTSerializer(services, new IdentityNewtonsoftJWTSerializer<TId, TUser, TRole>(serializer));
         }
 
@@ -496,7 +496,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
             {
                 throw new ArgumentNullException(nameof(options));
             }
-            
+
             return AddJWTSerializer<TId, TUser, TRole>(services, options, options);
         }
 
@@ -537,7 +537,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
             services.AddSingleton<IIdentityJWTSerializer<TId, TUser, TRole>, TSerializer>().TryAddSingleton<IIdentityJWTSerializerFactory<TId, TUser, TRole>>(static provider => new IdentityJWTSerializerFactory<TId, TUser, TRole>(provider.GetRequiredService<IIdentityJWTSerializer<TId, TUser, TRole>>()));
             return services;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IServiceCollection AddJWTSerializer<TId, TUser, TRole>(this IServiceCollection services, IIdentityJWTSerializer<TId, TUser, TRole> serializer) where TId : struct, IEquatable<TId> where TUser : class, IUserInfo<TId, TRole> where TRole : IEquatable<TRole>
         {
@@ -637,7 +637,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
             {
                 throw new ArgumentNullException(nameof(serializer));
             }
-            
+
             return TryAddJWTSerializer(services, new IdentityNewtonsoftJWTSerializer<TId, TUser, TRole>(serializer));
         }
 
@@ -653,7 +653,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
             {
                 throw new ArgumentNullException(nameof(options));
             }
-            
+
             return TryAddJWTSerializer<TId, TUser, TRole>(services, options, options);
         }
 
@@ -695,7 +695,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
             services.TryAddSingleton<IIdentityJWTSerializerFactory<TId, TUser, TRole>>(static provider => new IdentityJWTSerializerFactory<TId, TUser, TRole>(provider.GetRequiredService<IIdentityJWTSerializer<TId, TUser, TRole>>()));
             return services;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IServiceCollection TryAddJWTSerializer<TId, TUser, TRole>(this IServiceCollection services, IIdentityJWTSerializer<TId, TUser, TRole> serializer) where TId : struct, IEquatable<TId> where TUser : class, IUserInfo<TId, TRole> where TRole : IEquatable<TRole>
         {
@@ -767,7 +767,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
             services.TryAddTransient<IIdentityJWTSerializer<TId, TUser, TRole>>(static provider => provider.GetRequiredService<IIdentityJWTSerializerFactory<TId, TUser, TRole>>().Create().Identity<TId, TUser, TRole>() ?? throw new NotSupportedException("JWT serializer factory isn't support default serializer."));
             return services;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IServiceCollection AddJWTValidator<TId, TUser, TRole, TValidator>(this IServiceCollection services) where TId : struct, IEquatable<TId> where TUser : class, IUserInfo<TId, TRole> where TRole : IEquatable<TRole> where TValidator : class, IIdentityJWTValidator<TId, TUser, TRole>
         {
@@ -778,7 +778,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
 
             return services.AddSingleton<IIdentityJWTValidator<TId, TUser, TRole>, TValidator>();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IServiceCollection AddJWTValidator<TId, TUser, TRole>(this IServiceCollection services, IIdentityJWTValidator<TId, TUser, TRole> validator) where TId : struct, IEquatable<TId> where TUser : class, IUserInfo<TId, TRole> where TRole : IEquatable<TRole>
         {
@@ -794,7 +794,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
 
             return services.AddSingleton(validator);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IServiceCollection TryAddJWTValidator<TId, TUser, TRole, TValidator>(this IServiceCollection services) where TId : struct, IEquatable<TId> where TUser : class, IUserInfo<TId, TRole> where TRole : IEquatable<TRole> where TValidator : class, IIdentityJWTValidator<TId, TUser, TRole>
         {
@@ -806,7 +806,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
             services.TryAddSingleton<IIdentityJWTValidator<TId, TUser, TRole>, TValidator>();
             return services;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IServiceCollection TryAddJWTValidator<TId, TUser, TRole>(this IServiceCollection services, IIdentityJWTValidator<TId, TUser, TRole> validator) where TId : struct, IEquatable<TId> where TUser : class, IUserInfo<TId, TRole> where TRole : IEquatable<TRole>
         {
@@ -983,7 +983,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
                 _ => throw new EnumUndefinedOrNotSupportedException<JWTSerializerType>(serializer, nameof(serializer), null)
             };
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IServiceCollection RegisterJWTIdentityServices<TId, TUser, TRole, TAlgorithm, TSerializer>(this IServiceCollection services, IIdentityJWTSecret<TId, TUser, TRole> secret) where TId : struct, IEquatable<TId> where TUser : class, IUserInfo<TId, TRole> where TRole : IEquatable<TRole> where TAlgorithm : class, IIdentityJWTAlgorithm<TId, TUser, TRole> where TSerializer : class, IIdentityJWTSerializer<TId, TUser, TRole>
         {

@@ -760,8 +760,11 @@ namespace NetExtender.Utilities.Types
                     foreach (DirectPoint point in bitmap)
                     {
                         Int32 color = point.Color.ToArgb();
+#if NET8_0_OR_GREATER
+                        MemoryMarshal.Write(integer, in color);
+#else
                         MemoryMarshal.Write(integer, ref color);
-
+#endif
                         integer[0] = lookup[integer[0]]; // B
                         integer[1] = lookup[integer[1]]; // G
                         integer[2] = lookup[integer[2]]; // R
@@ -774,8 +777,11 @@ namespace NetExtender.Utilities.Types
                     foreach (DirectPoint point in bitmap)
                     {
                         Int32 color = point.Color.ToArgb();
+#if NET8_0_OR_GREATER
+                        MemoryMarshal.Write(integer, in color);
+#else
                         MemoryMarshal.Write(integer, ref color);
-
+#endif
                         integer[0] = lookup[integer[0]]; // B
                         integer[1] = lookup[integer[1]]; // G
                         integer[2] = lookup[integer[2]]; // R
@@ -835,8 +841,11 @@ namespace NetExtender.Utilities.Types
                 foreach (DirectPoint point in bitmap)
                 {
                     Int32 color = point.Color.ToArgb();
+#if NET8_0_OR_GREATER
+                    MemoryMarshal.Write(integer, in color);
+#else
                     MemoryMarshal.Write(integer, ref color);
-
+#endif
                     Double b = lookup[integer[0]]; // B
                     Double g = lookup[integer[1]]; // G
                     Double r = lookup[integer[2]]; // R
@@ -851,8 +860,11 @@ namespace NetExtender.Utilities.Types
                 foreach (DirectPoint point in bitmap)
                 {
                     Int32 color = point.Color.ToArgb();
+#if NET8_0_OR_GREATER
+                    MemoryMarshal.Write(integer, in color);
+#else
                     MemoryMarshal.Write(integer, ref color);
-
+#endif
                     Double b = lookup[integer[0]]; // B
                     Double g = lookup[integer[1]]; // G
                     Double r = lookup[integer[2]]; // R
@@ -928,7 +940,7 @@ namespace NetExtender.Utilities.Types
             }
 
             const UInt32 alpha = Byte.MaxValue;
-            
+
             foreach (DirectPoint point in bitmap)
             {
                 UInt32 color = unchecked((UInt32) point.Color.ToArgb()) | alpha;
@@ -941,7 +953,7 @@ namespace NetExtender.Utilities.Types
 
             return true;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean MakeTransparent(this DirectBitmap bitmap, params Color[]? transparent)
         {
@@ -1056,12 +1068,12 @@ namespace NetExtender.Utilities.Types
 
             using DirectBitmap source = bitmap.Direct();
             using DirectBitmap target = other.Direct();
-            
+
             UInt64 count = (UInt64) (source.Height * source.Stride * (Int64) DirectBitmap.BytesPerPixel);
             Buffer.MemoryCopy(source.Scan0.ToPointer(), target.Scan0.ToPointer(), count, count);
             return true;
         }
-        
+
         public static Boolean Copy(this Bitmap bitmap, Bitmap other, Rectangle source, Rectangle target)
         {
             if (bitmap is null)
@@ -1165,7 +1177,7 @@ namespace NetExtender.Utilities.Types
             {
                 return true;
             }
-            
+
             if (bitmap is null || other is null)
             {
                 return false;

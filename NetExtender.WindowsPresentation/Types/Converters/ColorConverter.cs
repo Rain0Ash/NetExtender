@@ -36,7 +36,7 @@ namespace NetExtender.WindowsPresentation.Types.Converters
                 result = default;
                 return true;
             }
-            
+
             System.Drawing.Color? nullable = value switch
             {
                 String @string => ColorUtilities.TryParse(@string, out System.Drawing.Color color) ? color : null,
@@ -68,7 +68,7 @@ namespace NetExtender.WindowsPresentation.Types.Converters
             result = @interface;
             return successful;
         }
-        
+
         protected virtual Boolean ToBrush(Object? value, Object? parameter, CultureInfo? culture, out SolidBrush? result)
         {
             result = value switch
@@ -83,7 +83,7 @@ namespace NetExtender.WindowsPresentation.Types.Converters
 
             return result is not null;
         }
-        
+
         protected virtual Boolean ToBrush(Object? value, Object? parameter, CultureInfo? culture, out SolidColorBrush? result)
         {
             result = value switch
@@ -136,7 +136,7 @@ namespace NetExtender.WindowsPresentation.Types.Converters
                 result = value.Color.ToMediaColor();
                 return true;
             }
-            
+
             result = value.Color.ToColor(targetType);
             return true;
         }
@@ -178,7 +178,7 @@ namespace NetExtender.WindowsPresentation.Types.Converters
                 result = value.Color;
                 return true;
             }
-            
+
             result = value.Color.ToColor(targetType);
             return true;
         }
@@ -197,7 +197,7 @@ namespace NetExtender.WindowsPresentation.Types.Converters
 
             return DependencyProperty.UnsetValue;
         }
-        
+
         public virtual Object? ConvertBack(Object? value, Type? targetType, Object? parameter, CultureInfo? culture)
         {
             return value switch

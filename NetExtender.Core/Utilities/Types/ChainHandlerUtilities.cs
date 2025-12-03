@@ -18,32 +18,32 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(collection));
             }
-            
+
             if (handler is null)
             {
                 throw new ArgumentNullException(nameof(handler));
             }
-            
+
             DynamicChainHandler<T> dynamic = new DynamicChainHandler<T>(handler);
             collection.Add(dynamic);
             return dynamic;
         }
-        
+
         public static DynamicChainHandler<T>[] AddRange<T>(this IObservableChainHandlerCollection<T, IChainHandler<T>> collection, params Func<T, T>?[]? handlers)
         {
             if (collection is null)
             {
                 throw new ArgumentNullException(nameof(collection));
             }
-            
+
             if (handlers is null || handlers.Length <= 0)
             {
                 return Array.Empty<DynamicChainHandler<T>>();
             }
-            
+
             List<DynamicChainHandler<T>> dynamics = new List<DynamicChainHandler<T>>(handlers.Length);
             dynamics.AddRange(handlers.WhereNotNull().Select(static handler => new DynamicChainHandler<T>(handler)));
-            
+
             collection.AddRange(dynamics.Cast<IChainHandler<T>>());
             return dynamics.ToArray();
         }

@@ -35,6 +35,11 @@ namespace NetExtender.FileSystems
             return FileSystem.Directory.CreateDirectory(path);
         }
 
+        public override IDirectoryInfo CreateDirectory(String path, UnixFileMode mode)
+        {
+            return FileSystem.Directory.CreateDirectory(path, mode);
+        }
+
         public override String[] GetFileSystemEntries(String path)
         {
             return FileSystem.Directory.GetFileSystemEntries(path);

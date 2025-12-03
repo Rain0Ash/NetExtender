@@ -60,7 +60,7 @@ namespace NetExtender.Utilities.Types
             values.Sort(RangeUtilities.CompareTo);
             return values.ToArray();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<IGrouping<T, Int32>> CountGroup<T>(this IEnumerable<T> source) where T : notnull
         {
@@ -89,7 +89,7 @@ namespace NetExtender.Utilities.Types
 
             return counter.GroupManyByKey();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<IGrouping<TKey, Int32>> CountGroupBy<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector) where TKey : notnull
         {
@@ -110,7 +110,7 @@ namespace NetExtender.Utilities.Types
 
             return source.Select(selector).CountGroup(comparer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<IGrouping<T, Int64>> LongCountGroup<T>(this IEnumerable<T> source) where T : notnull
         {
@@ -145,7 +145,7 @@ namespace NetExtender.Utilities.Types
         {
             return LongCountGroupBy(source, selector, null);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<IGrouping<TKey, Int64>> LongCountGroupBy<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, IEqualityComparer<TKey>? comparer) where TKey : notnull
         {
@@ -161,7 +161,7 @@ namespace NetExtender.Utilities.Types
 
             return source.Select(selector).LongCountGroup(comparer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<IGrouping<Type, T>> GroupByType<T>(this IEnumerable<T> source)
         {
@@ -172,7 +172,7 @@ namespace NetExtender.Utilities.Types
 
             return source.WhereNotNull().GroupBy(item => item!.GetType());
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<IGrouping<TKey, TSource>> WhereKeyNotNull<TKey, TSource>(this IEnumerable<IGrouping<TKey?, TSource>?> source)
         {
@@ -180,10 +180,10 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             return source.WhereNotNull().Where(static group => group.Key is not null)!;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<IGrouping<TKey, TSource>> GroupNotNullBy<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey?> keySelector)
         {
@@ -191,15 +191,15 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (keySelector is null)
             {
                 throw new ArgumentNullException(nameof(keySelector));
             }
-            
+
             return source.GroupBy(keySelector).WhereKeyNotNull();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<IGrouping<TKey, TSource>> GroupNotNullBy<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey?> keySelector, IEqualityComparer<TKey?>? comparer)
         {
@@ -207,15 +207,15 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (keySelector is null)
             {
                 throw new ArgumentNullException(nameof(keySelector));
             }
-            
+
             return source.GroupBy(keySelector, comparer).WhereKeyNotNull();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<IGrouping<TKey, TElement>> GroupNotNullBy<TSource, TKey, TElement>(this IEnumerable<TSource> source, Func<TSource, TKey?> keySelector, Func<TSource, TElement> elementSelector)
         {
@@ -223,20 +223,20 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (keySelector is null)
             {
                 throw new ArgumentNullException(nameof(keySelector));
             }
-            
+
             if (elementSelector is null)
             {
                 throw new ArgumentNullException(nameof(elementSelector));
             }
-            
+
             return source.GroupBy(keySelector, elementSelector).WhereKeyNotNull();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<IGrouping<TKey, TElement>> GroupNotNullBy<TSource, TKey, TElement>(this IEnumerable<TSource> source, Func<TSource, TKey?> keySelector, Func<TSource, TElement> elementSelector, IEqualityComparer<TKey>? comparer)
         {
@@ -244,20 +244,20 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (keySelector is null)
             {
                 throw new ArgumentNullException(nameof(keySelector));
             }
-            
+
             if (elementSelector is null)
             {
                 throw new ArgumentNullException(nameof(elementSelector));
             }
-            
+
             return source.GroupBy(keySelector!, elementSelector, comparer).WhereKeyNotNull();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<TResult> GroupNotNullBy<TSource, TKey, TResult>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, Func<TKey, IEnumerable<TSource>, TResult> resultSelector)
         {
@@ -265,12 +265,12 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (keySelector is null)
             {
                 throw new ArgumentNullException(nameof(keySelector));
             }
-            
+
             if (resultSelector is null)
             {
                 throw new ArgumentNullException(nameof(resultSelector));
@@ -278,7 +278,7 @@ namespace NetExtender.Utilities.Types
 
             return source.GroupBy(keySelector, resultSelector).WhereNotNull();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<TResult> GroupNotNullBy<TSource, TKey, TElement, TResult>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector, Func<TKey, IEnumerable<TElement>, TResult> resultSelector)
         {
@@ -286,17 +286,17 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (keySelector is null)
             {
                 throw new ArgumentNullException(nameof(keySelector));
             }
-            
+
             if (elementSelector is null)
             {
                 throw new ArgumentNullException(nameof(elementSelector));
             }
-            
+
             if (resultSelector is null)
             {
                 throw new ArgumentNullException(nameof(resultSelector));
@@ -304,7 +304,7 @@ namespace NetExtender.Utilities.Types
 
             return source.GroupBy(keySelector, elementSelector, resultSelector).WhereNotNull();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<TResult> GroupNotNullBy<TSource, TKey, TResult>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, Func<TKey, IEnumerable<TSource>, TResult> resultSelector, IEqualityComparer<TKey>? comparer)
         {
@@ -312,20 +312,20 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (keySelector is null)
             {
                 throw new ArgumentNullException(nameof(keySelector));
             }
-            
+
             if (resultSelector is null)
             {
                 throw new ArgumentNullException(nameof(resultSelector));
             }
-            
+
             return source.GroupBy(keySelector, resultSelector, comparer).WhereNotNull();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<TResult> GroupNotNullBy<TSource, TKey, TElement, TResult>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector, Func<TKey, IEnumerable<TElement>, TResult> resultSelector, IEqualityComparer<TKey>? comparer)
         {
@@ -333,25 +333,25 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (keySelector is null)
             {
                 throw new ArgumentNullException(nameof(keySelector));
             }
-            
+
             if (elementSelector is null)
             {
                 throw new ArgumentNullException(nameof(elementSelector));
             }
-            
+
             if (resultSelector is null)
             {
                 throw new ArgumentNullException(nameof(resultSelector));
             }
-            
+
             return source.GroupBy(keySelector, elementSelector, resultSelector, comparer).WhereNotNull();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Dictionary<TKey, List<TValue>> ToDictionary<TKey, TValue>(this IEnumerable<IGrouping<TKey, TValue>> source) where TKey : notnull
         {
@@ -362,7 +362,7 @@ namespace NetExtender.Utilities.Types
 
             return source.ToDictionary(static group => group.Key, static group => new List<TValue>(group));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Dictionary<TKey, List<TValue>> ToDictionary<TKey, TValue>(this IEnumerable<IGrouping<TKey, TValue>> source, IEqualityComparer<TKey>? comparer) where TKey : notnull
         {
@@ -384,7 +384,7 @@ namespace NetExtender.Utilities.Types
 
             return source.ToNullableDictionary(static group => group.Key, static group => new List<TValue>(group));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NullableDictionary<TKey, List<TValue>> ToNullableDictionary<TKey, TValue>(this IEnumerable<IGrouping<TKey, TValue>> source, IEqualityComparer<TKey>? comparer)
         {
@@ -395,7 +395,7 @@ namespace NetExtender.Utilities.Types
 
             return source.ToNullableDictionary(static group => group.Key, static group => new List<TValue>(group), comparer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NullableDictionary<TKey, List<TValue>> ToNullableDictionary<TKey, TValue>(this IEnumerable<IGrouping<TKey, TValue>> source, IEqualityComparer<NullMaybe<TKey>>? comparer)
         {

@@ -18,9 +18,9 @@ namespace NetExtender.Types.Network
         {
             return value?.Collection;
         }
-        
+
         private KeyValuePair<String, String>[] Pairs { get; }
-        
+
         private NameValueCollection? _collection;
         public NameValueCollection Collection
         {
@@ -77,13 +77,13 @@ namespace NetExtender.Types.Network
             }
 
             List<KeyValuePair<String, String>> pairs = new List<KeyValuePair<String, String>>();
-            
+
             Byte[] bytes = Encoding.UTF8.GetBytes(query);
             FormUrlEncodedParser parser = new FormUrlEncodedParser(pairs, Int64.MaxValue);
-            
+
             Int32 read = 0;
             Int32 length = bytes.Length;
-            
+
             if (parser.ParseBuffer(bytes, length, ref read, true) != HttpParserState.Done)
             {
                 throw new InvalidOperationException($"Error parsing HTML form URL-encoded data, byte {read}.");

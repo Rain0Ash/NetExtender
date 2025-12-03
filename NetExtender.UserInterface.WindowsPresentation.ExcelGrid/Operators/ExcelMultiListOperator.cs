@@ -17,7 +17,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 return true;
             }
         }
-        
+
         public override Boolean CanDeleteColumns
         {
             get
@@ -25,19 +25,19 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 return true;
             }
         }
-        
+
         public ExcelMultiListOperator(IExcelGrid excel)
             : base(excel)
         {
         }
-        
+
         protected override IEnumerable<ExcelColumnDefinition> AutoGenerateColumns(IList? source)
         {
             if (source is null)
             {
                 yield break;
             }
-            
+
             Type type = Type(source) ?? typeof(Object);
             Int32 columns = source.Cast<IList>().FirstOrDefault()?.Count ?? 0;
             for (Int32 i = 0; i < columns; i++)
@@ -50,19 +50,19 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 };
             }
         }
-        
+
         public override Boolean CanSort(Int32 index)
         {
             return false;
         }
-        
+
         public override Object? GetItem(ExcelCell cell)
         {
             if (Excel.ItemsSource is not { } source || cell.Row < 0 || cell.Column < 0 || cell.Row >= source.Count)
             {
                 return null;
             }
-            
+
             if (source[cell.Row] is not IList row || cell.Column >= row.Count)
             {
                 return null;
@@ -70,7 +70,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
 
             return ((IList?) source[cell.Row])?[cell.Column];
         }
-        
+
         // ReSharper disable once CognitiveComplexity
         public override Int32 InsertItem(Int32 index)
         {
@@ -80,7 +80,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
             }
 
             Type type = GetItemType(source);
-            
+
             try
             {
                 if (CreateItem(type) is not IList list || Type(list) is not { } element)
@@ -94,12 +94,12 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                     {
                         list.Add(CreateItem(element));
                     }
-                    
+
                     if (index < 0)
                     {
                         return list.Add(list);
                     }
-                    
+
                     list.Insert(index, list);
                     return index;
                 }
@@ -115,7 +115,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
 
                     row.Insert(index, item);
                 }
-                
+
                 return index;
             }
             catch (Exception)
@@ -123,35 +123,35 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 return -1;
             }
         }
-        
+
         public override String GetBindingPath(ExcelCell cell)
         {
             return $"[{cell.Row}][{cell.Column}]";
         }
-        
+
         public override Boolean SetValue(ExcelCell cell, Object? value)
         {
             if (Excel.ItemsSource is not { } source || cell.Row < 0 || cell.Column < 0 || cell.Row >= source.Count)
             {
                 return false;
             }
-            
+
             if (source[cell.Row] is not IList row || cell.Column >= row.Count)
             {
                 return false;
             }
-            
+
             row[cell.Column] = value;
             return true;
         }
-        
+
         protected virtual Int32 InsertColumnHeader(Int32 index)
         {
             if (Excel.ColumnHeadersSource is null)
             {
                 return -1;
             }
-            
+
             Object item = Excel.CreateColumnHeader(index);
             if (index < 0 || index >= Excel.ColumnHeadersSource.Count)
             {
@@ -161,38 +161,38 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
             Excel.ColumnHeadersSource.Insert(index, item);
             return index;
         }
-        
+
         public override void InsertColumns(Int32 index, Int32 count)
         {
             for (Int32 i = 0; i < count; i++)
             {
                 InsertColumnHeader(index + i);
             }
-            
+
             base.InsertColumns(index, count);
         }
-        
+
         protected override Boolean DeleteItem(Int32 index)
         {
             if (Excel.ItemsSource is not { } source || index < 0 || index >= source.Count)
             {
                 return false;
             }
-            
+
             if (!Excel.ItemsInColumns)
             {
                 source.RemoveAt(index);
                 return true;
             }
-            
+
             foreach (IList row in Excel.ItemsSource.OfType<IList>().Where(row => index < row.Count))
             {
                 row.RemoveAt(index);
             }
-            
+
             return true;
         }
-        
+
         public override void DeleteColumns(Int32 index, Int32 count)
         {
             if (Excel.ColumnHeadersSource is not { } source)
@@ -200,7 +200,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 base.DeleteColumns(index, count);
                 return;
             }
-            
+
             for (Int32 i = index + count - 1; i >= index; i--)
             {
                 source.RemoveAt(i);

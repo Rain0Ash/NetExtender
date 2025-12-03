@@ -62,7 +62,7 @@ namespace NetExtender.Types.Counters
                 return Internal.IsReadOnly;
             }
         }
-        
+
         Boolean IDictionary<T, TCount>.ContainsKey(T key)
         {
             return Contains(key);
@@ -92,7 +92,7 @@ namespace NetExtender.Types.Counters
 
             return TryGetValue(item, out TCount current) && GreaterOrEquals(current, count);
         }
-        
+
         Boolean ICollection<KeyValuePair<T, TCount>>.Contains(KeyValuePair<T, TCount> item)
         {
             return Contains(item.Key, item.Value);
@@ -144,12 +144,12 @@ namespace NetExtender.Types.Counters
             Internal.Add(item, Add(current, count));
             return current;
         }
-        
+
         void IDictionary<T, TCount>.Add(T key, TCount value)
         {
             Add(key, value);
         }
-        
+
         void ICollection<KeyValuePair<T, TCount>>.Add(KeyValuePair<T, TCount> item)
         {
             Add(item.Key, item.Value);
@@ -312,7 +312,7 @@ namespace NetExtender.Types.Counters
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             Boolean successful = false;
 
             // ReSharper disable once LoopCanBeConvertedToQuery
@@ -320,7 +320,7 @@ namespace NetExtender.Types.Counters
             {
                 successful |= Remove(item);
             }
-            
+
             return successful;
         }
 
@@ -330,7 +330,7 @@ namespace NetExtender.Types.Counters
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             Boolean successful = false;
 
             foreach ((T item, TCount count) in source.WhereNotNull())
@@ -362,7 +362,7 @@ namespace NetExtender.Types.Counters
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             Boolean successful = false;
 
             // ReSharper disable once LoopCanBeConvertedToQuery
@@ -427,7 +427,7 @@ namespace NetExtender.Types.Counters
                     {
                         return null;
                     }
-            
+
                     capacity += count;
                 }
 
@@ -440,7 +440,7 @@ namespace NetExtender.Types.Counters
                         array[index++] = item;
                     }
                 }
-                
+
                 return array;
             }
             catch (OverflowException)
@@ -483,7 +483,7 @@ namespace NetExtender.Types.Counters
                     Clear(item);
                     return;
                 }
-                
+
                 Internal[item] = value;
             }
         }
@@ -495,7 +495,7 @@ namespace NetExtender.Types.Counters
         {
             return INetExtenderComparisonOperators<TCount>.LessThan(value, count);
         }
-        
+
         protected virtual Boolean LessOrEquals(TCount value, TCount count)
         {
             return INetExtenderComparisonOperators<TCount>.LessThanOrEqual(value, count);

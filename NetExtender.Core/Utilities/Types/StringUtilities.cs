@@ -52,7 +52,7 @@ namespace NetExtender.Utilities.Types
         /// Null string task
         /// </summary>
         public static Task<String?> Null { get; } = Task.FromResult<String?>(null);
-        
+
         /// <summary>
         /// Null string task
         /// </summary>
@@ -291,7 +291,7 @@ namespace NetExtender.Utilities.Types
         }
 
         private static Regex FormatVariablesRegex { get; } = new Regex(@"\{|\}", RegexOptions.Compiled);
-        
+
         public static IEnumerable<String> GetFormatVariables(String value)
         {
             if (value is null)
@@ -3062,7 +3062,7 @@ namespace NetExtender.Utilities.Types
             Int32 index = value.IndexOf(occurence, StringComparison.Ordinal);
             return index < 0 ? value : value.Remove(index, occurence.Length);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static unsafe String RemoveAllWhiteSpace(this String value)
         {
@@ -3083,20 +3083,20 @@ namespace NetExtender.Utilities.Types
                     {
                         length = RemoveWhiteSpace(original, buffer, value.Length);
                     }
-                    
+
                     return new String(buffer, 0, length);
                 }
                 default:
                 {
                     Int32 length;
                     Char[] buffer = new Char[value.Length];
-                    
+
                     fixed (Char* original = value)
                     fixed (Char* result = buffer)
                     {
                         length = RemoveWhiteSpace(original, result, value.Length);
                     }
-                    
+
                     return new String(buffer, 0, length);
                 }
             }
@@ -3295,6 +3295,9 @@ namespace NetExtender.Utilities.Types
             return HttpUtility.UrlEncode(value, encoding ?? Encoding.UTF8);
         }
 
+#if NET7_0_OR_GREATER
+        [Obsolete("This method produces non-standards-compliant output and has interoperability issues. The preferred alternative is UrlEncode(String).")]
+#endif
         [return: NotNullIfNotNull("value")]
         public static String? UrlEncodeUnicode(this String? value)
         {
@@ -3397,7 +3400,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(second));
             }
-            
+
             return DamerauLevenshteinDistance(first, second, new Int32[first.Length + 1, second.Length + 1]);
         }
 
@@ -3412,7 +3415,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(second));
             }
-            
+
             return DamerauLevenshteinDistance(first, second, comparison, new Int32[first.Length + 1, second.Length + 1]);
         }
 

@@ -44,7 +44,7 @@ namespace NetExtender.Utilities.EntityFrameworkCore
 
             builder.UseLazyLoadingProxies();
         }
-        
+
         public static DbConnectionStringBuilder GetConnectionStringBuilder(this DbConnection connection)
         {
             return GetConnectionStringBuilder<DbConnectionStringBuilder>(connection);

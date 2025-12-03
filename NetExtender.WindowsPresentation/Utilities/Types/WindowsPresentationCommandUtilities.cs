@@ -19,7 +19,7 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
         {
             AddRange(collection, (IEnumerable<CommandBinding?>?) commands);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void AddRange(this CommandBindingCollection collection, IEnumerable<CommandBinding?>? commands)
         {
@@ -27,29 +27,29 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(collection));
             }
-            
+
             if (commands is null)
             {
                 return;
             }
-            
+
             foreach (CommandBinding? command in commands)
             {
                 if (command is null)
                 {
                     continue;
                 }
-                
+
                 collection.Add(command);
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ExceptionHandlerAction Exception<T>(ICommand? command, Object? sender, T? parameter, Exception? exception)
         {
             return Exception(command, sender as DependencyObject, parameter, exception);
         }
-        
+
         [SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
         public static ExceptionHandlerAction Exception<T>(ICommand? command, DependencyObject? sender, T? parameter, Exception? exception)
         {
@@ -57,14 +57,14 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(command));
             }
-            
+
             DependencyObject? current = sender;
-            
+
             while (current is not null && current is not IWindowsPresentationExceptionHandler)
             {
                 current = current.GetAncestor();
             }
-            
+
             if (current is null)
             {
                 current = sender;
@@ -73,7 +73,7 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
                     current = current.GetParent();
                 }
             }
-            
+
             current ??= sender is not null ? Window.GetWindow(sender) : null;
 
             return current switch

@@ -15,22 +15,22 @@ namespace NetExtender.Types.Reflection
     {
         public abstract String Name { get; }
         public MethodInfo? Method { get; }
-        
+
         protected ReflectionOperator()
         {
         }
-        
+
         protected ReflectionOperator(MethodInfo? method)
         {
             Method = method;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IUnaryReflectionOperator? Get(Type type, UnaryOperator @operator)
         {
             return UnaryReflectionOperator.Get(type, @operator);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IUnaryReflectionOperator<TSelf, TSelf>? Get<TSelf>(UnaryOperator @operator)
         {
@@ -42,31 +42,31 @@ namespace NetExtender.Types.Reflection
         {
             return UnaryReflectionOperator.Get<TSelf, TResult>(@operator);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IBinaryReflectionOperator? Get(Type first, Type second, BinaryOperator @operator)
         {
             return BinaryReflectionOperator.Get(first, second, @operator);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IBinaryReflectionOperator<TSelf, TSelf, TSelf>? Get<TSelf>(BinaryOperator @operator)
         {
             return BinaryReflectionOperator.Get<TSelf>(@operator);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IBinaryReflectionOperator<TSelf, TSelf, TResult>? Get<TSelf, TResult>(BinaryOperator @operator)
         {
             return BinaryReflectionOperator.Get<TSelf, TResult>(@operator);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IBinaryReflectionOperator<TFirst, TSecond, TResult>? Get<TFirst, TSecond, TResult>(BinaryOperator @operator)
         {
             return BinaryReflectionOperator.Get<TFirst, TSecond, TResult>(@operator);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IUnaryReflectionOperator<TSelf, TSelf> Exception<TSelf>(UnaryOperator @operator)
         {
@@ -78,19 +78,19 @@ namespace NetExtender.Types.Reflection
         {
             return UnaryReflectionOperator.Exception<TSelf, TResult>(@operator);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IBinaryReflectionOperator<TSelf, TSelf, TSelf> Exception<TSelf>(BinaryOperator @operator)
         {
             return BinaryReflectionOperator.Exception<TSelf>(@operator);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IBinaryReflectionOperator<TSelf, TSelf, TResult> Exception<TSelf, TResult>(BinaryOperator @operator)
         {
             return BinaryReflectionOperator.Exception<TSelf, TResult>(@operator);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IBinaryReflectionOperator<TFirst, TSecond, TResult> Exception<TFirst, TSecond, TResult>(BinaryOperator @operator)
         {
@@ -102,7 +102,7 @@ namespace NetExtender.Types.Reflection
     {
         private new const String Message = "Reflection operator not implemented.";
         private const String FormatMessage = "Reflection operator '{0}' not implemented.";
-        
+
         public abstract String Identifier { get; }
 
         protected ReflectionOperatorNotImplementedException(String? identifier)
@@ -124,7 +124,11 @@ namespace NetExtender.Types.Reflection
             : base(Format(identifier, message), exception)
         {
         }
-        
+
+#if NET8_0_OR_GREATER
+        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
         protected ReflectionOperatorNotImplementedException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {

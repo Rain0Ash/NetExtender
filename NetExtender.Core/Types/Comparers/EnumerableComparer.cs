@@ -11,7 +11,7 @@ namespace NetExtender.Types.Comparers
     public class EnumerableComparer<T> : IComparer<IEnumerable<T>>
     {
         protected IComparer<T> Comparer { get; }
-        
+
         public EnumerableComparer()
             : this(null)
         {
@@ -21,7 +21,7 @@ namespace NetExtender.Types.Comparers
         {
             Comparer = comparer ?? Comparer<T>.Default;
         }
-        
+
         // ReSharper disable once CognitiveComplexity
         public virtual Int32 Compare(IEnumerable<T>? x, IEnumerable<T>? y)
         {
@@ -29,35 +29,35 @@ namespace NetExtender.Types.Comparers
             {
                 return ReferenceEquals(x, y) ? 0 : x is null ? -1 : 1;
             }
-            
+
             if (ReferenceEquals(x, y))
             {
                 return 0;
             }
-            
+
             using IEnumerator<T> xenumerator = x.GetEnumerator();
             using IEnumerator<T> yenumerator = y.GetEnumerator();
-            
+
             if (Equals(xenumerator, yenumerator))
             {
                 return 0;
             }
-            
+
             while (true)
             {
                 Boolean left = xenumerator.MoveNext();
                 Boolean right = yenumerator.MoveNext();
-                
+
                 if (!left && !right)
                 {
                     return 0;
                 }
-                
+
                 if (!left)
                 {
                     return -1;
                 }
-                
+
                 if (!right)
                 {
                     return 1;
@@ -71,27 +71,27 @@ namespace NetExtender.Types.Comparers
             }
         }
     }
-    
+
     public class EnumerableComparer : IComparer<IEnumerable>, IComparer<IEnumerable<Object?>>
     {
         public static EnumerableComparer Default { get; } = new EnumerableComparer();
         protected IComparer Comparer { get; }
-        
+
         public EnumerableComparer()
             : this(null)
         {
         }
-        
+
         public EnumerableComparer(IComparer? comparer)
         {
             Comparer = comparer ?? Comparer<Object?>.Default;
         }
-        
+
         public Int32 Compare(IEnumerable? x, IEnumerable? y)
         {
             return Compare(x?.Cast<Object>(), y?.Cast<Object>());
         }
-        
+
         // ReSharper disable once CognitiveComplexity
         public virtual Int32 Compare(IEnumerable<Object?>? x, IEnumerable<Object?>? y)
         {
@@ -99,7 +99,7 @@ namespace NetExtender.Types.Comparers
             {
                 return ReferenceEquals(x, y) ? 0 : x is null ? -1 : 1;
             }
-            
+
             if (ReferenceEquals(x, y))
             {
                 return 0;
@@ -107,32 +107,32 @@ namespace NetExtender.Types.Comparers
 
             using IEnumerator<Object?> xenumerator = x.GetEnumerator();
             using IEnumerator<Object?> yenumerator = y.GetEnumerator();
-            
+
             if (Equals(xenumerator, yenumerator))
             {
                 return 0;
             }
-            
+
             while (true)
             {
                 Boolean left = xenumerator.MoveNext();
                 Boolean right = yenumerator.MoveNext();
-                
+
                 if (!left && !right)
                 {
                     return 0;
                 }
-                
+
                 if (!left)
                 {
                     return -1;
                 }
-                
+
                 if (!right)
                 {
                     return 1;
                 }
-                
+
                 Int32 result = Comparer.Compare(xenumerator.Current, yenumerator.Current);
                 if (result != 0)
                 {

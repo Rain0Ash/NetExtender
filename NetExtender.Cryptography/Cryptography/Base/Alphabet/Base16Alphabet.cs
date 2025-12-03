@@ -49,7 +49,7 @@ namespace NetExtender.Cryptography.Base.Alphabet
             : base(16, alphabet)
         {
             Insensitive = insensitive;
-            
+
             if (Insensitive)
             {
                 MapCounterparts();

@@ -122,20 +122,20 @@ namespace NetExtender.Domains.Initializer
             }
         }
     }
-    
+
     public abstract class WinFormsApplicationInitializer<T> : ApplicationInitializer<WinFormsApplication, WinFormsView<T>> where T : Form, new()
     {
         public abstract class Middleware<TBuilder> : NetExtender.Types.Middlewares.Middleware<TBuilder> where TBuilder : WinFormsBuilder<T>
         {
         }
     }
-    
+
     public abstract class WinFormsApplicationInitializer<T, TBuilder> : ApplicationInitializer<WinFormsApplication, WinFormsView<T, TBuilder>> where T : Form where TBuilder : IApplicationBuilder<T>, new()
     {
         public abstract class Builder : WinFormsBuilder<T>
         {
         }
-        
+
         public abstract class ConsoleBuilder : WinFormsConsoleBuilder<T>
         {
         }

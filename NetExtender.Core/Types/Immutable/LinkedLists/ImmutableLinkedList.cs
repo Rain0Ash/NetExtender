@@ -212,7 +212,7 @@ namespace NetExtender.Types.Immutable.LinkedLists
             {
                 return this;
             }
-            
+
             last.Next = new Node(value);
             return new ImmutableLinkedList<T>(first, Count + 1);
         }
@@ -306,7 +306,7 @@ namespace NetExtender.Types.Immutable.LinkedLists
             {
                 return this;
             }
-            
+
             last.Next = Head;
             return new ImmutableLinkedList<T>(first, Count + source.Count);
         }
@@ -410,7 +410,7 @@ namespace NetExtender.Types.Immutable.LinkedLists
                 {
                     return this;
                 }
-                
+
                 last.Next = current.Next;
                 return new ImmutableLinkedList<T>(first, Count - 1);
             }
@@ -455,7 +455,7 @@ namespace NetExtender.Types.Immutable.LinkedLists
                 removed = default;
                 return this;
             }
-            
+
             last.Next = current?.Next;
             removed = current is not null ? current.Value : default;
             return new ImmutableLinkedList<T>(first, Count - 1);
@@ -595,7 +595,7 @@ namespace NetExtender.Types.Immutable.LinkedLists
         private static void SortCore(Node head, Int32 count, IComparer<T>? comparer, out Segment sorted, out Node? next)
         {
             comparer ??= ComparisonComparer<T>.Default;
-            
+
             if (count == 1)
             {
                 sorted = new Segment { First = head, Copied = null, Last = head };
@@ -612,7 +612,7 @@ namespace NetExtender.Types.Immutable.LinkedLists
                 next = head.Next;
                 return;
             }
-            
+
             SortCore(half2, count - half, comparer, out Segment segment2, out next);
 
             if (!TryShortCircuitMerge(ref segment1, ref segment2, count, comparer, out sorted))
@@ -659,7 +659,7 @@ namespace NetExtender.Types.Immutable.LinkedLists
             Boolean iscopied = segment2.Copied is not null;
             Node? first = null;
             Node? last = null;
-            
+
             do
             {
                 if (comparer.Compare(next1.Value, next2.Value) <= 0)
@@ -756,7 +756,7 @@ namespace NetExtender.Types.Immutable.LinkedLists
                 newlast = default;
                 return false;
             }
-            
+
             Node current = newhead = new Node(first.Value);
             for (Node? next = first.Next; next is not null && next != last; next = next.Next)
             {

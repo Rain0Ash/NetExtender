@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using NetExtender.Types.Combinatoric;
 using NetExtender.Types.Combinatoric.Interfaces;
 using NetExtender.Types.Exceptions;
@@ -11,6 +12,7 @@ namespace NetExtender.Utilities.Numerics
 {
     public static class CombinatoricUtilities
     {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ICombinatoricCollection<T> Combinatoric<T>(IEnumerable<T> values, CombinatoricsType type)
         {
             return Combinatoric(values, type, 2);
@@ -30,11 +32,13 @@ namespace NetExtender.Utilities.Numerics
             };
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ICombinatoricCollection<T> Combinatoric<T>(this CombinatoricsType type, IEnumerable<T> values)
         {
             return Combinatoric(values, type, 2);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ICombinatoricCollection<T> Combinatoric<T>(this CombinatoricsType type, IEnumerable<T> values, Int32 take)
         {
             return Combinatoric(values, type, take);

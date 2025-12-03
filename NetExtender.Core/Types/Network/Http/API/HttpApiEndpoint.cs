@@ -19,10 +19,10 @@ namespace NetExtender.Types.Network.API
             }
             init
             {
-                Unsafe.AsRef(_controller) = value;
+                Unsafe.AsRef(in _controller) = value;
             }
         }
-        
+
         public new virtual String? Name
         {
             get
@@ -31,10 +31,10 @@ namespace NetExtender.Types.Network.API
             }
             init
             {
-                Unsafe.AsRef(_name) = value;
+                Unsafe.AsRef(in _name) = value;
             }
         }
-        
+
         public new virtual HttpMethod Method
         {
             get
@@ -43,10 +43,10 @@ namespace NetExtender.Types.Network.API
             }
             init
             {
-                Unsafe.AsRef(_method) = value ?? throw new ArgumentNullException(nameof(value));
+                Unsafe.AsRef(in _method) = value ?? throw new ArgumentNullException(nameof(value));
             }
         }
-        
+
         public new virtual HttpMethodType MethodType
         {
             get
@@ -58,12 +58,12 @@ namespace NetExtender.Types.Network.API
                 Method = value.Method();
             }
         }
-        
+
         public DynamicHttpApiEndpoint()
             : base(null, null, null!, null!)
         {
         }
-        
+
         public DynamicHttpApiEndpoint(Uri endpoint, HttpMethod method)
             : this(null, null, endpoint, method)
         {
@@ -79,7 +79,7 @@ namespace NetExtender.Types.Network.API
         {
         }
     }
-    
+
     public class DynamicHttpApiEndpointBase<TRequest, TResponse> : HttpApiEndpoint<TRequest, TResponse> where TRequest : IEntityCQRS
     {
         private protected readonly String? _controller;
@@ -90,7 +90,7 @@ namespace NetExtender.Types.Network.API
                 return _controller;
             }
         }
-        
+
         private protected readonly String? _name;
         public sealed override String? Name
         {
@@ -99,7 +99,7 @@ namespace NetExtender.Types.Network.API
                 return _name;
             }
         }
-        
+
         private protected readonly HttpMethod? _method;
         public sealed override HttpMethod Method
         {
@@ -116,7 +116,7 @@ namespace NetExtender.Types.Network.API
                 return base.MethodType;
             }
         }
-        
+
         private protected readonly Uri? _endpoint;
         public sealed override Uri Endpoint
         {
@@ -125,7 +125,7 @@ namespace NetExtender.Types.Network.API
                 return _endpoint!;
             }
         }
-        
+
         private protected readonly String? _description;
         public sealed override String? Description
         {
@@ -151,7 +151,7 @@ namespace NetExtender.Types.Network.API
             _method = method;
         }
     }
-    
+
     public abstract class HttpApiEndpoint<TRequest, TResponse> : IHttpApiEndpoint<TRequest, TResponse> where TRequest : IEntityCQRS
     {
         public abstract String? Controller { get; }

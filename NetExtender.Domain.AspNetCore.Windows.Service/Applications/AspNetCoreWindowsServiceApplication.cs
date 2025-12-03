@@ -37,7 +37,7 @@ namespace NetExtender.Domains.AspNetCore.Service.Applications
             : base(initializer, installer)
         {
         }
-        
+
         public override Task<IApplication> RunAsync(CancellationToken token)
         {
             return RunAsync(null, token);
@@ -102,7 +102,7 @@ namespace NetExtender.Domains.AspNetCore.Service.Applications
             }
         }
     }
-    
+
     public class AspNetCoreWindowsServiceWebApplication : AspNetCoreWindowsServiceApplication<IWebHost>
     {
         public AspNetCoreWindowsServiceWebApplication()

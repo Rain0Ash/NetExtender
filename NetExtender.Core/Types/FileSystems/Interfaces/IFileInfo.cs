@@ -24,7 +24,7 @@ namespace NetExtender.FileSystems.Interfaces
     public interface IFileInfo : IFileSystemInfo, IEquatable<FileInfo>, IEquatable<IFileInfo>
     {
         public new FileInfo? Info { get; }
-        
+
         /// <inheritdoc cref="FileInfo.Length"/>
         public Int64 Length { get; }
 

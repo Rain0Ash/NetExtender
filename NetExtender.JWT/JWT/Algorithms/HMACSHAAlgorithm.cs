@@ -13,7 +13,7 @@ namespace NetExtender.JWT.Algorithms
         {
             protected abstract HMAC CreateAlgorithm(ReadOnlySpan<Byte> key);
             protected abstract HMAC CreateAlgorithm(JWTKey key);
-            
+
             // ReSharper disable once ReturnTypeCanBeNotNullable
             [return: NotNullIfNotNull("key")]
             public override Byte[]? Sign(JWTKey key, Byte[] source)

@@ -17,6 +17,12 @@ using NetExtender.Types.Exceptions;
 namespace NetExtender.Utilities.Numerics
 {
 <#
+    const String Int128 = nameof(Int128);
+    const String UInt128 = nameof(UInt128);
+    const String Half = nameof(Half);
+    const String BigInteger = nameof(BigInteger);
+    const String Complex = nameof(Complex);
+
     List<String> Types = new List<String>
     {
         nameof(Char),
@@ -33,9 +39,6 @@ namespace NetExtender.Utilities.Numerics
         nameof(Decimal)
     };
 
-    const String biginteger = "BigInteger";
-    const String complex = "Complex";
-
     static Boolean NotChar(String type)
     {
         return type != nameof(Char);
@@ -48,12 +51,17 @@ namespace NetExtender.Utilities.Numerics
 
     static Boolean IsUnsignedType(String type)
     {
-        return type == nameof(Char) || type == nameof(Byte) || type == nameof(UInt16) || type == nameof(UInt32) || type == nameof(UInt64);
+        return type == nameof(Char) || type == nameof(Byte) || type == nameof(UInt16) || type == nameof(UInt32) || type == nameof(UInt64) || type == UInt128;
     }
 
-    Boolean IsIntType(String type)
+    static Boolean IsIntType(String type)
     {
-        return type == nameof(Char) || type == nameof(SByte) || type == nameof(Byte) || type == nameof(Int16) || type == nameof(UInt16) || type == nameof(Int32) || type == nameof(UInt32) || type == nameof(Int64) || type == nameof(UInt64) || type == biginteger;
+        return type == nameof(Char) || type == nameof(SByte) || type == nameof(Byte) || type == nameof(Int16) || type == nameof(UInt16) || type == nameof(Int32) || type == nameof(UInt32) || type == nameof(Int64) || type == nameof(UInt64) || type == Int128 || type == UInt128 || type == BigInteger;
+    }
+
+    static Boolean IsNET7_0_OR_GREATER(String type)
+    {
+        return type == Int128 || type == UInt128 || type == Half;
     }
 
     static String ToUnsignedType(String type)
@@ -64,6 +72,7 @@ namespace NetExtender.Utilities.Numerics
             nameof(Int16) => nameof(UInt16),
             nameof(Int32) => nameof(UInt32),
             nameof(Int64) => nameof(UInt64),
+            Int128 => UInt128,
             _ => type
         };
     }
@@ -74,7 +83,17 @@ namespace NetExtender.Utilities.Numerics
 
         for (Int32 i = 0; i < type.Length; i++)
         {
-            action(type[i]);
+            String current = type[i];
+            if (IsNET7_0_OR_GREATER(current))
+            {
+                WriteLine("#if NET7_0_OR_GREATER");
+                action(current);
+                WriteLine("#endif");
+            }
+            else
+            {
+                action(current);
+            }
 
             if (line && i <= type.Length - 2)
             {
@@ -105,7 +124,7 @@ namespace NetExtender.Utilities.Numerics
 
     void Min()
     {
-        ForEach(Types.Append(biginteger), MinImplementation);
+        ForEach(Types.Append(BigInteger), MinImplementation);
     }
 
     void MaxImplementation(String type)
@@ -130,7 +149,7 @@ namespace NetExtender.Utilities.Numerics
 
     void Max()
     {
-        ForEach(Types.Append(biginteger), MaxImplementation);
+        ForEach(Types.Append(BigInteger), MaxImplementation);
     }
 
     void RangeImplementation(String type)
@@ -343,7 +362,7 @@ namespace NetExtender.Utilities.Numerics
 
     void ToRange()
     {
-        ForEach(Types.Append(biginteger), ToRangeImplementation);
+        ForEach(Types.Append(BigInteger), ToRangeImplementation);
     }
 
     void InRangeImplementation(String type)
@@ -423,7 +442,7 @@ namespace NetExtender.Utilities.Numerics
 
     void IsPositive()
     {
-        ForEach(Types.Append(biginteger), IsPositiveImplementation);
+        ForEach(Types.Append(BigInteger), IsPositiveImplementation);
     }
 
     void IsNegativeImplementation(String type)
@@ -442,7 +461,7 @@ namespace NetExtender.Utilities.Numerics
 
     void IsNegative()
     {
-        ForEach(Types.Append(biginteger), IsNegativeImplementation);
+        ForEach(Types.Append(BigInteger), IsNegativeImplementation);
     }
 
     void ToSignImplementation(String type)
@@ -461,7 +480,7 @@ namespace NetExtender.Utilities.Numerics
 
     void ToSign()
     {
-        ForEach(Types.Append(biginteger), ToSignImplementation);
+        ForEach(Types.Append(BigInteger), ToSignImplementation);
     }
 
     void RoundToMultiplierImplementation(String type)
@@ -484,7 +503,16 @@ namespace NetExtender.Utilities.Numerics
 
         WriteLine(String.Empty);
 
-        WriteLine($"\t\tpublic static {type} RoundUpToMultiplier({type} value, {type} multiplier = 10)");
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {type} RoundUpToMultiplier({type} value)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\tconst {type} multiplier = 10;");
+        WriteLine("\t\t\treturn RoundUpToMultiplier(value, multiplier);");
+        WriteLine("\t\t}");
+
+        WriteLine(String.Empty);
+
+        WriteLine($"\t\tpublic static {type} RoundUpToMultiplier({type} value, {type} multiplier)");
         WriteLine("\t\t{");
         WriteLine($"\t\t\tif ({(integer ? "multiplier == 0" : "IsEpsilon(multiplier)")})");
         WriteLine("\t\t\t{");
@@ -525,7 +553,16 @@ namespace NetExtender.Utilities.Numerics
 
         WriteLine(String.Empty);
 
-        WriteLine($"\t\tpublic static {type} RoundDownToMultiplier({type} value, {type} multiplier = 10)");
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {type} RoundDownToMultiplier({type} value)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\tconst {type} multiplier = 10;");
+        WriteLine("\t\t\treturn RoundDownToMultiplier(value, multiplier);");
+        WriteLine("\t\t}");
+
+        WriteLine(String.Empty);
+
+        WriteLine($"\t\tpublic static {type} RoundDownToMultiplier({type} value, {type} multiplier)");
         WriteLine("\t\t{");
         WriteLine($"\t\t\tif ({(integer ? "multiplier == 0" : "IsEpsilon(multiplier)")})");
         WriteLine("\t\t\t{");
@@ -570,7 +607,16 @@ namespace NetExtender.Utilities.Numerics
 
         WriteLine(String.Empty);
 
-        WriteLine($"\t\tpublic static {type} RoundBankingToMultiplier({type} value, {type} multiplier = 10)");
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {type} RoundBankingToMultiplier({type} value)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\tconst {type} multiplier = 10;");
+        WriteLine("\t\t\treturn RoundBankingToMultiplier(value, multiplier);");
+        WriteLine("\t\t}");
+
+        WriteLine(String.Empty);
+
+        WriteLine($"\t\tpublic static {type} RoundBankingToMultiplier({type} value, {type} multiplier)");
         WriteLine("\t\t{");
         WriteLine($"\t\t\tif ({(integer ? "multiplier == 0" : "IsEpsilon(multiplier)")})");
         WriteLine("\t\t\t{");
@@ -671,12 +717,12 @@ namespace NetExtender.Utilities.Numerics
         WriteLine("\t\t}");
 
         WriteLine(String.Empty);
-        
+
         WriteLine($"\t\tpublic static {type} {nameof(RoundToMultiplier)}(this {type} value, {type} multiplier)");
         WriteLine("\t\t{");
         WriteLine($"\t\t\treturn {nameof(RoundToMultiplier)}(value, multiplier, MidpointRounding.ToEven);");
         WriteLine("\t\t}");
-        
+
         WriteLine(String.Empty);
 
         WriteLine($"\t\tpublic static {type} {nameof(RoundToMultiplier)}(this {type} value, {type} multiplier, MidpointRounding rounding)");
@@ -781,7 +827,7 @@ namespace NetExtender.Utilities.Numerics
 
     void Pow()
     {
-        ForEach(Types.Where(type => IsIntType(type) && !IsSmallType(type)).Append(biginteger), PowImplementation);
+        ForEach(Types.Where(type => IsIntType(type) && !IsSmallType(type)).Append(BigInteger), PowImplementation);
     }
 
     void RoundUpToPowerOf2Implementation(String type)
@@ -966,7 +1012,7 @@ namespace NetExtender.Utilities.Numerics
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
         WriteLine($"\t\tpublic static {ToUnsignedType(type)} {nameof(Difference)}(this {type} value, {type} between)");
         WriteLine("\t\t{");
-        if (!IsIntType(type) || IsUnsignedType(type) || type == biginteger)
+        if (!IsIntType(type) || IsUnsignedType(type) || type == BigInteger)
         {
             WriteLine(IsUnsignedType(type)
                 ? $"\t\t\treturn value <= between ? {(IsSmallType(type) ? $"({type}) (between - value)" : "between - value")} : {(IsSmallType(type) ? $"({type}) (value - between)" : "value - between")};"
@@ -985,7 +1031,7 @@ namespace NetExtender.Utilities.Numerics
 
     void Difference()
     {
-        ForEach(Types.Append(biginteger), DifferenceImplementation);
+        ForEach(Types.Append(BigInteger), DifferenceImplementation);
     }
 
     void DiscreteDifferenceImplementation(String type)
@@ -1139,7 +1185,7 @@ namespace NetExtender.Utilities.Numerics
         WriteLine($"\t\tpublic static {type} {nameof(Mean)}(this IEnumerable<{type}> values)");
         WriteLine("\t\t{");
         WriteLine("\t\t\tUInt32 count = 0;");
-        WriteLine($"\t\t\t{(IsIntType(type) ? type == biginteger ? biginteger : IsUnsignedType(type) ? nameof(UInt64) : nameof(Int64) : type == nameof(Single) ? nameof(Double) : type)} sum = 0;");
+        WriteLine($"\t\t\t{(IsIntType(type) ? type == BigInteger ? BigInteger : IsUnsignedType(type) ? nameof(UInt64) : nameof(Int64) : type == nameof(Single) ? nameof(Double) : type)} sum = 0;");
         WriteLine($"\t\t\tforeach ({type} value in values)");
         WriteLine("\t\t\t{");
         WriteLine("\t\t\t\tsum += value;");
@@ -1155,14 +1201,14 @@ namespace NetExtender.Utilities.Numerics
 
         WriteLine(String.Empty);
 
-        Boolean remove = type == nameof(Int64) || type == nameof(UInt64) || type == nameof(Double) || type == nameof(Decimal) || type == biginteger;
+        Boolean remove = type == nameof(Int64) || type == nameof(UInt64) || type == nameof(Double) || type == nameof(Decimal) || type == BigInteger;
         WriteLine($"\t\t\treturn {(remove ? "sum / count" : $"({type})(sum / count)")};");
         WriteLine("\t\t}");
     }
 
     void Mean()
     {
-        ForEach(Types.Where(NotChar).Append(biginteger), MeanImplementation);
+        ForEach(Types.Where(NotChar).Append(BigInteger), MeanImplementation);
     }
 
     void ToBaseImplementation(String type)
@@ -1201,12 +1247,12 @@ namespace NetExtender.Utilities.Numerics
 
         WriteLine(String.Empty);
 
-        if (type != biginteger)
+        if (type != BigInteger)
         {
             WriteLine($"\t\t\t// 64 is the worst cast buffer size for base 2 and {type}.MaxValue");
         }
 
-        WriteLine($"\t\t\t{(type == biginteger ? "Int32 max = (Int32) Round(Log(value, 2), MidpointRounding.ToPositiveInfinity)" : $"const Int32 max = 8 * sizeof({type})")};");
+        WriteLine($"\t\t\t{(type == BigInteger ? "Int32 max = (Int32) Round(Log(value, 2), MidpointRounding.ToPositiveInfinity)" : $"const Int32 max = 8 * sizeof({type})")};");
         WriteLine($"\t\t\t{nameof(Int32)} i = max;");
         WriteLine($"\t\t\tSpan<{nameof(Char)}> buffer = stackalloc {nameof(Char)}[max];");
 
@@ -1236,12 +1282,12 @@ namespace NetExtender.Utilities.Numerics
 
         WriteLine(String.Empty);
 
-        ForEach(Types.Where(type => NotChar(type) && IsIntType(type)).Append(biginteger), ToBaseImplementation);
+        ForEach(Types.Where(type => NotChar(type) && IsIntType(type)).Append(BigInteger), ToBaseImplementation);
     }
 
     void SumImplementation(String type)
     {
-        if (IsSmallType(type) || IsUnsignedType(type) || type == biginteger || type == complex)
+        if (IsSmallType(type) || IsUnsignedType(type) || type == BigInteger || type == Complex)
         {
             WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
             WriteLine($"\t\tpublic static {type} {nameof(Sum)}(this IEnumerable<{type}> source)");
@@ -1271,7 +1317,7 @@ namespace NetExtender.Utilities.Numerics
 
     void Sum()
     {
-        ForEach(Types.Where(NotChar).Append(biginteger).Append(complex), SumImplementation);
+        ForEach(Types.Where(NotChar).Append(BigInteger).Append(Complex), SumImplementation);
     }
 
     void MultiplyImplementation(String type)
@@ -1300,9 +1346,9 @@ namespace NetExtender.Utilities.Numerics
         WriteLine("\t\t\t\t{");
         WriteLine("\t\t\t\t\tswitch (enumerator.Current)");
         WriteLine("\t\t\t\t\t{");
-        WriteLine($"\t\t\t\t\t\tcase {(type == biginteger ? "BigInteger.Zero" : "0")}:");
+        WriteLine($"\t\t\t\t\t\tcase {(type == BigInteger ? "BigInteger.Zero" : "0")}:");
         WriteLine("\t\t\t\t\t\t\treturn 0;");
-        WriteLine($"\t\t\t\t\t\tcase {(type == biginteger ? "BigInteger.One" : "1")}:");
+        WriteLine($"\t\t\t\t\t\tcase {(type == BigInteger ? "BigInteger.One" : "1")}:");
         WriteLine("\t\t\t\t\t\t\tcontinue;");
         WriteLine("\t\t\t\t\t\tdefault:");
         WriteLine("\t\t\t\t\t\t\tresult *= enumerator.Current;");
@@ -1439,11 +1485,21 @@ namespace NetExtender.Utilities.Numerics
         String[] subtypes = Types.Where(NotChar).ToArray();
         foreach (String subtype in subtypes)
         {
+            if (IsNET7_0_OR_GREATER(subtype))
+            {
+                WriteLine("#if NET7_0_OR_GREATER");
+            }
+
             WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
-            WriteLine($"\t\tpublic static {(type == nameof(Decimal) || subtype == nameof(Decimal) ? nameof(Decimal) : type == nameof(Double) || subtype == nameof(Double) ? nameof(Double) : type == nameof(Single) || subtype == nameof(Single) ? nameof(Single) : nameof(Double))} {nameof(Percent)}(this {type} value, {subtype} percent)");
+            WriteLine($"\t\tpublic static {(type == nameof(Decimal) || subtype == nameof(Decimal) ? nameof(Decimal) : type == nameof(Double) || subtype == nameof(Double) ? nameof(Double) : type == nameof(Single) || subtype == nameof(Single) ? nameof(Single) : type == Half || subtype == Half ? Half : nameof(Double))} {nameof(Percent)}(this {type} value, {subtype} percent)");
             WriteLine("\t\t{");
             WriteLine($"\t\t\treturn {(subtype == nameof(Decimal) && (type == nameof(Single) || type == nameof(Double)) ? $"({nameof(Decimal)}) " : String.Empty)}value * ({(type == nameof(Decimal) && (subtype == nameof(Single) || subtype == nameof(Double)) ? $"({nameof(Decimal)}) " : String.Empty)}percent / 100{(type == nameof(Decimal) || subtype == nameof(Decimal) ? "M" : type == nameof(Double) || subtype == nameof(Double) ? "D" : type == nameof(Single) || subtype == nameof(Single) ? "F" : "D")});");
             WriteLine("\t\t}");
+
+            if (IsNET7_0_OR_GREATER(subtype))
+            {
+                WriteLine("#endif");
+            }
 
             if (subtypes.Last() != subtype)
             {
@@ -1462,11 +1518,21 @@ namespace NetExtender.Utilities.Numerics
         String[] subtypes = Types.Where(NotChar).ToArray();
         foreach (String subtype in subtypes)
         {
+            if (IsNET7_0_OR_GREATER(subtype))
+            {
+                WriteLine("#if NET7_0_OR_GREATER");
+            }
+
             WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
-            WriteLine($"\t\tpublic static {(type == nameof(Decimal) || subtype == nameof(Decimal) ? nameof(Decimal) : type == nameof(Double) || subtype == nameof(Double) ? nameof(Double) : type == nameof(Single) || subtype == nameof(Single) ? nameof(Single) : nameof(Double))} {nameof(Promille)}(this {type} value, {subtype} promille)");
+            WriteLine($"\t\tpublic static {(type == nameof(Decimal) || subtype == nameof(Decimal) ? nameof(Decimal) : type == nameof(Double) || subtype == nameof(Double) ? nameof(Double) : type == nameof(Single) || subtype == nameof(Single) ? nameof(Single) : type == Half || subtype == Half ? Half : nameof(Double))} {nameof(Promille)}(this {type} value, {subtype} promille)");
             WriteLine("\t\t{");
             WriteLine($"\t\t\treturn {(subtype == nameof(Decimal) && (type == nameof(Single) || type == nameof(Double)) ? $"({nameof(Decimal)}) " : String.Empty)}value * ({(type == nameof(Decimal) && (subtype == nameof(Single) || subtype == nameof(Double)) ? $"({nameof(Decimal)}) " : String.Empty)}promille / 1000{(type == nameof(Decimal) || subtype == nameof(Decimal) ? "M" : type == nameof(Double) || subtype == nameof(Double) ? "D" : type == nameof(Single) || subtype == nameof(Single) ? "F" : "D")});");
             WriteLine("\t\t}");
+
+            if (IsNET7_0_OR_GREATER(subtype))
+            {
+                WriteLine("#endif");
+            }
 
             if (subtypes.Last() != subtype)
             {

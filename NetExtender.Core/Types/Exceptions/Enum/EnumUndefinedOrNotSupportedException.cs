@@ -35,7 +35,7 @@ namespace NetExtender.Types.Exceptions
         {
         }
     }
-    
+
     public class EnumUndefinedOrNotSupportedException<T> : ExceptionWrapper<Exception> where T : unmanaged, Enum
     {
         public EnumUndefinedOrNotSupportedException(T value)
@@ -63,7 +63,7 @@ namespace NetExtender.Types.Exceptions
         {
         }
     }
-    
+
     [Serializable]
     public class EnumUndefinedOrNotSupportedThrowableException<T> : IncorrectEnumTypeException<T> where T : unmanaged, Enum
     {
@@ -78,7 +78,7 @@ namespace NetExtender.Types.Exceptions
             {
                 return;
             }
-            
+
             throw value.In() ? EnumNotSupportedException<T>.Create(value) : EnumUndefinedException<T>.Create(value);
         }
 
@@ -94,7 +94,7 @@ namespace NetExtender.Types.Exceptions
             {
                 return;
             }
-            
+
             throw value.In() ? EnumNotSupportedException<T>.Create(value, message) : EnumUndefinedException<T>.Create(value, null, message);
         }
 
@@ -110,7 +110,7 @@ namespace NetExtender.Types.Exceptions
             {
                 return;
             }
-            
+
             throw value.In() ? EnumNotSupportedException<T>.Create(value, message) : EnumUndefinedException<T>.Create(value, parameter, message);
         }
 
@@ -126,7 +126,7 @@ namespace NetExtender.Types.Exceptions
             {
                 return;
             }
-            
+
             if (value.In())
             {
                 throw EnumNotSupportedException<T>.Create(value, message, exception);
@@ -135,6 +135,10 @@ namespace NetExtender.Types.Exceptions
             throw exception is not null ? EnumUndefinedException<T>.Create(value, message, exception) : EnumUndefinedException<T>.Create(value, parameter, message);
         }
 
+#if NET8_0_OR_GREATER
+        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
         protected EnumUndefinedOrNotSupportedThrowableException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {

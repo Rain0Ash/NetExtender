@@ -11,14 +11,14 @@ namespace NetExtender.Types.Collections
     public abstract class PaginationCollection<T, TCollection> : PaginationCollection<T>, IPaginationEnumerable<T, TCollection> where TCollection : class, IEnumerable<T>
     {
         public TCollection Source { get; }
-        
+
         protected PaginationCollection(TCollection source, Int32 index, Int32 size)
             : base(index, size)
         {
             Source = source ?? throw new ArgumentNullException(nameof(source));
         }
     }
-    
+
     public abstract class PaginationCollection<T> : PaginationCollection, IPaginationEnumerable<T>
     {
         protected PaginationCollection(Int32 index, Int32 size)
@@ -49,7 +49,7 @@ namespace NetExtender.Types.Collections
                 _index = value;
             }
         }
-        
+
         public Int32 Page
         {
             get
@@ -57,7 +57,7 @@ namespace NetExtender.Types.Collections
                 return Index + 1;
             }
         }
-        
+
         public virtual Int32 Total
         {
             get
@@ -65,9 +65,9 @@ namespace NetExtender.Types.Collections
                 return Math.Abs((Int32) Math.Ceiling(Count / (Double) Size));
             }
         }
-        
+
         public abstract Int32 Items { get; }
-        
+
         private Int32 _size;
         public virtual Int32 Size
         {
@@ -80,7 +80,7 @@ namespace NetExtender.Types.Collections
                 _size = value;
             }
         }
-        
+
         public virtual Boolean CanResize
         {
             get
@@ -88,7 +88,7 @@ namespace NetExtender.Types.Collections
                 return false;
             }
         }
-        
+
         public abstract Int32 Count { get; }
 
         public Boolean HasPrevious
@@ -112,24 +112,24 @@ namespace NetExtender.Types.Collections
             _index = index >= 0 ? index : throw new ArgumentOutOfRangeException(nameof(index), index, null);
             _size = size > 0 ? size : throw new ArgumentOutOfRangeException(nameof(size), size, null);
         }
-        
+
         public Boolean Resize(Int32 size)
         {
             return Resize(size, false);
         }
-        
+
         public virtual Boolean Resize(Int32 size, Boolean resize)
         {
             if (size <= 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(size), size, null);
             }
-            
+
             if (!CanResize)
             {
                 return false;
             }
-            
+
             Size = size;
             Index = resize ? Math.Clamp(Index * Size / size, 0, Total - 1) : 0;
             return true;

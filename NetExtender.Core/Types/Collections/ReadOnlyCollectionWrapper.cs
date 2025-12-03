@@ -61,7 +61,7 @@ namespace NetExtender.Types.Collections
                 collection.CopyTo(array, index);
                 return;
             }
-            
+
             Collection.CopyTo(array, index);
         }
 

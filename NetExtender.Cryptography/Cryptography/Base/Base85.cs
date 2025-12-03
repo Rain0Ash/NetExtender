@@ -28,7 +28,7 @@ namespace NetExtender.Cryptography.Base
         /// Gets the encoding alphabet.
         /// </summary>
         public Base85Alphabet Alphabet { get; }
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Base85"/> class
         /// using a custom alphabet.
@@ -38,7 +38,7 @@ namespace NetExtender.Cryptography.Base
         {
             Alphabet = alphabet ?? throw new ArgumentNullException(nameof(alphabet));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static Boolean IsWhiteSpace(Char character)
         {
@@ -272,7 +272,7 @@ namespace NetExtender.Cryptography.Base
                 }
 
                 Byte[] buffer = new Byte[SafeByteCountForDecoding(value.Length, Alphabet.HasShortcut)];
-                
+
                 fixed (Char* pointer = value)
                 fixed (Byte* pbuffer = buffer)
                 {

@@ -18,7 +18,7 @@ namespace NetExtender.Domains.Builder.Middlewares
         {
             Idempotency = MiddlewareIdempotencyMode.Argument;
         }
-        
+
         public override void Invoke(Object? sender, IApplicationBuilder builder)
         {
             if (builder is null)

@@ -19,12 +19,12 @@ namespace NetExtender.Types.Numerics
         {
             return angle.Gradian;
         }
-        
+
         /// <summary>
         /// Represents the zero <see cref="AngleGradian"/> value (0 degrees). This field is read-only.
         /// </summary>
         public static AngleGradian Zero { get; } = new AngleGradian(AngleUtilities.Gradian.Double.Zero);
-        
+
         /// <summary>
         /// Represents the golden <see cref="AngleGradian"/> value (~137.508 degrees).
         /// </summary>

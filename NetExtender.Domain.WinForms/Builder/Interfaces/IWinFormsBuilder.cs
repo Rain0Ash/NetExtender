@@ -9,7 +9,7 @@ namespace NetExtender.Domains.WinForms.Builder.Interfaces
     public interface IWinFormsBuilder<out T> : IWinFormsBuilder, IApplicationBuilder<T> where T : Form
     {
     }
-    
+
     public interface IWinFormsBuilder : IApplicationBuilder
     {
     }

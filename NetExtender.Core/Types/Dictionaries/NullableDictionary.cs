@@ -23,7 +23,7 @@ namespace NetExtender.Types.Dictionaries
                 return _keys ??= SelectorCollectionWrapper.Nullable(base.Keys);
             }
         }
-        
+
         public new ICollection<TValue> Values
         {
             get
@@ -31,7 +31,7 @@ namespace NetExtender.Types.Dictionaries
                 return base.Values;
             }
         }
-        
+
         IEnumerable<TKey> IReadOnlyDictionary<TKey, TValue>.Keys
         {
             get
@@ -39,7 +39,7 @@ namespace NetExtender.Types.Dictionaries
                 return Keys;
             }
         }
-        
+
         IEnumerable<TValue> IReadOnlyDictionary<TKey, TValue>.Values
         {
             get
@@ -47,7 +47,7 @@ namespace NetExtender.Types.Dictionaries
                 return Values;
             }
         }
-        
+
         private IEqualityComparer<TKey>? _comparer;
         public IEqualityComparer<TKey> KeyComparer
         {
@@ -72,7 +72,7 @@ namespace NetExtender.Types.Dictionaries
                 return KeyComparer;
             }
         }
-        
+
         Boolean ICollection<KeyValuePair<TKey, TValue>>.IsReadOnly
         {
             get
@@ -80,7 +80,7 @@ namespace NetExtender.Types.Dictionaries
                 return ((ICollection<KeyValuePair<NullMaybe<TKey>, TValue>>) this).IsReadOnly;
             }
         }
-        
+
         public NullableDictionary()
         {
         }
@@ -94,12 +94,12 @@ namespace NetExtender.Types.Dictionaries
             : base(comparer)
         {
         }
-        
+
         public NullableDictionary(IDictionary<TKey, TValue> dictionary)
             : this(dictionary, (IEqualityComparer<NullMaybe<TKey>>?) null)
         {
         }
-        
+
         public NullableDictionary(IDictionary<NullMaybe<TKey>, TValue> dictionary)
             : base(dictionary)
         {
@@ -175,6 +175,10 @@ namespace NetExtender.Types.Dictionaries
         {
         }
 
+#if NET8_0_OR_GREATER
+        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
         protected NullableDictionary(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
@@ -219,7 +223,7 @@ namespace NetExtender.Types.Dictionaries
         {
             return base.Remove(key);
         }
-        
+
         public void CopyTo(KeyValuePair<TKey, TValue>[] array, Int32 index)
         {
             CollectionUtilities.CopyTo(this, array, index);

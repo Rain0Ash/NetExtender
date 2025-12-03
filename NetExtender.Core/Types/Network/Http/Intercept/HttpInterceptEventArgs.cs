@@ -22,7 +22,7 @@ namespace NetExtender.Types.Network
                 }
             }
         }
-        
+
         public readonly struct Information : IInterceptArgumentInfo
         {
             public HttpRequestMessage Request { get; }
@@ -101,12 +101,12 @@ namespace NetExtender.Types.Network
                 return !ReferenceEquals(Response, Info.Response) || !ReferenceEquals(Exception, Info.Exception);
             }
         }
-        
+
         public HttpInterceptEventArgs(HttpRequestMessage request)
             : this(request, null, null)
         {
         }
-        
+
         public HttpInterceptEventArgs(HttpRequestMessage request, HttpResponseMessage response)
             : this(request, response ?? throw new ArgumentNullException(nameof(response)), null)
         {
@@ -136,7 +136,7 @@ namespace NetExtender.Types.Network
             {
                 throw new ArgumentNullException(nameof(exception));
             }
-            
+
             Intercept();
             Info = new Information(Info.Request, null, exception);
             Token.ThrowIfCancellationRequested();

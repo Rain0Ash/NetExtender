@@ -8,7 +8,7 @@ namespace NetExtender.Utilities.Numerics.Physics
         public const Char Kelvin = 'K';
         public const Char Celsius = '℃';
         public const Char Fahrenheit = '℉';
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Single KelvinToCelsius(Single value)
         {
@@ -47,19 +47,19 @@ namespace NetExtender.Utilities.Numerics.Physics
             Decimal celsius = KelvinToCelsius(value);
             return CelsiusToFahrenheit(celsius);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Single CelsiusToKelvin(Single value)
         {
             return value + 273.15F;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double CelsiusToKelvin(Double value)
         {
             return value + 273.15;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Decimal CelsiusToKelvin(Decimal value)
         {

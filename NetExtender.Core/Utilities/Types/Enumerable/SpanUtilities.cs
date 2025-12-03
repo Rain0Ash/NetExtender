@@ -33,7 +33,7 @@ namespace NetExtender.Utilities.Types
             Type generic = type.TryGetGenericTypeDefinition();
             return MemorySpanType.Contains(generic);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ReadOnlyMemory<T> AsReadOnly<T>(this Memory<T> span)
         {
@@ -268,7 +268,7 @@ namespace NetExtender.Utilities.Types
                 CryptographicOperations.ZeroMemory(source.As<T, Byte>());
                 return;
             }
-            
+
             source.Clear();
         }
 
@@ -283,7 +283,7 @@ namespace NetExtender.Utilities.Types
         {
             Clear(source.Slice(start, length), crypto);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean SequenceEqual<T>(this Memory<T> source, ReadOnlySpan<T> other)
         {
@@ -295,7 +295,7 @@ namespace NetExtender.Utilities.Types
         {
             return SequenceEqual(source.Span, other, comparer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean SequenceEqual<T>(this Memory<T> source, ReadOnlyMemory<T> other)
         {
@@ -307,7 +307,7 @@ namespace NetExtender.Utilities.Types
         {
             return SequenceEqual(source.Span, other.Span, comparer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean SequenceEqual<T>(this Span<T> source, ReadOnlySpan<T> other)
         {
@@ -319,7 +319,7 @@ namespace NetExtender.Utilities.Types
         {
             return SequenceEqual((ReadOnlySpan<T>) source, other, comparer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean SequenceEqual<T>(this ReadOnlyMemory<T> source, ReadOnlySpan<T> other)
         {
@@ -331,7 +331,7 @@ namespace NetExtender.Utilities.Types
         {
             return SequenceEqual(source.Span, other, comparer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean SequenceEqual<T>(this ReadOnlyMemory<T> source, ReadOnlyMemory<T> other)
         {
@@ -355,7 +355,7 @@ namespace NetExtender.Utilities.Types
         {
             return MemoryExtensions.SequenceEqual(source, other, comparer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean SequenceEqual<T>(this Memory<T> source, IEnumerable<T>? other)
         {
@@ -412,7 +412,7 @@ namespace NetExtender.Utilities.Types
             }
 
             comparer ??= EqualityComparer<T>.Default;
-            
+
             using IEnumerator<T> enumerator = other.GetEnumerator();
             foreach (T item in source)
             {
@@ -571,7 +571,7 @@ namespace NetExtender.Utilities.Types
             {
                 return false;
             }
-            
+
             comparer ??= EqualityComparer<T>.Default;
             foreach (T item in source)
             {

@@ -22,7 +22,7 @@ namespace NetExtender.Utilities.Numerics
         {
             return MathUtilities.Distance(first.X, first.Y, second.X, second.Y);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Offset(this PointOffset offset, ref Point value, Int32 count)
         {
@@ -160,7 +160,7 @@ namespace NetExtender.Utilities.Numerics
                     throw new EnumUndefinedOrNotSupportedException<PointOffset>(offset, nameof(offset), null);
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Offset(this PointOffset offset, ref PointF value, SizeF size)
         {

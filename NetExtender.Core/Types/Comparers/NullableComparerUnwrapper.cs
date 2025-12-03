@@ -38,7 +38,7 @@ namespace NetExtender.Types.Comparers
             return Comparer.ToString();
         }
     }
-    
+
     public sealed class NullableComparerUnwrapper<TSource, T> : IComparer<T>, IComparer<NullMaybe<T>> where TSource : notnull
     {
         private TSource Source { get; }

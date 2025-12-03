@@ -2,12 +2,12 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
-using System.ComponentModel;
 using System.Windows.Forms;
 using NetExtender.UserInterface.Events;
 using NetExtender.UserInterface.Interfaces;
 using NetExtender.Utilities.UserInterface.Types;
 using NetExtender.Utilities.Numerics;
+using NetExtender.Utilities.UserInterface;
 
 namespace NetExtender.UserInterface.WinForms.Forms
 {
@@ -122,12 +122,12 @@ namespace NetExtender.UserInterface.WinForms.Forms
         public FormWrapper(Form form)
         {
             Form = form ?? throw new ArgumentNullException(nameof(form));
-            Form.Closing += OnClosing;
+            Form.FormClosing += OnClosing;
         }
 
-        private void OnClosing(Object? sender, CancelEventArgs args)
+        private void OnClosing(Object? sender, FormClosingEventArgs args)
         {
-            InterfaceClosingEventArgs closing = new InterfaceClosingEventArgs(InterfaceCloseReason.WindowClosing, args.Cancel);
+            InterfaceClosingEventArgs closing = new InterfaceClosingEventArgs(args.CloseReason.ToInterfaceCloseReason(), args.Cancel);
             WindowClosing?.Invoke(sender, closing);
 
             if (closing.Cancel)

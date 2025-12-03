@@ -48,7 +48,7 @@ namespace NetExtender.Types.Comparers
             return Comparer.ToString();
         }
     }
-    
+
     public sealed class NullableEqualityComparerUnwrapper<TSource, T> : IEqualityComparer<T>, IEqualityComparer<NullMaybe<T>> where TSource : notnull
     {
         public TSource Source { get; }

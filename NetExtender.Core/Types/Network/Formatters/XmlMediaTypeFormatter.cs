@@ -26,7 +26,7 @@ namespace NetExtender.Types.Network.Formatters
     public class XmlMediaTypeFormatter : MediaTypeFormatter
     {
         protected static XsdDataContractExporter XsdExporter { get; } = new XsdDataContractExporter();
-        
+
         public static MediaTypeHeaderValue DefaultMediaType
         {
             get
@@ -73,7 +73,7 @@ namespace NetExtender.Types.Network.Formatters
                 {
                     throw new ArgumentOutOfRangeException(nameof(value), value, null);
                 }
-                
+
                 Quotas.MaxDepth = value;
             }
         }
@@ -100,7 +100,7 @@ namespace NetExtender.Types.Network.Formatters
                 UseXmlSerializer = formatter.UseXmlSerializer;
                 Quotas.MaxDepth = formatter.MaxDepth;
             }
-            
+
             Settings = formatter?.Settings ?? new XmlWriterSettings
             {
                 OmitXmlDeclaration = true,
@@ -108,7 +108,7 @@ namespace NetExtender.Types.Network.Formatters
                 CheckCharacters = false
             };
         }
-        
+
         public override Boolean CanReadType(Type? type)
         {
             return type is not null && GetSerializer(type, false) is not null;
@@ -118,13 +118,13 @@ namespace NetExtender.Types.Network.Formatters
         {
             return type is not null && TryGetDelegatingType(UseXmlSerializer ? typeof(IEnumerable<>) : typeof(IQueryable<>), ref type) && type is not null && GetSerializer(type, false) is not null;
         }
-        
+
         // ReSharper disable once ReturnTypeCanBeNotNullable
         protected internal virtual Object? GetSerializer(Type type, Object? value, HttpContent content)
         {
             return GetSerializerForType(type);
         }
-        
+
         protected Object? GetSerializer(Type type)
         {
             return GetSerializer(type, false);
@@ -158,13 +158,13 @@ namespace NetExtender.Types.Network.Formatters
 
             return GetSerializer(type, true) ?? throw new InvalidOperationException($"The '{(UseXmlSerializer ? nameof(XmlSerializer) : nameof(DataContractSerializer))}' serializer cannot serialize the type '{type}'.");
         }
-        
+
         // ReSharper disable once ReturnTypeCanBeNotNullable
         protected internal virtual Object? GetDeserializer(Type type, HttpContent content)
         {
             return GetSerializerForType(type);
         }
-        
+
         protected virtual Object? CreateDefaultSerializer(Type type, Boolean @throw)
         {
             try
@@ -182,7 +182,7 @@ namespace NetExtender.Types.Network.Formatters
                 return !@throw ? null : throw new InvalidOperationException($"The '{(UseXmlSerializer ? nameof(XmlSerializer) : nameof(DataContractSerializer))}' serializer cannot serialize the type '{type}'.", exception);
             }
         }
-        
+
         public void SetSerializer(Type type, XmlObjectSerializer serializer)
         {
             if (type is null)
@@ -232,7 +232,7 @@ namespace NetExtender.Types.Network.Formatters
 
             return SerializerStorage.TryRemove(type, out _);
         }
-        
+
         protected internal virtual XmlReader CreateXmlReader(Stream stream, HttpContent content)
         {
             if (stream is null)
@@ -335,7 +335,7 @@ namespace NetExtender.Types.Network.Formatters
             {
                 throw new ArgumentNullException(nameof(content));
             }
-            
+
             token.ThrowIfCancellationRequested();
 
             try
@@ -390,7 +390,7 @@ namespace NetExtender.Types.Network.Formatters
                     return;
                 default:
                     throw new InvalidOperationException($"The instance of type '{result.GetType()}' returned by {nameof(GetSerializer)} must be an instance of either {nameof(XmlObjectSerializer)} or {nameof(XmlSerializer)}.");
-                        
+
             }
         }
 

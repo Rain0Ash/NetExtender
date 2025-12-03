@@ -46,11 +46,11 @@ namespace NetExtender.Domains.WindowsPresentation.Builder
             return New(arguments);
         }
     }
-    
+
     public class WindowsPresentationConsoleBuilder : WindowsPresentationConsoleBuilder<Window>
     {
     }
-    
+
     public class WindowsPresentationConsoleBuilder<T> : WindowsPresentationBuilder<T> where T : Window
     {
         protected override void Initialize(ImmutableArray<String> arguments, IWindowConsole console)

@@ -51,7 +51,7 @@ namespace NetExtender.FileSystems
             }
         }
 #pragma warning restore CA1041
-        
+
         public override Char[] GetInvalidPathChars()
         {
             return Interceptor.Intercept(this, default, Path.GetInvalidPathChars);

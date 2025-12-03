@@ -19,7 +19,7 @@ namespace NetExtender.Utilities.Types
         {
             return writer is null || writer.GetType() == NullWriterType;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsSynchronized(this TextWriter? writer)
         {

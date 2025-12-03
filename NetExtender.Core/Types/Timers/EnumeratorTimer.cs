@@ -57,7 +57,7 @@ namespace NetExtender.Types.Timers
                 return Timer.IsStarted;
             }
         }
-        
+
         public DateTime Now
         {
             get

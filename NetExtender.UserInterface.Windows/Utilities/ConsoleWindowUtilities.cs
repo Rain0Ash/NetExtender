@@ -333,7 +333,7 @@ namespace NetExtender.Utilities.UserInterface
             get
             {
                 FontInfo font;
-                
+
                 try
                 {
                     font = ConsoleFont;
@@ -342,7 +342,7 @@ namespace NetExtender.Utilities.UserInterface
                 {
                     return null;
                 }
-                
+
                 IConsoleFont result = ConsoleFontInfo.New;
                 result.FontName = font.FontName;
                 result.Index = font.Index;
@@ -978,7 +978,7 @@ namespace NetExtender.Utilities.UserInterface
                 return new Font();
             }
         }
-        
+
         static ConsoleFontInfo()
         {
             Font? Current()

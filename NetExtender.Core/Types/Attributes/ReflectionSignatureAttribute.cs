@@ -14,7 +14,7 @@ namespace NetExtender.Utilities.Core
         public ReflectionSignatureAttribute()
         {
         }
-        
+
         public ReflectionSignatureAttribute(Type? reference)
             : base(reference)
         {

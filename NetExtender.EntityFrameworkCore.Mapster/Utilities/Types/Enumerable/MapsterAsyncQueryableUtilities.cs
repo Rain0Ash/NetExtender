@@ -34,7 +34,7 @@ namespace NetExtender.Utilities.Types
             TDestination[] items = array.Adapt<TSource[], TDestination[]>();
             return new PaginationPartialListWrapper<TDestination, TDestination[]>(items, index, size, count);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<TCollection> PaginationAsync<TSource, TDestination, TCollection>(IQueryable<TSource> source, Int32 index, Int32 size, Func<IPaginationList<TDestination, TDestination[]>, TCollection> converter) where TCollection : class, IEnumerable<TDestination>
         {
@@ -52,11 +52,11 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(converter));
             }
-            
+
             IPaginationList<TDestination, TDestination[]> result = await PaginationAsync<TSource, TDestination>(source, index, size, token).ConfigureAwait(false);
             return converter(result);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<TCollection> PaginationAsync<TSource, TDestination, TCollection>(this IQueryable<TSource> source, Int32 index, Int32 size, Func<IPaginationList<TDestination, TDestination[]>, Task<TCollection>> converter) where TCollection : class, IEnumerable<TDestination>
         {

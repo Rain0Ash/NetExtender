@@ -27,13 +27,13 @@ namespace NetExtender.Utilities.Serialization
         private sealed class UnspecifiedJsonNamingPolicy : JsonNamingPolicy
         {
             public static JsonNamingPolicy Instance { get; } = new UnspecifiedJsonNamingPolicy();
-            
+
             public override String ConvertName(String name)
             {
                 return name;
             }
         }
-        
+
         public static JsonNamingPolicy ToNamingPolicy(this JsonKnownNamingPolicy value)
         {
             return value switch
@@ -119,7 +119,7 @@ namespace NetExtender.Utilities.Serialization
 
             return JArray.Load(reader) is { Count: <= 0 };
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static JsonNamingPolicy? GetNamingPolicy(this JsonSerializerOptions options)
         {
@@ -158,14 +158,14 @@ namespace NetExtender.Utilities.Serialization
 
             return TryGetNamingPolicy(options, out JsonNamingPolicy? policy) ? Apply(policy, property) : property;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [return: NotNullIfNotNull("property")]
         public static String? Apply(this JsonNamingPolicy? policy, String? property)
         {
             return property is not null ? policy?.ConvertName(property) ?? property : null;
         }
-        
+
         public static NamingStrategy? GetNamingStrategy(this JsonSerializer serializer)
         {
             if (serializer is null)
@@ -272,7 +272,7 @@ namespace NetExtender.Utilities.Serialization
         {
             return element.GetProperty(policy.Apply(name));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static JToken? GetValue(this JObject @object, String property, NamingStrategy? strategy)
         {
@@ -316,7 +316,7 @@ namespace NetExtender.Utilities.Serialization
 
             return @object.GetValue(strategy.Apply(property, specified), comparison);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryGetProperty(this JsonElement element, String name, JsonNamingPolicy? policy, out JsonElement value)
         {
@@ -366,7 +366,7 @@ namespace NetExtender.Utilities.Serialization
 
             return @object.TryGetValue(strategy.Apply(property, specified), comparison, out value);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void WritePropertyName(this Utf8JsonWriter writer, String name, JsonNamingPolicy? policy)
         {
@@ -374,7 +374,7 @@ namespace NetExtender.Utilities.Serialization
             {
                 throw new ArgumentNullException(nameof(writer));
             }
-            
+
             writer.WritePropertyName(policy.Apply(name));
         }
 
@@ -391,7 +391,7 @@ namespace NetExtender.Utilities.Serialization
             {
                 throw new ArgumentNullException(nameof(writer));
             }
-            
+
             writer.WritePropertyName(strategy.Apply(property, specified));
         }
 
@@ -408,10 +408,10 @@ namespace NetExtender.Utilities.Serialization
             {
                 throw new ArgumentNullException(nameof(writer));
             }
-            
+
             writer.WritePropertyName(strategy.Apply(property, specified), escape);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void WriteObject(this Utf8JsonWriter writer)
         {
@@ -423,7 +423,7 @@ namespace NetExtender.Utilities.Serialization
             writer.WriteStartObject();
             writer.WriteEndObject();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void WriteArray(this Utf8JsonWriter writer)
         {
@@ -435,7 +435,7 @@ namespace NetExtender.Utilities.Serialization
             writer.WriteStartArray();
             writer.WriteEndArray();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void WriteObject(this JsonWriter writer)
         {
@@ -447,7 +447,7 @@ namespace NetExtender.Utilities.Serialization
             writer.WriteStartObject();
             writer.WriteEndObject();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void WriteArray(this JsonWriter writer)
         {

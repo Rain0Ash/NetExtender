@@ -51,7 +51,7 @@ namespace NetExtender.Utilities.Types
 
             return source.Value;
         }
-        
+
         public static Boolean TryInitialize<T>(this Lazy<T> source)
         {
             return TryInitialize(source, out _);

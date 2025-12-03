@@ -16,7 +16,7 @@ namespace NetExtender.Domains.Initializer
         {
         }
     }
-    
+
     public abstract class WindowsServiceApplicationInitializer<T, TBuilder> : ApplicationInitializer<WindowsServiceApplication, WindowsServiceView<T, TBuilder>> where T : class, IWindowsService where TBuilder : IApplicationBuilder<T>, new()
     {
         public abstract class Builder : WindowsServiceBuilder<T>

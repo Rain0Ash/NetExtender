@@ -23,16 +23,16 @@ namespace NetExtender.Types.Concurrent.Observable
     public abstract class ConcurrentObservableBase<T, TCollection, TSelf> : IConcurrentObservableBase<T>, ISerializable where TCollection : class where TSelf : ConcurrentObservableBase<T, TCollection, TSelf>
     {
         protected delegate FlowResult<TResult> Read<in TArgument, TResult>(TSelf @this, TCollection collection, TArgument argument);
-        
+
         [return: NotNullIfNotNull("collection")]
         protected delegate TCollection? Write<in TArgument>(TSelf @this, TCollection collection, TArgument argument);
-        
+
         [return: NotNullIfNotNull("collection")]
         protected delegate TCollection? Write<in TArgument, in TResult>(TSelf @this, TCollection collection, TArgument argument, TResult value);
-        
+
         protected delegate NotifyCollectionChangedEventArgs? Args<in TArgument>(TSelf @this, TCollection @new, TCollection old, TArgument argument);
         protected delegate NotifyCollectionChangedEventArgs? Args<in TArgument, in TResult>(TSelf @this, TCollection @new, TCollection old, TArgument argument, TResult value);
-        
+
         protected abstract TCollection Collection { get; set; }
         public abstract ICollection<T> View { get; }
         public abstract TCollection Immutable { get; }
@@ -92,7 +92,7 @@ namespace NetExtender.Types.Concurrent.Observable
                 _view = value ?? throw new ArgumentNullException(nameof(value));
             }
         }
-        
+
         public event PropertyChangingEventHandler? PropertyChanging;
         public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -104,11 +104,18 @@ namespace NetExtender.Types.Concurrent.Observable
             Lock = @lock ? new ReaderWriterLockSlim() : null;
         }
 
+#if NET8_0_OR_GREATER
+        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
+#endif
         protected ConcurrentObservableBase(SerializationInfo info, StreamingContext context)
             : this(info.GetBoolean(nameof(Lock)))
         {
         }
 
+#if NET8_0_OR_GREATER
+        [Obsolete("Formatter-based serialization is obsolete and should not be used.", DiagnosticId = "SYSLIB0050", UrlFormat = "https://aka.ms/dotnet-warnings/{0}")]
+#endif
         public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue(nameof(Lock), Lock is not null);
@@ -155,7 +162,7 @@ namespace NetExtender.Types.Concurrent.Observable
         {
             Clear(out _);
         }
-        
+
         protected abstract void Clear(out Int32 count);
 
         public void CopyTo(T[] array)
@@ -201,7 +208,7 @@ namespace NetExtender.Types.Concurrent.Observable
             {
                 return;
             }
-            
+
             if (notify?.Invoke(@this, @new, old, argument) is { } args)
             {
                 OnCollectionChanged(args);
@@ -215,7 +222,7 @@ namespace NetExtender.Types.Concurrent.Observable
             {
                 return;
             }
-            
+
             if (notify?.Invoke(@this, @new, old, argument, value) is { } args)
             {
                 OnCollectionChanged(args);
@@ -229,12 +236,12 @@ namespace NetExtender.Types.Concurrent.Observable
             {
                 return;
             }
-            
+
             if (notify1?.Invoke(@this, @new, old, argument) is { } args1)
             {
                 OnCollectionChanged(args1);
             }
-            
+
             if (notify2?.Invoke(@this, @new, old, argument) is { } args2)
             {
                 OnCollectionChanged(args2);
@@ -248,12 +255,12 @@ namespace NetExtender.Types.Concurrent.Observable
             {
                 return;
             }
-            
+
             if (notify1?.Invoke(@this, @new, old, argument, value) is { } args1)
             {
                 OnCollectionChanged(args1);
             }
-            
+
             if (notify2?.Invoke(@this, @new, old, argument, value) is { } args2)
             {
                 OnCollectionChanged(args2);
@@ -264,15 +271,15 @@ namespace NetExtender.Types.Concurrent.Observable
         protected Exception? Notify<TArgument>(TArgument argument, Write<TArgument> write, Args<TArgument>? notify)
         {
             TSelf @this = This;
-            
+
             if (Lock is not null)
             {
                 Lock.EnterUpgradeableReadLock();
-                
+
                 TCollection modify = Immutable;
-                
+
                 Lock.EnterWriteLock();
-                
+
                 try
                 {
                     if (write(@this, modify, argument) is { } @new)
@@ -433,7 +440,7 @@ namespace NetExtender.Types.Concurrent.Observable
             else
             {
                 TCollection modify = Immutable;
-                
+
                 try
                 {
                     if (write(@this, modify, argument) is { } @new)
@@ -549,7 +556,7 @@ namespace NetExtender.Types.Concurrent.Observable
             if (Lock is not null)
             {
                 Lock.EnterUpgradeableReadLock();
-                
+
                 TCollection modify = Immutable;
                 (Write<TArgument> write, Args<TArgument>? notify) = predicate(@this, modify, argument) ? @true : @false;
 

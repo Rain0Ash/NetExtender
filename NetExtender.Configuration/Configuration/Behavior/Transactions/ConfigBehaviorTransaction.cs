@@ -35,7 +35,7 @@ namespace NetExtender.Configuration.Behavior.Transactions
             {
                 return false;
             }
-            
+
             IsCommit = false;
             return true;
         }

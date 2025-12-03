@@ -17,13 +17,13 @@ namespace NetExtender.Utilities.UserInterface
         {
             return TryFindTemplate(control, name, out Object? result) ? result : null;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Object FindRequiredTemplate(this Control control, String name)
         {
             return FindTemplate(control, name) ?? throw new TemplateNotFoundException(name, control);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryFindTemplate(this Control control, String? name, [MaybeNullWhen(false)] out Object result)
         {
@@ -31,22 +31,22 @@ namespace NetExtender.Utilities.UserInterface
             {
                 throw new ArgumentNullException(nameof(control));
             }
-            
+
             return TryFindTemplate(control.Template, name, control, out result);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T? FindTemplate<T>(this Control control, String name) where T : DependencyObject
         {
             return FindTemplate(control, name) as T;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T FindRequiredTemplate<T>(this Control control, String name) where T : DependencyObject
         {
             return FindTemplate<T>(control, name) ?? throw new TemplateNotFoundException<T>(name, control);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryFindTemplate<T>(this Control control, String? name, [MaybeNullWhen(false)] out T result) where T : DependencyObject
         {
@@ -54,22 +54,22 @@ namespace NetExtender.Utilities.UserInterface
             {
                 throw new ArgumentNullException(nameof(control));
             }
-            
+
             return TryFindTemplate(control.Template, name, control, out result);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Object? FindTemplate(this ControlTemplate template, String name, FrameworkElement parent)
         {
             return TryFindTemplate(template, name, parent, out Object? result) ? result : null;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Object FindRequiredTemplate(this ControlTemplate template, String name, FrameworkElement parent)
         {
             return FindTemplate(template, name, parent) ?? throw new TemplateNotFoundException(name, parent);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryFindTemplate(this ControlTemplate template, String? name, FrameworkElement parent, [MaybeNullWhen(false)] out Object result)
         {
@@ -77,7 +77,7 @@ namespace NetExtender.Utilities.UserInterface
             {
                 throw new ArgumentNullException(nameof(template));
             }
-            
+
             if (name is null)
             {
                 result = null;
@@ -95,26 +95,26 @@ namespace NetExtender.Utilities.UserInterface
                 return false;
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T? FindTemplate<T>(this ControlTemplate template, String name, FrameworkElement parent) where T : DependencyObject
         {
             return FindTemplate(template, name, parent) as T;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T FindRequiredTemplate<T>(this ControlTemplate template, String name, FrameworkElement parent) where T : DependencyObject
         {
             return FindTemplate<T>(template, name, parent) ?? throw new TemplateNotFoundException<T>(name, parent);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryFindTemplate<T>(this ControlTemplate template, String? name, FrameworkElement parent, [MaybeNullWhen(false)] out T result) where T : DependencyObject
         {
             result = TryFindTemplate(template, name, parent, out Object? @object) ? @object as T : default;
             return result is not null;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static DataTemplate CreateDataTemplate(Func<Object> template)
         {
@@ -131,7 +131,7 @@ namespace NetExtender.Utilities.UserInterface
                 VisualTree = factory
             };
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static ControlTemplate CreateControlTemplate(Type type, Func<Object> template)
         {
@@ -153,11 +153,11 @@ namespace NetExtender.Utilities.UserInterface
                 VisualTree = factory
             };
         }
-        
+
         private sealed class TemplateGeneratorControl : ContentControl
         {
             public static readonly DependencyProperty FactoryProperty = DependencyProperty.Register(nameof(Factory), typeof(Func<Object>), typeof(TemplateGeneratorControl), new PropertyMetadata(null, FactoryChanged));
-            
+
             public Func<Object>? Factory
             {
                 get
@@ -169,14 +169,14 @@ namespace NetExtender.Utilities.UserInterface
                     SetValue(FactoryProperty, value);
                 }
             }
-            
+
             private static void FactoryChanged(DependencyObject instance, DependencyPropertyChangedEventArgs args)
             {
                 if (instance is null)
                 {
                     throw new ArgumentNullException(nameof(instance));
                 }
-                
+
                 TemplateGeneratorControl control = (TemplateGeneratorControl) instance;
                 Func<Object>? factory = (Func<Object>?) args.NewValue;
                 control.Content = factory?.Invoke();

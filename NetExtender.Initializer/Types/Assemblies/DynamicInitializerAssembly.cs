@@ -13,14 +13,14 @@ namespace NetExtender.Types.Assemblies
         public AssemblyName Name { get; }
         public AssemblyBuilder Assembly { get; }
         public ModuleBuilder Module { get; }
-        
+
         internal DynamicInitializerAssembly(AssemblyName name, AssemblyBuilder assembly, ModuleBuilder module)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
             Assembly = assembly ?? throw new ArgumentNullException(nameof(assembly));
             Module = module ?? throw new ArgumentNullException(nameof(module));
         }
-        
+
         public DynamicInitializerAssembly(AssemblyBuilderAccess access)
             : this(Guid(), access)
         {
@@ -48,7 +48,7 @@ namespace NetExtender.Types.Assemblies
         {
             return System.Guid.NewGuid().ToString();
         }
-        
+
         internal static void Initialize(AssemblyName name, AssemblyBuilderAccess access, out AssemblyBuilder assembly, out ModuleBuilder module)
         {
             assembly = AssemblyBuilder.DefineDynamicAssembly(name, access);

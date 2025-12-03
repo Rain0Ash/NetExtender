@@ -18,27 +18,27 @@ namespace NetExtender.Types.Collections
         {
             return new ToNullable(source);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static NullableSelectorCollectionWrapper<T> Create(ICollection<T> source, Boolean @null)
         {
             return @null ? new ToNullNullable(source) : new ToNullable(source);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static NullableSelectorCollectionWrapper<T> Create(ICollection<NullMaybe<T>> source)
         {
             return new FromNullable(source);
         }
-        
+
         public abstract ICollection<T> Source { get; }
         public abstract ICollection<NullMaybe<T>> Nullable { get; }
-        
+
         public abstract Int32 Count { get; }
         public abstract Boolean IsReadOnly { get; }
         public abstract Object SyncRoot { get; }
         public abstract Boolean IsSynchronized { get; }
-        
+
         public abstract Boolean Contains(T item);
         public abstract Boolean Contains(NullMaybe<T> item);
         public abstract void Add(T item);
@@ -66,10 +66,10 @@ namespace NetExtender.Types.Collections
         }
 
         public abstract void CopyTo(NullMaybe<T>[] array, Int32 index);
-        
+
         public abstract IEnumerator<T> GetEnumerator();
         protected abstract IEnumerator<NullMaybe<T>> GetNullableEnumerator();
-        
+
         IEnumerator<NullMaybe<T>> IEnumerable<NullMaybe<T>>.GetEnumerator()
         {
             return GetNullableEnumerator();
@@ -524,7 +524,7 @@ namespace NetExtender.Types.Collections
             }
         }
     }
-    
+
     public sealed class TwoWaySelectorCollectionWrapper<T, TKey> : ICollection<TKey>
     {
         public ICollection<T> Source { get; }
@@ -624,7 +624,7 @@ namespace NetExtender.Types.Collections
             return Source.ToString();
         }
     }
-    
+
     public sealed class SelectorCollectionWrapper<T, TKey> : ICollection<TKey>
     {
         private ICollection<T> Internal { get; }
@@ -770,13 +770,13 @@ namespace NetExtender.Types.Collections
         {
             return NullableSelectorCollectionWrapper<T>.Create(source ?? new List<T>());
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NullableSelectorCollectionWrapper<T> Nullable<T>(ICollection<T>? source, Boolean @null)
         {
             return NullableSelectorCollectionWrapper<T>.Create(source ?? new List<T>(), @null);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NullableSelectorCollectionWrapper<T> Nullable<T>(ICollection<NullMaybe<T>>? source)
         {

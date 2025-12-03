@@ -12,7 +12,7 @@ namespace NetExtender.Utilities.Types
     public interface IAssemblyMiddlewareManager : IMiddlewareManager, IScannable
     {
     }
-    
+
     public static partial class MiddlewareUtilities
     {
         private static readonly IResettableLazy<IAssemblyMiddlewareManager> manager = new ResettableLazy<IAssemblyMiddlewareManager>(Create);
@@ -28,7 +28,7 @@ namespace NetExtender.Utilities.Types
         {
             AppDomain.CurrentDomain.AssemblyLoad += OnAssemblyLoad;
         }
-        
+
         private static void OnAssemblyLoad(Object? sender, AssemblyLoadEventArgs args)
         {
             if (MiddlewareUtilities.manager.IsValueCreated && MiddlewareUtilities.manager.Value is { IsScan: true } manager)
@@ -36,12 +36,12 @@ namespace NetExtender.Utilities.Types
                 manager.Scan(args.LoadedAssembly);
             }
         }
-        
+
         private static IAssemblyMiddlewareManager Create()
         {
             return (IAssemblyMiddlewareManager) new MiddlewareManager().Scan();
         }
-        
+
         public static void Reset<T>() where T : class, IAssemblyMiddlewareManager, new()
         {
             if (!manager.IsValueCreated)
@@ -49,7 +49,7 @@ namespace NetExtender.Utilities.Types
                 manager.Reset(static () => new T());
                 return;
             }
-            
+
             manager.Reset(() =>
             {
                 T @new = new T();
@@ -57,7 +57,7 @@ namespace NetExtender.Utilities.Types
                 return @new;
             });
         }
-        
+
         private class MiddlewareManager : NetExtender.Types.Middlewares.MiddlewareManager, IAssemblyMiddlewareManager
         {
             public Boolean IsScan
@@ -67,11 +67,11 @@ namespace NetExtender.Utilities.Types
                     return true;
                 }
             }
-            
+
             public MiddlewareManager()
             {
             }
-            
+
             public MiddlewareManager(MiddlewareManagerOptions? options)
                 : base(options)
             {

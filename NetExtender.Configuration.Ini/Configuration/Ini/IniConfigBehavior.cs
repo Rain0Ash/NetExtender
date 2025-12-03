@@ -51,7 +51,7 @@ namespace NetExtender.Configuration.Ini
         {
             MainSection = section ?? DefaultSection;
         }
-        
+
         protected virtual String[]? UnpackSection(String? section)
         {
             return !String.IsNullOrEmpty(section) && section != MainSection ? section.Split(Joiner) : null;
@@ -107,7 +107,7 @@ namespace NetExtender.Configuration.Ini
                     {
                         section.Add(entry.Key, entry.Value);
                     }
-                    
+
                     file.Add(grouping.Key, section);
                 }
 
@@ -139,7 +139,7 @@ namespace NetExtender.Configuration.Ini
                     {
                         section.Add(entry.Key, entry.Value);
                     }
-                    
+
                     file.Add(grouping.Key, section);
                 }
 

@@ -15,7 +15,7 @@ namespace NetExtender.CQRS.Queries.Handlers
         {
             return HandleAsync(query, CancellationToken.None);
         }
-        
+
         public abstract override Task<TResult> HandleAsync(TQuery query, CancellationToken token);
     }
 }

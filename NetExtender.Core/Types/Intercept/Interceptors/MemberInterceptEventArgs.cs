@@ -25,13 +25,13 @@ namespace NetExtender.Types.Intercept
                 return Member;
             }
         }
-        
+
         protected MemberInterceptEventArgs(T value)
             : base(value)
         {
         }
     }
-    
+
     public abstract class MemberInterceptEventArgs<T> : InterceptEventArgs<T>, IMemberInterceptEventArgs where T : IMemberInterceptArgumentInfo
     {
         Object? ISimpleInterceptEventArgs.Value
@@ -63,7 +63,7 @@ namespace NetExtender.Types.Intercept
                 return IsSeal || !ReferenceEquals(Exception, Info.Exception);
             }
         }
-        
+
         protected MemberInterceptEventArgs(T value)
             : base(value)
         {

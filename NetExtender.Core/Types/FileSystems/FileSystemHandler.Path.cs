@@ -14,7 +14,7 @@ namespace NetExtender.FileSystems
         {
             private delegate ReadOnlySpan<Char> GetVolumeNameDelegate(ReadOnlySpan<Char> path);
             private delegate Int32 GetUncRootLengthDelegate(ReadOnlySpan<Char> path);
-            
+
             private static GetVolumeNameDelegate? GetVolumeNameHandler { get; }
             private static GetUncRootLengthDelegate? GetUncRootLengthHandler { get; }
 
@@ -23,7 +23,7 @@ namespace NetExtender.FileSystems
             {
                 return GetVolumeNameHandler is not null ? GetVolumeNameHandler.Invoke(path) : throw new NotSupportedException();
             }
-            
+
             [ReflectionSignature]
             public static Int32 GetUncRootLength(ReadOnlySpan<Char> path)
             {
@@ -63,7 +63,7 @@ namespace NetExtender.FileSystems
             }
         }
 
-        [Obsolete($"{nameof(InvalidPathChars)} has been deprecated. Use {nameof(GetInvalidPathChars)} instead.")]
+        [Obsolete($"InvalidPathChars has been deprecated. Use {nameof(GetInvalidPathChars)} instead.")]
         public virtual Char[] InvalidPathChars
         {
             get
@@ -81,7 +81,7 @@ namespace NetExtender.FileSystems
             }
         }
 
-        [Obsolete($"{nameof(InvalidFileNameChars)} has been deprecated. Use {nameof(GetInvalidFileNameChars)} instead.")]
+        [Obsolete($"InvalidFileNameChars has been deprecated. Use {nameof(GetInvalidFileNameChars)} instead.")]
         public virtual Char[] InvalidFileNameChars
         {
             get

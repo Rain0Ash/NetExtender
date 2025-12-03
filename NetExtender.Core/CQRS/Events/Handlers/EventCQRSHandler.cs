@@ -15,7 +15,7 @@ namespace NetExtender.CQRS.Events.Handlers
         {
             return HandleAsync(@event, CancellationToken.None);
         }
-        
+
         public abstract override Task HandleAsync(TEvent @event, CancellationToken token);
     }
 }

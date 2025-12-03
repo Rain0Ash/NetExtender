@@ -19,17 +19,17 @@ namespace NetExtender.UserInterface.WindowsPresentation
         {
             SelectedValuePathProperty.OverrideMetadataDefaultValue<LocalizationSelectorComboBox, String>(nameof(LocalizationImageEntry<Any>.Identifier));
         }
-        
+
         public LocalizationSelectorComboBox()
         {
             Initialized += OnInitialized;
         }
-        
+
         private void OnInitialized(Object? sender, EventArgs args)
         {
             ItemTemplate = CreateItemTemplate();
         }
-        
+
         protected virtual DataTemplate CreateItemTemplate()
         {
             DataTemplate template = new DataTemplate();

@@ -13,7 +13,7 @@ namespace NetExtender.Types.Mathematics.Interfaces
 
         public new IMutableMathBinaryExpression<T, TExpression> Clone();
     }
-    
+
     public interface IMutableMathBinaryExpression<T> : IMutableMathBinaryExpression, IMathBinaryExpression<T>, IMutableMathExpression<T>, ICloneable<IMutableMathBinaryExpression<T>> where T : struct, IEquatable<T>, IFormattable
     {
         public new MathResult<T> First { get; set; }
@@ -47,10 +47,10 @@ namespace NetExtender.Types.Mathematics.Interfaces
         public new IMathExpression<T> FirstInner { get; }
         public MathResult<T> Second { get; }
         public new IMathExpression<T> SecondInner { get; }
-        
+
         public new IMathBinaryExpression<T> Clone();
     }
-    
+
     public interface IMutableMathBinaryExpression : IMathBinaryExpression, ICloneable<IMutableMathBinaryExpression>
     {
         public new MathBinaryOperator Operator { get; set; }
@@ -61,21 +61,21 @@ namespace NetExtender.Types.Mathematics.Interfaces
     public interface IMathBinaryExpression : IMathExpression, ICloneable<IMathBinaryExpression>
     {
         public MathBinaryOperator Operator { get; }
-        
+
         public new IMathBinaryExpression Clone();
     }
-    
+
     public interface IMutableMathUnaryExpression<T, TExpression> : IMutableMathUnaryExpression<T>, ICloneable<IMutableMathUnaryExpression<T, TExpression>> where T : struct, IEquatable<T>, IFormattable where TExpression : IMathExpression<T>?
     {
         public new Maybe<TExpression> Inner { get; set; }
 
         public new IMutableMathUnaryExpression<T, TExpression> Clone();
     }
-    
+
     public interface IMutableMathUnaryExpression<T> : IMutableMathUnaryExpression, IMathUnaryExpression<T>, IMutableMathExpression<T>, ICloneable<IMutableMathUnaryExpression<T>> where T : struct, IEquatable<T>, IFormattable
     {
         public new MathResult<T> Value { get; set; }
-        
+
         public new String? Format { get; set; }
         public new IFormatProvider? Provider { get; set; }
 
@@ -91,7 +91,7 @@ namespace NetExtender.Types.Mathematics.Interfaces
 
         public new IMutableMathUnaryExpression<T> Clone();
     }
-    
+
     public interface IMathUnaryExpression<T> : IMathUnaryExpression, IMathExpression<T>, ICloneable<IMathUnaryExpression<T>> where T : struct, IEquatable<T>, IFormattable
     {
         public MathResult<T> Value { get; }
@@ -101,26 +101,26 @@ namespace NetExtender.Types.Mathematics.Interfaces
 
         public new IMathUnaryExpression<T> Clone();
     }
-    
+
     public interface IMutableMathUnaryExpression : IMathUnaryExpression, ICloneable<IMutableMathUnaryExpression>
     {
         public new MathUnaryOperator Operator { get; set; }
 
         public new IMutableMathUnaryExpression Clone();
     }
-    
+
     public interface IMathUnaryExpression : IMathExpression, ICloneable<IMathUnaryExpression>
     {
         public MathUnaryOperator Operator { get; }
 
         public new IMathUnaryExpression Clone();
     }
-    
+
     public interface IMutableMathExpression<T> : IMathExpression<T>, IMutableMathExpression, ICloneable<IMutableMathExpression<T>> where T : struct, IEquatable<T>, IFormattable
     {
         public new IMutableMathExpression<T> Clone();
     }
-    
+
     public interface IMathExpression<T> : IMathExpression, IEquality<T>, IEquality<MathResult<T>>, IEquality<IMathExpression<T>>, ICloneable<IMathExpression<T>> where T : struct, IEquatable<T>, IFormattable
     {
         public Int32 Elements { get; }
@@ -156,7 +156,7 @@ namespace NetExtender.Types.Mathematics.Interfaces
                 return !GetType().IsValueType;
             }
         }
-        
+
         internal MathExpression.State State
         {
             get
@@ -184,14 +184,14 @@ namespace NetExtender.Types.Mathematics.Interfaces
         public IMathExpression? Inner { get; }
         public IMathExpression? FirstInner { get; }
         public IMathExpression? SecondInner { get; }
-        
+
         public Boolean IsBinary { get; }
         public Boolean? IsTrue { get; }
         public Boolean? IsFalse { get; }
 
         public String? Format { get; }
         public IFormatProvider? Provider { get; }
-        
+
         public Boolean IsEmpty { get; }
 
         public new IMathExpression Clone();

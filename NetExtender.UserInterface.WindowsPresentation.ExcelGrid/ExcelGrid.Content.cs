@@ -25,35 +25,35 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
             {
                 return;
             }
-            
+
             grid.UpdateLayout();
-            
+
             if (Position(cell) is not { } current || Position(new ExcelCell(cell.Column + 1, cell.Row + 1)) is not { } next)
             {
                 return;
             }
-            
+
             if (current.X < SheetScrollViewer.HorizontalOffset)
             {
                 SheetScrollViewer.ScrollToHorizontalOffset(current.X);
             }
-            
+
             if (next.X > SheetScrollViewer.HorizontalOffset + SheetScrollViewer.ViewportWidth)
             {
                 SheetScrollViewer.ScrollToHorizontalOffset(Math.Max(next.X - SheetScrollViewer.ViewportWidth, 0));
             }
-            
+
             if (current.Y < SheetScrollViewer.VerticalOffset)
             {
                 SheetScrollViewer.ScrollToVerticalOffset(current.Y);
             }
-            
+
             if (next.Y > SheetScrollViewer.VerticalOffset + SheetScrollViewer.ViewportHeight)
             {
                 SheetScrollViewer.ScrollToVerticalOffset(Math.Max(next.Y - SheetScrollViewer.ViewportHeight, 0));
             }
         }
-        
+
         private volatile Boolean _update;
         public void Update()
         {
@@ -63,46 +63,46 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 {
                     return;
                 }
-                
+
                 _update = true;
                 ClearContent();
-                
+
                 if (ItemsSource is null || CreateOperator() is not { } @operator)
                 {
                     return;
                 }
-                
+
                 Operator = @operator;
                 if (AutoGenerateColumns && ColumnDefinitions.Count <= 0)
                 {
                     ObservableCollectionUtilities.AddRange(ColumnDefinitions, @operator.AutoGenerateColumns());
                 }
-                
+
                 @operator.UpdatePropertyDefinitions();
                 ItemsInColumns = PropertyDefinitions.OfType<ExcelRowDefinition>().FirstOrDefault() is not null;
-                
+
                 (Int32 columns, Int32 rows) = (@operator.ColumnCount, @operator.RowCount);
                 Visibility visibility = rows >= 0 ? Visibility.Visible : Visibility.Hidden;
                 RowScrollViewer.Visibility = ColumnScrollViewer.Visibility = SheetScrollViewer.Visibility = visibility;
-                
+
                 if (TopLeft is not null)
                 {
                     TopLeft.Visibility = visibility;
                 }
-                
+
                 if (rows < 0)
                 {
                     return;
                 }
-                
+
                 UpdateColumns(columns);
                 UpdateRows(rows);
                 UpdateCells(columns, rows);
                 UpdateSortDescriptionMarkers();
-                
+
                 UpdateSelectionVisibility();
                 ShowEditControl();
-                
+
                 Dispatcher.BeginInvoke(new Action(UpdateGridSize), DispatcherPriority.Loaded);
             }
             finally
@@ -110,33 +110,33 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 _update = false;
             }
         }
-        
+
         protected virtual void UpdateCollectionView()
         {
             if (!Dispatcher.CheckAccess())
             {
                 Debug.WriteLine("Updating collection view on non-dispatcher thread.");
             }
-            
+
             if (View is not { } view)
             {
                 return;
             }
-            
+
             if (view is ListCollectionView list)
             {
                 list.CustomSort = CustomSort;
             }
-            
+
             SortDescriptionCollection descriptions = view.SortDescriptions;
             if (CustomSort is ISortDescriptionComparer comparer)
             {
                 descriptions = comparer.Descriptions;
                 view.SortDescriptions.Clear();
             }
-            
+
             descriptions.Clear();
-            
+
             try
             {
                 foreach (SortDescription description in SortDescriptor.Descriptors)
@@ -148,11 +148,11 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
             {
                 descriptions.Clear();
             }
-            
+
             view.Refresh();
             UpdateSortDescriptionMarkers();
         }
-        
+
         // ReSharper disable once CognitiveComplexity
         protected virtual void UpdateColumns(Int32 columns)
         {
@@ -160,7 +160,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
             {
                 return;
             }
-            
+
             ColumnDefinition definition;
             Binding binding;
             for (Int32 column = 0; column < columns; column++)
@@ -169,7 +169,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 definition = new ColumnDefinition { Width = width };
                 grid.ColumnDefinitions.Add(definition);
                 binding = new TwoWayBinding(nameof(ColumnDefinition.Width), definition) { Source = definition };
-                
+
                 definition = new ColumnDefinition();
                 ColumnGrid.ColumnDefinitions.Add(definition);
                 definition.SetBinding(ColumnDefinition.WidthProperty, binding);
@@ -177,14 +177,14 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
 
             definition = new ColumnDefinition();
             ColumnGrid.ColumnDefinitions.Add(definition);
-            
+
             binding = new Binding(nameof(ScrollViewer.ComputedVerticalScrollBarVisibility))
             {
                 Source = SheetScrollViewer,
                 Converter = VerticalScrollBarVisibilityConverter,
                 ConverterParameter = SystemParameters.VerticalScrollBarWidth
             };
-            
+
             definition.SetBinding(ColumnDefinition.WidthProperty, binding);
 
             ColumnGrid.ContextMenu = ColumnsContextMenu;
@@ -202,7 +202,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                     BorderThickness = new Thickness(0, 1, 1, 1),
                     Margin = new Thickness(0, 0, column < columns - 1 ? -1 : 0, 0)
                 };
-                
+
                 Grid.SetColumn(border, column);
                 ColumnGrid.Children.Add(border);
 
@@ -236,7 +236,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 {
                     continue;
                 }
-                
+
                 GridSplitter splitter = new GridSplitter
                 {
                     ResizeDirection = GridResizeDirection.Columns,
@@ -247,17 +247,17 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                     HorizontalAlignment = HorizontalAlignment.Right,
                     VerticalAlignment = VerticalAlignment.Stretch
                 };
-                
+
                 splitter.MouseDoubleClick += ColumnSplitterDoubleClick;
                 splitter.DragStarted += ColumnSplitterChangeStarted;
                 splitter.DragDelta += ColumnSplitterChangeDelta;
                 splitter.DragCompleted += ColumnSplitterChangeCompleted;
-                
+
                 Grid.SetColumn(splitter, column);
                 ColumnGrid.Children.Add(splitter);
             }
         }
-        
+
         // ReSharper disable once CognitiveComplexity
         protected virtual void UpdateRows(Int32 rows)
         {
@@ -265,7 +265,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
             {
                 return;
             }
-            
+
             RowGrid.Children.AddIfNotNull(RowSelectionBackground);
 
             for (Int32 row = 0; row < rows; row++)
@@ -330,7 +330,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 Converter = HorizontalScrollBarVisibilityConverter,
                 ConverterParameter = SystemParameters.HorizontalScrollBarHeight
             });
-            
+
             if (!CanResizeRows)
             {
                 return;
@@ -348,40 +348,40 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                     HorizontalAlignment = HorizontalAlignment.Stretch,
                     VerticalAlignment = VerticalAlignment.Bottom
                 };
-                
+
                 splitter.MouseDoubleClick += RowSplitterDoubleClick;
                 splitter.DragStarted += RowSplitterChangeStarted;
                 splitter.DragDelta += RowSplitterChangeDelta;
                 splitter.DragCompleted += RowSplitterChangeCompleted;
-                
+
                 Grid.SetRow(splitter, row);
                 RowGrid.Children.Add(splitter);
             }
         }
-        
+
         private void CurrentCellSourceUpdated(ExcelCell cell)
         {
             if (EditingCells?.ToArray() is not { } edit || !Enumerable.Contains(edit, cell) || !TryGet(cell, out Object? value))
             {
                 return;
             }
-            
+
             foreach (ExcelCell current in edit)
             {
                 if (MultiChangeInChangedColumnOnly && current.Column != cell.Column)
                 {
                     continue;
                 }
-                
+
                 if (current.Equals(cell))
                 {
                     continue;
                 }
-                
+
                 TrySet(current, value);
             }
         }
-        
+
         // ReSharper disable once CognitiveComplexity
         private void UpdateCells(Int32 columns, Int32 rows)
         {
@@ -389,7 +389,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
             {
                 return;
             }
-            
+
             grid.ContextMenu = SheetContextMenu;
 
             grid.Children.AddIfNotNull(SelectionBackground);
@@ -449,12 +449,12 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                     InsertDisplayControl(new ExcelCell(column, row));
                 }
             }
-            
+
             grid.Children.AddIfNotNull(Selection);
             grid.Children.AddIfNotNull(AutoFillBox);
             grid.Children.AddIfNotNull(AutoFillSelection);
         }
-        
+
         // ReSharper disable once CognitiveComplexity
         private void UpdateSelectionVisibility()
         {
@@ -463,39 +463,39 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
             {
                 CurrentBackground.Visibility = enabled && CurrentCell.Column < Columns && CurrentCell.Row < Rows ? Visibility.Visible : Visibility.Hidden;
             }
-            
+
             if (AutoFillBox is not null)
             {
                 AutoFillBox.Visibility = enabled && IsAutoFill && CurrentCell.Column < Columns && CurrentCell.Row < Rows ? Visibility.Visible : Visibility.Hidden;
             }
-            
+
             if (SelectionBackground is not null)
             {
                 SelectionBackground.Visibility = enabled && CurrentCell.Column < Columns && CurrentCell.Row < Rows ? Visibility.Visible : Visibility.Hidden;
             }
-            
+
             if (ColumnSelectionBackground is not null)
             {
                 ColumnSelectionBackground.Visibility = enabled && CurrentCell.Column < Columns ? Visibility.Visible : Visibility.Hidden;
             }
-            
+
             if (RowSelectionBackground is not null)
             {
                 RowSelectionBackground.Visibility = enabled && CurrentCell.Row < Rows ? Visibility.Visible : Visibility.Hidden;
             }
-            
+
             if (Selection is not null)
             {
                 Selection.Visibility = enabled && CurrentCell.Column < Columns && CurrentCell.Row < Rows ? Visibility.Visible : Visibility.Hidden;
             }
-            
+
             if (TopLeft is not null && RowSelectionBackground is not null)
             {
                 Boolean all = Math.Abs(CurrentCell.Column - SelectionCell.Column) + 1 == Columns && Math.Abs(CurrentCell.Row - SelectionCell.Row) + 1 == Rows;
                 TopLeft.Background = enabled && all ? RowSelectionBackground.Background : RowGrid.Background;
             }
         }
-        
+
         protected void UpdateContent(ExcelCell cell)
         {
             if (GetElement(cell) is not { } element)
@@ -503,31 +503,31 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 InsertDisplayControl(cell);
                 return;
             }
-            
+
             SheetGrid?.Children.Remove(element);
             CellInsertionIndex--;
             Map.Cells.Remove(cell.GetHashCode());
             InsertDisplayControl(cell);
         }
-        
+
         protected void ClearContent()
         {
             ClearGrid(SheetGrid);
             ClearGrid(ColumnGrid);
             ClearGrid(RowGrid);
-            
+
             CellInsertionIndex = 0;
             Map.Columns.Clear();
             Map.Cells.Clear();
         }
-        
+
         protected void ClearGrid(Grid? grid)
         {
             if (grid is null)
             {
                 return;
             }
-            
+
             grid.ColumnDefinitions.Clear();
             grid.RowDefinitions.Clear();
             grid.Children.Clear();

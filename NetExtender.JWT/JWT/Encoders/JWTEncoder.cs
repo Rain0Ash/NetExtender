@@ -42,7 +42,7 @@ namespace NetExtender.JWT
             {
                 return new Dictionary<String, Object>(2, StringComparer.OrdinalIgnoreCase);
             }
-            
+
             Dictionary<String, Object> result = new Dictionary<String, Object>(extra.CountIfMaterialized(out Int32 count) ? count + 2 : 16, StringComparer.OrdinalIgnoreCase);
 
             foreach ((String? key, Object? value) in extra)
@@ -52,7 +52,7 @@ namespace NetExtender.JWT
                     result[key] = value;
                 }
             }
-            
+
             return result;
         }
 
@@ -69,10 +69,10 @@ namespace NetExtender.JWT
             {
                 throw new InvalidOperationException("Can't count JWT result.");
             }
-            
+
             Span<Byte> sign = count.IsStack ? stackalloc Byte[count] : new Byte[count];
             count.GetBytes(sign);
-            
+
             String? segment = GetSignatureSegment(algorithm, key, sign);
             return encode + "." + segment;
         }
@@ -102,7 +102,7 @@ namespace NetExtender.JWT
             {
                 throw new InvalidOperationException("Can't count JWT header.");
             }
-            
+
             Span<Byte> header = count.IsStack ? stackalloc Byte[count] : new Byte[count];
             count.GetBytes(header);
 
@@ -114,10 +114,10 @@ namespace NetExtender.JWT
 
             Span<Byte> load = count.IsStack ? stackalloc Byte[count] : new Byte[count];
             count.GetBytes(load);
-            
+
             return Encode(algorithm, key, header, load);
         }
-        
+
         public String Encode<TPayload>(ReadOnlySpan<Byte> key, TPayload payload)
         {
             return Encode(key, payload, null, out _);
@@ -185,7 +185,7 @@ namespace NetExtender.JWT
             headers = Create(extra);
             return Encode(algorithm, key, payload, headers);
         }
-        
+
         public String Encode<TPayload>(JWTKey key, TPayload payload, IEnumerable<KeyValuePair<String?, Object?>>? extra, out Dictionary<String, Object> headers)
         {
             return Encode((ReadOnlySpan<Byte>) key, payload, extra, out headers);
@@ -207,7 +207,7 @@ namespace NetExtender.JWT
                 }
             }
         }
-        
+
         public class Encoder : JWTEncoder
         {
             public Encoder(IJWTUrlEncoder encoder, IJWTAlgorithm algorithm, IJWTSerializer serializer)

@@ -41,7 +41,7 @@ namespace NetExtender.Types.Exceptions
         {
             return exception?.Value ?? default;
         }
-        
+
         public override Type Type
         {
             get
@@ -57,7 +57,7 @@ namespace NetExtender.Types.Exceptions
                 return Enum.Underlying;
             }
         }
-        
+
         public new abstract TEnum Enum { get; }
 
         public sealed override T Value
@@ -67,13 +67,18 @@ namespace NetExtender.Types.Exceptions
                 return Enum.Id;
             }
         }
-        
+
         protected EnumUndefinedException()
         {
         }
 
         protected EnumUndefinedException(String? parameter)
             : base(parameter)
+        {
+        }
+
+        protected EnumUndefinedException(String? parameter, String? message)
+            : base(parameter, message)
         {
         }
 
@@ -87,11 +92,10 @@ namespace NetExtender.Types.Exceptions
         {
         }
 
-        protected EnumUndefinedException(String? parameter, String? message)
-            : base(parameter, message)
-        {
-        }
-
+#if NET8_0_OR_GREATER
+        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
         protected EnumUndefinedException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
@@ -101,7 +105,7 @@ namespace NetExtender.Types.Exceptions
         private sealed class Exception : EnumUndefinedException<T, TEnum>
         {
             public override TEnum Enum { get; }
-            
+
             public Exception(TEnum value)
                 : this(value, null, (String?) null)
             {
@@ -113,24 +117,32 @@ namespace NetExtender.Types.Exceptions
             {
             }
 
-            public Exception(TEnum value, String? message, System.Exception? exception)
-                : base(value is not null ? message ?? $"Specified value '{value}' was out of the range of valid values of enum type '{value.Underlying}'." : throw new ArgumentNullException(nameof(value)), exception)
-            {
-                Enum = value;
-            }
-
             public Exception(TEnum value, String? parameter, String? message)
                 : base(parameter, value, value is not null ? message ?? $"Specified value '{value}' was out of the range of valid values of enum type '{value.Underlying}'." : throw new ArgumentNullException(nameof(value)))
             {
                 Enum = value;
             }
 
+            public Exception(TEnum value, String? message, System.Exception? exception)
+                : base(value is not null ? message ?? $"Specified value '{value}' was out of the range of valid values of enum type '{value.Underlying}'." : throw new ArgumentNullException(nameof(value)), exception)
+            {
+                Enum = value;
+            }
+
+#if NET8_0_OR_GREATER
+            [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+            [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
             private Exception(SerializationInfo info, StreamingContext context)
                 : base(info, context)
             {
                 Enum = info.GetValue<TEnum>(nameof(Enum));
             }
 
+#if NET8_0_OR_GREATER
+            [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+            [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
             public override void GetObjectData(SerializationInfo info, StreamingContext context)
             {
                 base.GetObjectData(info, context);
@@ -138,7 +150,7 @@ namespace NetExtender.Types.Exceptions
             }
         }
     }
-    
+
     [Serializable]
     public abstract class EnumUndefinedException<T> : EnumUndefinedException where T : unmanaged, Enum
     {
@@ -170,7 +182,7 @@ namespace NetExtender.Types.Exceptions
         {
             return exception?.Value ?? default;
         }
-        
+
         public override Type Type
         {
             get
@@ -178,7 +190,7 @@ namespace NetExtender.Types.Exceptions
                 return typeof(T);
             }
         }
-        
+
         public abstract T Value { get; }
 
         public sealed override Enum Enum
@@ -188,7 +200,7 @@ namespace NetExtender.Types.Exceptions
                 return Value;
             }
         }
-        
+
         protected EnumUndefinedException()
         {
         }
@@ -203,16 +215,20 @@ namespace NetExtender.Types.Exceptions
         {
         }
 
-        protected EnumUndefinedException(String? parameter, T value, String? message)
-            : base(parameter, value, message)
-        {
-        }
-
         protected EnumUndefinedException(String? parameter, String? message)
             : base(parameter, message)
         {
         }
 
+        protected EnumUndefinedException(String? parameter, T value, String? message)
+            : base(parameter, value, message)
+        {
+        }
+
+#if NET8_0_OR_GREATER
+        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
         protected EnumUndefinedException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
@@ -222,7 +238,7 @@ namespace NetExtender.Types.Exceptions
         private sealed class Exception : EnumUndefinedException<T>
         {
             public override T Value { get; }
-            
+
             public Exception(T value)
                 : this(value, null, (String?) null)
             {
@@ -246,12 +262,20 @@ namespace NetExtender.Types.Exceptions
                 Value = value;
             }
 
+#if NET8_0_OR_GREATER
+            [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+            [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
             private Exception(SerializationInfo info, StreamingContext context)
                 : base(info, context)
             {
                 Value = info.GetValue<T>(nameof(Value));
             }
 
+#if NET8_0_OR_GREATER
+            [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+            [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
             public override void GetObjectData(SerializationInfo info, StreamingContext context)
             {
                 base.GetObjectData(info, context);
@@ -268,7 +292,7 @@ namespace NetExtender.Types.Exceptions
         {
             return exception?.Enum;
         }
-        
+
         public virtual Type Type
         {
             get
@@ -276,9 +300,9 @@ namespace NetExtender.Types.Exceptions
                 return Enum.GetType();
             }
         }
-        
+
         public abstract Enum Enum { get; }
-        
+
         protected EnumUndefinedException()
         {
         }
@@ -293,16 +317,20 @@ namespace NetExtender.Types.Exceptions
         {
         }
 
-        protected EnumUndefinedException(String? parameter, Enum? value, String? message)
-            : base(parameter, value, message is null && value is not null ? $"Specified value '{value}' was out of the range of valid values of enum type '{value.GetType()}'." : message)
-        {
-        }
-
         protected EnumUndefinedException(String? parameter, String? message)
             : base(parameter, message ?? "Specified value was out of the range of valid values of enum.")
         {
         }
 
+        protected EnumUndefinedException(String? parameter, Enum? value, String? message)
+            : base(parameter, value, message is null && value is not null ? $"Specified value '{value}' was out of the range of valid values of enum type '{value.GetType()}'." : message)
+        {
+        }
+
+#if NET8_0_OR_GREATER
+        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
         protected EnumUndefinedException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {

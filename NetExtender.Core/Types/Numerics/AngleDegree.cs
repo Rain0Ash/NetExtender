@@ -19,12 +19,12 @@ namespace NetExtender.Types.Numerics
         {
             return angle.Degree;
         }
-        
+
         /// <summary>
         /// Represents the zero <see cref="AngleDegree"/> value (0 degrees).
         /// </summary>
         public static AngleDegree Zero { get; } = new AngleDegree(AngleUtilities.Degree.Double.Zero);
-        
+
         /// <summary>
         /// Represents the golden <see cref="AngleDegree"/> value (~137.508 degrees).
         /// </summary>
@@ -49,7 +49,7 @@ namespace NetExtender.Types.Numerics
         /// Represents the full <see cref="AngleDegree"/> value (360 degrees).
         /// </summary>
         public static AngleDegree Full { get; } = new AngleDegree(AngleUtilities.Degree.Double.Full);
-        
+
         /// <summary>
         /// Represents the smallest possible value of a <see cref="AngleDegree"/>.
         /// </summary>

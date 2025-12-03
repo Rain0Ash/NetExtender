@@ -11,7 +11,7 @@ namespace NetExtender.Types.Streams
     {
         private new const String Message = "Stream not support operation.";
         private const String FormatMessage = "Stream '{0}' not support operation.";
-        
+
         protected StreamNotSupportException()
             : base(Message)
         {
@@ -27,6 +27,10 @@ namespace NetExtender.Types.Streams
         {
         }
 
+#if NET8_0_OR_GREATER
+        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
         protected StreamNotSupportException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
@@ -38,7 +42,7 @@ namespace NetExtender.Types.Streams
     {
         private new const String Message = "Stream not support operation.";
         private const String FormatMessage = "Stream '{0}' not support operation.";
-        
+
         protected StreamArgumentNotSupportException()
             : base(Message)
         {
@@ -64,12 +68,16 @@ namespace NetExtender.Types.Streams
         {
         }
 
+#if NET8_0_OR_GREATER
+        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
         protected StreamArgumentNotSupportException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
         }
     }
-    
+
     [Serializable]
     public class StreamNotSupportReadException : StreamNotSupportException
     {
@@ -101,6 +109,10 @@ namespace NetExtender.Types.Streams
         {
         }
 
+#if NET8_0_OR_GREATER
+        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
         protected StreamNotSupportReadException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
@@ -168,6 +180,10 @@ namespace NetExtender.Types.Streams
         {
         }
 
+#if NET8_0_OR_GREATER
+        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
         protected StreamArgumentNotSupportReadException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
@@ -215,6 +231,10 @@ namespace NetExtender.Types.Streams
         {
         }
 
+#if NET8_0_OR_GREATER
+        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
         protected StreamNotSupportSeekException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
@@ -236,7 +256,7 @@ namespace NetExtender.Types.Streams
     {
         private new const String Message = "Stream not support seeking.";
         private const String FormatMessage = "Stream '{0}' not support seeking.";
-        
+
         public StreamArgumentNotSupportSeekException()
             : base(Message)
         {
@@ -282,6 +302,10 @@ namespace NetExtender.Types.Streams
         {
         }
 
+#if NET8_0_OR_GREATER
+        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
         protected StreamArgumentNotSupportSeekException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
@@ -329,6 +353,10 @@ namespace NetExtender.Types.Streams
         {
         }
 
+#if NET8_0_OR_GREATER
+        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
         protected StreamNotSupportWriteException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
@@ -350,7 +378,7 @@ namespace NetExtender.Types.Streams
     {
         private new const String Message = "Stream not support writing.";
         private const String FormatMessage = "Stream '{0}' not support writing.";
-        
+
         public StreamArgumentNotSupportWriteException()
             : base(Message)
         {
@@ -396,6 +424,10 @@ namespace NetExtender.Types.Streams
         {
         }
 
+#if NET8_0_OR_GREATER
+        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
         protected StreamArgumentNotSupportWriteException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
@@ -443,6 +475,10 @@ namespace NetExtender.Types.Streams
         {
         }
 
+#if NET8_0_OR_GREATER
+        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
         protected StreamNotSupportTimeoutException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
@@ -464,7 +500,7 @@ namespace NetExtender.Types.Streams
     {
         private new const String Message = "Stream not support timeout.";
         private const String FormatMessage = "Stream '{0}' not support timeout.";
-        
+
         public StreamArgumentNotSupportTimeoutException()
             : base(Message)
         {
@@ -510,6 +546,10 @@ namespace NetExtender.Types.Streams
         {
         }
 
+#if NET8_0_OR_GREATER
+        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
         protected StreamArgumentNotSupportTimeoutException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {

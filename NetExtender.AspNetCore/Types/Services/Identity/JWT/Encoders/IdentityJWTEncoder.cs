@@ -14,7 +14,7 @@ namespace NetExtender.AspNetCore.Identity
         {
         }
     }
-    
+
     public class IdentityJWTAlgorithmFactoryEncoder<TId, TUser, TRole> : JWTEncoder, IIdentityJWTEncoder<TId, TUser, TRole> where TId : struct, IEquatable<TId> where TUser : class, IUserInfo<TId, TRole> where TRole : IEquatable<TRole>
     {
         public IdentityJWTAlgorithmFactoryEncoder(IIdentityJWTUrlEncoder<TId, TUser, TRole> encoder, IIdentityJWTAlgorithmFactory<TId, TUser, TRole> algorithm, IIdentityJWTSerializer<TId, TUser, TRole> serializer)

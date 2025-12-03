@@ -17,7 +17,7 @@ namespace NetExtender.Types.Phone
         {
             return !(first == second);
         }
-        
+
         private String? Number { get; }
 
         public Boolean IsEmpty
@@ -51,7 +51,7 @@ namespace NetExtender.Types.Phone
                 result = default;
                 return false;
             }
-            
+
             result = new Phone(number);
             return true;
         }

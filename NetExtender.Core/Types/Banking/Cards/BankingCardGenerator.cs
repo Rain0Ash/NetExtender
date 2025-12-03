@@ -48,7 +48,7 @@ namespace NetExtender.Types.Banking.Cards
             {
                 throw new InvalidOperationException();
             }
-            
+
             return checksum % 10 != 0 ? Formatter.Format(number + (10 - checksum % 10)) : Formatter.Format(number + "0");
         }
     }

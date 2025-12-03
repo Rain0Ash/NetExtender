@@ -101,7 +101,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(action));
             }
-            
+
             foreach (TSource item in source)
             {
                 token.ThrowIfCancellationRequested();
@@ -126,7 +126,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(action));
             }
-            
+
             Int32 index = 0;
             foreach (TSource item in source)
             {
@@ -152,7 +152,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(action));
             }
-            
+
             Int32 index = 0;
             foreach (TSource item in source)
             {
@@ -160,7 +160,7 @@ namespace NetExtender.Utilities.Types
                 await action(item, index++, token).ConfigureAwait(false);
             }
         }
-        
+
 #if NET6_0_OR_GREATER
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task ParallelForEachAsync<TSource>(this IEnumerable<TSource> source, Func<TSource, Task> action)

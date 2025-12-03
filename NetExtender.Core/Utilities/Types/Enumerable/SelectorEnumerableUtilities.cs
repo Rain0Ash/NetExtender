@@ -35,7 +35,7 @@ namespace NetExtender.Utilities.Types
             Int64 counter = 0;
             return source.Select(item => (counter++, item));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<Maybe<T>> Maybe<T>(this IEnumerable<T> source)
         {
@@ -49,7 +49,7 @@ namespace NetExtender.Utilities.Types
                 yield return item;
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<NullMaybe<T>> Nullable<T>(this IEnumerable<T> source)
         {
@@ -63,7 +63,7 @@ namespace NetExtender.Utilities.Types
                 yield return item;
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<WeakMaybe<T>> Weak<T>(this IEnumerable<T> source) where T : class
         {
@@ -995,7 +995,7 @@ namespace NetExtender.Utilities.Types
 
             return source.SelectManyWhere(static item => item is not null, selector);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<T> TakeMany<T>(this IEnumerable<IEnumerable<T>?> source, Int32 count)
         {
@@ -1003,10 +1003,10 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             return source.WhereNotNull().Take(count).SelectMany();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<T> TakeMany<T>(this IEnumerable<IEnumerable<T>?> source, Range count)
         {
@@ -1014,10 +1014,10 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             return source.WhereNotNull().Take(count).SelectMany();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<T> TakeManyLast<T>(this IEnumerable<IEnumerable<T>?> source, Int32 count)
         {
@@ -1025,10 +1025,10 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             return source.WhereNotNull().TakeLast(count).SelectMany();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<TResult> TakeMany<T, TResult>(this IEnumerable<T> source, Func<T, IEnumerable<TResult>> selector, Int32 count)
         {
@@ -1036,15 +1036,15 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (selector is null)
             {
                 throw new ArgumentNullException(nameof(selector));
             }
-            
+
             return source.Take(count).SelectMany(selector);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<TResult> TakeMany<T, TResult>(this IEnumerable<T> source, Func<T, IEnumerable<TResult>> selector, Range count)
         {
@@ -1052,15 +1052,15 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (selector is null)
             {
                 throw new ArgumentNullException(nameof(selector));
             }
-            
+
             return source.Take(count).SelectMany(selector);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<TResult> TakeManyLast<T, TResult>(this IEnumerable<T> source, Func<T, IEnumerable<TResult>> selector, Int32 count)
         {
@@ -1068,15 +1068,15 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (selector is null)
             {
                 throw new ArgumentNullException(nameof(selector));
             }
-            
+
             return source.TakeLast(count).SelectMany(selector);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<TResult> TakeMany<T, TResult>(this IEnumerable<T> source, Func<T, Int32, IEnumerable<TResult>> selector, Int32 count)
         {
@@ -1084,15 +1084,15 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (selector is null)
             {
                 throw new ArgumentNullException(nameof(selector));
             }
-            
+
             return source.Take(count).SelectMany(selector);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<TResult> TakeMany<T, TResult>(this IEnumerable<T> source, Func<T, Int32, IEnumerable<TResult>> selector, Range count)
         {
@@ -1100,15 +1100,15 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (selector is null)
             {
                 throw new ArgumentNullException(nameof(selector));
             }
-            
+
             return source.Take(count).SelectMany(selector);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<TResult> TakeManyLast<T, TResult>(this IEnumerable<T> source, Func<T, Int32, IEnumerable<TResult>> selector, Int32 count)
         {
@@ -1116,15 +1116,15 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (selector is null)
             {
                 throw new ArgumentNullException(nameof(selector));
             }
-            
+
             return source.TakeLast(count).SelectMany(selector);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<TResult> TakeMany<T, TResult>(this IEnumerable<T> source, Func<T, IEnumerable<TResult>> collection, Func<T, TResult, TResult> selector, Int32 count)
         {
@@ -1132,20 +1132,20 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (collection is null)
             {
                 throw new ArgumentNullException(nameof(collection));
             }
-            
+
             if (selector is null)
             {
                 throw new ArgumentNullException(nameof(selector));
             }
-            
+
             return source.Take(count).SelectMany(collection, selector);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<TResult> TakeMany<T, TResult>(this IEnumerable<T> source, Func<T, IEnumerable<TResult>> collection, Func<T, TResult, TResult> selector, Range count)
         {
@@ -1153,20 +1153,20 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (collection is null)
             {
                 throw new ArgumentNullException(nameof(collection));
             }
-            
+
             if (selector is null)
             {
                 throw new ArgumentNullException(nameof(selector));
             }
-            
+
             return source.Take(count).SelectMany(collection, selector);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<TResult> TakeManyLast<T, TResult>(this IEnumerable<T> source, Func<T, IEnumerable<TResult>> collection, Func<T, TResult, TResult> selector, Int32 count)
         {
@@ -1174,20 +1174,20 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (collection is null)
             {
                 throw new ArgumentNullException(nameof(collection));
             }
-            
+
             if (selector is null)
             {
                 throw new ArgumentNullException(nameof(selector));
             }
-            
+
             return source.TakeLast(count).SelectMany(collection, selector);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<TResult> TakeMany<T, TResult>(this IEnumerable<T> source, Func<T, Int32, IEnumerable<TResult>> collection, Func<T, TResult, TResult> selector, Int32 count)
         {
@@ -1195,20 +1195,20 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (collection is null)
             {
                 throw new ArgumentNullException(nameof(collection));
             }
-            
+
             if (selector is null)
             {
                 throw new ArgumentNullException(nameof(selector));
             }
-            
+
             return source.Take(count).SelectMany(collection, selector);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<TResult> TakeMany<T, TResult>(this IEnumerable<T> source, Func<T, Int32, IEnumerable<TResult>> collection, Func<T, TResult, TResult> selector, Range count)
         {
@@ -1216,20 +1216,20 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (collection is null)
             {
                 throw new ArgumentNullException(nameof(collection));
             }
-            
+
             if (selector is null)
             {
                 throw new ArgumentNullException(nameof(selector));
             }
-            
+
             return source.Take(count).SelectMany(collection, selector);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<TResult> TakeManyLast<T, TResult>(this IEnumerable<T> source, Func<T, Int32, IEnumerable<TResult>> collection, Func<T, TResult, TResult> selector, Int32 count)
         {
@@ -1237,17 +1237,17 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (collection is null)
             {
                 throw new ArgumentNullException(nameof(collection));
             }
-            
+
             if (selector is null)
             {
                 throw new ArgumentNullException(nameof(selector));
             }
-            
+
             return source.TakeLast(count).SelectMany(collection, selector);
         }
 
@@ -1257,7 +1257,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (unpacker is null)
             {
                 throw new ArgumentNullException(nameof(unpacker));
@@ -1275,7 +1275,7 @@ namespace NetExtender.Utilities.Types
                     {
                         continue;
                     }
-                
+
                     foreach (T subitem in inner)
                     {
                         yield return subitem;
@@ -1283,14 +1283,14 @@ namespace NetExtender.Utilities.Types
                 }
             }
         }
-        
+
         public static IEnumerable<T> UnpackMany<T>(this IEnumerable<T> source, Int32 depth, Func<T, IEnumerable<T>?> unpacker)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (unpacker is null)
             {
                 throw new ArgumentNullException(nameof(unpacker));
@@ -1318,7 +1318,7 @@ namespace NetExtender.Utilities.Types
                     {
                         continue;
                     }
-                        
+
                     foreach (T subitem in UnpackMany(inner, depth - 1, unpacker))
                     {
                         yield return subitem;
@@ -1333,12 +1333,12 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (unpacker is null)
             {
                 throw new ArgumentNullException(nameof(unpacker));
             }
-            
+
             return predicate is not null ? Core(source, unpacker, predicate) : UnpackMany(source, unpacker);
 
             static IEnumerable<T> Core(IEnumerable<T> source, Func<T, IEnumerable<T>?> unpacker, Func<T, Boolean> predicate)
@@ -1351,7 +1351,7 @@ namespace NetExtender.Utilities.Types
                     {
                         continue;
                     }
-                
+
                     foreach (T subitem in inner)
                     {
                         if (predicate(subitem))
@@ -1369,7 +1369,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (unpacker is null)
             {
                 throw new ArgumentNullException(nameof(unpacker));
@@ -1399,7 +1399,7 @@ namespace NetExtender.Utilities.Types
                     {
                         continue;
                     }
-                    
+
                     foreach (T subitem in UnpackMany(inner, depth - 1, unpacker, predicate))
                     {
                         yield return subitem;
@@ -1414,12 +1414,12 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (unpacker is null)
             {
                 throw new ArgumentNullException(nameof(unpacker));
             }
-            
+
             return predicate is not null ? Core(source, unpacker, predicate) : UnpackMany(source, unpacker);
 
             static IEnumerable<T> Core(IEnumerable<T> source, Func<T, IEnumerable<T>?> unpacker, Func<T, Int32, Boolean> predicate)
@@ -1432,7 +1432,7 @@ namespace NetExtender.Utilities.Types
                     {
                         continue;
                     }
-                    
+
                     Int32 counter = 0;
                     foreach (T subitem in inner)
                     {
@@ -1451,7 +1451,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (unpacker is null)
             {
                 throw new ArgumentNullException(nameof(unpacker));
@@ -1481,7 +1481,7 @@ namespace NetExtender.Utilities.Types
                     {
                         continue;
                     }
-                    
+
                     foreach (T subitem in UnpackMany(inner, depth - 1, unpacker, predicate))
                     {
                         yield return subitem;
@@ -1496,12 +1496,12 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (unpacker is null)
             {
                 throw new ArgumentNullException(nameof(unpacker));
             }
-            
+
             return selector is not null ? Core(source, unpacker, selector) : UnpackMany(source, unpacker);
 
             static IEnumerable<T> Core(IEnumerable<T> source, Func<T, IEnumerable<T>?> unpacker, Func<T, T> selector)
@@ -1514,7 +1514,7 @@ namespace NetExtender.Utilities.Types
                     {
                         continue;
                     }
-                
+
                     foreach (T subitem in inner)
                     {
                         yield return selector(subitem);
@@ -1529,7 +1529,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (unpacker is null)
             {
                 throw new ArgumentNullException(nameof(unpacker));
@@ -1559,7 +1559,7 @@ namespace NetExtender.Utilities.Types
                     {
                         continue;
                     }
-                    
+
                     foreach (T subitem in UnpackMany(inner, depth - 1, unpacker, selector))
                     {
                         yield return subitem;
@@ -1574,7 +1574,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (unpacker is null)
             {
                 throw new ArgumentNullException(nameof(unpacker));
@@ -1592,7 +1592,7 @@ namespace NetExtender.Utilities.Types
                     {
                         continue;
                     }
-                    
+
                     foreach (T subitem in inner)
                     {
                         yield return selector(item, subitem);
@@ -1607,7 +1607,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (unpacker is null)
             {
                 throw new ArgumentNullException(nameof(unpacker));
@@ -1645,7 +1645,7 @@ namespace NetExtender.Utilities.Types
                     {
                         continue;
                     }
-                    
+
                     foreach (T subitem in UnpackMany(inner, depth - 1, unpacker, selector))
                     {
                         yield return subitem;
@@ -1660,12 +1660,12 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (unpacker is null)
             {
                 throw new ArgumentNullException(nameof(unpacker));
             }
-            
+
             return selector is not null ? Core(source, unpacker, selector) : UnpackMany(source, unpacker);
 
             static IEnumerable<T> Core(IEnumerable<T> source, Func<T, IEnumerable<T>?> unpacker, TryParseHandler<T, T> selector)
@@ -1678,7 +1678,7 @@ namespace NetExtender.Utilities.Types
                     {
                         continue;
                     }
-                
+
                     foreach (T subitem in inner)
                     {
                         if (selector(subitem, out T? result))
@@ -1696,7 +1696,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (unpacker is null)
             {
                 throw new ArgumentNullException(nameof(unpacker));
@@ -1726,7 +1726,7 @@ namespace NetExtender.Utilities.Types
                     {
                         continue;
                     }
-                    
+
                     foreach (T subitem in UnpackMany(inner, depth - 1, unpacker, selector))
                     {
                         yield return subitem;
@@ -1741,12 +1741,12 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (unpacker is null)
             {
                 throw new ArgumentNullException(nameof(unpacker));
             }
-            
+
             return selector is not null ? Core(source, unpacker, selector) : UnpackMany(source, unpacker);
 
             static IEnumerable<T> Core(IEnumerable<T> source, Func<T, IEnumerable<T>?> unpacker, TryParseHandler<T, Int32, T> selector)
@@ -1778,7 +1778,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (unpacker is null)
             {
                 throw new ArgumentNullException(nameof(unpacker));
@@ -1808,7 +1808,7 @@ namespace NetExtender.Utilities.Types
                     {
                         continue;
                     }
-                    
+
                     foreach (T subitem in UnpackMany(inner, depth - 1, unpacker, selector))
                     {
                         yield return subitem;
@@ -1816,19 +1816,19 @@ namespace NetExtender.Utilities.Types
                 }
             }
         }
-        
+
         public static IEnumerable<T> UnpackMany<T>(this IEnumerable<T> source, Func<T, Int32, IEnumerable<T>?> unpacker)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (unpacker is null)
             {
                 throw new ArgumentNullException(nameof(unpacker));
             }
-            
+
             return Core(source, unpacker);
 
             static IEnumerable<T> Core(IEnumerable<T> source, Func<T, Int32, IEnumerable<T>?> unpacker)
@@ -1842,7 +1842,7 @@ namespace NetExtender.Utilities.Types
                     {
                         continue;
                     }
-                
+
                     foreach (T subitem in inner)
                     {
                         yield return subitem;
@@ -1857,7 +1857,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (unpacker is null)
             {
                 throw new ArgumentNullException(nameof(unpacker));
@@ -1886,7 +1886,7 @@ namespace NetExtender.Utilities.Types
                     {
                         continue;
                     }
-                    
+
                     foreach (T subitem in UnpackMany(inner, depth - 1, unpacker))
                     {
                         yield return subitem;
@@ -1901,7 +1901,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (unpacker is null)
             {
                 throw new ArgumentNullException(nameof(unpacker));
@@ -1920,7 +1920,7 @@ namespace NetExtender.Utilities.Types
                     {
                         continue;
                     }
-                
+
                     foreach (T subitem in inner)
                     {
                         if (predicate(subitem))
@@ -1938,7 +1938,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (unpacker is null)
             {
                 throw new ArgumentNullException(nameof(unpacker));
@@ -1969,7 +1969,7 @@ namespace NetExtender.Utilities.Types
                     {
                         continue;
                     }
-                    
+
                     foreach (T subitem in UnpackMany(inner, depth - 1, unpacker, predicate))
                     {
                         yield return subitem;
@@ -1984,7 +1984,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (unpacker is null)
             {
                 throw new ArgumentNullException(nameof(unpacker));
@@ -2022,7 +2022,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (unpacker is null)
             {
                 throw new ArgumentNullException(nameof(unpacker));
@@ -2053,7 +2053,7 @@ namespace NetExtender.Utilities.Types
                     {
                         continue;
                     }
-                    
+
                     foreach (T subitem in UnpackMany(inner, depth - 1, unpacker, predicate))
                     {
                         yield return subitem;
@@ -2068,7 +2068,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (unpacker is null)
             {
                 throw new ArgumentNullException(nameof(unpacker));
@@ -2087,7 +2087,7 @@ namespace NetExtender.Utilities.Types
                     {
                         continue;
                     }
-                
+
                     foreach (T subitem in inner)
                     {
                         yield return selector(subitem);
@@ -2102,7 +2102,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (unpacker is null)
             {
                 throw new ArgumentNullException(nameof(unpacker));
@@ -2133,7 +2133,7 @@ namespace NetExtender.Utilities.Types
                     {
                         continue;
                     }
-                    
+
                     foreach (T subitem in UnpackMany(inner, depth - 1, unpacker, selector))
                     {
                         yield return subitem;
@@ -2141,14 +2141,14 @@ namespace NetExtender.Utilities.Types
                 }
             }
         }
-        
+
         public static IEnumerable<T> UnpackMany<T>(this IEnumerable<T> source, Func<T, Int32, IEnumerable<T>?> unpacker, Func<T, T, T>? selector)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (unpacker is null)
             {
                 throw new ArgumentNullException(nameof(unpacker));
@@ -2167,7 +2167,7 @@ namespace NetExtender.Utilities.Types
                     {
                         continue;
                     }
-                
+
                     foreach (T subitem in inner)
                     {
                         yield return selector(item, subitem);
@@ -2175,14 +2175,14 @@ namespace NetExtender.Utilities.Types
                 }
             }
         }
-        
+
         public static IEnumerable<T> UnpackMany<T>(this IEnumerable<T> source, Int32 depth, Func<T, Int32, IEnumerable<T>?> unpacker, Func<T, T, T>? selector)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (unpacker is null)
             {
                 throw new ArgumentNullException(nameof(unpacker));
@@ -2221,7 +2221,7 @@ namespace NetExtender.Utilities.Types
                     {
                         continue;
                     }
-                    
+
                     foreach (T subitem in UnpackMany(inner, depth - 1, unpacker, selector))
                     {
                         yield return subitem;
@@ -2229,14 +2229,14 @@ namespace NetExtender.Utilities.Types
                 }
             }
         }
-        
+
         public static IEnumerable<T> UnpackMany<T>(this IEnumerable<T> source, Func<T, Int32, IEnumerable<T>?> unpacker, TryParseHandler<T, T>? selector)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (unpacker is null)
             {
                 throw new ArgumentNullException(nameof(unpacker));
@@ -2255,7 +2255,7 @@ namespace NetExtender.Utilities.Types
                     {
                         continue;
                     }
-                
+
                     foreach (T subitem in inner)
                     {
                         if (selector(subitem, out T? result))
@@ -2273,7 +2273,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (unpacker is null)
             {
                 throw new ArgumentNullException(nameof(unpacker));
@@ -2304,7 +2304,7 @@ namespace NetExtender.Utilities.Types
                     {
                         continue;
                     }
-                    
+
                     foreach (T subitem in UnpackMany(inner, depth - 1, unpacker, selector))
                     {
                         yield return subitem;
@@ -2312,14 +2312,14 @@ namespace NetExtender.Utilities.Types
                 }
             }
         }
-        
+
         public static IEnumerable<T> UnpackMany<T>(this IEnumerable<T> source, Func<T, Int32, IEnumerable<T>?> unpacker, TryParseHandler<T, Int32, T>? selector)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (unpacker is null)
             {
                 throw new ArgumentNullException(nameof(unpacker));
@@ -2357,7 +2357,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (unpacker is null)
             {
                 throw new ArgumentNullException(nameof(unpacker));
@@ -2388,7 +2388,7 @@ namespace NetExtender.Utilities.Types
                     {
                         continue;
                     }
-                    
+
                     foreach (T subitem in UnpackMany(inner, depth - 1, unpacker, selector))
                     {
                         yield return subitem;
@@ -2689,7 +2689,7 @@ namespace NetExtender.Utilities.Types
                 yield return predicate(item) ? item : alternate;
             }
         }
-        
+
         public static IEnumerable<T> NotEmptyOrDefault<T>(this IEnumerable<T>? source, T alternate)
         {
             if (source is null)

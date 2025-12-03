@@ -25,7 +25,7 @@ namespace NetExtender.Types.Sets
                 return Node.Comparer;
             }
         }
-        
+
         public Int32 Count
         {
             get
@@ -33,7 +33,7 @@ namespace NetExtender.Types.Sets
                 return Node.Count;
             }
         }
-        
+
         public T First
         {
             get
@@ -41,7 +41,7 @@ namespace NetExtender.Types.Sets
                 return Link.First is { } node ? node.ValueRef : throw new InvalidOperationException();
             }
         }
-        
+
         public T Last
         {
             get
@@ -106,7 +106,7 @@ namespace NetExtender.Types.Sets
             {
                 throw new ArgumentNullException(nameof(collection));
             }
-            
+
             Node = new NullableDictionary<T, LinkedListNode<T>>(collection.CountIfMaterialized(16), comparer);
             Link = new LinkedList<T>();
 
@@ -131,7 +131,7 @@ namespace NetExtender.Types.Sets
         {
             return Node.ContainsKey(item);
         }
-        
+
         /// <inheritdoc cref="SortedSet{T}.IsSubsetOf"/>
         public Boolean IsSubsetOf(IEnumerable<T> other)
         {
@@ -368,7 +368,7 @@ namespace NetExtender.Types.Sets
             {
                 return false;
             }
-            
+
             Link.Remove(node);
             return true;
         }
@@ -388,7 +388,7 @@ namespace NetExtender.Types.Sets
             }
 
             Int32 count = 0;
-            
+
             do
             {
                 ref T value = ref node.ValueRef;
@@ -396,7 +396,7 @@ namespace NetExtender.Types.Sets
                 {
                     count++;
                 }
-            } while ((node = node.Next) is not null);
+            } while ((node = node?.Next) is not null);
 
             return count;
         }
@@ -437,12 +437,12 @@ namespace NetExtender.Types.Sets
 
             Link.CopyTo(array, index);
         }
-        
+
         public LinkedList<T>.Enumerator GetEnumerator()
         {
             return Link.GetEnumerator();
         }
-        
+
         IEnumerator<T> IEnumerable<T>.GetEnumerator()
         {
             return Link.GetEnumerator();

@@ -37,7 +37,7 @@ namespace NetExtender.Types.Network
                 _state = value;
             }
         }
-        
+
         private HttpHeaders Headers { get; }
         private CurrentHeaderFieldStore Current { get; }
         private Boolean Ignore { get; }
@@ -83,13 +83,13 @@ namespace NetExtender.Types.Network
             Int32 start = consumed;
             HttpParserState fields = HttpParserState.DataTooBig;
             Int32 end = length <= 0 ? Int32.MaxValue : length - total + start;
-            
+
             if (ready < end)
             {
                 fields = HttpParserState.NeedMoreData;
                 end = ready;
             }
-            
+
             switch (state)
             {
                 case HeaderFieldState.Name:
@@ -126,13 +126,13 @@ namespace NetExtender.Types.Network
                         total += consumed - start;
                         return fields;
                     }
-                    
+
                     if (consumed > index)
                     {
                         String value = Encoding.UTF8.GetString(buffer, index, consumed - index);
                         current.Name.Append(value);
                     }
-                    
+
                     state = HeaderFieldState.Value;
                     if (++consumed == end)
                     {
@@ -156,13 +156,13 @@ namespace NetExtender.Types.Network
                         total += consumed - start;
                         return fields;
                     }
-                    
+
                     if (consumed > index)
                     {
                         String value = Encoding.UTF8.GetString(buffer, index, consumed - index);
                         current.Value.Append(value);
                     }
-                    
+
                     state = HeaderFieldState.AfterCarriageReturn;
                     if (++consumed == end)
                     {
@@ -178,14 +178,14 @@ namespace NetExtender.Types.Network
                         fields = HttpParserState.Invalid;
                         break;
                     }
-                    
+
                     if (current.IsEmpty)
                     {
                         fields = HttpParserState.Done;
                         ++consumed;
                         break;
                     }
-                    
+
                     state = HeaderFieldState.FoldingLine;
                     if (++consumed == end)
                     {
@@ -218,7 +218,7 @@ namespace NetExtender.Types.Network
                     goto case HeaderFieldState.Value;
                 }
             }
-            
+
             total += consumed - start;
             return fields;
         }
@@ -241,7 +241,7 @@ namespace NetExtender.Types.Network
 
             public StringBuilder Name { get; } = new StringBuilder(128);
             public StringBuilder Value { get; } = new StringBuilder(2048);
-            
+
             public Boolean IsEmpty
             {
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -255,7 +255,7 @@ namespace NetExtender.Types.Network
             {
                 String name = Name.ToString();
                 String value = Value.ToString().Trim(LinearWhiteSpace);
-                
+
                 if (String.Equals("expires", name, StringComparison.OrdinalIgnoreCase))
                 {
                     validation = false;

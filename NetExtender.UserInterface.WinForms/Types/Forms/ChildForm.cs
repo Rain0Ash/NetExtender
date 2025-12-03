@@ -15,7 +15,7 @@ namespace NetExtender.UserInterface.WinForms.Forms
 
         protected Form? GetLastParentForm()
         {
-            Control parent = Parent;
+            Control? parent = Parent;
             while (parent is not null)
             {
                 if (parent is Form form)

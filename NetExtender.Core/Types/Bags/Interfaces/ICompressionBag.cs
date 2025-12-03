@@ -12,7 +12,7 @@ namespace NetExtender.Types.Bags.Interfaces
         public ICounter64<T> Constraints { get; }
         public IReadOnlyList<T> Bag { get; }
         public IReadOnlyCounter<T> Counter { get; }
-        
+
         public Boolean Contains(T item, Int32 count);
         public Int32 LastIndexOf(T item);
         public Int32 CountOf(T item);

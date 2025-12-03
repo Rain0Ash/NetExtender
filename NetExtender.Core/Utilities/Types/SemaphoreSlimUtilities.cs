@@ -27,9 +27,9 @@ namespace NetExtender.Utilities.Types
             }
 
             value.Wait(token);
-            return System.Reactive.Disposables.Disposable.Create(value, static value => value.Release());
+            return Disposable.Create(value, static value => value.Release());
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static AwaitableDisposable<IDisposable> LockAsync(this SemaphoreSlim value)
         {
@@ -43,16 +43,16 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(value));
             }
-            
+
             static async Task<IDisposable> Core(SemaphoreSlim value, CancellationToken token)
             {
                 await value.WaitAsync(token).ConfigureAwait(false);
-                return System.Reactive.Disposables.Disposable.Create(value, static value => value.Release());
+                return Disposable.Create(value, static value => value.Release());
             }
 
             return new AwaitableDisposable<IDisposable>(Core(value, token));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ValueTask<Int32> ReleaseAsync(this SemaphoreSlim value)
         {
@@ -60,10 +60,10 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(value));
             }
-            
+
             return new ValueTask<Int32>(value.Release());
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ValueTask<Int32> ReleaseAsync(this SemaphoreSlim value, Int32 releaseCount)
         {
@@ -71,7 +71,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(value));
             }
-            
+
             return new ValueTask<Int32>(value.Release(releaseCount));
         }
     }

@@ -28,7 +28,7 @@ namespace NetExtender.Types.Sets
             : base(set)
         {
         }
-        
+
         public override ObservableIndexSortedSet<T> GetViewBetween(T? lower, T? upper)
         {
             return new ObservableIndexSortedSet<T>(Internal.GetViewBetween(lower, upper));
@@ -61,7 +61,7 @@ namespace NetExtender.Types.Sets
             : base(set)
         {
         }
-        
+
         protected sealed override IndexSortedSet<T> CloneInternal()
         {
             return new IndexSortedSet<T>(Internal, Internal.Comparer);
@@ -111,10 +111,10 @@ namespace NetExtender.Types.Sets
                 Handle(step, @new);
                 return;
             }
-            
+
             base.Handle(step, state);
         }
-        
+
         protected virtual void Handle(Step step, State? state)
         {
             if (state is null)
@@ -131,12 +131,12 @@ namespace NetExtender.Types.Sets
                     {
                         state.PropertyChanging(nameof(Min));
                     }
-                    
+
                     if (state.Max)
                     {
                         state.PropertyChanging(nameof(Max));
                     }
-                    
+
                     goto default;
                 }
                 case Step.Collection:
@@ -145,12 +145,12 @@ namespace NetExtender.Types.Sets
                     {
                         state.PropertyChanged(nameof(Min));
                     }
-                    
+
                     if (state.Max)
                     {
                         state.PropertyChanged(nameof(Max));
                     }
-                    
+
                     goto default;
                 }
                 default:
@@ -242,7 +242,7 @@ namespace NetExtender.Types.Sets
         {
             return Internal.GetEnumerator();
         }
-        
+
         public T this[Int32 index]
         {
             get
@@ -260,7 +260,7 @@ namespace NetExtender.Types.Sets
                 state.Return();
             }
         }
-        
+
         //TODO: пофиксить. сломается при отсутствии изменения Next. Не забыть про обычный SortedSet
         protected new record State : ObservableSet<T, TSet>.State
         {
@@ -280,7 +280,7 @@ namespace NetExtender.Types.Sets
                         base.Next = value;
                         return;
                     }
-                    
+
                     Min = value.Comparer.Compare(Current.Min, value.Min) != 0 || !EqualityComparer<T>.Default.Equals(Current.Min, value.Min);
                     Max = value.Comparer.Compare(Current.Max, value.Max) != 0 || !EqualityComparer<T>.Default.Equals(Current.Max, value.Max);
                     base.Next = value;

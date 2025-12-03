@@ -13,7 +13,7 @@ namespace NetExtender.CQRS.Requests.Handlers.Interfaces
         public new Task<TResult> HandleAsync(TRequest request);
         public new Task<TResult> HandleAsync(TRequest request, CancellationToken token);
     }
-    
+
     public interface IRequestCQRSHandler<in TRequest> : IEntityCQRSHandler<TRequest> where TRequest : IRequestCQRS
     {
         public new Task HandleAsync(TRequest request);

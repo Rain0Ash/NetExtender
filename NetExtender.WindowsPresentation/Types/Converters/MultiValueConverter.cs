@@ -15,7 +15,7 @@ namespace NetExtender.WindowsPresentation.Types.Converters
         {
         }
     }
-    
+
     public class MultiValueConverterWrapper<T> : MultiValueConverter where T : class, IMultiValueConverter
     {
         public T Converter { get; }
@@ -35,7 +35,7 @@ namespace NetExtender.WindowsPresentation.Types.Converters
             return Converter.ConvertBack(value, targetTypes, parameter, culture);
         }
     }
-    
+
     public abstract class MultiValueConverter : IMultiValueConverter
     {
         public static Object None
@@ -45,7 +45,7 @@ namespace NetExtender.WindowsPresentation.Types.Converters
                 return DependencyProperty.UnsetValue;
             }
         }
-        
+
         public abstract Object? Convert(Object?[]? values, Type? targetType, Object? parameter, CultureInfo? culture);
         public abstract Object?[]? ConvertBack(Object? value, Type?[]? targetTypes, Object? parameter, CultureInfo? culture);
     }

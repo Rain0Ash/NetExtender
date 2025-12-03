@@ -399,7 +399,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
 
             return builder.UseUrls(UriUtilities.HttpDelimiter + http, UriUtilities.HttpsDelimiter + https);
         }
-        
+
         public static IWebHostBuilder UseUrls(this IWebHostBuilder builder, Boolean https, String address, UInt16 port)
         {
             if (builder is null)
@@ -437,7 +437,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
             {
                 throw new ArgumentNullException(nameof(address));
             }
-            
+
             return UseUrls(builder, https.Get(), address.Get(), port);
         }
 
@@ -462,7 +462,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
             {
                 return UseUrls(builder, https.Get(), address.Get(), (UInt16) port);
             }
-            
+
             throw new ArgumentOutOfRangeException(nameof(port), port, $"The port must be between {UInt16.MinValue} and {UInt16.MaxValue}.");
         }
 
@@ -487,10 +487,10 @@ namespace NetExtender.Utilities.AspNetCore.Types
             {
                 throw new ArgumentNullException(nameof(port));
             }
-            
+
             return UseUrls(builder, https, address, port.Get());
         }
-        
+
         public static IWebHostBuilder UseUrls(this IWebHostBuilder builder, IGetter<Boolean> https, IGetter<String> address, IGetter<Int32> port)
         {
             if (builder is null)
@@ -512,7 +512,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
             {
                 throw new ArgumentNullException(nameof(port));
             }
-            
+
             return UseUrls(builder, https, address, port.Get());
         }
     }

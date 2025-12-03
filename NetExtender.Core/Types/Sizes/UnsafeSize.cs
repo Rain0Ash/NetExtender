@@ -15,7 +15,7 @@ namespace NetExtender.Types.Sizes
     {
         internal const String Data = nameof(Data);
     }
-    
+
     [Serializable]
     public unsafe struct UnsafeSize<TSize> : IUnsafeSpace<TSize>, IUnsafeSpace<UnsafeSize<TSize>> where TSize : struct, IUnsafeSize<TSize>
     {
@@ -319,7 +319,7 @@ namespace NetExtender.Types.Sizes
             {
                 throw new NotSupportedException($"Type '{typeof(T).Name} ({Unsafe.SizeOf<T>()})' not support for '{Type.Name} ({Size})'.");
             }
-            
+
             fixed (void* pointer = &Internal)
             {
                 return ref UnsafeUtilities.AsRef<T>(pointer);
@@ -342,7 +342,7 @@ namespace NetExtender.Types.Sizes
             {
                 throw new NotSupportedException($"Type '{typeof(T).Name} ({Unsafe.SizeOf<T>()})' not support for '{Type.Name} ({Size})'.");
             }
-            
+
             fixed (void* pointer = &Internal)
             {
                 return new ReadOnlySpan<T>(pointer, Size / Unsafe.SizeOf<T>());
@@ -365,13 +365,13 @@ namespace NetExtender.Types.Sizes
             {
                 throw new NotSupportedException($"Type '{typeof(T).Name} ({Unsafe.SizeOf<T>()})' not support for '{Type.Name} ({Size})'.");
             }
-            
+
             fixed (void* pointer = &Internal)
             {
                 return new Span<T>(pointer, Size / Unsafe.SizeOf<T>());
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         ref TSize IUnsafeSize<TSize>.SetFull()
         {
@@ -422,7 +422,7 @@ namespace NetExtender.Types.Sizes
             Internal.Fill(in value);
             return ref this;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         ref TSize IUnsafeSize<TSize>.Clear()
         {
@@ -435,7 +435,7 @@ namespace NetExtender.Types.Sizes
             Internal.Clear();
             return ref this;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         ref TSize IUnsafeSize<TSize>.Reset()
         {
@@ -454,7 +454,7 @@ namespace NetExtender.Types.Sizes
         {
             AsReadOnlySpan().CopyTo(destination);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public readonly void CopyTo(ref TSize destination)
         {
@@ -463,19 +463,19 @@ namespace NetExtender.Types.Sizes
                 CopyTo(new Span<Byte>(pointer, destination.Size));
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public readonly void CopyTo(ref UnsafeSize<TSize> destination)
         {
             CopyTo(ref destination.Internal);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public readonly Boolean TryCopyTo(Span<Byte> destination)
         {
             return AsReadOnlySpan().TryCopyTo(destination);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public readonly Boolean TryCopyTo(ref TSize destination)
         {
@@ -496,7 +496,7 @@ namespace NetExtender.Types.Sizes
         {
             return AsReadOnlySpan().ToArray();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         Byte[] IUnsafeSize<TSize>.ToFullArray()
         {
@@ -514,7 +514,7 @@ namespace NetExtender.Types.Sizes
         {
             return AsReadOnlySpan<T>().ToArray();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         T[] IUnsafeSize<TSize>.ToFullArray<T>()
         {

@@ -214,17 +214,17 @@ namespace NetExtender.Types.Monads
             : this(value, DefaultDateTimeKind)
         {
         }
-        
+
         public Debounce(T value, DateTimeKind kind)
             : this(value, TimeSpan.Zero, kind)
         {
         }
-        
+
         public Debounce(T value, TimeSpan delay)
             : this(delay, DefaultDateTimeKind)
         {
         }
-        
+
         public Debounce(T value, TimeSpan delay, DateTimeKind kind)
             : this(delay)
         {
@@ -233,6 +233,10 @@ namespace NetExtender.Types.Monads
             SetTime = Now;
         }
 
+#if NET8_0_OR_GREATER
+        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
         private Debounce(SerializationInfo info, StreamingContext context)
             : this(info.GetValue<TimeSpan>(nameof(Delay)))
         {
@@ -254,11 +258,11 @@ namespace NetExtender.Types.Monads
                 value = null;
                 return false;
             }
-            
+
             value = _value;
             return true;
         }
-        
+
         public Boolean Unwrap([MaybeNullWhen(false)] out T value)
         {
             if (IsEmpty)
@@ -266,11 +270,11 @@ namespace NetExtender.Types.Monads
                 value = default;
                 return false;
             }
-            
+
             value = _value;
             return true;
         }
-        
+
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue(nameof(Value), _value);
@@ -278,22 +282,22 @@ namespace NetExtender.Types.Monads
             info.AddValue(nameof(SetTime), SetTime);
             info.AddValue(nameof(TimeKind), (Byte) TimeKind);
         }
-        
+
         private static TimeSpan Normalize(TimeSpan value)
         {
             return value >= TimeSpan.Zero ? value : Utilities.Types.Time.Millisecond.Ten;
         }
-        
+
         public Boolean Set(T value, out Debounce<T> result)
         {
             return Set(value, out DateTime _, out result);
         }
-        
+
         Boolean IDebounce<T>.Set(T value)
         {
             return false;
         }
-        
+
         Boolean IDebounce<T>.Set(T value, [MaybeNullWhen(false)] out IDebounce<T> result)
         {
             if (Set(value, out Debounce<T> debounce))
@@ -301,11 +305,11 @@ namespace NetExtender.Types.Monads
                 result = debounce;
                 return true;
             }
-            
+
             result = null;
             return false;
         }
-        
+
         public Boolean Set(T value, out TimeSpan delta, out Debounce<T> result)
         {
             delta = Time;
@@ -314,17 +318,17 @@ namespace NetExtender.Types.Monads
                 result = default;
                 return false;
             }
-            
+
             result = new Debounce<T>(value, Delay) { SetTime = Now };
             return true;
         }
-        
+
         Boolean IDebounce<T>.Set(T value, out TimeSpan delta)
         {
             delta = Time;
             return false;
         }
-        
+
         Boolean IDebounce<T>.Set(T value, out TimeSpan delta, [MaybeNullWhen(false)] out IDebounce<T> result)
         {
             if (Set(value, out delta, out Debounce<T> debounce))
@@ -332,11 +336,11 @@ namespace NetExtender.Types.Monads
                 result = debounce;
                 return true;
             }
-            
+
             result = null;
             return false;
         }
-        
+
         public Boolean Set(T value, out DateTime time, out Debounce<T> result)
         {
             if (IsDebounce)
@@ -345,18 +349,18 @@ namespace NetExtender.Types.Monads
                 result = default;
                 return false;
             }
-            
+
             time = Now;
             result = new Debounce<T>(value, Delay) { SetTime = time };
             return true;
         }
-        
+
         Boolean IDebounce<T>.Set(T value, out DateTime time)
         {
             time = SetTime;
             return false;
         }
-        
+
         Boolean IDebounce<T>.Set(T value, out DateTime time, [MaybeNullWhen(false)] out IDebounce<T> result)
         {
             if (Set(value, out time, out Debounce<T> debounce))
@@ -364,21 +368,21 @@ namespace NetExtender.Types.Monads
                 result = debounce;
                 return true;
             }
-            
+
             result = null;
             return false;
         }
-        
+
         public Debounce<T> With(TimeSpan delay)
         {
             return new Debounce<T>(_value, delay) { SetTime = SetTime };
         }
-        
+
         public Int32 CompareTo(T? other)
         {
             return CompareTo(other, null);
         }
-        
+
         public Int32 CompareTo(T? other, IComparer<T>? comparer)
         {
             return comparer.SafeCompare(_value, other) ?? 0;
@@ -388,22 +392,22 @@ namespace NetExtender.Types.Monads
         {
             return CompareTo(other, null);
         }
-        
+
         public Int32 CompareTo(Debounce<T> other, IComparer<T>? comparer)
         {
             return CompareTo(other._value, comparer);
         }
-        
+
         public Int32 CompareTo(IDebounce<T>? other)
         {
             return CompareTo(other, null);
         }
-        
+
         public Int32 CompareTo(IDebounce<T>? other, IComparer<T>? comparer)
         {
             return other is not null ? CompareTo(other.Value, comparer) : 1;
         }
-        
+
         public override Int32 GetHashCode()
         {
             return _value is not null ? _value.GetHashCode() : 0;
@@ -413,7 +417,7 @@ namespace NetExtender.Types.Monads
         {
             return Equals(other, null);
         }
-        
+
         public Boolean Equals(Object? other, IEqualityComparer<T>? comparer)
         {
             return other switch
@@ -424,38 +428,38 @@ namespace NetExtender.Types.Monads
                 _ => false
             };
         }
-        
+
         public Boolean Equals(T? other)
         {
             return Equals(other, null);
         }
-        
+
         public Boolean Equals(T? other, IEqualityComparer<T>? comparer)
         {
             comparer ??= EqualityComparer<T>.Default;
             return comparer.Equals(_value, other);
         }
-        
+
         public Boolean Equals(Debounce<T> other)
         {
             return Equals(other, null);
         }
-        
+
         public Boolean Equals(Debounce<T> other, IEqualityComparer<T>? comparer)
         {
             return Equals(other._value, comparer);
         }
-        
+
         public Boolean Equals(IDebounce<T>? other)
         {
             return Equals(other, null);
         }
-        
+
         public Boolean Equals(IDebounce<T>? other, IEqualityComparer<T>? comparer)
         {
             return other is not null && Equals(other.Value, comparer);
         }
-        
+
         public Debounce<T> Clone()
         {
             return this;

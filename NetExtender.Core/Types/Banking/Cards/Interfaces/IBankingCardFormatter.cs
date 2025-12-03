@@ -10,7 +10,7 @@ namespace NetExtender.Types.Banking.Cards.Interfaces
         public Byte Length { get; }
         public Byte Splitting { get; }
         public String Delimiter { get; }
-        
+
         public String Format(String value);
     }
 }

@@ -69,7 +69,7 @@ namespace NetExtender.Domains.AspNetCore.Applications
             }
         }
     }
-    
+
     public class AspNetCoreWebApplication : AspNetCoreApplication<IWebHost?>
     {
         public override async Task<IApplication> RunAsync(IWebHost? host, CancellationToken token)

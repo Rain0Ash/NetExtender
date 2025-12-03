@@ -31,7 +31,7 @@ namespace NetExtender.Newtonsoft.Types.Monads
             return true;
         }
     }
-    
+
     public sealed class MutableDebounceJsonConverter<T> : NewtonsoftJsonConverter<MutableDebounce<T>>
     {
         protected internal override MutableDebounce<T>? Read(in JsonReader reader, Type type, Maybe<MutableDebounce<T>> exist, ref SerializerOptions options)
@@ -74,7 +74,7 @@ namespace NetExtender.Newtonsoft.Types.Monads
                     {
                         return default(T)!;
                     }
-                    
+
                     JToken jvalue = @object.GetValue(nameof(Debounce<T>.Value), options) ?? throw new JsonSerializationException($"Missing required property '{nameof(Debounce<T>.Value)}'.");
                     T? value = jvalue.ToObject<T>(options);
 
@@ -89,7 +89,7 @@ namespace NetExtender.Newtonsoft.Types.Monads
                     {
                         delay = jdelay.ToObject<TimeSpan>(options);
                     }
-                    
+
                     DateTimeKind kind = Debounce<T>.DefaultDateTimeKind;
                     if (@object.GetValue(nameof(Debounce<T>.TimeKind), options) is { } jkind)
                     {
@@ -123,7 +123,7 @@ namespace NetExtender.Newtonsoft.Types.Monads
                     writer.WriteObject();
                     return true;
                 }
-                
+
                 options.Serialize(writer, value.Value);
                 return true;
             }
@@ -212,7 +212,7 @@ namespace NetExtender.Serialization.Json.Monads
             return true;
         }
     }
-    
+
     public sealed class DebounceJsonConverter<T> : TextJsonConverter<Debounce<T>>
     {
         // ReSharper disable once CognitiveComplexity
@@ -234,7 +234,7 @@ namespace NetExtender.Serialization.Json.Monads
                     {
                         return default(T)!;
                     }
-                    
+
                     if (!root.TryGetProperty(nameof(Debounce<T>.Value), options, out JsonElement jvalue))
                     {
                         throw new JsonException($"Missing required property '{nameof(Debounce<T>.Value)}'.");
@@ -253,7 +253,7 @@ namespace NetExtender.Serialization.Json.Monads
                     {
                         delay = jdelay.Deserialize<TimeSpan>();
                     }
-                    
+
                     DateTimeKind kind = Debounce<T>.DefaultDateTimeKind;
                     if (root.TryGetProperty(nameof(Debounce<T>.TimeKind), options, out JsonElement jkind))
                     {
@@ -287,7 +287,7 @@ namespace NetExtender.Serialization.Json.Monads
                     writer.WriteObject();
                     return true;
                 }
-                
+
                 JsonSerializer.Serialize(writer, value.Value, options);
                 return true;
             }
@@ -314,7 +314,7 @@ namespace NetExtender.Serialization.Json.Monads
                 writer.WritePropertyName(nameof(Debounce<T>.TimeKind), options);
                 JsonSerializer.Serialize(writer, value.TimeKind, options);
             }
-            
+
             writer.WriteEndObject();
             return true;
         }

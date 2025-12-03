@@ -12,7 +12,7 @@ namespace NetExtender.UserInterface.WindowsPresentation
     {
         public static readonly DependencyProperty AutoHideProperty = DependencyProperty.RegisterAttached(nameof(AutoHideMenuItem.AutoHide), typeof(Boolean), typeof(ContextMenu), new PropertyMetadata(true));
         protected static Binding TargetBinding { get; } = new Binding(nameof(PlacementTarget) + "." + nameof(DataContext)) { RelativeSource = RelativeSource.Self };
-        
+
         public TargetContextMenu()
         {
             SetBinding(DataContextProperty, TargetBinding);

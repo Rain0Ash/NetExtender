@@ -13,61 +13,61 @@ namespace NetExtender.FileSystems
     {
 #region Storage
         protected internal abstract DriveInfo? Info(TDrive node);
-        
+
         DriveInfo? IFileSystemStorage.Info(IDriveEntry entry)
         {
             return Info(Verify<TDrive, IDriveEntry>(entry));
         }
-        
+
         protected internal abstract void GetObjectData(TDrive node, SerializationInfo info, StreamingContext context);
-        
+
         void IFileSystemStorage.GetObjectData(IDriveEntry entry, SerializationInfo info, StreamingContext context)
         {
             GetObjectData(Verify<TDrive, IDriveEntry>(entry), info, context);
         }
-        
+
         protected new abstract String Name(TDrive node);
 
         String IFileSystemStorage.Name(IDriveEntry entry)
         {
             return Name(Verify<TDrive, IDriveEntry>(entry));
         }
-        
+
         protected internal abstract String FullName(TDrive node);
 
         String IFileSystemStorage.FullName(IDriveEntry entry)
         {
             return FullName(Verify<TDrive, IDriveEntry>(entry));
         }
-        
+
         protected new abstract Boolean IsReal(TDrive node);
 
         Boolean IFileSystemStorage.IsReal(IDriveEntry entry)
         {
             return IsReal(Verify<TDrive, IDriveEntry>(entry));
         }
-        
+
         protected internal abstract Boolean IsReady(TDrive node);
 
         Boolean IFileSystemStorage.IsReady(IDriveEntry entry)
         {
             return IsReady(Verify<TDrive, IDriveEntry>(entry));
         }
-        
+
         protected internal abstract DriveType DriveType(TDrive node);
 
         DriveType IFileSystemStorage.DriveType(IDriveEntry entry)
         {
             return DriveType(Verify<TDrive, IDriveEntry>(entry));
         }
-        
+
         protected internal abstract String DriveFormat(TDrive node);
 
         String IFileSystemStorage.DriveFormat(IDriveEntry entry)
         {
             return DriveFormat(Verify<TDrive, IDriveEntry>(entry));
         }
-        
+
         protected internal abstract String? VolumeLabel(TDrive node);
 
         String? IFileSystemStorage.VolumeLabel(IDriveEntry entry)
@@ -81,56 +81,56 @@ namespace NetExtender.FileSystems
         {
             VolumeLabel(Verify<TDrive, IDriveEntry>(entry), value);
         }
-        
+
         protected internal abstract Int64 AvailableFreeSpace(TDrive node);
 
         Int64 IFileSystemStorage.AvailableFreeSpace(IDriveEntry entry)
         {
             return AvailableFreeSpace(Verify<TDrive, IDriveEntry>(entry));
         }
-        
+
         protected internal abstract Int64 TotalFreeSpace(TDrive node);
 
         Int64 IFileSystemStorage.TotalFreeSpace(IDriveEntry entry)
         {
             return TotalFreeSpace(Verify<TDrive, IDriveEntry>(entry));
         }
-        
+
         protected internal abstract Int64 TotalSize(TDrive node);
 
         Int64 IFileSystemStorage.TotalSize(IDriveEntry entry)
         {
             return TotalSize(Verify<TDrive, IDriveEntry>(entry));
         }
-        
+
         protected internal abstract TDirectory RootDirectory(TDrive node);
 
         IDirectoryEntry IFileSystemStorage.RootDirectory(IDriveEntry entry)
         {
             return RootDirectory(Verify<TDrive, IDriveEntry>(entry));
         }
-        
+
         protected internal abstract Int32 GetHashCode(TDrive? node);
 
         Int32 IFileSystemStorage.GetHashCode(IDriveEntry? entry)
         {
             return GetHashCode(Verify<TDrive, IDriveEntry>(entry));
         }
-        
+
         protected internal abstract Boolean Equals(TDrive? node, DriveInfo? other);
 
         Boolean IFileSystemStorage.Equals(IDriveEntry? entry, DriveInfo? other)
         {
             return Equals(Verify<TDrive, IDriveEntry>(entry), other);
         }
-        
+
         protected internal abstract Boolean Equals(TDrive? node, IDriveInfo? other);
 
         Boolean IFileSystemStorage.Equals(IDriveEntry? entry, IDriveInfo? other)
         {
             return Equals(Verify<TDrive, IDriveEntry>(entry), other);
         }
-        
+
         [return: NotNullIfNotNull("node")]
         protected internal abstract String? ToString(TDrive? node);
 
@@ -188,7 +188,7 @@ namespace NetExtender.FileSystems
                 return ref INode<TInitializer>.Verify(this, ref initializer);
             }
         }
-        
+
         public abstract class DriveNode : DriveInfoEntry, IDriveNode
         {
             public Guid Id { get; }

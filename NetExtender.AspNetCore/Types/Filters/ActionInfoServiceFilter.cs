@@ -17,7 +17,7 @@ namespace NetExtender.AspNetCore.Filters
         protected ActionInfoServiceFilter()
         {
         }
-        
+
         public ActionInfoServiceFilter(IActionInfoService? service)
             : base(service)
         {
@@ -49,7 +49,7 @@ namespace NetExtender.AspNetCore.Filters
         {
             _service.Set(Current = action, Descriptor = descriptor);
         }
-        
+
         public virtual async Task OnActionExecutionAsync(ActionExecutingContext? context, ActionExecutionDelegate? next)
         {
             Set(context?.RouteData.Values["action"]?.ToString(), context?.ActionDescriptor);

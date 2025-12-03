@@ -18,7 +18,7 @@ namespace NetExtender.UserInterface.Console.Interfaces
         }
 
         public Icon? Icon { get; set; }
-        
+
         public Graphics CreateGraphics();
         public Boolean TryGetTitle([MaybeNullWhen(false)] String result);
         public Boolean TrySetTitle(String? result);

@@ -10,7 +10,7 @@ namespace System.Windows.Input
         public void Execute(T? parameter);
         public void Execute(Object? sender, T? parameter);
     }
-    
+
     public interface ISenderCommand : ICommand
     {
         public Boolean CanExecute(Object? sender, Object? parameter);

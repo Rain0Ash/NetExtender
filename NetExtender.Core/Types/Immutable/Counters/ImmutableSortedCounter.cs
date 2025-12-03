@@ -24,22 +24,22 @@ namespace NetExtender.Types.Immutable.Counters
                 ImmutableSortedCounter<T, Int32> result = ImmutableSortedCounter<T>.Empty;
                 return Unsafe.As<ImmutableSortedCounter<T, Int32>, ImmutableSortedCounter<T, TCount>>(ref result);
             }
-            
+
             if (typeof(TCount) == typeof(Int64))
             {
                 ImmutableSortedCounter<T, Int64> result = ImmutableSortedCounter64<T>.Empty;
                 return Unsafe.As<ImmutableSortedCounter<T, Int64>, ImmutableSortedCounter<T, TCount>>(ref result);
             }
-            
+
             if (typeof(TCount) == typeof(Decimal))
             {
                 ImmutableSortedCounter<T, Decimal> result = ImmutableSortedDecimalCounter<T>.Empty;
                 return Unsafe.As<ImmutableSortedCounter<T, Decimal>, ImmutableSortedCounter<T, TCount>>(ref result);
             }
-            
+
             return ImmutableSortedCounter<T, TCount>.Empty;
         }
-        
+
         public static ImmutableSortedCounter<T, TCount> Create<T, TCount>(IComparer<T>? comparer) where T : notnull where TCount : unmanaged, IConvertible
         {
             if (typeof(TCount) == typeof(Int32))
@@ -47,19 +47,19 @@ namespace NetExtender.Types.Immutable.Counters
                 ImmutableSortedCounter<T, Int32> result = new ImmutableSortedCounter<T>(ImmutableSortedDictionary.Create<T, Int32>(comparer));
                 return Unsafe.As<ImmutableSortedCounter<T, Int32>, ImmutableSortedCounter<T, TCount>>(ref result);
             }
-            
+
             if (typeof(TCount) == typeof(Int64))
             {
                 ImmutableSortedCounter<T, Int64> result = new ImmutableSortedCounter64<T>(ImmutableSortedDictionary.Create<T, Int64>(comparer));
                 return Unsafe.As<ImmutableSortedCounter<T, Int64>, ImmutableSortedCounter<T, TCount>>(ref result);
             }
-            
+
             if (typeof(TCount) == typeof(Decimal))
             {
                 ImmutableSortedCounter<T, Decimal> result = new ImmutableSortedDecimalCounter<T>(ImmutableSortedDictionary.Create<T, Decimal>(comparer));
                 return Unsafe.As<ImmutableSortedCounter<T, Decimal>, ImmutableSortedCounter<T, TCount>>(ref result);
             }
-            
+
             return new ImmutableSortedCounter<T, TCount>(ImmutableSortedDictionary.Create<T, TCount>(comparer));
         }
 
@@ -155,11 +155,11 @@ namespace NetExtender.Types.Immutable.Counters
             return ImmutableSortedCounter<TKey, TValue>.Empty.WithComparers(comparer).AddRange(source.Pair(keySelector, elementSelector));
         }
     }
-    
+
     public class ImmutableSortedCounter<T> : ImmutableSortedCounter<T, Int32> where T : notnull
     {
         public new static ImmutableSortedCounter<T, Int32> Empty { get; } = new ImmutableSortedCounter<T>(ImmutableSortedDictionary<T, Int32>.Empty);
-        
+
         internal ImmutableSortedCounter(ImmutableSortedDictionary<T, Int32> @internal)
             : base(@internal)
         {
@@ -191,12 +191,12 @@ namespace NetExtender.Types.Immutable.Counters
         {
             return new Counter<T>(Internal);
         }
-        
+
         protected sealed override Boolean Less(Int32 value, Int32 count)
         {
             return value < count;
         }
-        
+
         protected sealed override Boolean LessOrEquals(Int32 value, Int32 count)
         {
             return value <= count;
@@ -232,16 +232,16 @@ namespace NetExtender.Types.Immutable.Counters
             return first - second;
         }
     }
-    
+
     public class ImmutableSortedCounter64<T> : ImmutableSortedCounter<T, Int64> where T : notnull
     {
         public new static ImmutableSortedCounter<T, Int64> Empty { get; } = new ImmutableSortedCounter64<T>(ImmutableSortedDictionary<T, Int64>.Empty);
-        
+
         internal ImmutableSortedCounter64(ImmutableSortedDictionary<T, Int64> @internal)
             : base(@internal)
         {
         }
-        
+
         [return: NotNullIfNotNull("internal")]
         protected override ImmutableSortedCounter64<T>? Convert(IImmutableDictionary<T, Int64>? @internal)
         {
@@ -268,12 +268,12 @@ namespace NetExtender.Types.Immutable.Counters
         {
             return new Counter64<T>(Internal);
         }
-        
+
         protected sealed override Boolean Less(Int64 value, Int64 count)
         {
             return value < count;
         }
-        
+
         protected sealed override Boolean LessOrEquals(Int64 value, Int64 count)
         {
             return value <= count;
@@ -309,16 +309,16 @@ namespace NetExtender.Types.Immutable.Counters
             return first - second;
         }
     }
-    
+
     public class ImmutableSortedDecimalCounter<T> : ImmutableSortedCounter<T, Decimal> where T : notnull
     {
         public new static ImmutableSortedCounter<T, Decimal> Empty { get; } = new ImmutableSortedDecimalCounter<T>(ImmutableSortedDictionary<T, Decimal>.Empty);
-        
+
         internal ImmutableSortedDecimalCounter(ImmutableSortedDictionary<T, Decimal> @internal)
             : base(@internal)
         {
         }
-        
+
         [return: NotNullIfNotNull("internal")]
         protected override ImmutableSortedDecimalCounter<T>? Convert(IImmutableDictionary<T, Decimal>? @internal)
         {
@@ -345,12 +345,12 @@ namespace NetExtender.Types.Immutable.Counters
         {
             return new DecimalCounter<T>(Internal);
         }
-        
+
         protected sealed override Boolean Less(Decimal value, Decimal count)
         {
             return value < count;
         }
-        
+
         protected sealed override Boolean LessOrEquals(Decimal value, Decimal count)
         {
             return value <= count;
@@ -386,16 +386,16 @@ namespace NetExtender.Types.Immutable.Counters
             return first - second;
         }
     }
-    
+
     public class ImmutableSortedCounter<T, TCount> : ImmutableSortedCounter<T, TCount, ImmutableSortedCounter<T, TCount>> where T : notnull where TCount : unmanaged, IConvertible
     {
         public static ImmutableSortedCounter<T, TCount> Empty { get; } = new ImmutableSortedCounter<T, TCount>(ImmutableSortedDictionary<T, TCount>.Empty);
-        
+
         internal ImmutableSortedCounter(ImmutableSortedDictionary<T, TCount> @internal)
             : base(@internal)
         {
         }
-        
+
         [return: NotNullIfNotNull("internal")]
         protected override ImmutableSortedCounter<T, TCount>? Convert(IImmutableDictionary<T, TCount>? @internal)
         {
@@ -423,11 +423,11 @@ namespace NetExtender.Types.Immutable.Counters
             return new Counter<T, TCount>(Internal);
         }
     }
-    
+
     public abstract class ImmutableSortedCounter<T, TCount, TCounter> : ImmutableCounterBase<T, TCount, TCounter> where T : notnull where TCount : unmanaged, IConvertible where TCounter : class, IImmutableCounter<T, TCount>
     {
         protected sealed override ImmutableSortedDictionary<T, TCount> Internal { get; }
-        
+
         public IComparer<T> KeyComparer
         {
             get
@@ -435,7 +435,7 @@ namespace NetExtender.Types.Immutable.Counters
                 return Internal.KeyComparer;
             }
         }
-        
+
         public IEqualityComparer<TCount> ValueComparer
         {
             get

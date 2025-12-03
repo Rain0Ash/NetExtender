@@ -8,7 +8,7 @@ namespace NetExtender.FileSystems.Interfaces
         /// <inheritdoc cref="FileInfo.Directory"/>
         public new IDirectoryEntry? Directory { get; }
     }
-    
+
     public interface ILinkInfo : IFileSystemInfo, IEquatable<ILinkInfo>
     {
         /// <inheritdoc cref="FileInfo.DirectoryName"/>
@@ -16,7 +16,7 @@ namespace NetExtender.FileSystems.Interfaces
 
         /// <inheritdoc cref="FileInfo.Directory"/>
         public IDirectoryInfo? Directory { get; }
-        
+
         public void Create();
     }
 }

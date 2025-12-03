@@ -36,16 +36,16 @@ namespace NetExtender.WindowsPresentation.Types.Converters
     public class OperationConverter : IValueConverter
     {
         public ConverterMathOperation Operation { get; set; } 
-        
+
         public OperationConverter()
         {
         }
-        
+
         public OperationConverter(ConverterMathOperation operation)
         {
             Operation = operation;
         }
-        
+
         // ReSharper disable once CognitiveComplexity
         public Object Convert(Object? value, Type? targetType, Object? parameter, CultureInfo? culture)
         {
@@ -56,7 +56,7 @@ namespace NetExtender.WindowsPresentation.Types.Converters
                 case Trilean trilean when Operation is ConverterMathOperation.Not:
                     return !trilean;
             }
-            
+
             if (value is null || parameter is null)
             {
                 return Operation switch

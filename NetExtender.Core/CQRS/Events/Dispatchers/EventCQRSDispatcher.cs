@@ -15,7 +15,7 @@ namespace NetExtender.CQRS.Events.Dispatchers
         {
             return DispatchAsync(@event);
         }
-        
+
         Task IEventCQRSDispatcher.DispatchAsync<TEvent>(TEvent @event, CancellationToken token)
         {
             return DispatchAsync(@event, token);

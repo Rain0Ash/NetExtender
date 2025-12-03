@@ -31,7 +31,7 @@ namespace NetExtender.Patch
                     return result ?? throw new ReflectionOperationException($"Can't get type '{nameof(FileStreamHelpers)}' from '{assembly}'.");
                 }
             }
-            
+
             [ReflectionNaming]
             protected static IEnumerable<MethodInfo> ChooseStrategy
             {
@@ -69,7 +69,7 @@ namespace NetExtender.Patch
                             yield return enumerator.Current;
                         }
                     }
-                    
+
                     return Factory;
                 }
             }
@@ -81,7 +81,7 @@ namespace NetExtender.Patch
                     return GetName(typeof(NetExtenderFileStreamPatch));
                 }
             }
-            
+
             public sealed override ReflectionPatchCategory Category
             {
                 get
@@ -111,10 +111,10 @@ namespace NetExtender.Patch
                     harmony.Transpiler(transpiler, method);
                     any = true;
                 }
-                
+
                 return any ? ReflectionPatchState.Apply : ReflectionPatchState.Failed;
             }
-            
+
             protected override void Dispose(Boolean disposing)
             {
             }

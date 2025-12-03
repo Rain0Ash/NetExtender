@@ -13,12 +13,12 @@ namespace NetExtender.Utilities.Delegates
         {
             return new AsyncTaskValueAction<TDelegate>(value);
         }
-        
+
         public static implicit operator TDelegate(AsyncTaskValueAction<TDelegate> value)
         {
             return value._internal;
         }
-        
+
         public static Boolean operator ==(AsyncTaskValueAction<TDelegate> first, AsyncTaskValueAction<TDelegate> second)
         {
             return first.Equals(second);
@@ -122,19 +122,19 @@ namespace NetExtender.Utilities.Delegates
             }
         }
     }
-    
+
     public struct AsyncValueTaskValueAction<TDelegate> : IAsyncValueAction<AsyncValueTaskValueAction<TDelegate>> where TDelegate : struct, IValueFunc<TDelegate, ValueTask>
     {
         public static implicit operator AsyncValueTaskValueAction<TDelegate>(TDelegate value)
         {
             return new AsyncValueTaskValueAction<TDelegate>(value);
         }
-        
+
         public static implicit operator TDelegate(AsyncValueTaskValueAction<TDelegate> value)
         {
             return value._internal;
         }
-        
+
         public static Boolean operator ==(AsyncValueTaskValueAction<TDelegate> first, AsyncValueTaskValueAction<TDelegate> second)
         {
             return first.Equals(second);
@@ -238,19 +238,19 @@ namespace NetExtender.Utilities.Delegates
             }
         }
     }
-    
+
     public struct AsyncTaskValueFunc<TDelegate, TResult> : IAsyncValueFunc<AsyncTaskValueFunc<TDelegate, TResult>, TResult> where TDelegate : struct, IValueFunc<TDelegate, Task<TResult>>
     {
         public static implicit operator AsyncTaskValueFunc<TDelegate, TResult>(TDelegate value)
         {
             return new AsyncTaskValueFunc<TDelegate, TResult>(value);
         }
-        
+
         public static implicit operator TDelegate(AsyncTaskValueFunc<TDelegate, TResult> value)
         {
             return value._internal;
         }
-        
+
         public static Boolean operator ==(AsyncTaskValueFunc<TDelegate, TResult> first, AsyncTaskValueFunc<TDelegate, TResult> second)
         {
             return first.Equals(second);
@@ -354,19 +354,19 @@ namespace NetExtender.Utilities.Delegates
             }
         }
     }
-    
+
     public struct AsyncValueTaskValueFunc<TDelegate, TResult> : IAsyncValueFunc<AsyncValueTaskValueFunc<TDelegate, TResult>, TResult> where TDelegate : struct, IValueFunc<TDelegate, ValueTask<TResult>>
     {
         public static implicit operator AsyncValueTaskValueFunc<TDelegate, TResult>(TDelegate value)
         {
             return new AsyncValueTaskValueFunc<TDelegate, TResult>(value);
         }
-        
+
         public static implicit operator TDelegate(AsyncValueTaskValueFunc<TDelegate, TResult> value)
         {
             return value._internal;
         }
-        
+
         public static Boolean operator ==(AsyncValueTaskValueFunc<TDelegate, TResult> first, AsyncValueTaskValueFunc<TDelegate, TResult> second)
         {
             return first.Equals(second);

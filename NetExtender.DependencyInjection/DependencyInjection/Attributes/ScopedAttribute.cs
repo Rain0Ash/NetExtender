@@ -10,22 +10,22 @@ namespace NetExtender.DependencyInjection.Attributes
     public sealed class ScopedAttribute : ServiceDependencyAttribute
     {
         private new const ServiceLifetime Lifetime = ServiceLifetime.Scoped;
-        
+
         public ScopedAttribute()
             : base(Lifetime)
         {
         }
-        
+
         public ScopedAttribute(Object? key)
             : base(key, Lifetime)
         {
         }
-        
+
         public ScopedAttribute(Type @interface)
             : base(@interface ?? throw new ArgumentNullException(nameof(@interface)), Lifetime)
         {
         }
-        
+
         public ScopedAttribute(Type @interface, Object? key)
             : base(@interface ?? throw new ArgumentNullException(nameof(@interface)), key, Lifetime)
         {

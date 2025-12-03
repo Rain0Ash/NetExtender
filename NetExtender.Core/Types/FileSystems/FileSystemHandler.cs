@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
 using System.Text;
 using NetExtender.FileSystems.Interfaces;
@@ -27,7 +28,7 @@ namespace NetExtender.FileSystems
     internal sealed class FileSystem : FileSystemHandler
     {
         internal static FileSystem Instance { get; } = new FileSystem();
-        
+
         private FileSystem()
         {
         }
@@ -68,7 +69,7 @@ namespace NetExtender.FileSystems
                 return FileSystemName();
             }
         }
-        
+
         protected DateTimeOffset CreationTimeOffset { get; init; } = DateTimeOffset.Now;
 
         public DateTime CreationTime
@@ -105,7 +106,7 @@ namespace NetExtender.FileSystems
             }
         }
 
-        [Obsolete($"Use {nameof(IFileSystemHandler)} as specified interface {nameof(IPathHandler)}; {nameof(IFileHandler)}; {nameof(IDirectoryHandler)}.")]
+        [Obsolete($"Use IFileSystemHandler as specified interface {nameof(IPathHandler)}; {nameof(ILinkHandler)}; {nameof(IFileHandler)}; {nameof(IDirectoryHandler)}; {nameof(IDriveHandler)}; {nameof(IEnvironmentHandler)}.")]
         IFileSystemHandler IFileSystem.FileSystem
         {
             get
@@ -387,6 +388,60 @@ namespace NetExtender.FileSystems
         void IFileSystemHandler.SetAttributes(String path, FileAttributes attributes)
         {
             SetAttributes(path, attributes, FileSystemHandlerType.Unknown);
+        }
+
+        protected virtual UnixFileMode GetUnixFileMode(String path, FileSystemHandlerType handler)
+        {
+            return handler switch
+            {
+                FileSystemHandlerType.Unknown => throw new AmbiguousFileSystemHandlerException(),
+                FileSystemHandlerType.Path => throw new NotSupportedException(),
+                FileSystemHandlerType.Link => throw new NotSupportedException(),
+#if NET7_0_OR_GREATER
+                FileSystemHandlerType.File => RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? ~UnixFileMode.None : System.IO.File.GetUnixFileMode(path),
+#else
+                FileSystemHandlerType.File => RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? ~UnixFileMode.None : throw new NotSupportedException(),
+#endif
+                FileSystemHandlerType.Directory => throw new NotSupportedException(),
+                FileSystemHandlerType.Drive => throw new NotSupportedException(),
+                _ => throw new EnumUndefinedOrNotSupportedException<FileSystemHandlerType>(handler, nameof(handler), null)
+            };
+        }
+
+        UnixFileMode IFileSystemHandler.GetUnixFileMode(String path)
+        {
+            return GetUnixFileMode(path, FileSystemHandlerType.Unknown);
+        }
+
+        protected virtual void SetUnixFileMode(String path, UnixFileMode mode, FileSystemHandlerType handler)
+        {
+            switch (handler)
+            {
+                case FileSystemHandlerType.Unknown:
+                    throw new AmbiguousFileSystemHandlerException();
+                case FileSystemHandlerType.Path:
+                case FileSystemHandlerType.Link:
+                case FileSystemHandlerType.Directory:
+                    throw new NotSupportedException();
+                case FileSystemHandlerType.File when RuntimeInformation.IsOSPlatform(OSPlatform.Windows):
+                    return;
+                case FileSystemHandlerType.File:
+#if NET7_0_OR_GREATER
+                    System.IO.File.SetUnixFileMode(path, mode);
+                    return;
+#else
+                    throw new NotSupportedException();
+#endif
+                case FileSystemHandlerType.Drive:
+                    throw new NotSupportedException();
+                default:
+                    throw new EnumUndefinedOrNotSupportedException<FileSystemHandlerType>(handler, nameof(handler), null);
+            }
+        }
+
+        void IFileSystemHandler.SetUnixFileMode(String path, UnixFileMode mode)
+        {
+            SetUnixFileMode(path, mode, FileSystemHandlerType.Unknown);
         }
 
         protected virtual DateTime GetCreationTime(String path, FileSystemHandlerType handler)
@@ -961,7 +1016,7 @@ namespace NetExtender.FileSystems
         {
             Delete(path, recursive, FileSystemHandlerType.Unknown);
         }
-        
+
         #endregion
 
         public void Dispose()
@@ -980,7 +1035,7 @@ namespace NetExtender.FileSystems
             Dispose(false);
             IFileSystem.Dispose(this);
         }
-        
+
         private static partial class Handler
         {
             static Handler()
@@ -1010,12 +1065,16 @@ namespace NetExtender.FileSystems
         {
         }
 
+#if NET8_0_OR_GREATER
+        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
+#endif
         private AmbiguousFileSystemHandlerException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
         }
     }
-    
+
     [Serializable]
     public sealed class FileSystemIsNotRealException : InvalidOperationException
     {
@@ -1036,6 +1095,10 @@ namespace NetExtender.FileSystems
         {
         }
 
+#if NET8_0_OR_GREATER
+        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
+#endif
         private FileSystemIsNotRealException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {

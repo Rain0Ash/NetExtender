@@ -19,7 +19,7 @@ namespace NetExtender.Domains.WindowsPresentation.AspNetCore.Context
             host = Host;
         }
     }
-    
+
     public class WindowsPresentationAspNetCoreContext<TWindow, THost> : WindowsPresentationAspNetCoreContext<TWindow> where TWindow : Window where THost : class, IHost
     {
         public sealed override THost? Host { get; }
@@ -29,14 +29,14 @@ namespace NetExtender.Domains.WindowsPresentation.AspNetCore.Context
         {
             Host = host;
         }
-        
+
         public void Deconstruct(out TWindow? window, out THost? host)
         {
             window = Window;
             host = Host;
         }
     }
-    
+
     public abstract class WindowsPresentationAspNetCoreContext<TWindow> : WindowsPresentationAspNetCoreContext where TWindow : Window
     {
         public sealed override TWindow? Window { get; }
@@ -45,18 +45,18 @@ namespace NetExtender.Domains.WindowsPresentation.AspNetCore.Context
         {
             Window = window;
         }
-        
+
         public void Deconstruct(out TWindow? window, out IHost? host)
         {
             window = Window;
             host = Host;
         }
     }
-    
+
     public abstract class WindowsPresentationAspNetCoreContext : WindowsPresentationAspNetCoreContextBase<IHost>
     {
     }
-    
+
     public class WindowsPresentationAspNetCoreWebContext<TWindow, THost> : WindowsPresentationAspNetCoreWebContext<TWindow> where TWindow : Window where THost : class, IWebHost
     {
         public sealed override THost? Host { get; }
@@ -66,14 +66,14 @@ namespace NetExtender.Domains.WindowsPresentation.AspNetCore.Context
         {
             Host = host;
         }
-        
+
         public void Deconstruct(out TWindow? window, out THost? host)
         {
             window = Window;
             host = Host;
         }
     }
-    
+
     public abstract class WindowsPresentationAspNetCoreWebContext<TWindow> : WindowsPresentationAspNetCoreWebContext where TWindow : Window
     {
         public sealed override TWindow? Window { get; }
@@ -82,18 +82,18 @@ namespace NetExtender.Domains.WindowsPresentation.AspNetCore.Context
         {
             Window = window;
         }
-        
+
         public void Deconstruct(out TWindow? window, out IWebHost? host)
         {
             window = Window;
             host = Host;
         }
     }
-    
+
     public abstract class WindowsPresentationAspNetCoreWebContext : WindowsPresentationAspNetCoreContextBase<IWebHost>
     {
     }
-    
+
     public class WindowsPresentationAspNetCoreWebApplicationContext<TWindow> : WindowsPresentationAspNetCoreContext<TWindow, WebApplication> where TWindow : Window
     {
         public WindowsPresentationAspNetCoreWebApplicationContext(TWindow? window, WebApplication? host)

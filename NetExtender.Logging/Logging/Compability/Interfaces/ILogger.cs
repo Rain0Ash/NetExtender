@@ -26,7 +26,7 @@ namespace Microsoft.Extensions.Logging
         /// <returns><c>true</c> if enabled.</returns>
         public Boolean IsEnabled(TLevel logLevel);
     }
-    
+
     /// <summary>
     /// A generic interface for logging where the category name is derived from the specified
     /// <typeparamref name="TCategoryName" /> type name.

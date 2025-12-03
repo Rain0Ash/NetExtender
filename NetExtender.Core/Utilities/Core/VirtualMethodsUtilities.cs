@@ -20,77 +20,77 @@ namespace NetExtender.Utilities.Core
                 {
                     throw new ArgumentNullException(nameof(@delegate));
                 }
-                
+
                 if (@delegate.Method is not { } method)
                 {
                     throw new ArgumentException("Action must contains internal method.");
                 }
-                
+
                 if (typeof(Action).GetMethod(nameof(System.Action.Invoke)) is null)
                 {
                     throw new ArgumentException($"Action '{@delegate.GetType()}' must contains method '{nameof(System.Action.Invoke)}'.");
                 }
-                
+
                 if (method.DeclaringType is null)
                 {
                     throw new ArgumentException($"Action '{@delegate.GetType()}' must contains declaring type.");
                 }
-                
+
                 if (method is { IsAbstract: false, IsVirtual: false })
                 {
                     throw new ArgumentException($"Action '{@delegate.GetType()}' must be virtual or abstract.");
                 }
-                
+
                 if (!method.ReturnType.IsVoid())
                 {
                     throw new ArgumentException($"Action '{@delegate.GetType()}' must return '{typeof(void)}'.");
                 }
-                
+
                 instance = Expression.Parameter(typeof(TAction), nameof(instance));
                 parameters = method.GetParameters().Select(static parameter => Expression.Parameter(parameter.ParameterType, parameter.Name)).ToArray();
                 call = Expression.Call(instance, method, parameters);
                 return method;
             }
-            
+
             public static MethodInfo Function<TFunction>(TFunction @delegate, out ParameterExpression instance, out ParameterExpression[] parameters, out MethodCallExpression call) where TFunction : Delegate
             {
                 if (@delegate is null)
                 {
                     throw new ArgumentNullException(nameof(@delegate));
                 }
-                
+
                 if (@delegate.Method is not { } method)
                 {
                     throw new ArgumentException("Function must contains internal method.");
                 }
-                
+
                 if (typeof(Action).GetMethod(nameof(System.Action.Invoke)) is null)
                 {
                     throw new ArgumentException($"Function '{@delegate.GetType()}' must contains method '{nameof(System.Action.Invoke)}'.");
                 }
-                
+
                 if (method.DeclaringType is null)
                 {
                     throw new ArgumentException($"Function '{@delegate.GetType()}' must contains declaring type.");
                 }
-                
+
                 if (method is { IsAbstract: false, IsVirtual: false })
                 {
                     throw new ArgumentException($"Function '{@delegate.GetType()}' must be virtual or abstract.");
                 }
-                
+
                 if (method.ReturnType.IsVoid())
                 {
                     throw new ArgumentException($"Function '{@delegate.GetType()}' must return value.");
                 }
-                
+
                 instance = Expression.Parameter(typeof(TFunction), nameof(instance));
                 parameters = method.GetParameters().Select(static parameter => Expression.Parameter(parameter.ParameterType, parameter.Name)).ToArray();
                 call = Expression.Call(instance, method, parameters);
                 return method;
             }
         }
-        
+
         private static class Storage<TDelegate> where TDelegate : Delegate
         {
             private static TDelegate? @delegate;
@@ -106,36 +106,36 @@ namespace NetExtender.Utilities.Core
                 }
             }
         }
-        
+
         private static Action<TSource> Create<TSource>(Action action)
         {
             if (action is null)
             {
                 throw new ArgumentNullException(nameof(action));
             }
-            
+
             MethodInfo method = Storage.Action(action, out ParameterExpression? instance, out ParameterExpression[]? parameters, out MethodCallExpression? call);
             return Expression.Lambda<Action<TSource>>(call, method.Name, parameters.Prepend(instance)).Compile();
         }
-        
+
         private static Action<TSource, T> Create<TSource, T>(Action<T> action)
         {
             if (action is null)
             {
                 throw new ArgumentNullException(nameof(action));
             }
-            
+
             MethodInfo method = Storage.Action(action, out ParameterExpression? instance, out ParameterExpression[]? parameters, out MethodCallExpression? call);
             return Expression.Lambda<Action<TSource, T>>(call, method.Name, parameters.Prepend(instance)).Compile();
         }
-        
+
         private static Action<TSource, T1, T2> Create<TSource, T1, T2>(Action<T1, T2> action)
         {
             if (action is null)
             {
                 throw new ArgumentNullException(nameof(action));
             }
-            
+
             MethodInfo method = Storage.Action(action, out ParameterExpression? instance, out ParameterExpression[]? parameters, out MethodCallExpression? call);
             return Expression.Lambda<Action<TSource, T1, T2>>(call, method.Name, parameters.Prepend(instance)).Compile();
         }
@@ -146,7 +146,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(action));
             }
-            
+
             MethodInfo method = Storage.Action(action, out ParameterExpression? instance, out ParameterExpression[]? parameters, out MethodCallExpression? call);
             return Expression.Lambda<Action<TSource, T1, T2, T3>>(call, method.Name, parameters.Prepend(instance)).Compile();
         }
@@ -157,7 +157,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(action));
             }
-            
+
             MethodInfo method = Storage.Action(action, out ParameterExpression? instance, out ParameterExpression[]? parameters, out MethodCallExpression? call);
             return Expression.Lambda<Action<TSource, T1, T2, T3, T4>>(call, method.Name, parameters.Prepend(instance)).Compile();
         }
@@ -168,7 +168,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(action));
             }
-            
+
             MethodInfo method = Storage.Action(action, out ParameterExpression? instance, out ParameterExpression[]? parameters, out MethodCallExpression? call);
             return Expression.Lambda<Action<TSource, T1, T2, T3, T4, T5>>(call, method.Name, parameters.Prepend(instance)).Compile();
         }
@@ -179,7 +179,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(action));
             }
-            
+
             MethodInfo method = Storage.Action(action, out ParameterExpression? instance, out ParameterExpression[]? parameters, out MethodCallExpression? call);
             return Expression.Lambda<Action<TSource, T1, T2, T3, T4, T5, T6>>(call, method.Name, parameters.Prepend(instance)).Compile();
         }
@@ -190,7 +190,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(action));
             }
-            
+
             MethodInfo method = Storage.Action(action, out ParameterExpression? instance, out ParameterExpression[]? parameters, out MethodCallExpression? call);
             return Expression.Lambda<Action<TSource, T1, T2, T3, T4, T5, T6, T7>>(call, method.Name, parameters.Prepend(instance)).Compile();
         }
@@ -201,7 +201,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(action));
             }
-            
+
             MethodInfo method = Storage.Action(action, out ParameterExpression? instance, out ParameterExpression[]? parameters, out MethodCallExpression? call);
             return Expression.Lambda<Action<TSource, T1, T2, T3, T4, T5, T6, T7, T8>>(call, method.Name, parameters.Prepend(instance)).Compile();
         }
@@ -212,7 +212,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(action));
             }
-            
+
             MethodInfo method = Storage.Action(action, out ParameterExpression? instance, out ParameterExpression[]? parameters, out MethodCallExpression? call);
             return Expression.Lambda<Action<TSource, T1, T2, T3, T4, T5, T6, T7, T8, T9>>(call, method.Name, parameters.Prepend(instance)).Compile();
         }
@@ -223,7 +223,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(action));
             }
-            
+
             MethodInfo method = Storage.Action(action, out ParameterExpression? instance, out ParameterExpression[]? parameters, out MethodCallExpression? call);
             return Expression.Lambda<Action<TSource, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>>(call, method.Name, parameters.Prepend(instance)).Compile();
         }
@@ -234,7 +234,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(action));
             }
-            
+
             MethodInfo method = Storage.Action(action, out ParameterExpression? instance, out ParameterExpression[]? parameters, out MethodCallExpression? call);
             return Expression.Lambda<Action<TSource, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11>>(call, method.Name, parameters.Prepend(instance)).Compile();
         }
@@ -245,7 +245,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(action));
             }
-            
+
             MethodInfo method = Storage.Action(action, out ParameterExpression? instance, out ParameterExpression[]? parameters, out MethodCallExpression? call);
             return Expression.Lambda<Action<TSource, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12>>(call, method.Name, parameters.Prepend(instance)).Compile();
         }
@@ -256,7 +256,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(action));
             }
-            
+
             MethodInfo method = Storage.Action(action, out ParameterExpression? instance, out ParameterExpression[]? parameters, out MethodCallExpression? call);
             return Expression.Lambda<Action<TSource, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13>>(call, method.Name, parameters.Prepend(instance)).Compile();
         }
@@ -267,7 +267,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(action));
             }
-            
+
             MethodInfo method = Storage.Action(action, out ParameterExpression? instance, out ParameterExpression[]? parameters, out MethodCallExpression? call);
             return Expression.Lambda<Action<TSource, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14>>(call, method.Name, parameters.Prepend(instance)).Compile();
         }
@@ -278,18 +278,18 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(action));
             }
-            
+
             MethodInfo method = Storage.Action(action, out ParameterExpression? instance, out ParameterExpression[]? parameters, out MethodCallExpression? call);
             return Expression.Lambda<Action<TSource, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15>>(call, method.Name, parameters.Prepend(instance)).Compile();
         }
-        
+
         private static Func<TSource, TResult> Create<TSource, TResult>(Func<TResult> function)
         {
             if (function is null)
             {
                 throw new ArgumentNullException(nameof(function));
             }
-            
+
             MethodInfo method = Storage.Function(function, out ParameterExpression? instance, out ParameterExpression[]? parameters, out MethodCallExpression? call);
             return Expression.Lambda<Func<TSource, TResult>>(Expression.Convert(call, method.ReturnType), method.Name, parameters.Prepend(instance)).Compile();
         }
@@ -300,7 +300,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(function));
             }
-            
+
             MethodInfo method = Storage.Function(function, out ParameterExpression? instance, out ParameterExpression[]? parameters, out MethodCallExpression? call);
             return Expression.Lambda<Func<TSource, T1, TResult>>(Expression.Convert(call, method.ReturnType), method.Name, parameters.Prepend(instance)).Compile();
         }
@@ -311,7 +311,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(function));
             }
-            
+
             MethodInfo method = Storage.Function(function, out ParameterExpression? instance, out ParameterExpression[]? parameters, out MethodCallExpression? call);
             return Expression.Lambda<Func<TSource, T1, T2, TResult>>(Expression.Convert(call, method.ReturnType), method.Name, parameters.Prepend(instance)).Compile();
         }
@@ -322,7 +322,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(function));
             }
-            
+
             MethodInfo method = Storage.Function(function, out ParameterExpression? instance, out ParameterExpression[]? parameters, out MethodCallExpression? call);
             return Expression.Lambda<Func<TSource, T1, T2, T3, TResult>>(Expression.Convert(call, method.ReturnType), method.Name, parameters.Prepend(instance)).Compile();
         }
@@ -333,7 +333,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(function));
             }
-            
+
             MethodInfo method = Storage.Function(function, out ParameterExpression? instance, out ParameterExpression[]? parameters, out MethodCallExpression? call);
             return Expression.Lambda<Func<TSource, T1, T2, T3, T4, TResult>>(Expression.Convert(call, method.ReturnType), method.Name, parameters.Prepend(instance)).Compile();
         }
@@ -344,7 +344,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(function));
             }
-            
+
             MethodInfo method = Storage.Function(function, out ParameterExpression? instance, out ParameterExpression[]? parameters, out MethodCallExpression? call);
             return Expression.Lambda<Func<TSource, T1, T2, T3, T4, T5, TResult>>(Expression.Convert(call, method.ReturnType), method.Name, parameters.Prepend(instance)).Compile();
         }
@@ -355,7 +355,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(function));
             }
-            
+
             MethodInfo method = Storage.Function(function, out ParameterExpression? instance, out ParameterExpression[]? parameters, out MethodCallExpression? call);
             return Expression.Lambda<Func<TSource, T1, T2, T3, T4, T5, T6, TResult>>(Expression.Convert(call, method.ReturnType), method.Name, parameters.Prepend(instance)).Compile();
         }
@@ -366,7 +366,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(function));
             }
-            
+
             MethodInfo method = Storage.Function(function, out ParameterExpression? instance, out ParameterExpression[]? parameters, out MethodCallExpression? call);
             return Expression.Lambda<Func<TSource, T1, T2, T3, T4, T5, T6, T7, TResult>>(Expression.Convert(call, method.ReturnType), method.Name, parameters.Prepend(instance)).Compile();
         }
@@ -377,7 +377,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(function));
             }
-            
+
             MethodInfo method = Storage.Function(function, out ParameterExpression? instance, out ParameterExpression[]? parameters, out MethodCallExpression? call);
             return Expression.Lambda<Func<TSource, T1, T2, T3, T4, T5, T6, T7, T8, TResult>>(Expression.Convert(call, method.ReturnType), method.Name, parameters.Prepend(instance)).Compile();
         }
@@ -388,7 +388,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(function));
             }
-            
+
             MethodInfo method = Storage.Function(function, out ParameterExpression? instance, out ParameterExpression[]? parameters, out MethodCallExpression? call);
             return Expression.Lambda<Func<TSource, T1, T2, T3, T4, T5, T6, T7, T8, T9, TResult>>(Expression.Convert(call, method.ReturnType), method.Name, parameters.Prepend(instance)).Compile();
         }
@@ -399,7 +399,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(function));
             }
-            
+
             MethodInfo method = Storage.Function(function, out ParameterExpression? instance, out ParameterExpression[]? parameters, out MethodCallExpression? call);
             return Expression.Lambda<Func<TSource, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, TResult>>(Expression.Convert(call, method.ReturnType), method.Name, parameters.Prepend(instance)).Compile();
         }
@@ -410,7 +410,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(function));
             }
-            
+
             MethodInfo method = Storage.Function(function, out ParameterExpression? instance, out ParameterExpression[]? parameters, out MethodCallExpression? call);
             return Expression.Lambda<Func<TSource, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, TResult>>(Expression.Convert(call, method.ReturnType), method.Name, parameters.Prepend(instance)).Compile();
         }
@@ -421,7 +421,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(function));
             }
-            
+
             MethodInfo method = Storage.Function(function, out ParameterExpression? instance, out ParameterExpression[]? parameters, out MethodCallExpression? call);
             return Expression.Lambda<Func<TSource, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, TResult>>(Expression.Convert(call, method.ReturnType), method.Name, parameters.Prepend(instance)).Compile();
         }
@@ -432,7 +432,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(function));
             }
-            
+
             MethodInfo method = Storage.Function(function, out ParameterExpression? instance, out ParameterExpression[]? parameters, out MethodCallExpression? call);
             return Expression.Lambda<Func<TSource, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, TResult>>(Expression.Convert(call, method.ReturnType), method.Name, parameters.Prepend(instance)).Compile();
         }
@@ -443,7 +443,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(function));
             }
-            
+
             MethodInfo method = Storage.Function(function, out ParameterExpression? instance, out ParameterExpression[]? parameters, out MethodCallExpression? call);
             return Expression.Lambda<Func<TSource, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, TResult>>(Expression.Convert(call, method.ReturnType), method.Name, parameters.Prepend(instance)).Compile();
         }
@@ -454,7 +454,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(function));
             }
-            
+
             MethodInfo method = Storage.Function(function, out ParameterExpression? instance, out ParameterExpression[]? parameters, out MethodCallExpression? call);
             return Expression.Lambda<Func<TSource, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, TResult>>(Expression.Convert(call, method.ReturnType), method.Name, parameters.Prepend(instance)).Compile();
         }
@@ -465,7 +465,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(action));
             }
-            
+
             return Storage<Action<TSource>>.Delegate ??= Create<TSource>(action);
         }
 
@@ -475,7 +475,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(action));
             }
-            
+
             return Storage<Action<TSource, T1>>.Delegate ??= Create<TSource, T1>(action);
         }
 
@@ -485,7 +485,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(action));
             }
-            
+
             return Storage<Action<TSource, T1, T2>>.Delegate ??= Create<TSource, T1, T2>(action);
         }
 
@@ -495,7 +495,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(action));
             }
-            
+
             return Storage<Action<TSource, T1, T2, T3>>.Delegate ??= Create<TSource, T1, T2, T3>(action);
         }
 
@@ -505,7 +505,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(action));
             }
-            
+
             return Storage<Action<TSource, T1, T2, T3, T4>>.Delegate ??= Create<TSource, T1, T2, T3, T4>(action);
         }
 
@@ -515,7 +515,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(action));
             }
-            
+
             return Storage<Action<TSource, T1, T2, T3, T4, T5>>.Delegate ??= Create<TSource, T1, T2, T3, T4, T5>(action);
         }
 
@@ -525,7 +525,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(action));
             }
-            
+
             return Storage<Action<TSource, T1, T2, T3, T4, T5, T6>>.Delegate ??= Create<TSource, T1, T2, T3, T4, T5, T6>(action);
         }
 
@@ -535,7 +535,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(action));
             }
-            
+
             return Storage<Action<TSource, T1, T2, T3, T4, T5, T6, T7>>.Delegate ??= Create<TSource, T1, T2, T3, T4, T5, T6, T7>(action);
         }
 
@@ -545,7 +545,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(action));
             }
-            
+
             return Storage<Action<TSource, T1, T2, T3, T4, T5, T6, T7, T8>>.Delegate ??= Create<TSource, T1, T2, T3, T4, T5, T6, T7, T8>(action);
         }
 
@@ -555,7 +555,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(action));
             }
-            
+
             return Storage<Action<TSource, T1, T2, T3, T4, T5, T6, T7, T8, T9>>.Delegate ??= Create<TSource, T1, T2, T3, T4, T5, T6, T7, T8, T9>(action);
         }
 
@@ -565,7 +565,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(action));
             }
-            
+
             return Storage<Action<TSource, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>>.Delegate ??= Create<TSource, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>(action);
         }
 
@@ -575,7 +575,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(action));
             }
-            
+
             return Storage<Action<TSource, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11>>.Delegate ??= Create<TSource, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11>(action);
         }
 
@@ -585,7 +585,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(action));
             }
-            
+
             return Storage<Action<TSource, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12>>.Delegate ??= Create<TSource, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12>(action);
         }
 
@@ -595,7 +595,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(action));
             }
-            
+
             return Storage<Action<TSource, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13>>.Delegate ??= Create<TSource, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13>(action);
         }
 
@@ -605,7 +605,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(action));
             }
-            
+
             return Storage<Action<TSource, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14>>.Delegate ??= Create<TSource, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14>(action);
         }
 
@@ -615,7 +615,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(action));
             }
-            
+
             return Storage<Action<TSource, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15>>.Delegate ??= Create<TSource, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15>(action);
         }
 
@@ -625,7 +625,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(function));
             }
-            
+
             return Storage<Func<TSource, TResult>>.Delegate ??= Create<TSource, TResult>(function);
         }
 
@@ -635,7 +635,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(function));
             }
-            
+
             return Storage<Func<TSource, T1, TResult>>.Delegate ??= Create<TSource, T1, TResult>(function);
         }
 
@@ -645,7 +645,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(function));
             }
-            
+
             return Storage<Func<TSource, T1, T2, TResult>>.Delegate ??= Create<TSource, T1, T2, TResult>(function);
         }
 
@@ -655,7 +655,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(function));
             }
-            
+
             return Storage<Func<TSource, T1, T2, T3, TResult>>.Delegate ??= Create<TSource, T1, T2, T3, TResult>(function);
         }
 
@@ -665,7 +665,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(function));
             }
-            
+
             return Storage<Func<TSource, T1, T2, T3, T4, TResult>>.Delegate ??= Create<TSource, T1, T2, T3, T4, TResult>(function);
         }
 
@@ -675,7 +675,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(function));
             }
-            
+
             return Storage<Func<TSource, T1, T2, T3, T4, T5, TResult>>.Delegate ??= Create<TSource, T1, T2, T3, T4, T5, TResult>(function);
         }
 
@@ -685,7 +685,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(function));
             }
-            
+
             return Storage<Func<TSource, T1, T2, T3, T4, T5, T6, TResult>>.Delegate ??= Create<TSource, T1, T2, T3, T4, T5, T6, TResult>(function);
         }
 
@@ -695,7 +695,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(function));
             }
-            
+
             return Storage<Func<TSource, T1, T2, T3, T4, T5, T6, T7, TResult>>.Delegate ??= Create<TSource, T1, T2, T3, T4, T5, T6, T7, TResult>(function);
         }
 
@@ -705,7 +705,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(function));
             }
-            
+
             return Storage<Func<TSource, T1, T2, T3, T4, T5, T6, T7, T8, TResult>>.Delegate ??= Create<TSource, T1, T2, T3, T4, T5, T6, T7, T8, TResult>(function);
         }
 
@@ -715,7 +715,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(function));
             }
-            
+
             return Storage<Func<TSource, T1, T2, T3, T4, T5, T6, T7, T8, T9, TResult>>.Delegate ??= Create<TSource, T1, T2, T3, T4, T5, T6, T7, T8, T9, TResult>(function);
         }
 
@@ -725,7 +725,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(function));
             }
-            
+
             return Storage<Func<TSource, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, TResult>>.Delegate ??= Create<TSource, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, TResult>(function);
         }
 
@@ -735,7 +735,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(function));
             }
-            
+
             return Storage<Func<TSource, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, TResult>>.Delegate ??= Create<TSource, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, TResult>(function);
         }
 
@@ -745,7 +745,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(function));
             }
-            
+
             return Storage<Func<TSource, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, TResult>>.Delegate ??= Create<TSource, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, TResult>(function);
         }
 
@@ -755,7 +755,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(function));
             }
-            
+
             return Storage<Func<TSource, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, TResult>>.Delegate ??= Create<TSource, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, TResult>(function);
         }
 
@@ -765,7 +765,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(function));
             }
-            
+
             return Storage<Func<TSource, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, TResult>>.Delegate ??= Create<TSource, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, TResult>(function);
         }
 
@@ -775,7 +775,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(function));
             }
-            
+
             return Storage<Func<TSource, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, TResult>>.Delegate ??= Create<TSource, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, TResult>(function);
         }
     }

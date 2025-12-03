@@ -5,6 +5,5 @@ namespace NetExtender.Mapster.Utilities
 {
     public static class MapsterUtilities
     {
-        
     }
 }

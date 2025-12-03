@@ -74,7 +74,7 @@ namespace NetExtender.AspNetCore.Identity.Attributes
             : base(identity)
         {
         }
-        
+
         protected DenyIdentityAttribute(UInt64 identity)
             : base(identity)
         {
@@ -123,7 +123,7 @@ namespace NetExtender.AspNetCore.Identity.Attributes
                 {
                     throw new InvalidOperationException($"Can't set attribute type from '{type}' to '{value}'.");
                 }
-                
+
                 _type = value;
             }
         }
@@ -209,7 +209,7 @@ namespace NetExtender.AspNetCore.Identity.Attributes
             {
                 throw new ArgumentException($"Argument '{identity}' must be equals '{Type}' for attribute '{GetType()}' with type '{typeof(T)}'.", nameof(identity));
             }
-            
+
             return identity?.GetTypeCode() switch
             {
                 null => null,

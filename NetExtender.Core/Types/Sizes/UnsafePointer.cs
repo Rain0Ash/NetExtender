@@ -10,12 +10,12 @@ namespace NetExtender.Types.Sizes
         {
             return new UnsafePointer<T>(value);
         }
-        
+
         public static implicit operator T(UnsafePointer<T> value)
         {
             return value.Value;
         }
-        
+
         public static Boolean operator ==(UnsafePointer<T> first, UnsafePointer<T> second)
         {
             return first.Equals(second);
@@ -25,7 +25,7 @@ namespace NetExtender.Types.Sizes
         {
             return !(first == second);
         }
-        
+
         public readonly T* Pointer;
 
         public ref T Value

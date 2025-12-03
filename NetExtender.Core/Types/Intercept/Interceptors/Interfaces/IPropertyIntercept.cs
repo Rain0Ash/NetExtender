@@ -19,7 +19,7 @@ namespace NetExtender.Types.Intercept.Interfaces
                 ((IPropertyIntercept<Object?, TArgument>) this).PropertyIntercept -= value.Unsafe<EventHandler<Object?, TArgument>>();
             }
         }
-        
+
         public new event EventHandler<TArgument> PropertyIntercepting
         {
             add
@@ -31,7 +31,7 @@ namespace NetExtender.Types.Intercept.Interfaces
                 ((IPropertyIntercept<Object?, TArgument>) this).PropertyIntercepting -= value.Unsafe<EventHandler<Object?, TArgument>>();
             }
         }
-        
+
         public new event EventHandler<TArgument> PropertyIntercepted
         {
             add
@@ -43,7 +43,7 @@ namespace NetExtender.Types.Intercept.Interfaces
                 ((IPropertyIntercept<Object?, TArgument>) this).PropertyIntercepted -= value.Unsafe<EventHandler<Object?, TArgument>>();
             }
         }
-        
+
         public new event EventHandler<TArgument> PropertyGetIntercept
         {
             add
@@ -55,7 +55,7 @@ namespace NetExtender.Types.Intercept.Interfaces
                 ((IPropertyIntercept<Object?, TArgument>) this).PropertyGetIntercept -= value.Unsafe<EventHandler<Object?, TArgument>>();
             }
         }
-        
+
         public new event EventHandler<TArgument> PropertyGetIntercepting
         {
             add
@@ -67,7 +67,7 @@ namespace NetExtender.Types.Intercept.Interfaces
                 ((IPropertyIntercept<Object?, TArgument>) this).PropertyGetIntercepting -= value.Unsafe<EventHandler<Object?, TArgument>>();
             }
         }
-        
+
         public new event EventHandler<TArgument> PropertyGetIntercepted
         {
             add
@@ -79,7 +79,7 @@ namespace NetExtender.Types.Intercept.Interfaces
                 ((IPropertyIntercept<Object?, TArgument>) this).PropertyGetIntercepted -= value.Unsafe<EventHandler<Object?, TArgument>>();
             }
         }
-        
+
         public new event EventHandler<TArgument> PropertySetIntercept
         {
             add
@@ -91,7 +91,7 @@ namespace NetExtender.Types.Intercept.Interfaces
                 ((IPropertyIntercept<Object?, TArgument>) this).PropertySetIntercept -= value.Unsafe<EventHandler<Object?, TArgument>>();
             }
         }
-        
+
         public new event EventHandler<TArgument> PropertySetIntercepting
         {
             add
@@ -103,7 +103,7 @@ namespace NetExtender.Types.Intercept.Interfaces
                 ((IPropertyIntercept<Object?, TArgument>) this).PropertySetIntercepting -= value.Unsafe<EventHandler<Object?, TArgument>>();
             }
         }
-        
+
         public new event EventHandler<TArgument> PropertySetIntercepted
         {
             add
@@ -132,7 +132,7 @@ namespace NetExtender.Types.Intercept.Interfaces
                 PropertyIntercepted -= value;
             }
         }
-        
+
         public event EventHandler<TSender, TArgument> PropertyIntercepting
         {
             add
@@ -146,7 +146,7 @@ namespace NetExtender.Types.Intercept.Interfaces
                 PropertySetIntercepting -= value;
             }
         }
-        
+
         public event EventHandler<TSender, TArgument> PropertyIntercepted
         {
             add
@@ -160,7 +160,7 @@ namespace NetExtender.Types.Intercept.Interfaces
                 PropertySetIntercepted -= value;
             }
         }
-        
+
         public event EventHandler<TSender, TArgument> PropertyGetIntercept
         {
             add
@@ -174,10 +174,10 @@ namespace NetExtender.Types.Intercept.Interfaces
                 PropertyGetIntercepted -= value;
             }
         }
-        
+
         public event EventHandler<TSender, TArgument> PropertyGetIntercepting;
         public event EventHandler<TSender, TArgument> PropertyGetIntercepted;
-        
+
         public event EventHandler<TSender, TArgument> PropertySetIntercept
         {
             add
@@ -191,7 +191,7 @@ namespace NetExtender.Types.Intercept.Interfaces
                 PropertySetIntercepted -= value;
             }
         }
-        
+
         public event EventHandler<TSender, TArgument> PropertySetIntercepting;
         public event EventHandler<TSender, TArgument> PropertySetIntercepted;
     }

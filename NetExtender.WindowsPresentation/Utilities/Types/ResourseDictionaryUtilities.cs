@@ -14,12 +14,12 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(dictionary));
             }
-            
+
             if (style?.TargetType is not { } type || dictionary.Contains(type))
             {
                 return false;
             }
-            
+
             try
             {
                 dictionary.Add(type, style);
@@ -37,12 +37,12 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(dictionary));
             }
-            
+
             if (style?.TargetType is not { } type || !dictionary.Contains(type))
             {
                 return false;
             }
-            
+
             try
             {
                 dictionary.Remove(type);

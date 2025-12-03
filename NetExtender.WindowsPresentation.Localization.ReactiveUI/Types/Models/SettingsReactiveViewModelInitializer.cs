@@ -56,7 +56,7 @@ namespace NetExtender.WindowsPresentation.ReactiveUI
             LocalizationCollection languages = identifiers.ToLocalizationCollection();
             return Subscribe(languages, handler);
         }
-        
+
         protected virtual T Subscribe<T>(T value, Handler handler) where T : INotifyPropertyChanged, INotifyCollectionChanged
         {
             if (value is null)
@@ -73,14 +73,14 @@ namespace NetExtender.WindowsPresentation.ReactiveUI
             value.CollectionChanged += handler.Collection;
             return value;
         }
-        
+
         public class Handler
         {
             public static implicit operator Handler((PropertyChangedEventHandler Property, NotifyCollectionChangedEventHandler Collection) value)
             {
                 return new Handler(value.Property, value.Collection);
             }
-            
+
             public PropertyChangedEventHandler Property { get; }
             public NotifyCollectionChangedEventHandler Collection { get; }
 

@@ -16,7 +16,7 @@ namespace NetExtender.Types.Storages
     public class WeakStorage<T> : IStorage<T>, IReadOnlyStorage<T> where T : class
     {
         protected IWeakSet<T> Internal { get; } = new ConcurrentWeakSet<T>();
-        
+
         public Boolean Contains(T item)
         {
             return Internal.Contains(item);
@@ -47,11 +47,11 @@ namespace NetExtender.Types.Storages
             return ((IEnumerable) Internal).GetEnumerator();
         }
     }
-    
+
     public class WeakStorage<TKey, TValue> : IStorage<TKey, TValue>, IReadOnlyStorage<TKey, TValue> where TKey : class where TValue : class?
     {
         protected IWeakDictionary<TKey, TValue> Internal { get; } = new ConcurrentWeakDictionary<TKey, TValue>();
-        
+
         public Boolean Contains(TKey key)
         {
             return Internal.Contains(key);

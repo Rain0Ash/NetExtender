@@ -13,7 +13,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
         {
             return AddIdentityFilter<TId, TUser, TRole, ActionInfoServiceFilter<TId, TUser, TRole>, TFilter>(collection);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static FilterCollection AddIdentityFilter<TId, TUser, TRole, TActionFilter, TIdentityFilter>(this FilterCollection collection) where TId : struct, IEquatable<TId> where TUser : class, IUserInfo<TId, TRole>, new() where TRole : IEquatable<TRole> where TIdentityFilter : IdentityServiceFilter<TId, TUser, TRole> where TActionFilter : ActionInfoServiceFilter<TId, TUser, TRole>
         {

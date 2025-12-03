@@ -80,7 +80,7 @@ namespace NetExtender.Types.Streams
                 Exception = exception;
             }
         }
-        
+
         private protected Maybe<T> _value;
         public virtual T Value
         {
@@ -94,7 +94,7 @@ namespace NetExtender.Types.Streams
                 {
                     throw new InvalidOperationException("Cannot change value when intercept is seal.");
                 }
-                
+
                 _value = value;
                 Seal();
             }
@@ -167,7 +167,7 @@ namespace NetExtender.Types.Streams
             Invoke();
         }
     }
-    
+
     public class FileStreamInterceptEventArgs : FileStreamInterceptBaseEventArgs<FileStreamInterceptEventArgs.Information>
     {
         public readonly struct Information : IFileStreamInterceptArgumentInfo
@@ -286,7 +286,7 @@ namespace NetExtender.Types.Streams
                 {
                     throw new ArgumentException("Buffer length mismatch with original buffer.", nameof(value));
                 }
-                
+
                 _buffer = value;
             }
         }
@@ -355,7 +355,7 @@ namespace NetExtender.Types.Streams
                 {
                     throw new ArgumentOutOfRangeException(nameof(value), value, "Value must be greater than or equal to zero.");
                 }
-                
+
                 _offset = value;
             }
         }
@@ -382,7 +382,7 @@ namespace NetExtender.Types.Streams
                 _count = value;
             }
         }
-        
+
         protected FileStreamInterceptBaseEventArgs(T value)
             : base(value)
         {

@@ -31,7 +31,7 @@ namespace NetExtender.Newtonsoft
         private delegate JsonStringContract CreateStringContractDelegate(DefaultContractResolver resolver, Type type);
         private delegate JsonPrimitiveContract CreatePrimitiveContractDelegate(DefaultContractResolver resolver, Type type);
         private delegate JsonDynamicContract CreateDynamicContractDelegate(DefaultContractResolver resolver, Type type);
-        
+
         private static GetSerializableMembersDelegate GetSerializableMembersHandler { get; } = CreateDelegate<GetSerializableMembersDelegate>(nameof(GetSerializableMembers));
         private static ResolveContractConverterDelegate ResolveContractConverterHandler { get; } = CreateDelegate<ResolveContractConverterDelegate>(nameof(ResolveContractConverter));
         private static ResolvePropertyNameDelegate ResolvePropertyNameHandler { get; } = CreateDelegate<ResolvePropertyNameDelegate>(nameof(ResolvePropertyName));
@@ -87,7 +87,7 @@ namespace NetExtender.Newtonsoft
         {
             return Resolver is not null ? GetSerializableMembersHandler(Resolver, type) : base.GetSerializableMembers(type);
         }
-        
+
         protected override JsonConverter? ResolveContractConverter(Type type)
         {
             return Resolver is not null ? ResolveContractConverterHandler(Resolver, type) : base.ResolveContractConverter(type);
@@ -178,14 +178,14 @@ namespace NetExtender.Newtonsoft
             return Resolver is not null ? CreateDynamicContractHandler(Resolver, type) : base.CreateDynamicContract(type);
         }
     }
-    
+
     public abstract class NewtonsoftContractResolver : DefaultContractResolver
     {
         protected override List<MemberInfo> GetSerializableMembers(Type type)
         {
             return base.GetSerializableMembers(type);
         }
-        
+
         protected override JsonConverter? ResolveContractConverter(Type type)
         {
             return base.ResolveContractConverter(type);

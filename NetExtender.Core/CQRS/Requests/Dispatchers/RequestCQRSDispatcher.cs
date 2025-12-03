@@ -14,7 +14,7 @@ namespace NetExtender.CQRS.Requests.Dispatchers
         {
             return DispatchAsync(request);
         }
-        
+
         Task IRequestCQRSDispatcher.DispatchAsync<TRequest>(TRequest request, CancellationToken token)
         {
             return DispatchAsync(request, token);

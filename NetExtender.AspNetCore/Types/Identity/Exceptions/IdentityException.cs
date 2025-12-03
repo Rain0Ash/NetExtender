@@ -70,6 +70,10 @@ namespace NetExtender.AspNetCore.Identity
         {
         }
 
+#if NET8_0_OR_GREATER
+        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
         protected IdentityException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
@@ -94,7 +98,7 @@ namespace NetExtender.AspNetCore.Identity
             NoUser,
             Restrict
         }
-        
+
         [return: NotNullIfNotNull("value")]
         public static IdentityException<String?>? From(JWTException? value)
         {
@@ -110,7 +114,7 @@ namespace NetExtender.AspNetCore.Identity
                 _ => new IdentityUnknownException(null, value)
             };
         }
-        
+
         [return: NotNullIfNotNull("value")]
         public static IdentityException<String?>? From(JWTException? value, Boolean message)
         {
@@ -126,7 +130,7 @@ namespace NetExtender.AspNetCore.Identity
                 _ => new IdentityUnknownException(value.Message, value)
             } : From(value);
         }
-        
+
         [return: NotNullIfNotNull("value")]
         public static IdentityException<T>? From<T>(JWTException? value, T code)
         {

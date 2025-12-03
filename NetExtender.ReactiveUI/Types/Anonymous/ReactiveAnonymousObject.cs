@@ -22,7 +22,7 @@ namespace NetExtender.ReactiveUI.Anonymous.Core
         {
             return GetEnumerator();
         }
-        
+
         public AnonymousObjectProperty this[Int32 index]
         {
             get

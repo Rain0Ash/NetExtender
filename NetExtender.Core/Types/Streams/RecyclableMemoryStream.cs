@@ -602,12 +602,12 @@ namespace NetExtender.Types.Streams
                 Id = typeof(Microsoft.IO.RecyclableMemoryStream).GetProperty(nameof(Id), binding)?.GetMethod?.CreateDelegate<Func<Microsoft.IO.RecyclableMemoryStream, Guid>>() ?? (static _ => Guid.Empty);
                 Tag = typeof(Microsoft.IO.RecyclableMemoryStream).GetProperty(nameof(Tag), binding)?.GetMethod?.CreateDelegate<Func<Microsoft.IO.RecyclableMemoryStream, String?>>() ?? (static _ => null);
             }
-            
+
             public static Guid GetId(Microsoft.IO.RecyclableMemoryStream stream)
             {
                 return Id.Invoke(stream);
             }
-            
+
             public static String? GetTag(Microsoft.IO.RecyclableMemoryStream stream)
             {
                 return Tag.Invoke(stream);

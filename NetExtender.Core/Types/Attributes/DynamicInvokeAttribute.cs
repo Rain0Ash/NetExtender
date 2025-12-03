@@ -13,7 +13,7 @@ namespace NetExtender.Utilities.Core
             : base(type ?? throw new ArgumentNullException(nameof(type)), name ?? throw new ArgumentNullException(nameof(name)))
         {
         }
-        
+
         protected DynamicInvokeAttribute(Type type, String name, Int32 order)
             : base(type ?? throw new ArgumentNullException(nameof(type)), name ?? throw new ArgumentNullException(nameof(name)), order)
         {
@@ -27,21 +27,21 @@ namespace NetExtender.Utilities.Core
         {
             return Invoke(null, value);
         }
-        
+
         public virtual Boolean Invoke(Object? sender, Object? value)
         {
             if (Type is null || Name is null)
             {
                 return false;
             }
-            
+
             const BindingFlags binding = BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public;
 
             if (Type.GetMethods(binding) is not { Length: > 0 } methods)
             {
                 return false;
             }
-            
+
             if (value is not null && Type.DefaultBinder.SelectMethod(binding, methods, new []{ value.GetType() }) is { } method)
             {
                 return Invoke(method, sender, new[] { value });

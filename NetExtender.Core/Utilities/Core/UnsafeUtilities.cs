@@ -2,6 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -552,7 +553,7 @@ namespace NetExtender.Utilities.Core
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ref T AsRef<T>(in T source)
         {
-            return ref Unsafe.AsRef(source);
+            return ref Unsafe.AsRef(in source);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -835,12 +836,21 @@ namespace NetExtender.Utilities.Core
             return Unsafe.IsAddressLessThan(ref left, ref right);
         }
 
+        [SuppressMessage("ReSharper", "RedundantCast")]
         public static class Segfault
         {
             [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
             private delegate void UnmanagedCallback();
 
-            private static UnmanagedCallback? SegfaultDelegate { get; } = (UnmanagedCallback) Marshal.GetDelegateForFunctionPointer((IntPtr) 1, typeof(UnmanagedCallback));
+            private static IntPtr Address
+            {
+                get
+                {
+                    return (IntPtr) 1;
+                }
+            }
+
+            private static UnmanagedCallback? SegfaultDelegate { get; } = Marshal.GetDelegateForFunctionPointer<UnmanagedCallback>(Address);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static void Crash()
@@ -875,7 +885,6 @@ namespace NetExtender.Utilities.Core
                 }
                 catch (TaskCanceledException)
                 {
-                    //ignored
                 }
             }
         }

@@ -17,7 +17,7 @@ namespace NetExtender.Utilities.UserInterface
         Horizontal,
         Vertical
     }
-    
+
     public static class WindowsPresentationUserInterfaceUtilities
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -30,7 +30,7 @@ namespace NetExtender.Utilities.UserInterface
                 _ => throw new EnumUndefinedOrNotSupportedException<ListSortDirection>(value, nameof(value), null)
             };
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String ToInverseSymbol(this ListSortDirection value)
         {
@@ -41,7 +41,7 @@ namespace NetExtender.Utilities.UserInterface
                 _ => throw new EnumUndefinedOrNotSupportedException<ListSortDirection>(value, nameof(value), null)
             };
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean? GetWindowSystemMenu(this Window window)
         {
@@ -63,7 +63,7 @@ namespace NetExtender.Utilities.UserInterface
 
             return UserInterfaceUtilities.SetWindowSystemMenu(window.GetHandle(), value);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Rectangle GetWindowRectangle(this Window window)
         {
@@ -104,7 +104,7 @@ namespace NetExtender.Utilities.UserInterface
             {
                 throw new ArgumentNullException(nameof(window));
             }
-            
+
             return UserInterfaceUtilities.GetWindowDisplayAffinity(window.GetHandle(), out affinity);
         }
 
@@ -115,7 +115,7 @@ namespace NetExtender.Utilities.UserInterface
             {
                 throw new ArgumentNullException(nameof(window));
             }
-            
+
             return UserInterfaceUtilities.SetWindowDisplayAffinity(window.GetHandle(), affinity);
         }
 

@@ -17,8 +17,9 @@ namespace NetExtender.Localization.Properties
 {
     public sealed class LocalizationStringInfoWrapper : ILocalizationStringInfo
     {
+#pragma warning disable CS0067
         public event PropertyChangedEventHandler? PropertyChanged;
-        
+
         public event LocalizationChangedEventHandler? LocalizationChanged
         {
             add
@@ -36,6 +37,7 @@ namespace NetExtender.Localization.Properties
                 }
             }
         }
+#pragma warning restore CS0067
 
         private ILocalizationConfigInfo? Config { get; }
 

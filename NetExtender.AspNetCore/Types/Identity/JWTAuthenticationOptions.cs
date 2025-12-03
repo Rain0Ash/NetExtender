@@ -32,11 +32,11 @@ namespace NetExtender.AspNetCore.Identity
                 base.Events = value ?? throw new ArgumentNullException(nameof(value));
             }
         }
-        
+
         public JWTKeys Keys { get; init; }
         public Boolean VerifySignature { get; init; } = true;
         public Boolean IncludeAuthenticationScheme { get; init; } = true;
-        
+
         public JWTAuthenticationOptions()
         {
             Events = new JWTAuthenticationLogEvent();

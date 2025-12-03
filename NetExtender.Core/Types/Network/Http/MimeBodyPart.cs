@@ -19,7 +19,7 @@ namespace NetExtender.Types.Network
         protected HttpContent? Parent { get; set; }
         protected HttpContent? Content { get; set; }
         protected HttpContentHeaders Headers { get; }
-        
+
         public InternetMessageFormatHeaderParser? Parser { get; private set; }
         public List<ArraySegment<Byte>> Segments { get; }
         public Boolean IsComplete { get; set; }
@@ -30,14 +30,14 @@ namespace NetExtender.Types.Network
             Provider = provider ?? throw new ArgumentNullException(nameof(provider));
             Parent = parent;
             Segments = new List<ArraySegment<Byte>>(2);
-            
+
             using StringContent content = new StringContent(String.Empty);
             Headers = content.Headers;
             Headers.Clear();
-            
+
             Parser = new InternetMessageFormatHeaderParser(Headers, header, true);
         }
-        
+
         public HttpContent? GetHttpContent()
         {
             if (Content is null)
@@ -55,7 +55,7 @@ namespace NetExtender.Types.Network
             {
                 return;
             }
-            
+
             await GetOutputStream().WriteAsync(segment.Array, segment.Offset, segment.Count, token);
         }
 
@@ -65,7 +65,7 @@ namespace NetExtender.Types.Network
             {
                 throw new ObjectDisposedException(nameof(MimeBodyPart));
             }
-            
+
             if (Stream is not null)
             {
                 return Stream;
@@ -79,7 +79,7 @@ namespace NetExtender.Types.Network
             {
                 throw new InvalidOperationException($"The stream provider of type '{Provider.GetType()}' threw an exception.", exception);
             }
-            
+
             if (Stream is null)
             {
                 throw new InvalidOperationException($"The stream provider of type '{Provider.GetType()}' returned null. It must return a writable '{nameof(System.IO.Stream)}' instance.");
@@ -120,14 +120,14 @@ namespace NetExtender.Types.Network
                     Stream = null;
                     break;
             }
-            
+
             if (!IsComplete && Content is not null)
             {
                 Content.Dispose();
             }
 
             Content = null;
-            
+
             Parent = null;
             Parser = null;
             Segments.Clear();

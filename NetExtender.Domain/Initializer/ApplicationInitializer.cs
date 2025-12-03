@@ -41,7 +41,7 @@ namespace NetExtender.Domains.Initializer
                 instance = value;
             }
         }
-        
+
         private static Type? type;
         public static Type Type
         {
@@ -50,7 +50,7 @@ namespace NetExtender.Domains.Initializer
                 return type ??= Instance.GetType();
             }
         }
-        
+
         [NetExtenderException]
         [SuppressMessage("ReSharper", "ParameterHidesMember")]
         static ApplicationInitializer()
@@ -59,14 +59,14 @@ namespace NetExtender.Domains.Initializer
             {
                 throw new EntryPointNotFoundException();
             }
-            
+
             static ApplicationInitializer Initialize(Type initializer)
             {
                 if (initializer is null)
                 {
                     throw new ArgumentNullException(nameof(initializer));
                 }
-                
+
                 try
                 {
                     return (ApplicationInitializer?) Activator.CreateInstance(Seal(initializer)) ?? throw new InvalidOperationException();
@@ -76,7 +76,7 @@ namespace NetExtender.Domains.Initializer
                     return (ApplicationInitializer?) Activator.CreateInstance(initializer) ?? throw new InvalidOperationException();
                 }
             }
-            
+
             static Type[] GetSafeTypes(Assembly assembly)
             {
                 if (assembly is null)
@@ -93,7 +93,7 @@ namespace NetExtender.Domains.Initializer
                     return exception.Types.Where(static type => type is not null).ToArray()!;
                 }
             }
-            
+
             Instance = GetSafeTypes(assembly).Where(static type => type.IsSubclassOf(typeof(ApplicationInitializer))).ToArray() switch
             {
                 { Length: 0 } => throw new EntryPointNotFoundException($"Application initializer for assembly '{assembly}' not found."),
@@ -171,7 +171,7 @@ namespace NetExtender.Domains.Initializer
         {
             return StartAsync(args, CancellationToken.None);
         }
-        
+
         protected Awaiter<Int32> StartAsync(String[]? args, CancellationToken token)
         {
             static async Task<Int32> Execute(ApplicationInitializer initializer, String[]? args, CancellationToken token)
@@ -183,7 +183,7 @@ namespace NetExtender.Domains.Initializer
 
                 return await ThreadUtilities.STA(initializer.InvokeAsync, args, token).ConfigureAwait(false);
             }
-            
+
             return new Awaiter<Int32>(Execute(this, args, token));
         }
 
@@ -222,7 +222,7 @@ namespace NetExtender.Domains.Initializer
             {
                 return value != default ? new Awaiter<T>(value) : default;
             }
-            
+
             public static implicit operator T(Awaiter<T> value)
             {
                 return value.Internal;
@@ -232,7 +232,7 @@ namespace NetExtender.Domains.Initializer
             {
                 return value.Internal;
             }
-            
+
             public static implicit operator ValueTask<T>(Awaiter<T> value)
             {
                 return value.Internal;
@@ -242,7 +242,7 @@ namespace NetExtender.Domains.Initializer
             {
                 return new Awaiter<T>(value);
             }
-            
+
             public static Boolean operator true(Awaiter<T> value)
             {
                 return value != default;
@@ -252,7 +252,7 @@ namespace NetExtender.Domains.Initializer
             {
                 return value == default;
             }
-            
+
             public static Boolean operator ==(Awaiter<T> first, Awaiter<T> second)
             {
                 return first.Equals(second);
@@ -319,12 +319,12 @@ namespace NetExtender.Domains.Initializer
             {
                 return Internal.GetAwaiter();
             }
-            
+
             public ConfiguredValueTaskAwaitable<T> ConfigureAwait(Boolean continueOnCapturedContext)
             {
                 return Internal.ConfigureAwait(continueOnCapturedContext);
             }
-            
+
             public override Int32 GetHashCode()
             {
                 return Internal.GetHashCode();

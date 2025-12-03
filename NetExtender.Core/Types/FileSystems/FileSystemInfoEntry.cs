@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
 using NetExtender.FileSystems.Interfaces;
 using NetExtender.Utilities.Types;
@@ -12,7 +13,7 @@ namespace NetExtender.FileSystems
     {
         public event PropertyChangingEventHandler? PropertyChanging;
         public event PropertyChangedEventHandler? PropertyChanged;
-        
+
         public virtual FileSystemInfo? Info
         {
             get
@@ -20,7 +21,7 @@ namespace NetExtender.FileSystems
                 return Storage.Info(this);
             }
         }
-        
+
         private readonly IFileSystemStorage _storage;
         private protected IFileSystemStorage Storage
         {
@@ -49,7 +50,7 @@ namespace NetExtender.FileSystems
                 return Storage;
             }
         }
-        
+
         IFileSystem IFileSystemStorageInfo.FileSystem
         {
             get
@@ -133,6 +134,18 @@ namespace NetExtender.FileSystems
             get
             {
                 return Storage.LinkTarget(this);
+            }
+        }
+
+        public virtual UnixFileMode UnixFileMode
+        {
+            get
+            {
+                return Storage.UnixFileMode(this);
+            }
+            set
+            {
+                Storage.UnixFileMode(this, value);
             }
         }
 
@@ -330,7 +343,7 @@ namespace NetExtender.FileSystems
             return Storage.ToString(this);
         }
     }
-    
+
     public abstract class FileSystemInfoWrapper : IFileSystemInfo
     {
         [return: NotNullIfNotNull("value")]
@@ -435,6 +448,36 @@ namespace NetExtender.FileSystems
             get
             {
                 return Info.LinkTarget;
+            }
+        }
+
+        public virtual UnixFileMode UnixFileMode
+        {
+            get
+            {
+#if NET7_0_OR_GREATER
+                return RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? ~UnixFileMode.None : Info.UnixFileMode;
+#else
+                return RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? ~UnixFileMode.None : throw new NotSupportedException();
+#endif
+            }
+#if !NET7_0_OR_GREATER
+            [SuppressMessage("ReSharper", "ValueParameterNotUsed")]
+#endif
+            set
+            {
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
+                    return;
+                }
+
+#if NET7_0_OR_GREATER
+                OnPropertyChanging(nameof(UnixFileMode));
+                Info.UnixFileMode = value;
+                OnPropertyChanged(nameof(UnixFileMode));
+#else
+                throw new NotSupportedException();
+#endif
             }
         }
 
@@ -543,7 +586,7 @@ namespace NetExtender.FileSystems
         {
             PropertyChanged?.Invoke(this, new PropertyChanged(property));
         }
-        
+
         [return: NotNullIfNotNull("value")]
         protected internal static IFileSystemInfo? Create(FileSystemInfo? value)
         {
@@ -574,6 +617,10 @@ namespace NetExtender.FileSystems
             return value is not null ? new DriveInfoWrapper(value) : null;
         }
 
+#if NET8_0_OR_GREATER
+        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId = "SYSLIB0051", UrlFormat = "https://aka.ms/dotnet-warnings/{0}")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
+#endif
         public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             Info.GetObjectData(info, context);

@@ -21,18 +21,18 @@ namespace NetExtender.Types.Reflection.Interfaces
                 return this as IPatch ?? new ReflectionPatchWrapper(this);
             }
         }
-        
+
         public SyncRoot SyncRoot { get; }
         public Boolean IsAutoInit { get; }
-        
+
         public Boolean Apply();
         public Boolean Apply(Boolean force);
         public Exception? Require();
-        
+
         private sealed class ReflectionPatchWrapper : IReflectionPatch, IPatch
         {
             private IReflectionPatch Patch { get; }
-            
+
             IPatch IReflectionPatch.Patch
             {
                 get
@@ -40,7 +40,7 @@ namespace NetExtender.Types.Reflection.Interfaces
                     return this;
                 }
             }
-            
+
             public SyncRoot SyncRoot
             {
                 get
@@ -48,7 +48,7 @@ namespace NetExtender.Types.Reflection.Interfaces
                     return Patch.SyncRoot;
                 }
             }
-            
+
             Object IPatch.SyncRoot
             {
                 get
@@ -64,7 +64,7 @@ namespace NetExtender.Types.Reflection.Interfaces
                     return Patch.Name;
                 }
             }
-            
+
             public ReflectionPatchCategory Category
             {
                 get
@@ -72,7 +72,7 @@ namespace NetExtender.Types.Reflection.Interfaces
                     return Patch.Category;
                 }
             }
-            
+
             public ReflectionPatchState State
             {
                 get
@@ -80,7 +80,7 @@ namespace NetExtender.Types.Reflection.Interfaces
                     return Patch.State;
                 }
             }
-            
+
             public ReflectionPatchThrow IsThrow
             {
                 get
@@ -88,7 +88,7 @@ namespace NetExtender.Types.Reflection.Interfaces
                     return Patch.IsThrow;
                 }
             }
-            
+
             public Boolean IsAutoInit
             {
                 get
@@ -96,42 +96,42 @@ namespace NetExtender.Types.Reflection.Interfaces
                     return Patch.IsAutoInit;
                 }
             }
-            
+
             public ReflectionPatchWrapper(IReflectionPatch patch)
             {
                 Patch = patch ?? throw new ArgumentNullException(nameof(patch));
             }
-            
+
             public Boolean Apply()
             {
                 return Patch.Apply();
             }
-            
+
             public Boolean Apply(Boolean force)
             {
                 return Patch.Apply(force);
             }
-            
+
             public Exception? Require()
             {
                 return Patch.Require();
             }
-            
+
             public override Int32 GetHashCode()
             {
                 return Patch.GetHashCode();
             }
-            
+
             public override Boolean Equals(Object? other)
             {
                 return Patch.Equals(other);
             }
-            
+
             public override String? ToString()
             {
                 return Patch.ToString();
             }
-            
+
             public void Dispose()
             {
                 Patch.Dispose();
@@ -148,16 +148,16 @@ namespace NetExtender.Types.Reflection.Interfaces
                 return this as IPatchInfo ?? new ReflectionPatchInfoWrapper(this);
             }
         }
-        
+
         public String Name { get; }
         public ReflectionPatchCategory Category { get; }
         public ReflectionPatchState State { get; }
         public ReflectionPatchThrow IsThrow { get; }
-        
+
         private sealed class ReflectionPatchInfoWrapper : IReflectionPatchInfo, IPatchInfo
         {
             private IReflectionPatchInfo Patch { get; }
-            
+
             IPatchInfo IReflectionPatchInfo.Patch
             {
                 get
@@ -173,7 +173,7 @@ namespace NetExtender.Types.Reflection.Interfaces
                     return Patch.Name;
                 }
             }
-            
+
             public ReflectionPatchCategory Category
             {
                 get
@@ -181,7 +181,7 @@ namespace NetExtender.Types.Reflection.Interfaces
                     return Patch.Category;
                 }
             }
-            
+
             public ReflectionPatchState State
             {
                 get
@@ -189,7 +189,7 @@ namespace NetExtender.Types.Reflection.Interfaces
                     return Patch.State;
                 }
             }
-            
+
             public ReflectionPatchThrow IsThrow
             {
                 get
@@ -197,22 +197,22 @@ namespace NetExtender.Types.Reflection.Interfaces
                     return Patch.IsThrow;
                 }
             }
-            
+
             public ReflectionPatchInfoWrapper(IReflectionPatchInfo patch)
             {
                 Patch = patch ?? throw new ArgumentNullException(nameof(patch));
             }
-            
+
             public override Int32 GetHashCode()
             {
                 return Patch.GetHashCode();
             }
-            
+
             public override Boolean Equals(Object? other)
             {
                 return Patch.Equals(other);
             }
-            
+
             public override String? ToString()
             {
                 return Patch.ToString();

@@ -28,7 +28,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
             {
                 return new ExcelCell(0, 0);
             }
-            
+
             String scolumn = String.Empty;
             String srow = String.Empty;
             foreach (Char character in @string)
@@ -42,7 +42,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                     scolumn += character;
                 }
             }
-            
+
             Int32 column = 0;
             Int32 row = Int32.Parse(srow) - 1;
             for (Int32 i = scolumn.Length - 1; i >= 0; i--)

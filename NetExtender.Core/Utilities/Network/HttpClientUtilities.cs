@@ -6,14 +6,10 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
-using System.Text.Json;
-using System.Text.Json.Serialization.Metadata;
 using System.Threading;
 using System.Threading.Tasks;
 using NetExtender.Types.Network.Formatters;
@@ -29,7 +25,7 @@ namespace NetExtender.Utilities.Network
     {
         private static IStorage<HttpClient, JsonMediaTypeFormatter> JsonFormatters { get; } = new WeakStorage<HttpClient, JsonMediaTypeFormatter>();
         private static IStorage<HttpClient, XmlMediaTypeFormatter> XmlFormatters { get; } = new WeakStorage<HttpClient, XmlMediaTypeFormatter>();
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static HttpClient Create()
         {
@@ -110,7 +106,7 @@ namespace NetExtender.Utilities.Network
             HttpClient client = new HttpClient(Pipeline(handler, handlers));
             return DisposeAndThrowOnInvalidAddUserAgent(client, agent);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static HttpClient Create(this HttpMessageHandler handler, Boolean dispose)
         {
@@ -133,7 +129,7 @@ namespace NetExtender.Utilities.Network
             HttpClient client = new HttpClient(handler, dispose);
             return DisposeAndThrowOnInvalidAddUserAgent(client, agent);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static HttpClient Register(this HttpClient client, JsonMediaTypeFormatter formatter)
         {
@@ -141,11 +137,11 @@ namespace NetExtender.Utilities.Network
             {
                 throw new ArgumentNullException(nameof(client));
             }
-            
+
             JsonFormatters[client] = formatter ?? throw new ArgumentNullException(nameof(formatter));
             return client;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static HttpClient Register(this HttpClient client, XmlMediaTypeFormatter formatter)
         {
@@ -153,7 +149,7 @@ namespace NetExtender.Utilities.Network
             {
                 throw new ArgumentNullException(nameof(client));
             }
-            
+
             XmlFormatters[client] = formatter ?? throw new ArgumentNullException(nameof(formatter));
             return client;
         }
@@ -181,7 +177,7 @@ namespace NetExtender.Utilities.Network
                 @delegate.InnerHandler = @delegate.InnerHandler is null ? pipeline : throw new InvalidOperationException();
                 pipeline = @delegate;
             }
-            
+
             return pipeline;
         }
 
@@ -218,12 +214,12 @@ namespace NetExtender.Utilities.Network
             {
                 return null;
             }
-            
+
             handler.ClientCertificateOptions = ClientCertificateOption.Manual;
             handler.ServerCertificateCustomValidationCallback = (_, _, _, _) => true;
             return handler;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<HttpResponseMessage> PostAsync<T>(this HttpClient client, String requestUri, T value, MediaTypeFormatter formatter)
         {
@@ -325,7 +321,7 @@ namespace NetExtender.Utilities.Network
             MediaTypeContent content = new MediaTypeContent(value, formatter, media);
             return client.PostAsync(requestUri, content, token);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<HttpResponseMessage> PostAsJsonAsync<T>(this HttpClient client, String requestUri, T value)
         {
@@ -337,7 +333,7 @@ namespace NetExtender.Utilities.Network
         {
             return PostAsJsonAsync(client, requestUri, value, null, token);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<HttpResponseMessage> PostAsJsonAsync<T>(this HttpClient client, String requestUri, T value, JsonMediaTypeFormatter? formatter)
         {
@@ -351,7 +347,7 @@ namespace NetExtender.Utilities.Network
             {
                 throw new ArgumentNullException(nameof(client));
             }
-            
+
             return PostAsync(client, requestUri, value, formatter ?? JsonFormatters.GetOrAdd(client, static () => new JsonMediaTypeFormatter()), token);
         }
 
@@ -380,7 +376,7 @@ namespace NetExtender.Utilities.Network
             {
                 throw new ArgumentNullException(nameof(client));
             }
-            
+
             return PostAsync(client, requestUri, value, formatter ?? JsonFormatters.GetOrAdd(client, static () => new JsonMediaTypeFormatter()), token);
         }
 
@@ -409,7 +405,7 @@ namespace NetExtender.Utilities.Network
             {
                 throw new ArgumentNullException(nameof(client));
             }
-            
+
             return PostAsync(client, requestUri, value, formatter ?? XmlFormatters.GetOrAdd(client, static () => new XmlMediaTypeFormatter()), token);
         }
 
@@ -438,10 +434,10 @@ namespace NetExtender.Utilities.Network
             {
                 throw new ArgumentNullException(nameof(client));
             }
-            
+
             return PostAsync(client, requestUri, value, formatter ?? XmlFormatters.GetOrAdd(client, static () => new XmlMediaTypeFormatter()), token);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<HttpResponseMessage> PutAsync<T>(this HttpClient client, String requestUri, T value, MediaTypeFormatter formatter)
         {
@@ -543,7 +539,7 @@ namespace NetExtender.Utilities.Network
             MediaTypeContent content = new MediaTypeContent(value, formatter, media);
             return client.PutAsync(requestUri, content, token);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<HttpResponseMessage> PutAsJsonAsync<T>(this HttpClient client, String requestUri, T value)
         {
@@ -555,7 +551,7 @@ namespace NetExtender.Utilities.Network
         {
             return PutAsJsonAsync(client, requestUri, value, null, token);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<HttpResponseMessage> PutAsJsonAsync<T>(this HttpClient client, String requestUri, T value, JsonMediaTypeFormatter? formatter)
         {
@@ -639,7 +635,7 @@ namespace NetExtender.Utilities.Network
         {
             return PutAsync(client, requestUri, value, formatter ?? XmlFormatters.GetOrAdd(client, static () => new XmlMediaTypeFormatter()), token);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<HttpResponseMessage> PatchAsync<T>(this HttpClient client, String requestUri, T value, MediaTypeFormatter formatter)
         {
@@ -741,7 +737,7 @@ namespace NetExtender.Utilities.Network
             MediaTypeContent content = new MediaTypeContent(value, formatter, media);
             return client.PatchAsync(requestUri, content, token);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<HttpResponseMessage> PatchAsJsonAsync<T>(this HttpClient client, String requestUri, T value)
         {
@@ -753,7 +749,7 @@ namespace NetExtender.Utilities.Network
         {
             return PatchAsJsonAsync(client, requestUri, value, null, token);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<HttpResponseMessage> PatchAsJsonAsync<T>(this HttpClient client, String requestUri, T value, JsonMediaTypeFormatter? formatter)
         {
@@ -1009,7 +1005,7 @@ namespace NetExtender.Utilities.Network
 
             return TaskUtilities.TimeoutRetryTaskAsync(HandlerAsync, tries, timeout, callback, token);
         }
-        
+
         private const Byte DefaultTries = 3;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1068,13 +1064,13 @@ namespace NetExtender.Utilities.Network
         {
             return DownloadStringAsync(client, requestUri, encoding, tries, CancellationToken.None);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<String?> DownloadStringAsync(this HttpClient client, String requestUri, Encoding? encoding, Byte tries, CancellationToken token)
         {
             return DownloadStringAsync(client, requestUri, encoding, tries, Time.Minute.OneHalf, token);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<String?> DownloadStringAsync(this HttpClient client, String requestUri, TimeSpan timeout)
         {
@@ -1148,7 +1144,7 @@ namespace NetExtender.Utilities.Network
 
             return TaskUtilities.TimeoutRetryTaskAsync(HandlerAsync, tries, timeout, callback, token);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<String> DownloadStringAsync(this HttpClient client, Uri requestUri)
         {
@@ -1205,13 +1201,13 @@ namespace NetExtender.Utilities.Network
         {
             return DownloadStringAsync(client, requestUri, encoding, tries, CancellationToken.None);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<String?> DownloadStringAsync(this HttpClient client, Uri requestUri, Encoding? encoding, Byte tries, CancellationToken token)
         {
             return DownloadStringAsync(client, requestUri, encoding, tries, Time.Minute.OneHalf, token);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<String?> DownloadStringAsync(this HttpClient client, Uri requestUri, TimeSpan timeout)
         {
@@ -1287,7 +1283,7 @@ namespace NetExtender.Utilities.Network
         }
 
         private const Boolean DefaultOverwrite = false;
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<FileInfo?> DownloadFileTaskAsync(this HttpClient client, String requestUri, String path, Int32 buffer = BufferUtilities.DefaultBuffer)
         {
@@ -1343,7 +1339,7 @@ namespace NetExtender.Utilities.Network
                 return null;
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<FileInfo?> DownloadFileTaskAsync(this HttpClient client, Uri requestUri, String path, Int32 buffer = BufferUtilities.DefaultBuffer)
         {
@@ -1474,10 +1470,17 @@ namespace NetExtender.Utilities.Network
     }
 }
 
+#if !NET7_0_OR_GREATER
 namespace System.Net.Http.Json
 {
+    using System.Linq.Expressions;
+    using System.Reflection;
+    using System.Text.Json;
+    using System.Text.Json.Serialization.Metadata;
+
     public static class HttpClientExtensions
     {
+
         private static class JsonContentFactory<T>
         {
             private static Func<T, JsonTypeInfo<T>, HttpContent> Constructor { get; }
@@ -1510,7 +1513,7 @@ namespace System.Net.Http.Json
                 return Constructor(value, jsonTypeInfo);
             }
         }
-        
+
         /// <summary>Sends a PATCH request to the specified Uri containing the <paramref name="value" /> serialized as JSON in the request body.</summary>
         /// <param name="client">The client used to send the request.</param>
         /// <param name="requestUri">The Uri the request is sent to.</param>
@@ -1546,7 +1549,7 @@ namespace System.Net.Http.Json
             {
                 throw new ArgumentNullException(nameof(client));
             }
-            
+
             JsonContent content = JsonContent.Create(value, options: options);
             return client.PatchAsync(requestUri, content, token);
         }
@@ -1620,9 +1623,10 @@ namespace System.Net.Http.Json
             {
                 throw new ArgumentNullException(nameof(client));
             }
-            
+
             HttpContent content = JsonContentFactory<TValue>.Create(value, jsonTypeInfo);
             return client.PatchAsync(requestUri, content, token);
         }
     }
 }
+#endif

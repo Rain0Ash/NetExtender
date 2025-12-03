@@ -38,7 +38,7 @@ namespace NetExtender.Types.Tasks
         {
             return value.Internal;
         }
-        
+
         public static Boolean operator ==(AsyncResult<T> first, AsyncResult<T> second)
         {
             return first.Equals(second);
@@ -117,7 +117,7 @@ namespace NetExtender.Types.Tasks
         {
             return this;
         }
-        
+
         public AsyncResult<T> Preserve()
         {
             return Internal.Preserve();
@@ -132,7 +132,7 @@ namespace NetExtender.Types.Tasks
         {
             return Internal.ConfigureAwait(continueOnCapturedContext);
         }
-        
+
         public override Int32 GetHashCode()
         {
             return Internal.GetHashCode();

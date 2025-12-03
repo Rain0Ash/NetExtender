@@ -18,7 +18,7 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
             {
                 return null;
             }
-            
+
             value = value.MemberwiseClone();
             value.Handled = false;
             return value;

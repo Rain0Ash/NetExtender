@@ -33,7 +33,7 @@ namespace NetExtender.Utilities.Core
         {
             return null;
         }
-        
+
         public static class FileStream
         {
             public readonly struct Handler
@@ -52,7 +52,7 @@ namespace NetExtender.Utilities.Core
                 public EventHandler<InterceptFileStream, IFileStreamInterceptEventArgs>? MethodIntercepted { get; init; }
             }
         }
-        
+
         [SuppressMessage("Design", "CA1041")]
         [SuppressMessage("ReSharper", "PublicConstructorInAbstractClass")]
         public abstract class InterceptHarmonyFileStream : InterceptFileStream, IInterceptIdentifierTarget<InterceptHarmonyFileStream>
@@ -69,12 +69,12 @@ namespace NetExtender.Utilities.Core
             public new static event EventHandler<InterceptFileStream, IFileStreamInterceptEventArgs>? MethodIntercept;
             public new static event EventHandler<InterceptFileStream, IFileStreamInterceptEventArgs>? MethodIntercepting;
             public new static event EventHandler<InterceptFileStream, IFileStreamInterceptEventArgs>? MethodIntercepted;
-            
+
             static InterceptHarmonyFileStream()
             {
                 Intercept<InterceptHarmonyFileStream>.Regex = new Regex("(Intercept|FileStream)", RegexOptions.Compiled);
             }
-            
+
             public sealed override String Identifier
             {
                 get
@@ -86,7 +86,7 @@ namespace NetExtender.Utilities.Core
                     throw new NotSupportedException();
                 }
             }
-            
+
             public InterceptHarmonyFileStream(String path, FileMode mode)
                 : base(path, mode)
             {
@@ -128,7 +128,7 @@ namespace NetExtender.Utilities.Core
             {
                 Initialize();
             }
-            
+
             [Obsolete]
             public InterceptHarmonyFileStream(IntPtr handle, FileAccess access)
                 : base(handle, access)
@@ -156,7 +156,7 @@ namespace NetExtender.Utilities.Core
             {
                 Initialize();
             }
-            
+
             public InterceptHarmonyFileStream(SafeFileHandle handle, FileAccess access)
                 : base(handle, access)
             {

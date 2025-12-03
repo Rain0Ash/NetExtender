@@ -16,7 +16,7 @@ namespace NetExtender.Utilities.Delegates
             : this(null, action, period)
         {
         }
-        
+
         public ThrottleAction(String? name, Action<T> action, TimeSpan period)
         {
             Action = action ?? throw new ArgumentNullException(nameof(action));
@@ -67,7 +67,7 @@ namespace NetExtender.Utilities.Delegates
             return Name;
         }
     }
-    
+
     public sealed class ThrottleAction : IDisposable
     {
         public String? Name { get; }
@@ -80,7 +80,7 @@ namespace NetExtender.Utilities.Delegates
             : this(null, action, period)
         {
         }
-        
+
         public ThrottleAction(String? name, Action action, TimeSpan period)
         {
             Action = action ?? throw new ArgumentNullException(nameof(action));

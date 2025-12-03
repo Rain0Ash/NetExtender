@@ -15,7 +15,7 @@ namespace NetExtender.Utilities.Core
     public static class ExpressionUtilities
     {
         public static Func<ITranslationSettings?, ITranslationSettings>? Settings { get; set; }
-        
+
         public static String GetMemberName<T, TResult>(this Expression<Func<T, TResult>> expression)
         {
             if (expression is null)
@@ -39,7 +39,7 @@ namespace NetExtender.Utilities.Core
 
             throw new InvalidOperationException("Invalid expression.");
         }
-        
+
         public static Func<T, TResult> CreateExpression<T, TResult>(this Func<Expression, UnaryExpression> function)
         {
             if (function is null)
@@ -137,22 +137,22 @@ namespace NetExtender.Utilities.Core
         {
             return casting ? CreateExpression<T1, T2, TResult>(function) : CreateExpressionWithoutCasting<T1, T2, TResult>(function);
         }
-        
+
         public static Expression<Func<Object>> CreateNewExpression(Type type)
         {
             return CreateNewExpression<Object>(type);
         }
-        
+
         public static Expression<Func<TResult>> CreateNewExpression<TResult>(Type type)
         {
             if (type is null)
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             const BindingFlags binding = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
             ConstructorInfo? constructor = type.GetConstructor(binding, Type.EmptyTypes);
-            
+
             NewExpression expression = constructor is not null ? Expression.New(constructor) : Expression.New(type);
             return Expression.Lambda<Func<TResult>>(Expression.Convert(expression, typeof(TResult)));
         }
@@ -160,7 +160,7 @@ namespace NetExtender.Utilities.Core
         public static Expression<Func<TSource>> CreateNewExpression<TSource>()
         {
             Type type = typeof(TSource);
-            
+
             const BindingFlags binding = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
             ConstructorInfo? constructor = type.GetConstructor(binding, Type.EmptyTypes);
 
@@ -171,9 +171,9 @@ namespace NetExtender.Utilities.Core
         public static Expression<Func<T, TSource>> CreateNewExpression<TSource, T>()
         {
             Type type = typeof(TSource);
-            
+
             const BindingFlags binding = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
-            
+
             Type[] types = { typeof(T) };
             ConstructorInfo? constructor = type.GetConstructor(binding, types);
 
@@ -183,7 +183,7 @@ namespace NetExtender.Utilities.Core
             }
 
             ParameterExpression argument = Expression.Parameter(typeof(T), nameof(argument));
-            
+
             NewExpression expression = Expression.New(constructor, argument);
             return Expression.Lambda<Func<T, TSource>>(expression, argument);
         }
@@ -191,7 +191,7 @@ namespace NetExtender.Utilities.Core
         public static Expression<Func<T1, T2, TSource>> CreateNewExpression<TSource, T1, T2>()
         {
             Type type = typeof(TSource);
-            
+
             const BindingFlags binding = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
 
             Type[] types = { typeof(T1), typeof(T2) };
@@ -204,7 +204,7 @@ namespace NetExtender.Utilities.Core
 
             ParameterExpression first = Expression.Parameter(typeof(T1), nameof(first));
             ParameterExpression second = Expression.Parameter(typeof(T2), nameof(second));
-            
+
             NewExpression expression = Expression.New(constructor, first, second);
             return Expression.Lambda<Func<T1, T2, TSource>>(expression, first, second);
         }
@@ -212,7 +212,7 @@ namespace NetExtender.Utilities.Core
         public static Expression<Func<T1, T2, T3, TSource>> CreateNewExpression<TSource, T1, T2, T3>()
         {
             Type type = typeof(TSource);
-            
+
             const BindingFlags binding = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
 
             Type[] types = { typeof(T1), typeof(T2), typeof(T3) };
@@ -226,7 +226,7 @@ namespace NetExtender.Utilities.Core
             ParameterExpression first = Expression.Parameter(typeof(T1), nameof(first));
             ParameterExpression second = Expression.Parameter(typeof(T2), nameof(second));
             ParameterExpression third = Expression.Parameter(typeof(T3), nameof(third));
-            
+
             NewExpression expression = Expression.New(constructor, first, second, third);
             return Expression.Lambda<Func<T1, T2, T3, TSource>>(expression, first, second, third);
         }
@@ -234,7 +234,7 @@ namespace NetExtender.Utilities.Core
         public static Expression<Func<T1, T2, T3, T4, TSource>> CreateNewExpression<TSource, T1, T2, T3, T4>()
         {
             Type type = typeof(TSource);
-            
+
             const BindingFlags binding = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
 
             Type[] types = { typeof(T1), typeof(T2), typeof(T3), typeof(T4) };
@@ -249,7 +249,7 @@ namespace NetExtender.Utilities.Core
             ParameterExpression second = Expression.Parameter(typeof(T2), nameof(second));
             ParameterExpression third = Expression.Parameter(typeof(T3), nameof(third));
             ParameterExpression fourth = Expression.Parameter(typeof(T4), nameof(fourth));
-            
+
             NewExpression expression = Expression.New(constructor, first, second, third, fourth);
             return Expression.Lambda<Func<T1, T2, T3, T4, TSource>>(expression, first, second, third, fourth);
         }
@@ -257,7 +257,7 @@ namespace NetExtender.Utilities.Core
         public static Expression<Func<T1, T2, T3, T4, T5, TSource>> CreateNewExpression<TSource, T1, T2, T3, T4, T5>()
         {
             Type type = typeof(TSource);
-            
+
             const BindingFlags binding = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
 
             Type[] types = { typeof(T1), typeof(T2), typeof(T3), typeof(T4), typeof(T5) };
@@ -273,7 +273,7 @@ namespace NetExtender.Utilities.Core
             ParameterExpression third = Expression.Parameter(typeof(T3), nameof(third));
             ParameterExpression fourth = Expression.Parameter(typeof(T4), nameof(fourth));
             ParameterExpression fifth = Expression.Parameter(typeof(T5), nameof(fifth));
-            
+
             NewExpression expression = Expression.New(constructor, first, second, third, fourth, fifth);
             return Expression.Lambda<Func<T1, T2, T3, T4, T5, TSource>>(expression, first, second, third, fourth, fifth);
         }
@@ -281,7 +281,7 @@ namespace NetExtender.Utilities.Core
         public static Expression<Func<T1, T2, T3, T4, T5, T6, TSource>> CreateNewExpression<TSource, T1, T2, T3, T4, T5, T6>()
         {
             Type type = typeof(TSource);
-            
+
             const BindingFlags binding = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
 
             Type[] types = { typeof(T1), typeof(T2), typeof(T3), typeof(T4), typeof(T5), typeof(T6) };
@@ -298,7 +298,7 @@ namespace NetExtender.Utilities.Core
             ParameterExpression fourth = Expression.Parameter(typeof(T4), nameof(fourth));
             ParameterExpression fifth = Expression.Parameter(typeof(T5), nameof(fifth));
             ParameterExpression sixth = Expression.Parameter(typeof(T6), nameof(sixth));
-            
+
             NewExpression expression = Expression.New(constructor, first, second, third, fourth, fifth, sixth);
             return Expression.Lambda<Func<T1, T2, T3, T4, T5, T6, TSource>>(expression, first, second, third, fourth, fifth, sixth);
         }
@@ -306,7 +306,7 @@ namespace NetExtender.Utilities.Core
         public static Expression<Func<T1, T2, T3, T4, T5, T6, T7, TSource>> CreateNewExpression<TSource, T1, T2, T3, T4, T5, T6, T7>()
         {
             Type type = typeof(TSource);
-            
+
             const BindingFlags binding = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
 
             Type[] types = { typeof(T1), typeof(T2), typeof(T3), typeof(T4), typeof(T5), typeof(T6), typeof(T7) };
@@ -324,7 +324,7 @@ namespace NetExtender.Utilities.Core
             ParameterExpression fifth = Expression.Parameter(typeof(T5), nameof(fifth));
             ParameterExpression sixth = Expression.Parameter(typeof(T6), nameof(sixth));
             ParameterExpression seventh = Expression.Parameter(typeof(T7), nameof(seventh));
-            
+
             NewExpression expression = Expression.New(constructor, first, second, third, fourth, fifth, sixth, seventh);
             return Expression.Lambda<Func<T1, T2, T3, T4, T5, T6, T7, TSource>>(expression, first, second, third, fourth, fifth, sixth, seventh);
         }
@@ -332,7 +332,7 @@ namespace NetExtender.Utilities.Core
         public static Expression<Func<T1, T2, T3, T4, T5, T6, T7, T8, TSource>> CreateNewExpression<TSource, T1, T2, T3, T4, T5, T6, T7, T8>()
         {
             Type type = typeof(TSource);
-            
+
             const BindingFlags binding = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
 
             Type[] types = { typeof(T1), typeof(T2), typeof(T3), typeof(T4), typeof(T5), typeof(T6), typeof(T7), typeof(T8) };
@@ -351,7 +351,7 @@ namespace NetExtender.Utilities.Core
             ParameterExpression sixth = Expression.Parameter(typeof(T6), nameof(sixth));
             ParameterExpression seventh = Expression.Parameter(typeof(T7), nameof(seventh));
             ParameterExpression eighth = Expression.Parameter(typeof(T8), nameof(eighth));
-            
+
             NewExpression expression = Expression.New(constructor, first, second, third, fourth, fifth, sixth, seventh, eighth);
             return Expression.Lambda<Func<T1, T2, T3, T4, T5, T6, T7, T8, TSource>>(expression, first, second, third, fourth, fifth, sixth, seventh, eighth);
         }
@@ -359,7 +359,7 @@ namespace NetExtender.Utilities.Core
         public static Expression<Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, TSource>> CreateNewExpression<TSource, T1, T2, T3, T4, T5, T6, T7, T8, T9>()
         {
             Type type = typeof(TSource);
-            
+
             const BindingFlags binding = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
 
             Type[] types = { typeof(T1), typeof(T2), typeof(T3), typeof(T4), typeof(T5), typeof(T6), typeof(T7), typeof(T8), typeof(T9) };
@@ -379,11 +379,11 @@ namespace NetExtender.Utilities.Core
             ParameterExpression seventh = Expression.Parameter(typeof(T7), nameof(seventh));
             ParameterExpression eighth = Expression.Parameter(typeof(T8), nameof(eighth));
             ParameterExpression ninth = Expression.Parameter(typeof(T9), nameof(ninth));
-            
+
             NewExpression expression = Expression.New(constructor, first, second, third, fourth, fifth, sixth, seventh, eighth, ninth);
             return Expression.Lambda<Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, TSource>>(expression, first, second, third, fourth, fifth, sixth, seventh, eighth, ninth);
         }
-        
+
         public static Expression<Func<TFrom, TTo>>? CreateAssignExpression<TFrom, TTo>()
         {
             //TODO:
@@ -393,53 +393,53 @@ namespace NetExtender.Utilities.Core
                 {
                     return Expression.Convert(parameter, to);
                 }
-                
+
                 if (!to.IsGenericType || !parameter.Type.IsGenericType)
                 {
                     return null;
                 }
-                
+
                 if (to.GetGenericTypeDefinition() != parameter.Type.GetGenericTypeDefinition())
                 {
                     return null;
                 }
-                
+
                 if (from.TryGetGenericArguments() is not { } fromargs || to.TryGetGenericArguments() is not { } toargs)
                 {
                     return null;
                 }
-                
+
                 for (Int32 i = 0; i < fromargs.Length; i++)
                 {
                     IndexExpression property = Expression.Property(parameter, "Item", Expression.Constant(i));
                     Expression? assignability = Assignability(property, toargs[i], fromargs[i]);
-                    
+
                     if (assignability is null)
                     {
                         return null;
                     }
                 }
-                
+
                 return parameter;
             }
-            
+
             ParameterExpression value = Expression.Parameter(typeof(TFrom), nameof(value));
             Expression? body = Assignability(value, typeof(TFrom), typeof(TTo));
             return body is not null ? Expression.Lambda<Func<TFrom, TTo>>(body, value) : null;
         }
-        
+
         public static Expression<Func<TFrom, TTo>>? CreateAssignExpression<TFrom, TTo>(Boolean simple)
         {
             if (!simple)
             {
                 return CreateAssignExpression<TFrom, TTo>();
             }
-            
+
             if (!typeof(TTo).IsAssignableFrom(typeof(TFrom)))
             {
                 return null;
             }
-            
+
             ParameterExpression parameter = Expression.Parameter(typeof(TFrom), nameof(parameter));
             Expression body = Expression.Convert(parameter, typeof(TTo));
             return Expression.Lambda<Func<TFrom, TTo>>(body, parameter);
@@ -769,7 +769,7 @@ namespace NetExtender.Utilities.Core
 
             return CreateSetExpression<TSource, TValue>(member);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static Boolean TryCreateSetExpression<TSource, TValue>(String name, [MaybeNullWhen(false)] out Expression<Action<TSource, TValue>> result)
         {
@@ -867,7 +867,7 @@ namespace NetExtender.Utilities.Core
         {
             return CreateSetExpression<TSource, TValue>((MemberInfo) field);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryCreateSetExpression<TSource, TValue>(this FieldInfo field, [MaybeNullWhen(false)] out Expression<Action<TSource, TValue>> result)
         {
@@ -879,7 +879,7 @@ namespace NetExtender.Utilities.Core
         {
             return CreateSetExpression<TSource, TValue>((MemberInfo) property);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryCreateSetExpression<TSource, TValue>(this PropertyInfo property, [MaybeNullWhen(false)] out Expression<Action<TSource, TValue>> result)
         {

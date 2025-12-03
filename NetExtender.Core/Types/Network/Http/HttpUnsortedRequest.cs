@@ -17,7 +17,7 @@ namespace NetExtender.Types.Network
         public HttpUnsortedRequest()
         {
         }
-        
+
         public HttpUnsortedRequest(HttpMethod method, Version version, String requestUri)
         {
             Method = method;

@@ -263,7 +263,7 @@ namespace NetExtender.Cryptography.Base
 
                 written = (Int32) (poutput - poutput);
                 return true;
-                
+
                 overflow:
                 written = (Int32) (poutput - poutput);
                 return false;

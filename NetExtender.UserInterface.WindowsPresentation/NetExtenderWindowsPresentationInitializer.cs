@@ -19,7 +19,7 @@ namespace NetExtender.DependencyInjection
         {
             EventManager.RegisterClassHandler(typeof(FrameworkElement), FrameworkElement.ContextMenuOpeningEvent, new RoutedEventHandler(OnContextMenuOpening));
         }
-        
+
         // ReSharper disable once CognitiveComplexity
         private static void OnContextMenuOpening(Object sender, RoutedEventArgs args)
         {
@@ -65,7 +65,7 @@ namespace NetExtender.DependencyInjection
 
                             continue;
                         }
-                        
+
                         if (element.Visibility == Visibility.Visible)
                         {
                             args.Handled = false;
@@ -77,7 +77,7 @@ namespace NetExtender.DependencyInjection
                             args.Handled = false;
                             return;
                         }
-                        
+
                         continue;
                     }
                     case FrameworkElement element:
@@ -87,7 +87,7 @@ namespace NetExtender.DependencyInjection
                             args.Handled = false;
                             return;
                         }
-                        
+
                         continue;
                     }
                     default:

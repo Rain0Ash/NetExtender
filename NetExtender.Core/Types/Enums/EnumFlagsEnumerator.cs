@@ -131,7 +131,7 @@ namespace NetExtender.Types.Enums
         {
             _value = value;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public Boolean MoveNext()
         {
@@ -151,11 +151,11 @@ namespace NetExtender.Types.Enums
                     {
                         throw new InvalidOperationException();
                     }
-                    
+
                     _written = unchecked((Byte) written);
                 }
             }
-            
+
             if (_index >= _written)
             {
                 _index = 0;
@@ -188,13 +188,13 @@ namespace NetExtender.Types.Enums
         {
             return new EnumeratorFiller<T, EnumFlagsEnumerator<T>, EnumComparer<T>>(this, Comparer).ToImmutableArray();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public readonly List<T> ToList()
         {
             return new EnumeratorFiller<T, EnumFlagsEnumerator<T>, EnumComparer<T>>(this, Comparer).ToList();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public readonly ImmutableList<T> ToImmutableList()
         {
@@ -212,19 +212,19 @@ namespace NetExtender.Types.Enums
         {
             return new EnumeratorFiller<T, EnumFlagsEnumerator<T>, EnumComparer<T>>(this, Comparer).ToHashSet();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public readonly ImmutableHashSet<T> ToImmutableHashSet()
         {
             return new EnumeratorFiller<T, EnumFlagsEnumerator<T>, EnumComparer<T>>(this, Comparer).ToImmutableHashSet();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public readonly SortedSet<T> ToSortedSet()
         {
             return new EnumeratorFiller<T, EnumFlagsEnumerator<T>, EnumComparer<T>>(this, Comparer).ToSortedSet();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public readonly ImmutableSortedSet<T> ToImmutableSortedSet()
         {
@@ -436,7 +436,7 @@ namespace NetExtender.Types.Enums
                 {
                     return enumerator.Current;
                 }
-                
+
                 throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
         }
@@ -450,7 +450,7 @@ namespace NetExtender.Types.Enums
             {
                 return new Any(value);
             }
-            
+
             public static implicit operator Any(T value)
             {
                 return new Any(value);
@@ -475,7 +475,7 @@ namespace NetExtender.Types.Enums
             {
                 return !(first == second);
             }
-            
+
             private EnumFlagsEnumerator<T> Enumerator;
 
             public readonly EnumComparer<T> Comparer
@@ -562,7 +562,7 @@ namespace NetExtender.Types.Enums
             {
                 Enumerator = enumerator;
             }
-            
+
             public Boolean MoveNext()
             {
                 return Enumerator.MoveNext();
@@ -584,13 +584,13 @@ namespace NetExtender.Types.Enums
             {
                 return Enumerator.ToImmutableArray();
             }
-            
+
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public readonly List<T> ToList()
             {
                 return Enumerator.ToList();
             }
-            
+
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public readonly ImmutableList<T> ToImmutableList()
             {
@@ -608,19 +608,19 @@ namespace NetExtender.Types.Enums
             {
                 return Enumerator.ToHashSet();
             }
-            
+
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public readonly ImmutableHashSet<T> ToImmutableHashSet()
             {
                 return Enumerator.ToImmutableHashSet();
             }
-            
+
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public readonly SortedSet<T> ToSortedSet()
             {
                 return Enumerator.ToSortedSet();
             }
-            
+
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public readonly ImmutableSortedSet<T> ToImmutableSortedSet()
             {
@@ -679,7 +679,7 @@ namespace NetExtender.Types.Enums
             {
                 return Enumerator.GetEnumerator();
             }
-            
+
             readonly IEnumerator<Enum> IEnumerable<Enum>.GetEnumerator()
             {
                 return GetEnumerator();
@@ -802,7 +802,7 @@ namespace NetExtender.Types.Enums
                     return Enumerator[index];
                 }
             }
-            
+
             readonly Enum IReadOnlyList<Enum>.this[Int32 index]
             {
                 get
@@ -848,7 +848,7 @@ namespace NetExtender.Types.Enums
             {
                 return EnumUtilities.GetName(value);
             }
-            
+
             public String this[Int32 index]
             {
                 get

@@ -41,7 +41,7 @@ namespace NetExtender.Utilities.Types
         {
             return CountIfMaterialized<T>(source, out Int32 result) && result >= 0 ? result : count;
         }
-        
+
         [Pure]
         public static Int32? CountIfMaterialized<T>([JetBrains.Annotations.NoEnumeration] this IEnumerable<T> source)
         {
@@ -434,9 +434,9 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             using IEnumerator<T> enumerator = source.GetEnumerator();
-            
+
             while (enumerator.MoveNext())
             {
                 yield return enumerator.Current;

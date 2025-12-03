@@ -15,17 +15,17 @@ namespace NetExtender.DependencyInjection.Events
                 return _factory();
             }
         }
-        
+
         public ServiceProviderEventArgs(IServiceProvider provider)
         {
             if (provider is null)
             {
                 throw new ArgumentNullException(nameof(provider));
             }
-            
+
             _factory = () => provider;
         }
-        
+
         public ServiceProviderEventArgs(Func<IServiceProvider> provider)
         {
             _factory = provider ?? throw new ArgumentNullException(nameof(provider));

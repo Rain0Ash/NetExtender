@@ -84,7 +84,7 @@ namespace NetExtender.Configuration.Behavior.Settings
         {
             return Synchronizer.SaveAsync(token);
         }
-        
+
         public sealed override Boolean Reset()
         {
             return Synchronizer.Reset();

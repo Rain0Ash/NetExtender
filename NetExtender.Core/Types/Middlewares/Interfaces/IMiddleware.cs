@@ -15,7 +15,7 @@ namespace NetExtender.Types.Middlewares.Interfaces
 
         public ValueTask<TArgument> ConvertAsync(Object? sender, T argument);
     }
-    
+
     public interface IMiddlewareConverter<in T, out TArgument>
     {
         public TArgument Convert(T argument)
@@ -33,7 +33,7 @@ namespace NetExtender.Types.Middlewares.Interfaces
         public ValueTask InvokeValueAsync(T argument);
         public ValueTask InvokeValueAsync(Object? sender, T argument);
     }
-    
+
     public interface IAsyncMiddleware : IMiddlewareInfo
     {
         public new Boolean IsAsync
@@ -43,7 +43,7 @@ namespace NetExtender.Types.Middlewares.Interfaces
                 return true;
             }
         }
-        
+
         public Boolean IsValue
         {
             get
@@ -51,19 +51,19 @@ namespace NetExtender.Types.Middlewares.Interfaces
                 return false;
             }
         }
-        
+
         public Task<Boolean> InvokeAsync<TArgument>(TArgument argument);
         public Task<Boolean> InvokeAsync<TArgument>(Object? sender, TArgument argument);
         public ValueTask<Boolean> InvokeValueAsync<TArgument>(TArgument argument);
         public ValueTask<Boolean> InvokeValueAsync<TArgument>(Object? sender, TArgument argument);
     }
-    
+
     public interface IMiddleware<in T> : IMiddleware
     {
         public void Invoke(T argument);
         public void Invoke(Object? sender, T argument);
     }
-    
+
     public interface IMiddleware : IMiddlewareInfo
     {
         public new Boolean IsAsync
@@ -73,16 +73,16 @@ namespace NetExtender.Types.Middlewares.Interfaces
                 return false;
             }
         }
-        
+
         public Boolean Invoke<TArgument>(TArgument argument);
         public Boolean Invoke<TArgument>(Object? sender, TArgument argument);
     }
-    
+
     public interface IMiddlewareInfo
     {
         public MiddlewareExecutionContext Context { get; }
         public MiddlewareIdempotencyMode Idempotency { get; }
-        
+
         public Boolean IsAsync
         {
             get

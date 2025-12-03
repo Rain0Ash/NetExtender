@@ -21,7 +21,7 @@ namespace NetExtender.WindowsPresentation.Types.Commands.History
                 return _command;
             }
         }
-        
+
         IMultiCommand ICommandHistoryMultiEntry.Command
         {
             get
@@ -38,7 +38,7 @@ namespace NetExtender.WindowsPresentation.Types.Commands.History
                 return _parameter;
             }
         }
-        
+
         public override Boolean CanExecute
         {
             get
@@ -61,7 +61,7 @@ namespace NetExtender.WindowsPresentation.Types.Commands.History
             _command = command ?? throw new ArgumentNullException(nameof(command));
             _parameter = parameter?.AsImmutableList();
         }
-        
+
         public override Boolean Execute()
         {
             if (!CanExecute)
@@ -90,7 +90,7 @@ namespace NetExtender.WindowsPresentation.Types.Commands.History
         {
             return HashCode.Combine(Command, Parameter);
         }
-        
+
         public override Boolean Equals(Object? other)
         {
             return other switch
@@ -101,27 +101,27 @@ namespace NetExtender.WindowsPresentation.Types.Commands.History
                 _ => false
             };
         }
-        
+
         public virtual Boolean Equals(IEnumerable<T>? other)
         {
             return Parameter is not null ? other is not null && Parameter.SequenceEqual(other) : other is null;
         }
-        
+
         public override Boolean Equals(ICommand? other)
         {
             return Command.Equals(other);
         }
-        
+
         public override Boolean Equals(CommandHistoryEntry? other)
         {
             return Equals(other as CommandHistoryMultiEntry<T>);
         }
-        
+
         public virtual Boolean Equals(CommandHistoryMultiEntry<T>? other)
         {
             return other is not null && Command.Equals(other.Command) && Equals(other.Parameter);
         }
-        
+
         public override Boolean Equals(ICommandHistoryEntry? other)
         {
             return other is CommandHistoryEntry<T> entry && Equals(entry) || Equals(other?.Command);

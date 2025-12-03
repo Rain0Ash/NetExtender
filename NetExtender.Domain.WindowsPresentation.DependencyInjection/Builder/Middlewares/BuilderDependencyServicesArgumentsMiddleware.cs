@@ -22,7 +22,7 @@ namespace NetExtender.Domains.WindowsPresentation.Builder.Middlewares
         {
             Idempotency = MiddlewareIdempotencyMode.Single;
         }
-        
+
         public override void Invoke(Object? sender, IServiceProvider provider)
         {
             if (provider is null)
@@ -34,7 +34,7 @@ namespace NetExtender.Domains.WindowsPresentation.Builder.Middlewares
             {
                 return;
             }
-            
+
             _ = provider.GetService<Arguments>();
         }
     }
@@ -51,7 +51,7 @@ namespace NetExtender.Domains.WindowsPresentation
         }
 
         private ImmutableArray<String> Internal { get; }
-        
+
         public Int32 Count
         {
             get
@@ -59,7 +59,7 @@ namespace NetExtender.Domains.WindowsPresentation
                 return Internal.Length;
             }
         }
-        
+
         private FileInfo? _executable;
         public FileInfo? Executable
         {
@@ -68,7 +68,7 @@ namespace NetExtender.Domains.WindowsPresentation
                 return _executable ??= Internal.Length > 0 && PathUtilities.IsExist(Internal[0], PathType.LocalFile) ? new FileInfo(Internal[0]) : null;
             }
         }
-        
+
         public Arguments()
             : this(ApplicationUtilities.Arguments)
         {
@@ -78,22 +78,22 @@ namespace NetExtender.Domains.WindowsPresentation
         {
             Internal = arguments;
         }
-        
+
         public ImmutableArray<String>.Enumerator GetEnumerator()
         {
             return Internal.GetEnumerator();
         }
-        
+
         IEnumerator<String> IEnumerable<String>.GetEnumerator()
         {
             return ((IEnumerable<String>) Internal).GetEnumerator();
         }
-        
+
         IEnumerator IEnumerable.GetEnumerator()
         {
             return ((IEnumerable) Internal).GetEnumerator();
         }
-        
+
         public String this[Int32 index]
         {
             get
@@ -101,7 +101,7 @@ namespace NetExtender.Domains.WindowsPresentation
                 return Internal[index];
             }
         }
-        
+
         public String this[Index index]
         {
             get

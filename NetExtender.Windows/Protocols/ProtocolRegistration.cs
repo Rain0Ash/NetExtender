@@ -69,14 +69,14 @@ namespace NetExtender.Windows.Protocols
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
         }
-        
+
         public abstract Boolean Register();
 
         public Boolean Unregister()
         {
             return Unregister(false);
         }
-        
+
         public abstract Boolean Unregister(Boolean force);
     }
 }

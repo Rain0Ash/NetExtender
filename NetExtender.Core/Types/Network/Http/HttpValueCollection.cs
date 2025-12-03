@@ -31,13 +31,17 @@ namespace NetExtender.Types.Network
             }
         }
 
-        protected HttpValueCollection(SerializationInfo info, StreamingContext context)
-            : base(info, context)
+        private HttpValueCollection()
+            : base(StringComparer.OrdinalIgnoreCase)
         {
         }
 
-        private HttpValueCollection()
-            : base(StringComparer.OrdinalIgnoreCase)
+#if NET8_0_OR_GREATER
+        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
+        protected HttpValueCollection(SerializationInfo info, StreamingContext context)
+            : base(info, context)
         {
         }
 
@@ -54,7 +58,7 @@ namespace NetExtender.Types.Network
             }
 
             HttpValueCollection collection = new HttpValueCollection();
-            
+
             foreach (KeyValuePair<String, String> pair in source)
             {
                 collection.Add(pair.Key, pair.Value);
@@ -70,7 +74,7 @@ namespace NetExtender.Types.Network
             {
                 throw new InvalidOperationException($"The number of keys in a {GetType()} has exceeded the limit of '{MaximumHttpCollectionKeys}'.");
             }
-            
+
             base.Add(name ?? String.Empty, value ?? String.Empty);
         }
 
@@ -88,7 +92,7 @@ namespace NetExtender.Types.Network
             {
                 builder.Append('&');
             }
-            
+
             first = false;
             builder.Append(name);
             if (String.IsNullOrEmpty(value))
@@ -128,7 +132,7 @@ namespace NetExtender.Types.Network
                     AppendNameValuePair(builder, ref first, encode, name, value);
                 }
             }
-            
+
             return builder.ToString();
         }
     }

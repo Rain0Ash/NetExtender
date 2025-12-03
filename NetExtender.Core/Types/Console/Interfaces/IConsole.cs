@@ -48,9 +48,9 @@ namespace NetExtender.Types.Console.Interfaces
 
         /// <inheritdoc cref="System.Console.OutputEncoding"/>
         public new Encoding? OutputEncoding { get; set; }
-        
+
         public new Boolean? IsVisible { get; set; }
-        
+
         public new IConsoleFontInfo? Font { get; set; }
         public new UInt32 FontIndex { get; set; }
         public new Int16 FontSize { get; set; }
@@ -115,10 +115,10 @@ namespace NetExtender.Types.Console.Interfaces
 
         /// <inheritdoc cref="System.Console.CapsLock"/>
         public new Boolean CapsLock { get; }
-        
+
         public new Boolean? IsVTCode { get; set; }
         public new Boolean? IsQuickEditEnabled { get; set; }
-        
+
         public new Boolean? IsEchoInputEnabled { get; set; }
         public new Boolean? IsWindowInputEnabled { get; set; }
         public new Boolean? IsMouseInputEnabled { get; set; }
@@ -353,9 +353,9 @@ namespace NetExtender.Types.Console.Interfaces
 
         /// <inheritdoc cref="System.Console.OutputEncoding"/>
         public Encoding? OutputEncoding { get; }
-        
+
         public Boolean? IsVisible { get; }
-        
+
         public IConsoleFontInfo? Font { get; }
         public UInt32 FontIndex { get; }
         public Int16 FontSize { get; }
@@ -420,10 +420,10 @@ namespace NetExtender.Types.Console.Interfaces
 
         /// <inheritdoc cref="System.Console.CapsLock"/>
         public Boolean CapsLock { get; }
-        
+
         public Boolean? IsVTCode { get; }
         public Boolean? IsQuickEditEnabled { get; }
-        
+
         public Boolean? IsEchoInputEnabled { get; }
         public Boolean? IsWindowInputEnabled { get; }
         public Boolean? IsMouseInputEnabled { get; }

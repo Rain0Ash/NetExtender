@@ -66,7 +66,7 @@ namespace NetExtender.Types.Numerics
         {
             return new Decimal(value);
         }
-        
+
         public static implicit operator FloatDecimal(Decimal value)
         {
             return new FloatDecimal(value);
@@ -134,32 +134,32 @@ namespace NetExtender.Types.Numerics
 
         public static Boolean operator ==(FloatDecimal first, FloatDecimal second)
         {
-            
+
         }
 
         public static Boolean operator !=(FloatDecimal first, FloatDecimal second)
         {
-            
+
         }
 
         public static Boolean operator <(FloatDecimal first, FloatDecimal second)
         {
-            
+
         }
 
         public static Boolean operator <=(FloatDecimal first, FloatDecimal second)
         {
-            
+
         }
 
         public static Boolean operator >(FloatDecimal first, FloatDecimal second)
         {
-            
+
         }
 
         public static Boolean operator >=(FloatDecimal first, FloatDecimal second)
         {
-            
+
         }
 
         public static FloatDecimal operator ++(FloatDecimal value)
@@ -401,12 +401,12 @@ namespace NetExtender.Types.Numerics
 
         public static FloatDecimal operator /(FloatDecimal first, FloatDecimal second)
         {
-            
+
         }
 
         public static FloatDecimal operator %(FloatDecimal first, FloatDecimal second)
         {
-            
+
         }
 
         public static FloatDecimal Zero
@@ -440,7 +440,7 @@ namespace NetExtender.Types.Numerics
                 return Decimal.MinusOne;
             }
         }
-        
+
         public static FloatDecimal MaxValue
         {
             get
@@ -448,7 +448,7 @@ namespace NetExtender.Types.Numerics
                 return Decimal.MaxValue;
             }
         }
-        
+
         public static FloatDecimal MinValue
         {
             get
@@ -456,7 +456,7 @@ namespace NetExtender.Types.Numerics
                 return Decimal.MinValue;
             }
         }
-        
+
         public static FloatDecimal PositiveInfinity
         {
             get
@@ -464,7 +464,7 @@ namespace NetExtender.Types.Numerics
                 return new FloatDecimal(State.PositiveInfinity);
             }
         }
-        
+
         public static FloatDecimal NegativeInfinity
         {
             get
@@ -472,7 +472,7 @@ namespace NetExtender.Types.Numerics
                 return new FloatDecimal(State.NegativeInfinity);
             }
         }
-        
+
         public static FloatDecimal NaN
         {
             get
@@ -480,7 +480,7 @@ namespace NetExtender.Types.Numerics
                 return new FloatDecimal(State.NaN);
             }
         }
-        
+
         private readonly State _state;
         private readonly Decimal _value;
 
@@ -491,7 +491,7 @@ namespace NetExtender.Types.Numerics
                 return false;
             }
         }
-        
+
         public FloatDecimal(Int32 value)
         {
             _state = State.Finite;
@@ -508,7 +508,7 @@ namespace NetExtender.Types.Numerics
         {
             _state = State.Finite;
             _value = new Decimal(value);
-            
+
         }
 
         public FloatDecimal(UInt64 value)
@@ -582,7 +582,7 @@ namespace NetExtender.Types.Numerics
             _state = State.Finite;
             _value = value;
         }
-        
+
         public FloatDecimal(ReadOnlySpan<Int32> bits)
         {
             switch (bits.Length)
@@ -597,7 +597,7 @@ namespace NetExtender.Types.Numerics
                     return;
             }
         }
-        
+
         public FloatDecimal(Int32 low, Int32 middle, Int32 high, Boolean negative, Byte scale)
         {
             _state = State.Finite;
@@ -719,7 +719,7 @@ namespace NetExtender.Types.Numerics
         {
             return DecCalc.VarCyFromDec(ref AsMutable(ref value));
         }
-        
+
         public static Decimal Parse(String s)
         {
             if (s == null) ThrowHelper.ThrowArgumentNullException(ExceptionArgument.s);
@@ -1155,77 +1155,77 @@ namespace NetExtender.Types.Numerics
 
         Boolean IConvertible.ToBoolean(IFormatProvider? provider)
         {
-            
+
         }
 
         Char IConvertible.ToChar(IFormatProvider? provider)
         {
-            
+
         }
 
         SByte IConvertible.ToSByte(IFormatProvider? provider)
         {
-            
+
         }
 
         Byte IConvertible.ToByte(IFormatProvider? provider)
         {
-            
+
         }
 
         Int16 IConvertible.ToInt16(IFormatProvider? provider)
         {
-            
+
         }
 
         UInt16 IConvertible.ToUInt16(IFormatProvider? provider)
         {
-            
+
         }
 
         Int32 IConvertible.ToInt32(IFormatProvider? provider)
         {
-            
+
         }
 
         UInt32 IConvertible.ToUInt32(IFormatProvider? provider)
         {
-            
+
         }
 
         Int64 IConvertible.ToInt64(IFormatProvider? provider)
         {
-            
+
         }
 
         UInt64 IConvertible.ToUInt64(IFormatProvider? provider)
         {
-            
+
         }
 
         System.Single IConvertible.ToSingle(IFormatProvider? provider)
         {
-            
+
         }
 
         System.Double IConvertible.ToDouble(IFormatProvider? provider)
         {
-            
+
         }
 
         Decimal IConvertible.ToDecimal(IFormatProvider? provider)
         {
-            
+
         }
 
         DateTime IConvertible.ToDateTime(IFormatProvider? provider)
         {
-            
+
         }
 
         Object IConvertible.ToType(Type type, IFormatProvider? provider)
         {
-            
+
         }
 
         public Boolean TryFormat(Span<Char> destination, out Int32 written, ReadOnlySpan<Char> format, IFormatProvider? provider)
@@ -1240,7 +1240,7 @@ namespace NetExtender.Types.Numerics
 
         public override Boolean Equals(Object? other)
         {
-            
+
         }
 
         public override String ToString()

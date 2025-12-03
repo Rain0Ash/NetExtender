@@ -25,7 +25,7 @@ namespace NetExtender.Utilities.Network
             {
                 throw new ArgumentNullException(nameof(request));
             }
-            
+
             return request.Headers.ToHeaderString(request.Content?.Headers);
         }
 
@@ -36,10 +36,10 @@ namespace NetExtender.Utilities.Network
             {
                 throw new ArgumentNullException(nameof(request));
             }
-            
+
             return request.Headers.ToHeaderString(request.Content?.Headers, buffer);
         }
-        
+
         public static CookieHeaderValue[] GetCookies(this HttpRequestHeaders source)
         {
             if (source is null)
@@ -78,13 +78,13 @@ namespace NetExtender.Utilities.Network
 
             return source.GetCookies().Where(header => header.Cookies.Any(state => String.Equals(state.Key, key, StringComparison.OrdinalIgnoreCase))).ToArray();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static HttpResponseMessage CreateResponse(this HttpRequestMessage request)
         {
             return CreateResponse<HttpResponseMessage>(request);
         }
-        
+
         public static T CreateResponse<T>(this HttpRequestMessage request) where T : HttpResponseMessage, new()
         {
             if (request is null)

@@ -12,7 +12,7 @@ namespace NetExtender.FileSystems
     {
         public event PropertyChangingEventHandler? PropertyChanging;
         public event PropertyChangedEventHandler? PropertyChanged;
-        
+
         public DriveInfo? Info
         {
             get
@@ -20,7 +20,7 @@ namespace NetExtender.FileSystems
                 return Storage.Info(this);
             }
         }
-        
+
         private readonly IFileSystemStorage _storage;
         private protected IFileSystemStorage Storage
         {
@@ -75,7 +75,7 @@ namespace NetExtender.FileSystems
                 return Storage.IsSynchronized;
             }
         }
-        
+
         public virtual String Name
         {
             get
@@ -83,7 +83,7 @@ namespace NetExtender.FileSystems
                 return Storage.Name(this);
             }
         }
-        
+
         public virtual String FullName
         {
             get
@@ -255,16 +255,16 @@ namespace NetExtender.FileSystems
         {
             return value?.Info;
         }
-        
+
         [return: NotNullIfNotNull("value")]
         public static implicit operator DriveInfoWrapper?(DriveInfo? value)
         {
             return value is not null ? new DriveInfoWrapper(value) : null;
         }
-        
+
         public event PropertyChangingEventHandler? PropertyChanging;
         public event PropertyChangedEventHandler? PropertyChanged;
-        
+
         public DriveInfo Info { get; }
 
         Guid IDriveInfo.Storage
@@ -413,11 +413,14 @@ namespace NetExtender.FileSystems
             PropertyChanged?.Invoke(this, new PropertyChanged(property));
         }
 
+#if NET8_0_OR_GREATER
+        [Obsolete("Formatter-based serialization is obsolete and should not be used.", DiagnosticId = "SYSLIB0050", UrlFormat = "https://aka.ms/dotnet-warnings/{0}")]
+#endif
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             ((ISerializable) Info).GetObjectData(info, context);
         }
-        
+
         public override Int32 GetHashCode()
         {
             return Info.GetHashCode();
@@ -433,7 +436,7 @@ namespace NetExtender.FileSystems
                 _ => false
             };
         }
-        
+
         public virtual Boolean Equals(DriveInfo? other)
         {
             return Info.Equals(other);

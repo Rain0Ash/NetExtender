@@ -15,7 +15,7 @@ namespace NetExtender.Types.Enumerators
                 return new DictionaryEntry(Enumerator.Current.Key!, Enumerator.Current.Value);
             }
         }
-        
+
         public Object Current
         {
             get
@@ -44,7 +44,7 @@ namespace NetExtender.Types.Enumerators
         {
             Enumerator = enumerator ?? throw new ArgumentNullException(nameof(enumerator));
         }
-        
+
         public Boolean MoveNext()
         {
             return Enumerator.MoveNext();
@@ -55,7 +55,7 @@ namespace NetExtender.Types.Enumerators
             Enumerator.Reset();
         }
     }
-    
+
     public sealed class DictionaryEnumerator<TKey, TValue, TEnumerator> : IDictionaryEnumerator where TEnumerator : IEnumerator<KeyValuePair<TKey, TValue>>
     {
         private TEnumerator Enumerator;
@@ -67,7 +67,7 @@ namespace NetExtender.Types.Enumerators
                 return new DictionaryEntry(Enumerator.Current.Key!, Enumerator.Current.Value);
             }
         }
-        
+
         public Object Current
         {
             get
@@ -96,7 +96,7 @@ namespace NetExtender.Types.Enumerators
         {
             Enumerator = enumerator ?? throw new ArgumentNullException(nameof(enumerator));
         }
-        
+
         public Boolean MoveNext()
         {
             return Enumerator.MoveNext();

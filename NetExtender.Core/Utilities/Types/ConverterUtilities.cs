@@ -18,7 +18,7 @@ namespace NetExtender.Utilities.Types
 
             return new OneWayConverterWrapper<TInput, TOutput>(converter);
         }
-        
+
         public static ITwoWayConverter<TInput, TOutput> AsTwoWay<TInput, TOutput>(this TryConverter<TInput, TOutput> converter)
         {
             if (converter is null)
@@ -28,7 +28,7 @@ namespace NetExtender.Utilities.Types
 
             return TwoWayConverter<TInput, TOutput>.Create(converter);
         }
-        
+
         public static ITwoWayConverter<TInput, TOutput> AsTwoWay<TInput, TOutput>(this IOneWayConverter<TInput, TOutput> converter)
         {
             if (converter is null)
@@ -38,7 +38,7 @@ namespace NetExtender.Utilities.Types
 
             return converter as ITwoWayConverter<TInput, TOutput> ?? TwoWayConverter<TInput, TOutput>.Create(converter);
         }
-        
+
         public static ITwoWayConverter<TInput, TOutput> AsTwoWay<TInput, TOutput>(this TryConverter<TInput, TOutput> converter, TryConverter<TOutput, TInput> reverse)
         {
             if (converter is null)
@@ -53,7 +53,7 @@ namespace NetExtender.Utilities.Types
 
             return TwoWayConverter<TInput, TOutput>.Combine(converter, reverse);
         }
-        
+
         public static ITwoWayConverter<TInput, TOutput> AsTwoWay<TInput, TOutput>(this IOneWayConverter<TInput, TOutput> converter, TryConverter<TOutput, TInput> reverse)
         {
             if (converter is null)
@@ -65,10 +65,10 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(reverse));
             }
-            
+
             return converter as ITwoWayConverter<TInput, TOutput> ?? TwoWayConverter<TInput, TOutput>.Combine(converter, reverse);
         }
-        
+
         public static ITwoWayConverter<TInput, TOutput> AsTwoWay<TInput, TOutput>(this TryConverter<TInput, TOutput> converter, IOneWayConverter<TOutput, TInput> reverse)
         {
             if (converter is null)
@@ -83,7 +83,7 @@ namespace NetExtender.Utilities.Types
 
             return TwoWayConverter<TInput, TOutput>.Combine(converter, reverse);
         }
-        
+
         public static ITwoWayConverter<TInput, TOutput> AsTwoWay<TInput, TOutput>(this IOneWayConverter<TInput, TOutput> converter, IOneWayConverter<TOutput, TInput> reverse)
         {
             if (converter is null)
@@ -95,10 +95,10 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(reverse));
             }
-            
+
             return converter as ITwoWayConverter<TInput, TOutput> ?? TwoWayConverter<TInput, TOutput>.Combine(converter, reverse);
         }
-        
+
         public static ITwoWayConverter<TInput, TOutput> ToTwoWay<TInput, TOutput>(this TryConverter<TInput, TOutput> converter)
         {
             if (converter is null)
@@ -108,7 +108,7 @@ namespace NetExtender.Utilities.Types
 
             return TwoWayConverter<TInput, TOutput>.Create(converter);
         }
-        
+
         public static ITwoWayConverter<TInput, TOutput> ToTwoWay<TInput, TOutput>(this IOneWayConverter<TInput, TOutput> converter)
         {
             if (converter is null)
@@ -118,7 +118,7 @@ namespace NetExtender.Utilities.Types
 
             return TwoWayConverter<TInput, TOutput>.Create(converter);
         }
-        
+
         public static ITwoWayConverter<TInput, TOutput> ToTwoWay<TInput, TOutput>(this TryConverter<TInput, TOutput> converter, TryConverter<TOutput, TInput> reverse)
         {
             if (converter is null)
@@ -133,7 +133,7 @@ namespace NetExtender.Utilities.Types
 
             return TwoWayConverter<TInput, TOutput>.Combine(converter, reverse);
         }
-        
+
         public static ITwoWayConverter<TInput, TOutput> ToTwoWay<TInput, TOutput>(this IOneWayConverter<TInput, TOutput> converter, TryConverter<TOutput, TInput> reverse)
         {
             if (converter is null)
@@ -145,10 +145,10 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(reverse));
             }
-            
+
             return TwoWayConverter<TInput, TOutput>.Combine(converter, reverse);
         }
-        
+
         public static ITwoWayConverter<TInput, TOutput> ToTwoWay<TInput, TOutput>(this TryConverter<TInput, TOutput> converter, IOneWayConverter<TOutput, TInput> reverse)
         {
             if (converter is null)
@@ -163,7 +163,7 @@ namespace NetExtender.Utilities.Types
 
             return TwoWayConverter<TInput, TOutput>.Combine(converter, reverse);
         }
-        
+
         public static ITwoWayConverter<TInput, TOutput> ToTwoWay<TInput, TOutput>(this IOneWayConverter<TInput, TOutput> converter, IOneWayConverter<TOutput, TInput> reverse)
         {
             if (converter is null)
@@ -175,7 +175,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(reverse));
             }
-            
+
             return TwoWayConverter<TInput, TOutput>.Combine(converter, reverse);
         }
     }

@@ -43,8 +43,10 @@ namespace NetExtender.Types.Monads
             return !(first == second);
         }
 
+#pragma warning disable CS0067
         public event PropertyChangingEventHandler? PropertyChanging;
         public event PropertyChangedEventHandler? PropertyChanged;
+#pragma warning restore CS0067
 
         public Guid Id { get; private set; }
 
@@ -158,11 +160,11 @@ namespace NetExtender.Types.Monads
                 value = null;
                 return false;
             }
-            
+
             value = _value;
             return true;
         }
-        
+
         public Boolean Unwrap([MaybeNullWhen(false)] out T value)
         {
             if (IsEmpty)
@@ -170,7 +172,7 @@ namespace NetExtender.Types.Monads
                 value = default;
                 return false;
             }
-            
+
             value = _value;
             return true;
         }

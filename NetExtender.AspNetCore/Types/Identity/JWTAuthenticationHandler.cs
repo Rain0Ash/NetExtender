@@ -19,7 +19,7 @@ namespace NetExtender.AspNetCore.Identity
         {
         }
     }
-    
+
     public abstract class JWTAuthenticationHandler<T> : AuthenticationHandler<T> where T : JWTAuthenticationOptions, new()
     {
         public new IJWTAuthenticationEvent Events

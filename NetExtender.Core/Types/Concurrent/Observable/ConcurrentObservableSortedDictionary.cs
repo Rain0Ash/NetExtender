@@ -10,10 +10,12 @@ using System.Runtime.Serialization;
 using NetExtender.Types.Comparers;
 using NetExtender.Types.Concurrent.Observable.Interfaces;
 using NetExtender.Types.Enumerators;
+using NetExtender.Types.Exceptions;
 using NetExtender.Types.Immutable.Dictionaries;
 using NetExtender.Types.Monads;
 using NetExtender.Types.Sizes;
 using NetExtender.Utilities.Types;
+using TSR = System.Collections.Generic.Dictionary<NetExtender.Types.Entities.Any.Value, NetExtender.Types.Entities.Any.Value>;
 
 namespace NetExtender.Types.Concurrent.Observable
 {
@@ -35,7 +37,7 @@ namespace NetExtender.Types.Concurrent.Observable
                 return base.IsEmpty;
             }
         }
-        
+
         protected ConcurrentObservableSortedDictionary()
         {
         }
@@ -145,11 +147,18 @@ namespace NetExtender.Types.Concurrent.Observable
         {
         }
 
+#if NET8_0_OR_GREATER
+        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
+#endif
         protected ConcurrentObservableSortedDictionary(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
         }
 
+#if NET8_0_OR_GREATER
+        [Obsolete("Formatter-based serialization is obsolete and should not be used.", DiagnosticId = "SYSLIB0050", UrlFormat = "https://aka.ms/dotnet-warnings/{0}")]
+#endif
         public sealed override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             base.GetObjectData(info, context);
@@ -339,7 +348,7 @@ namespace NetExtender.Types.Concurrent.Observable
                 return Immutable.Values;
             }
         }
-        
+
         ICollection IDictionary.Values
         {
             get
@@ -347,7 +356,7 @@ namespace NetExtender.Types.Concurrent.Observable
                 return ((IDictionary) Immutable).Values;
             }
         }
-        
+
         ICollection<TValue> IDictionary<TKey, TValue>.Values
         {
             get
@@ -379,7 +388,7 @@ namespace NetExtender.Types.Concurrent.Observable
                 return ((IDictionary) Collection).IsFixedSize;
             }
         }
-        
+
         Object ICollection.SyncRoot
         {
             get
@@ -509,12 +518,19 @@ namespace NetExtender.Types.Concurrent.Observable
             PropertyChanged += OnViewChanged;
         }
 
+#if NET8_0_OR_GREATER
+        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
+#endif
         protected ConcurrentObservableSortedDictionary(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
             Collection = info.GetValue(nameof(Collection), typeof(KeyValuePair<TKey, TValue>[])) is KeyValuePair<TKey, TValue>[] array ? ImmutableNullableSortedDictionary.CreateRange(array) : ImmutableNullableSortedDictionary<TKey, TValue>.Empty;
         }
 
+#if NET8_0_OR_GREATER
+        [Obsolete("Formatter-based serialization is obsolete and should not be used.", DiagnosticId = "SYSLIB0050", UrlFormat = "https://aka.ms/dotnet-warnings/{0}")]
+#endif
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             base.GetObjectData(info, context);
@@ -576,9 +592,10 @@ namespace NetExtender.Types.Concurrent.Observable
 
         void IDictionary.Add(Object? key, Object? value)
         {
-            if (!Add((TKey) key!, (TValue) value!))
+            TKey convert = (TKey) key!;
+            if (!Add(convert, (TValue) value!))
             {
-                throw new ArgumentException(DictionaryUtilities.SR.Argument_AddingDuplicateWithKey.Format(key), nameof(key));
+                throw new ArgumentAddingDuplicateWithKeyException<TKey, TSR>(convert, nameof(key));
             }
         }
 
@@ -591,7 +608,7 @@ namespace NetExtender.Types.Concurrent.Observable
         {
             if (!Add(key, value))
             {
-                throw new ArgumentException(DictionaryUtilities.SR.Argument_AddingDuplicateWithKey.Format(key), nameof(key));
+                throw new ArgumentAddingDuplicateWithKeyException<TKey, TSR>(key, nameof(key));
             }
         }
 
@@ -606,7 +623,7 @@ namespace NetExtender.Types.Concurrent.Observable
             {
                 return 0;
             }
-            
+
             Int32 count = 0;
 
             Exception? exception = Notify((Items: items, Count: new UnsafePointer<Int32>(&count)),
@@ -702,7 +719,7 @@ namespace NetExtender.Types.Concurrent.Observable
             {
                 return;
             }
-            
+
             Exception? exception = Notify(items,
                 static (_, modify, items) => modify.RemoveRange(items),
                 static (_, @new, old, _) => new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, Source(@new.RemoveRange(old)))
@@ -725,7 +742,7 @@ namespace NetExtender.Types.Concurrent.Observable
             {
                 return;
             }
-            
+
             Exception? exception = Notify(items,
                 static (_, modify, items) => modify.RemoveRange(items),
                 static (_, @new, old, _) => new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, Source(@new.RemoveRange(old)))
@@ -740,7 +757,7 @@ namespace NetExtender.Types.Concurrent.Observable
         protected override unsafe void Clear(out Int32 count)
         {
             Exception? exception;
-            
+
             fixed (Int32* pointer = &count)
             {
                 exception = Notify(new UnsafePointer<Int32>(pointer),
@@ -825,7 +842,7 @@ namespace NetExtender.Types.Concurrent.Observable
                         static (_, _, _, pair) => new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, pair)
                     )
                 );
-                
+
                 if (exception is not null)
                 {
                     throw exception;

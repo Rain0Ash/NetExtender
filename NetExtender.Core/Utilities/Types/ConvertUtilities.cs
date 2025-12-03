@@ -485,7 +485,7 @@ namespace NetExtender.Utilities.Types
             {
                 return new StringConverterInfo(Convert(value.Handler), Convert(value.Format));
             }
-            
+
             private StringConverter<T> Handler { get; }
             private StringFormatConverter<T> Format { get; }
 
@@ -494,13 +494,13 @@ namespace NetExtender.Utilities.Types
                 Handler = handler ?? throw new ArgumentNullException(nameof(handler));
                 Format = format ?? throw new ArgumentNullException(nameof(format));
             }
-            
+
             [return: NotNullIfNotNull("converter")]
             private static StringConverter? Convert(StringConverter<T>? converter)
             {
                 return converter is not null ? (@object, escape, provider) => converter((T?) @object, escape, provider) : null;
             }
-            
+
             [return: NotNullIfNotNull("converter")]
             private static StringFormatConverter? Convert(StringFormatConverter<T>? converter)
             {
@@ -532,23 +532,23 @@ namespace NetExtender.Utilities.Types
                 return Equals(Handler, other.Handler) && Equals(Format, other.Format);
             }
         }
-        
+
         private readonly struct StringConverterInfo : IEquatable<StringConverterInfo>
         {
             private StringConverter Handler { get; }
             private StringFormatConverter Format { get; }
-            
+
             public StringConverterInfo(StringConverter handler, StringFormatConverter format)
             {
                 Handler = handler ?? throw new ArgumentNullException(nameof(handler));
                 Format = format ?? throw new ArgumentNullException(nameof(format));
             }
-            
+
             public String? Convert(Object? value, EscapeType escape, IFormatProvider? provider)
             {
                 return Handler(value, escape, provider);
             }
-            
+
             public String? Convert(Object? value, EscapeType escape, String? format, IFormatProvider? provider)
             {
                 return Format(value, escape, format, provider);
@@ -569,29 +569,29 @@ namespace NetExtender.Utilities.Types
                 return Equals(Handler, other.Handler) && Equals(Format, other.Format);
             }
         }
-        
+
         private static ConcurrentDictionary<Type, StringConverterInfo> StringConverters { get; } = new ConcurrentDictionary<Type, StringConverterInfo>();
-        
+
         public static Boolean RegisterStringHandler(Type type, StringConverter handler)
         {
             if (type is null)
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             if (handler is null)
             {
                 throw new ArgumentNullException(nameof(handler));
             }
-            
+
             String? Format(Object? value, EscapeType escape, String? _, IFormatProvider? provider)
             {
                 return handler.Invoke(value, escape, provider);
             }
-            
+
             return RegisterStringHandler(type, handler, Format);
         }
-        
+
         public static Boolean RegisterStringHandler<T>(StringConverter<T> handler)
         {
             if (handler is null)
@@ -613,7 +613,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             if (handler is null)
             {
                 throw new ArgumentNullException(nameof(handler));
@@ -1069,9 +1069,9 @@ namespace NetExtender.Utilities.Types
 
                         return (AnonymousTypeConvert, AnonymousTypeFormatConvert);
                     }
-                    
+
                     Type generic = type.TryGetGenericTypeDefinition();
-                    
+
                     if (generic == KeyValuePairUtilities.KeyValuePairType)
                     {
                         static Boolean KeyValuePairConvert(Object? value, EscapeType escape, IFormatProvider? provider, out String? result)
@@ -1093,7 +1093,7 @@ namespace NetExtender.Utilities.Types
                                 result = null;
                                 return false;
                             }
-                            
+
                             result = $"{{{accessors.Key.Invoke(value).GetString(escape, format, provider)} : {accessors.Value.Invoke(value).GetString(escape, format, provider)}}}";
                             return true;
                         }
@@ -1277,7 +1277,7 @@ namespace NetExtender.Utilities.Types
 
                         return (WeakMaybeConvert, WeakMaybeFormatConvert);
                     }
-                    
+
                     if (generic.IsMemorySpan())
                     {
                         static Boolean MemorySpanConvert(Object? value, EscapeType escape, IFormatProvider? provider, out String? result)
@@ -1287,7 +1287,7 @@ namespace NetExtender.Utilities.Types
                                 result = null;
                                 return false;
                             }
-                            
+
                             result = GetString((dynamic) value, escape, provider);
                             return true;
                         }
@@ -1299,7 +1299,7 @@ namespace NetExtender.Utilities.Types
                                 result = null;
                                 return false;
                             }
-                            
+
                             result = GetString((dynamic) value, escape, format, provider);
                             return true;
                         }
@@ -1622,7 +1622,7 @@ namespace NetExtender.Utilities.Types
             {
                 return NumberFormatInfo.GetInstance(provider).NumberDecimalSeparator;
             }
-            
+
             return format switch
             {
                 "." => value.CountDigitsAfterPoint() > 0 ? value.ToString(provider) : $"{value.ToString(provider)}{Separator(provider)}",
@@ -1658,7 +1658,7 @@ namespace NetExtender.Utilities.Types
             {
                 return NumberFormatInfo.GetInstance(provider).NumberDecimalSeparator;
             }
-            
+
             return format switch
             {
                 "." => value.CountDigitsAfterPoint() > 0 ? value.ToString(provider) : $"{value.ToString(provider)}{Separator(provider)}",
@@ -1695,7 +1695,7 @@ namespace NetExtender.Utilities.Types
             {
                 return NumberFormatInfo.GetInstance(provider).NumberDecimalSeparator;
             }
-            
+
             return format switch
             {
                 "." => value.CountDigitsAfterPoint() > 0 ? value.ToString(provider) : $"{value.ToString(provider)}{Separator(provider)}",
@@ -1729,7 +1729,7 @@ namespace NetExtender.Utilities.Types
             {
                 < 0 => $"{value.Real.ToString(format, provider ?? CultureInfo.InvariantCulture)} - {Math.Abs(value.Imaginary).ToString(format, provider ?? CultureInfo.InvariantCulture)}i",
                 0 => value.Real.ToString(format, provider ?? CultureInfo.InvariantCulture),
-                _ => $"{value.Real.ToString(format, provider ?? CultureInfo.InvariantCulture)} + {value.Imaginary.ToString(format, provider ?? CultureInfo.InvariantCulture)}i",
+                _ => $"{value.Real.ToString(format, provider ?? CultureInfo.InvariantCulture)} + {value.Imaginary.ToString(format, provider ?? CultureInfo.InvariantCulture)}i"
             };
         }
 
@@ -1909,7 +1909,7 @@ namespace NetExtender.Utilities.Types
             {
                 return GetString((String?) null, escape, provider);
             }
-            
+
             StringBuilder builder = new StringBuilder();
             FormatException(builder, value, escape, format, provider, 0);
             return builder.ToString();
@@ -1919,7 +1919,7 @@ namespace NetExtender.Utilities.Types
         private static void FormatException(StringBuilder builder, Exception exception, EscapeType escape, String? format, IFormatProvider? provider, Int32 depth)
         {
             provider ??= CultureInfo.InvariantCulture;
-            
+
             start:
             if (depth > 0)
             {
@@ -1944,7 +1944,7 @@ namespace NetExtender.Utilities.Types
                     builder.AppendLine(exception.Data[key]?.GetString(escape, provider));
                 }
             }
-            
+
             builder.AppendLine(exception.ToString());
 
             if (exception is AggregateException aggregate)
@@ -1953,7 +1953,7 @@ namespace NetExtender.Utilities.Types
                 {
                     FormatException(builder, inner, escape, format, provider, depth + 1);
                 }
-                
+
                 return;
             }
 
@@ -2001,7 +2001,7 @@ namespace NetExtender.Utilities.Types
             {
                 return GetString((String?) null, escape);
             }
-            
+
             try
             {
                 return value.ToReadableString(ExpressionUtilities.Settings);

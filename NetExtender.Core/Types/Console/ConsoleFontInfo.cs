@@ -6,7 +6,7 @@ namespace NetExtender.Types.Console
     public class ConsoleFontInfo : IConsoleFontInfo
     {
         protected internal static Func<Font?>? Current { get; protected set; }
-        
+
         private Font Internal;
 
         public String? FontName
@@ -129,7 +129,7 @@ namespace NetExtender.Types.Console
                     Width = Width,
                     Size = Size,
                     Family = Family,
-                    Weight = Weight,
+                    Weight = Weight
                 };
             }
 

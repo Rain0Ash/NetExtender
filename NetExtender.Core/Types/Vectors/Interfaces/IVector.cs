@@ -11,7 +11,7 @@ namespace NetExtender.Types.Vectors.Interfaces
 
         public T[] ToArray();
         public T[] ToFullArray();
-        
+
         public new T this[Int32 index] { get; set; }
     }
 

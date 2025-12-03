@@ -13,7 +13,7 @@ namespace NetExtender.AspNetCore.Identity
     {
         public new static String? Message { get; set; } = "Identity unknown exception.";
         public new static String? Code { get; set; } = $"{nameof(Identity)}.Unknown";
-        
+
         public IdentityUnknownException()
             : base(Code)
         {
@@ -49,6 +49,10 @@ namespace NetExtender.AspNetCore.Identity
         {
         }
 
+#if NET8_0_OR_GREATER
+        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
         protected IdentityUnknownException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
@@ -104,6 +108,10 @@ namespace NetExtender.AspNetCore.Identity
         {
         }
 
+#if NET8_0_OR_GREATER
+        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
         protected IdentityUnknownException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {

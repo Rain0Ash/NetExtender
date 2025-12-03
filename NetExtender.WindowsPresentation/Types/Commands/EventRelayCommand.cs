@@ -13,19 +13,19 @@ namespace NetExtender.WindowsPresentation.Types.Commands
     public delegate Boolean CanExecuteSenderDelegate(Object? sender, Object? parameter);
     public delegate Boolean CanExecuteDelegate<in T>(T? parameter);
     public delegate Boolean CanExecuteSenderDelegate<in T>(Object? sender, T? parameter);
-    
+
     public class EventRelayCommand<T> : Command<T>
     {
         public event ExecuteDelegate<T>? Executed;
         public event CanExecuteDelegate<T>? CanExecuted;
-        
+
         protected override Boolean CanExecuteImplementation(Object? sender, T? parameter)
         {
             if (CanExecuted is null)
             {
                 return true;
             }
-            
+
             foreach (Delegate @delegate in CanExecuted.GetInvocationList())
             {
                 if (@delegate is CanExecuteDelegate<T> validator && !validator.Invoke(parameter))
@@ -36,25 +36,25 @@ namespace NetExtender.WindowsPresentation.Types.Commands
 
             return true;
         }
-        
+
         protected override void ExecuteImplementation(Object? sender, T? parameter)
         {
             Executed?.Invoke(parameter);
         }
     }
-    
+
     public class EventRelaySenderCommand<T> : Command<T>
     {
         public event ExecuteSenderDelegate<T>? Executed;
         public event CanExecuteSenderDelegate<T>? CanExecuted;
-        
+
         protected override Boolean CanExecuteImplementation(Object? sender, T? parameter)
         {
             if (CanExecuted is null)
             {
                 return true;
             }
-            
+
             foreach (Delegate @delegate in CanExecuted.GetInvocationList())
             {
                 if (@delegate is CanExecuteSenderDelegate<T> validator && !validator.Invoke(sender, parameter))
@@ -65,7 +65,7 @@ namespace NetExtender.WindowsPresentation.Types.Commands
 
             return true;
         }
-        
+
         protected override void ExecuteImplementation(Object? sender, T? parameter)
         {
             Executed?.Invoke(sender, parameter);

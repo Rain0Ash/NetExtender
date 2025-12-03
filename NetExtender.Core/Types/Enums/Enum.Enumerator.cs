@@ -213,7 +213,7 @@ namespace NetExtender.Types.Enums
                     return Index >= 0 ? Current : null;
                 }
             }
-            
+
             public readonly Boolean IsFlags
             {
                 get
@@ -221,7 +221,7 @@ namespace NetExtender.Types.Enums
                     return Value?.IsFlags ?? Enumerator.IsFlags;
                 }
             }
-            
+
             public readonly Boolean IsIntern
             {
                 get
@@ -265,13 +265,13 @@ namespace NetExtender.Types.Enums
             {
                 return new EnumeratorFiller<TEnum, Wrapper, EnumComparer<T>>(this, Comparer).ToImmutableArray();
             }
-            
+
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public readonly List<TEnum> ToList()
             {
                 return new EnumeratorFiller<TEnum, Wrapper, EnumComparer<T>>(this, Comparer).ToList();
             }
-            
+
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public readonly ImmutableList<TEnum> ToImmutableList()
             {
@@ -289,19 +289,19 @@ namespace NetExtender.Types.Enums
             {
                 return new EnumeratorFiller<TEnum, Wrapper, EnumComparer<T>>(this, Comparer).ToHashSet();
             }
-            
+
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public readonly ImmutableHashSet<TEnum> ToImmutableHashSet()
             {
                 return new EnumeratorFiller<TEnum, Wrapper, EnumComparer<T>>(this, Comparer).ToImmutableHashSet();
             }
-            
+
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public readonly SortedSet<TEnum> ToSortedSet()
             {
                 return new EnumeratorFiller<TEnum, Wrapper, EnumComparer<T>>(this, Comparer).ToSortedSet();
             }
-            
+
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public readonly ImmutableSortedSet<TEnum> ToImmutableSortedSet()
             {
@@ -427,7 +427,7 @@ namespace NetExtender.Types.Enums
             {
                 return new EnumeratorFiller<Enum<T, TEnum>, FlagsEnumerator, EnumComparer<T>>(this, Comparer).TryCopyTo(destination);
             }
-            
+
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public readonly Boolean TryCopyTo(Span<TEnum> destination)
             {
@@ -475,7 +475,7 @@ namespace NetExtender.Types.Enums
             {
                 return new EnumeratorFiller<Enum<T, TEnum>, FlagsEnumerator, EnumComparer<T>>(this, Comparer).TryCopyTo(destination, out written);
             }
-            
+
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public readonly Boolean TryCopyTo(Span<TEnum> destination, out Int32 written)
             {
@@ -739,7 +739,7 @@ namespace NetExtender.Types.Enums
                 {
                     return new Any(value);
                 }
-                
+
                 public static implicit operator Any(TEnum value)
                 {
                     return new Any(value);
@@ -943,7 +943,7 @@ namespace NetExtender.Types.Enums
                         return Index >= 0 ? Current : null;
                     }
                 }
-                
+
                 public readonly Boolean IsFlags
                 {
                     get
@@ -951,7 +951,7 @@ namespace NetExtender.Types.Enums
                         return Enumerator.IsFlags;
                     }
                 }
-                
+
                 public readonly Boolean IsIntern
                 {
                     get
@@ -994,13 +994,13 @@ namespace NetExtender.Types.Enums
                 {
                     return Enumerator.ToImmutableArray();
                 }
-                
+
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 public readonly List<TEnum> ToList()
                 {
                     return Enumerator.ToList();
                 }
-                
+
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 public readonly ImmutableList<TEnum> ToImmutableList()
                 {
@@ -1018,19 +1018,19 @@ namespace NetExtender.Types.Enums
                 {
                     return Enumerator.ToHashSet();
                 }
-                
+
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 public readonly ImmutableHashSet<TEnum> ToImmutableHashSet()
                 {
                     return Enumerator.ToImmutableHashSet();
                 }
-                
+
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 public readonly SortedSet<TEnum> ToSortedSet()
                 {
                     return Enumerator.ToSortedSet();
                 }
-                
+
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 public readonly ImmutableSortedSet<TEnum> ToImmutableSortedSet()
                 {
@@ -1156,7 +1156,7 @@ namespace NetExtender.Types.Enums
                 {
                     return Enumerator.TryCopyTo(destination);
                 }
-                
+
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 public readonly Boolean TryCopyTo(Span<TEnum> destination)
                 {
@@ -1204,7 +1204,7 @@ namespace NetExtender.Types.Enums
                 {
                     return Enumerator.TryCopyTo(destination, out written);
                 }
-                
+
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 public readonly Boolean TryCopyTo(Span<TEnum> destination, out Int32 written)
                 {
@@ -1683,7 +1683,7 @@ namespace NetExtender.Types.Enums
                     }
                 }
             }
-            
+
             [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
             public abstract record Stringify : EnumeratorStringFiller<TEnum, Wrapper, Stringify>, IReadOnlyList<String>
             {
@@ -1703,7 +1703,7 @@ namespace NetExtender.Types.Enums
                     {
                         format = null;
                     }
-                    
+
                     return filler switch
                     {
                         null or "" => new Default(in enumerator, format, provider),
@@ -1718,7 +1718,7 @@ namespace NetExtender.Types.Enums
                 {
                     return value?.ToString(Format, Provider);
                 }
-                
+
                 public String this[Int32 index]
                 {
                     get
@@ -1765,7 +1765,7 @@ namespace NetExtender.Types.Enums
             }
         }
     }
-    
+
     public partial class Enum<T>
     {
         public struct FlagsEnumerator : IEquatableStruct<FlagsEnumerator>, IReadOnlySortedList<Enum<T>>, IReadOnlySortedList<T>, IReadOnlySortedList<IEnum<T>>, IEnumerator<Enum<T>>, IEnumerator<T>, IEnumerator<IEnum<T>>, IEquatable<Enum<T>>, IEquatable<T>, IEquatable<IEnum<T>>, IEquatable<EnumFlagsEnumerator<T>>, IEquatable<FlagsEnumerator.Any>, ICloneable<FlagsEnumerator>, ICloneable, IFormattable
@@ -1899,7 +1899,7 @@ namespace NetExtender.Types.Enums
                     return Index >= 0 ? Current : null;
                 }
             }
-            
+
             public readonly Boolean IsFlags
             {
                 get
@@ -1907,7 +1907,7 @@ namespace NetExtender.Types.Enums
                     return Value?.IsFlags ?? Enumerator.IsFlags;
                 }
             }
-            
+
             public readonly Boolean IsIntern
             {
                 get
@@ -1951,13 +1951,13 @@ namespace NetExtender.Types.Enums
             {
                 return new EnumeratorFiller<Enum<T>, FlagsEnumerator, EnumComparer<T>>(this, Comparer).ToImmutableArray();
             }
-            
+
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public readonly List<Enum<T>> ToList()
             {
                 return new EnumeratorFiller<Enum<T>, FlagsEnumerator, EnumComparer<T>>(this, Comparer).ToList();
             }
-            
+
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public readonly ImmutableList<Enum<T>> ToImmutableList()
             {
@@ -1975,19 +1975,19 @@ namespace NetExtender.Types.Enums
             {
                 return new EnumeratorFiller<Enum<T>, FlagsEnumerator, EnumComparer<T>>(this, Comparer).ToHashSet();
             }
-            
+
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public readonly ImmutableHashSet<Enum<T>> ToImmutableHashSet()
             {
                 return new EnumeratorFiller<Enum<T>, FlagsEnumerator, EnumComparer<T>>(this, Comparer).ToImmutableHashSet();
             }
-            
+
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public readonly SortedSet<Enum<T>> ToSortedSet()
             {
                 return new EnumeratorFiller<Enum<T>, FlagsEnumerator, EnumComparer<T>>(this, Comparer).ToSortedSet();
             }
-            
+
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public readonly ImmutableSortedSet<Enum<T>> ToImmutableSortedSet()
             {
@@ -2302,17 +2302,17 @@ namespace NetExtender.Types.Enums
                 {
                     return new Any(value);
                 }
-                
+
                 public static implicit operator Any(Enum<T> value)
                 {
                     return new Any(value);
                 }
-                
+
                 public static implicit operator FlagsEnumerator(Any value)
                 {
                     return value.Enumerator;
                 }
-                
+
                 public static implicit operator EnumFlagsEnumerator<T>(Any value)
                 {
                     return value.Enumerator;
@@ -2451,7 +2451,7 @@ namespace NetExtender.Types.Enums
                         return Index >= 0 ? Current : null;
                     }
                 }
-                
+
                 public readonly Boolean IsFlags
                 {
                     get
@@ -2459,7 +2459,7 @@ namespace NetExtender.Types.Enums
                         return Enumerator.IsFlags;
                     }
                 }
-                
+
                 public readonly Boolean IsIntern
                 {
                     get
@@ -2502,13 +2502,13 @@ namespace NetExtender.Types.Enums
                 {
                     return Enumerator.ToImmutableArray();
                 }
-                
+
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 public readonly List<Enum<T>> ToList()
                 {
                     return Enumerator.ToList();
                 }
-                
+
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 public readonly ImmutableList<Enum<T>> ToImmutableList()
                 {
@@ -2526,19 +2526,19 @@ namespace NetExtender.Types.Enums
                 {
                     return Enumerator.ToHashSet();
                 }
-                
+
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 public readonly ImmutableHashSet<Enum<T>> ToImmutableHashSet()
                 {
                     return Enumerator.ToImmutableHashSet();
                 }
-                
+
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 public readonly SortedSet<Enum<T>> ToSortedSet()
                 {
                     return Enumerator.ToSortedSet();
                 }
-                
+
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 public readonly ImmutableSortedSet<Enum<T>> ToImmutableSortedSet()
                 {
@@ -2867,7 +2867,7 @@ namespace NetExtender.Types.Enums
                     {
                         format = null;
                     }
-                    
+
                     return filler switch
                     {
                         null or "" => new Default(in enumerator, format, provider),
@@ -2882,7 +2882,7 @@ namespace NetExtender.Types.Enums
                 {
                     return value?.ToString(Format, Provider);
                 }
-                
+
                 public String this[Int32 index]
                 {
                     get

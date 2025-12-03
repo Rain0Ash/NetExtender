@@ -6,7 +6,7 @@ namespace NetExtender.JWT.Interfaces
     public interface IJWTSerializerFactory
     {
         public JWTSerializerType Type { get; }
-        
+
         public IJWTSerializer Create();
     }
 }

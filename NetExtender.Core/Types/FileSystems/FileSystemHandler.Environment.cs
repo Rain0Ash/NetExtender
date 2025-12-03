@@ -18,9 +18,9 @@ namespace NetExtender.FileSystems
         private static partial class Handler
         {
             private delegate void SetCommandLineArgsDelegate(String[] arguments);
-            
+
             private static SetCommandLineArgsDelegate? SetCommandLineArgsHandler { get; }
-            
+
             [ReflectionSignature]
             public static void SetCommandLineArgs(String[] arguments)
             {
@@ -28,11 +28,11 @@ namespace NetExtender.FileSystems
                 {
                     throw new NotSupportedException();
                 }
-                
+
                 handler.Invoke(arguments);
             }
         }
-        
+
         public virtual String NewLine
         {
             get
@@ -300,7 +300,7 @@ namespace NetExtender.FileSystems
             {
                 return false;
             }
-            
+
             System.Environment.SetEnvironmentVariable(variable, value);
             return true;
         }
@@ -311,7 +311,7 @@ namespace NetExtender.FileSystems
             {
                 return false;
             }
-            
+
             System.Environment.SetEnvironmentVariable(variable, value, target);
             return true;
         }

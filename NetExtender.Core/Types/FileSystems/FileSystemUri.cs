@@ -18,12 +18,12 @@ namespace NetExtender.FileSystems
         {
             return !String.IsNullOrEmpty(value) ? new FileSystemUri(value) : default;
         }
-        
+
         public static implicit operator FileSystemUri(Uri? value)
         {
             return value is not null ? new FileSystemUri(value) : default;
         }
-        
+
         public static implicit operator FileSystemUri(FileSystemInfo? value)
         {
             return value is not null ? new FileSystemUri(value) : default;
@@ -48,7 +48,7 @@ namespace NetExtender.FileSystems
         {
             return !(first == second);
         }
-        
+
         private IFileSystem? FileSystem { get; }
         public String Uri { get; }
 
@@ -160,7 +160,7 @@ namespace NetExtender.FileSystems
                 { IsAbsoluteUri: false } => throw new ArgumentException("Argument must be a absolute URI.", nameof(uri)),
                 _ => uri.AbsolutePath
             };
-            
+
             FileSystem = system;
         }
 
@@ -249,7 +249,7 @@ namespace NetExtender.FileSystems
                 return Uri.AsMemory(range);
             }
         }
-        
+
         [Flags]
         public enum SegmentType : UInt16
         {
@@ -303,7 +303,7 @@ namespace NetExtender.FileSystems
             }
 
             private readonly Enumerator Enumerator;
-            
+
             public Byte Index { get; }
             public SegmentType Type { get; }
 
@@ -416,7 +416,7 @@ namespace NetExtender.FileSystems
                 return Value.ToString();
             }
         }
-        
+
         public struct Enumerator : IEquatableStruct<Enumerator>, IEnumerator<Segment>, IEquatable<FileSystemUri>
         {
             public static Boolean operator ==(Enumerator first, Enumerator second)
@@ -428,7 +428,7 @@ namespace NetExtender.FileSystems
             {
                 return !(first == second);
             }
-            
+
             private readonly FileSystemUri _uri;
             public readonly FileSystemUri Uri
             {
@@ -559,7 +559,7 @@ namespace NetExtender.FileSystems
                     return _index;
                 }
             }
-            
+
             private Range _range = default;
 
             public readonly Segment Current
@@ -590,7 +590,7 @@ namespace NetExtender.FileSystems
             {
                 _uri = uri;
             }
-            
+
             private readonly Boolean IsSeparator(Char character)
             {
                 return character == DirectorySeparatorChar || character == AltDirectorySeparatorChar;
@@ -640,7 +640,7 @@ namespace NetExtender.FileSystems
                 {
                     end++;
                 }
-                
+
                 if (end == uri.Length)
                 {
                     type |= SegmentType.Final;
@@ -657,14 +657,14 @@ namespace NetExtender.FileSystems
                 {
                     return false;
                 }
-                
+
                 Int32 end = 2;
                 SegmentType type = SegmentType.Home;
                 if (end < uri.Length && IsSeparator(uri[end]))
                 {
                     end = SkipSeparators(uri, end);
                 }
-                
+
                 if (uri.Length == end)
                 {
                     type |= SegmentType.Final;
@@ -706,7 +706,7 @@ namespace NetExtender.FileSystems
                 {
                     return false;
                 }
-                
+
                 SegmentType type = SegmentType.Root;
 
                 if (uri.Length == 1)
@@ -752,7 +752,7 @@ namespace NetExtender.FileSystems
 
                 Int32 end = FindSegment(uri, start);
                 SetSegmentType(uri, start, end);
-                
+
                 _index++;
                 _range = start..end;
                 return true;

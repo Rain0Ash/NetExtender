@@ -36,7 +36,7 @@ namespace NetExtender.UserInterface.WindowsPresentation
         protected Container Nullable { get; set; }
         protected ICollection? Values { get; private set; }
         private Func<Boolean>? Reload { get; set; }
-        
+
         protected virtual View<T> Convert<T>(T value)
         {
             return value!;
@@ -51,7 +51,7 @@ namespace NetExtender.UserInterface.WindowsPresentation
         {
             return TryGetSelectedItem(out result);
         }
-        
+
         public Maybe<T> GetSelectedItem<T>()
         {
             return TryGetSelectedItem(out Maybe<T> result) ? result : default;
@@ -68,7 +68,7 @@ namespace NetExtender.UserInterface.WindowsPresentation
             result = current.Maybe;
             return true;
         }
-        
+
         public Boolean Set<T>(T value)
         {
             for (Int32 i = 0; i < Items.Count; i++)
@@ -77,11 +77,11 @@ namespace NetExtender.UserInterface.WindowsPresentation
                 {
                     continue;
                 }
-                
+
                 SelectedIndex = i;
                 return true;
             }
-            
+
             return false;
         }
 
@@ -94,7 +94,7 @@ namespace NetExtender.UserInterface.WindowsPresentation
         {
             DisplayMemberPath = nameof(View<T>.Display);
             SelectedValuePath = nameof(View<T>.Value);
-            
+
             return Update<T, View<T>>();
         }
 
@@ -104,7 +104,7 @@ namespace NetExtender.UserInterface.WindowsPresentation
             {
                 Nullable = DefaultItem is not null ? new Container(new View<T>(DefaultItem)) { IsAuto = true } : default;
             }
-            
+
             TView[] array = Values switch
             {
                 TView[] values => Nullable.View is TView view ? values.Prepend(view).ToArray() : values,
@@ -133,7 +133,7 @@ namespace NetExtender.UserInterface.WindowsPresentation
             Values = source.ToArray();
             Update<T>();
         }
-        
+
         public void SetItemsSource<T>(IEnumerable<T> source)
         {
             if (source is null)
@@ -150,7 +150,7 @@ namespace NetExtender.UserInterface.WindowsPresentation
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (nullable is null)
             {
                 SetItemsSource(source);
@@ -159,7 +159,7 @@ namespace NetExtender.UserInterface.WindowsPresentation
 
             SetItemsSource(nullable, source.Select(Convert));
         }
-        
+
         private static void OnDefaultChanged(DependencyObject @object, DependencyPropertyChangedEventArgs args)
         {
             if (@object is not NullableComboBox combobox)
@@ -173,7 +173,7 @@ namespace NetExtender.UserInterface.WindowsPresentation
                 {
                     return;
                 }
-                
+
                 if (args.NewValue is String value)
                 {
                     combobox.Nullable.SetText(value);
@@ -214,7 +214,7 @@ namespace NetExtender.UserInterface.WindowsPresentation
 
             public Boolean SetText(String value);
         }
-        
+
         public class View<T> : View, IView<T>
         {
             [return: NotNullIfNotNull("value")]
@@ -236,7 +236,7 @@ namespace NetExtender.UserInterface.WindowsPresentation
             }
 
             public Maybe<T> Maybe { get; }
-            
+
             public sealed override Boolean HasValue
             {
                 get
@@ -286,7 +286,7 @@ namespace NetExtender.UserInterface.WindowsPresentation
                     this.RaiseAndSetIfChanged(ref _display, value);
                 }
             }
-            
+
             protected View(String display)
             {
                 _display = display ?? throw new ArgumentNullException(nameof(display));
@@ -306,9 +306,11 @@ namespace NetExtender.UserInterface.WindowsPresentation
 
         public abstract class ViewBase : IView
         {
+#pragma warning disable CS0067
             public event PropertyChangingEventHandler? PropertyChanging;
             public event PropertyChangedEventHandler? PropertyChanged;
-            
+#pragma warning restore CS0067
+
             public abstract Boolean HasValue { get; }
             public abstract Boolean SetText(String value);
         }

@@ -30,7 +30,7 @@ namespace NetExtender.EntityFrameworkCore.Context
         Lazy,
         Eager
     }
-    
+
     public class EventDbContext : DbContext, ISaveDbContext
     {
         public Assembly? Assembly { get; }
@@ -85,7 +85,7 @@ namespace NetExtender.EntityFrameworkCore.Context
             {
                 builder.ApplyConfigurationsFromAssembly(Assembly);
             }
-            
+
             base.OnModelCreating(builder);
         }
 
@@ -95,7 +95,7 @@ namespace NetExtender.EntityFrameworkCore.Context
             {
                 throw new NotSupportedException($"Сan't save changes at eager {nameof(DbContext)}.");
             }
-            
+
             IReadOnlyCollection<IAfterSaveEventCQRS> events = await ProcessEventsBeforeSaveChanges(token);
 
             Int32 result = await base.SaveChangesAsync(token).ConfigureAwait(false);
@@ -135,7 +135,7 @@ namespace NetExtender.EntityFrameworkCore.Context
             {
                 return;
             }
-            
+
             while (true)
             {
                 IEventCQRS[] events = source.ToArray();
@@ -162,7 +162,7 @@ namespace NetExtender.EntityFrameworkCore.Context
             }
 
             MethodInfo method = Dispatch.MakeGenericMethod(type);
-            
+
             ParameterExpression dispatcher = Expression.Parameter(typeof(IEventCQRSDispatcher), nameof(dispatcher));
             ParameterExpression @event = Expression.Parameter(typeof(IEventCQRS), nameof(@event));
             ParameterExpression token = Expression.Parameter(typeof(CancellationToken), nameof(token));

@@ -15,7 +15,7 @@ namespace NetExtender.Utilities.Types
 {
     public delegate TDestination RaiseAndSetIfChangedHandler<in TSource, out TDestination>(TSource sender);
     public delegate TDestination RaiseAndSetIfChangedFactoryHandler<in TSource, TDestination>(TSource sender, TDestination value);
-    
+
     public static class ReactiveUtilities
     {
         [ReflectionNaming]
@@ -49,7 +49,7 @@ namespace NetExtender.Utilities.Types
             assembly = AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(assembly => assembly.GetName().Name == nameof(ReactiveUI));
             reactive = default;
             raise = default;
-            
+
             if (assembly?.GetType($"{nameof(ReactiveUI)}.IReactiveObject") is not { IsInterface: true } @interface)
             {
                 return false;
@@ -67,7 +67,7 @@ namespace NetExtender.Utilities.Types
                     @interface.GetMethod(nameof(RaisePropertyChanging), binding, new[] { typeof(PropertyChangingEventArgs) })?.IsVoid() is true &&
                     @interface.GetMethod(nameof(RaisePropertyChanged), binding, new[] { typeof(PropertyChangedEventArgs) })?.IsVoid() is true;
             }
-            
+
             if (!HasInterfaces(@interface))
             {
                 return false;
@@ -78,7 +78,7 @@ namespace NetExtender.Utilities.Types
             {
                 return false;
             }
-            
+
             if (extensions.GetMethod(nameof(RaiseAndSetIfChanged), BindingFlags.Static | BindingFlags.Public) is not { IsGenericMethod: true } method)
             {
                 return false;
@@ -87,7 +87,7 @@ namespace NetExtender.Utilities.Types
             raise = method;
             return true;
         }
-        
+
         private record ReactiveObjectHandler
         {
             private delegate TDestination RaiseAndSetIfChangedHandler<in TSource, TDestination>(TSource source, ref TDestination field, TDestination value, String? property) where TSource : class;
@@ -96,7 +96,7 @@ namespace NetExtender.Utilities.Types
             public Type Source { get; }
             public Type Destination { get; }
             private Delegate? Handler { get; }
-            
+
             private ReactiveObjectHandler(Type source, Type destination)
             {
                 Source = source ?? throw new ArgumentNullException(nameof(source));
@@ -135,7 +135,7 @@ namespace NetExtender.Utilities.Types
                     return null;
                 }
             }
-            
+
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             private Boolean Invoke<TSource, TDestination>(TSource source, ref TDestination field, TDestination value, String? property, [MaybeNullWhen(false)] out TDestination result) where TSource : class
             {
@@ -216,18 +216,18 @@ namespace NetExtender.Utilities.Types
                 {
                     return null;
                 }
-                
+
                 ParameterExpression source = Expression.Parameter(type, nameof(source));
                 ParameterExpression field = Expression.Parameter(destination.MakeByRefType(), nameof(field));
                 ParameterExpression value = Expression.Parameter(destination, nameof(value));
                 ParameterExpression property = Expression.Parameter(typeof(String), nameof(property));
                 method = method.MakeGenericMethod(type, destination);
-                
+
                 MethodCallExpression call = Expression.Call(null, method, Expression.Convert(source, type), field, Expression.Convert(value, destination), property);
                 return Expression.Lambda(typeof(RaiseAndSetIfChangedHandler<,>).MakeGenericType(type, destination), call, source, field, value, property).Compile();
             }
         }
-        
+
         private record PropertyEventHandler
         {
             private static ConcurrentDictionary<Type, PropertyEventHandler?> Storage { get; } = new ConcurrentDictionary<Type, PropertyEventHandler?>();
@@ -306,12 +306,12 @@ namespace NetExtender.Utilities.Types
                 {
                     return null;
                 }
-                
+
                 ParameterExpression source = Expression.Parameter(typeof(Object), nameof(source));
                 ParameterExpression property = Expression.Parameter(typeof(String), nameof(property));
                 NewExpression argument = Expression.New(constructor, property);
                 MemberExpression field = Expression.Field(Expression.Convert(source, type), @event);
-                
+
                 BinaryExpression notnull = Expression.NotEqual(field, Expression.Constant(null, typeof(Object)));
                 MethodCallExpression call = Expression.Call(field, method, Expression.Convert(source, method.GetParameters()[0].ParameterType), argument);
                 ConditionalExpression conditional = Expression.IfThen(notnull, call);
@@ -337,7 +337,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             PropertyEventHandler? handler = PropertyEventHandler.Get(source);
 
             if (handler is null)
@@ -345,7 +345,7 @@ namespace NetExtender.Utilities.Types
                 field = value;
                 return value;
             }
-            
+
             handler.RaiseChanging(source, property);
             field = value;
             handler.RaiseChanged(source, property);
@@ -358,14 +358,14 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             PropertyEventHandler? handler = PropertyEventHandler.Get(source);
 
             if (handler is null)
             {
                 return;
             }
-            
+
             handler.RaiseChanging(source, property);
             handler.RaiseChanged(source, property);
         }
@@ -384,13 +384,13 @@ namespace NetExtender.Utilities.Types
 
             PropertyEventHandler? handler = PropertyEventHandler.Get(source);
             TDestination value = factory(source);
-            
+
             if (handler is null)
             {
                 field = value;
                 return value;
             }
-            
+
             handler.RaiseChanging(source, property);
             field = value;
             handler.RaiseChanged(source, property);
@@ -411,13 +411,13 @@ namespace NetExtender.Utilities.Types
 
             PropertyEventHandler? handler = PropertyEventHandler.Get(source);
             TDestination value = factory(source, field);
-            
+
             if (handler is null)
             {
                 field = value;
                 return value;
             }
-            
+
             handler.RaiseChanging(source, property);
             field = value;
             handler.RaiseChanged(source, property);
@@ -455,7 +455,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (factory is null)
             {
                 throw new ArgumentNullException(nameof(factory));
@@ -463,17 +463,17 @@ namespace NetExtender.Utilities.Types
 
             return ReactiveObjectHandler.Handle(source, ref field, factory, property, out TDestination? result) ? result : RaiseProperty(source, ref field, factory, property);
         }
-        
+
         public static void RaisePropertyChanging<TSource>(this TSource source, [CallerMemberName] String? property = null) where TSource : class
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             PropertyEventHandler.Get(source)?.RaiseChanging(source, property);
         }
-        
+
         public static void RaisePropertyChanging<TSource>(this TSource source, params String?[]? properties) where TSource : class
         {
             if (source is null)
@@ -485,7 +485,7 @@ namespace NetExtender.Utilities.Types
             {
                 return;
             }
-            
+
             if (PropertyEventHandler.Get(source) is not { } handler)
             {
                 return;
@@ -518,7 +518,7 @@ namespace NetExtender.Utilities.Types
             {
                 return;
             }
-            
+
             if (PropertyEventHandler.Get(source) is not { } handler)
             {
                 return;

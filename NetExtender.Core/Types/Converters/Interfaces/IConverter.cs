@@ -11,7 +11,7 @@ namespace NetExtender.Types.Converters.Interfaces
         public TOutput Convert(TInput input);
         public Boolean TryConvert(TInput input, [MaybeNullWhen(false)] out TOutput output);
     }
-    
+
     public interface ITwoWayConverter<TInput, TOutput> : IOneWayConverter<TInput, TOutput>
     {
         public TInput ConvertBack(TOutput input);

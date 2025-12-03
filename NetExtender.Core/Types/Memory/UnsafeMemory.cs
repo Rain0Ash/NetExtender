@@ -14,12 +14,12 @@ namespace NetExtender.Types.Memory
         {
             return value?.Memory ?? default;
         }
-        
+
         public static implicit operator Memory<T>(UnsafeMemory<T>? value)
         {
             return value?.Memory ?? default;
         }
-        
+
         private readonly void* _pointer;
         private readonly Int32 _length;
 

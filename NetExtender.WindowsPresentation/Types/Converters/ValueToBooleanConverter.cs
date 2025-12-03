@@ -18,22 +18,22 @@ namespace NetExtender.WindowsPresentation.Types.Converters
                 return Equal;
             }
         }
-        
+
         public static ValueToBooleanConverter Equal { get; } = new ValueToBooleanConverter(true);
         public static ValueToBooleanConverter NotEqual { get; } = new ValueToBooleanConverter(false);
-        
+
         public Boolean IsEquals { get; }
-        
+
         public ValueToBooleanConverter()
             : this(true)
         {
         }
-        
+
         public ValueToBooleanConverter(Boolean equals)
         {
             IsEquals = equals;
         }
-        
+
         public override Object? Convert(Object? value, Type? targetType, Object? parameter, CultureInfo? culture)
         {
             if (value is null)

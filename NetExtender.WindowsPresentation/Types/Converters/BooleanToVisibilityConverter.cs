@@ -51,7 +51,7 @@ namespace NetExtender.WindowsPresentation.Types.Converters
             };
         }
     }
-    
+
     [ValueConversion(typeof(Boolean), typeof(Visibility))]
     public class BooleanToVisibilityConverter : BooleanToVisibilityConverterBase
     {
@@ -88,7 +88,7 @@ namespace NetExtender.WindowsPresentation.Types.Converters
                     throw new InvalidOperationException();
                 }
             }
-            
+
             protected override Visibility Convert(Boolean value)
             {
                 return value ? Visibility.Visible : Visibility.Collapsed;
@@ -108,14 +108,14 @@ namespace NetExtender.WindowsPresentation.Types.Converters
                     throw new InvalidOperationException();
                 }
             }
-            
+
             protected override Visibility Convert(Boolean value)
             {
                 return value ? Visibility.Visible : Visibility.Hidden;
             }
         }
     }
-    
+
     [ValueConversion(typeof(Boolean), typeof(Visibility))]
     public class NotBooleanToVisibilityConverter : BooleanToVisibilityConverterBase
     {
@@ -138,7 +138,7 @@ namespace NetExtender.WindowsPresentation.Types.Converters
         {
             return value != Visibility.Visible;
         }
-        
+
         private sealed class CollapsedNotBooleanToVisibilityConverter : NotBooleanToVisibilityConverter
         {
             public override Boolean TrueIsCollapsed
@@ -152,7 +152,7 @@ namespace NetExtender.WindowsPresentation.Types.Converters
                     throw new InvalidOperationException();
                 }
             }
-            
+
             protected override Visibility Convert(Boolean value)
             {
                 return value ? Visibility.Collapsed : Visibility.Visible;
@@ -172,7 +172,7 @@ namespace NetExtender.WindowsPresentation.Types.Converters
                     throw new InvalidOperationException();
                 }
             }
-            
+
             protected override Visibility Convert(Boolean value)
             {
                 return value ? Visibility.Hidden : Visibility.Visible;

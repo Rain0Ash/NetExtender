@@ -9,11 +9,11 @@ namespace NetExtender.Types.Counters.Interfaces
     public interface ICounter<T> : ICounter<T, Int32>
     {
     }
-    
+
     public interface ICounter64<T> : ICounter<T, Int64>
     {
     }
-    
+
     public interface ICounter<T, TCount> : IDictionary<T, TCount> where TCount : unmanaged, IConvertible
     {
         public Boolean Contains(T item);

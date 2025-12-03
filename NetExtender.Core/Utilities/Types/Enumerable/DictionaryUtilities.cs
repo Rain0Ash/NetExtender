@@ -13,24 +13,12 @@ using System.Runtime.CompilerServices;
 using NetExtender.Types.Dictionaries;
 using NetExtender.Types.Immutable.Dictionaries;
 using NetExtender.Types.Monads;
-using NetExtender.Types.Reflection;
-using NetExtender.Utilities.Core;
 using NetExtender.Utilities.Numerics;
 
 namespace NetExtender.Utilities.Types
 {
     public static class DictionaryUtilities
     {
-        [SuppressMessage("ReSharper", "IdentifierTypo")]
-        [ReflectionSystemResource(typeof(Dictionary<,>))]
-        internal static class SR
-        {
-            private static Type SRType { get; } = SRUtilities.SRType(typeof(Dictionary<,>).Assembly);
-
-            [ReflectionSystemResource(typeof(Dictionary<,>))]
-            public static SRInfo Argument_AddingDuplicateWithKey { get; } = new SRInfo(SRType);
-        }
-
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ReadOnlyDictionary<TKey, TValue> AsReadOnly<TKey, TValue>(this Dictionary<TKey, TValue> dictionary) where TKey : notnull
         {
@@ -76,6 +64,7 @@ namespace NetExtender.Utilities.Types
             return result;
         }
 
+#if !NET8_0_OR_GREATER
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Dictionary<TKey, TValue> ToDictionary<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source) where TKey : notnull
         {
@@ -119,36 +108,37 @@ namespace NetExtender.Utilities.Types
 
             return source.ToKeyValuePairs().ToDictionary(comparer);
         }
-        
+#endif
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NullableDictionary<TKey, TSource> ToNullableDictionary<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector)
         {
             return ToNullableDictionary(source, keySelector, (IEqualityComparer<NullMaybe<TKey>>?) null);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NullableDictionary<TKey, TSource> ToNullableDictionary<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, IEqualityComparer<TKey>? comparer)
         {
             return ToNullableDictionary(source, keySelector, comparer?.ToNullMaybeEqualityComparer());
         }
-        
+
         public static NullableDictionary<TKey, TSource> ToNullableDictionary<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, IEqualityComparer<NullMaybe<TKey>>? comparer)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (keySelector is null)
             {
                 throw new ArgumentNullException(nameof(keySelector));
             }
-            
+
             if (source.CountIfMaterialized(out Int32 capacity) && capacity <= 0)
             {
                 return new NullableDictionary<TKey, TSource>(comparer);
             }
-            
+
             if (source is ICollection<TSource> collection)
             {
                 switch (collection)
@@ -169,7 +159,7 @@ namespace NetExtender.Utilities.Types
 
             return dictionary;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static NullableDictionary<TKey, TSource> ToNullableDictionary<TSource, TKey>(TSource[] source, Func<TSource, TKey> keySelector, IEqualityComparer<NullMaybe<TKey>>? comparer)
         {
@@ -177,23 +167,23 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (keySelector is null)
             {
                 throw new ArgumentNullException(nameof(keySelector));
             }
-            
+
             NullableDictionary<TKey, TSource> dictionary = new NullableDictionary<TKey, TSource>(source.Length, comparer);
-            
+
             // ReSharper disable once ForCanBeConvertedToForeach
             for (Int32 index = 0; index < source.Length; ++index)
             {
                 dictionary.Add(keySelector(source[index]), source[index]);
             }
-            
+
             return dictionary;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static NullableDictionary<TKey, TSource> ToNullableDictionary<TSource, TKey>(List<TSource> source, Func<TSource, TKey> keySelector, IEqualityComparer<NullMaybe<TKey>>? comparer)
         {
@@ -216,41 +206,41 @@ namespace NetExtender.Utilities.Types
 
             return dictionary;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NullableDictionary<TKey, TElement> ToNullableDictionary<TSource, TKey, TElement>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector)
         {
             return ToNullableDictionary(source, keySelector, elementSelector, (IEqualityComparer<NullMaybe<TKey>>?) null);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NullableDictionary<TKey, TElement> ToNullableDictionary<TSource, TKey, TElement>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector, IEqualityComparer<TKey>? comparer)
         {
             return ToNullableDictionary(source, keySelector, elementSelector, comparer?.ToNullMaybeEqualityComparer());
         }
-        
+
         public static NullableDictionary<TKey, TElement> ToNullableDictionary<TSource, TKey, TElement>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector, IEqualityComparer<NullMaybe<TKey>>? comparer)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (keySelector is null)
             {
                 throw new ArgumentNullException(nameof(keySelector));
             }
-            
+
             if (elementSelector is null)
             {
                 throw new ArgumentNullException(nameof(elementSelector));
             }
-            
+
             if (source.CountIfMaterialized(out Int32 capacity) && capacity <= 0)
             {
                 return new NullableDictionary<TKey, TElement>(comparer);
             }
-            
+
             if (source is ICollection<TSource> sources)
             {
                 switch (sources)
@@ -261,9 +251,9 @@ namespace NetExtender.Utilities.Types
                         return ToNullableDictionary(list, keySelector, elementSelector, comparer);
                 }
             }
-            
+
             NullableDictionary<TKey, TElement> dictionary = new NullableDictionary<TKey, TElement>(capacity, comparer);
-            
+
             foreach (TSource item in source)
             {
                 dictionary.Add(keySelector(item), elementSelector(item));
@@ -271,7 +261,7 @@ namespace NetExtender.Utilities.Types
 
             return dictionary;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static NullableDictionary<TKey, TElement> ToNullableDictionary<TSource, TKey, TElement>(TSource[] source, Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector, IEqualityComparer<NullMaybe<TKey>>? comparer)
         {
@@ -279,28 +269,28 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (keySelector is null)
             {
                 throw new ArgumentNullException(nameof(keySelector));
             }
-            
+
             if (elementSelector is null)
             {
                 throw new ArgumentNullException(nameof(elementSelector));
             }
-            
+
             NullableDictionary<TKey, TElement> dictionary = new NullableDictionary<TKey, TElement>(source.Length, comparer);
-            
+
             // ReSharper disable once ForCanBeConvertedToForeach
             for (Int32 index = 0; index < source.Length; ++index)
             {
                 dictionary.Add(keySelector(source[index]), elementSelector(source[index]));
             }
-            
+
             return dictionary;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static NullableDictionary<TKey, TElement> ToNullableDictionary<TSource, TKey, TElement>(List<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector, IEqualityComparer<NullMaybe<TKey>>? comparer)
         {
@@ -308,27 +298,27 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (keySelector is null)
             {
                 throw new ArgumentNullException(nameof(keySelector));
             }
-            
+
             if (elementSelector is null)
             {
                 throw new ArgumentNullException(nameof(elementSelector));
             }
-            
+
             NullableDictionary<TKey, TElement> dictionary = new NullableDictionary<TKey, TElement>(source.Count, comparer);
-            
+
             foreach (TSource item in source)
             {
                 dictionary.Add(keySelector(item), elementSelector(item));
             }
-            
+
             return dictionary;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NullableDictionary<TKey, TValue> ToNullableDictionary<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source)
         {
@@ -336,33 +326,33 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (!source.CountIfMaterialized(out Int32 capacity))
             {
                 return new NullableDictionary<TKey, TValue>(source.KeyNullable());
             }
-            
+
             NullableDictionary<TKey, TValue> result = new NullableDictionary<TKey, TValue>(capacity);
-            
+
             if (capacity <= 0)
             {
                 return result;
             }
-            
+
             foreach (KeyValuePair<TKey, TValue> item in source)
             {
                 result.Add(item.Key, item.Value);
             }
-            
+
             return result;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NullableDictionary<TKey, TValue> ToNullableDictionary<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source, IEqualityComparer<TKey>? comparer)
         {
             return ToNullableDictionary(source, comparer?.ToNullMaybeEqualityComparer());
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NullableDictionary<TKey, TValue> ToNullableDictionary<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source, IEqualityComparer<NullMaybe<TKey>>? comparer)
         {
@@ -370,27 +360,27 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (!source.CountIfMaterialized(out Int32 capacity))
             {
                 return new NullableDictionary<TKey, TValue>(source.KeyNullable(), comparer);
             }
-            
+
             NullableDictionary<TKey, TValue> result = new NullableDictionary<TKey, TValue>(capacity, comparer);
-            
+
             if (capacity <= 0)
             {
                 return result;
             }
-            
+
             foreach (KeyValuePair<TKey, TValue> item in source)
             {
                 result.Add(item.Key, item.Value);
             }
-            
+
             return result;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NullableDictionary<TKey, TValue> ToNullableDictionary<TKey, TValue>(this IEnumerable<(TKey, TValue)> source)
         {
@@ -401,7 +391,7 @@ namespace NetExtender.Utilities.Types
 
             return source.ToKeyValuePairs().ToNullableDictionary();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NullableDictionary<TKey, TValue> ToNullableDictionary<TKey, TValue>(this IEnumerable<(TKey, TValue)> source, IEqualityComparer<TKey>? comparer)
         {
@@ -412,7 +402,7 @@ namespace NetExtender.Utilities.Types
 
             return source.ToKeyValuePairs().ToNullableDictionary(comparer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NullableDictionary<TKey, TValue> ToNullableDictionary<TKey, TValue>(this IEnumerable<(TKey, TValue)> source, IEqualityComparer<NullMaybe<TKey>>? comparer)
         {
@@ -1869,11 +1859,12 @@ namespace NetExtender.Utilities.Types
             Dictionary<NullMaybe<TKey>, TValue> intersect = new NullableDictionary<TKey, TValue>(source.Count, source.Comparer);
             IEqualityComparer<TValue> comparer = EqualityComparer<TValue>.Default;
 
-            foreach ((NullMaybe<TKey> key, TValue value) in other)
+            foreach ((TKey key, TValue value) in other)
             {
-                if (source.TryGetValue(key, out TValue? current) && comparer.Equals(value, current))
+                NullMaybe<TKey> @null = key;
+                if (source.TryGetValue(@null, out TValue? current) && comparer.Equals(value, current))
                 {
-                    intersect[key] = current;
+                    intersect[@null] = current;
                 }
             }
 
@@ -1992,11 +1983,12 @@ namespace NetExtender.Utilities.Types
             SortedDictionary<NullMaybe<TKey>, TValue> intersect = new NullableSortedDictionary<TKey, TValue>(source.Comparer);
             IEqualityComparer<TValue> comparer = EqualityComparer<TValue>.Default;
 
-            foreach ((NullMaybe<TKey> key, TValue value) in other)
+            foreach ((TKey key, TValue value) in other)
             {
-                if (source.TryGetValue(key, out TValue? current) && comparer.Equals(value, current))
+                NullMaybe<TKey> @null = key;
+                if (source.TryGetValue(@null, out TValue? current) && comparer.Equals(value, current))
                 {
-                    intersect[key] = current;
+                    intersect[@null] = current;
                 }
             }
 

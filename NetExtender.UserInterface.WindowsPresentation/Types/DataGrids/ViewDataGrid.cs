@@ -14,7 +14,7 @@ namespace NetExtender.UserInterface.WindowsPresentation
             SelectionModeProperty.OverrideMetadataDefaultValue<ViewDataGrid, DataGridSelectionMode>(DataGridSelectionMode.Single);
             AutoGenerateColumnsProperty.OverrideMetadataDefaultValue<ViewDataGrid, Boolean>(false);
             IsReadOnlyProperty.OverrideMetadataDefaultValue<ViewDataGrid, Boolean>(true);
-            
+
             /*CellStyle = new Style(typeof(DataGridCell))
             {
                 Setters =

@@ -10,7 +10,7 @@ namespace NetExtender.Types.Intercept.Interfaces
     public interface IMethodInterceptEventArgs<T> : IMethodInterceptEventArgs, IMemberInterceptEventArgs<MethodInfo, T>
     {
     }
-    
+
     public interface IMethodInterceptEventArgs : IMemberInterceptEventArgs<MethodInfo>
     {
         public MethodInfo Method { get; }

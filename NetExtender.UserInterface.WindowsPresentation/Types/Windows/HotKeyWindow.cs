@@ -36,7 +36,7 @@ namespace NetExtender.UserInterface.WindowsPresentation
             OnHotKey(message.WParam.ToInt32());
             return base.WndProc(ref message);
         }
-        
+
         private void OnHotKey(Int32 id)
         {
             if (HotKeyUtilities.TryGetHotKey(Handle, id, out WindowsHotKeyAction<Int32> action))

@@ -16,7 +16,7 @@ namespace NetExtender.AspNetCore.Identity.Interfaces
     {
         public new TIdentity CreateIdentity(Object payload);
     }
-    
+
     public interface IIdentityFactory
     {
         public IIdentity CreateIdentity(Object payload);

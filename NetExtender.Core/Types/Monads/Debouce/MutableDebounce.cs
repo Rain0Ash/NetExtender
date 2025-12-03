@@ -26,12 +26,12 @@ namespace NetExtender.Types.Monads
         {
             return new NotifyDebounce<T>(value);
         }
-        
+
         public static implicit operator NotifyDebounce<T>(Debounce<T> value)
         {
             return new NotifyDebounce<T>(value);
         }
-        
+
         public new static NotifyDebounce<T?> New
         {
             get
@@ -39,7 +39,7 @@ namespace NetExtender.Types.Monads
                 return new NotifyDebounce<T?>(default(T));
             }
         }
-        
+
         protected internal override Debounce<T> Internal
         {
             get
@@ -50,7 +50,7 @@ namespace NetExtender.Types.Monads
             {
                 Boolean @internal = !Internal.Equals(value.Value);
                 Boolean delay = Internal.Delay != Delay;
-                
+
                 if (@internal)
                 {
                     OnPropertyChanging(nameof(Value));
@@ -62,59 +62,59 @@ namespace NetExtender.Types.Monads
                 {
                     OnPropertyChanging(nameof(Delay));
                 }
-                
+
                 if (@internal || delay)
                 {
                     OnPropertyChanging(nameof(IsDebounce));
                 }
-                
+
                 base.Internal = value;
-                
+
                 if (@internal)
                 {
                     OnPropertyChanged(nameof(Value));
                     OnPropertyChanged(nameof(Time));
                     OnPropertyChanged(nameof(SetTime));
                 }
-                
+
                 if (delay)
                 {
                     OnPropertyChanged(nameof(Delay));
                 }
-                
+
                 if (@internal || delay)
                 {
                     OnPropertyChanged(nameof(IsDebounce));
                 }
             }
         }
-        
+
         public NotifyDebounce(TimeSpan delay)
             : base(delay)
         {
         }
-        
+
         public NotifyDebounce(T value)
             : base(value)
         {
         }
-        
+
         public NotifyDebounce(T value, TimeSpan delay)
             : base(value, delay)
         {
         }
-        
+
         public NotifyDebounce(Debounce<T> value)
             : base(value)
         {
         }
-        
+
         public override NotifyDebounce<T> Clone()
         {
             return new NotifyDebounce<T>(Internal);
         }
     }
-    
+
     [Serializable]
     [JsonConverter(typeof(MutableDebounceJsonConverter<>))]
     [System.Text.Json.Serialization.JsonConverter(typeof(Serialization.Json.Monads.MutableDebounceJsonConverter<>))]
@@ -125,7 +125,7 @@ namespace NetExtender.Types.Monads
         {
             return value is not null ? value.Value : default;
         }
-        
+
         public static implicit operator Debounce<T>(MutableDebounce<T>? value)
         {
             return value?.Internal ?? default;
@@ -140,7 +140,7 @@ namespace NetExtender.Types.Monads
         {
             return new MutableDebounce<T>(value);
         }
-        
+
         public static Boolean operator ==(T? first, MutableDebounce<T>? second)
         {
             return second == first;
@@ -160,7 +160,7 @@ namespace NetExtender.Types.Monads
         {
             return !(first == second);
         }
-        
+
         public static Boolean operator ==(Debounce<T> first, MutableDebounce<T>? second)
         {
             return second == first;
@@ -180,7 +180,7 @@ namespace NetExtender.Types.Monads
         {
             return !(first == second);
         }
-        
+
         public static Boolean operator ==(MutableDebounce<T>? first, MutableDebounce<T>? second)
         {
             return ReferenceEquals(first, second) || first is not null && first.Equals(second);
@@ -298,12 +298,12 @@ namespace NetExtender.Types.Monads
                 return new MutableDebounce<T?>(default(T));
             }
         }
-        
+
         public event PropertyChangingEventHandler? PropertyChanging;
         public event PropertyChangedEventHandler? PropertyChanged;
-        
+
         protected Guid Id { get; } = Guid.NewGuid();
-        
+
         private Debounce<T> _internal;
         protected internal virtual Debounce<T> Internal
         {
@@ -316,7 +316,7 @@ namespace NetExtender.Types.Monads
                 _internal = value;
             }
         }
-        
+
         public T Value
         {
             get
@@ -331,7 +331,7 @@ namespace NetExtender.Types.Monads
                 }
             }
         }
-        
+
         public TimeSpan Time
         {
             get
@@ -375,7 +375,7 @@ namespace NetExtender.Types.Monads
                 return _internal.IsDebounce;
             }
         }
-        
+
         [JsonIgnore]
         [System.Text.Json.Serialization.JsonIgnore]
         public Boolean IsEmpty
@@ -385,27 +385,31 @@ namespace NetExtender.Types.Monads
                 return _internal.IsEmpty;
             }
         }
-        
+
         public MutableDebounce(TimeSpan delay)
         {
             _internal = new Debounce<T>(delay);
         }
-        
+
         public MutableDebounce(T value)
         {
             _internal = new Debounce<T>(value);
         }
-        
+
         public MutableDebounce(T value, TimeSpan delay)
         {
             _internal = new Debounce<T>(value, delay);
         }
-        
+
         public MutableDebounce(Debounce<T> value)
         {
             _internal = value;
         }
 
+#if NET8_0_OR_GREATER
+        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
+#endif
         protected MutableDebounce(SerializationInfo info, StreamingContext context)
         {
             _internal = new Debounce<T>(info.GetValue<T>(nameof(Value)), info.GetValue<TimeSpan>(nameof(Delay))) { SetTime = info.GetDateTime(nameof(SetTime)) };
@@ -418,11 +422,11 @@ namespace NetExtender.Types.Monads
                 value = null;
                 return false;
             }
-            
+
             value = _internal.Value;
             return true;
         }
-        
+
         public Boolean Unwrap([MaybeNullWhen(false)] out T value)
         {
             if (IsEmpty)
@@ -430,11 +434,11 @@ namespace NetExtender.Types.Monads
                 value = default;
                 return false;
             }
-            
+
             value = _internal.Value;
             return true;
         }
-        
+
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue(nameof(Value), _internal.Value);
@@ -446,23 +450,23 @@ namespace NetExtender.Types.Monads
         {
             PropertyChanging?.Invoke(this, new PropertyChanging(property));
         }
-        
+
         protected void OnPropertyChanged([CallerMemberName] String? property = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChanged(property));
         }
-        
+
         public Boolean Set(T value)
         {
             if (!_internal.Set(value, out Debounce<T> result))
             {
                 return false;
             }
-            
+
             _internal = result;
             return true;
         }
-        
+
         Boolean IDebounce<T>.Set(T value, [MaybeNullWhen(false)] out IDebounce<T> result)
         {
             if (Set(value))
@@ -470,22 +474,22 @@ namespace NetExtender.Types.Monads
                 result = this;
                 return true;
             }
-            
+
             result = null;
             return false;
         }
-        
+
         public Boolean Set(T value, out TimeSpan delta)
         {
             if (!_internal.Set(value, out delta, out Debounce<T> result))
             {
                 return false;
             }
-            
+
             Internal = result;
             return true;
         }
-        
+
         Boolean IDebounce<T>.Set(T value, out TimeSpan delta, [MaybeNullWhen(false)] out IDebounce<T> result)
         {
             if (Set(value, out delta))
@@ -493,22 +497,22 @@ namespace NetExtender.Types.Monads
                 result = this;
                 return true;
             }
-            
+
             result = null;
             return false;
         }
-        
+
         public Boolean Set(T value, out DateTime time)
         {
             if (!_internal.Set(value, out time, out Debounce<T> result))
             {
                 return false;
             }
-            
+
             Internal = result;
             return true;
         }
-        
+
         Boolean IDebounce<T>.Set(T value, out DateTime time, [MaybeNullWhen(false)] out IDebounce<T> result)
         {
             if (Set(value, out time))
@@ -516,16 +520,16 @@ namespace NetExtender.Types.Monads
                 result = this;
                 return true;
             }
-            
+
             result = null;
             return false;
         }
-        
+
         public Int32 CompareTo(T? other)
         {
             return _internal.CompareTo(other);
         }
-        
+
         public Int32 CompareTo(T? other, IComparer<T>? comparer)
         {
             return _internal.CompareTo(other, comparer);
@@ -622,7 +626,7 @@ namespace NetExtender.Types.Monads
         {
             return _internal.Equals(other, comparer);
         }
-        
+
         public virtual MutableDebounce<T> Clone()
         {
             return new MutableDebounce<T>(_internal);
@@ -738,24 +742,28 @@ namespace NetExtender.Types.Monads
             return _internal.GetString(escape, format, provider);
         }
     }
-    
+
     [Serializable]
     public class DebounceException : InvalidOperationException
     {
         public DebounceException()
         {
         }
-        
+
         public DebounceException(String? message)
             : base(message)
         {
         }
-        
+
         public DebounceException(String? message, Exception? exception)
             : base(message, exception)
         {
         }
-        
+
+#if NET8_0_OR_GREATER
+        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
+#endif
         protected DebounceException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {

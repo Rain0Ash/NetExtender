@@ -36,7 +36,7 @@ namespace NetExtender.Utilities.Types
             }
 
             using RegisterTransaction<T> transaction = new RegisterTransaction<T>(); 
-            
+
             try
             {
                 if (!ValuesStorage<T>.Register(members))
@@ -133,9 +133,9 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(members));
             }
-            
+
             using RegisterTransaction<T, TEnum> transaction = new RegisterTransaction<T, TEnum>(); 
-            
+
             try
             {
                 if (!ValuesStorage<T>.Register(members))
@@ -206,7 +206,7 @@ namespace NetExtender.Utilities.Types
                 throw new InvalidOperationException($"Exception at: {exception.Message}", exception);
             }
         }
-        
+
         public static Boolean TryRegister<T, TEnum>(EnumSynchronizationMember<T, TEnum> members) where T : unmanaged, Enum where TEnum : Enum<T, TEnum>, new()
         {
             if (members is null)
@@ -253,7 +253,7 @@ namespace NetExtender.Utilities.Types
             public Boolean Commit()
             {
                 IsCommit = true;
-                
+
                 foreach (ITransaction transaction in Transactions)
                 {
                     transaction.Commit();
@@ -270,7 +270,7 @@ namespace NetExtender.Utilities.Types
                 }
 
                 IsCommit = false;
-                
+
                 foreach (ITransaction transaction in Transactions)
                 {
                     transaction.Rollback();
@@ -287,7 +287,7 @@ namespace NetExtender.Utilities.Types
                 }
             }
         }
-        
+
         private class RegisterTransaction<T, TEnum> : ITransaction where T : unmanaged, Enum where TEnum : Enum<T, TEnum>, new()
         {
             public Boolean? IsCommit { get; private set; }
@@ -309,14 +309,14 @@ namespace NetExtender.Utilities.Types
                     MembersByNameStorage<T>.Transaction(),
                     UnderlyingOperationStorage<T>.Transaction(),
                     EnumStorage<T>.Transaction<TEnum>(),
-                    Synchronization.Transaction<T, TEnum>(),
+                    Synchronization.Transaction<T, TEnum>()
                 }.ToImmutableArray();
             }
 
             public Boolean Commit()
             {
                 IsCommit = true;
-                
+
                 foreach (ITransaction transaction in Transactions)
                 {
                     transaction.Commit();
@@ -333,7 +333,7 @@ namespace NetExtender.Utilities.Types
                 }
 
                 IsCommit = false;
-                
+
                 foreach (ITransaction transaction in Transactions)
                 {
                     transaction.Rollback();
@@ -359,7 +359,7 @@ namespace NetExtender.Utilities.Types
                 transaction.Read();
                 return transaction;
             }
-            
+
             public Boolean? IsCommit { get; protected set; }
             public TransactionCommitPolicy Policy { get; init; } = TransactionCommitPolicy.Manual;
 
@@ -388,7 +388,7 @@ namespace NetExtender.Utilities.Types
                 }
             }
         }
-        
+
         public static void Reset<T>() where T : unmanaged, Enum
         {
             ValuesStorage<T>.Reset();
@@ -442,7 +442,7 @@ namespace NetExtender.Utilities.Types
             public static T? Minimum { get; private set; }
             public static T? Maximum { get; private set; }
             public static Int32? Flags { get; private set; }
-            
+
             public static Boolean IsEmpty
             {
                 get
@@ -482,7 +482,7 @@ namespace NetExtender.Utilities.Types
             {
                 return Set.ContainsKey(value);
             }
-            
+
             public static Boolean TryGetValue(T value, out Decimal result)
             {
                 if (Decimal.TryGetValue(value, out result))
@@ -503,7 +503,7 @@ namespace NetExtender.Utilities.Types
             {
                 return Set.TryGetValue(value, out result);
             }
-            
+
             [MethodImpl(MethodImplOptions.AggressiveOptimization)]
             private static Int32? CountOfFlags(ImmutableArray<T> values)
             {
@@ -514,7 +514,7 @@ namespace NetExtender.Utilities.Types
             {
                 return new CacheTransaction();
             }
-            
+
             internal static Boolean Register(EnumSynchronizationMember<T> member)
             {
                 if (member is null)
@@ -577,7 +577,7 @@ namespace NetExtender.Utilities.Types
             public static ImmutableDictionary<T, Decimal> Decimal { get; private set; } = null!;
             public static T? Minimum { get; private set; }
             public static T? Maximum { get; private set; }
-            
+
             public static Boolean IsEmpty
             {
                 get
@@ -599,7 +599,7 @@ namespace NetExtender.Utilities.Types
             private static void Initialize(IEnumerable<T>? source)
             {
                 ImmutableArray<T> values = source?.ToImmutableArray() ?? ValuesStorage<T>.Values.Where(GenericUtilities.IsNotDefault).ToImmutableArray();
-                
+
                 Int32 i = 0;
                 ImmutableDictionary<T, Int32> set = values.ToImmutableDictionary(static value => value, _ => i++);
                 ImmutableDictionary<T, Decimal> @decimal = values.ToImmutableDictionary(static value => value, static value => ((IConvertible) value).ToDecimal());
@@ -616,7 +616,7 @@ namespace NetExtender.Utilities.Types
             {
                 return Set.ContainsKey(value);
             }
-            
+
             public static Boolean TryGetValue(T value, out Decimal result)
             {
                 if (Decimal.TryGetValue(value, out result))
@@ -642,7 +642,7 @@ namespace NetExtender.Utilities.Types
             {
                 return new CacheTransaction();
             }
-            
+
             internal static Boolean Register()
             {
                 try
@@ -660,7 +660,7 @@ namespace NetExtender.Utilities.Types
             {
                 Initialize();
             }
-            
+
             [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
             private class CacheTransaction : CacheTransactionBase
             {
@@ -694,7 +694,7 @@ namespace NetExtender.Utilities.Types
         {
             public static ReadOnlyCollection<String> Names { get; private set; } = null!;
             public static ImmutableHashSet<String> Set { get; private set; } = null!;
-            
+
             public static Boolean IsEmpty
             {
                 get
@@ -719,7 +719,7 @@ namespace NetExtender.Utilities.Types
                 {
                     throw new ArgumentNullException(nameof(source));
                 }
-                
+
                 Initialize(source.Select(static item => item.ToString()));
             }
 
@@ -729,7 +729,7 @@ namespace NetExtender.Utilities.Types
                 {
                     throw new ArgumentNullException(nameof(source));
                 }
-                
+
                 Names = source.ToReadOnlyArray();
                 Set = Names.ToImmutableHashSet();
             }
@@ -743,7 +743,7 @@ namespace NetExtender.Utilities.Types
             {
                 return new CacheTransaction();
             }
-            
+
             internal static Boolean Register(EnumSynchronizationMember<T> member)
             {
                 if (member is null)
@@ -766,7 +766,7 @@ namespace NetExtender.Utilities.Types
             {
                 Initialize();
             }
-            
+
             [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
             private class CacheTransaction : CacheTransactionBase
             {
@@ -791,7 +791,7 @@ namespace NetExtender.Utilities.Types
         {
             public static ReadOnlyCollection<String> Names { get; private set; } = null!;
             public static ImmutableHashSet<String> Set { get; private set; } = null!;
-            
+
             public static Boolean IsEmpty
             {
                 get
@@ -804,7 +804,7 @@ namespace NetExtender.Utilities.Types
             {
                 Initialize();
             }
-            
+
             private static void Initialize()
             {
                 Initialize(null);
@@ -826,7 +826,7 @@ namespace NetExtender.Utilities.Types
             {
                 return new CacheTransaction();
             }
-            
+
             internal static Boolean Register()
             {
                 try
@@ -844,7 +844,7 @@ namespace NetExtender.Utilities.Types
             {
                 Initialize();
             }
-            
+
             [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
             private class CacheTransaction : CacheTransactionBase
             {
@@ -899,7 +899,7 @@ namespace NetExtender.Utilities.Types
                 {
                     Initialize();
                 }
-                
+
                 private static void Initialize()
                 {
                     Initialize(null);
@@ -939,7 +939,7 @@ namespace NetExtender.Utilities.Types
 
                     return new KeyValuePair<T, ImmutableDictionary<LocalizationIdentifier, String>?>(value, Core(value));
                 }
-                
+
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 public static Boolean Contains(T value)
                 {
@@ -993,9 +993,9 @@ namespace NetExtender.Utilities.Types
                     }
 
                     Attribute[] attributes = Attribute.GetCustomAttributes(field, typeof(EnumDescriptionAttribute));
-                    return attributes.Length > 0 ? attributes.Cast<KeyValuePair<LocalizationIdentifier, String>>().ToArray() : null;
+                    return attributes.Length > 0 ? attributes.OfType<EnumDescriptionAttribute>().Select(static attribute => (KeyValuePair<LocalizationIdentifier, String>) attribute).ToArray() : null;
                 }
-                
+
                 internal static Boolean Register(EnumSynchronizationMember<T> member)
                 {
                     if (member is null)
@@ -1018,7 +1018,7 @@ namespace NetExtender.Utilities.Types
                 {
                     Initialize();
                 }
-                
+
                 internal class CacheTransaction : CacheTransactionBase
                 {
                     public ImmutableDictionary<T, ImmutableDictionary<LocalizationIdentifier, String>> Values { get; private set; } = null!;
@@ -1064,7 +1064,7 @@ namespace NetExtender.Utilities.Types
             {
                 return Description.TryGetValue(value, out result);
             }
-            
+
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static Boolean TryGetValue(T value, LocalizationIdentifier identifier, [MaybeNullWhen(false)] out String result)
             {
@@ -1109,7 +1109,7 @@ namespace NetExtender.Utilities.Types
             {
                 return new CacheTransaction();
             }
-            
+
             internal static Boolean Register(EnumSynchronizationMember<T> member)
             {
                 if (member is null)
@@ -1133,7 +1133,7 @@ namespace NetExtender.Utilities.Types
                 Initialize();
                 Description.Reset();
             }
-            
+
             [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
             private class CacheTransaction : CacheTransactionBase
             {
@@ -1153,7 +1153,7 @@ namespace NetExtender.Utilities.Types
                 }
             }
         }
-        
+
         private static class DescriptionToEnumStorage<T> where T : unmanaged, Enum
         {
             public static ImmutableDictionary<String, T> Values { get; private set; } = null!;
@@ -1190,7 +1190,7 @@ namespace NetExtender.Utilities.Types
                 {
                     throw new ArgumentNullException(nameof(source));
                 }
-                
+
                 Values = source.ToImmutableDictionary();
             }
 
@@ -1233,7 +1233,7 @@ namespace NetExtender.Utilities.Types
                             values[key] = value;
                         }
                     }
-                    
+
                     Initialize(values);
                 }
 
@@ -1244,14 +1244,14 @@ namespace NetExtender.Utilities.Types
                         Initialize();
                         return;
                     }
-                    
+
                     Dictionary<(LocalizationIdentifier, String), T> values = new Dictionary<(LocalizationIdentifier, String), T>();
 
                     foreach (((LocalizationIdentifier, String) key, T value) in source)
                     {
                         values[key] = value;
                     }
-                    
+
                     Initialize(values);
                 }
 
@@ -1261,7 +1261,7 @@ namespace NetExtender.Utilities.Types
                     {
                         throw new ArgumentNullException(nameof(source));
                     }
-                    
+
                     Values = source.ToImmutableDictionary();
                     Identifiers = Values.Keys.Select(static item => item.Identifier).ToImmutableSortedSet();
                 }
@@ -1271,13 +1271,13 @@ namespace NetExtender.Utilities.Types
                 {
                     return value is not null ? Values.ContainsKey((LocalizationIdentifier.Invariant, value)) : throw new ArgumentNullException(nameof(value));
                 }
-                
+
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 public static Boolean Contains(LocalizationIdentifier identifier, String value)
                 {
                     return value is not null ? Values.ContainsKey((identifier, value)) : throw new ArgumentNullException(nameof(value));
                 }
-                
+
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 public static Boolean Contains((LocalizationIdentifier Identifier, String Key) value)
                 {
@@ -1313,7 +1313,7 @@ namespace NetExtender.Utilities.Types
                 {
                     return value.Key is not null ? Values.TryGetValue(value, out result) : throw new ArgumentNullException(nameof(value));
                 }
-                
+
                 internal static Boolean Register(EnumSynchronizationMember<T> member)
                 {
                     if (member is null)
@@ -1324,7 +1324,7 @@ namespace NetExtender.Utilities.Types
                     try
                     {
                         Dictionary<(LocalizationIdentifier, String), T> values = new Dictionary<(LocalizationIdentifier, String), T>(member.Values.Length);
-                        
+
                         foreach (IGrouping<LocalizationIdentifier?, Enum<T>> group in member.Values.GroupBy(static item => item.Identifier))
                         {
                             foreach (Enum<T> @enum in group)
@@ -1333,7 +1333,7 @@ namespace NetExtender.Utilities.Types
                                 values[key] = @enum.Id;
                             }
                         }
-                        
+
                         Initialize(values);
                         return true;
                     }
@@ -1347,7 +1347,7 @@ namespace NetExtender.Utilities.Types
                 {
                     Initialize();
                 }
-                
+
                 internal class CacheTransaction : CacheTransactionBase
                 {
                     public ImmutableDictionary<(LocalizationIdentifier Identifier, String Title), T> Values { get; private set; } = null!;
@@ -1372,7 +1372,7 @@ namespace NetExtender.Utilities.Types
             {
                 return value is not null ? Values.ContainsKey(value) || Description.Contains(value) : throw new ArgumentNullException(nameof(value));
             }
-            
+
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static Boolean Contains(LocalizationIdentifier identifier, String value)
             {
@@ -1384,7 +1384,7 @@ namespace NetExtender.Utilities.Types
             {
                 return Description.Contains(value);
             }
-            
+
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static Boolean Contains(LocalizationIdentifier identifier)
             {
@@ -1402,7 +1402,7 @@ namespace NetExtender.Utilities.Types
             {
                 return value is not null ? Values.TryGetValue(value, out result) || Description.TryGetValue(value, out result) : throw new ArgumentNullException(nameof(value));
             }
-            
+
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static Boolean TryGetValue(LocalizationIdentifier identifier, String value, out T result)
             {
@@ -1419,7 +1419,7 @@ namespace NetExtender.Utilities.Types
             {
                 return new CacheTransaction();
             }
-            
+
             internal static Boolean Register(EnumSynchronizationMember<T> member)
             {
                 if (member is null)
@@ -1435,7 +1435,7 @@ namespace NetExtender.Utilities.Types
                     {
                         values[@enum.Title] = @enum.Id;
                     }
-                    
+
                     Initialize(values);
                     return true;
                 }
@@ -1449,7 +1449,7 @@ namespace NetExtender.Utilities.Types
             {
                 Initialize();
             }
-            
+
             [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
             private class CacheTransaction : CacheTransactionBase
             {
@@ -1512,7 +1512,7 @@ namespace NetExtender.Utilities.Types
             {
                 Initialize();
             }
-            
+
             [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
             private class CacheTransaction : CacheTransactionBase
             {
@@ -1543,7 +1543,7 @@ namespace NetExtender.Utilities.Types
             {
                 Initialize(null);
             }
-            
+
             private static void Initialize(IEnumerable<EnumMember<T>>? source)
             {
                 if (source is null)
@@ -1551,10 +1551,10 @@ namespace NetExtender.Utilities.Types
                     Initialize(MembersStorage<T>.Members);
                     return;
                 }
-                
+
                 Members = source.Where(static member => member.Value.IsNotDefault()).ToImmutableArray();
             }
-            
+
             private static void Initialize(ImmutableArray<EnumMember<T>> source)
             {
                 Members = source.Where(static member => member.Value.IsNotDefault()).ToImmutableArray();
@@ -1582,7 +1582,7 @@ namespace NetExtender.Utilities.Types
             {
                 Initialize();
             }
-            
+
             [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
             private class CacheTransaction : CacheTransactionBase
             {
@@ -1674,7 +1674,7 @@ namespace NetExtender.Utilities.Types
             {
                 Initialize();
             }
-            
+
             [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
             private class CacheTransaction : CacheTransactionBase
             {
@@ -1750,7 +1750,7 @@ namespace NetExtender.Utilities.Types
             {
                 Initialize();
             }
-            
+
             [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
             private class CacheTransaction : CacheTransactionBase
             {
@@ -1780,7 +1780,7 @@ namespace NetExtender.Utilities.Types
             {
                 Initialize();
             }
-            
+
             private static void Initialize()
             {
                 Initialize((IEnumerable<T>?) null);
@@ -1799,14 +1799,14 @@ namespace NetExtender.Utilities.Types
                     Initialize();
                     return;
                 }
-                
+
                 ImmutableSortedSet<Enum<T>> values = source.ToImmutableSortedSet();
                 ImmutableDictionary<T, Enum<T>> enums = values.ToImmutableDictionary(static value => value.Id, static value => value);
                 ImmutableDictionary<T, ImmutableDictionary<LocalizationIdentifier, Enum<T>>> identifiers = values.ToImmutableDictionary(static value => value.Id,
                     value => DescriptionToEnumStorage<T>.Get().ToImmutableDictionary(static identifier => identifier, identifier => Enum<T>.Create(value, identifier)));
                 ImmutableDictionary<LocalizationIdentifier, ImmutableSortedSet<Enum<T>>> grouping = identifiers.SelectMany(static pair => pair.Value).GroupBy(static pair => pair.Key, static pair => pair.Value)
                     .ToImmutableDictionary(static group => group.Key, static group => group.Select(static value => value).ToImmutableSortedSet());
-                
+
                 Values = values;
                 Enums = enums;
                 Identifiers = identifiers;
@@ -1843,7 +1843,7 @@ namespace NetExtender.Utilities.Types
                         Initialize();
                         return;
                     }
-                    
+
                     ImmutableSortedSet<TEnum> values = source.ToImmutableSortedSet();
                     ImmutableDictionary<T, TEnum> enums = values.ToImmutableDictionary(static value => value.Id, static value => value);
                     ImmutableDictionary<T, ImmutableDictionary<LocalizationIdentifier, TEnum>> identifiers = values.ToImmutableDictionary(static value => value.Id,
@@ -1862,19 +1862,19 @@ namespace NetExtender.Utilities.Types
                 {
                     return Values;
                 }
-                
+
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 public static ImmutableSortedSet<TEnum>? Get(LocalizationIdentifier identifier)
                 {
                     return Grouping.TryGetValue(identifier, out ImmutableSortedSet<TEnum>? result) ? result : null;
                 }
-                
+
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 public static Boolean Contains(T value)
                 {
                     return Enums.ContainsKey(value);
                 }
-                
+
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 public static Boolean Contains(LocalizationIdentifier identifier, T value)
                 {
@@ -1905,7 +1905,7 @@ namespace NetExtender.Utilities.Types
                     {
                         throw new ArgumentNullException(nameof(value));
                     }
-                    
+
                     return (value.Identifier is { } identifier ? TryParse(identifier, value.Id, out TEnum? result) : TryParse(value.Id, out result)) && String.Equals(value.Title, result.Title, StringComparison.Ordinal);
                 }
 
@@ -1919,7 +1919,7 @@ namespace NetExtender.Utilities.Types
 
                     return Values.Contains(value);
                 }
-                
+
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 public static Boolean TryParse(T value, [MaybeNullWhen(false)] out TEnum result)
                 {
@@ -1945,7 +1945,7 @@ namespace NetExtender.Utilities.Types
                     {
                         throw new ArgumentNullException(nameof(value));
                     }
-                    
+
                     if (DescriptionToEnumStorage<T>.TryGetValue(value, out T @enum))
                     {
                         return TryParse(@enum, out result);
@@ -1962,7 +1962,7 @@ namespace NetExtender.Utilities.Types
                     {
                         throw new ArgumentNullException(nameof(value));
                     }
-                    
+
                     if (DescriptionToEnumStorage<T>.TryGetValue(identifier, value, out T @enum))
                     {
                         return TryParse(@enum, out result);
@@ -1994,7 +1994,7 @@ namespace NetExtender.Utilities.Types
                 {
                     Initialize();
                 }
-            
+
                 [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
                 internal class CacheTransaction : CacheTransactionBase
                 {
@@ -2020,25 +2020,25 @@ namespace NetExtender.Utilities.Types
                     }
                 }
             }
-            
+
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static ImmutableSortedSet<Enum<T>> Get()
             {
                 return Values;
             }
-            
+
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static ImmutableSortedSet<Enum<T>>? Get(LocalizationIdentifier identifier)
             {
                 return Grouping.TryGetValue(identifier, out ImmutableSortedSet<Enum<T>>? result) ? result : null;
             }
-            
+
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static ImmutableSortedSet<TEnum> Get<TEnum>() where TEnum : Enum<T, TEnum>, new()
             {
                 return Type<TEnum>.Get();
             }
-            
+
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static ImmutableSortedSet<TEnum>? Get<TEnum>(LocalizationIdentifier identifier) where TEnum : Enum<T, TEnum>, new()
             {
@@ -2078,7 +2078,7 @@ namespace NetExtender.Utilities.Types
 
                 return DescriptionToEnumStorage<T>.TryGetValue(identifier, value, out T result) && Contains(result);
             }
-            
+
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static Boolean Contains(Enum<T> value)
             {
@@ -2089,13 +2089,13 @@ namespace NetExtender.Utilities.Types
 
                 return (value.Identifier is { } identifier ? TryParse(identifier, value.Id, out Enum<T>? result) : TryParse(value.Id, out result)) && String.Equals(value.Title, result.Title, StringComparison.Ordinal);
             }
-            
+
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static Boolean IsFlags(Enum<T> value)
             {
                 return value is not null ? EnumUtilities.IsFlags<T>() : throw new ArgumentNullException(nameof(value));
             }
-            
+
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static Boolean IsIntern(Enum<T> value)
             {
@@ -2130,25 +2130,25 @@ namespace NetExtender.Utilities.Types
             {
                 return Type<TEnum>.Contains(identifier, value);
             }
-            
+
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static Boolean Contains<TEnum>(TEnum value) where TEnum : Enum<T, TEnum>, new()
             {
                 return Type<TEnum>.Contains(value);
             }
-            
+
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static Boolean IsIntern<TEnum>(TEnum value) where TEnum : Enum<T, TEnum>, new()
             {
                 return Type<TEnum>.IsIntern(value);
             }
-            
+
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static Boolean TryParse(T value, [MaybeNullWhen(false)] out Enum<T> result)
             {
                 return Enums.TryGetValue(value, out result);
             }
-            
+
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static Boolean TryParse(LocalizationIdentifier identifier, T value, [MaybeNullWhen(false)] out Enum<T> result)
             {
@@ -2160,7 +2160,7 @@ namespace NetExtender.Utilities.Types
                 result = default;
                 return false;
             }
-        
+
             [MethodImpl(MethodImplOptions.AggressiveOptimization)]
             public static Boolean TryParse(String value, [MaybeNullWhen(false)] out Enum<T> result)
             {
@@ -2177,7 +2177,7 @@ namespace NetExtender.Utilities.Types
                 result = default;
                 return false;
             }
-            
+
             [MethodImpl(MethodImplOptions.AggressiveOptimization)]
             public static Boolean TryParse(LocalizationIdentifier identifier, String value, [MaybeNullWhen(false)] out Enum<T> result)
             {
@@ -2185,7 +2185,7 @@ namespace NetExtender.Utilities.Types
                 {
                     throw new ArgumentNullException(nameof(value));
                 }
-                    
+
                 if (DescriptionToEnumStorage<T>.TryGetValue(identifier, value, out T @enum))
                 {
                     return TryParse(@enum, out result);
@@ -2194,13 +2194,13 @@ namespace NetExtender.Utilities.Types
                 result = default;
                 return false;
             }
-            
+
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static Boolean TryParse<TEnum>(T value, [MaybeNullWhen(false)] out TEnum result) where TEnum : Enum<T, TEnum>, new()
             {
                 return Type<TEnum>.TryParse(value, out result);
             }
-            
+
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static Boolean TryParse<TEnum>(LocalizationIdentifier identifier, T value, [MaybeNullWhen(false)] out TEnum result) where TEnum : Enum<T, TEnum>, new()
             {
@@ -2228,7 +2228,7 @@ namespace NetExtender.Utilities.Types
             {
                 return new CacheTransaction<TEnum>();
             }
-            
+
             internal static Boolean Register(EnumSynchronizationMember<T> member)
             {
                 if (member is null)
@@ -2246,7 +2246,7 @@ namespace NetExtender.Utilities.Types
                     return false;
                 }
             }
-            
+
             internal static Boolean Register<TEnum>(EnumSynchronizationMember<T, TEnum> member) where TEnum : Enum<T, TEnum>, new()
             {
                 if (member is null)
@@ -2268,7 +2268,7 @@ namespace NetExtender.Utilities.Types
             {
                 Initialize();
             }
-            
+
             internal static void Reset<TEnum>() where TEnum : Enum<T, TEnum>, new()
             {
                 Type<TEnum>.Reset();
@@ -2338,7 +2338,7 @@ namespace NetExtender.Utilities.Types
 
                     return type.IsDefined(typeof(EnumSynchronizeAttribute), false);
                 }
-                
+
                 Enums = new ConcurrentDictionary<Type, EnumSynchronizationMember>(ReflectionUtilities.Custom.Types.Where(Predicate).Select(Member).WhereValueNotNull());
                 Array = Enums.OrderByDescending(static pair => pair.Value.Order).ToImmutableArray();
             }
@@ -2372,7 +2372,7 @@ namespace NetExtender.Utilities.Types
                 {
                     return new KeyValuePair<Type, EnumSynchronizationMember?>(type, null);
                 }
-                
+
                 const BindingFlags binding = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.CreateInstance;
                 EnumSynchronizationMember? member = (EnumSynchronizationMember?) Activator.CreateInstance(typeof(EnumSynchronizationMember<,>).MakeGenericType(generic), binding, null, new Object[] { attribute, enumerable }, null);
 
@@ -2472,7 +2472,7 @@ namespace NetExtender.Utilities.Types
                 {
                     Array = Enums.OrderByDescending(static pair => pair.Value.Order).ToImmutableArray();
                 }
-                
+
                 return successful;
             }
 
@@ -2513,13 +2513,13 @@ namespace NetExtender.Utilities.Types
                     {
                     }
                 }
-                
+
                 if (successful)
                 {
                     Array = Enums.OrderByDescending(static pair => pair.Value.Order).ToImmutableArray();
                 }
             }
-            
+
             [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
             private class CacheTransaction<T> : CacheTransactionBase where T : unmanaged, Enum
             {
@@ -2537,12 +2537,12 @@ namespace NetExtender.Utilities.Types
                         Reset(typeof(T));
                         return;
                     }
-                    
+
                     Enums.AddOrUpdate(Member.Type, _ => Member, (_, member) => ReferenceEquals(member, Member) ? member : throw new InvalidOperationException());
                     Array = Enums.OrderByDescending(static pair => pair.Value.Order).ToImmutableArray();
                 }
             }
-            
+
             [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
             private class CacheTransaction<T, TEnum> : CacheTransaction<T> where T : unmanaged, Enum where TEnum : Enum<T, TEnum>, new()
             {

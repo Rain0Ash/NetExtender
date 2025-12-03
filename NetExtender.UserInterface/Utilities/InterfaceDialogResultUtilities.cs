@@ -36,7 +36,7 @@ namespace NetExtender.UserInterface.Utilities
                 _ => throw new EnumUndefinedOrNotSupportedException<InterfaceDialogResult>(value, nameof(value), null)
             };
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean None(this InterfaceDialogResult value)
         {

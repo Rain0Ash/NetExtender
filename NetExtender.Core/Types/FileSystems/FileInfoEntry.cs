@@ -16,7 +16,7 @@ namespace NetExtender.FileSystems
                 return Storage.Info(this);
             }
         }
-        
+
         public override String Name
         {
             get
@@ -387,7 +387,7 @@ namespace NetExtender.FileSystems
         {
             return value?.Info;
         }
-        
+
         [return: NotNullIfNotNull("value")]
         public static implicit operator FileInfoWrapper?(FileInfo? value)
         {
@@ -509,7 +509,7 @@ namespace NetExtender.FileSystems
             {
                 return false;
             }
-            
+
             try
             {
                 Info.Encrypt();
@@ -527,7 +527,7 @@ namespace NetExtender.FileSystems
             {
                 return false;
             }
-            
+
             try
             {
                 Info.Decrypt();

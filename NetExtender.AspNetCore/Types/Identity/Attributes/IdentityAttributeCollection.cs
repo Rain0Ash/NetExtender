@@ -21,7 +21,7 @@ namespace NetExtender.AspNetCore.Identity.Attributes
             Any = 3,
             Custom = 4
         }
-        
+
         private ImmutableArray<IdentityAttribute> Attributes { get; }
 
         public Int32 Count
@@ -44,7 +44,7 @@ namespace NetExtender.AspNetCore.Identity.Attributes
                 _identity = value;
             }
         }
-        
+
         public Boolean IsNoIdentity
         {
             get
@@ -90,14 +90,14 @@ namespace NetExtender.AspNetCore.Identity.Attributes
         private static ImmutableArray<IdentityAttribute> Initialize(IEnumerable<IdentityAttribute?>? attributes, out Identity identity)
         {
             identity = Identity.None;
-            
+
             if (attributes is null)
             {
                 return ImmutableArray<IdentityAttribute>.Empty;
             }
-            
+
             List<IdentityAttribute> result = new List<IdentityAttribute>(attributes.CountIfMaterialized(16));
-            
+
             foreach (IdentityAttribute? attribute in attributes)
             {
                 switch (attribute)
@@ -119,7 +119,7 @@ namespace NetExtender.AspNetCore.Identity.Attributes
                         continue;
                 }
             }
-            
+
             return result.ToImmutableArray();
         }
 
@@ -202,7 +202,7 @@ namespace NetExtender.AspNetCore.Identity.Attributes
                     result = false;
                 }
             }
-            
+
             return result ?? _identity switch
             {
                 Identity.None => true,

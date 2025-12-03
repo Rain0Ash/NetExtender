@@ -19,7 +19,7 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
     {
         [ReflectionNaming]
         private static Action<FrameworkPropertyMetadata, FrameworkPropertyMetadataOptions> TranslateFlags { get; }
-        
+
         static DependencyPropertyUtilities()
         {
             const BindingFlags binding = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
@@ -27,11 +27,11 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
 
             ParameterExpression instance = Expression.Parameter(typeof(FrameworkPropertyMetadata), nameof(instance));
             ParameterExpression options = Expression.Parameter(typeof(FrameworkPropertyMetadataOptions), nameof(options));
-            
+
             MethodCallExpression call = Expression.Call(instance, method, options);
             TranslateFlags = Expression.Lambda<Action<FrameworkPropertyMetadata, FrameworkPropertyMetadataOptions>>(call, instance, options).Compile();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [return: NotNullIfNotNull("metadata")]
         public static TMetadata? Seal<TMetadata>(TMetadata? metadata) where TMetadata : PropertyMetadata
@@ -39,7 +39,7 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
             OneWayBugHandler.Seal(metadata);
             return metadata;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [return: NotNullIfNotNull("metadata")]
         public static TMetadata? Unseal<TMetadata>(TMetadata? metadata) where TMetadata : PropertyMetadata
@@ -47,7 +47,7 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
             OneWayBugHandler.Unseal(metadata);
             return metadata;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void SetConverter(this DependencyObject target, DependencyProperty property, IValueConverter? converter)
         {
@@ -73,16 +73,16 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
 
             binding = binding.MemberwiseClone();
             binding.Converter = converter;
-            
+
             BindingOperations.SetBinding(target, property, binding);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void SetConverter(this DependencyObject target, DependencyProperty property, Func<IValueConverter?, IValueConverter?> converter)
         {
             SetConverter(property, target, converter);
         }
-        
+
         public static void SetConverter(this DependencyProperty property, DependencyObject target, Func<IValueConverter?, IValueConverter?> converter)
         {
             if (property is null)
@@ -110,7 +110,7 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
 
             BindingOperations.SetBinding(target, property, binding);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Binding? GetBinding(this DependencyObject target, DependencyProperty property)
         {
@@ -128,7 +128,7 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(target));
             }
-            
+
             return BindingOperations.GetBinding(target, property);
         }
 
@@ -137,7 +137,7 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
         {
             SetBinding(property, target, binding);
         }
-        
+
         public static void SetBinding(this DependencyProperty property, DependencyObject target, Binding? binding)
         {
             if (property is null)
@@ -155,7 +155,7 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
                 BindingOperations.ClearBinding(target, property);
                 return;
             }
-            
+
             BindingOperations.SetBinding(target, property, binding);
         }
 
@@ -164,7 +164,7 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
         {
             SetBinding(property, target, factory);
         }
-        
+
         public static void SetBinding(this DependencyProperty property, DependencyObject target, Func<Binding?, Binding?> factory)
         {
             if (property is null)
@@ -181,13 +181,13 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(factory));
             }
-            
+
             if (factory(property.GetBinding(target)) is not { } binding)
             {
                 BindingOperations.ClearBinding(target, property);
                 return;
             }
-            
+
             BindingOperations.SetBinding(target, property, binding);
         }
 
@@ -222,13 +222,13 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
             action(binding);
             property.SetBinding(target, binding);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void ClearBinding(this DependencyObject target, DependencyProperty property)
         {
             ClearBinding(property, target);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void ClearBinding(this DependencyProperty property, DependencyObject target)
         {
@@ -236,15 +236,15 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(property));
             }
-            
+
             if (target is null)
             {
                 throw new ArgumentNullException(nameof(target));
             }
-            
+
             BindingOperations.ClearBinding(target, property);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void ClearBindings(this DependencyObject target)
         {
@@ -252,10 +252,10 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(target));
             }
-            
+
             BindingOperations.ClearAllBindings(target);
         }
-        
+
         private sealed record AnalysisInformation
         {
             public static Type[] CallbackMethodTypes { get; } = { typeof(DependencyObject), typeof(DependencyPropertyChangedEventArgs) };
@@ -415,7 +415,7 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(name));
             }
-            
+
             return Register<T, TType>(name, new PropertyMetadata(callback));
         }
 
@@ -430,7 +430,7 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(name));
             }
-            
+
             return Register<T, TType>(name, new FrameworkPropertyMetadata(default(T), options));
         }
 
@@ -445,7 +445,7 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(name));
             }
-            
+
             return Register<T, TType>(name, new FrameworkPropertyMetadata(default(T), options, callback));
         }
 
@@ -455,7 +455,7 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(name));
             }
-            
+
             return Register<T, TType>(name, new PropertyMetadata(value));
         }
 
@@ -465,7 +465,7 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(name));
             }
-            
+
             return Register<T, TType>(name, new PropertyMetadata(value, callback));
         }
 
@@ -480,7 +480,7 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(name));
             }
-            
+
             return Register<T, TType>(name, new FrameworkPropertyMetadata(value, options));
         }
 
@@ -495,7 +495,7 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(name));
             }
-            
+
             return Register<T, TType>(name, new FrameworkPropertyMetadata(value, options, callback));
         }
 
@@ -539,7 +539,7 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(name));
             }
-            
+
             return Register(name, new PropertyMetadata(callback));
         }
 
@@ -559,7 +559,7 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(name));
             }
-            
+
             return Register(name, (PropertyMetadata) new FrameworkPropertyMetadata(default, options));
         }
 
@@ -572,7 +572,7 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
         {
             return Register<Boolean>(name, value, twoway, callback);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static DependencyProperty Register(String name, FrameworkPropertyMetadataOptions options, PropertyChangedCallback? callback)
         {
@@ -580,10 +580,10 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(name));
             }
-            
+
             return Register(name, (PropertyMetadata) new FrameworkPropertyMetadata(default, options, callback));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static DependencyProperty Register<T>(String name, T value)
         {
@@ -591,10 +591,10 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(name));
             }
-            
+
             return Register(name, new PropertyMetadata(value));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static DependencyProperty Register<T>(String name, T value, PropertyChangedCallback? callback)
         {
@@ -602,16 +602,16 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(name));
             }
-            
+
             return Register(name, new PropertyMetadata(value, callback));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static DependencyProperty Register<T>(String name, T value, Boolean twoway)
         {
             return twoway ? Register(name, value, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault) : Register(name, value);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static DependencyProperty Register<T>(String name, T value, FrameworkPropertyMetadataOptions options)
         {
@@ -619,10 +619,10 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(name));
             }
-            
+
             return Register(name, (PropertyMetadata) new FrameworkPropertyMetadata(value, options));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static DependencyProperty Register<T>(String name, T value, Boolean twoway, PropertyChangedCallback? callback)
         {
@@ -636,16 +636,16 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(name));
             }
-            
+
             return Register(name, (PropertyMetadata) new FrameworkPropertyMetadata(value, options, callback));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TMetadata? GetMetadata<T, TMetadata>(this DependencyProperty property) where T : DependencyObject where TMetadata : PropertyMetadata
         {
             return GetMetadata<TMetadata>(property, typeof(T));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TMetadata? GetMetadata<TMetadata>(this DependencyProperty property, Type type) where TMetadata : PropertyMetadata
         {
@@ -653,15 +653,15 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(property));
             }
-            
+
             if (type is null)
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             return property.GetMetadata(type) as TMetadata;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TMetadata? GetMetadata<TMetadata>(this DependencyProperty property, DependencyObjectType type) where TMetadata : PropertyMetadata
         {
@@ -669,15 +669,15 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(property));
             }
-            
+
             if (type is null)
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             return property.GetMetadata(type) as TMetadata;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TMetadata? GetMetadata<TMetadata>(this DependencyProperty property, DependencyObject @object) where TMetadata : PropertyMetadata
         {
@@ -685,15 +685,15 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(property));
             }
-            
+
             if (@object is null)
             {
                 throw new ArgumentNullException(nameof(@object));
             }
-            
+
             return property.GetMetadata(@object) as TMetadata;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryGetMetadata<T, TMetadata>(this DependencyProperty property, [MaybeNullWhen(false)] out TMetadata metadata) where T : DependencyObject where TMetadata : PropertyMetadata
         {
@@ -701,11 +701,11 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(property));
             }
-            
+
             metadata = GetMetadata<T, TMetadata>(property);
             return metadata is not null;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryGetMetadata<TMetadata>(this DependencyProperty property, Type? type, [MaybeNullWhen(false)] out TMetadata metadata) where TMetadata : PropertyMetadata
         {
@@ -713,11 +713,11 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(property));
             }
-            
+
             metadata = type is not null ? GetMetadata<TMetadata>(property, type) : null;
             return metadata is not null;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryGetMetadata<TMetadata>(this DependencyProperty property, DependencyObjectType? type, [MaybeNullWhen(false)] out TMetadata metadata) where TMetadata : PropertyMetadata
         {
@@ -725,11 +725,11 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(property));
             }
-            
+
             metadata = type is not null ? GetMetadata<TMetadata>(property, type) : null;
             return metadata is not null;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryGetMetadata<TMetadata>(this DependencyProperty property, DependencyObject? @object, [MaybeNullWhen(false)] out TMetadata metadata) where TMetadata : PropertyMetadata
         {
@@ -737,18 +737,18 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(property));
             }
-            
+
             metadata = @object is not null ? GetMetadata<TMetadata>(property, @object) : null;
             return metadata is not null;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [return: NotNullIfNotNull("metadata")]
         public static TMetadata? Clone<TMetadata>(this TMetadata? metadata) where TMetadata : PropertyMetadata
         {
             return Clone(metadata, true);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         [return: NotNullIfNotNull("metadata")]
         public static TMetadata? Clone<TMetadata>(this TMetadata? metadata, Boolean flags) where TMetadata : PropertyMetadata
@@ -757,19 +757,19 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
             {
                 return metadata;
             }
-            
+
             Type type = metadata.GetType();
             switch (metadata)
             {
                 case FrameworkPropertyMetadata framework when type == typeof(FrameworkPropertyMetadata):
                 {
                     FrameworkPropertyMetadata result = new FrameworkPropertyMetadata(framework.DefaultValue, FrameworkPropertyMetadataOptions.None, framework.PropertyChangedCallback, framework.CoerceValueCallback, framework.IsAnimationProhibited, framework.DefaultUpdateSourceTrigger);
-                    
+
                     if (!flags)
                     {
                         return Unsafe.As<FrameworkPropertyMetadata, TMetadata>(ref result);
                     }
-                    
+
                     result.AffectsMeasure = framework.AffectsMeasure;
                     result.AffectsArrange = framework.AffectsArrange;
                     result.AffectsParentMeasure = framework.AffectsParentMeasure;
@@ -797,7 +797,7 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
                     throw new NotSupportedException($"Metadata '{type}' not supported for clone.");
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void OverrideMetadata<T>(this DependencyProperty property, PropertyMetadata metadata) where T : DependencyObject
         {
@@ -805,15 +805,15 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(property));
             }
-            
+
             if (metadata is null)
             {
                 throw new ArgumentNullException(nameof(metadata));
             }
-            
+
             property.OverrideMetadata(typeof(T), metadata);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void OverrideMetadata<T>(this DependencyProperty property, PropertyMetadata metadata, DependencyPropertyKey key) where T : DependencyObject
         {
@@ -821,20 +821,20 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(property));
             }
-            
+
             if (metadata is null)
             {
                 throw new ArgumentNullException(nameof(metadata));
             }
-            
+
             if (key is null)
             {
                 throw new ArgumentNullException(nameof(key));
             }
-            
+
             property.OverrideMetadata(typeof(T), metadata, key);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static TMetadata CreateMetadataWithOptions<TMetadata>(this TMetadata metadata, FrameworkPropertyMetadataOptions options) where TMetadata : PropertyMetadata
         {
@@ -842,17 +842,17 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(metadata));
             }
-            
+
             metadata = metadata.Clone(false);
-            
+
             if (metadata is FrameworkPropertyMetadata framework)
             {
                 TranslateFlags(framework, options);
             }
-            
+
             return metadata;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void OverrideMetadataOptions(this DependencyProperty property, Type type, FrameworkPropertyMetadataOptions options)
         {
@@ -860,33 +860,33 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(property));
             }
-            
+
             if (type is null)
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             PropertyMetadata? metadata = property.GetMetadata(type);
-            
+
             if (metadata is not FrameworkPropertyMetadata { BindsTwoWayByDefault: true })
             {
                 property.OverrideMetadata(type, metadata.CreateMetadataWithOptions(options));
                 return;
             }
-            
+
             metadata = metadata.CreateMetadataWithOptions(options);
-            
+
             if (metadata is not FrameworkPropertyMetadata { BindsTwoWayByDefault: false } framework)
             {
                 property.OverrideMetadata(type, metadata);
                 return;
             }
-            
+
             framework.DefaultUpdateSourceTrigger = UpdateSourceTrigger.Explicit;
             property.OverrideMetadata(type, framework);
             OneWayBugHandler.Handle(framework);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void OverrideMetadataOptions(this DependencyProperty property, Type type, DependencyPropertyKey key, FrameworkPropertyMetadataOptions options)
         {
@@ -894,62 +894,62 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(property));
             }
-            
+
             if (type is null)
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             PropertyMetadata? metadata = property.GetMetadata(type);
-            
+
             if (metadata is not FrameworkPropertyMetadata { BindsTwoWayByDefault: true })
             {
                 property.OverrideMetadata(type, metadata.CreateMetadataWithOptions(options), key);
                 return;
             }
-            
+
             metadata = metadata.CreateMetadataWithOptions(options);
-            
+
             if (metadata is not FrameworkPropertyMetadata { BindsTwoWayByDefault: false } framework)
             {
                 property.OverrideMetadata(type, metadata, key);
                 return;
             }
-            
+
             framework.DefaultUpdateSourceTrigger = UpdateSourceTrigger.Explicit;
             property.OverrideMetadata(type, framework, key);
             OneWayBugHandler.Handle(framework);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void OverrideMetadataOptions<T>(this DependencyProperty property, FrameworkPropertyMetadataOptions options) where T : DependencyObject
         {
             OverrideMetadataOptions(property, typeof(T), options);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void OverrideMetadataOptions<T>(this DependencyProperty property, DependencyPropertyKey key, FrameworkPropertyMetadataOptions options) where T : DependencyObject
         {
             OverrideMetadataOptions(property, typeof(T), key, options);
         }
-        
+
         private static class OneWayBugHandler
         {
             [ReflectionNaming]
             private static Action<PropertyMetadata, Boolean> Sealed { get; }
-            
+
             static OneWayBugHandler()
             {
                 const BindingFlags binding = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
                 MethodInfo method = typeof(PropertyMetadata).GetProperty(nameof(Sealed), binding)?.SetMethod ?? throw new MissingMethodException(nameof(FrameworkPropertyMetadata), nameof(Sealed));
-                
+
                 ParameterExpression instance = Expression.Parameter(typeof(PropertyMetadata), nameof(instance));
                 ParameterExpression seal = Expression.Parameter(typeof(Boolean), nameof(seal));
-                
+
                 MethodCallExpression call = Expression.Call(instance, method, seal);
                 Sealed = Expression.Lambda<Action<PropertyMetadata, Boolean>>(call, instance, seal).Compile();
             }
-            
+
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static void Seal(PropertyMetadata? metadata)
             {
@@ -958,7 +958,7 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
                     Sealed(metadata, true);
                 }
             }
-            
+
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static void Unseal(PropertyMetadata? metadata)
             {
@@ -967,7 +967,7 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
                     Sealed(metadata, false);
                 }
             }
-            
+
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static void Handle(FrameworkPropertyMetadata? metadata)
             {
@@ -987,7 +987,7 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
         {
             OverrideMetadataOneWay(property, type, default(FrameworkPropertyMetadataOptions?));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static void OverrideMetadataOneWay(this DependencyProperty property, Type type, FrameworkPropertyMetadataOptions? options)
         {
@@ -995,33 +995,33 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(property));
             }
-            
+
             if (type is null)
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             PropertyMetadata metadata = property.GetMetadata(type);
             metadata = options.HasValue ? CreateMetadataWithOptions(metadata, options.Value) : metadata.Clone();
-            
+
             if (metadata is not FrameworkPropertyMetadata framework)
             {
                 property.OverrideMetadata(type, metadata);
                 return;
             }
-            
+
             framework.BindsTwoWayByDefault = false;
             framework.DefaultUpdateSourceTrigger = UpdateSourceTrigger.Explicit;
             property.OverrideMetadata(type, framework);
             OneWayBugHandler.Handle(framework);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void OverrideMetadataOneWay(this DependencyProperty property, Type type, DependencyPropertyKey key)
         {
             OverrideMetadataOneWay(property, type, key, null);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static void OverrideMetadataOneWay(this DependencyProperty property, Type type, DependencyPropertyKey key, FrameworkPropertyMetadataOptions? options)
         {
@@ -1029,51 +1029,51 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(property));
             }
-            
+
             if (type is null)
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             PropertyMetadata metadata = property.GetMetadata(type);
             metadata = options.HasValue ? CreateMetadataWithOptions(metadata, options.Value) : metadata.Clone();
-            
+
             if (metadata is not FrameworkPropertyMetadata framework)
             {
                 property.OverrideMetadata(type, metadata, key);
                 return;
             }
-            
+
             framework.BindsTwoWayByDefault = false;
             framework.DefaultUpdateSourceTrigger = UpdateSourceTrigger.Explicit;
             property.OverrideMetadata(type, metadata, key);
             OneWayBugHandler.Handle(framework);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void OverrideMetadataOneWay<T>(this DependencyProperty property) where T : DependencyObject
         {
             OverrideMetadataOneWay<T>(property, default(FrameworkPropertyMetadataOptions?));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void OverrideMetadataOneWay<T>(this DependencyProperty property, FrameworkPropertyMetadataOptions? options) where T : DependencyObject
         {
             OverrideMetadataOneWay(property, typeof(T), options);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void OverrideMetadataOneWay<T>(this DependencyProperty property, DependencyPropertyKey key) where T : DependencyObject
         {
             OverrideMetadataOneWay<T>(property, key, null);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void OverrideMetadataOneWay<T>(this DependencyProperty property, DependencyPropertyKey key, FrameworkPropertyMetadataOptions? options) where T : DependencyObject
         {
             OverrideMetadataOneWay(property, typeof(T), key, options);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static TMetadata CreateMetadataWithDefaultValue<TMetadata>(this TMetadata metadata, Object? value) where TMetadata : PropertyMetadata
         {
@@ -1081,12 +1081,12 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(metadata));
             }
-            
+
             metadata = metadata.Clone();
             metadata.DefaultValue = value;
             return metadata;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static TMetadata CreateMetadataWithDefaultValue<TMetadata>(this TMetadata metadata, FrameworkPropertyMetadataOptions? options, Object? value) where TMetadata : PropertyMetadata
         {
@@ -1094,18 +1094,18 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(metadata));
             }
-            
+
             metadata = options.HasValue ? metadata.CreateMetadataWithOptions(options.Value) : metadata.Clone();
             metadata.DefaultValue = value;
             return metadata;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void OverrideMetadataDefaultValue(this DependencyProperty property, Type type, Object? value)
         {
             OverrideMetadataDefaultValue(property, type, default(FrameworkPropertyMetadataOptions?), value);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void OverrideMetadataDefaultValue(this DependencyProperty property, Type type, FrameworkPropertyMetadataOptions? options, Object? value)
         {
@@ -1113,21 +1113,21 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(property));
             }
-            
+
             if (type is null)
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             property.OverrideMetadata(type, property.GetMetadata(type).CreateMetadataWithDefaultValue(options, value));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void OverrideMetadataDefaultValue(this DependencyProperty property, Type type, DependencyPropertyKey key, Object? value)
         {
             OverrideMetadataDefaultValue(property, type, key, null, value);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void OverrideMetadataDefaultValue(this DependencyProperty property, Type type, DependencyPropertyKey key, FrameworkPropertyMetadataOptions? options, Object? value)
         {
@@ -1135,38 +1135,38 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(property));
             }
-            
+
             if (type is null)
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             if (key is null)
             {
                 throw new ArgumentNullException(nameof(key));
             }
-            
+
             property.OverrideMetadata(type, property.GetMetadata(type).CreateMetadataWithDefaultValue(options, value), key);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void OverrideMetadataDefaultValue<T>(this DependencyProperty property, Object? value) where T : DependencyObject
         {
             OverrideMetadataDefaultValue<T>(property, default(FrameworkPropertyMetadataOptions?), value);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void OverrideMetadataDefaultValue<T>(this DependencyProperty property, FrameworkPropertyMetadataOptions? options, Object? value) where T : DependencyObject
         {
             OverrideMetadataDefaultValue(property, typeof(T), options, value);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void OverrideMetadataDefaultValue<T>(this DependencyProperty property, DependencyPropertyKey key, Object? value) where T : DependencyObject
         {
             OverrideMetadataDefaultValue<T>(property, key, null, value);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void OverrideMetadataDefaultValue<T>(this DependencyProperty property, DependencyPropertyKey key, FrameworkPropertyMetadataOptions? options, Object? value) where T : DependencyObject
         {

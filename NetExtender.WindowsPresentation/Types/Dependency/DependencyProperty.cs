@@ -11,7 +11,7 @@ using NetExtender.Utilities.Core;
 namespace NetExtender.WindowsPresentation.Types.Dependency
 {
     public delegate void PropertyChangedCallback<TProperty>(DependencyPropertyChangedEventArgs<TProperty> e);
-    
+
     public static class DependencyProperty<T> where T : DependencyObject
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -66,7 +66,7 @@ namespace NetExtender.WindowsPresentation.Types.Dependency
         {
             return new DependencyPropertyChangedEventArgs<T>(value);
         }
-        
+
         public DependencyProperty Property { get; }
         public T NewValue { get; }
         public T OldValue { get; }

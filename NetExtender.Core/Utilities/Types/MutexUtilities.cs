@@ -16,7 +16,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(mutex));
             }
-            
+
             try
             {
                 return mutex.WaitOne();
@@ -30,7 +30,7 @@ namespace NetExtender.Utilities.Types
                 return false;
             }
         }
-        
+
         public static Boolean TryWaitOne(this Mutex mutex, Int32 timeout)
         {
             if (mutex is null)
@@ -51,7 +51,7 @@ namespace NetExtender.Utilities.Types
                 return false;
             }
         }
-        
+
         public static Boolean TryWaitOne(this Mutex mutex, Int32 timeout, Boolean exit)
         {
             if (mutex is null)

@@ -18,14 +18,14 @@ namespace NetExtender.Utilities.Network
         {
             public String Ip { get; init; } = null!;
             public String Name { get; init; } = null!;
-            
+
             [JsonProperty("country")]
             public String Country2 { get; init; } = null!;
-            
+
             [JsonProperty("country_3")]
             public String Country3 { get; init; } = null!;
         }
-        
+
         [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
         private static class ClientStorage
         {
@@ -128,12 +128,12 @@ namespace NetExtender.Utilities.Network
             {
                 throw new ArgumentNullException(nameof(response));
             }
-            
+
             response.EnsureSuccessStatusCode();
             GeoResponse? geo = await response.Content.ReadAsAsync<GeoResponse>(token);
             return geo is not null && CountryInfo.TryParse(geo.Country2, out CountryInfo? result) ? result : null;
         }
-        
+
         // ReSharper disable once ParameterHidesMember
         public static void Reset(HttpClient client)
         {

@@ -13,7 +13,7 @@ namespace NetExtender.CQRS.Commands.Handlers.Interfaces
         public new Task<TResult> HandleAsync(TCommand command);
         public new Task<TResult> HandleAsync(TCommand command, CancellationToken token);
     }
-    
+
     public interface ICommandCQRSHandler<in TCommand> : IEntityCQRSHandler<TCommand> where TCommand : ICommandCQRS
     {
         public new Task HandleAsync(TCommand command);

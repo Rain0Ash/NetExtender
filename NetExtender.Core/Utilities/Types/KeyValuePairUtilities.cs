@@ -16,11 +16,11 @@ using NetExtender.Utilities.Core;
 namespace NetExtender.Utilities.Types
 {
     public record KeyValuePairAccessor(Func<Object, Object?> Key, Func<Object, Object?> Value);
-    
+
     public static class KeyValuePairUtilities
     {
         public static Type KeyValuePairType { get; } = typeof(KeyValuePair<,>);
-        
+
         private static class KeyValuePairStorage
         {
             private static ConcurrentDictionary<Type, KeyValuePairAccessor> Storage { get; } = new ConcurrentDictionary<Type, KeyValuePairAccessor>();
@@ -176,7 +176,7 @@ namespace NetExtender.Utilities.Types
         {
             return FlattenByInnerValue(pair);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static KeyValuePair<TKey, TValue> FlattenByInnerValue<TKey, TInnerKey, TValue>(this KeyValuePair<TKey, KeyValuePair<TInnerKey, TValue>> pair)
         {

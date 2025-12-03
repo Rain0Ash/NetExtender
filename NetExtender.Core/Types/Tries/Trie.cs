@@ -106,7 +106,7 @@ namespace NetExtender.Types.Tries
 
             return Set.Get(prefix).Cast<Entry>().Select(entry => new TrieEntry<TKey, TValue>(entry, entry.Value));
         }
-        
+
         public IEnumerable<TrieEntry<TKey, TValue>> Get(ReadOnlySpan<TKey> prefix)
         {
             return Set.Get(prefix).Cast<Entry>().Select(entry => new TrieEntry<TKey, TValue>(entry, entry.Value));

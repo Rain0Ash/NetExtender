@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Runtime.InteropServices;
 using NetExtender.FileSystems.Interfaces;
 
 namespace NetExtender.FileSystems
@@ -40,6 +41,15 @@ namespace NetExtender.FileSystems
         public virtual IDirectoryInfo CreateDirectory(String path)
         {
             return FileSystemInfoWrapper.Create(System.IO.Directory.CreateDirectory(path));
+        }
+
+        public virtual IDirectoryInfo CreateDirectory(String path, UnixFileMode mode)
+        {
+#if NET7_0_OR_GREATER
+            return RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? CreateDirectory(path) : FileSystemInfoWrapper.Create(System.IO.Directory.CreateDirectory(path, mode));
+#else
+            return RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? CreateDirectory(path) : throw new NotSupportedException();
+#endif
         }
 
         IFileSystemInfo IDirectoryHandler.CreateSymbolicLink(String path, String target)
@@ -91,7 +101,7 @@ namespace NetExtender.FileSystems
         {
             return GetLastWriteTimeUtc(path, FileSystemHandlerType.Directory);
         }
-        
+
         void IDirectoryHandler.SetCreationTime(String path, DateTime time)
         {
             SetCreationTime(path, time, FileSystemHandlerType.Directory);

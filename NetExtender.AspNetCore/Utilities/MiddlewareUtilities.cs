@@ -26,12 +26,12 @@ namespace NetExtender.Utilities.AspNetCore.Types
 
             return builder.UseMiddleware<RequestTracingMiddleware>();
         }
-        
+
         public static IApplicationBuilder UseBusinessExceptionHandler(this IApplicationBuilder builder)
         {
             return UseBusinessExceptionHandler<BusinessExceptionHandlerMiddleware>(builder);
         }
-        
+
         public static IApplicationBuilder UseBusinessExceptionHandler<T>(this IApplicationBuilder builder) where T : BusinessExceptionHandlerMiddleware
         {
             if (builder is null)
@@ -41,7 +41,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
 
             return builder.UseMiddleware<T>();
         }
-        
+
         public static IApplicationBuilder UseMiddlewareIf(this IApplicationBuilder builder, Type middleware, Boolean condition, params Object?[] args)
         {
             if (builder is null)
@@ -151,7 +151,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
 
             return !condition(builder) ? builder.UseMiddleware(middleware, args) : builder;
         }
-        
+
         public static IApplicationBuilder UseMiddlewareIf<[DynamicallyAccessedMembers(MiddlewareAccessibility)] TMiddleware>(this IApplicationBuilder builder, Boolean condition, params Object?[] args) where TMiddleware : class
         {
             if (builder is null)
@@ -231,7 +231,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
 
             return !condition(builder) ? builder.UseMiddleware<TMiddleware>(args) : builder;
         }
-        
+
         public static IApplicationBuilder UseMiddlewareIf(this IApplicationBuilder builder, Boolean condition, Func<IApplicationBuilder, IApplicationBuilder> middleware)
         {
             if (builder is null)
@@ -286,7 +286,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
 
             return condition(builder) ? middleware(builder) : builder;
         }
-        
+
         public static IApplicationBuilder UseMiddlewareIf<T>(this IApplicationBuilder builder, Boolean condition, Func<IApplicationBuilder, T, IApplicationBuilder> middleware, T argument)
         {
             if (builder is null)
@@ -341,7 +341,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
 
             return condition(builder) ? middleware(builder, argument) : builder;
         }
-        
+
         public static IApplicationBuilder UseMiddlewareIf<T1, T2>(this IApplicationBuilder builder, Boolean condition, Func<IApplicationBuilder, T1, T2, IApplicationBuilder> middleware, T1 first, T2 second)
         {
             if (builder is null)
@@ -396,7 +396,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
 
             return condition(builder) ? middleware(builder, first, second) : builder;
         }
-        
+
         public static IApplicationBuilder UseMiddlewareIf<T1, T2, T3>(this IApplicationBuilder builder, Boolean condition, Func<IApplicationBuilder, T1, T2, T3, IApplicationBuilder> middleware, T1 first, T2 second, T3 third)
         {
             if (builder is null)
@@ -451,7 +451,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
 
             return condition(builder) ? middleware(builder, first, second, third) : builder;
         }
-        
+
         public static IApplicationBuilder UseMiddlewareIfNot(this IApplicationBuilder builder, Boolean condition, Func<IApplicationBuilder, IApplicationBuilder> middleware)
         {
             if (builder is null)
@@ -506,7 +506,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
 
             return !condition(builder) ? middleware(builder) : builder;
         }
-        
+
         public static IApplicationBuilder UseMiddlewareIfNot<T>(this IApplicationBuilder builder, Boolean condition, Func<IApplicationBuilder, T, IApplicationBuilder> middleware, T argument)
         {
             if (builder is null)
@@ -561,7 +561,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
 
             return !condition(builder) ? middleware(builder, argument) : builder;
         }
-        
+
         public static IApplicationBuilder UseMiddlewareIfNot<T1, T2>(this IApplicationBuilder builder, Boolean condition, Func<IApplicationBuilder, T1, T2, IApplicationBuilder> middleware, T1 first, T2 second)
         {
             if (builder is null)
@@ -616,7 +616,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
 
             return !condition(builder) ? middleware(builder, first, second) : builder;
         }
-        
+
         public static IApplicationBuilder UseMiddlewareIfNot<T1, T2, T3>(this IApplicationBuilder builder, Boolean condition, Func<IApplicationBuilder, T1, T2, T3, IApplicationBuilder> middleware, T1 first, T2 second, T3 third)
         {
             if (builder is null)

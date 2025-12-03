@@ -27,8 +27,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.NAudio", "NetEx
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.NAudio.Windows", "NetExtender.NAudio.Windows\NetExtender.NAudio.Windows.csproj", "{8D3D9988-3DE2-4E48-B9CA-C15FFD95F3B6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.NAudio.Xamarin.Android", "NetExtender.NAudio.Xamarin.Android\NetExtender.NAudio.Xamarin.Android.csproj", "{7E15DFE1-B6DA-4509-9C76-833B2230DF6E}"
-EndProject
 
 
 
@@ -131,8 +129,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.Domain.WinForms
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.Domain.WinForms.AspNetCore", "NetExtender.Domain.WinForms.AspNetCore\NetExtender.Domain.WinForms.AspNetCore.csproj", "{2105F181-7E83-41D7-9C1B-3C8F662ADE0F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.Domain.Xamarin", "NetExtender.Domain.Xamarin\NetExtender.Domain.Xamarin.csproj", "{B1628C4E-3A11-4A9D-B592-3982E2B0EB7A}"
-EndProject
 
 
 
@@ -150,10 +146,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NetExtender.Image", "NetExt
 EndProject
 
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.Drawing.Images", "NetExtender.Drawing.Images\NetExtender.Drawing.Images.csproj", "{3165AF7B-F29C-4FC7-BAF0-13A92CB0ACDB}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.ImageSharp", "NetExtender.ImageSharp\NetExtender.ImageSharp.csproj", "{8F13ECC7-6A93-4863-A03F-E7DF616DB603}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.ImageSharp.Drawing", "NetExtender.ImageSharp.Drawing\NetExtender.ImageSharp.Drawing.csproj", "{99270A76-B263-403E-AA32-1885325E67AB}"
 EndProject
 
 
@@ -202,8 +194,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.UserInterface.WindowsPresentationForms", "NetExtender.UserInterface.WindowsPresentationForms\NetExtender.UserInterface.WindowsPresentationForms.csproj", "{947201F3-F6F9-488F-934B-BA40166C9748}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.UserInterface.WinForms", "NetExtender.UserInterface.WinForms\NetExtender.UserInterface.WinForms.csproj", "{7AF8C949-E014-43DE-A0FE-4D49735536D9}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.UserInterface.Xamarin", "NetExtender.UserInterface.Xamarin\NetExtender.UserInterface.Xamarin.csproj", "{F1AB5887-46C7-4F74-A0CF-D861A74A7E61}"
 EndProject
 
 
@@ -290,11 +280,6 @@ Global
                 {8D3D9988-3DE2-4E48-B9CA-C15FFD95F3B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
                 {8D3D9988-3DE2-4E48-B9CA-C15FFD95F3B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
                 {8D3D9988-3DE2-4E48-B9CA-C15FFD95F3B6}.Release|Any CPU.Build.0 = Release|Any CPU
-
-                {7E15DFE1-B6DA-4509-9C76-833B2230DF6E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-                {7E15DFE1-B6DA-4509-9C76-833B2230DF6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-                {7E15DFE1-B6DA-4509-9C76-833B2230DF6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-                {7E15DFE1-B6DA-4509-9C76-833B2230DF6E}.Release|Any CPU.Build.0 = Release|Any CPU
 
 
 
@@ -491,11 +476,6 @@ Global
                 {2105F181-7E83-41D7-9C1B-3C8F662ADE0F}.Release|Any CPU.ActiveCfg = Release|Any CPU
                 {2105F181-7E83-41D7-9C1B-3C8F662ADE0F}.Release|Any CPU.Build.0 = Release|Any CPU
 
-                {B1628C4E-3A11-4A9D-B592-3982E2B0EB7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-                {B1628C4E-3A11-4A9D-B592-3982E2B0EB7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-                {B1628C4E-3A11-4A9D-B592-3982E2B0EB7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-                {B1628C4E-3A11-4A9D-B592-3982E2B0EB7A}.Release|Any CPU.Build.0 = Release|Any CPU
-
 
 
                 {1566851A-7963-45CA-A2B6-6ACEDF041ACA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -514,16 +494,6 @@ Global
                 {3165AF7B-F29C-4FC7-BAF0-13A92CB0ACDB}.Debug|Any CPU.Build.0 = Debug|Any CPU
                 {3165AF7B-F29C-4FC7-BAF0-13A92CB0ACDB}.Release|Any CPU.ActiveCfg = Release|Any CPU
                 {3165AF7B-F29C-4FC7-BAF0-13A92CB0ACDB}.Release|Any CPU.Build.0 = Release|Any CPU
-
-                {8F13ECC7-6A93-4863-A03F-E7DF616DB603}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-                {8F13ECC7-6A93-4863-A03F-E7DF616DB603}.Debug|Any CPU.Build.0 = Debug|Any CPU
-                {8F13ECC7-6A93-4863-A03F-E7DF616DB603}.Release|Any CPU.ActiveCfg = Release|Any CPU
-                {8F13ECC7-6A93-4863-A03F-E7DF616DB603}.Release|Any CPU.Build.0 = Release|Any CPU
-
-                {99270A76-B263-403E-AA32-1885325E67AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-                {99270A76-B263-403E-AA32-1885325E67AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-                {99270A76-B263-403E-AA32-1885325E67AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-                {99270A76-B263-403E-AA32-1885325E67AB}.Release|Any CPU.Build.0 = Release|Any CPU
 
 
 
@@ -592,11 +562,6 @@ Global
                 {7AF8C949-E014-43DE-A0FE-4D49735536D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
                 {7AF8C949-E014-43DE-A0FE-4D49735536D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
                 {7AF8C949-E014-43DE-A0FE-4D49735536D9}.Release|Any CPU.Build.0 = Release|Any CPU
-
-                {F1AB5887-46C7-4F74-A0CF-D861A74A7E61}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-                {F1AB5887-46C7-4F74-A0CF-D861A74A7E61}.Debug|Any CPU.Build.0 = Debug|Any CPU
-                {F1AB5887-46C7-4F74-A0CF-D861A74A7E61}.Release|Any CPU.ActiveCfg = Release|Any CPU
-                {F1AB5887-46C7-4F74-A0CF-D861A74A7E61}.Release|Any CPU.Build.0 = Release|Any CPU
 
 
 
@@ -708,7 +673,6 @@ Global
 
                 {F0BD0491-EA66-44A1-93CA-7A663568DA10} = {F22DBBFE-420B-4A95-BC9E-9E406DE5ACC5}
                 {8D3D9988-3DE2-4E48-B9CA-C15FFD95F3B6} = {F22DBBFE-420B-4A95-BC9E-9E406DE5ACC5}
-                {7E15DFE1-B6DA-4509-9C76-833B2230DF6E} = {F22DBBFE-420B-4A95-BC9E-9E406DE5ACC5}
 
                 {47692AB7-5D73-4577-B4E6-BFE37AA19954} = {0831D84F-7D4F-4E1A-87BA-8E00A2BFB199}
                 {A876A04B-A1C8-45A8-8072-CA7A40A3F6F3} = {0831D84F-7D4F-4E1A-87BA-8E00A2BFB199}
@@ -741,7 +705,7 @@ Global
                 {A7137A1F-4DB2-4E3B-BF7A-028927FE5D95} = {57669121-7D0F-4429-96C8-563563F6F3D1}
 
                 {9E53DCE9-6269-47A8-9A9A-F022725C015C} = {11F1AABD-49ED-4A7A-9102-BE69FC3FDD10}
-                
+
                 {565276E6-CCA8-4E40-A700-9DB9861F7AC8} = {57E5B92C-BB28-4EA3-B380-1CC3B8B2F71A}
                 {0F17D558-04C4-4238-9135-EA27F581C690} = {57E5B92C-BB28-4EA3-B380-1CC3B8B2F71A}
                 {D6A48FD6-BFEF-4618-BF09-A05C3B86D8E0} = {57E5B92C-BB28-4EA3-B380-1CC3B8B2F71A}
@@ -751,14 +715,11 @@ Global
                 {6DD44487-5020-48DF-8A41-33E0813A65AA} = {57E5B92C-BB28-4EA3-B380-1CC3B8B2F71A}
                 {7E0E72A6-A871-474B-83E0-377B5276766C} = {57E5B92C-BB28-4EA3-B380-1CC3B8B2F71A}
                 {2105F181-7E83-41D7-9C1B-3C8F662ADE0F} = {57E5B92C-BB28-4EA3-B380-1CC3B8B2F71A}
-                {B1628C4E-3A11-4A9D-B592-3982E2B0EB7A} = {57E5B92C-BB28-4EA3-B380-1CC3B8B2F71A}
 
                 {1566851A-7963-45CA-A2B6-6ACEDF041ACA} = {0B0D27E3-898C-4D84-AF56-13C54F9F1EC1}
                 {A1FEB727-F79E-42B8-897A-4CCE6D8BCCE8} = {0B0D27E3-898C-4D84-AF56-13C54F9F1EC1}
 
                 {3165AF7B-F29C-4FC7-BAF0-13A92CB0ACDB} = {93B62F24-8CA7-430C-AFA3-87FFBE152731}
-                {8F13ECC7-6A93-4863-A03F-E7DF616DB603} = {93B62F24-8CA7-430C-AFA3-87FFBE152731}
-                {99270A76-B263-403E-AA32-1885325E67AB} = {93B62F24-8CA7-430C-AFA3-87FFBE152731}
 
                 {517CF6A6-39F4-4D76-ADD3-B4954A36B93A} = {F7A961F4-F974-4820-8FE6-E608A2FF4B24}
                 {96A15B1D-FFE0-49D8-A8B9-5386C11FCAF5} = {F7A961F4-F974-4820-8FE6-E608A2FF4B24}
@@ -775,7 +736,6 @@ Global
                 {9BAFDC4C-6F4F-421E-BD4A-72B1B778EB7B} = {FD7B50FD-1BB3-4D14-B9E6-BF0B09172F97}
                 {947201F3-F6F9-488F-934B-BA40166C9748} = {FD7B50FD-1BB3-4D14-B9E6-BF0B09172F97}
                 {7AF8C949-E014-43DE-A0FE-4D49735536D9} = {FD7B50FD-1BB3-4D14-B9E6-BF0B09172F97}
-                {F1AB5887-46C7-4F74-A0CF-D861A74A7E61} = {FD7B50FD-1BB3-4D14-B9E6-BF0B09172F97}
 
                 {C78BDA6F-B9C6-4245-9462-9EBD6FE2DC13} = {A7BE8994-15D1-4F4B-BD86-C308973371B6}
                 {40412617-CA47-4C9D-A9A3-C34365D6895B} = {A7BE8994-15D1-4F4B-BD86-C308973371B6}

@@ -16,7 +16,6 @@ namespace NetExtender.Windows.Types
         {
             return message.Message;
         }
-        
         public static Boolean operator ==(WindowsMessage first, WindowsMessage second)
         {
             return first.Equals(second);
@@ -40,7 +39,6 @@ namespace NetExtender.Windows.Types
         public WindowsMessage(IntPtr handle, Int32 message)
             : this(handle, (WM) message)
         {
-            
         }
 
         public WindowsMessage(IntPtr handle, WM message)
@@ -131,24 +129,24 @@ namespace NetExtender.Windows.Types
         {
             return ToString((IFormatProvider?) null);
         }
-        
+
         public String ToString(IFormatProvider? provider)
         {
             return $"{{ {nameof(Handle)}: {Handle.ToString(provider)}, {nameof(Message)}: {Message}, {nameof(WParam)}: {WParam.ToString(provider)}, {nameof(LParam)}: {LParam.ToString(provider)}, {nameof(Result)}: {Result.ToString(provider)} }}";
         }
-        
+
         public String ToString(String? format)
         {
             return ToString(format, null);
         }
-        
+
         public String ToString(String? format, IFormatProvider? provider)
         {
             if (format is null)
             {
                 return ToString(provider);
             }
-            
+
             return format
                 .Replace("{HANDLE}", Handle.ToString(provider)).Replace("{H}", Handle.ToString(provider))
                 .Replace("{MESSAGE}", Message.ToString()).Replace("{WM}", Message.ToString()).Replace("{M}", Message.ToString())

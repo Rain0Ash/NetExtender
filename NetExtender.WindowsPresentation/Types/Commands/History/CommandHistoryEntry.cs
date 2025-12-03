@@ -51,7 +51,7 @@ namespace NetExtender.WindowsPresentation.Types.Commands.History
             _command = command ?? throw new ArgumentNullException(nameof(command));
             _parameter = parameter;
         }
-        
+
         public override Boolean Execute()
         {
             if (!CanExecute)
@@ -80,7 +80,7 @@ namespace NetExtender.WindowsPresentation.Types.Commands.History
         {
             return HashCode.Combine(Command, Parameter);
         }
-        
+
         public override Boolean Equals(Object? other)
         {
             return other switch
@@ -91,12 +91,12 @@ namespace NetExtender.WindowsPresentation.Types.Commands.History
                 _ => false
             };
         }
-        
+
         public virtual Boolean Equals(T? other)
         {
             return EqualityComparer<T>.Default.Equals(Parameter, other);
         }
-        
+
         public override Boolean Equals(ICommand? other)
         {
             return Command.Equals(other);
@@ -106,12 +106,12 @@ namespace NetExtender.WindowsPresentation.Types.Commands.History
         {
             return Equals(other as CommandHistoryEntry<T>);
         }
-        
+
         public virtual Boolean Equals(CommandHistoryEntry<T>? other)
         {
             return other is not null && Command.Equals(other.Command) && Equals(other.Parameter);
         }
-        
+
         public override Boolean Equals(ICommandHistoryEntry? other)
         {
             return other is CommandHistoryEntry<T> entry && Equals(entry) || Equals(other?.Command);
@@ -126,7 +126,7 @@ namespace NetExtender.WindowsPresentation.Types.Commands.History
     public abstract class CommandHistoryEntry : ICommandHistoryEntry, IEquatable<ICommand>, IEquatable<CommandHistoryEntry>
     {
         public abstract ICommand Command { get; }
-        
+
         ICommand ICommandHistoryEntry.Command
         {
             get
@@ -139,12 +139,12 @@ namespace NetExtender.WindowsPresentation.Types.Commands.History
         public CommandHistoryEntryOptions Options { get; }
         public abstract Boolean CanExecute { get; }
         public abstract Boolean CanRevert { get; }
-        
+
         protected CommandHistoryEntry(CommandHistoryEntryOptions options)
         {
             Options = options;
         }
-        
+
         public abstract Boolean Execute();
         public abstract Boolean Revert();
         public abstract override Int32 GetHashCode();

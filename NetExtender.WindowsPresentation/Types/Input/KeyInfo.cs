@@ -13,32 +13,32 @@ namespace NetExtender.WindowsPresentation.Types
         {
             return first.Equals(second);
         }
-        
+
         public static Boolean operator !=(KeyInfo first, KeyInfo second)
         {
             return !(first == second);
         }
-        
+
         public static implicit operator Key(KeyInfo value)
         {
             return value.Key;
         }
-        
+
         public static implicit operator ModifierKeys(KeyInfo value)
         {
             return value.Modifiers;
         }
-        
+
         public static implicit operator KeyStates(KeyInfo value)
         {
             return value.State;
         }
-        
+
         public static implicit operator KeyInfo(Key value)
         {
             return new KeyInfo(value);
         }
-        
+
         public static implicit operator KeyInfo(KeyEventArgs? value)
         {
             return value is not null ? new KeyInfo(value.Key)
@@ -48,10 +48,10 @@ namespace NetExtender.WindowsPresentation.Types
                 IsRepeat = value.IsRepeat
             } : new KeyInfo();
         }
-        
+
         public Key Key { get; }
         public ModifierKeys Modifiers { get; init; }
-        
+
         public Boolean Alt
         {
             get
@@ -59,7 +59,7 @@ namespace NetExtender.WindowsPresentation.Types
                 return Modifiers.HasFlag(ModifierKeys.Alt);
             }
         }
-        
+
         public Boolean Control
         {
             get
@@ -67,7 +67,7 @@ namespace NetExtender.WindowsPresentation.Types
                 return Modifiers.HasFlag(ModifierKeys.Control);
             }
         }
-        
+
         public Boolean Shift
         {
             get
@@ -75,7 +75,7 @@ namespace NetExtender.WindowsPresentation.Types
                 return Modifiers.HasFlag(ModifierKeys.Shift);
             }
         }
-        
+
         public Boolean Windows
         {
             get
@@ -85,7 +85,7 @@ namespace NetExtender.WindowsPresentation.Types
         }
         public KeyStates State { get; init; }
         public Boolean IsRepeat { get; init; }
-        
+
         private KeyInfo(Key key)
         {
             Key = key;
@@ -93,7 +93,7 @@ namespace NetExtender.WindowsPresentation.Types
             State = KeyStates.None;
             IsRepeat = false;
         }
-        
+
         public static KeyInfo Create(Key key)
         {
             return new KeyInfo(key)
@@ -102,7 +102,7 @@ namespace NetExtender.WindowsPresentation.Types
                 State = Keyboard.GetKeyStates(key)
             };
         }
-        
+
         public Boolean Simplify(out KeyInfo result)
         {
             if (IsRepeat)
@@ -110,23 +110,23 @@ namespace NetExtender.WindowsPresentation.Types
                 result = new KeyInfo(Key) { Modifiers = Modifiers, State = State };
                 return true;
             }
-            
+
             if (State != KeyStates.None)
             {
                 result = new KeyInfo(Key) { Modifiers = Modifiers };
                 return true;
             }
-            
+
             if (Modifiers != ModifierKeys.None)
             {
                 result = new KeyInfo(Key);
                 return true;
             }
-            
+
             result = this;
             return false;
         }
-        
+
         public Int32 CompareTo(KeyInfo other)
         {
             Int32 key = Key.CompareTo(other.Key);
@@ -134,32 +134,32 @@ namespace NetExtender.WindowsPresentation.Types
             {
                 return key;
             }
-            
+
             Int32 modifiers = Modifiers.CompareTo(other.Modifiers);
             if (modifiers != 0)
             {
                 return modifiers;
             }
-            
+
             Int32 state = State.CompareTo(other.State);
             return state != 0 ? state : IsRepeat.CompareTo(other.IsRepeat);
         }
-        
+
         public override Int32 GetHashCode()
         {
             return HashCode.Combine(Key, Modifiers, State, IsRepeat);
         }
-        
+
         public override Boolean Equals(Object? other)
         {
             return other is KeyInfo info && Equals(info);
         }
-        
+
         public Boolean Equals(KeyInfo other)
         {
             return Key == other.Key && Modifiers == other.Modifiers && State == other.State && IsRepeat == other.IsRepeat;
         }
-        
+
         public override String ToString()
         {
             return $"{{ {nameof(Key)}: {Key}, {nameof(Modifiers)}: {Modifiers.Flags().ToString(" + ", null, null)}, {nameof(State)}: {State}, {nameof(IsRepeat)}: {IsRepeat} }}";

@@ -20,7 +20,7 @@ namespace NetExtender.Utilities.Numerics
         {
             return !(first == second);
         }
-        
+
         public static PrimeCollection Default
         {
             get

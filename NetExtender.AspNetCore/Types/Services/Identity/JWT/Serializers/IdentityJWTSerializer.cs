@@ -24,7 +24,7 @@ namespace NetExtender.AspNetCore.Identity
             };
         }
     }
-    
+
     internal sealed class IdentityNoneJWTSerializer<TId, TUser, TRole> : IdentityTextJsonJWTSerializer<TId, TUser, TRole> where TId : struct, IEquatable<TId> where TUser : class, IUserInfo<TId, TRole> where TRole : IEquatable<TRole>
     {
         private static System.Text.Json.JsonSerializerOptions Throw
@@ -34,7 +34,7 @@ namespace NetExtender.AspNetCore.Identity
                 throw new NotSupportedException();
             }
         }
-        
+
         private IdentityNoneJWTSerializer()
             : base(Throw)
         {
@@ -47,7 +47,7 @@ namespace NetExtender.AspNetCore.Identity
             : base(options, options)
         {
         }
-        
+
         [DependencyConstructor]
         public IdentityTextJsonJWTSerializer(System.Text.Json.JsonSerializerOptions serialize, System.Text.Json.JsonSerializerOptions deserialize)
             : base(serialize, deserialize)
@@ -61,7 +61,7 @@ namespace NetExtender.AspNetCore.Identity
             : base(serializer)
         {
         }
-        
+
         [DependencyConstructor]
         public IdentityNewtonsoftJWTSerializer(JsonSerializerSettings settings)
             : base(settings)
@@ -72,7 +72,7 @@ namespace NetExtender.AspNetCore.Identity
     public sealed class IdentityJWTSerializer<TId, TUser, TRole> : IIdentityJWTSerializer<TId, TUser, TRole> where TId : struct, IEquatable<TId> where TUser : class, IUserInfo<TId, TRole> where TRole : IEquatable<TRole>
     {
         private IJWTSerializer Internal { get; }
-        
+
         public JWTSerializerType Type
         {
             get
@@ -80,7 +80,7 @@ namespace NetExtender.AspNetCore.Identity
                 return Internal.Type;
             }
         }
-        
+
         public IdentityJWTSerializer(IJWTSerializer serializer)
         {
             Internal = serializer ?? throw new ArgumentNullException(nameof(serializer));

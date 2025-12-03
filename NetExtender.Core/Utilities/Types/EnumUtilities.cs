@@ -28,13 +28,13 @@ namespace NetExtender.Utilities.Types
         {
             return value;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TEnum As<T, TEnum>(this T value) where T : unmanaged, Enum where TEnum : Enum<T, TEnum>, new()
         {
             return EnumStorage<T>.TryParse<TEnum>(value, out TEnum? result) ? result : Enum<T>.Create<TEnum>(value);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Enum<T> As<T>(this String value) where T : unmanaged, Enum
         {
@@ -45,7 +45,7 @@ namespace NetExtender.Utilities.Types
 
             return EnumStorage<T>.TryParse(value, out Enum<T>? result) ? result : throw new InvalidOperationException();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TEnum As<T, TEnum>(this String value) where T : unmanaged, Enum where TEnum : Enum<T, TEnum>, new()
         {
@@ -120,13 +120,13 @@ namespace NetExtender.Utilities.Types
         {
             return DescriptionStorage<T>.TryGetValue(value, identifier, out result);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryFromDescriptionOrName<T>(this String key, out T result) where T : unmanaged, Enum
         {
             return DescriptionToEnumStorage<T>.TryGetValue(key, out result);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryFromDescriptionOrName<T>(this String key, LocalizationIdentifier identifier, out T result) where T : unmanaged, Enum
         {
@@ -174,7 +174,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentOutOfRangeException(nameof(value), value, "The value is not defined in the enum.");
             }
-            
+
             return ValuesStorage<T>.Values[index > 0 ? index - 1 : ValuesStorage<T>.Values.Length - 1];
         }
 
@@ -220,7 +220,7 @@ namespace NetExtender.Utilities.Types
         {
             return !In(value);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean NotIn<T>(this T value, Boolean without) where T : unmanaged, Enum
         {
@@ -250,7 +250,7 @@ namespace NetExtender.Utilities.Types
         {
             return ValuesWithoutDefaultStorage<T>.Values.Length;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T Minimum<T>() where T : unmanaged, Enum
         {
@@ -410,7 +410,7 @@ namespace NetExtender.Utilities.Types
         {
             return ValuesWithoutDefaultStorage<T>.Values.GetRandom();
         }
-        
+
         public static T GetRandomEnumValue<T>(this IEnumerable<T> source) where T : unmanaged, Enum
         {
             if (source is null)
@@ -451,14 +451,14 @@ namespace NetExtender.Utilities.Types
             ValuesStorage<T>.TryGetValue(value, out Decimal result);
             return result;
         }
-        
+
         public static IEnumerable<Decimal> ToDecimal<T>(this IEnumerable<T> source) where T : unmanaged, Enum
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             foreach (T value in source)
             {
                 yield return ToDecimal(value);
@@ -469,7 +469,7 @@ namespace NetExtender.Utilities.Types
         {
             return ValuesStorage<T>.Values.OfType<IConvertible>().ToDecimal();
         }
-        
+
         public static IEnumerable<UInt64> AsUInt64<T>() where T : unmanaged, Enum
         {
             return AsDecimal<T>().Select(ConvertUtilities.ToUInt64);
@@ -501,12 +501,6 @@ namespace NetExtender.Utilities.Types
             {
                 return new ReadOnlySpan<Byte>(pointer, sizeof(T) / sizeof(Byte));
             }
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
-        public static ReadOnlySpan<Byte> AsSpan<T>(this T value) where T : unmanaged, Enum
-        {
-            return AsSpan(in value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -716,13 +710,13 @@ namespace NetExtender.Utilities.Types
         {
             return NamesStorage<T>.Contains(name);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean ContainsName<T>(String name, Boolean without) where T : unmanaged, Enum
         {
             return without ? ContainsNameWithoutDefault<T>(name) : ContainsName<T>(name);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean ContainsNameWithoutDefault<T>(String name) where T : unmanaged, Enum
         {

@@ -154,7 +154,7 @@ namespace NetExtender.Types.Enums
             }
         }
     }
-    
+
     public sealed record EnumSynchronizationMember<T> : EnumSynchronizationMember, IReadOnlyList<Enum<T>> where T : unmanaged, Enum
     {
         public static implicit operator ImmutableArray<Enum<T>>(EnumSynchronizationMember<T>? value)
@@ -290,17 +290,17 @@ namespace NetExtender.Types.Enums
             }
         }
     }
-    
+
     public abstract record EnumSynchronizationMember
     {
         public static implicit operator ImmutableArray<IEnum>(EnumSynchronizationMember? value)
         {
             return value?.Array ?? ImmutableArray<IEnum>.Empty;
         }
-        
+
         public abstract Type Type { get; }
         public abstract Type Underlying { get; }
-        
+
         public EnumSynchronizeAttribute Attribute { get; }
         public abstract ImmutableArray<IEnum> Array { get; }
 
@@ -321,12 +321,12 @@ namespace NetExtender.Types.Enums
                 return Attribute.Order;
             }
         }
-        
+
         protected EnumSynchronizationMember(EnumSynchronizeAttribute attribute)
         {
             Attribute = attribute ?? throw new ArgumentNullException(nameof(attribute));
         }
-        
+
         public ImmutableArray<IEnum>.Enumerator GetEnumerator()
         {
             return Array.GetEnumerator();

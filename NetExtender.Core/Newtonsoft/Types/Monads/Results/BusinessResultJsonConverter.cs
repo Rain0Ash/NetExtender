@@ -57,7 +57,7 @@ namespace NetExtender.Newtonsoft.Types.Monads.Results
                 writer.WriteNull();
                 return true;
             }
-            
+
             if (value.Exception is { } exception)
             {
                 options.Serialize(writer, exception.Business);
@@ -68,7 +68,7 @@ namespace NetExtender.Newtonsoft.Types.Monads.Results
             return true;
         }
     }
-    
+
     public sealed class BusinessResultJsonConverter<T> : NewtonsoftJsonConverter<BusinessResult<T>>
     {
         protected internal override BusinessResult<T> Read(in JsonReader reader, Type type, Maybe<BusinessResult<T>> exist, ref SerializerOptions options)
@@ -115,7 +115,7 @@ namespace NetExtender.Newtonsoft.Types.Monads.Results
                 writer.WriteNull();
                 return true;
             }
-            
+
             if (value.Exception is { } exception)
             {
                 options.Serialize(writer, exception.Business);
@@ -126,7 +126,7 @@ namespace NetExtender.Newtonsoft.Types.Monads.Results
             return true;
         }
     }
-    
+
     public sealed class BusinessResultJsonConverter<T, TBusiness> : NewtonsoftJsonConverter<BusinessResult<T, TBusiness>>
     {
         protected internal override BusinessResult<T, TBusiness> Read(in JsonReader reader, Type type, Maybe<BusinessResult<T, TBusiness>> exist, ref SerializerOptions options)
@@ -173,7 +173,7 @@ namespace NetExtender.Newtonsoft.Types.Monads.Results
                 writer.WriteNull();
                 return true;
             }
-            
+
             if (value.Exception is { } exception)
             {
                 options.Serialize(writer, exception.Business);
@@ -189,7 +189,7 @@ namespace NetExtender.Newtonsoft.Types.Monads.Results
 namespace NetExtender.Serialization.Json.Monads
 {
     using System.Text.Json;
-    
+
     public sealed class BusinessResultJsonConverter : TextJsonConverter<BusinessResult>
     {
         protected internal override BusinessResult Read(ref Utf8JsonReader reader, Type type, ref SerializerOptions options)
@@ -234,7 +234,7 @@ namespace NetExtender.Serialization.Json.Monads
                 writer.WriteNullValue();
                 return true;
             }
-            
+
             if (value.Exception is { } exception)
             {
                 JsonSerializer.Serialize(writer, exception, options);
@@ -245,7 +245,7 @@ namespace NetExtender.Serialization.Json.Monads
             return true;
         }
     }
-    
+
     public sealed class BusinessResultJsonConverter<T> : TextJsonConverter<BusinessResult<T>>
     {
         protected internal override BusinessResult<T> Read(ref Utf8JsonReader reader, Type type, ref SerializerOptions options)
@@ -295,7 +295,7 @@ namespace NetExtender.Serialization.Json.Monads
                 writer.WriteNullValue();
                 return true;
             }
-            
+
             if (value.Exception is { } exception)
             {
                 JsonSerializer.Serialize(writer, exception.Business, options);
@@ -356,7 +356,7 @@ namespace NetExtender.Serialization.Json.Monads
                 writer.WriteNullValue();
                 return true;
             }
-            
+
             if (value.Exception is { } exception)
             {
                 JsonSerializer.Serialize(writer, exception, options);

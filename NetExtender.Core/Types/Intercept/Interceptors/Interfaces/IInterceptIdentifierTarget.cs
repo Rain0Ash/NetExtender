@@ -8,7 +8,7 @@ namespace NetExtender.Types.Intercept.Interfaces
     public interface IInterceptIdentifierTarget<TSender> : IInterceptIdentifierTarget<TSender, String>
     {
     }
-    
+
     public interface IInterceptIdentifierTarget<TSender, TIdentifier>
     {
         public TIdentifier Identifier { get; init; }

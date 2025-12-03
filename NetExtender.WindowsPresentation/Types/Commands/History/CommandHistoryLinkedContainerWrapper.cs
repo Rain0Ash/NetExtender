@@ -16,7 +16,7 @@ namespace NetExtender.WindowsPresentation.Types.Commands.History
     {
         private ICommandHistoryLinkedContainer<TNode> Container { get; }
         private WeakStorage<TNode, ICommandHistoryLinkedEntry> Storage { get; } = new WeakStorage<TNode, ICommandHistoryLinkedEntry>();
-        
+
         public Int32 Count
         {
             get
@@ -24,7 +24,7 @@ namespace NetExtender.WindowsPresentation.Types.Commands.History
                 return Container.Count;
             }
         }
-        
+
         public TNode? First
         {
             get
@@ -32,7 +32,7 @@ namespace NetExtender.WindowsPresentation.Types.Commands.History
                 return Container.First;
             }
         }
-        
+
         ICommandHistoryLinkedEntry? IReadOnlyLinkedContainer<ICommandHistoryLinkedEntry>.First
         {
             get
@@ -40,7 +40,7 @@ namespace NetExtender.WindowsPresentation.Types.Commands.History
                 return Convert(First);
             }
         }
-        
+
         ILinkedNode? IReadOnlyLinkedContainer.First
         {
             get
@@ -48,7 +48,7 @@ namespace NetExtender.WindowsPresentation.Types.Commands.History
                 return ((IReadOnlyLinkedContainer) Container).First;
             }
         }
-        
+
         public TNode? Last
         {
             get
@@ -56,7 +56,7 @@ namespace NetExtender.WindowsPresentation.Types.Commands.History
                 return Container.Last;
             }
         }
-        
+
         ICommandHistoryLinkedEntry? IReadOnlyLinkedContainer<ICommandHistoryLinkedEntry>.Last
         {
             get
@@ -64,7 +64,7 @@ namespace NetExtender.WindowsPresentation.Types.Commands.History
                 return Convert(Last);
             }
         }
-        
+
         ILinkedNode? IReadOnlyLinkedContainer.Last
         {
             get
@@ -72,7 +72,7 @@ namespace NetExtender.WindowsPresentation.Types.Commands.History
                 return ((IReadOnlyLinkedContainer) Container).Last;
             }
         }
-        
+
         Boolean ICollection.IsSynchronized
         {
             get
@@ -80,7 +80,7 @@ namespace NetExtender.WindowsPresentation.Types.Commands.History
                 return Container.IsSynchronized;
             }
         }
-        
+
         Object ICollection.SyncRoot
         {
             get
@@ -88,12 +88,12 @@ namespace NetExtender.WindowsPresentation.Types.Commands.History
                 return Container.SyncRoot;
             }
         }
-        
+
         public CommandHistoryLinkedContainerWrapper(ICommandHistoryLinkedContainer<TNode> container)
         {
             Container = container ?? throw new ArgumentNullException(nameof(container));
         }
-        
+
         [return: NotNullIfNotNull("node")]
         private ICommandHistoryLinkedEntry? Convert(TNode? node)
         {
@@ -109,14 +109,14 @@ namespace NetExtender.WindowsPresentation.Types.Commands.History
         {
             return Container.Find(predicate);
         }
-        
+
         ICommandHistoryLinkedEntry? IReadOnlyLinkedContainer<ICommandHistoryLinkedEntry>.Find(Predicate<ICommandHistoryLinkedEntry> predicate)
         {
             if (predicate is null)
             {
                 throw new ArgumentNullException(nameof(predicate));
             }
-            
+
             return Convert(Find(node => predicate(Convert(node))));
         }
 
@@ -124,27 +124,27 @@ namespace NetExtender.WindowsPresentation.Types.Commands.History
         {
             return Container.FindLast(predicate);
         }
-        
+
         ICommandHistoryLinkedEntry? IReadOnlyLinkedContainer<ICommandHistoryLinkedEntry>.FindLast(Predicate<ICommandHistoryLinkedEntry> predicate)
         {
             if (predicate is null)
             {
                 throw new ArgumentNullException(nameof(predicate));
             }
-            
+
             return Convert(FindLast(node => predicate(Convert(node))));
         }
-        
+
         void ICollection.CopyTo(Array array, Int32 index)
         {
             Container.CopyTo(array, index);
         }
-        
+
         public IEnumerator<TNode> GetEnumerator()
         {
             return Container.GetEnumerator();
         }
-        
+
         IEnumerator<ICommandHistoryLinkedEntry> IEnumerable<ICommandHistoryLinkedEntry>.GetEnumerator()
         {
             foreach (TNode node in this)
@@ -152,7 +152,7 @@ namespace NetExtender.WindowsPresentation.Types.Commands.History
                 yield return Convert(node);
             }
         }
-        
+
         IEnumerator IEnumerable.GetEnumerator()
         {
             return ((IEnumerable) Container).GetEnumerator();

@@ -53,7 +53,7 @@ namespace NetExtender.Types.Dictionaries
                 return Values;
             }
         }
-        
+
         private IComparer<TKey>? _comparer;
         public IComparer<TKey> KeyComparer
         {

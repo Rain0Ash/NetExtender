@@ -64,7 +64,7 @@ namespace NetExtender.Types.Tries
             TrieNode? node = Root;
             return prefix.All(item => node is not null && node.Children.TryGetValue(item, out node)) ? Get(node) : Array.Empty<IEnumerable<T>>();
         }
-        
+
         public IEnumerable<IEnumerable<T>> Get(ReadOnlySpan<T> prefix)
         {
             TrieNode? node = Root;
@@ -175,7 +175,7 @@ namespace NetExtender.Types.Tries
             result = node.Item;
             return result is not null;
         }
-        
+
         public Boolean TryGetItem(ReadOnlySpan<T> key, [MaybeNullWhen(false)] out IEnumerable<T> result)
         {
             TrieNode? node = GetNode(key);
@@ -239,7 +239,7 @@ namespace NetExtender.Types.Tries
 
             child = new TrieNode(key, Comparer) { Parent = node };
             node.Children.Add(key, child);
-            
+
             return child;
         }
 

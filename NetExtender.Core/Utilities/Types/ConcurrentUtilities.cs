@@ -12,13 +12,13 @@ namespace NetExtender.Utilities.Types
         private SyncRoot()
         {
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static SyncRoot Create()
         {
             return new SyncRoot();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public IDisposable? Lock()
         {

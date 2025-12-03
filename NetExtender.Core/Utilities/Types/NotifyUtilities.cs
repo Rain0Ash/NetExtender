@@ -78,7 +78,7 @@ namespace NetExtender.Utilities.Types
                 Name = Get(nameof(Name));
                 Description = Get(nameof(Description));
             }
-            
+
             public static PropertyChangingEventArgs Get(String? property)
             {
                 static PropertyChangingEventArgs Factory(String? property)
@@ -159,7 +159,7 @@ namespace NetExtender.Utilities.Types
                 Name = Get(nameof(Name));
                 Description = Get(nameof(Description));
             }
-            
+
             public static PropertyChangedEventArgs Get(String? property)
             {
                 static PropertyChangedEventArgs Factory(String? property)
@@ -171,7 +171,7 @@ namespace NetExtender.Utilities.Types
             }
         }
     }
-    
+
     public readonly struct PropertyChanging : IEquality<String?>, IEquality<PropertyChanging>, IEquality<PropertyChangingEventArgs>, IAnyEquality
     {
         public static implicit operator String?(PropertyChanging value)
@@ -343,7 +343,7 @@ namespace NetExtender.Utilities.Types
         {
             return String.Compare(first.Property, second?.PropertyName, StringComparison.Ordinal) >= 0;
         }
-        
+
         public String? Property { get; }
 
         public PropertyChanging(String? property)
@@ -415,7 +415,7 @@ namespace NetExtender.Utilities.Types
             return Property;
         }
     }
-    
+
     public readonly struct PropertyChanged : IEquality<String?>, IEquality<PropertyChanged>, IEquality<PropertyChangedEventArgs>, IAnyEquality
     {
         public static implicit operator String?(PropertyChanged value)
@@ -587,7 +587,7 @@ namespace NetExtender.Utilities.Types
         {
             return String.Compare(first.Property, second?.PropertyName, StringComparison.Ordinal) >= 0;
         }
-        
+
         public String? Property { get; }
 
         public PropertyChanged(String? property)

@@ -56,7 +56,7 @@ namespace NetExtender.Utilities.Core
             {
                 generator?.DeclareLocal(local.LocalType, local.IsPinned);
             }
-            
+
             return true;
         }
 
@@ -77,7 +77,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(field));
             }
-            
+
             return InheritField(builder, field, builder.InheritFieldInit(field), type, inherit);
         }
 
@@ -115,7 +115,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(field));
             }
-            
+
             return builder.DefineField(field.Name, field.FieldType, field.Attributes);
         }
 
@@ -148,7 +148,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(property));
             }
-            
+
             return InheritProperty(builder, property, builder.InheritPropertyInit(property, out get, out set), get, set, type, inherit, null);
         }
 
@@ -213,16 +213,16 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(property));
             }
-            
+
             PropertyBuilder result = builder.DefineProperty(property.Name, property.Attributes, property.PropertyType, property.GetIndexParameterTypes());
-            
+
             get = set = default;
             MethodInfo? accessor = property.GetMethod;
             if (accessor is not null)
             {
                 get = builder.DefineMethod(accessor.Name, accessor.Attributes, accessor.CallingConvention, accessor.ReturnType, Type.EmptyTypes);
             }
-            
+
             accessor = property.SetMethod;
             if (accessor is not null)
             {
@@ -261,7 +261,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(@event));
             }
-            
+
             return InheritEvent(builder, @event, builder.InheritEventInit(@event, out raise, out add, out remove), raise, add, remove, type, inherit, null);
         }
 
@@ -334,22 +334,22 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(@event));
             }
-            
+
             EventBuilder result = builder.DefineEvent(@event.Name, @event.Attributes, @event.EventHandlerType!);
-            
+
             raise = add = remove = default;
             MethodInfo? accessor = @event.RaiseMethod;
             if (accessor is not null)
             {
                 raise = builder.DefineMethod(accessor.Name, accessor.Attributes, accessor.CallingConvention, accessor.ReturnType, Type.EmptyTypes);
             }
-            
+
             accessor = @event.AddMethod;
             if (accessor is not null)
             {
                 add = builder.DefineMethod(accessor.Name, accessor.Attributes, accessor.CallingConvention, accessor.ReturnType, Type.EmptyTypes);
             }
-            
+
             accessor = @event.RemoveMethod;
             if (accessor is not null)
             {
@@ -358,7 +358,7 @@ namespace NetExtender.Utilities.Core
 
             return result;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static MethodBuilder InheritMethod(this TypeBuilder builder, MethodInfo method)
         {
@@ -468,7 +468,7 @@ namespace NetExtender.Utilities.Core
                 for (Int32 i = 0; i < generic.Length; i++)
                 {
                     generic[i].SetGenericParameterAttributes(types[i].GenericParameterAttributes);
-                    
+
                     List<Type> interfaces = new List<Type>();
                     foreach (Type constraint in types[i].GetGenericParameterConstraints())
                     {
@@ -520,7 +520,7 @@ namespace NetExtender.Utilities.Core
             generator = result.GetILGenerator();
             return result;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ConstructorBuilder InheritStaticConstructor(this TypeBuilder builder, ConstructorInfo constructor)
         {
@@ -600,7 +600,7 @@ namespace NetExtender.Utilities.Core
             {
                 return constructor;
             }
-            
+
             generator.InheritStack(original);
             generator.Emit(type, inherit, members, original.Instructions());
             return constructor;
@@ -667,11 +667,11 @@ namespace NetExtender.Utilities.Core
                 {
                     continue;
                 }
-                
+
                 builder.SetCustomAttribute(custom);
                 result.Add(custom);
             }
-            
+
             return result.ToImmutableArray();
         }
 
@@ -702,11 +702,11 @@ namespace NetExtender.Utilities.Core
                 {
                     continue;
                 }
-                
+
                 builder.SetCustomAttribute(custom);
                 result.Add(custom);
             }
-            
+
             return result.ToImmutableArray();
         }
 
@@ -737,11 +737,11 @@ namespace NetExtender.Utilities.Core
                 {
                     continue;
                 }
-                
+
                 builder.SetCustomAttribute(custom);
                 result.Add(custom);
             }
-            
+
             return result.ToImmutableArray();
         }
 
@@ -772,11 +772,11 @@ namespace NetExtender.Utilities.Core
                 {
                     continue;
                 }
-                
+
                 builder.SetCustomAttribute(custom);
                 result.Add(custom);
             }
-            
+
             return result.ToImmutableArray();
         }
 
@@ -807,11 +807,11 @@ namespace NetExtender.Utilities.Core
                 {
                     continue;
                 }
-                
+
                 builder.SetCustomAttribute(custom);
                 result.Add(custom);
             }
-            
+
             return result.ToImmutableArray();
         }
 
@@ -842,11 +842,11 @@ namespace NetExtender.Utilities.Core
                 {
                     continue;
                 }
-                
+
                 builder.SetCustomAttribute(custom);
                 result.Add(custom);
             }
-            
+
             return result.ToImmutableArray();
         }
 
@@ -877,7 +877,7 @@ namespace NetExtender.Utilities.Core
                 {
                     continue;
                 }
-                
+
                 builder.SetCustomAttribute(custom);
                 result.Add(custom);
             }

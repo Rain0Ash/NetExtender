@@ -40,22 +40,22 @@ namespace NetExtender.WindowsPresentation.Types.Bindings
                 base.Converter = value;
             }
         }
-        
+
         public CustomBinding()
         {
         }
-        
+
         public CustomBinding(String path)
             : base(path)
         {
         }
-        
+
         public CustomBinding(String path, Object? source)
             : base(path)
         {
             Source = source;
         }
-        
+
         public CustomBinding(String path, RelativeSource? source)
             : base(path)
         {

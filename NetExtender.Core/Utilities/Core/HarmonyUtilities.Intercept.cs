@@ -39,7 +39,7 @@ namespace NetExtender.Utilities.Core
                 {
                     yield break;
                 }
-                
+
                 foreach (T instance in set)
                 {
                     yield return instance;
@@ -100,14 +100,14 @@ namespace NetExtender.Utilities.Core
         public static class Intercept<T, THandler> where T : class, IInterceptIdentifierTarget<T> where THandler : struct
         {
             internal static ConcurrentDictionary<String, THandler> Information { get; } = new ConcurrentDictionary<String, THandler>();
-            
+
             internal static THandler Add(T instance)
             {
                 if (instance is null)
                 {
                     throw new ArgumentNullException(nameof(instance));
                 }
-                
+
                 Intercept<T>.Storage.GetOrAdd(instance.Identifier, new ConcurrentWeakSet<T>()).Add(instance);
                 Information.TryGetValue(instance.GetType().Name, out THandler info);
                 return info;

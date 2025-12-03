@@ -15,7 +15,7 @@ namespace NetExtender.Types.Entities
         {
             return value is not null ? new Id<T>(value) : null;
         }
-        
+
         public Id()
         {
         }
@@ -25,7 +25,7 @@ namespace NetExtender.Types.Entities
         {
         }
     }
-    
+
     public class EntityId<T> : Entity<T>, IEntityId<T>, IEquality<EntityId<T>>
     {
         [return: NotNullIfNotNull("value")]
@@ -33,13 +33,13 @@ namespace NetExtender.Types.Entities
         {
             return value is not null ? value.Id : default;
         }
-        
+
         [return: NotNullIfNotNull("value")]
         public static implicit operator EntityId<T>?(T? value)
         {
             return value is not null ? new EntityId<T>(value) : null;
         }
-        
+
         public static Boolean operator ==(EntityId<T>? first, EntityId<T>? second)
         {
             if (ReferenceEquals(first, second))
@@ -89,7 +89,7 @@ namespace NetExtender.Types.Entities
         {
             return !(first < second);
         }
-        
+
         public T Id { get; init; }
 
         public EntityId()
@@ -172,13 +172,13 @@ namespace NetExtender.Types.Entities
         {
             return value is not null ? value.Value : default;
         }
-        
+
         [return: NotNullIfNotNull("value")]
         public static implicit operator EntityValue<T>?(T? value)
         {
             return value is not null ? new EntityValue<T>(value) : null;
         }
-        
+
         public static Boolean operator ==(EntityValue<T>? first, EntityValue<T>? second)
         {
             if (ReferenceEquals(first, second))
@@ -228,7 +228,7 @@ namespace NetExtender.Types.Entities
         {
             return !(first < second);
         }
-        
+
         public T Value { get; init; }
 
         public EntityValue(T value)
@@ -298,7 +298,7 @@ namespace NetExtender.Types.Entities
             return Value is IFormattable formattable ? formattable.ToString(format, provider) : ToString() ?? String.Empty;
         }
     }
-    
+
     public abstract class Entity<T> : IEntity<T>, IEquality<T>, IEquality<Entity<T>>, IAnyEquality, IFormattable
     {
         [return: NotNullIfNotNull("value")]
@@ -306,7 +306,7 @@ namespace NetExtender.Types.Entities
         {
             return value is not null ? value.Get() : default;
         }
-        
+
         public static Boolean operator ==(Entity<T>? first, Entity<T>? second)
         {
             if (ReferenceEquals(first, second))
@@ -358,7 +358,7 @@ namespace NetExtender.Types.Entities
         }
 
         public abstract T Get();
-        
+
         public virtual Int32 CompareTo(Object? other)
         {
             return other switch

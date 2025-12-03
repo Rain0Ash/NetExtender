@@ -13,7 +13,7 @@ namespace NetExtender.Types.History
             {
                 return node.Value;
             }
-            
+
             public static implicit operator DateTime(Node node)
             {
                 return node.Time.LocalDateTime;
@@ -288,7 +288,7 @@ namespace NetExtender.Types.History
             {
                 // ReSharper disable once MemberHidesStaticFromOuterClass
                 public new static NodeComparer Default { get; } = new NodeComparer(null);
-                
+
                 public Seal(IComparer<T>? comparer)
                     : base(comparer)
                 {

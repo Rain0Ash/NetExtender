@@ -20,6 +20,7 @@ namespace NetExtender.FileSystems
         public abstract override Boolean SetCurrentDirectory(String path);
         public abstract override String GetDirectoryRoot(String path);
         public abstract override IDirectoryInfo CreateDirectory(String path);
+        public abstract override IDirectoryInfo CreateDirectory(String path, UnixFileMode mode);
 
         public override String[] GetFileSystemEntries(String path)
         {
@@ -122,22 +123,22 @@ namespace NetExtender.FileSystems
         }
 
         public abstract override IEnumerable<String> EnumerateDirectories(String path, String? pattern, EnumerationOptions options);
-        
+
 #region Storage
         protected internal abstract DirectoryInfo? Info(TDirectory node);
-        
+
         DirectoryInfo? IFileSystemStorage.Info(IDirectoryEntry entry)
         {
             return Info(Verify<TDirectory, IDirectoryEntry>(entry));
         }
-        
+
         protected internal abstract void GetObjectData(TDirectory node, SerializationInfo info, StreamingContext context);
-        
+
         void IFileSystemStorage.GetObjectData(IDirectoryEntry entry, SerializationInfo info, StreamingContext context)
         {
             GetObjectData(Verify<TDirectory, IDirectoryEntry>(entry), info, context);
         }
-        
+
         protected internal new abstract String Name(TDirectory node);
 
         String IFileSystemStorage.Name(IDirectoryEntry entry)
@@ -151,28 +152,28 @@ namespace NetExtender.FileSystems
         {
             return FullName(Verify<TDirectory, IDirectoryEntry>(entry));
         }
-        
+
         protected internal abstract String Extension(TDirectory node);
 
         String IFileSystemStorage.Extension(IDirectoryEntry entry)
         {
             return Extension(Verify<TDirectory, IDirectoryEntry>(entry));
         }
-        
+
         protected internal new abstract Boolean IsReal(TDirectory node);
 
         Boolean IFileSystemStorage.IsReal(IDirectoryEntry entry)
         {
             return IsReal(Verify<TDirectory, IDirectoryEntry>(entry));
         }
-        
+
         protected internal abstract Boolean Exists(TDirectory node);
 
         Boolean IFileSystemStorage.Exists(IDirectoryEntry entry)
         {
             return Exists(Verify<TDirectory, IDirectoryEntry>(entry));
         }
-        
+
         protected internal abstract FileAttributes Attributes(TDirectory node);
 
         FileAttributes IFileSystemStorage.Attributes(IDirectoryEntry entry)
@@ -186,371 +187,378 @@ namespace NetExtender.FileSystems
         {
             Attributes(Verify<TDirectory, IDirectoryEntry>(entry), value);
         }
-        
+
         protected internal abstract String? LinkTarget(TDirectory node);
-        
+
         String? IFileSystemStorage.LinkTarget(IDirectoryEntry entry)
         {
             return LinkTarget(Verify<TDirectory, IDirectoryEntry>(entry));
         }
-        
+
         protected internal new abstract DateTime CreationTime(TDirectory node);
 
         DateTime IFileSystemStorage.CreationTime(IDirectoryEntry entry)
         {
             return CreationTime(Verify<TDirectory, IDirectoryEntry>(entry));
         }
-        
+
         protected internal new abstract void CreationTime(TDirectory node, DateTime value);
 
         void IFileSystemStorage.CreationTime(IDirectoryEntry entry, DateTime value)
         {
             CreationTime(Verify<TDirectory, IDirectoryEntry>(entry), value);
         }
-        
+
         protected internal new abstract DateTime CreationTimeUtc(TDirectory node);
 
         DateTime IFileSystemStorage.CreationTimeUtc(IDirectoryEntry entry)
         {
             return CreationTimeUtc(Verify<TDirectory, IDirectoryEntry>(entry));
         }
-        
+
         protected internal new abstract void CreationTimeUtc(TDirectory node, DateTime value);
 
         void IFileSystemStorage.CreationTimeUtc(IDirectoryEntry entry, DateTime value)
         {
             CreationTimeUtc(Verify<TDirectory, IDirectoryEntry>(entry), value);
         }
-        
+
         protected internal abstract DateTime LastAccessTime(TDirectory node);
 
         DateTime IFileSystemStorage.LastAccessTime(IDirectoryEntry entry)
         {
             return LastAccessTime(Verify<TDirectory, IDirectoryEntry>(entry));
         }
-        
+
         protected internal abstract void LastAccessTime(TDirectory node, DateTime value);
 
         void IFileSystemStorage.LastAccessTime(IDirectoryEntry entry, DateTime value)
         {
             LastAccessTime(Verify<TDirectory, IDirectoryEntry>(entry), value);
         }
-        
+
         protected internal abstract DateTime LastAccessTimeUtc(TDirectory node);
 
         DateTime IFileSystemStorage.LastAccessTimeUtc(IDirectoryEntry entry)
         {
             return LastAccessTimeUtc(Verify<TDirectory, IDirectoryEntry>(entry));
         }
-        
+
         protected internal abstract void LastAccessTimeUtc(TDirectory node, DateTime value);
 
         void IFileSystemStorage.LastAccessTimeUtc(IDirectoryEntry entry, DateTime value)
         {
             LastAccessTimeUtc(Verify<TDirectory, IDirectoryEntry>(entry), value);
         }
-        
+
         protected internal abstract DateTime LastWriteTime(TDirectory node);
 
         DateTime IFileSystemStorage.LastWriteTime(IDirectoryEntry entry)
         {
             return LastWriteTime(Verify<TDirectory, IDirectoryEntry>(entry));
         }
-        
+
         protected internal abstract void LastWriteTime(TDirectory node, DateTime value);
 
         void IFileSystemStorage.LastWriteTime(IDirectoryEntry entry, DateTime value)
         {
             LastWriteTime(Verify<TDirectory, IDirectoryEntry>(entry), value);
         }
-        
+
         protected internal abstract DateTime LastWriteTimeUtc(TDirectory node);
 
         DateTime IFileSystemStorage.LastWriteTimeUtc(IDirectoryEntry entry)
         {
             return LastWriteTimeUtc(Verify<TDirectory, IDirectoryEntry>(entry));
         }
-        
+
         protected internal abstract void LastWriteTimeUtc(TDirectory node, DateTime value);
 
         void IFileSystemStorage.LastWriteTimeUtc(IDirectoryEntry entry, DateTime value)
         {
             LastWriteTimeUtc(Verify<TDirectory, IDirectoryEntry>(entry), value);
         }
-        
+
         protected internal abstract TDirectory Root(TDirectory node);
 
         IDirectoryEntry IFileSystemStorage.Root(IDirectoryEntry entry)
         {
             return Root(Verify<TDirectory, IDirectoryEntry>(entry));
         }
-        
+
         protected internal abstract TDirectory? Parent(TDirectory node);
 
         IDirectoryEntry? IFileSystemStorage.Parent(IDirectoryEntry entry)
         {
             return Parent(Verify<TDirectory, IDirectoryEntry>(entry));
         }
-        
+
         protected internal new abstract TDrive? Drive(TDirectory node);
 
         IDriveEntry? IFileSystemStorage.Drive(IDirectoryEntry entry)
         {
             return Drive(Verify<TDirectory, IDirectoryEntry>(entry));
         }
-        
+
         protected internal abstract Boolean CreateAsSymbolicLink(TDirectory node, String target);
 
         Boolean IFileSystemStorage.CreateAsSymbolicLink(IDirectoryEntry entry, String target)
         {
             return CreateAsSymbolicLink(Verify<TDirectory, IDirectoryEntry>(entry), target);
         }
-        
+
         protected internal abstract IFileSystemNode? ResolveLinkTarget(TDirectory node);
 
         IFileSystemEntry? IFileSystemStorage.ResolveLinkTarget(IDirectoryEntry entry)
         {
             return ResolveLinkTarget(Verify<TDirectory, IDirectoryEntry>(entry))?.This;
         }
-        
+
         protected internal abstract IFileSystemNode? ResolveLinkTarget(TDirectory node, Boolean final);
 
         IFileSystemEntry? IFileSystemStorage.ResolveLinkTarget(IDirectoryEntry entry, Boolean final)
         {
             return ResolveLinkTarget(Verify<TDirectory, IDirectoryEntry>(entry), final)?.This;
         }
-        
+
         protected internal abstract IFileSystemNode[] GetFileSystemInfos(TDirectory node);
 
         IFileSystemEntry[] IFileSystemStorage.GetFileSystemInfos(IDirectoryEntry entry)
         {
             return GetFileSystemInfos(Verify<TDirectory, IDirectoryEntry>(entry)).ConvertAll(static node => node.This);
         }
-        
+
         protected internal abstract IFileSystemNode[] GetFileSystemInfos(TDirectory node, String? pattern);
 
         IFileSystemEntry[] IFileSystemStorage.GetFileSystemInfos(IDirectoryEntry entry, String? pattern)
         {
             return GetFileSystemInfos(Verify<TDirectory, IDirectoryEntry>(entry), pattern).ConvertAll(static node => node.This);
         }
-        
+
         protected internal abstract IFileSystemNode[] GetFileSystemInfos(TDirectory node, String? pattern, SearchOption option);
 
         IFileSystemEntry[] IFileSystemStorage.GetFileSystemInfos(IDirectoryEntry entry, String? pattern, SearchOption option)
         {
             return GetFileSystemInfos(Verify<TDirectory, IDirectoryEntry>(entry), pattern, option).ConvertAll(static node => node.This);
         }
-        
+
         protected internal abstract IFileSystemNode[] GetFileSystemInfos(TDirectory node, String? pattern, EnumerationOptions options);
 
         IFileSystemEntry[] IFileSystemStorage.GetFileSystemInfos(IDirectoryEntry entry, String? pattern, EnumerationOptions options)
         {
             return GetFileSystemInfos(Verify<TDirectory, IDirectoryEntry>(entry), pattern, options).ConvertAll(static node => node.This);
         }
-        
+
         protected internal abstract TFile[] GetFiles(TDirectory node);
 
         IFileEntry[] IFileSystemStorage.GetFiles(IDirectoryEntry entry)
         {
             return GetFiles(Verify<TDirectory, IDirectoryEntry>(entry)).ConvertAll(static node => node.This);
         }
-        
+
         protected internal abstract TFile[] GetFiles(TDirectory node, String? pattern);
 
         IFileEntry[] IFileSystemStorage.GetFiles(IDirectoryEntry entry, String? pattern)
         {
             return GetFiles(Verify<TDirectory, IDirectoryEntry>(entry), pattern).ConvertAll(static node => node.This);
         }
-        
+
         protected internal abstract TFile[] GetFiles(TDirectory node, String? pattern, SearchOption option);
 
         IFileEntry[] IFileSystemStorage.GetFiles(IDirectoryEntry entry, String? pattern, SearchOption option)
         {
             return GetFiles(Verify<TDirectory, IDirectoryEntry>(entry), pattern, option).ConvertAll(static node => node.This);
         }
-        
+
         protected internal abstract TFile[] GetFiles(TDirectory node, String? pattern, EnumerationOptions options);
 
         IFileEntry[] IFileSystemStorage.GetFiles(IDirectoryEntry entry, String? pattern, EnumerationOptions options)
         {
             return GetFiles(Verify<TDirectory, IDirectoryEntry>(entry), pattern, options).ConvertAll(static node => node.This);
         }
-        
+
         protected internal abstract TDirectory[] GetDirectories(TDirectory node);
 
         IDirectoryEntry[] IFileSystemStorage.GetDirectories(IDirectoryEntry entry)
         {
             return GetDirectories(Verify<TDirectory, IDirectoryEntry>(entry)).ConvertAll(static node => node.This);
         }
-        
+
         protected internal abstract TDirectory[] GetDirectories(TDirectory node, String? pattern);
 
         IDirectoryEntry[] IFileSystemStorage.GetDirectories(IDirectoryEntry entry, String? pattern)
         {
             return GetDirectories(Verify<TDirectory, IDirectoryEntry>(entry), pattern).ConvertAll(static node => node.This);
         }
-        
+
         protected internal abstract TDirectory[] GetDirectories(TDirectory node, String? pattern, SearchOption option);
 
         IDirectoryEntry[] IFileSystemStorage.GetDirectories(IDirectoryEntry entry, String? pattern, SearchOption option)
         {
             return GetDirectories(Verify<TDirectory, IDirectoryEntry>(entry), pattern, option).ConvertAll(static node => node.This);
         }
-        
+
         protected internal abstract TDirectory[] GetDirectories(TDirectory node, String? pattern, EnumerationOptions options);
 
         IDirectoryEntry[] IFileSystemStorage.GetDirectories(IDirectoryEntry entry, String? pattern, EnumerationOptions options)
         {
             return GetDirectories(Verify<TDirectory, IDirectoryEntry>(entry), pattern, options).ConvertAll(static node => node.This);
         }
-        
+
         protected internal abstract IEnumerable<IFileSystemNode> EnumerateFileSystemInfos(TDirectory node);
 
         IEnumerable<IFileSystemEntry> IFileSystemStorage.EnumerateFileSystemInfos(IDirectoryEntry entry)
         {
             return EnumerateFileSystemInfos(Verify<TDirectory, IDirectoryEntry>(entry)).Select(static node => node.This);
         }
-        
+
         protected internal abstract IEnumerable<IFileSystemNode> EnumerateFileSystemInfos(TDirectory node, String? pattern);
 
         IEnumerable<IFileSystemEntry> IFileSystemStorage.EnumerateFileSystemInfos(IDirectoryEntry entry, String? pattern)
         {
             return EnumerateFileSystemInfos(Verify<TDirectory, IDirectoryEntry>(entry), pattern).Select(static node => node.This);
         }
-        
+
         protected internal abstract IEnumerable<IFileSystemNode> EnumerateFileSystemInfos(TDirectory node, String? pattern, SearchOption option);
 
         IEnumerable<IFileSystemEntry> IFileSystemStorage.EnumerateFileSystemInfos(IDirectoryEntry entry, String? pattern, SearchOption option)
         {
             return EnumerateFileSystemInfos(Verify<TDirectory, IDirectoryEntry>(entry), pattern, option).Select(static node => node.This);
         }
-        
+
         protected internal abstract IEnumerable<IFileSystemNode> EnumerateFileSystemInfos(TDirectory node, String? pattern, EnumerationOptions options);
 
         IEnumerable<IFileSystemEntry> IFileSystemStorage.EnumerateFileSystemInfos(IDirectoryEntry entry, String? pattern, EnumerationOptions options)
         {
             return EnumerateFileSystemInfos(Verify<TDirectory, IDirectoryEntry>(entry), pattern, options).Select(static node => node.This);
         }
-        
+
         protected internal abstract IEnumerable<TFile> EnumerateFiles(TDirectory node);
 
         IEnumerable<IFileEntry> IFileSystemStorage.EnumerateFiles(IDirectoryEntry entry)
         {
             return EnumerateFiles(Verify<TDirectory, IDirectoryEntry>(entry));
         }
-        
+
         protected internal abstract IEnumerable<TFile> EnumerateFiles(TDirectory node, String? pattern);
 
         IEnumerable<IFileEntry> IFileSystemStorage.EnumerateFiles(IDirectoryEntry entry, String? pattern)
         {
             return EnumerateFiles(Verify<TDirectory, IDirectoryEntry>(entry), pattern);
         }
-        
+
         protected internal abstract IEnumerable<TFile> EnumerateFiles(TDirectory node, String? pattern, SearchOption option);
 
         IEnumerable<IFileEntry> IFileSystemStorage.EnumerateFiles(IDirectoryEntry entry, String? pattern, SearchOption option)
         {
             return EnumerateFiles(Verify<TDirectory, IDirectoryEntry>(entry), pattern, option);
         }
-        
+
         protected internal abstract IEnumerable<TFile> EnumerateFiles(TDirectory node, String? pattern, EnumerationOptions options);
 
         IEnumerable<IFileEntry> IFileSystemStorage.EnumerateFiles(IDirectoryEntry entry, String? pattern, EnumerationOptions options)
         {
             return EnumerateFiles(Verify<TDirectory, IDirectoryEntry>(entry), pattern, options);
         }
-        
+
         protected internal abstract IEnumerable<TDirectory> EnumerateDirectories(TDirectory node);
 
         IEnumerable<IDirectoryEntry> IFileSystemStorage.EnumerateDirectories(IDirectoryEntry entry)
         {
             return EnumerateDirectories(Verify<TDirectory, IDirectoryEntry>(entry));
         }
-        
+
         protected internal abstract IEnumerable<TDirectory> EnumerateDirectories(TDirectory node, String? pattern);
 
         IEnumerable<IDirectoryEntry> IFileSystemStorage.EnumerateDirectories(IDirectoryEntry entry, String? pattern)
         {
             return EnumerateDirectories(Verify<TDirectory, IDirectoryEntry>(entry), pattern);
         }
-        
+
         protected internal abstract IEnumerable<TDirectory> EnumerateDirectories(TDirectory node, String? pattern, SearchOption option);
 
         IEnumerable<IDirectoryEntry> IFileSystemStorage.EnumerateDirectories(IDirectoryEntry entry, String? pattern, SearchOption option)
         {
             return EnumerateDirectories(Verify<TDirectory, IDirectoryEntry>(entry), pattern, option);
         }
-        
+
         protected internal abstract IEnumerable<TDirectory> EnumerateDirectories(TDirectory node, String? pattern, EnumerationOptions options);
 
         IEnumerable<IDirectoryEntry> IFileSystemStorage.EnumerateDirectories(IDirectoryEntry entry, String? pattern, EnumerationOptions options)
         {
             return EnumerateDirectories(Verify<TDirectory, IDirectoryEntry>(entry), pattern, options);
         }
-        
+
         protected internal abstract void MoveTo(TDirectory node, String destination);
 
         void IFileSystemStorage.MoveTo(IDirectoryEntry entry, String destination)
         {
             MoveTo(Verify<TDirectory, IDirectoryEntry>(entry), destination);
         }
-        
+
         protected internal abstract void Create(TDirectory node);
 
         void IFileSystemStorage.Create(IDirectoryEntry entry)
         {
             Create(Verify<TDirectory, IDirectoryEntry>(entry));
         }
-        
+
+        protected internal abstract void Create(TDirectory node, UnixFileMode mode);
+
+        void IFileSystemStorage.Create(IDirectoryEntry entry, UnixFileMode mode)
+        {
+            Create(Verify<TDirectory, IDirectoryEntry>(entry), mode);
+        }
+
         protected internal abstract TDirectory CreateSubdirectory(TDirectory node, String path);
 
         IDirectoryEntry IFileSystemStorage.CreateSubdirectory(IDirectoryEntry entry, String path)
         {
             return CreateSubdirectory(Verify<TDirectory, IDirectoryEntry>(entry), path);
         }
-        
+
         protected internal abstract void Delete(TDirectory node);
 
         void IFileSystemStorage.Delete(IDirectoryEntry entry)
         {
             Delete(Verify<TDirectory, IDirectoryEntry>(entry));
         }
-        
+
         protected internal abstract void Delete(TDirectory node, Boolean recursive);
 
         void IFileSystemStorage.Delete(IDirectoryEntry entry, Boolean recursive)
         {
             Delete(Verify<TDirectory, IDirectoryEntry>(entry), recursive);
         }
-        
+
         protected internal abstract void Refresh(TDirectory node);
 
         void IFileSystemStorage.Refresh(IDirectoryEntry entry)
         {
             Refresh(Verify<TDirectory, IDirectoryEntry>(entry));
         }
-        
+
         protected internal abstract Int32 GetHashCode(TDirectory? node);
 
         Int32 IFileSystemStorage.GetHashCode(IDirectoryEntry? entry)
         {
             return GetHashCode(Verify<TDirectory, IDirectoryEntry>(entry));
         }
-        
+
         protected internal abstract Boolean Equals(TDirectory? node, DirectoryInfo? other);
 
         Boolean IFileSystemStorage.Equals(IDirectoryEntry? entry, DirectoryInfo? other)
         {
             return Equals(Verify<TDirectory, IDirectoryEntry>(entry), other);
         }
-        
+
         protected internal abstract Boolean Equals(TDirectory? node, IDirectoryInfo? other);
 
         Boolean IFileSystemStorage.Equals(IDirectoryEntry? entry, IDirectoryInfo? other)
         {
             return Equals(Verify<TDirectory, IDirectoryEntry>(entry), other);
         }
-        
+
         [return: NotNullIfNotNull("node")]
         protected internal abstract String? ToString(TDirectory? node);
 

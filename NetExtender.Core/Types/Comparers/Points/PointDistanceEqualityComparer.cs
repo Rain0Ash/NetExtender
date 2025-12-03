@@ -14,7 +14,7 @@ namespace NetExtender.Types.Comparers.Points
         public static PointDistanceEqualityComparer One { get; } = new PointDistanceEqualityComparer(1);
 
         public Double Epsilon { get; }
-        
+
         public PointDistanceEqualityComparer()
             : this(Double.Epsilon)
         {

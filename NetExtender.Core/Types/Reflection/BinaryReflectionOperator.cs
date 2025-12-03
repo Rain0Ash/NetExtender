@@ -121,18 +121,18 @@ namespace NetExtender.Types.Reflection
         }
 
         public BinaryOperator Operator { get; }
-        
+
         protected BinaryReflectionOperator(BinaryOperator @operator)
         {
             Operator = @operator;
         }
-        
+
         protected BinaryReflectionOperator(MethodInfo? method, BinaryOperator @operator)
             : base(method)
         {
             Operator = @operator;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         protected static MethodInfo? Find(Type first, Type second, BinaryOperator @operator)
         {
@@ -140,17 +140,17 @@ namespace NetExtender.Types.Reflection
             {
                 throw new ArgumentNullException(nameof(first));
             }
-            
+
             if (second is null)
             {
                 throw new ArgumentNullException(nameof(second));
             }
-            
+
             const BindingFlags binding = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy;
-            
+
             String name = @operator.Operator();
             MethodInfo[] exists = first.GetMethods(binding);
-            
+
             if (exists.SingleOrDefault(method => method.HasName(name) && method.GetParameterTypes() is { Length: 2 } parameters && parameters[0] == first && parameters[1] == second) is { } result)
             {
                 return result;
@@ -163,9 +163,9 @@ namespace NetExtender.Types.Reflection
 
             return null;
         }
-        
+
         public abstract Object? Invoke(Object? first, Object? second);
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         private static Boolean Get(Type first, Type second, BinaryOperator @operator, [MaybeNullWhen(false)] out IBinaryReflectionOperator result)
         {
@@ -173,21 +173,21 @@ namespace NetExtender.Types.Reflection
             {
                 throw new ArgumentNullException(nameof(first));
             }
-            
+
             if (second is null)
             {
                 throw new ArgumentNullException(nameof(second));
             }
-            
+
             result = Storage.GetOrAdd((first, second, @operator), static key =>
             {
                 (Type first, Type second, BinaryOperator @operator) = key;
-                
+
                 if (Find(first, second, @operator) is not { } method)
                 {
                     return Find(second, first, @operator) is not null && Get(second, first, @operator, out IBinaryReflectionOperator? result) ? result : null;
                 }
-                
+
                 if (method.GetParameterTypes() is { Length: 2 } parameters && (parameters[0] != first || parameters[1] != second))
                 {
                     return Storage.GetOrAdd((parameters[0], parameters[1], @operator), static (key, method) =>
@@ -197,14 +197,14 @@ namespace NetExtender.Types.Reflection
                         return (IBinaryReflectionOperator?) Activator.CreateInstance(typeof(BinaryReflectionOperator<,,>.Seal).MakeGenericType(first, second, method.ReturnType), binding, null, new Object[] { method, @operator }, null);
                     }, method);
                 }
-                
+
                 const BindingFlags binding = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.CreateInstance;
                 return (IBinaryReflectionOperator?) Activator.CreateInstance(typeof(BinaryReflectionOperator<,,>.Seal).MakeGenericType(first, second, method.ReturnType), binding, null, new Object[] { method, @operator }, null);
             });
 
             return result is not null;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public new static IBinaryReflectionOperator? Get(Type first, Type second, BinaryOperator @operator)
         {
@@ -220,19 +220,19 @@ namespace NetExtender.Types.Reflection
                 _ => throw new EnumUndefinedOrNotSupportedException<BinaryOperator>(flags, nameof(@operator), null)
             };
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public new static IBinaryReflectionOperator<TSelf, TSelf, TSelf>? Get<TSelf>(BinaryOperator @operator)
         {
             return Get<TSelf, TSelf, TSelf>(@operator);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public new static IBinaryReflectionOperator<TSelf, TSelf, TResult>? Get<TSelf, TResult>(BinaryOperator @operator)
         {
             return Get<TSelf, TSelf, TResult>(@operator);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public new static IBinaryReflectionOperator<TSelf, TOther, TResult>? Get<TSelf, TOther, TResult>(BinaryOperator @operator)
         {
@@ -262,7 +262,7 @@ namespace NetExtender.Types.Reflection
             return Operator.Operator();
         }
     }
-    
+
     public class BinaryOperatorNotImplementedException<TSelf, TOther, TResult> : BinaryOperatorNotImplementedException
     {
         public sealed override String Identifier
@@ -293,12 +293,16 @@ namespace NetExtender.Types.Reflection
         {
         }
 
+#if NET8_0_OR_GREATER
+        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
         protected BinaryOperatorNotImplementedException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
         }
     }
-    
+
     public abstract class BinaryOperatorNotImplementedException : ReflectionOperatorNotImplementedException
     {
         public BinaryOperator Operator { get; }
@@ -327,12 +331,20 @@ namespace NetExtender.Types.Reflection
             Operator = @operator;
         }
 
+#if NET8_0_OR_GREATER
+        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
         protected BinaryOperatorNotImplementedException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
             Operator = (BinaryOperator) info.GetUInt32(nameof(Operator));
         }
 
+#if NET8_0_OR_GREATER
+        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId = "SYSLIB0051", UrlFormat = "https://aka.ms/dotnet-warnings/{0}")]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             base.GetObjectData(info, context);

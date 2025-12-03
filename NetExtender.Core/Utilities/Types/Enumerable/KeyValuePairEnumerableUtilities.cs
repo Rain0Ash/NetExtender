@@ -26,7 +26,7 @@ namespace NetExtender.Utilities.Types
                 yield return pair.Nullable();
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<KeyValuePair<NullMaybe<TKey>, TValue>> KeyNullable<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source)
         {
@@ -40,7 +40,7 @@ namespace NetExtender.Utilities.Types
                 yield return pair.KeyNullable();
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<KeyValuePair<TKey, NullMaybe<TValue>>> ValueNullable<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source)
         {
@@ -54,7 +54,7 @@ namespace NetExtender.Utilities.Types
                 yield return pair.ValueNullable();
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryGetValue<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source, TKey key, [MaybeNullWhen(false)] out TValue result)
         {

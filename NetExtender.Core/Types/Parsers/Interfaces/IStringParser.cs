@@ -18,7 +18,7 @@ namespace NetExtender.Types.Parsers.Interfaces
         public Boolean TryParse(ReadOnlySpan<Char> value, IFormatProvider? provider, [MaybeNullWhen(false)] out TResult result);
         public Boolean TryParse(ReadOnlySpan<Char> value, NumberStyles style, IFormatProvider? provider, [MaybeNullWhen(false)] out TResult result);
     }
-    
+
     public interface IStringParser : IParser<String>
     {
         public Object? Parse(ReadOnlySpan<Char> value);

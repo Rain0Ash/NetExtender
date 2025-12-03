@@ -1385,7 +1385,7 @@ namespace NetExtender.Utilities.IO
         {
             return Environment.GetFolderPath(folder);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static DirectoryInfo? ToDirectoryInfo(this Environment.SpecialFolder folder)
         {

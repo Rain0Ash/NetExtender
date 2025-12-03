@@ -15,7 +15,7 @@ namespace NetExtender.Utilities.Types
         {
             return checked(size.Width * size.Height);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryCount(this Size size, out Int32 result)
         {
@@ -30,13 +30,13 @@ namespace NetExtender.Utilities.Types
                 return false;
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Int32 Count(this SizeF size)
         {
             return checked((Int32) size.Width * (Int32) size.Height);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryCount(this SizeF size, out Int32 result)
         {
@@ -51,13 +51,13 @@ namespace NetExtender.Utilities.Types
                 return false;
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Int64 LongCount(this Size size)
         {
             return checked((Int64) size.Width * size.Height);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryLongCount(this Size size, out Int64 result)
         {
@@ -72,13 +72,13 @@ namespace NetExtender.Utilities.Types
                 return false;
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Int64 LongCount(this SizeF size)
         {
             return checked((Int64) size.Width * (Int64) size.Height);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryLongCount(this SizeF size, out Int64 result)
         {
@@ -93,7 +93,7 @@ namespace NetExtender.Utilities.Types
                 return false;
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static SizeEnumerator GetEnumerator(this Size size)
         {
@@ -117,7 +117,7 @@ namespace NetExtender.Utilities.Types
         {
             return new SizeEnumerator(size, bounds, rotation);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static SizeEnumerator GetEnumerator(this Size size, Size step)
         {
@@ -141,7 +141,7 @@ namespace NetExtender.Utilities.Types
         {
             return new SizeEnumerator(size, step, bounds, rotation);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static SizeFEnumerator GetEnumerator(this SizeF size)
         {
@@ -159,13 +159,13 @@ namespace NetExtender.Utilities.Types
         {
             return GetEnumerator(size, GeometryBoundsType.Bound, rotation);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static SizeFEnumerator GetEnumerator(this SizeF size, GeometryBoundsType bounds, GeometryRotationType rotation)
         {
             return new SizeFEnumerator(size, bounds, rotation);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static SizeFEnumerator GetEnumerator(this SizeF size, SizeF step)
         {
@@ -183,7 +183,7 @@ namespace NetExtender.Utilities.Types
         {
             return GetEnumerator(size, step, GeometryBoundsType.Bound, rotation);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static SizeFEnumerator GetEnumerator(this SizeF size, SizeF step, GeometryBoundsType bounds, GeometryRotationType rotation)
         {
@@ -285,13 +285,13 @@ namespace NetExtender.Utilities.Types
         {
             return GetEnumerator(size, step, bounds, GeometryRotationType.Vertical);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double GetAspectRatio(this Size size)
         {
             return DrawingUtilities.GetAspectRatio(size.Width, size.Height);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double GetAspectRatio(this SizeF size)
         {
@@ -302,7 +302,7 @@ namespace NetExtender.Utilities.Types
         public static Size AspectRatioBounds(this Size size, Size bounds)
         {
             Double difference = GetAspectRatio(size);
-            
+
             Int32 height = (Int32) DrawingUtilities.GetAspectRatio(size.Height, difference);
 
             if (height <= bounds.Height)
@@ -311,7 +311,7 @@ namespace NetExtender.Utilities.Types
             }
 
             difference = DrawingUtilities.GetAspectRatio(height, bounds.Height);
-            
+
             Int32 width = (Int32) DrawingUtilities.GetAspectRatio(bounds.Width, difference);
             return new Size(width, bounds.Height);
         }
@@ -329,7 +329,7 @@ namespace NetExtender.Utilities.Types
             }
 
             difference = DrawingUtilities.GetAspectRatio(height, bounds.Height);
-            
+
             Single width = (Single) DrawingUtilities.GetAspectRatio(bounds.Width, difference);
             return new SizeF(width, bounds.Height);
         }

@@ -46,7 +46,7 @@ namespace NetExtender.Utilities.UserInterface
 
             return UserInterfaceUtilities.BringToForegroundWindow(form.Handle);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean? GetWindowSystemMenu(this Form form)
         {
@@ -68,7 +68,7 @@ namespace NetExtender.Utilities.UserInterface
 
             return UserInterfaceUtilities.SetWindowSystemMenu(form.Handle, value);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean GetWindowDisplayAffinity(this Form form, out WindowDisplayAffinity affinity)
         {
@@ -76,7 +76,7 @@ namespace NetExtender.Utilities.UserInterface
             {
                 throw new ArgumentNullException(nameof(form));
             }
-            
+
             return UserInterfaceUtilities.GetWindowDisplayAffinity(form.Handle, out affinity);
         }
 
@@ -87,7 +87,7 @@ namespace NetExtender.Utilities.UserInterface
             {
                 throw new ArgumentNullException(nameof(form));
             }
-            
+
             return UserInterfaceUtilities.SetWindowDisplayAffinity(form.Handle, affinity);
         }
 

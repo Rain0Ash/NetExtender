@@ -64,7 +64,7 @@ namespace NetExtender.Types.HotKeys.Comparer
         public virtual Int32 Compare(T x, T y)
         {
             Int32 comparison = 0;
-            
+
             if (Key)
             {
                 comparison = Comparer<TKey>.Default.Compare(x.Key, y.Key);
@@ -78,7 +78,7 @@ namespace NetExtender.Types.HotKeys.Comparer
             return comparison;
         }
     }
-    
+
     public class HotKeyActionComparer<T, TId, TKey, TModifier> : HotKeyActionComparer<T, TKey, TModifier>, IHotKeyActionComparer<T, TId, TKey, TModifier> where T : struct, IHotKeyAction<T, TId, TKey, TModifier> where TId : unmanaged, IComparable<TId>, IConvertible where TKey : unmanaged where TModifier : unmanaged
     {
         public Boolean Id { get; init; } = true;

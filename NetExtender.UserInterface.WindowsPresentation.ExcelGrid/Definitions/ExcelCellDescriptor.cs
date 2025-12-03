@@ -38,7 +38,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 this.RaiseAndSetIfChanged(ref _item, value);
             }
         }
-        
+
         private Type? _type;
         public Type? PropertyType
         {
@@ -51,7 +51,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 this.RaiseAndSetIfChanged(ref _type, value);
             }
         }
-        
+
         private String? _path;
         public String? BindingPath
         {
@@ -64,7 +64,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 this.RaiseAndSetIfChanged(ref _path, value);
             }
         }
-        
+
         private Object? _source;
         public Object? BindingSource
         {

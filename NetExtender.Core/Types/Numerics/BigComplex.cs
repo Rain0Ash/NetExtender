@@ -15,7 +15,7 @@ namespace NetExtender.Types.Numerics
         {
             return new BigComplex(value, Decimal.Zero);
         }
-        
+
         public static implicit operator BigComplex(Int16 value)
         {
             return new BigComplex(value, Decimal.Zero);
@@ -166,7 +166,7 @@ namespace NetExtender.Types.Numerics
             division = second._real / second._imaginary;
             return new BigComplex(first * division / (second._imaginary + second._real * division), -first / (second._imaginary + second._real * division));
         }
-        
+
         public static readonly BigComplex Zero = new BigComplex(Decimal.Zero, Decimal.Zero);
         public static readonly BigComplex One = new BigComplex(Decimal.One, Decimal.Zero);
         public static readonly BigComplex ImaginaryOne = new BigComplex(Decimal.Zero, Decimal.One);
@@ -424,7 +424,7 @@ namespace NetExtender.Types.Numerics
         public static BigComplex Asin(BigComplex value)
         {
             AsinCore(Math.Abs(value.Real), Math.Abs(value.Imaginary), out Decimal b, out Decimal bprime, out Decimal v);
-            
+
             Decimal real = bprime >= Decimal.Zero ? bprime.Atan() : b.Asin();
             if (value.Real < Decimal.Zero)
             {
@@ -454,7 +454,7 @@ namespace NetExtender.Types.Numerics
         public static BigComplex Acos(BigComplex value)
         {
             AsinCore(Math.Abs(value.Real), Math.Abs(value.Imaginary), out Decimal b, out Decimal bprime, out Decimal v);
-            
+
             Decimal real = bprime >= Decimal.Zero ? (Decimal.One / bprime).Atan() : b.Acos();
             if (value.Real < Decimal.Zero)
             {
@@ -532,12 +532,12 @@ namespace NetExtender.Types.Numerics
                 {
                     if (x <= Decimal.One)
                     {
-                        Decimal num6 = (y * y / (num3 + (x + Decimal.One)) + (num4 + (Decimal.One - x))) * 0.5M;
+                        Decimal num6 = (y * y / (num3 + x + Decimal.One) + num4 + (Decimal.One - x)) * 0.5M;
                         bprime = x / ((num5 + x) * num6).Sqrt();
                     }
                     else
                     {
-                        Decimal num7 = (Decimal.One / (num3 + (x + Decimal.One)) + Decimal.One / (num4 + (x - Decimal.One))) * 0.5M;
+                        Decimal num7 = (Decimal.One / (num3 + x + Decimal.One) + Decimal.One / (num4 + (x - Decimal.One))) * 0.5M;
                         bprime = x / y / ((num5 + x) * num7).Sqrt();
                     }
                 }
@@ -550,13 +550,13 @@ namespace NetExtender.Types.Numerics
                 {
                     if (x < Decimal.One)
                     {
-                        Decimal num8 = (Decimal.One / (num3 + (x + Decimal.One)) + Decimal.One / (num4 + (Decimal.One - x))) * 0.5M;
+                        Decimal num8 = (Decimal.One / (num3 + x + Decimal.One) + Decimal.One / (num4 + (Decimal.One - x))) * 0.5M;
                         Decimal num9 = y * y * num8;
                         v = Log1P(num9 + y * (num8 * (num5 + Decimal.One)).Sqrt());
                     }
                     else
                     {
-                        Decimal num10 = (y * y / (num3 + (x + Decimal.One)) + (num4 + (x - Decimal.One))) * 0.5M;
+                        Decimal num10 = (y * y / (num3 + x + Decimal.One) + num4 + (x - Decimal.One)) * 0.5M;
                         v = Log1P(num10 + (num10 * (num5 + Decimal.One)).Sqrt());
                     }
                 }
@@ -620,7 +620,7 @@ namespace NetExtender.Types.Numerics
             {
                 < 0 => $"{_real} - {Math.Abs(_imaginary)}i",
                 0 => _real.ToString(),
-                _ => $"{_real} + {_imaginary}i",
+                _ => $"{_real} + {_imaginary}i"
             };
         }
 
@@ -640,7 +640,7 @@ namespace NetExtender.Types.Numerics
             {
                 < 0 => $"{_real.ToString(format, provider)} - {Math.Abs(_imaginary).ToString(format, provider)}i",
                 0 => _real.ToString(format, provider),
-                _ => $"{_real.ToString(format, provider)} + {_imaginary.ToString(format, provider)}i",
+                _ => $"{_real.ToString(format, provider)} + {_imaginary.ToString(format, provider)}i"
             };
         }
     }

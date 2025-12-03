@@ -14,7 +14,7 @@ namespace NetExtender.Utilities.Delegates
         public Task<TResult> InvokeTask();
         public ValueTask<TResult> InvokeValueTask();
     }
-    
+
     public interface IAsyncValueAction<T> : IAsyncValueDelegate<T> where T : struct, IAsyncValueAction<T>
     {
         public Task AsTask();
@@ -22,12 +22,12 @@ namespace NetExtender.Utilities.Delegates
         public Task InvokeTask();
         public ValueTask InvokeValueTask();
     }
-    
+
     public interface IAsyncValueDelegate<T> : IValueDelegate<T> where T : struct, IAsyncValueDelegate<T>
     {
         public Boolean IsValue { get; }
     }
-    
+
     public interface IValueAction<T> : IValueDelegate<T> where T : struct, IValueAction<T>
     {
         public new void Invoke();

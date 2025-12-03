@@ -17,7 +17,7 @@ namespace NetExtender.Utilities.Core
         {
             return Invoke(null, value);
         }
-        
+
         public abstract Boolean Invoke(Object? sender, Object? value);
     }
 }

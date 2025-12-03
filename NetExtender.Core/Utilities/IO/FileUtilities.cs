@@ -32,7 +32,7 @@ namespace NetExtender.Utilities.IO
         {
             return (current & attributes) == attributes;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean HasAttribute(String path, FileAttributes attributes)
         {

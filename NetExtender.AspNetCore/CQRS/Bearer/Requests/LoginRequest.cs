@@ -41,7 +41,7 @@ namespace Microsoft.AspNetCore.Identity.Data
             : this(String.Empty, String.Empty)
         {
         }
-        
+
         public LoginRequest(String email, String password)
         {
             Email = email ?? throw new ArgumentNullException(nameof(email));

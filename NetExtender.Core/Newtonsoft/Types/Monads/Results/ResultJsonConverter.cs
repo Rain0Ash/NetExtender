@@ -50,7 +50,7 @@ namespace NetExtender.Newtonsoft.Types.Monads.Results
                 writer.WriteNull();
                 return true;
             }
-            
+
             if (value.Exception is { } exception)
             {
                 options.Serialize(writer, exception);
@@ -61,7 +61,7 @@ namespace NetExtender.Newtonsoft.Types.Monads.Results
             return true;
         }
     }
-    
+
     public sealed class ResultJsonConverter<T, TException> : NewtonsoftJsonConverter<Result<T, TException>> where TException : Exception
     {
         protected internal override Result<T, TException> Read(in JsonReader reader, Type type, Maybe<Result<T, TException>> exist, ref SerializerOptions options)
@@ -108,7 +108,7 @@ namespace NetExtender.Newtonsoft.Types.Monads.Results
                 writer.WriteNull();
                 return true;
             }
-            
+
             if (value.Exception is { } exception)
             {
                 options.Serialize(writer, exception);
@@ -124,7 +124,7 @@ namespace NetExtender.Newtonsoft.Types.Monads.Results
 namespace NetExtender.Serialization.Json.Monads
 {
     using System.Text.Json;
-    
+
     public sealed class ResultJsonConverter<T> : TextJsonConverter<Result<T>>
     {
         protected internal override Result<T> Read(ref Utf8JsonReader reader, Type type, ref SerializerOptions options)
@@ -174,7 +174,7 @@ namespace NetExtender.Serialization.Json.Monads
                 writer.WriteNullValue();
                 return true;
             }
-            
+
             if (value.Exception is { } exception)
             {
                 JsonSerializer.Serialize(writer, exception, options);
@@ -235,7 +235,7 @@ namespace NetExtender.Serialization.Json.Monads
                 writer.WriteNullValue();
                 return true;
             }
-            
+
             if (value.Exception is { } exception)
             {
                 JsonSerializer.Serialize(writer, exception, options);

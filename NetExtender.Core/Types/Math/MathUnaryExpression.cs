@@ -405,7 +405,7 @@ namespace NetExtender.Types.Mathematics
         {
             return MathUnaryNode<T>.TryGetOperator(@operator);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected internal new static Boolean Register(MathUnaryOperator @operator, Func<MathResult<T>, MathResult<T>> selector)
         {
@@ -564,7 +564,7 @@ namespace NetExtender.Types.Mathematics
             return Expression switch
             {
                 MathUnaryExpression<T> or MathUnaryNode<T> => ToString(Operator, new Wrapper(Expression.ToString(format ?? (Expression.Format is null ? Format : null), provider ?? (Expression.Provider is null ? Provider : null))) { State = Expression.State }),
-                _ => ToString(Operator, new Wrapper(Expression.ToString(format, provider ?? (Expression.Provider is null ? Provider : null))) { State = Expression.State }),
+                _ => ToString(Operator, new Wrapper(Expression.ToString(format, provider ?? (Expression.Provider is null ? Provider : null))) { State = Expression.State })
             };
         }
 
@@ -608,11 +608,11 @@ namespace NetExtender.Types.Mathematics
             return Expression switch
             {
                 MathUnaryExpression<T> or MathUnaryNode<T> => ToString(Operator, new Wrapper(Expression.GetString(escape, format ?? (Expression.Format is null ? Format : null), provider ?? (Expression.Provider is null ? Provider : null))) { State = Expression.State }),
-                _ => ToString(Operator, new Wrapper(Expression.GetString(escape, format, provider ?? (Expression.Provider is null ? Provider : null))) { State = Expression.State }),
+                _ => ToString(Operator, new Wrapper(Expression.GetString(escape, format, provider ?? (Expression.Provider is null ? Provider : null))) { State = Expression.State })
             };
         }
     }
-    
+
     public class MathUnaryNode<T> : MathUnaryExpression<T, MathUnaryNode<T>.Expression>, IMutableMathUnaryExpression<T, MathUnaryNode<T>.Expression>, ICloneable<MathUnaryNode<T>> where T : struct, IEquatable<T>, IFormattable
     {
         public static explicit operator MathUnaryNode<T>?(Expression value)
@@ -636,7 +636,7 @@ namespace NetExtender.Types.Mathematics
             Expression expression = (Expression) value;
             return (MathUnaryNode<T>) expression!;
         }
-        
+
         private static Dictionary<MathUnaryOperator, Func<MathResult<T>, MathResult<T>>> Operators { get; } = new Dictionary<MathUnaryOperator, Func<MathResult<T>, MathResult<T>>>(EnumUtilities.Count<MathUnaryOperator>());
 
         [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
@@ -872,7 +872,7 @@ namespace NetExtender.Types.Mathematics
             : base(id, expression)
         {
         }
-        
+
         protected sealed override IMathExpression<T>? GetBaseFirstExpression()
         {
             return Inner.HasValue ? Inner.Value : null;
@@ -1155,12 +1155,12 @@ namespace NetExtender.Types.Mathematics
             {
                 return new Expression(IsConstant(value) ? MathUnaryOperator.Constant : MathUnaryOperator.Number, value);
             }
-            
+
             public static explicit operator Expression(MathResult<T> value)
             {
                 return new Expression(value && IsConstant(value) ? MathUnaryOperator.Constant : MathUnaryOperator.Number, value);
             }
-            
+
             public static Boolean operator ==(Expression first, Expression second)
             {
                 return first.Equals(second);
@@ -1759,7 +1759,7 @@ namespace NetExtender.Types.Mathematics
             }
         }
     }
-    
+
     public abstract class MathUnaryExpression<T, TExpression> : MathExpression<T, TExpression, MathUnaryOperator>, IMutableMathUnaryExpression<T>, IEquality<MathUnaryNode<T>.Expression>, ICloneable<MathUnaryExpression<T, TExpression>> where T : struct, IEquatable<T>, IFormattable where TExpression : IMathExpression<T>
     {
         public sealed override TExpression Expression
@@ -1783,7 +1783,7 @@ namespace NetExtender.Types.Mathematics
                 return Operator is not default(MathUnaryOperator) && IsTrue is not false;
             }
         }
-        
+
         public String? Format { get; set; }
 
         String? IMathExpression.Format
@@ -1793,7 +1793,7 @@ namespace NetExtender.Types.Mathematics
                 return Format;
             }
         }
-        
+
         public IFormatProvider? Provider { get; set; }
 
         IFormatProvider? IMathExpression.Provider
@@ -1813,7 +1813,7 @@ namespace NetExtender.Types.Mathematics
             : base(id, node)
         {
         }
-        
+
         public abstract IMutableMathExpression<T>? ApplyToInner(MathUnaryOperator @operator);
         public abstract IMutableMathExpression<T>? ApplyToInner(MathBinaryOperator @operator);
         public abstract IMutableMathExpression<T>? ApplyInverseToInner(MathBinaryOperator @operator);
@@ -1878,7 +1878,7 @@ namespace NetExtender.Types.Mathematics
         }
 
         public abstract override MathUnaryExpression<T, TExpression> Clone();
-        
+
         IMutableMathUnaryExpression<T> IMutableMathUnaryExpression<T>.Clone()
         {
             return Clone();

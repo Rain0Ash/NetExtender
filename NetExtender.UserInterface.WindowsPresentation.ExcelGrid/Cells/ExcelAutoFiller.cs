@@ -12,7 +12,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
     {
         protected TryGetter<ExcelCell, Object?> Getter { get; }
         protected TrySetter<ExcelCell, Object?> Setter { get; }
-        
+
         public ExcelAutoFiller(TryGetter<ExcelCell, Object?> getter, TrySetter<ExcelCell, Object?> setter)
         {
             Getter = getter ?? throw new ArgumentNullException(nameof(getter));
@@ -70,20 +70,20 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
             {
                 TryExtrapolate(cell, new ExcelCell(mincolumn, row), new ExcelCell(maxcolumn, row), out value);
             }
-            
+
             result = value;
-            
+
             if (value is not null)
             {
                 result = value;
                 return true;
             }
-            
+
             cell = new ExcelCell(PeriodicClamp(column, mincolumn, maxcolumn), PeriodicClamp(row, minrow, maxrow));
             Getter.Invoke(cell, out result);
             return result is not null;
         }
-        
+
         // ReSharper disable once CognitiveComplexity
         protected virtual Boolean TryExtrapolate(ExcelCell cell, ExcelCell start, ExcelCell end, [MaybeNullWhen(false)] out Object result)
         {
@@ -98,7 +98,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 Int32 Δcolumn = end.Column - start.Column;
                 Int32 Δrow = end.Row - start.Row;
                 Double extrapolation = 0;
-                
+
                 if ((cell.Column < start.Column || cell.Column > end.Column) && Δcolumn > 0)
                 {
                     extrapolation = 1.0 * (cell.Column - start.Column) / Δcolumn;
@@ -114,7 +114,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                     result = first;
                     return true;
                 }
-                
+
                 Type type = first.GetType();
                 if (ReflectionOperator.Get(last.GetType(), type, BinaryOperator.Subtraction)?.Invoke(last, first) is { } subtract &&
                     ReflectionOperator.Get(subtract.GetType(), extrapolation.GetType(), BinaryOperator.Multiply)?.Invoke(subtract, extrapolation) is { } multiply &&
@@ -133,22 +133,22 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 return false;
             }
         }
-        
+
         protected static Int32 PeriodicClamp(Int32 value, Int32 min, Int32 max)
         {
             if (min >= max)
             {
                 return min;
             }
-            
+
             Int32 difference = max - min + 1;
             Int32 offset = (value - (max + 1)) % difference;
-            
+
             if (offset < 0)
             {
                 offset += difference;
             }
-            
+
             return min + offset;
         }
     }

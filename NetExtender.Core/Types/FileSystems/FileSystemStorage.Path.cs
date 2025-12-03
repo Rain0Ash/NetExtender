@@ -13,7 +13,7 @@ namespace NetExtender.FileSystems
         public abstract override Char DirectorySeparatorChar { get; }
         public abstract override Char AltDirectorySeparatorChar { get; }
 
-        [Obsolete($"{nameof(InvalidPathChars)} has been deprecated. Use {nameof(GetInvalidPathChars)} instead.")]
+        [Obsolete($"InvalidPathChars has been deprecated. Use {nameof(GetInvalidPathChars)} instead.")]
         public override Char[] InvalidPathChars
         {
             get
@@ -22,7 +22,7 @@ namespace NetExtender.FileSystems
             }
         }
 
-        [Obsolete($"{nameof(InvalidFileNameChars)} has been deprecated. Use {nameof(GetInvalidFileNameChars)} instead.")]
+        [Obsolete($"InvalidFileNameChars has been deprecated. Use {nameof(GetInvalidFileNameChars)} instead.")]
         public override Char[] InvalidFileNameChars
         {
             get

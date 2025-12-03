@@ -24,7 +24,7 @@ namespace NetExtender.Utilities.Types
 
             return ReferenceEquals(first, second) ? 0 : null;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static Box<T> Box<T>(this T value)
         {

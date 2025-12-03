@@ -15,7 +15,7 @@ namespace NetExtender.JWT
         {
             return value.Key.Span;
         }
-        
+
         public static implicit operator ReadOnlyMemory<Byte>(JWTKey value)
         {
             return value.Key;
@@ -55,7 +55,7 @@ namespace NetExtender.JWT
         {
             return !(first == second);
         }
-        
+
         private static ConditionalWeakTable<String, Byte[]> Storage { get; } = new ConditionalWeakTable<String, Byte[]>();
 
         private ReadOnlyMemory<Byte> Key { get; }
@@ -121,7 +121,7 @@ namespace NetExtender.JWT
             {
                 throw new ArgumentNullException(nameof(key));
             }
-            
+
             Array = Algorithms.JWT.Encoding.GetBytes(key);
             Key = Array;
         }

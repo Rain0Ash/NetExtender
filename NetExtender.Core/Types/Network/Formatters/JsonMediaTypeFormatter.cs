@@ -45,7 +45,7 @@ namespace NetExtender.Types.Network.Formatters
                 {
                     throw new ArgumentOutOfRangeException(nameof(value), value, null);
                 }
-                
+
                 _maxdepth = value;
             }
         }
@@ -103,19 +103,19 @@ namespace NetExtender.Types.Network.Formatters
 
             return true;
         }
-        
+
         public JsonReader? CreateJsonReader(Type type, Stream stream, Encoding encoding)
         {
             return TryCreateJsonReader(type, stream, encoding, out JsonReader? reader) ? reader : null;
         }
-        
+
         public abstract Boolean TryCreateJsonReader(Type type, Stream stream, Encoding encoding, [MaybeNullWhen(false)] out JsonReader result);
-        
+
         public JsonWriter? CreateJsonWriter(Type type, Stream stream, Encoding encoding)
         {
             return TryCreateJsonWriter(type, stream, encoding, out JsonWriter? writer) ? writer : null;
         }
-        
+
         public abstract Boolean TryCreateJsonWriter(Type type, Stream stream, Encoding encoding, [MaybeNullWhen(false)] out JsonWriter result);
 
         protected virtual JsonSerializer CreateJsonSerializer()
@@ -153,9 +153,9 @@ namespace NetExtender.Types.Network.Formatters
             {
                 return ReflectionUtilities.Default(type);
             }
-            
+
             Encoding encoding = SelectCharacterEncoding(headers);
-            
+
             try
             {
                 return ReadFromStream(type, stream, encoding, logger);
@@ -188,7 +188,7 @@ namespace NetExtender.Types.Network.Formatters
             {
                 throw new ArgumentNullException(nameof(content));
             }
-            
+
             token.ThrowIfCancellationRequested();
 
             try
@@ -221,9 +221,9 @@ namespace NetExtender.Types.Network.Formatters
             using JsonReader reader = CreateJsonReader(type, stream, encoding) ?? throw new InvalidOperationException($"The '{nameof(CreateJsonReader)}' method returned null. It must return a {nameof(JsonReader)} instance.");
             reader.CloseInput = false;
             reader.MaxDepth = MaxDepth;
-            
+
             JsonSerializer serializer = CreateJsonSerializer();
-            
+
             if (logger is null)
             {
                 return serializer.Deserialize(reader, type);
@@ -235,7 +235,7 @@ namespace NetExtender.Types.Network.Formatters
                 logger.LogError(args.ErrorContext.Path, error);
                 args.ErrorContext.Handled = true;
             }
-            
+
             serializer.Error += Handler;
 
             try
@@ -268,7 +268,7 @@ namespace NetExtender.Types.Network.Formatters
             Encoding encoding = SelectCharacterEncoding(content.Headers);
             WriteToStream(type, value, stream, encoding);
         }
-        
+
         public virtual void WriteToStream(Type type, Object? value, Stream stream, Encoding encoding)
         {
             if (type is null)
@@ -325,11 +325,11 @@ namespace NetExtender.Types.Network.Formatters
             }
         }
     }
-    
+
     public class JsonMediaTypeFormatter : JsonMediaTypeFormatterBase
     {
         protected static XsdDataContractExporter XsdExporter { get; } = new XsdDataContractExporter();
-        
+
         public static MediaTypeHeaderValue DefaultMediaType
         {
             get
@@ -339,9 +339,9 @@ namespace NetExtender.Types.Network.Formatters
         }
 
         protected ConcurrentDictionary<Type, DataContractJsonSerializer?> SerializerStorage { get; } = new ConcurrentDictionary<Type, DataContractJsonSerializer?>();
-        
+
         protected RequestHeaderMapping? RequestHeaderMapping { get; }
-        
+
         protected XmlDictionaryReaderQuotas Quotas { get; } = new XmlDictionaryReaderQuotas
         {
             MaxArrayLength = Int32.MaxValue,
@@ -350,7 +350,7 @@ namespace NetExtender.Types.Network.Formatters
             MaxStringContentLength = Int32.MaxValue,
             MaxDepth = 256
         };
-        
+
         public Boolean UseJsonSerializer { get; set; }
         public Boolean Indent { get; set; }
 
@@ -366,7 +366,7 @@ namespace NetExtender.Types.Network.Formatters
                 {
                     throw new ArgumentOutOfRangeException(nameof(value), value, null);
                 }
-                
+
                 base.MaxDepth = value;
                 Quotas.MaxDepth = value;
             }
@@ -394,7 +394,7 @@ namespace NetExtender.Types.Network.Formatters
             base.MaxDepth = formatter.MaxDepth;
             Quotas.MaxDepth = base.MaxDepth;
         }
-        
+
         public override Boolean CanReadType(Type? type)
         {
             return type is not null && (UseJsonSerializer ? SerializerStorage.GetOrAdd(type, value => CreateDataContractSerializer(value, false)) is not null : base.CanReadType(type));
@@ -406,7 +406,7 @@ namespace NetExtender.Types.Network.Formatters
             {
                 return false;
             }
-            
+
             if (!UseJsonSerializer)
             {
                 return base.CanWriteType(type);
@@ -474,7 +474,7 @@ namespace NetExtender.Types.Network.Formatters
                 return false;
             }
         }
-        
+
         public override Object? ReadFromStream(Type type, Stream stream, Encoding encoding, ILogger? logger)
         {
             if (type is null)
@@ -530,7 +530,7 @@ namespace NetExtender.Types.Network.Formatters
             {
                 value = constructor.Invoke(new[] { value });
             }
-            
+
             if (delegating is null)
             {
                 throw new InvalidOperationException();

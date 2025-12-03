@@ -35,6 +35,16 @@ namespace NetExtender.FileSystems.Interfaces
         /// <inheritdoc cref="System.IO.File.SetAttributes(System.String, System.IO.FileAttributes)" />
         public void SetAttributes(String path, FileAttributes attributes);
 
+#if NET7_0_OR_GREATER
+        /// <inheritdoc cref="System.IO.File.GetUnixFileMode(System.String)" />
+#endif
+        public UnixFileMode GetUnixFileMode(String path);
+
+#if NET7_0_OR_GREATER
+        /// <inheritdoc cref="System.IO.File.SetUnixFileMode(System.String, System.IO.UnixFileMode)" />
+#endif
+        public void SetUnixFileMode(String path, UnixFileMode mode);
+
         /// <inheritdoc cref="System.IO.File.GetCreationTime(System.String)" />
         public DateTime GetCreationTime(String path);
 

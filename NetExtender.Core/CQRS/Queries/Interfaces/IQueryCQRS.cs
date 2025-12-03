@@ -14,7 +14,7 @@ namespace NetExtender.CQRS.Queries.Interfaces
     public interface IBusinessPaginationQueryCQRS<TResult, TCollection> : IBusinessQueryCQRS<TCollection> where TCollection : class, IPaginationEnumerable<TResult>
     {
     }
-    
+
     public interface IPaginationQueryCQRS<TResult> : IPaginationQueryCQRS<TResult, IPaginationEnumerable<TResult>>
     {
     }
@@ -22,7 +22,7 @@ namespace NetExtender.CQRS.Queries.Interfaces
     public interface IPaginationQueryCQRS<TResult, TCollection> : IQueryCQRS<TCollection> where TCollection : class, IPaginationEnumerable<TResult>
     {
     }
-    
+
     public interface IBusinessQueryCQRS<TResult> : IQueryCQRS<BusinessResult<TResult>>
     {
     }

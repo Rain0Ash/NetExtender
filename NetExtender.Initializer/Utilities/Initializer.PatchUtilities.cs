@@ -15,7 +15,7 @@ namespace NetExtender.Initializer
         internal static class PatchUtilities
         {
             private static ConcurrentDictionary<IPatchInfo, Exception?> Storage { get; } = new ConcurrentDictionary<IPatchInfo, Exception?>();
-            
+
             public static IEnumerable<IPatchInfo> Applied
             {
                 get
@@ -23,7 +23,7 @@ namespace NetExtender.Initializer
                     return Find(ReflectionPatchState.Apply).Select(static patch => patch.Key);
                 }
             }
-            
+
             public static IEnumerable<KeyValuePair<IPatchInfo, Exception?>> Failed
             {
                 get
@@ -31,7 +31,7 @@ namespace NetExtender.Initializer
                     return Find(ReflectionPatchState.Failed);
                 }
             }
-            
+
             public static IEnumerable<IPatchInfo> NotRequired
             {
                 get
@@ -39,7 +39,7 @@ namespace NetExtender.Initializer
                     return Find(ReflectionPatchState.NotRequired).Select(static patch => patch.Key);
                 }
             }
-            
+
             public static ReflectionPatchCategory AutoInitPatchCategory
             {
                 get
@@ -72,13 +72,13 @@ namespace NetExtender.Initializer
             {
                 return patch is not null && Storage.TryGetValue(patch, out Exception? exception) ? exception : null;
             }
-            
+
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             internal static Boolean Set(IPatchInfo? patch)
             {
                 return Set(patch, null);
             }
-            
+
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             internal static Boolean Set(IPatchInfo? patch, Exception? exception)
             {
@@ -86,7 +86,7 @@ namespace NetExtender.Initializer
                 {
                     return false;
                 }
-                
+
                 Storage[patch] = exception;
                 return true;
             }

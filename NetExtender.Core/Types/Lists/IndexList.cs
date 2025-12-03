@@ -487,7 +487,7 @@ namespace NetExtender.Types.Lists
                 Sort(default(IComparer<T>));
                 return;
             }
-            
+
             Internal.Sort(comparison);
             Rebuild = true;
         }

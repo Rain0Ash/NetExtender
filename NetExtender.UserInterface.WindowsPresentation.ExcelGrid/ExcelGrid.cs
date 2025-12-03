@@ -27,17 +27,17 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
         Row,
         Cell
     }
-    
+
     public partial class ExcelGrid : Control, IExcelGrid, IWeakEventListener
     {
         protected Grid? SheetGrid { get; set; }
         protected Grid ColumnGrid { get; set; } = null!;
         protected Grid RowGrid { get; set; } = null!;
-        
+
         public IExcelGridOperator? Operator { get; protected set; }
-        
+
         public SuppressObservableCollection<ExcelPropertyDefinition> PropertyDefinitions { get; }
-        
+
         public SuppressObservableCollection<ExcelPropertyDefinition> ColumnDefinitions
         {
             get
@@ -45,7 +45,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 return PropertyDefinitions;
             }
         }
-        
+
         IObservableCollection<ExcelPropertyDefinition> IExcelGrid.ColumnDefinitions
         {
             get
@@ -53,7 +53,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 return ColumnDefinitions;
             }
         }
-        
+
         public SuppressObservableCollection<ExcelPropertyDefinition> RowDefinitions
         {
             get
@@ -61,7 +61,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 return PropertyDefinitions;
             }
         }
-        
+
         IObservableCollection<ExcelPropertyDefinition> IExcelGrid.RowDefinitions
         {
             get
@@ -69,7 +69,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 return RowDefinitions;
             }
         }
-        
+
         public Int32 Columns
         {
             get
@@ -77,7 +77,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 return SheetGrid is not null ? SheetGrid.ColumnDefinitions.Count : 0;
             }
         }
-        
+
         public Int32 Rows
         {
             get
@@ -85,9 +85,9 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 return SheetGrid is not null ? SheetGrid.RowDefinitions.Count - 1 : 0;
             }
         }
-        
+
         public Boolean ItemsInColumns { get; protected set; }
-        
+
         public Boolean ItemsInRows
         {
             get
@@ -95,7 +95,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 return !ItemsInColumns;
             }
         }
-        
+
         protected ExcelCell _autofillcell;
         public ExcelCell AutoFillCell
         {
@@ -109,7 +109,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 SelectedCellsChanged();
             }
         }
-        
+
         public IEnumerable<ExcelCell> SelectedCells
         {
             get
@@ -120,10 +120,10 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                     {
                         yield return cell;
                     }
-                    
+
                     yield break;
                 }
-                
+
                 for (Int32 row = Math.Min(CurrentCell.Row, SelectionCell.Row); row <= Math.Max(CurrentCell.Row, SelectionCell.Row); row++)
                 {
                     for (Int32 column = Math.Min(CurrentCell.Column, SelectionCell.Column); column <= Math.Max(CurrentCell.Column, SelectionCell.Column); column++)
@@ -133,7 +133,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 }
             }
         }
-        
+
         protected ExcelCellRange? SelectionRange
         {
             get
@@ -152,7 +152,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
         }
 
         public ICollectionView? View { get; protected set; }
-        
+
         protected virtual Boolean CanInsertColumns
         {
             get
@@ -160,7 +160,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 return !IsReadOnly && (Operator?.CanInsertColumns ?? false);
             }
         }
-        
+
         protected virtual Boolean CanInsertRows
         {
             get
@@ -176,7 +176,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 return !IsReadOnly && (Operator?.CanDeleteColumns ?? false);
             }
         }
-        
+
         protected virtual Boolean CanDeleteRows
         {
             get
@@ -184,11 +184,11 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 return !IsReadOnly && (Operator?.CanDeleteRows ?? false);
             }
         }
-        
+
         protected ExcelMap Map { get; } = new ExcelMap();
         protected ExcelSortDescriptor SortDescriptor { get; } = new ExcelSortDescriptor();
         protected ExcelAutoFiller AutoFiller { get; set; }
-        
+
         protected ScrollViewer SheetScrollViewer { get; set; } = null!;
         protected ScrollViewer ColumnScrollViewer { get; set; } = null!;
         protected ScrollViewer RowScrollViewer { get; set; } = null!;
@@ -208,14 +208,14 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
         protected IList? SynchronizationCollection { get; set; }
         protected INotifyCollectionChanged? NotifyCollection { get; set; }
         protected Boolean SuppressCollectionNotify { get; set; }
-        
+
         public ExcelGrid()
         {
             PropertyDefinitions = new SuppressObservableCollection<ExcelPropertyDefinition>();
             PropertyDefinitions.CollectionChanged += PropertyDefinitionsChanged;
             AutoFiller = new ExcelAutoFiller(TryGet, TrySet);
         }
-        
+
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
@@ -234,11 +234,11 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
             ColumnSelectionBackground = this.FindTemplate<Border>(PART_ColumnSelectionBackground);
             RowSelectionBackground = this.FindTemplate<Border>(PART_RowSelectionBackground);
             TopLeft = this.FindRequiredTemplate<Border>(PART_TopLeft);
-            
+
             SheetScrollViewer.ScrollChanged += ScrollViewerScrollChanged;
             ColumnScrollViewer.ScrollChanged += ColumnScrollViewerScrollChanged;
             RowScrollViewer.ScrollChanged += RowScrollViewerScrollChanged;
-            
+
             TopLeft.MouseDown += TopLeftMouseDown;
             AutoFillBox.MouseLeftButtonDown += AutoFillBoxMouseDown;
             ColumnGrid.MouseDown += ColumnGridMouseDown;
@@ -262,85 +262,85 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
             SelectedCellsChanged();
             Commands.Setup(this);
         }
-        
+
         protected virtual IExcelGridOperator? CreateOperator()
         {
             if (ItemsSource is not { } source)
             {
                 return null;
             }
-            
+
             if (IsIList(source.GetType()))
             {
                 return new ExcelMultiListOperator(this);
             }
-            
+
             return WrapItems ? new ExcelWrapItemsOperator(this) : new ExcelListOperator(this);
         }
-        
+
         public Boolean ReceiveWeakEvent(Type manager, Object? sender, EventArgs args)
         {
             if (manager is null)
             {
                 throw new ArgumentNullException(nameof(manager));
             }
-            
+
             if (manager != typeof(CollectionChangedEventManager) || sender != NotifyCollection)
             {
                 return false;
             }
-            
+
             OnItemsCollectionChanged(args as NotifyCollectionChangedEventArgs);
             return true;
         }
-        
+
         protected virtual ExcelPropertyDefinition? GetPropertyDefinition(ExcelCell cell)
         {
             Int32 index = ItemsInRows ? cell.Column : cell.Row;
             return index < PropertyDefinitions.Count ? PropertyDefinitions[index] : null;
         }
-        
+
         ExcelPropertyDefinition? IExcelGrid.GetPropertyDefinition(ExcelCell cell)
         {
             return GetPropertyDefinition(cell);
         }
-        
+
         private void PropertyDefinitionsChanged(Object? sender, NotifyCollectionChangedEventArgs args)
         {
             Update();
         }
-        
+
         protected virtual void OnIsReadOnlyChanged(Boolean @readonly)
         {
             Update();
         }
-        
+
         private void OnSheetSizeChanged(Object? sender, SizeChangedEventArgs args)
         {
             UpdateGridSize();
         }
-        
+
         private void OnSheetScrollViewerLoaded(Object? sender, RoutedEventArgs args)
         {
             UpdateGridSize();
         }
-        
+
         private void ScrollViewerScrollChanged(Object? sender, ScrollChangedEventArgs args)
         {
             ColumnScrollViewer.ScrollToHorizontalOffset(SheetScrollViewer.HorizontalOffset);
             RowScrollViewer.ScrollToVerticalOffset(SheetScrollViewer.VerticalOffset);
         }
-        
+
         private void ColumnScrollViewerScrollChanged(Object? sender, ScrollChangedEventArgs args)
         {
             SheetScrollViewer.ScrollToHorizontalOffset(args.HorizontalOffset);
         }
-        
+
         private void RowScrollViewerScrollChanged(Object? sender, ScrollChangedEventArgs args)
         {
             SheetScrollViewer.ScrollToVerticalOffset(args.VerticalOffset);
         }
-        
+
         private void ItemsSourceChanged()
         {
             if (SynchronizationCollection is not null)
@@ -348,13 +348,13 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 BindingOperations.DisableCollectionSynchronization(SynchronizationCollection);
                 SynchronizationCollection = null;
             }
-            
+
             if (NotifyCollection is not null)
             {
                 CollectionChangedEventManager.RemoveListener(NotifyCollection, this);
                 NotifyCollection = null;
             }
-            
+
             if (ItemsSource is not null)
             {
                 SynchronizationCollection = ItemsSource;
@@ -367,18 +367,18 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
             {
                 View = null;
             }
-            
+
             Update();
-            
+
             if (View is not { } view)
             {
                 return;
             }
-            
+
             CollectionChangedEventManager.AddListener(view, this);
             NotifyCollection = view;
         }
-        
+
         private void OnItemsCollectionChanged(NotifyCollectionChangedEventArgs? args)
         {
             if (args is null)
@@ -394,30 +394,30 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
             // TODO: update only changed rows/columns
             Dispatcher.Invoke(Update);
         }
-        
+
         private void CurrentCellChanged()
         {
             SelectedCellsChanged();
         }
-        
+
         private void SelectionCellChanged()
         {
             SelectedCellsChanged();
             ScrollIntoView(SelectionCell);
         }
-        
+
         private void SelectedCellsChanged()
         {
             if (Selection is null)
             {
                 return;
             }
-            
+
             Int32 column = Math.Min(CurrentCell.Column, SelectionCell.Column);
             Int32 columnspan = Math.Abs(CurrentCell.Column - SelectionCell.Column) + 1;
             Int32 row = Math.Min(CurrentCell.Row, SelectionCell.Row);
             Int32 rowspan = Math.Abs(CurrentCell.Row - SelectionCell.Row) + 1;
-            
+
             Border? border = Selection;
             if (border is not null)
             {
@@ -426,7 +426,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 Grid.SetRow(border, row);
                 Grid.SetRowSpan(border, rowspan);
             }
-            
+
             border = SelectionBackground;
             if (border is not null)
             {
@@ -435,37 +435,37 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 Grid.SetRow(border, row);
                 Grid.SetRowSpan(border, rowspan);
             }
-            
+
             border = ColumnSelectionBackground;
             if (border is not null)
             {
                 Grid.SetColumn(border, column);
                 Grid.SetColumnSpan(border, columnspan);
             }
-            
+
             border = RowSelectionBackground;
             if (border is not null)
             {
                 Grid.SetRow(border, row);
                 Grid.SetRowSpan(border, rowspan);
             }
-            
+
             border = CurrentBackground;
             if (border is not null)
             {
                 Grid.SetColumn(border, CurrentCell.Column);
                 Grid.SetRow(border, CurrentCell.Row);
             }
-            
+
             UpdateSelectionVisibility();
-            
+
             border = AutoFillBox;
             if (border is not null)
             {
                 Grid.SetColumn(border, column + columnspan - 1);
                 Grid.SetRow(border, row + rowspan - 1);
             }
-            
+
             border = AutoFillSelection;
             if (border is not null)
             {
@@ -478,35 +478,35 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
             SelectedItems = EnumerateItems(SelectionRange).ToArray();
             ShowEditControl();
         }
-        
+
         protected override void OnTextInput(TextCompositionEventArgs args)
         {
             base.OnTextInput(args);
-            
+
             if (args.Text.Length <= 0 || args.Text[0] < 32)
             {
                 return;
             }
-            
+
             if (CurrentEditControl is null)
             {
                 ShowEditControl();
             }
-            
+
             if (CurrentEditControl is not TextBox { IsEnabled: true } editor)
             {
                 args.Handled = true;
                 return;
             }
-            
+
             ShowTextBoxEditControl();
-            
+
             void Edit()
             {
                 editor.Text = args.Text;
                 editor.CaretIndex = editor.Text.Length;
             }
-            
+
             Dispatcher.BeginInvoke(Edit, DispatcherPriority.Loaded);
             args.Handled = true;
         }

@@ -29,204 +29,204 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (comparer is null)
             {
                 return source.Find(value);
             }
-            
+
             LinkedListNode<T>? head = source.First;
             if (head is null)
             {
                 return null;
             }
-            
+
             LinkedListNode<T>? current = head;
-            
+
             do
             {
                 if (comparer.Equals(current.ValueRef, value))
                 {
                     return current;
                 }
-                
+
                 current = current.Next;
-                
+
             } while (current is not null && !ReferenceEquals(current, head));
-            
+
             return null;
         }
-        
+
         public static LinkedListNode<T>? Find<T>(this LinkedList<T> source, Predicate<T> predicate)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (predicate is null)
             {
                 throw new ArgumentNullException(nameof(predicate));
             }
-            
+
             LinkedListNode<T>? head = source.First;
             if (head is null)
             {
                 return null;
             }
-            
+
             LinkedListNode<T>? current = head;
-            
+
             do
             {
                 if (predicate(current.ValueRef))
                 {
                     return current;
                 }
-                
+
                 current = current.Next;
-                
+
             } while (current is not null && !ReferenceEquals(current, head));
-            
+
             return null;
         }
-        
+
         public static LinkedListNode<T>? Find<T>(this LinkedList<T> source, Predicate<LinkedListNode<T>> predicate)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (predicate is null)
             {
                 throw new ArgumentNullException(nameof(predicate));
             }
-            
+
             LinkedListNode<T>? head = source.First;
             if (head is null)
             {
                 return null;
             }
-            
+
             LinkedListNode<T>? current = head;
-            
+
             do
             {
                 if (predicate(current))
                 {
                     return current;
                 }
-                
+
                 current = current.Next;
-                
+
             } while (current is not null && !ReferenceEquals(current, head));
-            
+
             return null;
         }
-        
+
         public static LinkedListNode<T>? FindLast<T>(this LinkedList<T> source, T value, IEqualityComparer<T>? comparer)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (comparer is null)
             {
                 return source.FindLast(value);
             }
-            
+
             LinkedListNode<T>? tail = source.Last;
             if (tail is null)
             {
                 return null;
             }
-            
+
             LinkedListNode<T>? current = tail;
-            
+
             do
             {
                 if (comparer.Equals(current.ValueRef, value))
                 {
                     return current;
                 }
-                
+
                 current = current.Previous;
-                
+
             } while (current is not null && current != tail);
-            
+
             return null;
         }
-        
+
         public static LinkedListNode<T>? FindLast<T>(this LinkedList<T> source, Predicate<T> predicate)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (predicate is null)
             {
                 throw new ArgumentNullException(nameof(predicate));
             }
-            
+
             LinkedListNode<T>? tail = source.Last;
             if (tail is null)
             {
                 return null;
             }
-            
+
             LinkedListNode<T>? current = tail;
-            
+
             do
             {
                 if (predicate(current.ValueRef))
                 {
                     return current;
                 }
-                
+
                 current = current.Previous;
-                
+
             } while (current is not null && current != tail);
-            
+
             return null;
         }
-        
+
         public static LinkedListNode<T>? FindLast<T>(this LinkedList<T> source, Predicate<LinkedListNode<T>> predicate)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (predicate is null)
             {
                 throw new ArgumentNullException(nameof(predicate));
             }
-            
+
             LinkedListNode<T>? tail = source.Last;
             if (tail is null)
             {
                 return null;
             }
-            
+
             LinkedListNode<T>? current = tail;
-            
+
             do
             {
                 if (predicate(current))
                 {
                     return current;
                 }
-                
+
                 current = current.Previous;
-                
+
             } while (current is not null && current != tail);
-            
+
             return null;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static LinkedListNode<T> Add<T>(this LinkedList<T> collection, T item)
         {
@@ -237,7 +237,7 @@ namespace NetExtender.Utilities.Types
 
             return collection.AddLast(item);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TNode Add<T, TNode>(this ILinkedList<T, TNode> collection, T item) where TNode : class, ILinkedListNode<T, TNode>
         {
@@ -248,7 +248,7 @@ namespace NetExtender.Utilities.Types
 
             return collection.AddLast(item);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ILinkedListNode<T> Add<T>(this ILinkedList<T> collection, T item)
         {
@@ -259,7 +259,7 @@ namespace NetExtender.Utilities.Types
 
             return collection.AddLast(item);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Add<T>(this LinkedList<T> collection, LinkedListNode<T> node)
         {
@@ -275,7 +275,7 @@ namespace NetExtender.Utilities.Types
 
             collection.AddLast(node);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Add<T, TNode>(this ILinkedList<T, TNode> collection, TNode node) where TNode : class, ILinkedListNode<T, TNode>
         {
@@ -291,7 +291,7 @@ namespace NetExtender.Utilities.Types
 
             collection.AddLast(node);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static LinkedListNode<T> Insert<T>(this LinkedList<T> collection, Int32 index, T item)
         {
@@ -314,7 +314,7 @@ namespace NetExtender.Utilities.Types
 
             return collection.AddBefore(node, item);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TNode Insert<T, TNode>(this ILinkedList<T, TNode> collection, Int32 index, T item) where TNode : class, ILinkedListNode<T, TNode>
         {
@@ -337,7 +337,7 @@ namespace NetExtender.Utilities.Types
 
             return collection.AddBefore(node, item);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static LinkedListNode<T> Insert<T>(this LinkedList<T> collection, Index index, T item)
         {
@@ -348,7 +348,7 @@ namespace NetExtender.Utilities.Types
 
             return Insert(collection, index.GetOffset(collection.Count), item);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TNode Insert<T, TNode>(this ILinkedList<T, TNode> collection, Index index, T item) where TNode : class, ILinkedListNode<T, TNode>
         {
@@ -413,7 +413,7 @@ namespace NetExtender.Utilities.Types
 
             collection.AddBefore(node, @new);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Insert<T>(this LinkedList<T> collection, Index index, LinkedListNode<T> node)
         {
@@ -429,7 +429,7 @@ namespace NetExtender.Utilities.Types
 
             Insert(collection, index.GetOffset(collection.Count), node);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Insert<T, TNode>(this ILinkedList<T, TNode> collection, Index index, TNode node) where TNode : class, ILinkedListNode<T, TNode>
         {
@@ -743,7 +743,7 @@ namespace NetExtender.Utilities.Types
 
             return collection.AddLast(item);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TNode Enqueue<T, TNode>(this ILinkedList<T, TNode> collection, T item) where TNode : class, ILinkedListNode<T, TNode>
         {
@@ -754,7 +754,7 @@ namespace NetExtender.Utilities.Types
 
             return collection.AddLast(item);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ILinkedListNode<T> Enqueue<T>(this ILinkedList<T> collection, T item)
         {
@@ -1097,7 +1097,7 @@ namespace NetExtender.Utilities.Types
 
             return current;
         }
-        
+
         [SuppressMessage("ReSharper", "CognitiveComplexity")]
         public static ILinkedListNode<T>? NodeAt<T>(this ILinkedList<T> collection, Int32 index)
         {
@@ -1105,19 +1105,19 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(collection));
             }
-            
+
             if (index < 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
-            
+
             if (index >= collection.Count)
             {
                 return null;
             }
-            
+
             ILinkedListNode<T>? current;
-            
+
             if (index <= collection.Count / 2)
             {
                 current = collection.First;
@@ -1134,7 +1134,7 @@ namespace NetExtender.Utilities.Types
                     current = current.Previous;
                 }
             }
-            
+
             return current;
         }
 
@@ -1402,7 +1402,7 @@ namespace System.Runtime.InteropServices
             return container?.First;
         }
     }
-    
+
     public static class LinkedContainersMarshal
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

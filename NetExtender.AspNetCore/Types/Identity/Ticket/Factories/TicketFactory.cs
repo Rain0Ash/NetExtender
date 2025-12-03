@@ -12,7 +12,7 @@ namespace NetExtender.AspNetCore.Identity
     public class TicketFactory : TicketFactory<IIdentity>
     {
         public static ITicketFactory Default { get; } = new DefaultTicketFactory();
-        
+
         private sealed class DefaultTicketFactory : TicketFactory
         {
         }

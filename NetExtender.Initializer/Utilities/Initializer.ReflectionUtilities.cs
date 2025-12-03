@@ -18,7 +18,7 @@ namespace NetExtender.Initializer
         internal static class ReflectionUtilities
         {
             internal const String Constructor = ".ctor";
-            
+
             internal static Type Any
             {
                 get
@@ -26,9 +26,9 @@ namespace NetExtender.Initializer
                     return typeof(Object);
                 }
             }
-            
+
             private static IDynamicAssembly Assembly { get; } = new DynamicInitializerAssembly($"{nameof(Initializer)}<Seal>", AssemblyBuilderAccess.Run);
-            
+
             [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
             internal static class Object
             {
@@ -36,7 +36,7 @@ namespace NetExtender.Initializer
                 public new static MethodInfo GetHashCode { get; }
                 public new static MethodInfo Equals { get; }
                 public new static MethodInfo ToString { get; }
-                
+
                 static Object()
                 {
                     const BindingFlags binding = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
@@ -51,7 +51,7 @@ namespace NetExtender.Initializer
             internal class TypeSealException : NotSupportedException
             {
                 public Type Type { get; }
-                
+
                 public TypeSealException(Type type, String? message)
                     : base(message)
                 {
@@ -78,7 +78,7 @@ namespace NetExtender.Initializer
             {
                 return search ? EntryAssembly : System.Reflection.Assembly.GetEntryAssembly();
             }
-            
+
             [MethodImpl(MethodImplOptions.AggressiveOptimization)]
             internal static Boolean IsAbstract(MemberInfo info)
             {
@@ -86,7 +86,7 @@ namespace NetExtender.Initializer
                 {
                     throw new ArgumentNullException(nameof(info));
                 }
-                
+
                 return info switch
                 {
                     Type type => type.IsAbstract,
@@ -96,7 +96,7 @@ namespace NetExtender.Initializer
                     _ => false
                 };
             }
-            
+
             [MethodImpl(MethodImplOptions.AggressiveOptimization)]
             internal static Boolean IsAbstract(PropertyInfo info)
             {
@@ -104,10 +104,10 @@ namespace NetExtender.Initializer
                 {
                     throw new ArgumentNullException(nameof(info));
                 }
-                
+
                 return info.GetMethod is { IsAbstract: true } || info.SetMethod is { IsAbstract: true };
             }
-            
+
             [MethodImpl(MethodImplOptions.AggressiveOptimization)]
             internal static Boolean IsAbstract(EventInfo info)
             {
@@ -115,10 +115,10 @@ namespace NetExtender.Initializer
                 {
                     throw new ArgumentNullException(nameof(info));
                 }
-                
+
                 return info.AddMethod is { IsAbstract: true } || info.RemoveMethod is { IsAbstract: true };
             }
-            
+
             [MethodImpl(MethodImplOptions.AggressiveOptimization)]
             internal static Boolean HasAbstract(Type type)
             {
@@ -126,23 +126,23 @@ namespace NetExtender.Initializer
                 {
                     throw new ArgumentNullException(nameof(type));
                 }
-                
+
                 if (!type.IsAbstract)
                 {
                     return false;
                 }
-                
+
                 const BindingFlags binding = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly;
                 return type.GetMembers(binding).Any(IsAbstract);
             }
-            
+
             // ReSharper disable once MemberHidesStaticFromOuterClass
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             internal static Type Seal(Type type)
             {
                 return Seal(type, Assembly);
             }
-            
+
             // ReSharper disable once CognitiveComplexity
             [MethodImpl(MethodImplOptions.AggressiveOptimization)]
             internal static Type Seal(Type type, IDynamicAssembly assembly)
@@ -157,38 +157,38 @@ namespace NetExtender.Initializer
                 {
                     throw new ArgumentNullException(nameof(type));
                 }
-                
+
                 if (assembly is null)
                 {
                     throw new ArgumentNullException(nameof(assembly));
                 }
-                
+
                 if (type.IsInterface)
                 {
                     throw new TypeSealException(type, $"Cannot seal interface type '{type}'.");
                 }
-                
+
                 if (type.IsValueType || type.IsSealed || type.IsArray)
                 {
                     return type;
                 }
-                
+
                 if (type.IsAbstract && HasAbstract(type))
                 {
                     throw new TypeSealException(type, $"Cannot seal abstract type '{type}' with abstract members.");
                 }
-                
+
                 if (!type.IsClass)
                 {
                     throw new TypeSealException(type, "You can seal only class type.");
                 }
-                
+
                 static Type Create(Type type, Func<Type, String, String?>? name, Action<Type, TypeBuilder>? handler, IDynamicAssembly assembly)
                 {
                     const TypeAttributes attributes = TypeAttributes.Class | TypeAttributes.Sealed;
                     String @namespace = !String.IsNullOrWhiteSpace(type.Namespace) ? type.Namespace + "." : String.Empty;
                     TypeBuilder builder = assembly.Module.DefineType(name?.Invoke(type, @namespace) ?? $"{@namespace}{nameof(Seal)}(<{type.Name}>)", attributes, type);
-                    
+
                     InheritConstructor(builder, type);
                     OverrideToString(builder, type);
                     handler?.Invoke(type, builder);
@@ -197,7 +197,7 @@ namespace NetExtender.Initializer
 
                 return Create(type, name, builder, assembly);
             }
-            
+
             [MethodImpl(MethodImplOptions.AggressiveOptimization)]
             internal static void InheritConstructor(TypeBuilder builder, Type type)
             {
@@ -205,22 +205,22 @@ namespace NetExtender.Initializer
                 {
                     throw new ArgumentNullException(nameof(type));
                 }
-                
+
                 if (builder is null)
                 {
                     throw new ArgumentNullException(nameof(builder));
                 }
-                
+
                 const BindingFlags binding = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.CreateInstance;
                 ConstructorInfo[] constructors = type.GetConstructors(binding);
-                
+
                 switch (constructors.Length)
                 {
                     case 0:
                     {
                         ConstructorBuilder constructor = builder.DefineConstructor(MethodAttributes.Public, CallingConventions.Standard, Type.EmptyTypes);
                         ILGenerator generator = constructor.GetILGenerator();
-                        
+
                         generator.Emit(OpCodes.Ldarg_0);
                         generator.Emit(OpCodes.Call, Object.Constructor);
                         generator.Emit(OpCodes.Ret);
@@ -230,7 +230,7 @@ namespace NetExtender.Initializer
                     {
                         ConstructorBuilder constructor = builder.DefineConstructor(MethodAttributes.Public, CallingConventions.Standard, Type.EmptyTypes);
                         ILGenerator generator = constructor.GetILGenerator();
-                        
+
                         generator.Emit(OpCodes.Ldarg_0);
                         generator.Emit(OpCodes.Call, info);
                         generator.Emit(OpCodes.Ret);
@@ -242,31 +242,31 @@ namespace NetExtender.Initializer
                         {
                             Type[] parameters = info.GetParameters().Select(static info => info.ParameterType).ToArray();
                             ConstructorBuilder constructor = builder.DefineConstructor(info.Attributes, info.CallingConvention, parameters);
-                            
+
                             ILGenerator generator = constructor.GetILGenerator();
-                            
+
                             generator.Emit(OpCodes.Ldarg_0);
-                            
+
                             for (Int32 i = 1; i <= parameters.Length; i++)
                             {
                                 generator.Emit(OpCodes.Ldarg, i);
                             }
-                            
+
                             generator.Emit(OpCodes.Call, info);
                             generator.Emit(OpCodes.Ret);
                         }
-                        
+
                         return;
                     }
                 }
             }
-            
+
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             private static void OverrideToString(TypeBuilder builder, Type type)
             {
                 OverrideToString(builder, type, typeof(System.Object));
             }
-            
+
             [MethodImpl(MethodImplOptions.AggressiveOptimization)]
             internal static void OverrideToString(TypeBuilder builder, Type type, Type? @class)
             {
@@ -279,7 +279,7 @@ namespace NetExtender.Initializer
                 {
                     throw new ArgumentNullException(nameof(type));
                 }
-                
+
                 const BindingFlags binding = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
                 if (type.GetMethod(nameof(ToString), binding, null, Type.EmptyTypes, null) is not { } @string || @class != Any && @string.DeclaringType != @class)
                 {
@@ -288,11 +288,11 @@ namespace NetExtender.Initializer
 
                 MethodBuilder @override = builder.DefineMethod(nameof(ToString), MethodAttributes.Public | MethodAttributes.Virtual, typeof(String), Type.EmptyTypes);
                 ILGenerator generator = @override.GetILGenerator();
-                
+
                 generator.Emit(OpCodes.Ldarg_0);
                 generator.Emit(OpCodes.Call, Object.ToString);
                 generator.Emit(OpCodes.Ret);
-                
+
                 builder.DefineMethodOverride(@override, @string);
             }
         }

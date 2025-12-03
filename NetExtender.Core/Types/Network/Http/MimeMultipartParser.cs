@@ -39,7 +39,7 @@ namespace NetExtender.Types.Network
 
         protected String Boundary { get; }
         protected CurrentBodyPartStore Current { get; }
-        
+
         public Boolean IsWaiting
         {
             get
@@ -64,12 +64,12 @@ namespace NetExtender.Types.Network
             {
                 throw new ArgumentException("MIME multipart boundary cannot end with an empty space.", nameof(boundary));
             }
-            
+
             if (size < 10)
             {
                 throw new ArgumentOutOfRangeException(nameof(size), size, null);
             }
-            
+
             Size = size;
             Boundary = boundary;
             Current = new CurrentBodyPartStore(Boundary);
@@ -105,7 +105,7 @@ namespace NetExtender.Types.Network
             part = new ArraySegment<Byte>(Array.Empty<Byte>());
             final = false;
             MimeParserState state;
-            
+
             try
             {
                 state = ParseBodyPart(buffer, Current, ready, ref consumed, ref _state, Size, ref _total);
@@ -114,7 +114,7 @@ namespace NetExtender.Types.Network
             {
                 state = MimeParserState.Invalid;
             }
-            
+
             remaining = Current.GetDiscardedBoundary();
             part = Current.BodyPart;
 
@@ -160,7 +160,7 @@ namespace NetExtender.Types.Network
                 partstate = MimeParserState.NeedMoreData;
                 num = ready;
             }
-            
+
             current.ResetBoundaryOffset();
             switch (state)
             {
@@ -173,7 +173,7 @@ namespace NetExtender.Types.Network
                             goto end;
                         }
                     }
-                    
+
                     current.AppendBoundary(13);
                     state = BodyPartState.AfterFirstCarriageReturn;
                     if (++consumed == num)
@@ -313,7 +313,7 @@ namespace NetExtender.Types.Network
 
                         goto end;
                     }
-                    
+
                     if (consumed > start && !current.AppendBoundary(buffer, (Int32) start, (Int32) (consumed - start)))
                     {
                         current.ResetBoundary();
@@ -329,7 +329,7 @@ namespace NetExtender.Types.Network
                             state = BodyPartState.AfterSecondCarriageReturn;
                             break;
                         }
-                        
+
                         goto case BodyPartState.AfterSecondCarriageReturn;
                     }
 
@@ -376,13 +376,13 @@ namespace NetExtender.Types.Network
                     current.AppendBoundary(10);
                     ++consumed;
                     state = BodyPartState.BodyPart;
-                    
+
                     if (current.IsBoundaryComplete())
                     {
                         partstate = MimeParserState.BodyPartCompleted;
                         break;
                     }
-                    
+
                     current.ResetBoundary();
                     if (consumed == num)
                     {
@@ -405,7 +405,7 @@ namespace NetExtender.Types.Network
                 Int64 count = consumed - offset - boundaryDelta;
                 current.BodyPart = new ArraySegment<Byte>(buffer, (Int32) offset, (Int32) count);
             }
-            
+
             total += consumed - offset;
             return partstate;
         }
@@ -486,7 +486,7 @@ namespace NetExtender.Types.Network
                     HasPotentialBoundaryLeftOver = false;
                     ReleaseDiscardedBoundary = true;
                 }
-                
+
                 BoundaryLength = 0;
                 BoundaryOffset = 0;
             }
@@ -516,7 +516,7 @@ namespace NetExtender.Types.Network
                 Int32 length = BoundaryLength;
                 Buffer.BlockCopy(data, offset, Boundary, BoundaryLength, count);
                 BoundaryLength += count;
-                
+
                 for (Int32 index = Math.Min(BoundaryLength, ReferenceBoundaryLength); length < index; ++length)
                 {
                     if (Boundary[length] != ReferenceBoundary[length])
@@ -524,7 +524,7 @@ namespace NetExtender.Types.Network
                         return false;
                     }
                 }
-                
+
                 return true;
             }
 
@@ -543,7 +543,7 @@ namespace NetExtender.Types.Network
             public Boolean ValidateBoundary()
             {
                 Int32 position = 0;
-                
+
                 if (IsFirst)
                 {
                     position = 2;
@@ -557,14 +557,14 @@ namespace NetExtender.Types.Network
                         return false;
                     }
                 }
-                
+
                 Boolean flag = false;
                 if (Boundary[index] == 45 && Boundary[index + 1] == 45)
                 {
                     flag = true;
                     index += 2;
                 }
-                
+
                 for (; index < BoundaryLength - 2; ++index)
                 {
                     if (Boundary[index] != 32 && Boundary[index] != 9)

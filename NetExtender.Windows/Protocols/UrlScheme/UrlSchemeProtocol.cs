@@ -76,7 +76,7 @@ namespace NetExtender.Windows.Protocols
                     {
                         return ProtocolStatus.Error;
                     }
-                    
+
                     using RegistryKey? shell = registry.OpenSubKey(ShellSubKey);
 
                     if (shell is null)
@@ -88,7 +88,7 @@ namespace NetExtender.Windows.Protocols
                     {
                         return ProtocolStatus.Another;
                     }
-                    
+
                     if (shell.GetValue(null)?.ToString() != CommandPath)
                     {
                         return ProtocolStatus.Another;
@@ -193,7 +193,7 @@ namespace NetExtender.Windows.Protocols
             {
                 return true;
             }
-            
+
             if (!force && IsAnother)
             {
                 return false;

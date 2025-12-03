@@ -35,6 +35,16 @@ namespace NetExtender.FileSystems
             SetAttributes(path, attributes, FileSystemHandlerType.Link);
         }
 
+        UnixFileMode ILinkHandler.GetUnixFileMode(String path)
+        {
+            return GetUnixFileMode(path, FileSystemHandlerType.Link);
+        }
+
+        void ILinkHandler.SetUnixFileMode(String path, UnixFileMode mode)
+        {
+            SetUnixFileMode(path, mode, FileSystemHandlerType.Link);
+        }
+
         DateTime ILinkHandler.GetCreationTime(String path)
         {
             return GetCreationTime(path, FileSystemHandlerType.Link);
@@ -64,7 +74,7 @@ namespace NetExtender.FileSystems
         {
             return GetLastWriteTimeUtc(path, FileSystemHandlerType.Link);
         }
-        
+
         void ILinkHandler.SetCreationTime(String path, DateTime time)
         {
             SetCreationTime(path, time, FileSystemHandlerType.Link);

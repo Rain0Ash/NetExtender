@@ -14,7 +14,7 @@ namespace NetExtender.Types.HotKeys.Comparer.Interfaces
         public Boolean Modifier { get; }
         public IEqualityComparer<String?>? Comparer { get; }
     }
-    
+
     public interface IHotKeyActionComparer<in T, TId, TKey, TModifier> : IHotKeyActionComparer<T, TKey, TModifier> where T : struct, IHotKeyAction<T, TId, TKey, TModifier> where TId : unmanaged, IComparable<TId>, IConvertible where TKey : unmanaged where TModifier : unmanaged
     {
         public Boolean Id { get; }

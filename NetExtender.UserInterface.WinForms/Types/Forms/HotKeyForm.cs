@@ -13,7 +13,7 @@ namespace NetExtender.UserInterface.WinForms.Forms
     public abstract class HotKeyForm : Form
     {
         public event EventHandler<HotKeyEventArgs>? HotKey;
-        
+
         protected HotKeyForm()
         {
             Load += RegisterHotKeys;
@@ -57,7 +57,7 @@ namespace NetExtender.UserInterface.WinForms.Forms
         {
             return WinFormsHotKeyUtilities.RegisterHotKey(this, hotkey);
         }
-        
+
         public Boolean UnregisterHotKey(Int32 id)
         {
             return WinFormsHotKeyUtilities.UnregisterHotKey(this, id);

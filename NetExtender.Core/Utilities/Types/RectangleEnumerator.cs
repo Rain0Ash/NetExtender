@@ -152,7 +152,7 @@ namespace NetExtender.Utilities.Types
             enumerator.Reset();
             return enumerator;
         }
-        
+
         readonly IEnumerator<Point> IEnumerable<Point>.GetEnumerator()
         {
             // ReSharper disable once ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator
@@ -197,7 +197,7 @@ namespace NetExtender.Utilities.Types
                 enumerator._current.X = x;
                 return true;
             }
-            
+
             if (x >= enumerator._rectangle.Right && enumerator._current.X < enumerator._rectangle.Right)
             {
                 enumerator._current.X = enumerator._rectangle.Right;
@@ -211,7 +211,7 @@ namespace NetExtender.Utilities.Types
                 enumerator._current.Y = y;
                 return true;
             }
-            
+
             if (y >= enumerator._rectangle.Bottom && enumerator._current.Y < enumerator._rectangle.Bottom)
             {
                 enumerator._current.X = enumerator._rectangle.Left;
@@ -294,7 +294,7 @@ namespace NetExtender.Utilities.Types
                 enumerator._current.Y = y;
                 return true;
             }
-            
+
             if (y >= enumerator._rectangle.Bottom && enumerator._current.Y < enumerator._rectangle.Bottom)
             {
                 enumerator._current.Y = enumerator._rectangle.Bottom;
@@ -308,7 +308,7 @@ namespace NetExtender.Utilities.Types
                 enumerator._current.X = x;
                 return true;
             }
-            
+
             if (x >= enumerator._rectangle.Right && enumerator._current.X < enumerator._rectangle.Right)
             {
                 enumerator._current.Y = enumerator._rectangle.Top;

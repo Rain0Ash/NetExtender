@@ -35,7 +35,7 @@ namespace NetExtender.Types.Streams
                 return Primary.CanWrite;
             }
         }
-        
+
         public override Int64 Length
         {
             get
@@ -106,36 +106,36 @@ namespace NetExtender.Types.Streams
         public override Int64 Seek(Int64 offset, SeekOrigin origin)
         {
             Int64 result = Primary.Seek(offset, origin);
-            
+
             if (result != Secondary.Seek(offset, origin))
             {
                 throw new StreamSynchronizationException();
             }
-            
+
             return result;
         }
 
         public override Int32 ReadByte()
         {
             Int32 result = Primary.ReadByte();
-            
+
             if (result != Secondary.ReadByte())
             {
                 throw new StreamSynchronizationException();
             }
-            
+
             return result;
         }
 
         public override Int32 Read(Span<Byte> buffer)
         {
             Int32 result = Primary.Read(buffer);
-            
+
             if (result != Secondary.Read(buffer))
             {
                 throw new StreamSynchronizationException();
             }
-            
+
             return result;
         }
 
@@ -147,19 +147,19 @@ namespace NetExtender.Types.Streams
             {
                 throw new StreamSynchronizationException();
             }
-            
+
             return result;
         }
 
         public override async ValueTask<Int32> ReadAsync(Memory<Byte> buffer, CancellationToken token = default)
         {
             Int32 result = await Primary.ReadAsync(buffer, token);
-            
+
             if (result != await Secondary.ReadAsync(buffer, token))
             {
                 throw new StreamSynchronizationException();
             }
-            
+
             return result;
         }
 
@@ -167,12 +167,12 @@ namespace NetExtender.Types.Streams
         public override async Task<Int32> ReadAsync(Byte[] buffer, Int32 offset, Int32 count, CancellationToken token)
         {
             Int32 result = await Primary.ReadAsync(buffer, offset, count, token);
-            
+
             if (result != await Secondary.ReadAsync(buffer, offset, count, token))
             {
                 throw new StreamSynchronizationException();
             }
-            
+
             return result;
         }
 

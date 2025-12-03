@@ -50,10 +50,10 @@ namespace NetExtender.Types.Dictionaries
             {
                 throw new ArgumentOutOfRangeException(nameof(capacity), capacity, "Capacity must be greater than or equal to zero.");
             }
-            
+
             _buckets = new Int32[capacity];
             _entries = new Entry[capacity];
-            
+
             _length = 0;
             _free = 0;
             _list = 0;
@@ -81,7 +81,7 @@ namespace NetExtender.Types.Dictionaries
                 _list = -1;
                 return;
             }
-            
+
             Entry[] old = _entries!;
             Int32 size = _length;
 
@@ -129,7 +129,7 @@ namespace NetExtender.Types.Dictionaries
             {
                 return;
             }
-            
+
             Resize(capacity);
         }
 
@@ -144,7 +144,7 @@ namespace NetExtender.Types.Dictionaries
             {
                 Array.Copy(_entries, entries, length);
             }
-            
+
             for (Int32 i = 0; i < length; i++)
             {
                 ref Entry entry = ref entries[i];
@@ -153,7 +153,7 @@ namespace NetExtender.Types.Dictionaries
                 {
                     continue;
                 }
-                
+
                 ref Int32 bucket = ref buckets[unchecked((UInt32) entry.Key % (UInt32) buckets.Length)];
                 entry.Next = bucket - 1;
                 bucket = i + 1;
@@ -266,7 +266,7 @@ namespace NetExtender.Types.Dictionaries
 
             Entry[] entries = _entries!;
             Int32 i = _buckets![unchecked((UInt32) key % (UInt32) _buckets.Length)] - 1;
-            
+
             while (unchecked((UInt32) i < (UInt32) entries.Length))
             {
                 ref readonly Entry entry = ref entries[i];
@@ -459,7 +459,7 @@ namespace NetExtender.Types.Dictionaries
         {
             return new Enumerator(_entries, _length);
         }
-        
+
         public TValue this[Int32 key]
         {
             readonly get
@@ -478,7 +478,7 @@ namespace NetExtender.Types.Dictionaries
             {
                 return new KeyValuePair<Int32, TValue>(value.Key, value.Value);
             }
-            
+
             internal Int32 Next;
             internal Int32 Key;
             internal TValue Value;
@@ -490,11 +490,11 @@ namespace NetExtender.Types.Dictionaries
                 value = Value;
             }
         }
-        
+
         public readonly struct KeyCollection
         {
         }
-        
+
         public readonly struct ValueCollection
         {
         }
@@ -526,7 +526,7 @@ namespace NetExtender.Types.Dictionaries
             {
                 Int32 index = _index + 1;
                 Int32 length = _length;
-                
+
                 while (unchecked((UInt32) index < (UInt32) length))
                 {
                     ref readonly Entry entry = ref _entries[index];
@@ -579,7 +579,7 @@ namespace NetExtender.Types.Dictionaries
             {
                 return candidate == 2;
             }
-            
+
             Int32 num = (Int32) Math.Sqrt(candidate);
             for (Int32 index = 3; index <= num; index += 2)
             {

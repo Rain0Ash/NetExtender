@@ -8,7 +8,7 @@ namespace NetExtender.UserInterface.WindowsPresentation
     public interface IReactiveWindow : ITransientReactiveWindow
     {
     }
-    
+
     public interface ITransientReactiveWindow : IDependencyReactiveWindow, ITransient
     {
     }

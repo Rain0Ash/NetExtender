@@ -8,6 +8,7 @@ using NetExtender.JWT.Algorithms.Interfaces;
 using NetExtender.JWT.Interfaces;
 using NetExtender.Types.Exceptions;
 using NetExtender.Types.Monads;
+using NetExtender.Types.Times;
 using NetExtender.Types.Times.Interfaces;
 using NetExtender.Utilities.JWT;
 using NetExtender.Utilities.Types;
@@ -20,7 +21,7 @@ namespace NetExtender.JWT.Algorithms
         public class Builder
         {
             private JWTInfo Info { get; } = new JWTInfo();
-            public ITimeProvider Time { get; private set; } = TimeProvider.System;
+            public ITimeProvider Time { get; private set; } = TimeProviderAdapter.System;
             public IJWTUrlEncoder? Url { get; private set; } = JWTUrlEncoder.Default;
             public IJWTAlgorithm? Algorithm { get; private set; }
             public IJWTAlgorithmFactory? AlgorithmFactory { get; private set; }
@@ -66,7 +67,7 @@ namespace NetExtender.JWT.Algorithms
                 {
                     throw new EnumUndefinedOrNotSupportedException<JWTHeader>(header, nameof(header), null);
                 }
-                
+
                 Info.Header.Add(name, value);
                 return this;
             }
@@ -111,7 +112,7 @@ namespace NetExtender.JWT.Algorithms
                 {
                     throw new JWTBuilderException("Can't use algorithm and algorithm factory at same time.");
                 }
-                
+
                 Algorithm = algorithm ?? throw new ArgumentNullException(nameof(algorithm));
 
                 if (Algorithm is NoneAlgorithm)
@@ -128,7 +129,7 @@ namespace NetExtender.JWT.Algorithms
                 {
                     throw new JWTBuilderException("Can't use algorithm and algorithm factory at same time.");
                 }
-                
+
                 AlgorithmFactory = factory ?? throw new ArgumentNullException(nameof(factory));
                 return this;
             }
@@ -399,7 +400,7 @@ namespace NetExtender.JWT.Algorithms
                 {
                     throw new JWTBuilderDecodeException(nameof(WithJsonSerializer), nameof(WithValidator), nameof(WithUrlEncoder));
                 }
-                
+
                 return Decoder.DecodeHeader(token);
             }
 

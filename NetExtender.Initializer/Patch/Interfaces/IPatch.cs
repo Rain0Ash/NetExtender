@@ -14,11 +14,11 @@ namespace NetExtender.Patch
     {
         public Object SyncRoot { get; }
         public Boolean IsAutoInit { get; }
-        
+
         public Boolean Apply();
         public Boolean Apply(Boolean force);
     }
-    
+
     internal interface IPatchInfo
     {
         public String Name { get; }

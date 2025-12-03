@@ -27,7 +27,7 @@ namespace NetExtender.WindowsPresentation.Types.Commands.History
                 return First;
             }
         }
-        
+
         ICommandHistoryLinkedEntry? ILinkedNode<ICommandHistoryLinkedEntry>.Last
         {
             get
@@ -35,7 +35,7 @@ namespace NetExtender.WindowsPresentation.Types.Commands.History
                 return Last;
             }
         }
-        
+
         ICommandHistoryLinkedEntry? ILinkedNode<ICommandHistoryLinkedEntry>.Next
         {
             get
@@ -43,7 +43,7 @@ namespace NetExtender.WindowsPresentation.Types.Commands.History
                 return Next;
             }
         }
-        
+
         ICommandHistoryLinkedEntry? ILinkedNode<ICommandHistoryLinkedEntry>.Previous
         {
             get
@@ -51,63 +51,63 @@ namespace NetExtender.WindowsPresentation.Types.Commands.History
                 return Previous;
             }
         }
-        
+
         public CommandHistoryLinkedEntry(ICommandHistoryEntry history)
             : base(history)
         {
         }
-        
+
         public CommandHistoryLinkedEntry(CommandHistoryLinkedContainer container, ICommandHistoryEntry history)
             : base(container, history)
         {
         }
-        
+
         ICommandHistoryLinkedEntry? ILinkedNode<ICommandHistoryLinkedEntry>.Find(Predicate<ICommandHistoryLinkedEntry> predicate)
         {
             return Find(predicate);
         }
-        
+
         ICommandHistoryLinkedEntry? ILinkedNode<ICommandHistoryLinkedEntry>.FindLast(Predicate<ICommandHistoryLinkedEntry> predicate)
         {
             return FindLast(predicate);
         }
-        
+
         ICommandHistoryLinkedEntry? ILinkedNode<ICommandHistoryLinkedEntry>.FindPrevious(Predicate<ICommandHistoryLinkedEntry> predicate)
         {
             return FindPrevious(predicate);
         }
-        
+
         ICommandHistoryLinkedEntry? ILinkedNode<ICommandHistoryLinkedEntry>.FindLastPrevious(Predicate<ICommandHistoryLinkedEntry> predicate)
         {
             return FindLastPrevious(predicate);
         }
-        
+
         ICommandHistoryLinkedEntry? ILinkedNode<ICommandHistoryLinkedEntry>.FindNext(Predicate<ICommandHistoryLinkedEntry> predicate)
         {
             return FindNext(predicate);
         }
-        
+
         ICommandHistoryLinkedEntry? ILinkedNode<ICommandHistoryLinkedEntry>.FindLastNext(Predicate<ICommandHistoryLinkedEntry> predicate)
         {
             return FindLastNext(predicate);
         }
-        
+
         IEnumerator<ICommandHistoryLinkedEntry> ILinkedNode<ICommandHistoryLinkedEntry>.GetEnumerator()
         {
             return GetEnumerator();
         }
-        
+
         IEnumerator<ILinkedNode<ICommandHistoryLinkedEntry>> IEnumerable<ILinkedNode<ICommandHistoryLinkedEntry>>.GetEnumerator()
         {
             return GetEnumerator();
         }
-        
+
         IEnumerator<ICommandHistoryLinkedEntry> IEnumerable<ICommandHistoryLinkedEntry>.GetEnumerator()
         {
             return GetEnumerator();
         }
     }
-    
+
     public class CommandHistoryLinkedEntry<TNode> : CommandHistoryLinkedEntry<ICommandHistoryEntry, TNode> where TNode : CommandHistoryLinkedEntry<TNode>
     {
         [return: NotNullIfNotNull("value")]
@@ -115,18 +115,18 @@ namespace NetExtender.WindowsPresentation.Types.Commands.History
         {
             return value is not null ? new CommandHistoryLinkedEntry<TNode>(value) : null;
         }
-        
+
         public CommandHistoryLinkedEntry(ICommandHistoryEntry history)
             : base(history)
         {
         }
-        
+
         public CommandHistoryLinkedEntry(CommandHistoryLinkedContainer<TNode> container, ICommandHistoryEntry history)
             : base(container, history)
         {
         }
     }
-    
+
     public class CommandHistoryLinkedEntry<THistory, TNode> : LinkedNode<THistory, TNode>, ICommandHistoryLinkedEntry<TNode> where THistory : class, ICommandHistoryEntry where TNode : CommandHistoryLinkedEntry<THistory, TNode>
     {
         [return: NotNullIfNotNull("value")]
@@ -134,9 +134,9 @@ namespace NetExtender.WindowsPresentation.Types.Commands.History
         {
             return value is not null ? new CommandHistoryLinkedEntry<THistory, TNode>(value) : null;
         }
-        
+
         protected CommandHistoryLinkedContainer<TNode>? Container { get; }
-        
+
         protected sealed override TNode? Head
         {
             get
@@ -144,9 +144,9 @@ namespace NetExtender.WindowsPresentation.Types.Commands.History
                 return LinkedContainersMarshal.Head(Container);
             }
         }
-        
+
         protected THistory History { get; }
-        
+
         public ICommand Command
         {
             get
@@ -154,7 +154,7 @@ namespace NetExtender.WindowsPresentation.Types.Commands.History
                 return History.Command;
             }
         }
-        
+
         public CommandHistoryEntryState State
         {
             get
@@ -162,7 +162,7 @@ namespace NetExtender.WindowsPresentation.Types.Commands.History
                 return History.State;
             }
         }
-        
+
         public CommandHistoryEntryOptions Options
         {
             get
@@ -170,7 +170,7 @@ namespace NetExtender.WindowsPresentation.Types.Commands.History
                 return History.Options;
             }
         }
-        
+
         [SuppressMessage("ReSharper", "CognitiveComplexity")]
         public virtual Boolean CanExecute
         {
@@ -180,7 +180,7 @@ namespace NetExtender.WindowsPresentation.Types.Commands.History
                 {
                     return false;
                 }
-                
+
                 TNode? current = Previous;
                 while (current is not null)
                 {
@@ -189,15 +189,15 @@ namespace NetExtender.WindowsPresentation.Types.Commands.History
                         current = current.Previous;
                         continue;
                     }
-                    
+
                     if (current.State is not CommandHistoryEntryState.None && current.State is not CommandHistoryEntryState.Executed)
                     {
                         return false;
                     }
-                    
+
                     current = current.Previous;
                 }
-                
+
                 current = Next;
                 while (current is not null)
                 {
@@ -206,19 +206,19 @@ namespace NetExtender.WindowsPresentation.Types.Commands.History
                         current = current.Next;
                         continue;
                     }
-                    
+
                     if (current.State is not CommandHistoryEntryState.None && current.State is not CommandHistoryEntryState.Reverted)
                     {
                         return false;
                     }
-                    
+
                     current = current.Next;
                 }
-                
+
                 return true;
             }
         }
-        
+
         [SuppressMessage("ReSharper", "CognitiveComplexity")]
         public virtual Boolean CanRevert
         {
@@ -228,7 +228,7 @@ namespace NetExtender.WindowsPresentation.Types.Commands.History
                 {
                     return false;
                 }
-                
+
                 TNode? current = Next;
                 while (current is not null)
                 {
@@ -237,15 +237,15 @@ namespace NetExtender.WindowsPresentation.Types.Commands.History
                         current = current.Next;
                         continue;
                     }
-                    
+
                     if (current.State is not CommandHistoryEntryState.None && current.State is not CommandHistoryEntryState.Reverted)
                     {
                         return false;
                     }
-                    
+
                     current = current.Next;
                 }
-                
+
                 current = Previous;
                 while (current is not null)
                 {
@@ -254,15 +254,15 @@ namespace NetExtender.WindowsPresentation.Types.Commands.History
                         current = current.Previous;
                         continue;
                     }
-                    
+
                     if (current.State is not CommandHistoryEntryState.None && current.State is not CommandHistoryEntryState.Executed)
                     {
                         return false;
                     }
-                    
+
                     current = current.Previous;
                 }
-                
+
                 return true;
             }
         }
@@ -271,7 +271,7 @@ namespace NetExtender.WindowsPresentation.Types.Commands.History
             : this(null, history)
         {
         }
-        
+
         public CommandHistoryLinkedEntry(CommandHistoryLinkedContainer<TNode>? container, THistory history)
         {
             History = history ?? throw new ArgumentNullException(nameof(history));
@@ -282,7 +282,7 @@ namespace NetExtender.WindowsPresentation.Types.Commands.History
         {
             return CanExecute && History.Execute();
         }
-        
+
         public Boolean Revert()
         {
             return CanRevert && History.Revert();

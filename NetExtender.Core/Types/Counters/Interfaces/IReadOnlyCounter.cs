@@ -9,7 +9,7 @@ namespace NetExtender.Types.Counters.Interfaces
     public interface IReadOnlyCounter<T> : IReadOnlyCounter<T, Int32>
     {
     }
-    
+
     public interface IReadOnlyCounter64<T> : IReadOnlyCounter<T, Int64>
     {
     }

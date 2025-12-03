@@ -68,8 +68,13 @@ namespace NetExtender.Utilities.Core
         SpecialName = TypeAttributes.SpecialName,
         RTSpecialName = TypeAttributes.RTSpecialName,
         Import = TypeAttributes.Import,
+#if NET8_0_OR_GREATER
+        [Obsolete("Formatter-based serialization is obsolete and should not be used.", DiagnosticId = "SYSLIB0050", UrlFormat = "https://aka.ms/dotnet-warnings/{0}")]
+#endif
         Serializable = TypeAttributes.Serializable,
+#pragma warning disable SYSLIB0050
         Contextful = Serializable << 1,
+#pragma warning restore SYSLIB0050
         AnsiClass = TypeAttributes.AnsiClass | UnicodeClass >> 1,
         UnicodeClass = TypeAttributes.UnicodeClass,
         AutoClass = TypeAttributes.AutoClass,
@@ -78,7 +83,7 @@ namespace NetExtender.Utilities.Core
         IsSecuritySafeCritical = IsSecurityCritical << 1,
         IsSecurityTransparent = IsSecuritySafeCritical << 1
     }
-    
+
     [Flags]
     public enum PrimitiveType : Byte
     {
@@ -113,7 +118,7 @@ namespace NetExtender.Utilities.Core
     public static partial class ReflectionUtilities
     {
         public const String Constructor = Initializer.Initializer.ReflectionUtilities.Constructor;
-        
+
         private static readonly IResettableLazy<InheritEvaluator> inherit = new ResettableLazy<InheritEvaluator>(InheritEvaluator.Create, LazyThreadSafetyMode.ExecutionAndPublication);
         public static Inherit.Result Inherit
         {
@@ -122,7 +127,7 @@ namespace NetExtender.Utilities.Core
                 return inherit.Value;
             }
         }
-        
+
         private static readonly ConcurrentHashSet<Task> scanningset = new ConcurrentHashSet<Task>();
         private static readonly ConcurrentBag<Task> scanningbag = new ConcurrentBag<Task>();
         public static Int32 Scanning
@@ -132,7 +137,7 @@ namespace NetExtender.Utilities.Core
                 return scanningset.Count;
             }
         }
-        
+
         private static readonly ConcurrentHashSet<Assembly> assemblies = new ConcurrentHashSet<Assembly>();
         public static IReadOnlyCollection<Assembly> Assemblies
         {
@@ -141,7 +146,7 @@ namespace NetExtender.Utilities.Core
                 return assemblies;
             }
         }
-        
+
         public static Type NullableAttribute { get; }
         public static Type NullableContextAttribute { get; }
         private static HashSet<Type> VarArgTypes { get; }
@@ -155,14 +160,14 @@ namespace NetExtender.Utilities.Core
             IsByRefLikePredicate = typeof(Type).GetProperty("IsByRefLike")?.GetMethod?.CreateDelegate(typeof(Predicate<Type>)) as Predicate<Type> ?? (_ => false);
             NullableAttribute = Type.GetType("System.Runtime.CompilerServices.NullableAttribute") ?? throw new InvalidInitializationException();
             NullableContextAttribute = Type.GetType("System.Runtime.CompilerServices.NullableContextAttribute") ?? throw new InvalidInitializationException();
-            
+
             Scan().ContinueWith(static _ =>
             {
                 if (scanningset.Count > 0)
                 {
                     return;
                 }
-                
+
                 inherit.Reset(InheritEvaluator.Create);
                 Reset?.Invoke();
             });
@@ -176,17 +181,17 @@ namespace NetExtender.Utilities.Core
             {
                 Assembly assembly = args.LoadedAssembly;
                 await Scan(assembly).ConfigureAwait(false);
-                
+
                 CallStaticInitializerAttribute<StaticInitializerRequiredAttribute>(assembly);
-                
+
                 if (AssemblyLoadCallStaticConstructor)
                 {
                     CallStaticInitializerAttribute(assembly);
                 }
-                
+
                 return assembly;
             });
-            
+
             scanningset.Add(task);
             scanningbag.Add(task);
 
@@ -203,78 +208,78 @@ namespace NetExtender.Utilities.Core
                 {
                     return;
                 }
-                
+
                 inherit.Reset(InheritEvaluator.Create);
                 Reset?.Invoke();
             });
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Func<TSource> New<TSource>()
         {
             return ExpressionStorage<TSource>.New;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Func<T, TSource> New<TSource, T>()
         {
             return ExpressionStorage<TSource, T>.New;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Func<T1, T2, TSource> New<TSource, T1, T2>()
         {
             return ExpressionStorage<TSource, T1, T2>.New;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Func<T1, T2, T3, TSource> New<TSource, T1, T2, T3>()
         {
             return ExpressionStorage<TSource, T1, T2, T3>.New;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Func<T1, T2, T3, T4, TSource> New<TSource, T1, T2, T3, T4>()
         {
             return ExpressionStorage<TSource, T1, T2, T3, T4>.New;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Func<T1, T2, T3, T4, T5, TSource> New<TSource, T1, T2, T3, T4, T5>()
         {
             return ExpressionStorage<TSource, T1, T2, T3, T4, T5>.New;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Func<T1, T2, T3, T4, T5, T6, TSource> New<TSource, T1, T2, T3, T4, T5, T6>()
         {
             return ExpressionStorage<TSource, T1, T2, T3, T4, T5, T6>.New;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Func<T1, T2, T3, T4, T5, T6, T7, TSource> New<TSource, T1, T2, T3, T4, T5, T6, T7>()
         {
             return ExpressionStorage<TSource, T1, T2, T3, T4, T5, T6, T7>.New;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Func<T1, T2, T3, T4, T5, T6, T7, T8, TSource> New<TSource, T1, T2, T3, T4, T5, T6, T7, T8>()
         {
             return ExpressionStorage<TSource, T1, T2, T3, T4, T5, T6, T7, T8>.New;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, TSource> New<TSource, T1, T2, T3, T4, T5, T6, T7, T8, T9>()
         {
             return ExpressionStorage<TSource, T1, T2, T3, T4, T5, T6, T7, T8, T9>.New;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Func<TFrom, TTo>? Assign<TFrom, TTo>()
         {
             return AssignStorage<TFrom, TTo>.Assign;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Func<TFrom, TTo>? Assign<TFrom, TTo>(Boolean simple)
         {
@@ -286,7 +291,7 @@ namespace NetExtender.Utilities.Core
         {
             return Type.GetTypeCode(type);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         [return: NotNullIfNotNull("source")]
         public static Type? BiggestCommonType(this IEnumerable? source)
@@ -295,7 +300,7 @@ namespace NetExtender.Utilities.Core
             {
                 return null;
             }
-            
+
             Type? result = null;
             foreach (Object? item in source)
             {
@@ -303,19 +308,19 @@ namespace NetExtender.Utilities.Core
                 {
                     continue;
                 }
-                
+
                 if (result is null)
                 {
                     result = type;
                     continue;
                 }
-                
+
                 while (result?.BaseType is not null && !result.IsAssignableFrom(type))
                 {
                     result = result.BaseType;
                 }
             }
-            
+
             return result switch
             {
                 null when source is IList list => list.AsQueryable().ElementType,
@@ -323,13 +328,13 @@ namespace NetExtender.Utilities.Core
                 _ => result
             };
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String Join(params String[] values)
         {
             return Join(null, values);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String Join(Char separator, params String[] values)
         {
@@ -337,10 +342,10 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(values));
             }
-            
+
             return String.Join(separator, values);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String Join(String? separator, params String[] values)
         {
@@ -348,10 +353,10 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(values));
             }
-            
+
             return separator is not null ? String.Join(separator, values) : Join('.', values);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsVarArgType(this Type type)
         {
@@ -362,7 +367,7 @@ namespace NetExtender.Utilities.Core
 
             return VarArgTypes.Contains(type);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsStackOnly(this Type type)
         {
@@ -373,7 +378,7 @@ namespace NetExtender.Utilities.Core
 
             return type.IsByRef || type.IsVarArgType() || IsByRefLikePredicate.Invoke(type);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsBoxable(this Type type)
         {
@@ -384,7 +389,7 @@ namespace NetExtender.Utilities.Core
 
             return !type.IsPointer && !type.IsStackOnly();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsILBoxable(this Type type)
         {
@@ -395,7 +400,7 @@ namespace NetExtender.Utilities.Core
 
             return type.IsBoxable() || type.IsByRef || type.IsPointer;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsAssignableFrom<T>(this Type type)
         {
@@ -406,7 +411,7 @@ namespace NetExtender.Utilities.Core
 
             return type.IsAssignableFrom(typeof(T));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsAssignableFrom<T>(this TypeInfo type)
         {
@@ -417,7 +422,7 @@ namespace NetExtender.Utilities.Core
 
             return type.IsAssignableFrom(typeof(T).GetTypeInfo());
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsAssignableTo<T>(this Type type)
         {
@@ -428,7 +433,7 @@ namespace NetExtender.Utilities.Core
 
             return type.IsAssignableTo(typeof(T));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsAssignableTo<T>(this TypeInfo type)
         {
@@ -439,7 +444,7 @@ namespace NetExtender.Utilities.Core
 
             return type.IsAssignableTo(typeof(T).GetTypeInfo());
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsSameAsOrSubclassOf(this Type type, Type other)
         {
@@ -455,7 +460,7 @@ namespace NetExtender.Utilities.Core
 
             return type == other || type.IsSubclassOf(other);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsSameAsOrSubclassOf(this TypeInfo type, Type other)
         {
@@ -471,7 +476,7 @@ namespace NetExtender.Utilities.Core
 
             return type.AsType() == other || type.IsSubclassOf(other);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsSameAsOrSubclassOf<T>(this Type type)
         {
@@ -482,7 +487,7 @@ namespace NetExtender.Utilities.Core
 
             return type.IsSameAsOrSubclassOf(typeof(T));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsSameAsOrSubclassOf<T>(this TypeInfo type)
         {
@@ -493,7 +498,7 @@ namespace NetExtender.Utilities.Core
 
             return type.IsSameAsOrSubclassOf(typeof(T));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsGenericTypeDefinedAs(this Type type, Type? other)
         {
@@ -509,7 +514,7 @@ namespace NetExtender.Utilities.Core
 
             return type.GetGenericTypeDefinition() == other;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsGenericTypeDefinedAs(this TypeInfo type, Type? other)
         {
@@ -525,7 +530,7 @@ namespace NetExtender.Utilities.Core
 
             return type.GetGenericTypeDefinition() == other;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Int32 GetGenericArgumentsCount(this Type type)
         {
@@ -536,7 +541,7 @@ namespace NetExtender.Utilities.Core
 
             return type.IsGenericType ? type.GetGenericArguments().Length : 0;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Int32 GetGenericArgumentsCount(this MethodInfo method)
         {
@@ -547,7 +552,7 @@ namespace NetExtender.Utilities.Core
 
             return method.IsGenericMethod ? method.GetGenericArguments().Length : 0;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean HasInterface<T>(this Type type) where T : class
         {
@@ -558,7 +563,7 @@ namespace NetExtender.Utilities.Core
 
             return type.HasInterface(typeof(T));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean HasInterface<T>(this TypeInfo type) where T : class
         {
@@ -569,7 +574,7 @@ namespace NetExtender.Utilities.Core
 
             return type.HasInterface(typeof(T));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean HasInterface(this Type type, Type @interface)
         {
@@ -585,7 +590,7 @@ namespace NetExtender.Utilities.Core
 
             return type.GetInterfaces().Contains(@interface);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean HasInterface(this TypeInfo type, Type @interface)
         {
@@ -601,7 +606,7 @@ namespace NetExtender.Utilities.Core
 
             return type.ImplementedInterfaces.Contains(@interface);
         }
-        
+
         public static Boolean HasInterface(this Type type, params Type?[]? interfaces)
         {
             if (type is null)
@@ -613,7 +618,7 @@ namespace NetExtender.Utilities.Core
             {
                 return true;
             }
-            
+
             return interfaces.Length switch
             {
                 <= 0 => true,
@@ -641,7 +646,7 @@ namespace NetExtender.Utilities.Core
                 _ => interfaces.WhereNotNull().All(new HashSet<Type>(type.ImplementedInterfaces).Contains)
             };
         }
-        
+
         public static Boolean HasAnyInterface(this Type type, params Type?[]? interfaces)
         {
             if (type is null)
@@ -653,7 +658,7 @@ namespace NetExtender.Utilities.Core
             {
                 return false;
             }
-            
+
             return interfaces.Length switch
             {
                 <= 0 => false,
@@ -681,7 +686,7 @@ namespace NetExtender.Utilities.Core
                 _ => interfaces.WhereNotNull().Any(new HashSet<Type>(type.ImplementedInterfaces).Contains)
             };
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [SuppressMessage("Usage", "CA2200")]
         public static Boolean HasAbstract(this Type type)
@@ -690,7 +695,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             try
             {
                 return Initializer.Initializer.ReflectionUtilities.HasAbstract(type);
@@ -763,7 +768,7 @@ namespace NetExtender.Utilities.Core
 
             return method.IsGenericMethod ? method.GetGenericArguments() : null;
         }
-        
+
         public static Type[]? GetGenericArguments(this Type generic, Type @base)
         {
             if (generic is null)
@@ -830,7 +835,7 @@ namespace NetExtender.Utilities.Core
 
             return method.IsAbstract || method.IsInheritable() && method is {IsVirtual: true, IsFinal: false};
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsAsync(this MethodInfo method)
         {
@@ -919,13 +924,13 @@ namespace NetExtender.Utilities.Core
                 }
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static AnonymousTypeProperties? GetAnonymousProperties(this Object? value)
         {
             return value is not null ? GetAnonymousProperties(value.GetType()) : null;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static AnonymousTypeProperties? GetAnonymousProperties(this Type type)
         {
@@ -953,7 +958,7 @@ namespace NetExtender.Utilities.Core
 
             return member.IsDefined(typeof(T), inherit);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsAbstract(this MemberInfo member)
         {
@@ -961,10 +966,10 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(member));
             }
-            
+
             return Initializer.Initializer.ReflectionUtilities.IsAbstract(member);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsAbstract(this PropertyInfo property)
         {
@@ -972,10 +977,10 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(property));
             }
-            
+
             return Initializer.Initializer.ReflectionUtilities.IsAbstract(property);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsAbstract(this EventInfo @event)
         {
@@ -983,7 +988,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(@event));
             }
-            
+
             return Initializer.Initializer.ReflectionUtilities.IsAbstract(@event);
         }
 
@@ -1084,14 +1089,14 @@ namespace NetExtender.Utilities.Core
 
             return member.GetCustomAttributes(typeof(T), inherit).OfType<T>();
         }
-        
+
         public static List<Object> FilterOnBrowsableAttribute<T>(T source) where T : IEnumerable
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             List<Object> result = new List<Object>();
 
             foreach (Object? @object in source)
@@ -1100,14 +1105,14 @@ namespace NetExtender.Utilities.Core
                 {
                     continue;
                 }
-                
+
                 const BindingFlags binding = BindingFlags.Static | BindingFlags.Public | BindingFlags.GetField;
                 if (@object.ToString() is not { Length: > 0 } name || @object.GetType().GetField(name, binding) is not { } field)
                 {
                     result.Add(@object);
                     continue;
                 }
-                
+
                 if (field.GetCustomAttributes<BrowsableAttribute>(true).FirstOrDefault() is not { } browsable || browsable.Browsable)
                 {
                     result.Add(@object);
@@ -1116,7 +1121,7 @@ namespace NetExtender.Utilities.Core
 
             return result;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<MemberInfo> GetMembers(this Type type, Type attribute)
         {
@@ -1124,12 +1129,12 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             if (attribute is null)
             {
                 throw new ArgumentNullException(nameof(attribute));
             }
-            
+
             foreach (MemberInfo member in type.GetMembers())
             {
                 if (member.HasAttribute(attribute))
@@ -1138,7 +1143,7 @@ namespace NetExtender.Utilities.Core
                 }
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<MemberInfo> GetMembers(this Type type, Type attribute, Boolean inherit)
         {
@@ -1146,12 +1151,12 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             if (attribute is null)
             {
                 throw new ArgumentNullException(nameof(attribute));
             }
-            
+
             foreach (MemberInfo member in type.GetMembers())
             {
                 if (member.HasAttribute(attribute, inherit))
@@ -1160,7 +1165,7 @@ namespace NetExtender.Utilities.Core
                 }
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<MemberInfo> GetMembers(this Type type, Type attribute, BindingFlags binding)
         {
@@ -1168,12 +1173,12 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             if (attribute is null)
             {
                 throw new ArgumentNullException(nameof(attribute));
             }
-            
+
             foreach (MemberInfo member in type.GetMembers(binding))
             {
                 if (member.HasAttribute(attribute))
@@ -1182,7 +1187,7 @@ namespace NetExtender.Utilities.Core
                 }
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<MemberInfo> GetMembers(this Type type, Type attribute, BindingFlags binding, Boolean inherit)
         {
@@ -1190,12 +1195,12 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             if (attribute is null)
             {
                 throw new ArgumentNullException(nameof(attribute));
             }
-            
+
             foreach (MemberInfo member in type.GetMembers(binding))
             {
                 if (member.HasAttribute(attribute, inherit))
@@ -1204,7 +1209,7 @@ namespace NetExtender.Utilities.Core
                 }
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<MemberInfo> GetMembers<TAttribute>(this Type type) where TAttribute : Attribute
         {
@@ -1212,11 +1217,11 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             MemberInfo[] members = type.GetMembers();
             return members.Where(static member => member.HasAttribute<TAttribute>());
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<MemberInfo> GetMembers<TAttribute>(this Type type, Boolean inherit) where TAttribute : Attribute
         {
@@ -1224,11 +1229,11 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             MemberInfo[] members = type.GetMembers();
             return inherit ? members.Where(static member => member.HasAttribute<TAttribute>(false)) : members.Where(static member => member.HasAttribute<TAttribute>(true));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<MemberInfo> GetMembers<TAttribute>(this Type type, BindingFlags binding) where TAttribute : Attribute
         {
@@ -1236,11 +1241,11 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             MemberInfo[] members = type.GetMembers(binding);
             return members.Where(static member => member.HasAttribute<TAttribute>());
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<MemberInfo> GetMembers<TAttribute>(this Type type, BindingFlags binding, Boolean inherit) where TAttribute : Attribute
         {
@@ -1248,11 +1253,11 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             MemberInfo[] members = type.GetMembers(binding);
             return inherit ? members.Where(static member => member.HasAttribute<TAttribute>(false)) : members.Where(static member => member.HasAttribute<TAttribute>(true));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<FieldInfo> GetFields(this Type type, Type attribute)
         {
@@ -1260,12 +1265,12 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             if (attribute is null)
             {
                 throw new ArgumentNullException(nameof(attribute));
             }
-            
+
             foreach (FieldInfo field in type.GetFields())
             {
                 if (field.HasAttribute(attribute))
@@ -1274,7 +1279,7 @@ namespace NetExtender.Utilities.Core
                 }
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<FieldInfo> GetFields(this Type type, Type attribute, Boolean inherit)
         {
@@ -1282,12 +1287,12 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             if (attribute is null)
             {
                 throw new ArgumentNullException(nameof(attribute));
             }
-            
+
             foreach (FieldInfo field in type.GetFields())
             {
                 if (field.HasAttribute(attribute, inherit))
@@ -1296,7 +1301,7 @@ namespace NetExtender.Utilities.Core
                 }
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<FieldInfo> GetFields(this Type type, Type attribute, BindingFlags binding)
         {
@@ -1304,12 +1309,12 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             if (attribute is null)
             {
                 throw new ArgumentNullException(nameof(attribute));
             }
-            
+
             foreach (FieldInfo field in type.GetFields(binding))
             {
                 if (field.HasAttribute(attribute))
@@ -1318,7 +1323,7 @@ namespace NetExtender.Utilities.Core
                 }
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<FieldInfo> GetFields(this Type type, Type attribute, BindingFlags binding, Boolean inherit)
         {
@@ -1326,12 +1331,12 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             if (attribute is null)
             {
                 throw new ArgumentNullException(nameof(attribute));
             }
-            
+
             foreach (FieldInfo field in type.GetFields(binding))
             {
                 if (field.HasAttribute(attribute, inherit))
@@ -1340,7 +1345,7 @@ namespace NetExtender.Utilities.Core
                 }
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<FieldInfo> GetFields<TAttribute>(this Type type) where TAttribute : Attribute
         {
@@ -1348,11 +1353,11 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             FieldInfo[] fields = type.GetFields();
             return fields.Where(static field => field.HasAttribute<TAttribute>());
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<FieldInfo> GetFields<TAttribute>(this Type type, Boolean inherit) where TAttribute : Attribute
         {
@@ -1360,11 +1365,11 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             FieldInfo[] fields = type.GetFields();
             return inherit ? fields.Where(static field => field.HasAttribute<TAttribute>(false)) : fields.Where(static field => field.HasAttribute<TAttribute>(true));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<FieldInfo> GetFields<TAttribute>(this Type type, BindingFlags binding) where TAttribute : Attribute
         {
@@ -1372,11 +1377,11 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             FieldInfo[] fields = type.GetFields(binding);
             return fields.Where(static field => field.HasAttribute<TAttribute>());
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<FieldInfo> GetFields<TAttribute>(this Type type, BindingFlags binding, Boolean inherit) where TAttribute : Attribute
         {
@@ -1384,11 +1389,11 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             FieldInfo[] fields = type.GetFields(binding);
             return inherit ? fields.Where(static field => field.HasAttribute<TAttribute>(false)) : fields.Where(static field => field.HasAttribute<TAttribute>(true));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<PropertyInfo> GetProperties(this Type type, Type attribute)
         {
@@ -1396,12 +1401,12 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             if (attribute is null)
             {
                 throw new ArgumentNullException(nameof(attribute));
             }
-            
+
             foreach (PropertyInfo property in type.GetProperties())
             {
                 if (property.HasAttribute(attribute))
@@ -1410,7 +1415,7 @@ namespace NetExtender.Utilities.Core
                 }
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<PropertyInfo> GetProperties(this Type type, Type attribute, Boolean inherit)
         {
@@ -1418,12 +1423,12 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             if (attribute is null)
             {
                 throw new ArgumentNullException(nameof(attribute));
             }
-            
+
             foreach (PropertyInfo property in type.GetProperties())
             {
                 if (property.HasAttribute(attribute, inherit))
@@ -1432,7 +1437,7 @@ namespace NetExtender.Utilities.Core
                 }
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<PropertyInfo> GetProperties(this Type type, Type attribute, BindingFlags binding)
         {
@@ -1440,12 +1445,12 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             if (attribute is null)
             {
                 throw new ArgumentNullException(nameof(attribute));
             }
-            
+
             foreach (PropertyInfo property in type.GetProperties(binding))
             {
                 if (property.HasAttribute(attribute))
@@ -1454,7 +1459,7 @@ namespace NetExtender.Utilities.Core
                 }
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<PropertyInfo> GetProperties(this Type type, Type attribute, BindingFlags binding, Boolean inherit)
         {
@@ -1462,12 +1467,12 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             if (attribute is null)
             {
                 throw new ArgumentNullException(nameof(attribute));
             }
-            
+
             foreach (PropertyInfo property in type.GetProperties(binding))
             {
                 if (property.HasAttribute(attribute, inherit))
@@ -1476,7 +1481,7 @@ namespace NetExtender.Utilities.Core
                 }
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<PropertyInfo> GetProperties<TAttribute>(this Type type) where TAttribute : Attribute
         {
@@ -1484,11 +1489,11 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             PropertyInfo[] properties = type.GetProperties();
             return properties.Where(static property => property.HasAttribute<TAttribute>());
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<PropertyInfo> GetProperties<TAttribute>(this Type type, Boolean inherit) where TAttribute : Attribute
         {
@@ -1496,11 +1501,11 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             PropertyInfo[] properties = type.GetProperties();
             return inherit ? properties.Where(static property => property.HasAttribute<TAttribute>(false)) : properties.Where(static property => property.HasAttribute<TAttribute>(true));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<PropertyInfo> GetProperties<TAttribute>(this Type type, BindingFlags binding) where TAttribute : Attribute
         {
@@ -1508,11 +1513,11 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             PropertyInfo[] properties = type.GetProperties(binding);
             return properties.Where(static property => property.HasAttribute<TAttribute>());
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<PropertyInfo> GetProperties<TAttribute>(this Type type, BindingFlags binding, Boolean inherit) where TAttribute : Attribute
         {
@@ -1520,11 +1525,11 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             PropertyInfo[] properties = type.GetProperties(binding);
             return inherit ? properties.Where(static property => property.HasAttribute<TAttribute>(false)) : properties.Where(static property => property.HasAttribute<TAttribute>(true));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<EventInfo> GetEvents(this Type type, Type attribute)
         {
@@ -1532,12 +1537,12 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             if (attribute is null)
             {
                 throw new ArgumentNullException(nameof(attribute));
             }
-            
+
             foreach (EventInfo @event in type.GetEvents())
             {
                 if (@event.HasAttribute(attribute))
@@ -1546,7 +1551,7 @@ namespace NetExtender.Utilities.Core
                 }
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<EventInfo> GetEvents(this Type type, Type attribute, Boolean inherit)
         {
@@ -1554,12 +1559,12 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             if (attribute is null)
             {
                 throw new ArgumentNullException(nameof(attribute));
             }
-            
+
             foreach (EventInfo @event in type.GetEvents())
             {
                 if (@event.HasAttribute(attribute, inherit))
@@ -1568,7 +1573,7 @@ namespace NetExtender.Utilities.Core
                 }
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<EventInfo> GetEvents(this Type type, Type attribute, BindingFlags binding)
         {
@@ -1576,12 +1581,12 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             if (attribute is null)
             {
                 throw new ArgumentNullException(nameof(attribute));
             }
-            
+
             foreach (EventInfo @event in type.GetEvents(binding))
             {
                 if (@event.HasAttribute(attribute))
@@ -1590,7 +1595,7 @@ namespace NetExtender.Utilities.Core
                 }
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<EventInfo> GetEvents(this Type type, Type attribute, BindingFlags binding, Boolean inherit)
         {
@@ -1598,12 +1603,12 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             if (attribute is null)
             {
                 throw new ArgumentNullException(nameof(attribute));
             }
-            
+
             foreach (EventInfo @event in type.GetEvents(binding))
             {
                 if (@event.HasAttribute(attribute, inherit))
@@ -1612,7 +1617,7 @@ namespace NetExtender.Utilities.Core
                 }
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<EventInfo> GetEvents<TAttribute>(this Type type) where TAttribute : Attribute
         {
@@ -1620,11 +1625,11 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             EventInfo[] events = type.GetEvents();
             return events.Where(static @event => @event.HasAttribute<TAttribute>());
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<EventInfo> GetEvents<TAttribute>(this Type type, Boolean inherit) where TAttribute : Attribute
         {
@@ -1632,11 +1637,11 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             EventInfo[] events = type.GetEvents();
             return inherit ? events.Where(static @event => @event.HasAttribute<TAttribute>(false)) : events.Where(static @event => @event.HasAttribute<TAttribute>(true));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<EventInfo> GetEvents<TAttribute>(this Type type, BindingFlags binding) where TAttribute : Attribute
         {
@@ -1644,11 +1649,11 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             EventInfo[] events = type.GetEvents(binding);
             return events.Where(static @event => @event.HasAttribute<TAttribute>());
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<EventInfo> GetEvents<TAttribute>(this Type type, BindingFlags binding, Boolean inherit) where TAttribute : Attribute
         {
@@ -1656,11 +1661,11 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             EventInfo[] events = type.GetEvents(binding);
             return inherit ? events.Where(static @event => @event.HasAttribute<TAttribute>(false)) : events.Where(static @event => @event.HasAttribute<TAttribute>(true));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<MethodInfo> GetMethods(this Type type, Type attribute)
         {
@@ -1668,12 +1673,12 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             if (attribute is null)
             {
                 throw new ArgumentNullException(nameof(attribute));
             }
-            
+
             foreach (MethodInfo method in type.GetMethods())
             {
                 if (method.HasAttribute(attribute))
@@ -1682,7 +1687,7 @@ namespace NetExtender.Utilities.Core
                 }
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<MethodInfo> GetMethods(this Type type, Type attribute, Boolean inherit)
         {
@@ -1690,12 +1695,12 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             if (attribute is null)
             {
                 throw new ArgumentNullException(nameof(attribute));
             }
-            
+
             foreach (MethodInfo method in type.GetMethods())
             {
                 if (method.HasAttribute(attribute, inherit))
@@ -1704,7 +1709,7 @@ namespace NetExtender.Utilities.Core
                 }
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<MethodInfo> GetMethods(this Type type, Type attribute, BindingFlags binding)
         {
@@ -1712,12 +1717,12 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             if (attribute is null)
             {
                 throw new ArgumentNullException(nameof(attribute));
             }
-            
+
             foreach (MethodInfo method in type.GetMethods(binding))
             {
                 if (method.HasAttribute(attribute))
@@ -1726,7 +1731,7 @@ namespace NetExtender.Utilities.Core
                 }
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<MethodInfo> GetMethods(this Type type, Type attribute, BindingFlags binding, Boolean inherit)
         {
@@ -1734,12 +1739,12 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             if (attribute is null)
             {
                 throw new ArgumentNullException(nameof(attribute));
             }
-            
+
             foreach (MethodInfo method in type.GetMethods(binding))
             {
                 if (method.HasAttribute(attribute, inherit))
@@ -1748,7 +1753,7 @@ namespace NetExtender.Utilities.Core
                 }
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<MethodInfo> GetMethods<TAttribute>(this Type type) where TAttribute : Attribute
         {
@@ -1756,11 +1761,11 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             MethodInfo[] methods = type.GetMethods();
             return methods.Where(static method => method.HasAttribute<TAttribute>());
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<MethodInfo> GetMethods<TAttribute>(this Type type, Boolean inherit) where TAttribute : Attribute
         {
@@ -1768,11 +1773,11 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             MethodInfo[] methods = type.GetMethods();
             return inherit ? methods.Where(static method => method.HasAttribute<TAttribute>(false)) : methods.Where(static method => method.HasAttribute<TAttribute>(true));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<MethodInfo> GetMethods<TAttribute>(this Type type, BindingFlags binding) where TAttribute : Attribute
         {
@@ -1780,11 +1785,11 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             MethodInfo[] methods = type.GetMethods(binding);
             return methods.Where(static method => method.HasAttribute<TAttribute>());
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<MethodInfo> GetMethods<TAttribute>(this Type type, BindingFlags binding, Boolean inherit) where TAttribute : Attribute
         {
@@ -1792,11 +1797,11 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             MethodInfo[] methods = type.GetMethods(binding);
             return inherit ? methods.Where(static method => method.HasAttribute<TAttribute>(false)) : methods.Where(static method => method.HasAttribute<TAttribute>(true));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<ConstructorInfo> GetConstructors(this Type type, Type attribute)
         {
@@ -1804,12 +1809,12 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             if (attribute is null)
             {
                 throw new ArgumentNullException(nameof(attribute));
             }
-            
+
             foreach (ConstructorInfo constructor in type.GetConstructors())
             {
                 if (constructor.HasAttribute(attribute))
@@ -1818,7 +1823,7 @@ namespace NetExtender.Utilities.Core
                 }
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<ConstructorInfo> GetConstructors(this Type type, Type attribute, Boolean inherit)
         {
@@ -1826,12 +1831,12 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             if (attribute is null)
             {
                 throw new ArgumentNullException(nameof(attribute));
             }
-            
+
             foreach (ConstructorInfo constructor in type.GetConstructors())
             {
                 if (constructor.HasAttribute(attribute, inherit))
@@ -1840,7 +1845,7 @@ namespace NetExtender.Utilities.Core
                 }
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<ConstructorInfo> GetConstructors(this Type type, Type attribute, BindingFlags binding)
         {
@@ -1848,12 +1853,12 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             if (attribute is null)
             {
                 throw new ArgumentNullException(nameof(attribute));
             }
-            
+
             foreach (ConstructorInfo constructor in type.GetConstructors(binding))
             {
                 if (constructor.HasAttribute(attribute))
@@ -1862,7 +1867,7 @@ namespace NetExtender.Utilities.Core
                 }
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<ConstructorInfo> GetConstructors(this Type type, Type attribute, BindingFlags binding, Boolean inherit)
         {
@@ -1870,12 +1875,12 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             if (attribute is null)
             {
                 throw new ArgumentNullException(nameof(attribute));
             }
-            
+
             foreach (ConstructorInfo constructor in type.GetConstructors(binding))
             {
                 if (constructor.HasAttribute(attribute, inherit))
@@ -1884,7 +1889,7 @@ namespace NetExtender.Utilities.Core
                 }
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<ConstructorInfo> GetConstructors<TAttribute>(this Type type) where TAttribute : Attribute
         {
@@ -1892,11 +1897,11 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             ConstructorInfo[] constructors = type.GetConstructors();
             return constructors.Where(static constructor => constructor.HasAttribute<TAttribute>());
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<ConstructorInfo> GetConstructors<TAttribute>(this Type type, Boolean inherit) where TAttribute : Attribute
         {
@@ -1904,11 +1909,11 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             ConstructorInfo[] constructors = type.GetConstructors();
             return inherit ? constructors.Where(static constructor => constructor.HasAttribute<TAttribute>(false)) : constructors.Where(static constructor => constructor.HasAttribute<TAttribute>(true));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<ConstructorInfo> GetConstructors<TAttribute>(this Type type, BindingFlags binding) where TAttribute : Attribute
         {
@@ -1916,11 +1921,11 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             ConstructorInfo[] constructors = type.GetConstructors(binding);
             return constructors.Where(static constructor => constructor.HasAttribute<TAttribute>());
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<ConstructorInfo> GetConstructors<TAttribute>(this Type type, BindingFlags binding, Boolean inherit) where TAttribute : Attribute
         {
@@ -1928,7 +1933,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             ConstructorInfo[] constructors = type.GetConstructors(binding);
             return inherit ? constructors.Where(static constructor => constructor.HasAttribute<TAttribute>(false)) : constructors.Where(static constructor => constructor.HasAttribute<TAttribute>(true));
         }
@@ -1940,7 +1945,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(binder));
             }
-            
+
             return binder.SelectProperty(binding, match, null, null, null);
         }
 
@@ -1951,7 +1956,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(binder));
             }
-            
+
             return binder.SelectProperty(binding, match, returnType, null, null);
         }
 
@@ -1962,7 +1967,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(binder));
             }
-            
+
             return binder.SelectProperty(binding, match, null, indexes, null);
         }
 
@@ -1973,7 +1978,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(binder));
             }
-            
+
             return binder.SelectProperty(binding, match, null, null, modifiers);
         }
 
@@ -1984,7 +1989,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(binder));
             }
-            
+
             return binder.SelectProperty(binding, match, returnType, indexes, null);
         }
 
@@ -1995,7 +2000,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(binder));
             }
-            
+
             return binder.SelectProperty(binding, match, returnType, null, modifiers);
         }
 
@@ -2006,7 +2011,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(binder));
             }
-            
+
             return binder.SelectMethod(binding, match, types, null);
         }
 
@@ -2037,7 +2042,7 @@ namespace NetExtender.Utilities.Core
             // ReSharper disable once CoVariantArrayConversion
             return (MethodInfo?) binder.SelectMethod(binding, match, types, modifiers);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T? GetFirstAttributeOrDefault<T>(this PropertyDescriptor descriptor) where T : Attribute
         {
@@ -2045,16 +2050,16 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(descriptor));
             }
-            
+
             return descriptor.Attributes.OfType<T>().FirstOrDefault();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TResult? GetAttributeValue<T, TResult>(this PropertyDescriptor descriptor, Func<T, TResult> selector) where T : Attribute
         {
             return GetAttributeValue(descriptor, selector, default);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TResult? GetAttributeValue<T, TResult>(this PropertyDescriptor descriptor, Func<T, TResult> selector, TResult? @default) where T : Attribute
         {
@@ -2062,15 +2067,15 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(descriptor));
             }
-            
+
             if (selector is null)
             {
                 throw new ArgumentNullException(nameof(selector));
             }
-            
+
             return descriptor.Attributes.OfType<T>().FirstOrDefault() is { } result ? selector(result) : @default;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Attribute? GetFirstAttributeOrDefault(this PropertyDescriptor descriptor, Type attribute)
         {
@@ -2078,15 +2083,15 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(descriptor));
             }
-            
+
             if (attribute is null)
             {
                 throw new ArgumentNullException(nameof(attribute));
             }
-            
+
             return descriptor.Attributes.Cast<Attribute>().FirstOrDefault(item => item.GetType().IsAssignableFrom(attribute));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsReadOnly(this PropertyDescriptor descriptor)
         {
@@ -2094,10 +2099,10 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(descriptor));
             }
-            
+
             return descriptor.GetFirstAttributeOrDefault<ReadOnlyAttribute>() is { } attribute ? attribute.IsReadOnly : descriptor.IsReadOnly;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String AttributeCategory(this PropertyDescriptor dependency)
         {
@@ -2105,10 +2110,10 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(dependency));
             }
-            
+
             return dependency.GetFirstAttributeOrDefault<CategoryAttribute>() is { } attribute ? attribute.Category : dependency.Category;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String AttributeDescription(this PropertyDescriptor dependency)
         {
@@ -2116,10 +2121,10 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(dependency));
             }
-            
+
             return dependency.GetFirstAttributeOrDefault<DescriptionAttribute>() is { } attribute ? attribute.Description : dependency.Description;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String AttributeDisplayName(this PropertyDescriptor dependency)
         {
@@ -2127,7 +2132,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(dependency));
             }
-            
+
             return dependency.GetFirstAttributeOrDefault<DisplayNameAttribute>() is { } attribute ? attribute.DisplayName : dependency.DisplayName;
         }
 
@@ -2174,7 +2179,7 @@ namespace NetExtender.Utilities.Core
                 return null;
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ParameterInfo[]? GetSafeIndexParameters(this PropertyInfo property)
         {
@@ -2200,7 +2205,7 @@ namespace NetExtender.Utilities.Core
                 return null;
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String[] GetParameterNames(this MethodBase method)
         {
@@ -2211,7 +2216,7 @@ namespace NetExtender.Utilities.Core
 
             return method.GetParameters().Names();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String[]? GetSafeParameterNames(this MethodBase method)
         {
@@ -2222,7 +2227,7 @@ namespace NetExtender.Utilities.Core
 
             return method.GetSafeParameters()?.Names();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String[] GetIndexParameterNames(this PropertyInfo property)
         {
@@ -2233,7 +2238,7 @@ namespace NetExtender.Utilities.Core
 
             return property.GetIndexParameters().Names();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String[]? GetSafeIndexParameterNames(this PropertyInfo property)
         {
@@ -2244,7 +2249,7 @@ namespace NetExtender.Utilities.Core
 
             return property.GetSafeIndexParameters()?.Names();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Type[] GetParameterTypes(this MethodBase method)
         {
@@ -2255,7 +2260,7 @@ namespace NetExtender.Utilities.Core
 
             return method.GetParameters().Types();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Type[]? GetSafeParameterTypes(this MethodBase method)
         {
@@ -2266,7 +2271,7 @@ namespace NetExtender.Utilities.Core
 
             return method.GetSafeParameters()?.Types();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Type[] GetIndexParameterTypes(this PropertyInfo property)
         {
@@ -2277,7 +2282,7 @@ namespace NetExtender.Utilities.Core
 
             return property.GetIndexParameters().Types();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Type[]? GetSafeIndexParameterTypes(this PropertyInfo property)
         {
@@ -2288,7 +2293,7 @@ namespace NetExtender.Utilities.Core
 
             return property.GetSafeIndexParameters()?.Types();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Type MemberType(this MemberInfo member)
         {
@@ -2322,7 +2327,7 @@ namespace NetExtender.Utilities.Core
             parameters = method.GetSafeParameters();
             return parameters is not null;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static MethodInfo? GetMethod(this Type type, String name, ParameterInfo[] parameters)
         {
@@ -2330,20 +2335,20 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             if (name is null)
             {
                 throw new ArgumentNullException(nameof(name));
             }
-            
+
             if (parameters is null)
             {
                 throw new ArgumentNullException(nameof(parameters));
             }
-            
+
             return type.GetMethod(name, parameters.Types());
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static MethodInfo? GetMethod(this Type type, String name, ParameterInfo[] parameters, ParameterModifier[]? modifiers)
         {
@@ -2351,20 +2356,20 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             if (name is null)
             {
                 throw new ArgumentNullException(nameof(name));
             }
-            
+
             if (parameters is null)
             {
                 throw new ArgumentNullException(nameof(parameters));
             }
-            
+
             return type.GetMethod(name, parameters.Types(), modifiers);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static MethodInfo? GetMethod(this Type type, String name, BindingFlags bindingAttr, ParameterInfo[] parameters)
         {
@@ -2372,20 +2377,20 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             if (name is null)
             {
                 throw new ArgumentNullException(nameof(name));
             }
-            
+
             if (parameters is null)
             {
                 throw new ArgumentNullException(nameof(parameters));
             }
-            
+
             return type.GetMethod(name, bindingAttr, parameters.Types());
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static MethodInfo? GetMethod(this Type type, String name, BindingFlags bindingAttr, Type[] parameters, ParameterModifier[]? modifiers)
         {
@@ -2393,26 +2398,26 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             if (name is null)
             {
                 throw new ArgumentNullException(nameof(name));
             }
-            
+
             if (parameters is null)
             {
                 throw new ArgumentNullException(nameof(parameters));
             }
-            
+
             return type.GetMethod(name, bindingAttr, null, parameters, modifiers);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static MethodInfo? GetMethod(this Type type, String name, BindingFlags bindingAttr, ParameterInfo[] parameters, ParameterModifier[]? modifiers)
         {
             return GetMethod(type, name, bindingAttr, null, parameters, modifiers);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static MethodInfo? GetMethod(this Type type, String name, BindingFlags bindingAttr, Binder? binder, ParameterInfo[] parameters, ParameterModifier[]? modifiers)
         {
@@ -2420,20 +2425,20 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             if (name is null)
             {
                 throw new ArgumentNullException(nameof(name));
             }
-            
+
             if (parameters is null)
             {
                 throw new ArgumentNullException(nameof(parameters));
             }
-            
+
             return type.GetMethod(name, bindingAttr, binder, parameters.Types(), modifiers);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static MethodInfo? GetMethod(this Type type, String name, BindingFlags bindingAttr, Binder? binder, CallingConventions callConvention, ParameterInfo[] parameters, ParameterModifier[]? modifiers)
         {
@@ -2441,20 +2446,20 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             if (name is null)
             {
                 throw new ArgumentNullException(nameof(name));
             }
-            
+
             if (parameters is null)
             {
                 throw new ArgumentNullException(nameof(parameters));
             }
-            
+
             return type.GetMethod(name, bindingAttr, binder, callConvention, parameters.Types(), modifiers);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static MethodInfo? GetMethod(this Type type, String name, Int32 genericParameterCount, ParameterInfo[] parameters)
         {
@@ -2462,20 +2467,20 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             if (name is null)
             {
                 throw new ArgumentNullException(nameof(name));
             }
-            
+
             if (parameters is null)
             {
                 throw new ArgumentNullException(nameof(parameters));
             }
-            
+
             return type.GetMethod(name, genericParameterCount, parameters.Types());
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static MethodInfo? GetMethod(this Type type, String name, Int32 genericParameterCount, ParameterInfo[] parameters, ParameterModifier[]? modifiers)
         {
@@ -2483,20 +2488,20 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             if (name is null)
             {
                 throw new ArgumentNullException(nameof(name));
             }
-            
+
             if (parameters is null)
             {
                 throw new ArgumentNullException(nameof(parameters));
             }
-            
+
             return type.GetMethod(name, genericParameterCount, parameters.Types(), modifiers);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static MethodInfo? GetMethod(this Type type, String name, Int32 genericParameterCount, BindingFlags bindingAttr, Type[] types)
         {
@@ -2517,7 +2522,7 @@ namespace NetExtender.Utilities.Core
 
             return type.GetMethod(name, genericParameterCount, bindingAttr, null, types, null);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static MethodInfo? GetMethod(this Type type, String name, Int32 genericParameterCount, BindingFlags bindingAttr, ParameterInfo[] parameters)
         {
@@ -2538,7 +2543,7 @@ namespace NetExtender.Utilities.Core
 
             return GetMethod(type, name, genericParameterCount, bindingAttr, parameters.Types());
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static MethodInfo? GetMethod(this Type type, String name, Int32 genericParameterCount, BindingFlags bindingAttr, Type[] types, ParameterModifier[]? modifiers)
         {
@@ -2559,7 +2564,7 @@ namespace NetExtender.Utilities.Core
 
             return type.GetMethod(name, genericParameterCount, bindingAttr, null, types, modifiers);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static MethodInfo? GetMethod(this Type type, String name, Int32 genericParameterCount, BindingFlags bindingAttr, ParameterInfo[] parameters, ParameterModifier[]? modifiers)
         {
@@ -2602,7 +2607,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(types));
             }
-            
+
             return methods.Where(info => info.Name == name && info.IsGenericMethod && info.GetGenericArguments().Length == generics.Length)
                 .Select(info => info.MakeGenericMethod(generics))
                 .Select(method => new KeyValuePair<MethodInfo, ParameterInfo[]?>(method, method.GetSafeParameters()))
@@ -2610,7 +2615,7 @@ namespace NetExtender.Utilities.Core
                 .Where(pair => pair.Value.Length == types.Length && pair.Value.Select(static parameter => parameter.ParameterType).SequenceEqual(types))
                 .Keys();
         }
-        
+
         public static MethodInfo? GetMethod(this Type type, String name, Type[] generics, Type[] types)
         {
             if (type is null)
@@ -2642,7 +2647,7 @@ namespace NetExtender.Utilities.Core
                 _ => throw new AmbiguousMatchException()
             };
         }
-        
+
         public static MethodInfo? GetMethod(this Type type, String name, Type[] generics, ParameterInfo[] parameters)
         {
             if (type is null)
@@ -2664,10 +2669,10 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(parameters));
             }
-            
+
             return GetMethod(type, name, generics, parameters.Types());
         }
-        
+
         public static MethodInfo? GetMethod(this Type type, String name, BindingFlags bindingAttr, Type[] generics, Type[] types)
         {
             if (type is null)
@@ -2699,32 +2704,32 @@ namespace NetExtender.Utilities.Core
                 _ => throw new AmbiguousMatchException()
             };
         }
-        
+
         public static MethodInfo? GetMethod(this Type type, String name, BindingFlags bindingAttr, Type[] generics, ParameterInfo[] parameters)
         {
             if (type is null)
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             if (name is null)
             {
                 throw new ArgumentNullException(nameof(name));
             }
-            
+
             if (generics is null)
             {
                 throw new ArgumentNullException(nameof(generics));
             }
-            
+
             if (parameters is null)
             {
                 throw new ArgumentNullException(nameof(parameters));
             }
-            
+
             return GetMethod(type, name, bindingAttr, generics, parameters.Types());
         }
-        
+
         public static MethodInfo GetParentDefinition(this MethodInfo method)
         {
             if (method is null)
@@ -2755,7 +2760,7 @@ namespace NetExtender.Utilities.Core
                         return info;
                     }
                 }
-                
+
                 parent = parent.BaseType;
             }
 
@@ -2837,7 +2842,7 @@ namespace NetExtender.Utilities.Core
 
             return property.SetMethod?.GetParentMethod<Action<T>>(instance);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Type GetEntryPointType()
         {
@@ -3055,6 +3060,7 @@ namespace NetExtender.Utilities.Core
             });
         }
 
+        //TODO:
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Assembly LoadAssemblyFrom(String assembly, Byte[]? hash, AssembliesHashAlgorithm algorithm)
         {
@@ -3388,7 +3394,7 @@ namespace NetExtender.Utilities.Core
         {
             return GetEntryTypeNamespace(false);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String GetEntryTypeNamespace(Boolean root)
         {
@@ -3546,7 +3552,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(name));
             }
-            
+
             return GetTypesWithoutNamespace(assembly.GetSafeTypes(), name, insensitive);
         }
 
@@ -3631,7 +3637,7 @@ namespace NetExtender.Utilities.Core
             result = null;
             return false;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<Type> GetTypes(this AppDomain domain)
         {
@@ -3679,7 +3685,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(domain));
             }
-            
+
             return domain.GetAssemblies().GetInterfaces();
         }
 
@@ -3745,11 +3751,11 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(assembly));
             }
-            
+
             AssemblyName name = assembly.GetName();
             return name.Name ?? name.FullName;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<String> Name(this IEnumerable<Assembly?> source)
         {
@@ -3757,10 +3763,10 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             return source.WhereNotNull().Select(Name);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<String> FullName(this IEnumerable<Assembly?> source)
         {
@@ -3768,10 +3774,10 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             return source.WhereNotNull().Select(static assembly => assembly.GetName().FullName);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<String> Name(this IEnumerable<Type?> source)
         {
@@ -3779,10 +3785,10 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             return source.WhereNotNull().Select(static type => type.Name);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<String> FullName(this IEnumerable<Type?> source)
         {
@@ -3790,10 +3796,10 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             return source.WhereNotNull().Select(static type => type.FullName ?? type.Name);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<String> Name(this IEnumerable<MemberInfo> source)
         {
@@ -3801,7 +3807,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             return source.Select(static member => member.Name);
         }
 
@@ -3845,7 +3851,7 @@ namespace NetExtender.Utilities.Core
             ParameterInfo[]? parameters = method.GetSafeParameters();
             return $"{method.DeclarationName()}({(parameters is not null ? String.Join(", ", parameters.Select(FullName)) : "Unknown")})";
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableHashSet<String> ToNameSet(this IEnumerable<MemberInfo> source)
         {
@@ -3853,22 +3859,22 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             return source.Name().ToImmutableHashSet();
         }
-        
+
         public static IEnumerable<MemberInfo> Where(this IEnumerable<MemberInfo> source, Type type)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (type is null)
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             foreach (MemberInfo member in source)
             {
                 if (member.MemberType() == type)
@@ -3877,25 +3883,25 @@ namespace NetExtender.Utilities.Core
                 }
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<MemberInfo> Where<T>(this IEnumerable<MemberInfo> source)
         {
             return Where(source, typeof(T));
         }
-        
+
         public static IEnumerable<FieldInfo> Where(this IEnumerable<FieldInfo> source, Type type)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (type is null)
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             foreach (FieldInfo field in source)
             {
                 if (field.FieldType == type)
@@ -3904,25 +3910,25 @@ namespace NetExtender.Utilities.Core
                 }
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<FieldInfo> Where<T>(this IEnumerable<FieldInfo> source)
         {
             return Where(source, typeof(T));
         }
-        
+
         public static IEnumerable<PropertyInfo> Where(this IEnumerable<PropertyInfo> source, Type type)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (type is null)
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             foreach (PropertyInfo property in source)
             {
                 if (property.PropertyType == type)
@@ -3931,13 +3937,13 @@ namespace NetExtender.Utilities.Core
                 }
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<PropertyInfo> Where<T>(this IEnumerable<PropertyInfo> source)
         {
             return Where(source, typeof(T));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<String?> GetNamespaces(this Assembly assembly)
         {
@@ -3948,7 +3954,7 @@ namespace NetExtender.Utilities.Core
 
             return assembly.GetSafeTypes().Select(static type => type.Namespace);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<Type> OrderBy(this IEnumerable<Type> source, TypeComparison comparison)
         {
@@ -3956,11 +3962,11 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             TypeComparer comparer = comparison;
             return source.OrderBy(comparer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<Type> OrderByDescending(this IEnumerable<Type> source, TypeComparison comparison)
         {
@@ -3968,11 +3974,11 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             TypeComparer comparer = comparison;
             return source.OrderByDescending(comparer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<Assembly> OrderBy(this IEnumerable<Assembly> source, AssemblyComparison comparison)
         {
@@ -3980,11 +3986,11 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             AssemblyComparer comparer = comparison;
             return source.OrderBy(comparer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<Assembly> OrderByDescending(this IEnumerable<Assembly> source, AssemblyComparison comparison)
         {
@@ -3992,7 +3998,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             AssemblyComparer comparer = comparison;
             return source.OrderByDescending(comparer);
         }
@@ -4208,9 +4214,9 @@ namespace NetExtender.Utilities.Core
                 {
                     throw new ArgumentNullException(nameof(type));
                 }
-                
+
                 IEnumerable<StaticInitializerAttribute> attributes = GetCustomAttributes<TAttribute>(type);
-                
+
                 if (typeof(TAttribute) == typeof(StaticInitializerRequiredAttribute))
                 {
                     attributes = GetCustomAttributes<StaticInitializerNetExtenderAttribute>(type).Concat(attributes);
@@ -4259,13 +4265,13 @@ namespace NetExtender.Utilities.Core
         {
             return CallStaticInitializerAttribute<StaticInitializerAttribute>(assembly);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<Assembly> CallStaticInitializerAttribute(this IEnumerable<Assembly> assemblies)
         {
             return CallStaticInitializerAttribute(assemblies, false);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<Assembly> CallStaticInitializerAttribute(this IEnumerable<Assembly> assemblies, Boolean lazy)
         {
@@ -4281,13 +4287,13 @@ namespace NetExtender.Utilities.Core
 
             return assemblies.ForEach(Call).MaterializeIfNot(lazy);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<Assembly> CallStaticInitializerAttribute()
         {
             return CallStaticInitializerAttribute(Custom.Assemblies);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static IEnumerable<Assembly> CallStaticInitializerRequiredAttribute()
         {
@@ -4568,12 +4574,12 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             if (name is null)
             {
                 throw new ArgumentNullException(nameof(name));
             }
-            
+
             Type property = GetPropertyTypeReal(type, name);
 
             // get the generic type of nullable, not THE nullable
@@ -4600,12 +4606,12 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             if (name is null)
             {
                 throw new ArgumentNullException(nameof(name));
             }
-            
+
             Type property = GetPropertyTypeReal(type, name, binding);
 
             // get the generic type of nullable, not THE nullable
@@ -4629,12 +4635,12 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             if (name is null)
             {
                 throw new ArgumentNullException(nameof(name));
             }
-            
+
             PropertyInfo property = GetPropertyInfo(type, name);
             return property.PropertyType;
         }
@@ -4652,12 +4658,12 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             if (name is null)
             {
                 throw new ArgumentNullException(nameof(name));
             }
-            
+
             PropertyInfo property = GetPropertyInfo(type, name, binding);
             return property.PropertyType;
         }
@@ -4674,12 +4680,12 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(@object));
             }
-            
+
             if (name is null)
             {
                 throw new ArgumentNullException(nameof(name));
             }
-            
+
             return GetPropertyInfo(@object.GetType(), name);
         }
 
@@ -4696,12 +4702,12 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(@object));
             }
-            
+
             if (name is null)
             {
                 throw new ArgumentNullException(nameof(name));
             }
-            
+
             return GetPropertyInfo(@object.GetType(), name, binding);
         }
 
@@ -4759,7 +4765,7 @@ namespace NetExtender.Utilities.Core
 
             return property;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsIndexer(this PropertyInfo property)
         {
@@ -4787,7 +4793,7 @@ namespace NetExtender.Utilities.Core
 
             return method.ReturnType.IsVoid();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsOverridden(this MethodInfo method)
         {
@@ -4795,7 +4801,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(method));
             }
-            
+
             return method.GetBaseDefinition().DeclaringType != method.DeclaringType;
         }
 
@@ -4862,7 +4868,7 @@ namespace NetExtender.Utilities.Core
                 _ => throw new EnumUndefinedOrNotSupportedException<MethodVisibilityType>(type, nameof(type), null)
             };
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryCreateDelegate(this MethodInfo? info, [MaybeNullWhen(false)] out Delegate result)
         {
@@ -4983,25 +4989,25 @@ namespace NetExtender.Utilities.Core
             BindingFlags binding = BindingFlags.Public | BindingFlags.Static | (inherited ? BindingFlags.FlattenHierarchy : BindingFlags.DeclaredOnly);
             return type.GetFields(binding).Where(static field => field is { IsLiteral: true, IsInitOnly: false });
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<FieldInfo> GetAccessibleFields(this Type type)
         {
             return GetAccessibleMembers(type, RuntimeReflectionExtensions.GetRuntimeFields);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<PropertyInfo> GetAccessibleProperties(this Type type)
         {
             return GetAccessibleMembers(type, RuntimeReflectionExtensions.GetRuntimeProperties);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<EventInfo> GetAccessibleEvents(this Type type)
         {
             return GetAccessibleMembers(type, RuntimeReflectionExtensions.GetRuntimeEvents);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<MethodInfo> GetAccessibleMethods(this Type type)
         {
@@ -5081,7 +5087,9 @@ namespace NetExtender.Utilities.Core
                        signature.HasFlag(TypeSignature.SpecialName) && !type.IsSpecialName ||
                        signature.HasFlag(TypeSignature.RTSpecialName) && !type.Attributes.HasFlag(TypeAttributes.RTSpecialName) ||
                        signature.HasFlag(TypeSignature.Import) && !type.IsImport ||
+#pragma warning disable SYSLIB0050
                        signature.HasFlag(TypeSignature.Serializable) && !type.IsSerializable ||
+#pragma warning restore SYSLIB0050
                        signature.HasFlag(TypeSignature.Contextful) && !type.IsContextful ||
                        signature.HasFlag(TypeSignature.AnsiClass) && !type.IsAnsiClass ||
                        signature.HasFlag(TypeSignature.UnicodeClass) && !type.IsUnicodeClass ||
@@ -5148,7 +5156,7 @@ namespace NetExtender.Utilities.Core
                 {
                     continue;
                 }
-                
+
                 if (!signature[i].Equals(parameters[i]))
                 {
                     return false;
@@ -5331,7 +5339,7 @@ namespace NetExtender.Utilities.Core
 
             return WithSignature(type.GetMethods(binding), @return, signature);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         private static IEnumerable<KeyValuePair<Type, T[]>> Where<T>(this IEnumerable<KeyValuePair<Type, T[]>> source, Func<T, Boolean> predicate) where T : MethodBase
         {
@@ -5498,7 +5506,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             return type.GetConstructor(BindingFlags.Static | BindingFlags.NonPublic, null, Type.EmptyTypes, null);
         }
 
@@ -5641,32 +5649,32 @@ namespace NetExtender.Utilities.Core
             IEnumerable<KeyValuePair<Type, ConstructorInfo[]>> constructors = WithConstructors(source, binding, signature);
             return predicate is not null ? constructors.Where(predicate) : constructors;
         }
-        
+
         public static MethodInfo[] SignatureEqualityMethodAnalyzer(this Type type, Type other)
         {
             if (type is null)
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             if (other is null)
             {
                 throw new ArgumentNullException(nameof(other));
             }
-            
+
             const BindingFlags binding = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy | BindingFlags.CreateInstance;
             MethodInfo[] available = type.GetMethods(binding);
             List<MethodInfo> result = new List<MethodInfo>(available.Length);
             //TODO:
             return result.ToArray();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean HasImplementation(this MethodInfo method)
         {
             return HasImplementation(method, out Boolean? _);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean HasImplementation(this MethodInfo method, out Boolean @virtual)
         {
@@ -5674,7 +5682,7 @@ namespace NetExtender.Utilities.Core
             @virtual = state is true;
             return result;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static Boolean HasImplementation(this MethodInfo method, out Boolean? @virtual)
         {
@@ -5695,17 +5703,17 @@ namespace NetExtender.Utilities.Core
                 { IsStatic: true } => null,
                 _ => false
             };
-            
+
             if (method.GetMethodBody() is not { } body)
             {
                 return false;
             }
-            
+
             if (body.GetILAsByteArray() is not { } array)
             {
                 return false;
             }
-            
+
             ReadOnlySpan<OpByte> code = array.AsSpan().As<Byte, OpByte>();
 
             Int32 nop = 0;
@@ -5713,10 +5721,10 @@ namespace NetExtender.Utilities.Core
             {
                 nop++;
             }
-            
+
             return nop < code.Length && HasImplementation(method, code.Slice(nop));
         }
-        
+
         // ReSharper disable once CognitiveComplexity
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         private static Boolean HasImplementation(this MethodInfo method, ReadOnlySpan<OpByte> code)
@@ -5725,52 +5733,52 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(method));
             }
-            
+
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             static Boolean IsThrow(ReadOnlySpan<OpByte> code, Int32 i)
             {
                 return code.Length <= i + 6 && code[i++] == OpCodes.Newobj && code[i + sizeof(Int32)] == OpCodes.Throw;
             }
-            
+
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             static Boolean IsNull(ReadOnlySpan<OpByte> code, Int32 i)
             {
                 return code.Length <= i + 6 && code[i++] == OpCodes.Ldnull && code[i++] == OpCodes.Stloc_0 && code[i++] == OpCodes.Br_S && code[++i] == OpCodes.Ldloc_0 && code[++i] == OpCodes.Ret;
             }
-            
+
             // ReSharper disable once LocalFunctionHidesMethod
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             static Boolean IsVoid(ReadOnlySpan<OpByte> code, Int32 i)
             {
                 return i + 1 == code.Length && code[i] == OpCodes.Ret;
             }
-            
+
             // ReSharper disable once LocalFunctionHidesMethod
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             static Boolean IsDefault(ReadOnlySpan<OpByte> code, Int32 i)
             {
                 return Read<Int32>(code, ref i) != 0 && code[i++] == OpCodes.Ldloc_0 && code[i++] == OpCodes.Stloc_1 && code[i++] == OpCodes.Br_S && code[++i] == OpCodes.Ldloc_1 && code[++i] == OpCodes.Ret;
             }
-            
+
             // ReSharper disable once LocalFunctionHidesMethod
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             static Boolean IsField(ReadOnlySpan<OpByte> code, Int32 i)
             {
                 return Read<Int32>(code, ref i) != 0 && code[i++] == OpCodes.Stloc_0 && code[i++] == OpCodes.Br_S && code[++i] == OpCodes.Ldloc_0 && code[++i] == OpCodes.Ret;
             }
-            
+
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             static Boolean IsInt32(ReadOnlySpan<OpByte> code, Int32 i)
             {
                 return code[i++] == OpCodes.Stloc_0 && code[i++] == OpCodes.Br_S && code[++i] == OpCodes.Ldloc_0 && code[++i] == OpCodes.Ret;
             }
-            
+
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             static Boolean IsInt64(ReadOnlySpan<OpByte> code, Int32 i)
             {
                 return code[i++] == OpCodes.Conv_I8 && code[i++] == OpCodes.Stloc_0 && code[i++] == OpCodes.Br_S && code[++i] == OpCodes.Ldloc_0 && code[++i] == OpCodes.Ret;
             }
-            
+
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             static unsafe T Read<T>(ReadOnlySpan<OpByte> code, ref Int32 start) where T : unmanaged
             {
@@ -5778,61 +5786,61 @@ namespace NetExtender.Utilities.Core
                 start += sizeof(T);
                 return value;
             }
-            
+
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             static T ReadNext<T>(ReadOnlySpan<OpByte> code, ref Int32 start) where T : unmanaged
             {
                 ++start;
                 return Read<T>(code, ref start);
             }
-            
+
             Int32 i = 0;
             if (IsThrow(code, i))
             {
                 return false;
             }
-            
+
             if (!method.ReturnType.IsValueType && IsNull(code, i))
             {
                 return false;
             }
-            
+
             if (method.ReturnType.IsVoid())
             {
                 return !IsVoid(code, i);
             }
-            
+
             if (!method.ReturnType.IsValueType)
             {
                 return true;
             }
-            
+
             i = 0;
             if ((code[i++] == OpCodes.Ldc_I4_0 || code[i = 0] == OpCodes.Ldc_I4 && ReadNext<Int32>(code, ref i) == 0) && (IsInt32(code, i) || IsInt64(code, i)))
             {
                 return false;
             }
-            
+
             if (code[i = 0] == OpCodes.Ldc_R4 && ReadNext<Single>(code, ref i) == 0 && code[i++] == OpCodes.Stloc_0 && code[i++] == OpCodes.Br_S && code[++i] == OpCodes.Ldloc_0 && code[++i] == OpCodes.Ret)
             {
                 return false;
             }
-            
+
             if (code[i = 0] == OpCodes.Ldc_R8 && ReadNext<Double>(code, ref i) == 0 && code[i++] == OpCodes.Stloc_0 && code[i++] == OpCodes.Br_S && code[++i] == OpCodes.Ldloc_0 && code[++i] == OpCodes.Ret)
             {
                 return false;
             }
-            
+
             if (code[i = 0] == OpCodes.Ldloca_S && code[i += 2] == unchecked((UInt16) OpCodes.Initobj.Value).High() && code[++i] == OpCodes.Initobj.Value.Low())
             {
                 return !IsDefault(code, ++i);
             }
-            
+
             if (code[i = 0] == OpCodes.Ldsfld)
             {
                 return !IsField(code, ++i);
             }
-            
+
             return true;
         }
 
@@ -5889,12 +5897,12 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(@object));
             }
-            
+
             if (name is null)
             {
                 throw new ArgumentNullException(nameof(name));
             }
-            
+
             FieldInfo field = GetFieldInfo(@object, name);
             field.SetValue(@object, value);
             return @object;
@@ -5912,12 +5920,12 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(@object));
             }
-            
+
             if (name is null)
             {
                 throw new ArgumentNullException(nameof(name));
             }
-            
+
             PropertyInfo property = GetPropertyInfo(@object, name);
             property.SetValue(@object, value);
             return @object;
@@ -5936,12 +5944,12 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(@object));
             }
-            
+
             if (name is null)
             {
                 throw new ArgumentNullException(nameof(name));
             }
-            
+
             PropertyInfo property = GetPropertyInfo(@object, name, binding);
             property.SetValue(@object, value);
             return @object;
@@ -5959,12 +5967,12 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(@object));
             }
-            
+
             if (name is null)
             {
                 throw new ArgumentNullException(nameof(name));
             }
-            
+
             PropertyInfo property = GetPropertyInfo(@object, name);
             TypeConverter converter = TypeDescriptor.GetConverter(property.PropertyType);
             Object? result = converter.ConvertFromString(value!);
@@ -5985,12 +5993,12 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(@object));
             }
-            
+
             if (name is null)
             {
                 throw new ArgumentNullException(nameof(name));
             }
-            
+
             PropertyInfo property = GetPropertyInfo(@object, name, binding);
             TypeConverter converter = TypeDescriptor.GetConverter(property.PropertyType);
             Object? result = converter.ConvertFromString(value!);
@@ -6050,12 +6058,12 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(@object));
             }
-            
+
             if (name is null)
             {
                 throw new ArgumentNullException(nameof(name));
             }
-            
+
             Type type = @object.GetType();
             return HasProperty(type, name, inherited);
         }
@@ -6094,7 +6102,7 @@ namespace NetExtender.Utilities.Core
             PropertyInfo? property = type.GetProperty(name, binding | (inherited ? BindingFlags.FlattenHierarchy : BindingFlags.DeclaredOnly));
             return property is not null;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static Boolean IsMulticastDelegateFieldType(this Type? type)
         {
@@ -6146,13 +6154,13 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             Type? current = type;
             while (current is not null)
             {
                 const BindingFlags binding = BindingFlags.Static | BindingFlags.Instance | BindingFlags.NonPublic;
                 FieldInfo? field = current.GetFields(binding).FirstOrDefault(field => field.FieldType.IsMulticastDelegateFieldType() && field.FieldType.IsAssignableFrom(typeof(T)));
-                
+
                 if (field is not null)
                 {
                     return field;
@@ -6182,7 +6190,7 @@ namespace NetExtender.Utilities.Core
 
             return fields.ToArray();
         }
-        
+
         public static FieldInfo[] GetEventFields<T>(this Type type) where T : Delegate
         {
             if (type is null)
@@ -6201,7 +6209,7 @@ namespace NetExtender.Utilities.Core
 
             return fields.ToArray();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static MethodInfo? GetEventRaiseMethod(this Type type, String name)
         {
@@ -6217,7 +6225,7 @@ namespace NetExtender.Utilities.Core
 
             return type.GetEventField(name)?.FieldType.GetMethod(nameof(Action.Invoke));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static MethodInfo? GetEventRaiseMethod<T>(this Type type) where T : Delegate
         {
@@ -6234,7 +6242,7 @@ namespace NetExtender.Utilities.Core
         {
             return GetEventDelegate(type, name, @object, out _);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static MulticastDelegate? GetEventDelegate(this Type type, String name, Object? @object, out FieldInfo? field)
         {
@@ -6302,7 +6310,7 @@ namespace NetExtender.Utilities.Core
         {
             return GetEventDelegate(type, name, @object, out field) as T;
         }
-        
+
         public static KeyValuePair<FieldInfo, T>[] GetEventDelegates<T>(this Type type, Object? @object) where T : Delegate
         {
             if (type is null)
@@ -6421,7 +6429,10 @@ namespace NetExtender.Utilities.Core
             Type? @base = type.BaseType;
             return @base is not null && @base.ImplementsGeneric(@interface, out result);
         }
-        
+
+#if NET8_0_OR_GREATER
+        [Obsolete("Formatter-based serialization is obsolete and should not be used.", DiagnosticId = "SYSLIB0050", UrlFormat = "https://aka.ms/dotnet-warnings/{0}")]
+#endif
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsSerializable<T>(this IEnumerable<T?> source)
         {
@@ -6429,10 +6440,10 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             return typeof(T).IsValueType ? typeof(T).IsSerializable : source.All(static value => value?.GetType().IsSerializable is not false);
         }
-        
+
         public static String? StripQualifier(this Type type)
         {
             return StripQualifier(type, AssemblyNameType.Default);
@@ -6527,7 +6538,7 @@ namespace NetExtender.Utilities.Core
 
             return false;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsSuperclassOfRawGeneric(this Type type, Type? generic)
         {
@@ -6538,7 +6549,7 @@ namespace NetExtender.Utilities.Core
 
             return generic is not null && IsSubclassOfRawGeneric(generic, type);
         }
-        
+
         /// <inheritdoc cref="IsPrimitive(System.Type,PrimitiveType)"/>
         public static Boolean IsPrimitive(this Type type)
         {

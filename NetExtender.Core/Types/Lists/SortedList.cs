@@ -165,7 +165,7 @@ namespace NetExtender.Types.Lists
         public Int32 IndexOf(T item)
         {
             Int32 index = BinarySearch(item);
-            
+
             if (index < 0)
             {
                 return -1;
@@ -189,9 +189,9 @@ namespace NetExtender.Types.Lists
             {
                 return IndexOf(item);
             }
-            
+
             index = BinarySearch(index, item);
-            
+
             if (index < 0)
             {
                 return -1;
@@ -207,7 +207,7 @@ namespace NetExtender.Types.Lists
         public Int32 IndexOf(T item, Int32 index, Int32 count)
         {
             index = BinarySearch(index, count, item);
-            
+
             if (index < 0)
             {
                 return -1;
@@ -223,7 +223,7 @@ namespace NetExtender.Types.Lists
         public Int32 LastIndexOf(T item)
         {
             Int32 index = BinarySearch(item);
-            
+
             if (index < 0)
             {
                 return -1;
@@ -242,9 +242,9 @@ namespace NetExtender.Types.Lists
             {
                 return IndexOf(item);
             }
-            
+
             index = BinarySearch(index, item);
-            
+
             if (index < 0)
             {
                 return -1;
@@ -260,7 +260,7 @@ namespace NetExtender.Types.Lists
         public Int32 LastIndexOf(T item, Int32 index, Int32 count)
         {
             index = BinarySearch(index, count, item);
-            
+
             if (index < 0)
             {
                 return -1;
@@ -384,7 +384,7 @@ namespace NetExtender.Types.Lists
             {
                 throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
-            
+
             return Internal.BinarySearch(index, Internal.Count - index, item, Comparer);
         }
 
@@ -431,7 +431,7 @@ namespace NetExtender.Types.Lists
             }
 
             List<T> insert = new List<T>(collection);
-            
+
             if (insert.Count <= 0)
             {
                 return;
@@ -466,7 +466,7 @@ namespace NetExtender.Types.Lists
                 length = index - 1;
                 item = Internal[length];
                 Int32 end = i;
-                
+
                 while (--i >= 0 && Comparer.Compare(insert[i], item) > 0)
                 {
                 }
@@ -482,7 +482,7 @@ namespace NetExtender.Types.Lists
             {
                 throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
-            
+
             Add(item);
         }
 
@@ -628,7 +628,7 @@ namespace NetExtender.Types.Lists
             {
                 throw new ArgumentNullException(nameof(converter));
             }
-            
+
             return Internal.ConvertAll(converter);
         }
 
@@ -653,7 +653,7 @@ namespace NetExtender.Types.Lists
             catch (InvalidOperationException)
             {
             }
-            
+
             return new SortedList<TOutput>(convert, comparer);
         }
 

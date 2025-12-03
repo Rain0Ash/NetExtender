@@ -59,7 +59,7 @@ namespace NetExtender.Types.Network.Token
 			{
                 token = CancellationToken.None;
 				T? refresh = await GetToken(request, token);
-                
+
                 Logger?.LogDebug("The current token is: '{Token}'.", refresh);
 
                 if (refresh is null || !refresh.CanBeRefreshed)
@@ -106,7 +106,7 @@ namespace NetExtender.Types.Network.Token
             await NotifySessionExpiredHandler(request, @default, token);
         }
     }
-    
+
     public abstract class AuthenticationTokenProvider<T> : IAuthenticationTokenProvider<T> where T : IAuthenticationToken
     {
         public abstract Task<T?> GetToken(HttpRequestMessage request, CancellationToken token);

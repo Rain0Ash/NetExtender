@@ -19,7 +19,7 @@ namespace NetExtender.Domains.WinForms.AspNetCore.Context
             host = Host;
         }
     }
-    
+
     public class WinFormsAspNetCoreContext<TForm, THost> : WinFormsAspNetCoreContext<TForm> where TForm : Form where THost : class, IHost
     {
         public sealed override THost? Host { get; }
@@ -29,14 +29,14 @@ namespace NetExtender.Domains.WinForms.AspNetCore.Context
         {
             Host = host;
         }
-        
+
         public void Deconstruct(out TForm? form, out THost? host)
         {
             form = Form;
             host = Host;
         }
     }
-    
+
     public abstract class WinFormsAspNetCoreContext<TForm> : WinFormsAspNetCoreContext where TForm : Form
     {
         public sealed override TForm? Form { get; }
@@ -45,18 +45,18 @@ namespace NetExtender.Domains.WinForms.AspNetCore.Context
         {
             Form = form;
         }
-        
+
         public void Deconstruct(out TForm? form, out IHost? host)
         {
             form = Form;
             host = Host;
         }
     }
-    
+
     public abstract class WinFormsAspNetCoreContext : WinFormsAspNetCoreContextBase<IHost>
     {
     }
-    
+
     public class WinFormsAspNetCoreWebContext<TForm, THost> : WinFormsAspNetCoreWebContext<TForm> where TForm : Form where THost : class, IWebHost
     {
         public sealed override THost? Host { get; }
@@ -66,14 +66,14 @@ namespace NetExtender.Domains.WinForms.AspNetCore.Context
         {
             Host = host;
         }
-        
+
         public void Deconstruct(out TForm? form, out THost? host)
         {
             form = Form;
             host = Host;
         }
     }
-    
+
     public abstract class WinFormsAspNetCoreWebContext<TForm> : WinFormsAspNetCoreWebContext where TForm : Form
     {
         public sealed override TForm? Form { get; }
@@ -82,18 +82,18 @@ namespace NetExtender.Domains.WinForms.AspNetCore.Context
         {
             Form = form;
         }
-        
+
         public void Deconstruct(out TForm? form, out IWebHost? host)
         {
             form = Form;
             host = Host;
         }
     }
-    
+
     public abstract class WinFormsAspNetCoreWebContext : WinFormsAspNetCoreContextBase<IWebHost>
     {
     }
-    
+
     public class WinFormsAspNetCoreWebApplicationContext<TForm> : WinFormsAspNetCoreContext<TForm, WebApplication> where TForm : Form
     {
         public WinFormsAspNetCoreWebApplicationContext(TForm? window, WebApplication? host)

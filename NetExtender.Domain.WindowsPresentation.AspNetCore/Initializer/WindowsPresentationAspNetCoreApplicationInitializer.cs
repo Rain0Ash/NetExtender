@@ -17,14 +17,14 @@ namespace NetExtender.Domains.Initializer
     public abstract class WindowsPresentationAspNetCoreApplicationInitializer : WindowsPresentationApplicationInitializer
     {
     }
-    
+
     public abstract class WindowsPresentationAspNetCoreApplicationInitializer<TBuilder> : ApplicationInitializer<WindowsPresentationAspNetCoreApplication<Application>, WindowsPresentationAspNetCoreView<TBuilder>> where TBuilder : IApplicationBuilder<WindowsPresentationAspNetCoreContext>, new()
     {
         public abstract class Builder : WindowsPresentationAspNetCoreBuilder
         {
         }
     }
-    
+
     public abstract class WindowsPresentationAspNetCoreApplicationInitializer<TWindow, THost> : WindowsPresentationAspNetCoreApplicationInitializer<TWindow, THost, Application> where TWindow : Window, new() where THost : class, IHost, new()
     {
     }
@@ -46,14 +46,14 @@ namespace NetExtender.Domains.Initializer
         {
         }
     }
-    
+
     public abstract class WindowsPresentationAspNetCoreWebApplicationInitializer<TBuilder> : ApplicationInitializer<WindowsPresentationAspNetCoreWebApplication<Application>, WindowsPresentationAspNetCoreWebView<TBuilder>> where TBuilder : IApplicationBuilder<WindowsPresentationAspNetCoreWebContext>, new()
     {
         public abstract class Builder : WindowsPresentationAspNetCoreWebBuilder
         {
         }
     }
-    
+
     public abstract class WindowsPresentationAspNetCoreWebApplicationInitializer<TWindow, THost> : WindowsPresentationAspNetCoreWebApplicationInitializer<TWindow, THost, Application> where TWindow : Window, new() where THost : class, IWebHost, new()
     {
     }
@@ -75,21 +75,21 @@ namespace NetExtender.Domains.Initializer
         {
         }
     }
-    
+
     public abstract class WindowsPresentationAspNetCoreWebApplicationWrapperInitializer<TBuilder> : WindowsPresentationAspNetCoreApplicationInitializer<Window, WebApplication, WebApplicationBuilderWrapper, TBuilder, Application> where TBuilder : IApplicationBuilder<WindowsPresentationAspNetCoreContext<Window, WebApplication>>, new()
     {
         public new abstract class Builder : WindowsPresentationAspNetCoreWebApplicationBuilder
         {
         }
     }
-    
+
     public abstract class WindowsPresentationAspNetCoreWebApplicationWrapperInitializer<TWindow, TBuilder> : WindowsPresentationAspNetCoreApplicationInitializer<TWindow, WebApplication, WebApplicationBuilderWrapper, TBuilder, Application> where TWindow : Window where TBuilder : IApplicationBuilder<WindowsPresentationAspNetCoreContext<TWindow, WebApplication>>, new()
     {
         public new abstract class Builder : WindowsPresentationAspNetCoreWebApplicationBuilder<TWindow>
         {
         }
     }
-    
+
     public abstract class WindowsPresentationAspNetCoreWebApplicationWrapperInitializer<TWindow, TBuilder, TApplication> : WindowsPresentationAspNetCoreApplicationInitializer<TWindow, WebApplication, WebApplicationBuilderWrapper, TBuilder, TApplication> where TWindow : Window where TBuilder : IApplicationBuilder<WindowsPresentationAspNetCoreContext<TWindow, WebApplication>>, new() where TApplication : Application, new()
     {
         public new abstract class Builder : WindowsPresentationAspNetCoreWebApplicationBuilder<TWindow>

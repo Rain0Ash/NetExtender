@@ -17,7 +17,7 @@ namespace NetExtender.Utilities.Core
         Unchecked = 4,
         PreferUnchecked = Prefer | Unchecked,
         Flags = Prefer | Checked | Unchecked,
-        
+
         UnaryPlus = 8,
         UnaryNegation = 16,
         Increment = 32,
@@ -27,7 +27,7 @@ namespace NetExtender.Utilities.Core
         True = 512,
         False = 1024
     }
-    
+
     [Flags]
     public enum BinaryOperator : UInt32
     {
@@ -38,7 +38,7 @@ namespace NetExtender.Utilities.Core
         Unchecked = 4,
         PreferUnchecked = Prefer | Unchecked,
         Flags = Prefer | Checked | Unchecked,
-        
+
         Equality = 8,
         Inequality = 16,
         LessThan = 32,
@@ -57,7 +57,7 @@ namespace NetExtender.Utilities.Core
         RightShift = 262144,
         UnsignedRightShift = 524288
     }
-    
+
     public static class OperatorUtilities
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

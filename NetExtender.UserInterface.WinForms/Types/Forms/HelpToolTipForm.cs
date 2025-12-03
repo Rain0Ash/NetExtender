@@ -22,7 +22,7 @@ namespace NetExtender.UserInterface.WinForms.Forms
             {
                 throw new ObjectDisposedException(nameof(ToolTip));
             }
-            
+
             if (!Controls.Contains(control))
             {
                 return;
@@ -37,7 +37,7 @@ namespace NetExtender.UserInterface.WinForms.Forms
             {
                 throw new ObjectDisposedException(nameof(ToolTip));
             }
-            
+
             ToolTip.SetToolTip(control, null);
         }
 
@@ -47,7 +47,7 @@ namespace NetExtender.UserInterface.WinForms.Forms
             {
                 throw new ObjectDisposedException(nameof(ToolTip));
             }
-            
+
             ToolTip.RemoveAll();
         }
 

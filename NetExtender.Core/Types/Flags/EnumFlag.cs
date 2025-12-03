@@ -27,6 +27,11 @@ namespace NetExtender.Types.Flags
             return new Flag64(value);
         }
 
+        public static implicit operator Flag128(EnumFlag<T> value)
+        {
+            return new Flag128(value);
+        }
+
         public static implicit operator EnumFlag<T>(T value)
         {
             return new EnumFlag<T>(value);
@@ -36,7 +41,7 @@ namespace NetExtender.Types.Flags
         {
             fixed (void* pointer = &value)
             {
-                return new ReadOnlySpan<Byte>(pointer, sizeof(T) / sizeof(Byte));
+                return new ReadOnlySpan<Byte>(pointer, sizeof(EnumFlag<T>) / sizeof(Byte));
             }
         }
 
@@ -44,7 +49,7 @@ namespace NetExtender.Types.Flags
         {
             fixed (void* pointer = &value)
             {
-                return new ReadOnlySpan<UInt16>(pointer, sizeof(T) / sizeof(UInt16));
+                return new ReadOnlySpan<UInt16>(pointer, sizeof(EnumFlag<T>) / sizeof(UInt16));
             }
         }
 
@@ -52,7 +57,7 @@ namespace NetExtender.Types.Flags
         {
             fixed (void* pointer = &value)
             {
-                return new ReadOnlySpan<UInt32>(pointer, sizeof(T) / sizeof(UInt32));
+                return new ReadOnlySpan<UInt32>(pointer, sizeof(EnumFlag<T>) / sizeof(UInt32));
             }
         }
 
@@ -60,9 +65,19 @@ namespace NetExtender.Types.Flags
         {
             fixed (void* pointer = &value)
             {
-                return new ReadOnlySpan<UInt64>(pointer, sizeof(T) / sizeof(UInt64));
+                return new ReadOnlySpan<UInt64>(pointer, sizeof(EnumFlag<T>) / sizeof(UInt64));
             }
         }
+
+#if NET7_0_OR_GREATER
+        public static implicit operator ReadOnlySpan<UInt128>(in EnumFlag<T> value)
+        {
+            fixed (void* pointer = &value)
+            {
+                return new ReadOnlySpan<UInt128>(pointer, sizeof(EnumFlag<T>) / sizeof(UInt128));
+            }
+        }
+#endif
 
         public static Boolean operator ==(EnumFlag<T> first, T second)
         {
@@ -152,7 +167,10 @@ namespace NetExtender.Types.Flags
 
         public ReadOnlySpan<Byte> AsSpan()
         {
-            return this;
+            fixed (void* pointer = &this)
+            {
+                return new ReadOnlySpan<Byte>(pointer, sizeof(EnumFlag<T>) / sizeof(Byte));
+            }
         }
 
         public Boolean HasFlag(ReadOnlySpan<Byte> value)

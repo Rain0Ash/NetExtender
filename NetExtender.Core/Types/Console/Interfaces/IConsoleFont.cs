@@ -12,7 +12,7 @@ namespace NetExtender.Types.Console.Interfaces
                 return IConsoleFontInfo.New;
             }
         }
-        
+
         public new static IConsoleFont? Current
         {
             get

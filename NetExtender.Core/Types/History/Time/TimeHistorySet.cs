@@ -187,7 +187,7 @@ namespace NetExtender.Types.History
             {
                 throw new ArgumentNullException(nameof(other));
             }
-            
+
             foreach (T item in other)
             {
                 _ = Contains(item) ? Remove(item) : Add(item) >= 0;
@@ -211,7 +211,7 @@ namespace NetExtender.Types.History
                 Clear();
                 return;
             }
-            
+
             while (Internal.Count > size)
             {
                 Internal.Remove(Internal.Min);
@@ -222,7 +222,7 @@ namespace NetExtender.Types.History
         {
             Internal.Clear();
         }
-        
+
         public sealed override void CopyTo(T[] array)
         {
             base.CopyTo(array);
@@ -234,7 +234,7 @@ namespace NetExtender.Types.History
             {
                 throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
-            
+
             using SortedSet<Node>.Enumerator enumerator = Internal.GetEnumerator();
 
             for (Int32 i = index; i < array.Length && enumerator.MoveNext(); i++)

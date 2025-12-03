@@ -17,11 +17,11 @@ namespace NetExtender.AspNetCore.Types.Middlewares
             Next = next ?? throw new ArgumentNullException(nameof(next));
         }
     }
-    
+
     public abstract class InvokeMiddlewareBase
     {
     }
-    
+
     public abstract class Middleware : MiddlewareBase, Interfaces.IMiddleware
     {
         protected Middleware(RequestDelegate next)
@@ -34,7 +34,7 @@ namespace NetExtender.AspNetCore.Types.Middlewares
             Next.Invoke(context).ConfigureAwait(false);
         }
     }
-    
+
     public abstract class Middleware<TArgument> : MiddlewareBase, IMiddleware<TArgument>
     {
         protected Middleware(RequestDelegate next)
@@ -47,7 +47,7 @@ namespace NetExtender.AspNetCore.Types.Middlewares
             Next.Invoke(context).ConfigureAwait(false);
         }
     }
-    
+
     public abstract class Middleware<TArgument1, TArgument2> : MiddlewareBase, IMiddleware<TArgument1, TArgument2>
     {
         protected Middleware(RequestDelegate next)
@@ -60,7 +60,7 @@ namespace NetExtender.AspNetCore.Types.Middlewares
             Next.Invoke(context).ConfigureAwait(false);
         }
     }
-    
+
     public abstract class Middleware<TArgument1, TArgument2, TArgument3> : MiddlewareBase, IMiddleware<TArgument1, TArgument2, TArgument3>
     {
         protected Middleware(RequestDelegate next)
@@ -73,7 +73,7 @@ namespace NetExtender.AspNetCore.Types.Middlewares
             Next.Invoke(context).ConfigureAwait(false);
         }
     }
-    
+
     public abstract class Middleware<TArgument1, TArgument2, TArgument3, TArgument4> : MiddlewareBase, IMiddleware<TArgument1, TArgument2, TArgument3, TArgument4>
     {
         protected Middleware(RequestDelegate next)
@@ -86,7 +86,7 @@ namespace NetExtender.AspNetCore.Types.Middlewares
             Next.Invoke(context).ConfigureAwait(false);
         }
     }
-    
+
     public abstract class Middleware<TArgument1, TArgument2, TArgument3, TArgument4, TArgument5> : MiddlewareBase, IMiddleware<TArgument1, TArgument2, TArgument3, TArgument4, TArgument5>
     {
         protected Middleware(RequestDelegate next)
@@ -99,7 +99,7 @@ namespace NetExtender.AspNetCore.Types.Middlewares
             Next.Invoke(context).ConfigureAwait(false);
         }
     }
-    
+
     public abstract class Middleware<TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6> : MiddlewareBase, IMiddleware<TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6>
     {
         protected Middleware(RequestDelegate next)
@@ -112,7 +112,7 @@ namespace NetExtender.AspNetCore.Types.Middlewares
             Next.Invoke(context).ConfigureAwait(false);
         }
     }
-    
+
     public abstract class InvokeMiddleware : InvokeMiddlewareBase, IInvokeMiddleware
     {
         public virtual void Invoke(HttpContext context, RequestDelegate next)
@@ -125,7 +125,7 @@ namespace NetExtender.AspNetCore.Types.Middlewares
             next.Invoke(context).ConfigureAwait(false);
         }
     }
-    
+
     public abstract class InvokeMiddleware<TArgument> : InvokeMiddlewareBase, IInvokeMiddleware<TArgument>
     {
         public virtual void Invoke(HttpContext context, RequestDelegate next, TArgument argument)
@@ -138,7 +138,7 @@ namespace NetExtender.AspNetCore.Types.Middlewares
             next.Invoke(context).ConfigureAwait(false);
         }
     }
-    
+
     public abstract class InvokeMiddleware<TArgument1, TArgument2> : InvokeMiddlewareBase, IInvokeMiddleware<TArgument1, TArgument2>
     {
         public virtual void Invoke(HttpContext context, RequestDelegate next, TArgument1 first, TArgument2 second)
@@ -151,7 +151,7 @@ namespace NetExtender.AspNetCore.Types.Middlewares
             next.Invoke(context).ConfigureAwait(false);
         }
     }
-    
+
     public abstract class InvokeMiddleware<TArgument1, TArgument2, TArgument3> : InvokeMiddlewareBase, IInvokeMiddleware<TArgument1, TArgument2, TArgument3>
     {
         public virtual void Invoke(HttpContext context, RequestDelegate next, TArgument1 first, TArgument2 second, TArgument3 third)
@@ -164,7 +164,7 @@ namespace NetExtender.AspNetCore.Types.Middlewares
             next.Invoke(context).ConfigureAwait(false);
         }
     }
-    
+
     public abstract class InvokeMiddleware<TArgument1, TArgument2, TArgument3, TArgument4> : InvokeMiddlewareBase, IInvokeMiddleware<TArgument1, TArgument2, TArgument3, TArgument4>
     {
         public virtual void Invoke(HttpContext context, RequestDelegate next, TArgument1 first, TArgument2 second, TArgument3 third, TArgument4 fourth)
@@ -177,7 +177,7 @@ namespace NetExtender.AspNetCore.Types.Middlewares
             next.Invoke(context).ConfigureAwait(false);
         }
     }
-    
+
     public abstract class InvokeMiddleware<TArgument1, TArgument2, TArgument3, TArgument4, TArgument5> : InvokeMiddlewareBase, IInvokeMiddleware<TArgument1, TArgument2, TArgument3, TArgument4, TArgument5>
     {
         public virtual void Invoke(HttpContext context, RequestDelegate next, TArgument1 first, TArgument2 second, TArgument3 third, TArgument4 fourth, TArgument5 fifth)
@@ -281,7 +281,7 @@ namespace NetExtender.AspNetCore.Types.Middlewares
             await Next.Invoke(context).ConfigureAwait(false);
         }
     }
-    
+
     public abstract class AsyncInvokeMiddleware : InvokeMiddlewareBase, IAsyncInvokeMiddleware
     {
         public virtual async Task InvokeAsync(HttpContext context, RequestDelegate next)
@@ -294,7 +294,7 @@ namespace NetExtender.AspNetCore.Types.Middlewares
             await next.Invoke(context).ConfigureAwait(false);
         }
     }
-    
+
     public abstract class AsyncInvokeMiddleware<TArgument> : InvokeMiddlewareBase, IAsyncInvokeMiddleware<TArgument>
     {
         public virtual async Task InvokeAsync(HttpContext context, RequestDelegate next, TArgument argument)
@@ -307,7 +307,7 @@ namespace NetExtender.AspNetCore.Types.Middlewares
             await next.Invoke(context).ConfigureAwait(false);
         }
     }
-    
+
     public abstract class AsyncInvokeMiddleware<TArgument1, TArgument2> : InvokeMiddlewareBase, IAsyncInvokeMiddleware<TArgument1, TArgument2>
     {
         public virtual async Task InvokeAsync(HttpContext context, RequestDelegate next, TArgument1 first, TArgument2 second)
@@ -320,7 +320,7 @@ namespace NetExtender.AspNetCore.Types.Middlewares
             await next.Invoke(context).ConfigureAwait(false);
         }
     }
-    
+
     public abstract class AsyncInvokeMiddleware<TArgument1, TArgument2, TArgument3> : InvokeMiddlewareBase, IAsyncInvokeMiddleware<TArgument1, TArgument2, TArgument3>
     {
         public virtual async Task InvokeAsync(HttpContext context, RequestDelegate next, TArgument1 first, TArgument2 second, TArgument3 third)
@@ -333,7 +333,7 @@ namespace NetExtender.AspNetCore.Types.Middlewares
             await next.Invoke(context).ConfigureAwait(false);
         }
     }
-    
+
     public abstract class AsyncInvokeMiddleware<TArgument1, TArgument2, TArgument3, TArgument4> : InvokeMiddlewareBase, IAsyncInvokeMiddleware<TArgument1, TArgument2, TArgument3, TArgument4>
     {
         public virtual async Task InvokeAsync(HttpContext context, RequestDelegate next, TArgument1 first, TArgument2 second, TArgument3 third, TArgument4 fourth)
@@ -346,7 +346,7 @@ namespace NetExtender.AspNetCore.Types.Middlewares
             await next.Invoke(context).ConfigureAwait(false);
         }
     }
-    
+
     public abstract class AsyncInvokeMiddleware<TArgument1, TArgument2, TArgument3, TArgument4, TArgument5> : InvokeMiddlewareBase, IAsyncInvokeMiddleware<TArgument1, TArgument2, TArgument3, TArgument4, TArgument5>
     {
         public virtual async Task InvokeAsync(HttpContext context, RequestDelegate next, TArgument1 first, TArgument2 second, TArgument3 third, TArgument4 fourth, TArgument5 fifth)

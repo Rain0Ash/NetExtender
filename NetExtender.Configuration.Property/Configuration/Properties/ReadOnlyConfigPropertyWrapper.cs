@@ -436,7 +436,7 @@ namespace NetExtender.Configuration.Properties
                 return Internal.IsAlwaysDefault;
             }
         }
-        
+
         public Boolean IsThreadSafe
         {
             get

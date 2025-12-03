@@ -19,7 +19,7 @@ namespace NetExtender.WindowsPresentation.Types.Bindings
                 base.Converter = value ?? throw new ArgumentNullException(nameof(value));
             }
         }
-        
+
         protected ColorBinding()
         {
             Converter = ColorConverter.Instance;

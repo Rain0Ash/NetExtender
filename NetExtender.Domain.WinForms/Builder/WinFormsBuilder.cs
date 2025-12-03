@@ -39,7 +39,7 @@ namespace NetExtender.Domains.WinForms.Builder
         {
             base.Initialize(arguments, console);
         }
-        
+
         public override T Build(ImmutableArray<String> arguments)
         {
             Manager?.Invoke(this, this);

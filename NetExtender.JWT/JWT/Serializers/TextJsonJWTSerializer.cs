@@ -114,7 +114,7 @@ namespace NetExtender.JWT
                 }
 
                 Dictionary<String, Object?> result = new Dictionary<String, Object?>(8);
-                
+
                 while (reader.Read())
                 {
                     if (reader.TokenType == JsonTokenType.EndObject)

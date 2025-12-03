@@ -80,7 +80,7 @@ namespace NetExtender.Types.Monads
             Internal = new Lazy<T>(Mode);
             return this;
         }
-        
+
         IResettableLazy<T> IResettableLazy<T>.Reset()
         {
             return Reset();
@@ -91,7 +91,7 @@ namespace NetExtender.Types.Monads
             Internal = new Lazy<T>(() => value, Mode);
             return this;
         }
-        
+
         IResettableLazy<T> IResettableLazy<T>.Reset(T value)
         {
             return Reset(value);
@@ -103,11 +103,11 @@ namespace NetExtender.Types.Monads
             {
                 throw new ArgumentNullException(nameof(factory));
             }
-            
+
             Internal = new Lazy<T>(factory, Mode);
             return this;
         }
-        
+
         IResettableLazy<T> IResettableLazy<T>.Reset(Func<T> factory)
         {
             return Reset(factory);

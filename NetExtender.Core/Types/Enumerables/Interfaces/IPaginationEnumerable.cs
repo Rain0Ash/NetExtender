@@ -11,7 +11,7 @@ namespace NetExtender.Types.Enumerables.Interfaces
     {
         public TCollection Source { get; }
     }
-    
+
     public interface IPaginationEnumerable<out T> : IPaginationEnumerable, IEnumerable<T>
     {
     }
@@ -22,24 +22,24 @@ namespace NetExtender.Types.Enumerables.Interfaces
         /// Page index
         /// </summary>
         public Int32 Index { get; }
-        
+
         /// <summary>
         /// Page number
         /// <see cref="Index"/> + 1
         /// </summary>
         public Int32 Page { get; }
-        
+
         /// <summary>
         /// Total pages
         /// <seealso cref="Page"/>
         /// </summary>
         public Int32 Total { get; }
-        
+
         /// <summary>
         /// Count of page items
         /// </summary>
         public Int32 Items { get; }
-        
+
         /// <summary>
         /// Page size
         /// </summary>
@@ -50,10 +50,10 @@ namespace NetExtender.Types.Enumerables.Interfaces
         /// Total count of items
         /// </summary>
         public Int32 Count { get; }
-        
+
         public Boolean HasPrevious { get; }
         public Boolean HasNext { get; }
-        
+
         public Boolean Resize(Int32 size);
         public Boolean Resize(Int32 size, Boolean resize);
     }

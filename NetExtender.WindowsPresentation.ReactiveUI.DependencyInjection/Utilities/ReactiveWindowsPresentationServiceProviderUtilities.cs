@@ -19,11 +19,11 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(provider));
             }
-            
+
             Microsoft.Extensions.DependencyInjection.IServiceScope scope = ServiceProviderServiceExtensions.CreateScope(provider);
             return new ServiceScopeWrapper(scope);
         }
-        
+
         [ReflectionSignature(typeof(DependencyWindowsPresentationUtilities))]
         internal static IAsyncServiceScope CreateAsyncScope(IServiceProvider provider)
         {
@@ -31,7 +31,7 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(provider));
             }
-            
+
             AsyncServiceScope scope = ServiceProviderServiceExtensions.CreateAsyncScope(provider);
             return new AsyncServiceScopeWrapper(ref scope);
         }

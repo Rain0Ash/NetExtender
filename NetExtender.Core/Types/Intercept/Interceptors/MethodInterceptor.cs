@@ -16,7 +16,7 @@ namespace NetExtender.Types.Intercept
     public class MethodInterceptor<TSender, TInfo> : MethodInterceptor<TSender, IMethodInterceptEventArgs, TInfo> where TSender : IInterceptTargetRaise<IMethodInterceptEventArgs>
     {
         public static MethodInterceptor<TSender, TInfo> Default { get; } = new MethodInterceptor<TSender, TInfo>();
-        
+
         public MethodInterceptor()
         {
             Factory = MethodInterceptorUtilities.Factory<TInfo>.Instance;
@@ -119,16 +119,16 @@ namespace NetExtender.Types.Intercept
             {
                 throw new TypeNotSupportedException(typeof(TArgument));
             }
-            
+
             result = default;
             args.Token.ThrowIfCancellationRequested();
             sender.RaiseIntercepting(args);
-            
+
             if (args.Exception is not null)
             {
                 throw args.Exception;
             }
-            
+
             if (args.IsSeal)
             {
                 return argument.Value;
@@ -162,7 +162,7 @@ namespace NetExtender.Types.Intercept
 
             return argument.Value;
         }
-        
+
         // ReSharper disable once CognitiveComplexity
         public virtual async ValueTask InterceptAsync<TDelegate>(TSender sender, TArgument args, TDelegate @delegate) where TDelegate : struct, IAsyncValueAction<TDelegate>
         {
@@ -260,16 +260,16 @@ namespace NetExtender.Types.Intercept
             {
                 throw new TypeNotSupportedException(typeof(TArgument));
             }
-            
+
             args.Token.ThrowIfCancellationRequested();
             sender.RaiseIntercepting(args);
             await Wait(args);
-            
+
             if (args.Exception is not null)
             {
                 throw args.Exception;
             }
-            
+
             if (args.IsSeal)
             {
                 return argument.Value;
@@ -332,7 +332,7 @@ namespace NetExtender.Types.Intercept
             {
                 throw new InvalidOperationException($"{nameof(Factory)} is not set.");
             }
-            
+
             TArgument? args = null;
 
             try
@@ -352,7 +352,7 @@ namespace NetExtender.Types.Intercept
             {
                 throw new InvalidOperationException($"{nameof(Factory)} is not set.");
             }
-            
+
             TArgument? args = null;
 
             try
@@ -372,7 +372,7 @@ namespace NetExtender.Types.Intercept
             {
                 throw new InvalidOperationException($"{nameof(Factory)} is not set.");
             }
-            
+
             TArgument? args = null;
 
             try
@@ -392,7 +392,7 @@ namespace NetExtender.Types.Intercept
             {
                 throw new InvalidOperationException($"{nameof(Factory)} is not set.");
             }
-            
+
             TArgument? args = null;
 
             try
@@ -412,7 +412,7 @@ namespace NetExtender.Types.Intercept
             {
                 throw new InvalidOperationException($"{nameof(Factory)} is not set.");
             }
-            
+
             TArgument? args = null;
 
             try
@@ -432,7 +432,7 @@ namespace NetExtender.Types.Intercept
             {
                 throw new InvalidOperationException($"{nameof(Factory)} is not set.");
             }
-            
+
             TArgument? args = null;
 
             try
@@ -452,7 +452,7 @@ namespace NetExtender.Types.Intercept
             {
                 throw new InvalidOperationException($"{nameof(Factory)} is not set.");
             }
-            
+
             TArgument? args = null;
 
             try
@@ -472,7 +472,7 @@ namespace NetExtender.Types.Intercept
             {
                 throw new InvalidOperationException($"{nameof(Factory)} is not set.");
             }
-            
+
             TArgument? args = null;
 
             try
@@ -492,7 +492,7 @@ namespace NetExtender.Types.Intercept
             {
                 throw new InvalidOperationException($"{nameof(Factory)} is not set.");
             }
-            
+
             TArgument? args = null;
 
             try
@@ -512,7 +512,7 @@ namespace NetExtender.Types.Intercept
             {
                 throw new InvalidOperationException($"{nameof(Factory)} is not set.");
             }
-            
+
             TArgument? args = null;
 
             try
@@ -532,7 +532,7 @@ namespace NetExtender.Types.Intercept
             {
                 throw new InvalidOperationException($"{nameof(Factory)} is not set.");
             }
-            
+
             TArgument? args = null;
 
             try
@@ -552,7 +552,7 @@ namespace NetExtender.Types.Intercept
             {
                 throw new InvalidOperationException($"{nameof(Factory)} is not set.");
             }
-            
+
             TArgument? args = null;
 
             try
@@ -572,7 +572,7 @@ namespace NetExtender.Types.Intercept
             {
                 throw new InvalidOperationException($"{nameof(Factory)} is not set.");
             }
-            
+
             TArgument? args = null;
 
             try
@@ -592,7 +592,7 @@ namespace NetExtender.Types.Intercept
             {
                 throw new InvalidOperationException($"{nameof(Factory)} is not set.");
             }
-            
+
             TArgument? args = null;
 
             try
@@ -612,7 +612,7 @@ namespace NetExtender.Types.Intercept
             {
                 throw new InvalidOperationException($"{nameof(Factory)} is not set.");
             }
-            
+
             TArgument? args = null;
 
             try
@@ -632,7 +632,7 @@ namespace NetExtender.Types.Intercept
             {
                 throw new InvalidOperationException($"{nameof(Factory)} is not set.");
             }
-            
+
             TArgument? args = null;
 
             try
@@ -992,7 +992,7 @@ namespace NetExtender.Types.Intercept
             {
                 throw new InvalidOperationException($"{nameof(Factory)} is not set.");
             }
-            
+
             TArgument? args = null;
 
             try
@@ -1012,7 +1012,7 @@ namespace NetExtender.Types.Intercept
             {
                 throw new InvalidOperationException($"{nameof(Factory)} is not set.");
             }
-            
+
             TArgument? args = null;
 
             try
@@ -1032,7 +1032,7 @@ namespace NetExtender.Types.Intercept
             {
                 throw new InvalidOperationException($"{nameof(Factory)} is not set.");
             }
-            
+
             TArgument? args = null;
 
             try
@@ -1052,7 +1052,7 @@ namespace NetExtender.Types.Intercept
             {
                 throw new InvalidOperationException($"{nameof(Factory)} is not set.");
             }
-            
+
             TArgument? args = null;
 
             try
@@ -1072,7 +1072,7 @@ namespace NetExtender.Types.Intercept
             {
                 throw new InvalidOperationException($"{nameof(Factory)} is not set.");
             }
-            
+
             TArgument? args = null;
 
             try
@@ -1092,7 +1092,7 @@ namespace NetExtender.Types.Intercept
             {
                 throw new InvalidOperationException($"{nameof(Factory)} is not set.");
             }
-            
+
             TArgument? args = null;
 
             try
@@ -1112,7 +1112,7 @@ namespace NetExtender.Types.Intercept
             {
                 throw new InvalidOperationException($"{nameof(Factory)} is not set.");
             }
-            
+
             TArgument? args = null;
 
             try
@@ -1132,7 +1132,7 @@ namespace NetExtender.Types.Intercept
             {
                 throw new InvalidOperationException($"{nameof(Factory)} is not set.");
             }
-            
+
             TArgument? args = null;
 
             try
@@ -1152,7 +1152,7 @@ namespace NetExtender.Types.Intercept
             {
                 throw new InvalidOperationException($"{nameof(Factory)} is not set.");
             }
-            
+
             TArgument? args = null;
 
             try
@@ -1172,7 +1172,7 @@ namespace NetExtender.Types.Intercept
             {
                 throw new InvalidOperationException($"{nameof(Factory)} is not set.");
             }
-            
+
             TArgument? args = null;
 
             try
@@ -1192,7 +1192,7 @@ namespace NetExtender.Types.Intercept
             {
                 throw new InvalidOperationException($"{nameof(Factory)} is not set.");
             }
-            
+
             TArgument? args = null;
 
             try
@@ -1212,7 +1212,7 @@ namespace NetExtender.Types.Intercept
             {
                 throw new InvalidOperationException($"{nameof(Factory)} is not set.");
             }
-            
+
             TArgument? args = null;
 
             try
@@ -1232,7 +1232,7 @@ namespace NetExtender.Types.Intercept
             {
                 throw new InvalidOperationException($"{nameof(Factory)} is not set.");
             }
-            
+
             TArgument? args = null;
 
             try
@@ -1252,7 +1252,7 @@ namespace NetExtender.Types.Intercept
             {
                 throw new InvalidOperationException($"{nameof(Factory)} is not set.");
             }
-            
+
             TArgument? args = null;
 
             try
@@ -1272,7 +1272,7 @@ namespace NetExtender.Types.Intercept
             {
                 throw new InvalidOperationException($"{nameof(Factory)} is not set.");
             }
-            
+
             TArgument? args = null;
 
             try
@@ -1292,7 +1292,7 @@ namespace NetExtender.Types.Intercept
             {
                 throw new InvalidOperationException($"{nameof(Factory)} is not set.");
             }
-            
+
             TArgument? args = null;
 
             try
@@ -1312,7 +1312,7 @@ namespace NetExtender.Types.Intercept
             {
                 throw new InvalidOperationException($"{nameof(Factory)} is not set.");
             }
-            
+
             TArgument? args = null;
 
             try
@@ -1332,7 +1332,7 @@ namespace NetExtender.Types.Intercept
             {
                 throw new InvalidOperationException($"{nameof(Factory)} is not set.");
             }
-            
+
             TArgument? args = null;
 
             try
@@ -1352,7 +1352,7 @@ namespace NetExtender.Types.Intercept
             {
                 throw new InvalidOperationException($"{nameof(Factory)} is not set.");
             }
-            
+
             TArgument? args = null;
 
             try
@@ -1372,7 +1372,7 @@ namespace NetExtender.Types.Intercept
             {
                 throw new InvalidOperationException($"{nameof(Factory)} is not set.");
             }
-            
+
             TArgument? args = null;
 
             try
@@ -1392,7 +1392,7 @@ namespace NetExtender.Types.Intercept
             {
                 throw new InvalidOperationException($"{nameof(Factory)} is not set.");
             }
-            
+
             TArgument? args = null;
 
             try
@@ -1412,7 +1412,7 @@ namespace NetExtender.Types.Intercept
             {
                 throw new InvalidOperationException($"{nameof(Factory)} is not set.");
             }
-            
+
             TArgument? args = null;
 
             try
@@ -1432,7 +1432,7 @@ namespace NetExtender.Types.Intercept
             {
                 throw new InvalidOperationException($"{nameof(Factory)} is not set.");
             }
-            
+
             TArgument? args = null;
 
             try
@@ -1452,7 +1452,7 @@ namespace NetExtender.Types.Intercept
             {
                 throw new InvalidOperationException($"{nameof(Factory)} is not set.");
             }
-            
+
             TArgument? args = null;
 
             try
@@ -1472,7 +1472,7 @@ namespace NetExtender.Types.Intercept
             {
                 throw new InvalidOperationException($"{nameof(Factory)} is not set.");
             }
-            
+
             TArgument? args = null;
 
             try
@@ -1492,7 +1492,7 @@ namespace NetExtender.Types.Intercept
             {
                 throw new InvalidOperationException($"{nameof(Factory)} is not set.");
             }
-            
+
             TArgument? args = null;
 
             try
@@ -1512,7 +1512,7 @@ namespace NetExtender.Types.Intercept
             {
                 throw new InvalidOperationException($"{nameof(Factory)} is not set.");
             }
-            
+
             TArgument? args = null;
 
             try
@@ -1532,7 +1532,7 @@ namespace NetExtender.Types.Intercept
             {
                 throw new InvalidOperationException($"{nameof(Factory)} is not set.");
             }
-            
+
             TArgument? args = null;
 
             try
@@ -1552,7 +1552,7 @@ namespace NetExtender.Types.Intercept
             {
                 throw new InvalidOperationException($"{nameof(Factory)} is not set.");
             }
-            
+
             TArgument? args = null;
 
             try
@@ -1572,7 +1572,7 @@ namespace NetExtender.Types.Intercept
             {
                 throw new InvalidOperationException($"{nameof(Factory)} is not set.");
             }
-            
+
             TArgument? args = null;
 
             try
@@ -1592,7 +1592,7 @@ namespace NetExtender.Types.Intercept
             {
                 throw new InvalidOperationException($"{nameof(Factory)} is not set.");
             }
-            
+
             TArgument? args = null;
 
             try
@@ -1612,7 +1612,7 @@ namespace NetExtender.Types.Intercept
             {
                 throw new InvalidOperationException($"{nameof(Factory)} is not set.");
             }
-            
+
             TArgument? args = null;
 
             try
@@ -1632,7 +1632,7 @@ namespace NetExtender.Types.Intercept
             {
                 throw new InvalidOperationException($"{nameof(Factory)} is not set.");
             }
-            
+
             TArgument? args = null;
 
             try
@@ -1652,7 +1652,7 @@ namespace NetExtender.Types.Intercept
             {
                 throw new InvalidOperationException($"{nameof(Factory)} is not set.");
             }
-            
+
             TArgument? args = null;
 
             try

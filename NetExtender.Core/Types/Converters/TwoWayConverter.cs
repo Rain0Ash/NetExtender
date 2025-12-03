@@ -21,87 +21,87 @@ namespace NetExtender.Types.Converters
         {
             return StringConverter.Default;
         }
-        
+
         public static TwoWayConverter<TInput, String?> String(EscapeType escape)
         {
             return new StringConverter(escape, null, null);
         }
-        
+
         public static TwoWayConverter<TInput, String?> String(IFormatProvider? provider)
         {
             return new StringConverter(ConvertUtilities.DefaultEscapeType, null, provider);
         }
-        
+
         public static TwoWayConverter<TInput, String?> String(EscapeType escape, IFormatProvider? provider)
         {
             return new StringConverter(escape, null, provider);
         }
-        
+
         public static TwoWayConverter<TInput, String?> String(String? format, IFormatProvider? provider)
         {
             return new StringConverter(ConvertUtilities.DefaultEscapeType, format, provider);
         }
-        
+
         public static TwoWayConverter<TInput, String?> String(EscapeType escape, String? format, IFormatProvider? provider)
         {
             return new StringConverter(escape, format, provider);
         }
-        
+
         public static TwoWayConverter<TInput, String?> String(TryConverter<String?, TInput> converter)
         {
             return new StringConverter(converter, ConvertUtilities.DefaultEscapeType, null, null);
         }
-        
+
         public static TwoWayConverter<TInput, String?> String(TryConverter<String?, TInput> converter, EscapeType escape)
         {
             return new StringConverter(converter, escape, null, null);
         }
-        
+
         public static TwoWayConverter<TInput, String?> String(TryConverter<String?, TInput> converter, IFormatProvider? provider)
         {
             return new StringConverter(converter, ConvertUtilities.DefaultEscapeType, null, provider);
         }
-        
+
         public static TwoWayConverter<TInput, String?> String(TryConverter<String?, TInput> converter, EscapeType escape, IFormatProvider? provider)
         {
             return new StringConverter(converter, escape, null, provider);
         }
-        
+
         public static TwoWayConverter<TInput, String?> String(TryConverter<String?, TInput> converter, String? format, IFormatProvider? provider)
         {
             return new StringConverter(converter, ConvertUtilities.DefaultEscapeType, format, provider);
         }
-        
+
         public static TwoWayConverter<TInput, String?> String(TryConverter<String?, TInput> converter, EscapeType escape, String? format, IFormatProvider? provider)
         {
             return new StringConverter(converter, escape, format, provider);
         }
-        
+
         private sealed class StringConverter : TwoWayConverter<TInput>
         {
             // ReSharper disable once MemberHidesStaticFromOuterClass
             public new static StringConverter Default { get; } = new StringConverter();
-            
+
             public TryConverter<String?, TInput> Converter { get; }
             private EscapeType EscapeType { get; }
             private String? Format { get; }
             private IFormatProvider? Provider { get; }
-            
+
             public StringConverter()
                 : this(ConvertUtilities.DefaultEscapeType, null, null)
             {
             }
-            
+
             public StringConverter(EscapeType escape, String? format, IFormatProvider? provider)
                 : this(ConvertUtilities.TryConvert, escape, format, provider)
             {
             }
-            
+
             public StringConverter(TryConverter<String?, TInput> converter)
                 : this(converter, ConvertUtilities.DefaultEscapeType, null, null)
             {
             }
-            
+
             public StringConverter(TryConverter<String?, TInput> converter, EscapeType escape, String? format, IFormatProvider? provider)
             {
                 Converter = converter ?? throw new ArgumentNullException(nameof(converter));
@@ -109,7 +109,7 @@ namespace NetExtender.Types.Converters
                 Format = format;
                 Provider = provider;
             }
-            
+
             public override String? Convert(TInput input)
             {
                 return input.GetString(EscapeType, Format, Provider);
@@ -147,7 +147,7 @@ namespace NetExtender.Types.Converters
 
             return new TwoWayConverterWrapper<TInput, TOutput>(converter, ConvertUtilities.TryConvert);
         }
-        
+
         public static TwoWayConverter<TInput, TOutput> Create(IOneWayConverter<TInput, TOutput> converter)
         {
             if (converter is null)
@@ -187,7 +187,7 @@ namespace NetExtender.Types.Converters
 
             return new CombineConverter(new OneWayConverterWrapper<TInput, TOutput>(converter), reverse);
         }
-        
+
         public static TwoWayConverter<TInput, TOutput> Combine(IOneWayConverter<TInput, TOutput> converter, TryConverter<TOutput, TInput> reverse)
         {
             if (converter is null)
@@ -202,7 +202,7 @@ namespace NetExtender.Types.Converters
 
             return new CombineConverter(converter, new OneWayConverterWrapper<TOutput, TInput>(reverse));
         }
-        
+
         public static TwoWayConverter<TInput, TOutput> Combine(IOneWayConverter<TInput, TOutput> converter, IOneWayConverter<TOutput, TInput> reverse)
         {
             if (converter is null)
@@ -217,7 +217,7 @@ namespace NetExtender.Types.Converters
 
             return new CombineConverter(converter, reverse);
         }
-        
+
         public ITwoWayConverter<TOutput, TInput> Reverse()
         {
             return Storage.GetOrAdd(this, static converter => new ReverseConverter(converter));
@@ -322,7 +322,7 @@ namespace NetExtender.Types.Converters
             return Reverse.Invoke(input, out output);
         }
     }
-    
+
     //TODO: verify
     public class EnumConverter<TInput, TOutput> : TwoWayConverter<TInput, TOutput> where TInput : unmanaged, Enum
     {
@@ -338,7 +338,7 @@ namespace NetExtender.Types.Converters
             const BindingFlags binding = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.CreateInstance;
 
             Type? converter = null;
-            
+
             try
             {
                 if (typeof(TOutput).IsAssignableTo(typeof(Enum<,>).MakeGenericType(typeof(TInput), typeof(TOutput))))
@@ -350,7 +350,7 @@ namespace NetExtender.Types.Converters
             catch (ArgumentException)
             {
             }
-            
+
             try
             {
                 if (typeof(TOutput).IsAssignableTo(typeof(IEnum<,>).MakeGenericType(typeof(TInput), typeof(TOutput))))
@@ -362,7 +362,7 @@ namespace NetExtender.Types.Converters
             catch (ArgumentException)
             {
             }
-            
+
             try
             {
                 if (typeof(TOutput).IsAssignableTo(typeof(Enum<TInput>)))
@@ -374,7 +374,7 @@ namespace NetExtender.Types.Converters
             catch (ArgumentException)
             {
             }
-            
+
             try
             {
                 if (typeof(TOutput).IsAssignableTo(typeof(IEnum<TInput>)))
@@ -391,11 +391,11 @@ namespace NetExtender.Types.Converters
             {
                 return;
             }
-            
+
             converter:
             Converter = Activator.CreateInstance(converter, binding, Array.Empty<Object?>()) as EnumConverter<TInput, TOutput>;
         }
-        
+
         public override TOutput Convert(TInput input)
         {
             return TryConvert(input, out TOutput? output) ? output : throw new InvalidCastException();
@@ -408,7 +408,7 @@ namespace NetExtender.Types.Converters
                 output = Unsafe.As<TInput, TOutput>(ref input);
                 return true;
             }
-            
+
             if (typeof(TOutput) == typeof(String))
             {
                 String result = EnumUtilities.GetName(input);
@@ -445,7 +445,7 @@ namespace NetExtender.Types.Converters
             {
                 return converter.TryConvert(input, out output);
             }
-            
+
             output = default;
             return false;
         }
@@ -463,13 +463,13 @@ namespace NetExtender.Types.Converters
                 output = default;
                 return false;
             }
-            
+
             if (typeof(TOutput) == typeof(TInput))
             {
                 output = Unsafe.As<TOutput, TInput>(ref input);
                 return true;
             }
-            
+
             if (typeof(TOutput) == typeof(String))
             {
                 String value = Unsafe.As<TOutput, String>(ref input);
@@ -483,7 +483,7 @@ namespace NetExtender.Types.Converters
                     output = value;
                     return true;
                 }
-                
+
                 output = default;
                 return false;
             }
@@ -501,7 +501,7 @@ namespace NetExtender.Types.Converters
                 catch (Exception)
                 {
                 }
-                
+
                 output = default;
                 return false;
             }
@@ -510,7 +510,7 @@ namespace NetExtender.Types.Converters
             {
                 return converter.TryConvertBack(input, out output);
             }
-            
+
             output = default;
             return false;
         }
@@ -531,7 +531,7 @@ namespace NetExtender.Types.Converters
                     output = result;
                     return true;
                 }
-            
+
                 output = null;
                 return false;
             }
@@ -543,7 +543,7 @@ namespace NetExtender.Types.Converters
                     output = default;
                     return false;
                 }
-            
+
                 output = input.Id;
                 return true;
             }
@@ -562,7 +562,7 @@ namespace NetExtender.Types.Converters
                     output = result;
                     return true;
                 }
-            
+
                 output = null;
                 return false;
             }
@@ -574,7 +574,7 @@ namespace NetExtender.Types.Converters
                     output = default;
                     return false;
                 }
-            
+
                 output = input.Id;
                 return true;
             }

@@ -16,7 +16,7 @@ namespace NetExtender.UserInterface.WindowsPresentation
             HorizontalContentAlignmentProperty.OverrideMetadataDefaultValue<CenterTextBox, HorizontalAlignment>(HorizontalAlignment.Center);
             VerticalContentAlignmentProperty.OverrideMetadataDefaultValue<CenterTextBox, VerticalAlignment>(VerticalAlignment.Center);
         }
-        
+
         public CenterTextBox()
         {
             TextAlignment = TextAlignment.Center;

@@ -47,7 +47,7 @@ namespace NetExtender.UserInterface.WindowsPresentation
                 Setters =
                 {
                     new Setter(Control.VerticalContentAlignmentProperty, VerticalAlignment.Center),
-                    new Setter(Control.HorizontalContentAlignmentProperty, HorizontalAlignment.Center),
+                    new Setter(Control.HorizontalContentAlignmentProperty, HorizontalAlignment.Center)
                 }
             };
 

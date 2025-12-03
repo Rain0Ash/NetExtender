@@ -212,7 +212,7 @@ namespace NetExtender.Utilities.Delegates
         {
             return new ValueFunc<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, TResult>(@delegate, first, second, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth, eleventh, twelfth, thirteenth, fourteenth, fifteenth, sixteenth);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static AsyncTaskValueAction<ValueFunc<Task>> CreateAsync(Func<Task> @delegate)
         {
@@ -314,7 +314,7 @@ namespace NetExtender.Utilities.Delegates
         {
             return Create(@delegate, first, second, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth, eleventh, twelfth, thirteenth, fourteenth, fifteenth, sixteenth);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static AsyncValueTaskValueAction<ValueFunc<ValueTask>> CreateAsync(Func<ValueTask> @delegate)
         {
@@ -416,7 +416,7 @@ namespace NetExtender.Utilities.Delegates
         {
             return Create(@delegate, first, second, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth, eleventh, twelfth, thirteenth, fourteenth, fifteenth, sixteenth);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static AsyncTaskValueFunc<ValueFunc<Task<TResult>>, TResult> CreateAsync<TResult>(Func<Task<TResult>> @delegate)
         {
@@ -518,7 +518,7 @@ namespace NetExtender.Utilities.Delegates
         {
             return Create(@delegate, first, second, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth, eleventh, twelfth, thirteenth, fourteenth, fifteenth, sixteenth);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static AsyncValueTaskValueFunc<ValueFunc<ValueTask<TResult>>, TResult> CreateAsync<TResult>(Func<ValueTask<TResult>> @delegate)
         {

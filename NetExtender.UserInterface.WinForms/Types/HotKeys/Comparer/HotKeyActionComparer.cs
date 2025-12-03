@@ -12,7 +12,7 @@ namespace NetExtender.Types.HotKeys.Comparer
     public class HotKeyActionComparer<T> : HotKeyActionComparer<T, Keys, HotKeyModifierKeys>, IHotKeyActionComparer<T> where T : struct, IHotKeyAction<T>
     {
     }
-    
+
     public class HotKeyActionComparer<T, TId> : HotKeyActionComparer<T, TId, Keys, HotKeyModifierKeys>, IHotKeyActionComparer<T, TId> where T : struct, IHotKeyAction<T, TId> where TId : unmanaged, IComparable<TId>, IConvertible
     {
     }

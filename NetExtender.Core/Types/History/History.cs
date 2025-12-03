@@ -36,7 +36,7 @@ namespace NetExtender.Types.History
             {
                 return false;
             }
-            
+
             Past.Save();
             Restore(entry);
             return true;

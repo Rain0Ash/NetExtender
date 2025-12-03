@@ -15,37 +15,37 @@ namespace NetExtender.Types.Culture
         {
             return (LocalizationIdentifier) value;
         }
-        
+
         public static implicit operator LocalizationIdentifiers(LocalizationIdentifier value)
         {
             return new LocalizationIdentifiers(value);
         }
-        
+
         public static implicit operator ImmutableArray<CultureIdentifier>(LocalizationIdentifiers value)
         {
             return value.Internal.Select(identifier => identifier.Identifier).ToImmutableArray();
         }
-        
+
         public static implicit operator CultureIdentifier[](LocalizationIdentifiers value)
         {
             return value.Internal.Select(identifier => identifier.Identifier).ToArray();
         }
-        
+
         public static implicit operator LocalizationIdentifiers(CultureIdentifier[]? value)
         {
             return new LocalizationIdentifiers(value?.Select(identifier => (LocalizationIdentifier) identifier));
         }
-        
+
         public static implicit operator ImmutableArray<LocalizationIdentifier>(LocalizationIdentifiers value)
         {
             return value.Internal;
         }
-        
+
         public static implicit operator LocalizationIdentifier[](LocalizationIdentifiers value)
         {
             return value.Internal.ToArray();
         }
-        
+
         public static implicit operator LocalizationIdentifiers(LocalizationIdentifier[]? value)
         {
             return new LocalizationIdentifiers(value);
@@ -59,7 +59,7 @@ namespace NetExtender.Types.Culture
         public static LocalizationIdentifiers England { get; } = new LocalizationIdentifiers(CultureIdentifier.Us, CultureIdentifier.En);
         public static LocalizationIdentifiers Cis { get; } = new LocalizationIdentifiers(CultureIdentifier.Ru, CultureIdentifier.Uk, CultureIdentifier.Be, CultureIdentifier.Kk);
         public static LocalizationIdentifiers Europe { get; } = England | new LocalizationIdentifiers(CultureIdentifier.Fr, CultureIdentifier.Pl, CultureIdentifier.De, CultureIdentifier.It, CultureIdentifier.Es);
-        
+
         private ImmutableArray<LocalizationIdentifier> Internal { get; }
 
         public Int32 Count

@@ -23,7 +23,7 @@ namespace NetExtender.AspNetCore.Types.Middlewares
         {
             DisplayName = "Business Exception Handler Middleware"
         };
-        
+
         public BusinessExceptionHandlerMiddleware(RequestDelegate next)
             : base(next, Handle)
         {
@@ -59,7 +59,7 @@ namespace NetExtender.AspNetCore.Types.Middlewares
             {
                 context.Response.StatusCode = (Int32) code;
             }
-                    
+
             context.Response.ContentType = MediaTypeNames.Application.Json;
             JsonSerializerOptions? options = context.RequestServices.GetService<IOptions<JsonOptions>>()?.Value.JsonSerializerOptions;
             await context.Response.WriteAsJsonAsync(exception.Business, options).ConfigureAwait(false);
@@ -82,7 +82,7 @@ namespace NetExtender.AspNetCore.Types.Middlewares
                 await Handle(context, exception, code);
                 return;
             }
-            
+
             ActionDescriptor descriptor = context.GetEndpoint()?.Metadata.GetMetadata<ActionDescriptor>() ?? Descriptor;
             ObjectResult result = new ObjectResult(exception.Business) { StatusCode = (Int32?) code };
             await executor.ExecuteAsync(new ActionContext(context, context.GetRouteData(), descriptor), result);

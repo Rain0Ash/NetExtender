@@ -101,7 +101,7 @@ namespace NetExtender.Configuration.Properties
                 return Options.HasFlag(ConfigPropertyOptions.AlwaysDefault);
             }
         }
-        
+
         public abstract Boolean IsThreadSafe { get; }
 
         protected abstract event PropertyChangedEventHandler? PropertyChanged;

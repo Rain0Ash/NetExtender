@@ -15,7 +15,7 @@ namespace NetExtender.WindowsPresentation.Types.Converters
         {
         }
     }
-    
+
     public class ValueConverterWrapper<T> : ValueConverter where T : class, IValueConverter
     {
         public T Converter { get; }
@@ -35,7 +35,7 @@ namespace NetExtender.WindowsPresentation.Types.Converters
             return Converter.ConvertBack(value, targetType, parameter, culture);
         }
     }
-    
+
     public abstract class ValueConverter : IValueConverter
     {
         public static Object None
@@ -45,7 +45,7 @@ namespace NetExtender.WindowsPresentation.Types.Converters
                 return DependencyProperty.UnsetValue;
             }
         }
-        
+
         public abstract Object? Convert(Object? value, Type? targetType, Object? parameter, CultureInfo? culture);
         public abstract Object? ConvertBack(Object? value, Type? targetType, Object? parameter, CultureInfo? culture);
     }

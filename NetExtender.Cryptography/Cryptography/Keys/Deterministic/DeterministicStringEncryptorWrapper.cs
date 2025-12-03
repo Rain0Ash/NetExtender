@@ -107,7 +107,7 @@ namespace NetExtender.Cryptography.Keys.Deterministic
             {
                 return EncryptNullCore();
             }
-            
+
             if (Dictionary is null || Encryptor.IsDeterministic)
             {
                 return Encryptor.Encrypt(value);
@@ -122,7 +122,7 @@ namespace NetExtender.Cryptography.Keys.Deterministic
             {
                 return EncryptNullStringCore();
             }
-            
+
             if (Dictionary is null || Encryptor.IsDeterministic)
             {
                 return Encryptor.Encrypt(value);

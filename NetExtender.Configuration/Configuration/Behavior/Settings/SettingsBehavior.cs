@@ -25,15 +25,17 @@ namespace NetExtender.Configuration.Behavior.Settings
             }
         }
     }
-    
+
     public abstract class SettingsBehavior : IChangeableBehavior, INotifyProperty
     {
+#pragma warning disable CS0067
         public event PropertyChangingEventHandler? PropertyChanging;
         public event PropertyChangedEventHandler? PropertyChanged;
-        
+#pragma warning restore CS0067
+
         protected abstract IConfigInfo Config { get; }
         public abstract Boolean IsThreadSafe { get; }
-        
+
         public virtual Boolean IsDebug
         {
             get
@@ -45,7 +47,7 @@ namespace NetExtender.Configuration.Behavior.Settings
 #endif
             }
         }
-        
+
         public abstract Boolean Read();
         public abstract Task<Boolean> ReadAsync();
         public abstract Task<Boolean> ReadAsync(CancellationToken token);

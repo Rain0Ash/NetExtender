@@ -19,7 +19,7 @@ namespace NetExtender.Newtonsoft.Types.Trees
         private static Type DictionaryTreeNodeTypeDefinition { get; } = typeof(DictionaryTreeNode<,>);
         private static Type EqualityComparerTypeDefinition { get; } = typeof(EqualityComparer<>);
         private static Type IEqualityComparerTypeDefinition { get; } = typeof(IEqualityComparer<>);
-        
+
         private static ConcurrentDictionary<Type, Type> Cache { get; } = new ConcurrentDictionary<Type, Type>();
 
         public override Boolean CanWrite

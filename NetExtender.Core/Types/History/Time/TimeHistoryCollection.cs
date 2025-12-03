@@ -20,7 +20,7 @@ namespace NetExtender.Types.History
             : this(comparison?.ToComparer())
         {
         }
-        
+
         protected TimeHistoryCollection(NodeComparer? comparer)
         {
             Comparer = comparer ?? NodeComparer.Default;
@@ -49,7 +49,7 @@ namespace NetExtender.Types.History
                 return Comparer;
             }
         }
-        
+
         IComparer<TNode> IReadOnlyTimeHistoryCollection<T, TNode>.Comparer
         {
             get
@@ -93,10 +93,10 @@ namespace NetExtender.Types.History
 
         protected abstract TNode Create(T value);
         protected abstract TNode Universal(T value);
-        
+
         public abstract Boolean Contains(T item);
         public abstract Int32 Add(T item);
-        
+
         void ICollection<T>.Add(T item)
         {
             Add(item);
@@ -115,7 +115,7 @@ namespace NetExtender.Types.History
         {
             Internal.Clear();
         }
-        
+
         public virtual void CopyTo(T[] array)
         {
            CopyTo(array, 0);
@@ -127,7 +127,7 @@ namespace NetExtender.Types.History
             {
                 throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
-            
+
             using IEnumerator<TNode> enumerator = Internal.GetEnumerator();
 
             for (Int32 i = index; i < array.Length && enumerator.MoveNext(); i++)
@@ -159,7 +159,7 @@ namespace NetExtender.Types.History
         {
             return ((IEnumerable<T>) this).GetEnumerator();
         }
-        
+
         public interface INode : ITimeHistoryCollectionNode<T>, IEquality<TNode>
         {
         }

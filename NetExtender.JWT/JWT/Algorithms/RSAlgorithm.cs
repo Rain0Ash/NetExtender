@@ -61,7 +61,7 @@ namespace NetExtender.JWT.Algorithms
                 {
                     return ValueTask.FromCanceled<Byte[]?>(token);
                 }
-                
+
                 try
                 {
                     return ValueTask.FromResult<Byte[]?>(Sign(source));

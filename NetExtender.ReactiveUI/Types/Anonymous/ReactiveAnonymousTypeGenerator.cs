@@ -76,7 +76,7 @@ namespace NetExtender.ReactiveUI.Anonymous.Core
             }
 
             Type type = DefineType(properties);
-            
+
             ConstructorInfo[] constructors = type.GetConstructors();
             ConstructorInfo constructor = constructors.Length switch
             {
@@ -85,7 +85,7 @@ namespace NetExtender.ReactiveUI.Anonymous.Core
                 2 => constructors[1],
                 _ => throw new AmbiguousMatchException(type.Name)
             };
-            
+
             Type[] parameters = constructor.GetParameters().Select(parameter => parameter.ParameterType).ToArray();
             return ReactiveAnonymousActivator.Create(type, parameters);
         }

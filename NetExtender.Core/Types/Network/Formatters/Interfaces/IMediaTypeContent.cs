@@ -9,7 +9,7 @@ namespace NetExtender.Types.Network.Formatters.Interfaces
     {
         public new T Value { get; set; }
     }
-    
+
     public interface IMediaTypeContent
     {
         public Type Type { get; }

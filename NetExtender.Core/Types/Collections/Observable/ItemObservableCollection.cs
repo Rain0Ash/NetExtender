@@ -14,7 +14,7 @@ namespace NetExtender.Types.Collections
     {
         public event PropertyChangingEventHandler? ItemChanging;
         public event PropertyChangedEventHandler? ItemChanged;
-        
+
         public ItemObservableCollection()
         {
         }
@@ -105,7 +105,7 @@ namespace NetExtender.Types.Collections
                 }
             }
         }
-        
+
         protected void Subscribe(IList<T>? items)
         {
             if (items is null)
@@ -121,7 +121,7 @@ namespace NetExtender.Types.Collections
                 }
             }
         }
-        
+
         protected virtual void Unsubscribe<TItem>(TItem? item)
         {
             if (item is null)
@@ -139,7 +139,7 @@ namespace NetExtender.Types.Collections
                 changed.PropertyChanged -= ItemPropertyChanged;
             }
         }
-        
+
         protected void Unsubscribe(IList? items)
         {
             if (items is null)
@@ -155,7 +155,7 @@ namespace NetExtender.Types.Collections
                 }
             }
         }
-        
+
         protected void Unsubscribe(IList<T>? items)
         {
             if (items is null)

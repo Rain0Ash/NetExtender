@@ -10,7 +10,7 @@ namespace NetExtender.Types.Network
     public class HttpRequestLineParser
     {
         protected HttpUnsortedRequest Request { get; }
-        
+
         private Int32 _total;
         protected Int32 Total
         {
@@ -38,7 +38,7 @@ namespace NetExtender.Types.Network
                 _state = value;
             }
         }
-        
+
         private StringBuilder Current { get; } = new StringBuilder(2048);
 
         public HttpRequestLineParser(HttpUnsortedRequest request, Int32 linesize)
@@ -95,7 +95,7 @@ namespace NetExtender.Types.Network
                 linestate = HttpParserState.NeedMoreData;
                 end = ready;
             }
-            
+
             switch (state)
             {
                 case HttpRequestLineState.RequestMethod:
@@ -120,17 +120,17 @@ namespace NetExtender.Types.Network
                         total += consumed - start;
                         return linestate;
                     }
-                    
+
                     if (consumed > index)
                     {
                         String value = Encoding.UTF8.GetString(buffer, index, consumed - index);
                         current.Append(value);
                     }
-                    
+
                     request.Method = new HttpMethod(current.ToString());
                     current.Clear();
                     state = HttpRequestLineState.RequestUri;
-                    
+
                     if (++consumed == end)
                     {
                         break;
@@ -160,17 +160,17 @@ namespace NetExtender.Types.Network
                         total += consumed - start;
                         return linestate;
                     }
-                    
+
                     if (consumed > index)
                     {
                         String value = Encoding.UTF8.GetString(buffer, index, consumed - index);
                         current.Append(value);
                     }
-                    
+
                     request.RequestUri = current.Length != 0 ? current.ToString() : throw new FormatException($"HTTP Request {nameof(Uri)} cannot be an empty string.");
                     current.Clear();
                     state = HttpRequestLineState.BeforeVersionNumbers;
-                    
+
                     if (++consumed == end)
                     {
                         break;
@@ -200,13 +200,13 @@ namespace NetExtender.Types.Network
                         total += consumed - start;
                         return linestate;
                     }
-                    
+
                     if (consumed > index)
                     {
                         String value = Encoding.UTF8.GetString(buffer, index, consumed - index);
                         current.Append(value);
                     }
-                    
+
                     String version = current.ToString();
                     if (String.CompareOrdinal("HTTP", version) != 0)
                     {
@@ -215,7 +215,7 @@ namespace NetExtender.Types.Network
 
                     current.Clear();
                     state = HttpRequestLineState.MajorVersionNumber;
-                    
+
                     if (++consumed == end)
                     {
                         break;
@@ -245,16 +245,16 @@ namespace NetExtender.Types.Network
                         total += consumed - start;
                         return linestate;
                     }
-                    
+
                     if (consumed > index)
                     {
                         String value = Encoding.UTF8.GetString(buffer, index, consumed - index);
                         current.Append(value);
                     }
-                    
+
                     current.Append('.');
                     state = HttpRequestLineState.MinorVersionNumber;
-                    
+
                     if (++consumed == end)
                     {
                         break;
@@ -284,17 +284,17 @@ namespace NetExtender.Types.Network
                         total += consumed - start;
                         return linestate;
                     }
-                    
+
                     if (consumed > index)
                     {
                         String value = Encoding.UTF8.GetString(buffer, index, consumed - index);
                         current.Append(value);
                     }
-                    
+
                     request.Version = Version.Parse(current.ToString());
                     current.Clear();
                     state = HttpRequestLineState.AfterCarriageReturn;
-                    
+
                     if (++consumed == end)
                     {
                         break;
@@ -309,7 +309,7 @@ namespace NetExtender.Types.Network
                         linestate = HttpParserState.Invalid;
                         break;
                     }
-                    
+
                     linestate = HttpParserState.Done;
                     ++consumed;
                     break;

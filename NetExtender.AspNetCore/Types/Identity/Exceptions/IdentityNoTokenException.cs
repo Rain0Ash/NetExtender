@@ -14,7 +14,7 @@ namespace NetExtender.AspNetCore.Identity
         public new static HttpStatusCode Status { get; set; } = HttpStatusCode.Unauthorized;
         public new static String? Message { get; set; } = "Identity token is empty.";
         public new static String? Code { get; set; } = $"{nameof(Identity)}.Token.NoToken";
-        
+
         public IdentityNoTokenException()
             : base(Code)
         {
@@ -50,6 +50,10 @@ namespace NetExtender.AspNetCore.Identity
         {
         }
 
+#if NET8_0_OR_GREATER
+        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
         protected IdentityNoTokenException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
@@ -66,7 +70,7 @@ namespace NetExtender.AspNetCore.Identity
                 return IdentityException.Known.NoToken;
             }
         }
-        
+
         public IdentityNoTokenException(T code)
             : base(IdentityNoTokenException.Message, IdentityNoTokenException.Status, code)
         {
@@ -97,6 +101,10 @@ namespace NetExtender.AspNetCore.Identity
         {
         }
 
+#if NET8_0_OR_GREATER
+        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
         protected IdentityNoTokenException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {

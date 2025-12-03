@@ -30,13 +30,13 @@ namespace NetExtender.Types.Network.Formatters
         {
         }
     }
-    
+
     public class MediaTypeContent<T> : HttpContent, IMediaTypeContent<T>
     {
         public Type Type { get; }
         public MediaTypeFormatter Formatter { get; }
         public T Value { get; set; }
-        
+
         Object? IMediaTypeContent.Value
         {
             get
@@ -82,7 +82,7 @@ namespace NetExtender.Types.Network.Formatters
             Formatter.SetDefaultContentHeaders(Type, Headers, media);
             Value = value;
         }
-        
+
         [return: NotNullIfNotNull("media")]
         internal static MediaTypeHeaderValue? BuildHeaderValue(String? media)
         {

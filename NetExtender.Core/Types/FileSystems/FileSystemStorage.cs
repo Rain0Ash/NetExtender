@@ -34,7 +34,7 @@ namespace NetExtender.FileSystems
         {
             _name = !String.IsNullOrWhiteSpace(name) ? name : throw new ArgumentNullOrWhiteSpaceStringException(name, nameof(name));
         }
-        
+
         public new virtual String Name()
         {
             return base.Name!;
@@ -71,18 +71,18 @@ namespace NetExtender.FileSystems
         }
 
         private protected abstract override Boolean IsRealFileSystem();
-        
+
         protected static DateTimeOffset GetUtcDateTimeOffset(DateTime value)
         {
             return value.Kind is DateTimeKind.Unspecified ? DateTime.SpecifyKind(value, DateTimeKind.Utc) : value.ToUniversalTime();
         }
 
         [return: NotNullIfNotNull("value")]
-        protected virtual T? Verify<T>(T? value) where T : class, INode
+        protected virtual T? Verify<T>(T? value) where T : INode?
         {
             if (value is null)
             {
-                return null;
+                return default;
             }
 
             if (!ReferenceEquals(value.Storage, this))
@@ -94,7 +94,7 @@ namespace NetExtender.FileSystems
         }
 
         [return: NotNullIfNotNull("value")]
-        private T? Verify<T, TEntry>(TEntry? value) where T : class, INode where TEntry : class, IFileSystemStorageEntry
+        private T? Verify<T, TEntry>(TEntry? value) where T : INode? where TEntry : class, IFileSystemStorageEntry
         {
             return value switch
             {
@@ -103,7 +103,7 @@ namespace NetExtender.FileSystems
                 _ => throw new InvalidOperationException($"Entry '{value.GetType()}' must be a '{typeof(T)}' node.")
             };
         }
-        
+
         [return: NotNullIfNotNull("node")]
         protected static Exception? NotSupported(INode? node, String? method)
         {
@@ -203,11 +203,11 @@ namespace NetExtender.FileSystems
             return Register<TDrive>(drive);
         }
     }
-    
+
     public abstract partial class FileSystemStorage : FileSystemHandler
     {
         private const Int32 DefaultFileBufferSize = 4096;
-        
+
         private readonly Int32 _buffer = DefaultFileBufferSize;
         protected Int32 FileBufferSize
         {
@@ -246,7 +246,7 @@ namespace NetExtender.FileSystems
         protected internal interface INode<in TInitializer> : INode where TInitializer : struct, IInitializer<TInitializer>
         {
             public TInitializer Initializer { init; }
-            
+
             internal static ref TInitializer Verify(INode<TInitializer> node, ref TInitializer initializer)
             {
                 if (node is null)
@@ -258,7 +258,7 @@ namespace NetExtender.FileSystems
                 {
                     throw new ArgumentNullException(nameof(initializer));
                 }
-                
+
                 if (node.IsInitialize)
                 {
                     throw new AlreadyInitializedException(null, nameof(Initializer));
@@ -337,7 +337,7 @@ namespace NetExtender.FileSystems
     {
         private new const String Message = "Node does not belong to current storage.";
         private const String FormatMessage = "The '{0}' node with file system '{1}' does not belong to current storage '{2}'.";
-        
+
         public FileSystemNodeNotBelongStorageException()
         {
         }
@@ -357,7 +357,11 @@ namespace NetExtender.FileSystems
         {
         }
 
-        public FileSystemNodeNotBelongStorageException(SerializationInfo info, StreamingContext context)
+#if NET8_0_OR_GREATER
+        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
+        private FileSystemNodeNotBelongStorageException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
         }
@@ -373,7 +377,7 @@ namespace NetExtender.FileSystems
     {
         private new const String Message = "Node is not initialized.";
         private const String FormatMessage = "The '{0}' node with file system '{1}' and storage '{2}' is not initialized.";
-        
+
         public FileSystemNodeNotInitializedException()
         {
         }
@@ -408,7 +412,11 @@ namespace NetExtender.FileSystems
         {
         }
 
-        public FileSystemNodeNotInitializedException(SerializationInfo info, StreamingContext context)
+#if NET8_0_OR_GREATER
+        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
+        private FileSystemNodeNotInitializedException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
         }
@@ -424,7 +432,7 @@ namespace NetExtender.FileSystems
     {
         private new const String Message = "Node does not support this method.";
         private const String FormatMessage = "Node '{0}' does not support method '{1}' for storage '{2}'.";
-        
+
         public FileSystemNodeNotSupportMethodException()
         {
         }
@@ -444,7 +452,11 @@ namespace NetExtender.FileSystems
         {
         }
 
-        public FileSystemNodeNotSupportMethodException(SerializationInfo info, StreamingContext context)
+#if NET8_0_OR_GREATER
+        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
+        private FileSystemNodeNotSupportMethodException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
         }

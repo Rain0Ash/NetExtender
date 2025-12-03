@@ -182,7 +182,7 @@ namespace NetExtender.Utilities.Threading
             }
 
             TaskCompletionSource source = new TaskCompletionSource();
-            
+
             new Thread(() =>
                 {
                     foreach (Thread thread in threads)

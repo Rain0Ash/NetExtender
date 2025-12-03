@@ -117,7 +117,7 @@ namespace NetExtender.Windows.Types
             Bitmap = bitmap;
             Size = bitmap.Size;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public Boolean TryGetPixel(Int32 index, out Color color)
         {
@@ -125,13 +125,13 @@ namespace NetExtender.Windows.Types
             {
                 throw new InvalidOperationException("Must be locked before any pixel operations.");
             }
-            
+
             if (!TryGetPixel(index, out Int32 pixel))
             {
                 color = default;
                 return false;
             }
-            
+
             color = Color.FromArgb(pixel);
             return true;
         }
@@ -197,17 +197,17 @@ namespace NetExtender.Windows.Types
             {
                 throw new InvalidOperationException("Must be locked before any pixel operations.");
             }
-            
+
             if (!TryGetPixel(x, y, out Int32 pixel))
             {
                 color = default;
                 return false;
             }
-            
+
             color = Color.FromArgb(pixel);
             return true;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public Boolean TryGetPixel<TColor>(Int32 x, Int32 y, [MaybeNullWhen(false)] out TColor color) where TColor : IColor
         {
@@ -267,7 +267,7 @@ namespace NetExtender.Windows.Types
         {
             return TryGetPixel(point.X, point.Y, out color);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public Boolean TryGetPixel<TColor>(Point point, [MaybeNullWhen(false)] out TColor color) where TColor : IColor
         {
@@ -285,13 +285,13 @@ namespace NetExtender.Windows.Types
         {
             return TryGetPixel(point.X, point.Y, out pixel);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Boolean TrySetPixel(Int32 index, Color color)
         {
             return TrySetPixel(index, color.ToArgb());
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Boolean TrySetPixel<TColor>(Int32 index, TColor color) where TColor : IColor
         {
@@ -299,7 +299,7 @@ namespace NetExtender.Windows.Types
             {
                 throw new InvalidOperationException("Must be locked before any pixel operations.");
             }
-            
+
             if (color is null)
             {
                 throw new ArgumentNullException(nameof(color));
@@ -307,7 +307,7 @@ namespace NetExtender.Windows.Types
 
             return TrySetPixel(index, color.ToColor());
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Boolean TrySetPixel(Int32 index, Int32 color)
         {
@@ -344,7 +344,7 @@ namespace NetExtender.Windows.Types
             {
                 throw new InvalidOperationException("Must be locked before any pixel operations.");
             }
-            
+
             if (color is null)
             {
                 throw new ArgumentNullException(nameof(color));
@@ -375,7 +375,7 @@ namespace NetExtender.Windows.Types
             *(UInt32*) (LockScan0 + x + y * Stride) = color;
             return true;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Boolean TrySetPixel(Point point, Color color)
         {
@@ -415,7 +415,7 @@ namespace NetExtender.Windows.Types
                 Lock();
                 unlock = true;
             }
-            
+
             if (Data is null)
             {
                 throw new InvalidOperationException("Must be locked before any pixel operations.");
@@ -471,7 +471,7 @@ namespace NetExtender.Windows.Types
         public Boolean Clear(Rectangle region, Int32 pixel)
         {
             Rectangle bitmap = new Rectangle(Point.Empty, Size);
-            
+
             if (!region.IntersectsWith(bitmap))
             {
                 return false;
@@ -505,19 +505,19 @@ namespace NetExtender.Windows.Types
                 {
                     Unsafe.InitBlock(LockScan0 + region.Left + y * Stride, unchecked((Byte) component), (UInt32) stride);
                 }
-                
+
                 return true;
             }
 
             Int32[] row = new Int32[region.Width];
-            
+
             const Int32 block = 8;
             Int32 count = Math.DivRem(row.Length, block, out Int32 remainder);
 
             fixed (Int32* pointer = row)
             {
                 Int32 index = count;
-                
+
                 Int32* source = pointer;
                 while (index-- > 0)
                 {
@@ -582,7 +582,7 @@ namespace NetExtender.Windows.Types
 
                         *target++ = *scan++;
                     }
-                    
+
                     return true;
                 }
 
@@ -665,7 +665,7 @@ namespace NetExtender.Windows.Types
                 Lock();
                 unlock = true;
             }
-            
+
             if (Data is null)
             {
                 throw new InvalidOperationException("Must be locked before any pixel operations.");
@@ -715,7 +715,7 @@ namespace NetExtender.Windows.Types
                 return Bitmap.Clone(rectangle, Bitmap.PixelFormat);
             }
         }
-        
+
         public Bitmap Clone(RectangleF rectangle, PixelFormat format)
         {
             lock (Bitmap)
@@ -892,7 +892,7 @@ namespace NetExtender.Windows.Types
                     return _enumerator.Rectangle;
                 }
             }
-            
+
             public readonly GeometryBoundsType Bounds
             {
                 get
@@ -900,7 +900,7 @@ namespace NetExtender.Windows.Types
                     return _enumerator.Bounds;
                 }
             }
-            
+
             public readonly GeometryRotationType Rotation
             {
                 get
@@ -908,7 +908,7 @@ namespace NetExtender.Windows.Types
                     return _enumerator.Rotation;
                 }
             }
-            
+
             public Enumerator(DirectBitmap bitmap, GeometryRotationType rotation)
             {
                 Bitmap = bitmap ?? throw new ArgumentNullException(nameof(bitmap));
@@ -945,7 +945,7 @@ namespace NetExtender.Windows.Types
                 enumerator.Reset();
                 return enumerator;
             }
-            
+
             readonly IEnumerator<ColorPoint> IEnumerable<ColorPoint>.GetEnumerator()
             {
                 // ReSharper disable once ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator
@@ -961,19 +961,19 @@ namespace NetExtender.Windows.Types
             }
         }
     }
-    
+
     public readonly ref struct DirectPoint
     {
         public static implicit operator Point(DirectPoint value)
         {
             return value.Point;
         }
-            
+
         public static implicit operator Color(DirectPoint value)
         {
             return value.Color;
         }
-            
+
         public static implicit operator ColorPoint(DirectPoint value)
         {
             return new ColorPoint(value, value);
@@ -993,7 +993,7 @@ namespace NetExtender.Windows.Types
                 Bitmap[Point] = value;
             }
         }
-            
+
         public DirectPoint(DirectBitmap bitmap, Point point)
         {
             Bitmap = bitmap ?? throw new ArgumentNullException(nameof(bitmap));

@@ -11,7 +11,7 @@ namespace NetExtender.Types.Network.Formatters.Interfaces
     {
         public Boolean Contains(MediaTypeHeader media);
         public Boolean Contains(MediaTypeHeader media, Encoding encoding);
-        
+
         public IMediaTypeFormatter? FindReader(Type type);
         public IMediaTypeFormatter? FindReader(Type type, MediaTypeHeader media);
         public IEnumerable<IMediaTypeFormatter> FindReaders(Type type);
@@ -26,7 +26,7 @@ namespace NetExtender.Types.Network.Formatters.Interfaces
     {
         public Boolean Contains(MediaTypeHeader media);
         public Boolean Contains(MediaTypeHeader media, Encoding encoding);
-        
+
         public IReadOnlyMediaTypeFormatter? FindReader(Type type);
         public IReadOnlyMediaTypeFormatter? FindReader(Type type, MediaTypeHeader media);
         public IEnumerable<IReadOnlyMediaTypeFormatter> FindReaders(Type type);

@@ -51,7 +51,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
             }
 
             options ??= new IdentityOptions();
-            
+
             if (options.Authentication.HasValue)
             {
                 AuthenticationBuilder builder = options.Authentication.Value is { } authentication ? services.AddAuthentication(authentication) : services.AddAuthentication();
@@ -62,7 +62,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
                 AuthenticationBuilder builder = options.AuthenticationScheme.Value is { } scheme ? services.AddAuthentication(scheme) : services.AddAuthentication();
                 options.Builder?.Invoke(builder);
             }
-            
+
             if (options.Authorization.HasValue)
             {
                 services = options.Authorization.Value is { } authorization ? services.AddAuthorization(authorization) : services.AddAuthorization();
@@ -70,7 +70,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
 
             return services;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IdentityBuilder Identity<TRole>(this IServiceCollection services) where TRole : class, IEquatable<TRole>
         {
@@ -96,7 +96,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
             {
                 throw new ArgumentNullException(nameof(services));
             }
-            
+
             return Identity(services, options).AddIdentityCore<TUser>();
         }
 
@@ -113,18 +113,19 @@ namespace NetExtender.Utilities.AspNetCore.Types
             {
                 throw new ArgumentNullException(nameof(services));
             }
-            
+
             return Identity(services, options).AddIdentity<TUser, TRole>();
         }
 
 #if NET8_0_OR_GREATER
-        public static IdentityBuilder RegisterIdentityServices<TId, TUser, TRole>(this IdentityBuilder builder) where TId : struct, IEquatable<TId> where TUser : class, IUserInfo<TId, TRole> where TRole : IEquatable<TRole>
+        //TODO:
+        /*public static IdentityBuilder RegisterIdentityServices<TId, TUser, TRole>(this IdentityBuilder builder) where TId : struct, IEquatable<TId> where TUser : class, IUserInfo<TId, TRole> where TRole : IEquatable<TRole>
         {
             if (builder is null)
             {
                 throw new ArgumentNullException(nameof(builder));
             }
-            
+
             builder.Services.RegisterJWTIdentityServices<TId, TUser, TRole>()
                 .Add<IIdentityTimeService<TId, TUser, TRole>, IdentityTimeServiceWrapper<TId, TUser, TRole>>(builder.Services.Find<TimeProvider>(ServiceLifetime.Singleton))
                 .Add<IIdentityEmailService<TId, TUser, TRole>, IdentityEmailServiceWrapper<TId, TUser, TRole>>(builder.Services.Find(typeof(IEmailSender<>), ServiceLifetime.Singleton))
@@ -138,17 +139,17 @@ namespace NetExtender.Utilities.AspNetCore.Types
             {
                 throw new ArgumentNullException(nameof(builder));
             }
-            
+
             return RegisterIdentityServices<TId, TUser, TRole, TimeIdentityServiceWrapper<TId, TUser, TRole>, EmailIdentityServiceWrapper<TId, TUser, TRole>, BearerTokenOptionsMonitorWrapper<TId, TUser, TRole>>(builder, lifetime);
-        }
+        }*/
 #endif
-        
+
         private static class SignInManagerAuthenticationScheme<TUser> where TUser : class
         {
 #if !NET8_0_OR_GREATER
             [ReflectionNaming]
             private static Action<SignInManager<TUser>, String>? AuthenticationScheme { get; }
-            
+
             static SignInManagerAuthenticationScheme()
             {
                 try
@@ -179,7 +180,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
 #endif
             }
         }
-        
+
         private static void SetAuthenticationScheme<TUser>(this SignInManager<TUser> manager, Boolean cookie) where TUser : class
         {
             if (manager is null)
@@ -199,7 +200,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
 #if !NET7_0_OR_GREATER
             private static Func<IEndpointRouteBuilder, String, IEndpointRouteBuilder>? GroupMap { get; }
             private static Func<IEndpointRouteBuilder, RoutePattern, IEndpointRouteBuilder>? RouteGroupMap { get; }
-            
+
             static MapGroup()
             {
                 const BindingFlags binding = BindingFlags.Static | BindingFlags.Public;
@@ -213,7 +214,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
                 {
                     throw new ArgumentNullException(nameof(builder));
                 }
-                
+
 #if !NET7_0_OR_GREATER
                 return GroupMap?.Invoke(builder, prefix) ?? throw new NotSupportedException("Group map is not supported.");
 #else
@@ -227,7 +228,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
                 {
                     throw new ArgumentNullException(nameof(builder));
                 }
-                
+
 #if !NET7_0_OR_GREATER
                 return RouteGroupMap?.Invoke(builder, prefix) ?? throw new NotSupportedException("Group map is not supported.");
 #else
@@ -287,7 +288,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
             IIdentityTimeService<TId, TUser, TRole> identityTime = builder.ServiceProvider.GetRequiredService<IIdentityTimeService<TId, TUser, TRole>>();
             IIdentityEmailService<TId, TUser, TRole> mail = builder.ServiceProvider.GetRequiredService<IIdentityEmailService<TId, TUser, TRole>>();
             LinkGenerator link = builder.ServiceProvider.GetRequiredService<LinkGenerator>();
-            
+
             String? confirm = null;
 
             IdentityOptionsBuilder<TOptions> identity = new IdentityOptionsBuilder<TOptions>();
@@ -303,7 +304,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
                 Boolean persistent = UseCookies is true && UseSessionCookies is not true;
 
                 manager.SetAuthenticationScheme(UseCookies is true || UseSessionCookies is true);
-                
+
                 SignInResult result = await manager.PasswordSignInAsync(request.Email, request.Password, persistent, true);
 
                 if (!result.RequiresTwoFactor)
@@ -372,11 +373,11 @@ namespace NetExtender.Utilities.AspNetCore.Types
                 await context.SignInAsync(BearerScheme.BearerIdentityScheme, principal, null);
                 return AspResult.None;
             }
-            
+
             async Task<AspResult> ConfirmEmail([FromQuery] String UserId, [FromQuery] String Code, [FromQuery] String? ChangedEmail, [FromServices] IServiceProvider provider)
             {
                 UserManager<TUser> manager = provider.GetRequiredService<UserManager<TUser>>();
-                
+
                 if (await manager.FindByIdAsync(UserId) is not { } user)
                 {
                     return new BusinessUnauthorized401Exception();
@@ -420,7 +421,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
             async Task<AspResult> ResendConfirmationEmail([FromBody] ResendConfirmationEmailRequest request, HttpContext context, [FromServices] IServiceProvider provider)
             {
                 UserManager<TUser> manager = provider.GetRequiredService<UserManager<TUser>>();
-                
+
                 if (await manager.FindByEmailAsync(request.Email) is not { } user)
                 {
                     return new BusinessNotFound404Exception("User with email not found.");
@@ -429,7 +430,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
                 await SendConfirmationEmailAsync(user, manager, context, request.Email);
                 return default(BusinessResult);
             }
-            
+
             async Task<AspResult> ForgotPassword([FromBody] ForgotPasswordRequest request, [FromServices] IServiceProvider provider)
             {
                 UserManager<TUser> manager = provider.GetRequiredService<UserManager<TUser>>();
@@ -474,7 +475,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
             async Task<AspResult<InfoResponse>> GetInfo(ClaimsPrincipal principal, [FromServices] IServiceProvider provider)
             {
                 UserManager<TUser> manager = provider.GetRequiredService<UserManager<TUser>>();
-                
+
                 if (await manager.GetUserAsync(principal) is not { } user)
                 {
                     return new BusinessNotFound404Exception<String>("User not found.", "UserNotFound");
@@ -490,7 +491,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
             async Task<AspResult<InfoResponse>> SetInfo([FromBody] InfoRequest request, HttpContext context, ClaimsPrincipal principal, [FromServices] IServiceProvider provider)
             {
                 UserManager<TUser> manager = provider.GetRequiredService<UserManager<TUser>>();
-                
+
                 if (await manager.GetUserAsync(principal) is not { } user)
                 {
                     return new BusinessNotFound404Exception("User not found.");
@@ -523,18 +524,18 @@ namespace NetExtender.Utilities.AspNetCore.Types
                 {
                     await SendConfirmationEmailAsync(user, manager, context, request.NewEmail, true);
                 }
-                
+
                 return await manager.GetEmailAsync(user) is { } email ? new InfoResponse
                 {
                     Email = email,
                     IsEmailConfirmed = await manager.IsEmailConfirmedAsync(user)
                 } : new BusinessForbidden403Exception<String>("User must have an email.", "UserEmailRequired");
             }
-            
+
             async Task<AspResult<TwoFactorResponse>> TwoFactor([FromBody] TwoFactorRequest request, ClaimsPrincipal principal, [FromServices] IServiceProvider provider)
             {
                 SignInManager<TUser> manager = provider.GetRequiredService<SignInManager<TUser>>();
-                
+
                 if (await manager.UserManager.GetUserAsync(principal) is not { } user)
                 {
                     return new BusinessNotFound404Exception("User not found.");
@@ -610,7 +611,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
                     IsMachineRemembered = await manager.IsTwoFactorClientRememberedAsync(user)
                 };
             }
-            
+
             async Task SendConfirmationEmailAsync(TUser user, UserManager<TUser> manager, HttpContext context, String email, Boolean change = false)
             {
                 if (confirm is null)
@@ -636,7 +637,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
                 String uri = link.GetUriByName(context, confirm, values) ?? throw new NotSupportedException($"Could not find endpoint named '{confirm}'.");
                 await mail.SendConfirmationLinkAsync(user, email, HtmlEncoder.Default.Encode(uri));
             }
-            
+
             return identity.Options = new TOptions
             {
                 Login = new IdentityRoute(nameof(Login), HttpMethod.Post) { Handler = options.Bearer ? BearerLogin : Login },
@@ -684,7 +685,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
             {
                 return null;
             }
-            
+
             IEndpointConventionBuilder? result = route.Handler switch
             {
                 null => null,
@@ -703,7 +704,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
         {
             return MapIdentityApi<TId, TUser, TRole>(builder, false);
         }
-        
+
 #if NET7_0_OR_GREATER
         public static IEndpointConventionBuilder? MapIdentityApi<TId, TUser, TRole>(this IEndpointRouteBuilder builder, Boolean bearer) where TId : struct, IEquatable<TId> where TUser : class, IUserInfo<TId, TRole>, new() where TRole : IEquatable<TRole>
 #else
@@ -712,7 +713,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
         {
             return MapIdentityApi<TId, TUser, TRole>(builder, new CreateIdentityOptions { Bearer = bearer });
         }
-        
+
 #if NET7_0_OR_GREATER
         public static IEndpointConventionBuilder? MapIdentityApi<TId, TUser, TRole>(this IEndpointRouteBuilder builder, CreateIdentityOptions? options) where TId : struct, IEquatable<TId> where TUser : class, IUserInfo<TId, TRole>, new() where TRole : IEquatable<TRole>
 #else
@@ -721,9 +722,9 @@ namespace NetExtender.Utilities.AspNetCore.Types
         {
             return MapIdentityApi(builder, CreateIdentityOptions<TId, TUser, TRole>(builder, options));
         }
-        
+
 #if NET7_0_OR_GREATER
-        public static IEndpointConventionBuilder? MapIdentityApi<TId, TUser, TRole>(this IEndpointRouteBuilder builder, IdentityOptions<TId, TUser, TRole> options) where TId : IEquatable<TId> where TUser : class, IUserInfo<TId, TRole>, new() where TRole : IEquatable<TRole>
+        public static IEndpointConventionBuilder? MapIdentityApi<TId, TUser, TRole>(this IEndpointRouteBuilder builder, IdentityOptions<TId, TUser, TRole> options) where TId : struct, IEquatable<TId> where TUser : class, IUserInfo<TId, TRole>, new() where TRole : IEquatable<TRole>
 #else
         // ReSharper disable once ReturnTypeCanBeNotNullable
         public static IEndpointRouteBuilder? MapIdentityApi<TId, TUser, TRole>(this IEndpointRouteBuilder builder, IdentityOptions<TId, TUser, TRole> options) where TId : struct, IEquatable<TId> where TUser : class, IUserInfo<TId, TRole>, new() where TRole : IEquatable<TRole>
@@ -755,7 +756,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
             {
                 convention.Add(confirm);
             }
-            
+
             Map<TId, TUser, TRole, IdentityOptions<TId, TUser, TRole>>(route, options, static options => options.ResendConfirmEmail);
             Map<TId, TUser, TRole, IdentityOptions<TId, TUser, TRole>>(route, options, static options => options.ForgotPassword);
             Map<TId, TUser, TRole, IdentityOptions<TId, TUser, TRole>>(route, options, static options => options.ResetPassword);
@@ -775,7 +776,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
             return builder;
 #endif
         }
-        
+
 #if NET7_0_OR_GREATER
         private sealed class IdentityEndpointsConventionBuilder : IEndpointConventionBuilder
         {
@@ -787,7 +788,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
                     return Builder;
                 }
             }
-            
+
             public IdentityEndpointsConventionBuilder(RouteGroupBuilder builder)
             {
                 Builder = builder ?? throw new ArgumentNullException(nameof(builder));
@@ -812,7 +813,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
             {
                 throw new ArgumentNullException(nameof(value));
             }
-            
+
             return new BusinessException<String>(value.Description, value.Code);
         }
 

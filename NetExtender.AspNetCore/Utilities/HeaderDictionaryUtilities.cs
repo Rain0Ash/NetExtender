@@ -33,7 +33,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
 
             return HttpHeaderUtilities.ToHeaderString(source.Select(static pair => new KeyValuePair<String, IEnumerable<String>>(pair.Key, pair.Value)), buffer);
         }
-        
+
         public static void RemoveRange(this IHeaderDictionary dictionary, params String[] items)
         {
             RemoveRange(dictionary, (IEnumerable<String>) items);

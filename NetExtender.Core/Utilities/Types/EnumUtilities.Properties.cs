@@ -119,11 +119,11 @@ namespace NetExtender.Utilities.Types
                 {
                     throw new ArgumentNullException(nameof(name));
                 }
-                
+
                 const BindingFlags binding = BindingFlags.Instance | BindingFlags.Public;
                 return type.GetProperty(name, binding) ?? throw new InvalidOperationException($"Type '{type}' doesn't contains property '{name}'.");
             }
-            
+
             private static Boolean TryGetGenericArguments(Type type, [MaybeNullWhen(false)] out Type underlying, [MaybeNullWhen(false)] out Type @enum)
             {
                 return TryGetGenericArguments(type, out underlying, out @enum, out _);

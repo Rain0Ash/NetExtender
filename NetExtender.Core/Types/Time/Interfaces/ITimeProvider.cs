@@ -3,7 +3,6 @@
 
 using System;
 using System.Threading;
-using NetExtender.Types.Timers.Interfaces;
 
 namespace NetExtender.Types.Times.Interfaces
 {
@@ -12,7 +11,7 @@ namespace NetExtender.Types.Times.Interfaces
         public TimeZoneInfo LocalTimeZone { get; }
         public Int64 TimestampFrequency { get; }
 
-        public ITimer CreateTimer(TimerCallback callback, Object? state, TimeSpan dueTime, TimeSpan period);
+        public NetExtender.Types.Timers.Interfaces.ITimer CreateTimer(TimerCallback callback, Object? state, TimeSpan dueTime, TimeSpan period);
         public Int64 GetTimestamp();
         public DateTimeOffset GetUtcNow();
         public DateTimeOffset GetLocalNow();

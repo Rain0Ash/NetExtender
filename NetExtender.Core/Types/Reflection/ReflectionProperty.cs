@@ -286,7 +286,7 @@ namespace NetExtender.Types.Reflection
                 TProperty result => result,
                 _ => throw new ArgumentException($"Value is not {typeof(TProperty).Name}", nameof(value))
             };
-            
+
             SetValue(in source, property);
         }
 
@@ -296,19 +296,19 @@ namespace NetExtender.Types.Reflection
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (source is not TSource @object)
             {
                 throw new ArgumentException($"Source is not {typeof(TSource).Name}", nameof(source));
             }
-            
+
             TProperty property = value switch
             {
                 null => default!,
                 TProperty result => result,
                 _ => throw new ArgumentException($"Value is not {typeof(TProperty).Name}", nameof(value))
             };
-            
+
             SetValue(in @object, property);
         }
 

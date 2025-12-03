@@ -38,7 +38,7 @@ namespace NetExtender.Types.Network
                 return Handlers.Keys;
             }
         }
-        
+
         public ICollection<HttpExceptionHandler> Values
         {
             get
@@ -46,7 +46,7 @@ namespace NetExtender.Types.Network
                 return Handlers.Values;
             }
         }
-        
+
         ICollection<HttpExceptionHandler?> IDictionary<HttpStatusCode, HttpExceptionHandler?>.Values
         {
             get
@@ -54,7 +54,7 @@ namespace NetExtender.Types.Network
                 return Values!;
             }
         }
-        
+
         Boolean ICollection<KeyValuePair<HttpStatusCode, HttpExceptionHandler?>>.IsReadOnly
         {
             get
@@ -62,7 +62,7 @@ namespace NetExtender.Types.Network
                 return ((IDynamicHttpRequestHandler) this).IsReadOnly;
             }
         }
-        
+
         public Func<SocketException, ExceptionHandlerAction>? SocketHandler { get; set; }
         public Func<IOException, ExceptionHandlerAction>? IOHandler { get; set; }
         public Func<HttpMessageParsingException, ExceptionHandlerAction>? ParsingHandler { get; set; }
@@ -73,7 +73,7 @@ namespace NetExtender.Types.Network
         public Func<JsonException, ExceptionHandlerAction>? JsonHandler { get; set; }
         public Func<Exception, ExceptionHandlerAction>? DefaultHandler { get; set; }
         public Action? FinallyHandler { get; set; }
-        
+
         protected override ExceptionHandlerAction Handle(SocketException? exception)
         {
             return exception switch
@@ -83,7 +83,7 @@ namespace NetExtender.Types.Network
                 _ => ExceptionHandlerAction.Default
             };
         }
-        
+
         protected override ExceptionHandlerAction Handle(IOException? exception)
         {
             return exception switch
@@ -93,7 +93,7 @@ namespace NetExtender.Types.Network
                 _ => ExceptionHandlerAction.Default
             };
         }
-        
+
         protected override ExceptionHandlerAction Handle(HttpMessageParsingException? exception)
         {
             return exception switch
@@ -103,7 +103,7 @@ namespace NetExtender.Types.Network
                 _ => ExceptionHandlerAction.Default
             };
         }
-        
+
         protected override ExceptionHandlerAction Handle(MediaTypeNotSupportedException? exception)
         {
             return exception switch
@@ -113,7 +113,7 @@ namespace NetExtender.Types.Network
                 _ => ExceptionHandlerAction.Default
             };
         }
-        
+
         // ReSharper disable once CognitiveComplexity
         protected override ExceptionHandlerAction Handle(HttpRequestException? exception)
         {
@@ -130,7 +130,7 @@ namespace NetExtender.Types.Network
                     {
                         goto ClientError;
                     }
-                    
+
                     return result;
                 }
                 case var _ when exception.StatusCode.IsClientError(): ClientError:
@@ -140,7 +140,7 @@ namespace NetExtender.Types.Network
                     {
                         goto Default;
                     }
-                    
+
                     return result;
                 }
                 case var _ when exception.StatusCode is { } code && code.IsServerError() && Handlers.TryGetValue(code, out HttpExceptionHandler? handler):
@@ -150,7 +150,7 @@ namespace NetExtender.Types.Network
                     {
                         goto ServerError;
                     }
-                    
+
                     return result;
                 }
                 case var _ when exception.StatusCode.IsServerError(): ServerError:
@@ -160,7 +160,7 @@ namespace NetExtender.Types.Network
                     {
                         goto Default;
                     }
-                    
+
                     return result;
                 }
                 default: Default:
@@ -169,7 +169,7 @@ namespace NetExtender.Types.Network
                 }
             }
         }
-        
+
         protected override ExceptionHandlerAction Handle(JsonException? exception)
         {
             return exception switch
@@ -179,7 +179,7 @@ namespace NetExtender.Types.Network
                 _ => ExceptionHandlerAction.Default
             };
         }
-        
+
         protected override ExceptionHandlerAction Handle(Exception? exception)
         {
             return exception switch
@@ -189,32 +189,32 @@ namespace NetExtender.Types.Network
                 _ => ExceptionHandlerAction.Rethrow
             };
         }
-        
+
         protected override void Finally()
         {
             FinallyHandler?.Invoke();
         }
-        
+
         public Boolean Contains(HttpStatusCode code)
         {
             return ContainsKey(code);
         }
-        
+
         public Boolean ContainsKey(HttpStatusCode code)
         {
             return Handlers.ContainsKey(code);
         }
-        
+
         Boolean ICollection<KeyValuePair<HttpStatusCode, HttpExceptionHandler?>>.Contains(KeyValuePair<HttpStatusCode, HttpExceptionHandler?> item)
         {
             return ((ICollection<KeyValuePair<HttpStatusCode, HttpExceptionHandler?>>) Handlers).Contains(item);
         }
-        
+
         public Boolean TryGetValue(HttpStatusCode code, [MaybeNullWhen(false)] out HttpExceptionHandler result)
         {
             return Handlers.TryGetValue(code, out result);
         }
-        
+
         public void Add(HttpStatusCode code, HttpExceptionHandler? handler)
         {
             if (handler is not null && !TryAdd(code, handler))
@@ -222,82 +222,82 @@ namespace NetExtender.Types.Network
                 throw new ArgumentException($"Duplicate handler for status code '{code}'.");
             }
         }
-        
+
         public Boolean TryAdd(HttpStatusCode code, HttpExceptionHandler? handler)
         {
             return handler is not null && Handlers.TryAdd(code, handler);
         }
-        
+
         void ICollection<KeyValuePair<HttpStatusCode, HttpExceptionHandler?>>.Add(KeyValuePair<HttpStatusCode, HttpExceptionHandler?> item)
         {
             ((ICollection<KeyValuePair<HttpStatusCode, HttpExceptionHandler?>>) Handlers).Add(item);
         }
-        
+
         public Boolean Remove(HttpStatusCode code)
         {
             return Remove(code, out _);
         }
-        
+
         public Boolean Remove(HttpStatusCode code, [MaybeNullWhen(false)] out HttpExceptionHandler result)
         {
             return Handlers.TryRemove(code, out result);
         }
-        
+
         Boolean ICollection<KeyValuePair<HttpStatusCode, HttpExceptionHandler?>>.Remove(KeyValuePair<HttpStatusCode, HttpExceptionHandler?> item)
         {
             return ((ICollection<KeyValuePair<HttpStatusCode, HttpExceptionHandler?>>) Handlers).Remove(item);
         }
-        
+
         public void Clear()
         {
             Handlers.Clear();
         }
-        
+
         public void CopyTo(HttpStatusCode[] array, Int32 index)
         {
             if (array is null)
             {
                 throw new ArgumentNullException(nameof(array));
             }
-            
+
             Handlers.Keys.CopyTo(array, index);
         }
-        
+
         public void CopyTo(KeyValuePair<HttpStatusCode, HttpExceptionHandler>[] array, Int32 index)
         {
             if (array is null)
             {
                 throw new ArgumentNullException(nameof(array));
             }
-            
+
             ((ICollection<KeyValuePair<HttpStatusCode, HttpExceptionHandler>>) Handlers).CopyTo(array, index);
         }
-        
+
         void ICollection<KeyValuePair<HttpStatusCode, HttpExceptionHandler?>>.CopyTo(KeyValuePair<HttpStatusCode, HttpExceptionHandler?>[] array, Int32 index)
         {
             if (array is null)
             {
                 throw new ArgumentNullException(nameof(array));
             }
-            
+
             ((ICollection<KeyValuePair<HttpStatusCode, HttpExceptionHandler?>>) Handlers).CopyTo(array, index);
         }
-        
+
         public IEnumerator<KeyValuePair<HttpStatusCode, HttpExceptionHandler>> GetEnumerator()
         {
             return Handlers.GetEnumerator();
         }
-        
+
         IEnumerator<KeyValuePair<HttpStatusCode, HttpExceptionHandler?>> IEnumerable<KeyValuePair<HttpStatusCode, HttpExceptionHandler?>>.GetEnumerator()
         {
             return GetEnumerator()!;
         }
-        
+
         IEnumerator IEnumerable.GetEnumerator()
         {
             return ((IEnumerable) Handlers).GetEnumerator();
         }
-        
+
         public HttpExceptionHandler? this[HttpStatusCode code]
         {
             get
@@ -311,7 +311,7 @@ namespace NetExtender.Types.Network
                     Handlers.TryRemove(code, out _);
                     return;
                 }
-                
+
                 Handlers[code] = value;
             }
         }

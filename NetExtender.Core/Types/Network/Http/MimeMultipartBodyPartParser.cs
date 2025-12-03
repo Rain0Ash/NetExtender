@@ -85,7 +85,7 @@ namespace NetExtender.Types.Network
             {
                 throw new ObjectDisposedException(nameof(MimeMultipartBodyPartParser));
             }
-            
+
             if (data is null)
             {
                 throw new ArgumentNullException(nameof(data));
@@ -98,26 +98,26 @@ namespace NetExtender.Types.Network
                 Current = null;
                 throw new IOException("Unexpected end of MIME multipart stream. MIME multipart message is not complete.");
             }
-            
+
             Current?.Segments.Clear();
             while (Parser.CanParseMore(read, consumed))
             {
                 Status = Parser.ParseBuffer(data, read, ref consumed, out Part[0], out Part[1], out Boolean isFinalBodyPart);
-                
+
                 if (Status != MimeMultipartParser.MimeParserState.BodyPartCompleted && Status != MimeMultipartParser.MimeParserState.NeedMoreData)
                 {
                     Current?.Dispose();
                     Current = null;
                     throw new InvalidOperationException($"Error parsing MIME multipart message byte {consumed} of data segment {data}.");
                 }
-                
+
                 if (IsFirst)
                 {
                     if (Status == MimeMultipartParser.MimeParserState.BodyPartCompleted)
                     {
                         IsFirst = false;
                     }
-                    
+
                     continue;
                 }
 
@@ -188,7 +188,7 @@ namespace NetExtender.Types.Network
             {
                 return !@throw ? null : throw new ArgumentOutOfRangeException(nameof(size), size, null);
             }
-            
+
             MediaTypeHeaderValue? type = content.Headers.ContentType;
             if (type is null)
             {
@@ -199,7 +199,7 @@ namespace NetExtender.Types.Network
             {
                 return !@throw ? null : throw new ArgumentException($"Invalid '{nameof(HttpContent)}' instance provided. It does not have a content type header starting with 'multipart/'.", nameof(content));
             }
-            
+
             String? value = null;
             foreach (NameValueHeaderValue parameter in type.Parameters)
             {

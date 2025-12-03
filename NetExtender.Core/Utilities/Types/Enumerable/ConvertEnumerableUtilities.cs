@@ -40,7 +40,7 @@ namespace NetExtender.Utilities.Types
                 yield return converter(item);
             }
         }
-        
+
         public static IEnumerable<TTo?> SelectAs<TFrom, TTo>(this IEnumerable<TFrom> source) where TTo : class
         {
             if (source is null)

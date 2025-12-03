@@ -13,7 +13,7 @@ namespace NetExtender.Types.Monads.Interfaces
 
         public new IWeakMaybe<T> Clone();
     }
-    
+
     public interface IWeakMaybe : IMonad, ICloneable<IWeakMaybe>
     {
         public Boolean HasValue { get; }

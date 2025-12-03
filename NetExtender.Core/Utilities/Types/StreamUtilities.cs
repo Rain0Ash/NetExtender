@@ -68,7 +68,11 @@ namespace NetExtender.Utilities.Types
 
             Int32 size = Unsafe.SizeOf<T>();
             Span<Byte> buffer = stackalloc Byte[size];
+#if NET8_0_OR_GREATER
+            MemoryMarshal.Write(buffer, in value);
+#else
             MemoryMarshal.Write(buffer, ref value);
+#endif
             stream.Write(buffer);
         }
 

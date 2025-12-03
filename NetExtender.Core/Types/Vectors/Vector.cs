@@ -32,7 +32,7 @@ namespace NetExtender.Types.Vectors
                 return new Span<Byte>(pointer, value.Internal.Length);
             }
         }
-        
+
         public static implicit operator ReadOnlySpan<T>(in Vector<T, TSize> value)
         {
             fixed (Byte* pointer = value.Internal)
@@ -48,7 +48,7 @@ namespace NetExtender.Types.Vectors
                 return new Span<T>(pointer, value.Length);
             }
         }
-        
+
         public static explicit operator TSize(in Vector<T, TSize> value)
         {
             return (TSize) value.Internal;
@@ -244,7 +244,7 @@ namespace NetExtender.Types.Vectors
         {
             Internal = new TSize();
             ReadOnlySpan<Byte> bytes = value.AsBytes();
-            
+
             if (bytes.Length > Internal.Size)
             {
                 throw new ArgumentOutOfRangeException(nameof(value), bytes.Length, $"Length {value.Length} with element size {Unsafe.SizeOf<T>()} equals {bytes.Length}. It must be less or equals {Internal.Size}.");
@@ -271,7 +271,7 @@ namespace NetExtender.Types.Vectors
         {
             Internal = size;
         }
-        
+
         internal Vector(SerializationInfo info, StreamingContext context)
         {
             Internal = new UnsafeSpace<TSize>(info, context);
@@ -302,7 +302,7 @@ namespace NetExtender.Types.Vectors
             {
                 throw new NotSupportedException($"Type '{typeof(TStruct).Name} ({Unsafe.SizeOf<TStruct>()})' not support for '{Type.Name} ({Internal.Length})'.");
             }
-            
+
             return ref Internal.As<TStruct>();
         }
 
@@ -394,7 +394,7 @@ namespace NetExtender.Types.Vectors
             {
                 throw new NotSupportedException($"Type '{typeof(TStruct).Name} ({Unsafe.SizeOf<TStruct>()})' not support for '{Type.Name} ({Internal.Length})'.");
             }
-            
+
             Internal.Fill(in value);
             return ref this;
         }
@@ -617,7 +617,7 @@ namespace NetExtender.Types.Vectors
         {
             return Internal.Equals(in other.Internal);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public readonly Enumerator GetEnumerator()
         {
@@ -671,7 +671,7 @@ namespace NetExtender.Types.Vectors
                 builder.Append(' ');
                 builder.Append(enumerator.Current.ToString(format, provider));
             }
-            
+
             builder.Append(')');
             return builder.ToString();
         }

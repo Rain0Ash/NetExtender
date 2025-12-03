@@ -148,7 +148,7 @@ namespace NetExtender.FileSystems
         {
             WriteAllLines(path, (IEnumerable<String?>?) contents, encoding);
         }
-        
+
         public abstract override void WriteAllLines(String path, IEnumerable<String?>? contents, Encoding? encoding);
 
         public override Task WriteAllLinesAsync(String path, IEnumerable<String?>? contents, CancellationToken token)
@@ -165,273 +165,287 @@ namespace NetExtender.FileSystems
         {
             return Info(Verify<TFile, IFileEntry>(entry));
         }
-        
+
         protected internal abstract void GetObjectData(TFile node, SerializationInfo info, StreamingContext context);
 
         void IFileSystemStorage.GetObjectData(IFileEntry entry, SerializationInfo info, StreamingContext context)
         {
             GetObjectData(Verify<TFile, IFileEntry>(entry), info, context);
         }
-        
+
         protected internal new abstract String Name(TFile node);
 
         String IFileSystemStorage.Name(IFileEntry entry)
         {
             return Name(Verify<TFile, IFileEntry>(entry));
         }
-        
+
         protected internal abstract String FullName(TFile node);
 
         String IFileSystemStorage.FullName(IFileEntry entry)
         {
             return FullName(Verify<TFile, IFileEntry>(entry));
         }
-        
+
         protected internal abstract String Extension(TFile node);
 
         String IFileSystemStorage.Extension(IFileEntry entry)
         {
             return Extension(Verify<TFile, IFileEntry>(entry));
         }
-        
+
         protected internal new abstract Boolean IsReal(TFile node);
 
         Boolean IFileSystemStorage.IsReal(IFileEntry entry)
         {
             return IsReal(Verify<TFile, IFileEntry>(entry));
         }
-        
+
         protected internal abstract Boolean Exists(TFile node);
 
         Boolean IFileSystemStorage.Exists(IFileEntry entry)
         {
             return Exists(Verify<TFile, IFileEntry>(entry));
         }
-        
+
         protected internal abstract Int64 Length(TFile node);
 
         Int64 IFileSystemStorage.Length(IFileEntry entry)
         {
             return Length(Verify<TFile, IFileEntry>(entry));
         }
-        
+
         protected internal abstract Boolean IsReadOnly(TFile node);
 
         Boolean IFileSystemStorage.IsReadOnly(IFileEntry entry)
         {
             return IsReadOnly(Verify<TFile, IFileEntry>(entry));
         }
-        
+
         protected internal abstract void IsReadOnly(TFile node, Boolean value);
 
         void IFileSystemStorage.IsReadOnly(IFileEntry entry, Boolean value)
         {
             IsReadOnly(Verify<TFile, IFileEntry>(entry), value);
         }
-        
+
         protected internal abstract FileAttributes Attributes(TFile node);
 
         FileAttributes IFileSystemStorage.Attributes(IFileEntry entry)
         {
             return Attributes(Verify<TFile, IFileEntry>(entry));
         }
-        
+
         protected internal abstract void Attributes(TFile node, FileAttributes value);
 
         void IFileSystemStorage.Attributes(IFileEntry entry, FileAttributes value)
         {
             Attributes(Verify<TFile, IFileEntry>(entry), value);
         }
-        
+
+        protected internal abstract UnixFileMode UnixFileMode(TFile node);
+
+        UnixFileMode IFileSystemStorage.UnixFileMode(IFileEntry entry)
+        {
+            return UnixFileMode(Verify<TFile, IFileEntry>(entry));
+        }
+
+        protected internal abstract void UnixFileMode(TFile node, UnixFileMode value);
+
+        void IFileSystemStorage.UnixFileMode(IFileEntry entry, UnixFileMode value)
+        {
+            UnixFileMode(Verify<TFile, IFileEntry>(entry), value);
+        }
+
         protected internal abstract String? LinkTarget(TFile node);
 
         String? IFileSystemStorage.LinkTarget(IFileEntry entry)
         {
             return LinkTarget(Verify<TFile, IFileEntry>(entry));
         }
-        
+
         protected internal new abstract DateTime CreationTime(TFile node);
 
         DateTime IFileSystemStorage.CreationTime(IFileEntry entry)
         {
             return CreationTime(Verify<TFile, IFileEntry>(entry));
         }
-        
+
         protected internal new abstract void CreationTime(TFile node, DateTime value);
 
         void IFileSystemStorage.CreationTime(IFileEntry entry, DateTime value)
         {
             CreationTime(Verify<TFile, IFileEntry>(entry), value);
         }
-        
+
         protected internal new abstract DateTime CreationTimeUtc(TFile node);
 
         DateTime IFileSystemStorage.CreationTimeUtc(IFileEntry entry)
         {
             return CreationTimeUtc(Verify<TFile, IFileEntry>(entry));
         }
-        
+
         protected internal new abstract void CreationTimeUtc(TFile node, DateTime value);
 
         void IFileSystemStorage.CreationTimeUtc(IFileEntry entry, DateTime value)
         {
             CreationTimeUtc(Verify<TFile, IFileEntry>(entry), value);
         }
-        
+
         protected internal abstract DateTime LastAccessTime(TFile node);
 
         DateTime IFileSystemStorage.LastAccessTime(IFileEntry entry)
         {
             return LastAccessTime(Verify<TFile, IFileEntry>(entry));
         }
-        
+
         protected internal abstract void LastAccessTime(TFile node, DateTime value);
 
         void IFileSystemStorage.LastAccessTime(IFileEntry entry, DateTime value)
         {
             LastAccessTime(Verify<TFile, IFileEntry>(entry), value);
         }
-        
+
         protected internal abstract DateTime LastAccessTimeUtc(TFile node);
 
         DateTime IFileSystemStorage.LastAccessTimeUtc(IFileEntry entry)
         {
             return LastAccessTimeUtc(Verify<TFile, IFileEntry>(entry));
         }
-        
+
         protected internal abstract void LastAccessTimeUtc(TFile node, DateTime value);
 
         void IFileSystemStorage.LastAccessTimeUtc(IFileEntry entry, DateTime value)
         {
             LastAccessTimeUtc(Verify<TFile, IFileEntry>(entry), value);
         }
-        
+
         protected internal abstract DateTime LastWriteTime(TFile node);
 
         DateTime IFileSystemStorage.LastWriteTime(IFileEntry entry)
         {
             return LastWriteTime(Verify<TFile, IFileEntry>(entry));
         }
-        
+
         protected internal abstract void LastWriteTime(TFile node, DateTime value);
 
         void IFileSystemStorage.LastWriteTime(IFileEntry entry, DateTime value)
         {
             LastWriteTime(Verify<TFile, IFileEntry>(entry), value);
         }
-        
+
         protected internal abstract DateTime LastWriteTimeUtc(TFile node);
 
         DateTime IFileSystemStorage.LastWriteTimeUtc(IFileEntry entry)
         {
             return LastWriteTimeUtc(Verify<TFile, IFileEntry>(entry));
         }
-        
+
         protected internal abstract void LastWriteTimeUtc(TFile node, DateTime value);
 
         void IFileSystemStorage.LastWriteTimeUtc(IFileEntry entry, DateTime value)
         {
             LastWriteTimeUtc(Verify<TFile, IFileEntry>(entry), value);
         }
-        
+
         protected internal abstract String? DirectoryName(TFile node);
 
         String? IFileSystemStorage.DirectoryName(IFileEntry entry)
         {
             return DirectoryName(Verify<TFile, IFileEntry>(entry));
         }
-        
+
         protected internal abstract TDirectory? GetDirectory(TFile node);
 
         IDirectoryEntry? IFileSystemStorage.GetDirectory(IFileEntry entry)
         {
             return GetDirectory(Verify<TFile, IFileEntry>(entry));
         }
-        
+
         protected internal new abstract TDrive? Drive(TFile node);
 
         IDriveEntry? IFileSystemStorage.Drive(IFileEntry entry)
         {
             return Drive(Verify<TFile, IFileEntry>(entry));
         }
-        
+
         protected internal abstract Boolean CreateAsSymbolicLink(TFile node, String target);
 
         Boolean IFileSystemStorage.CreateAsSymbolicLink(IFileEntry entry, String target)
         {
             return CreateAsSymbolicLink(Verify<TFile, IFileEntry>(entry), target);
         }
-        
+
         protected internal abstract IFileSystemNode? ResolveLinkTarget(TFile node);
 
         IFileSystemEntry? IFileSystemStorage.ResolveLinkTarget(IFileEntry entry)
         {
             return ResolveLinkTarget(Verify<TFile, IFileEntry>(entry))?.This;
         }
-        
+
         protected internal abstract IFileSystemNode? ResolveLinkTarget(TFile node, Boolean final);
 
         IFileSystemEntry? IFileSystemStorage.ResolveLinkTarget(IFileEntry entry, Boolean final)
         {
             return ResolveLinkTarget(Verify<TFile, IFileEntry>(entry), final)?.This;
         }
-        
+
         protected internal abstract FileStream Open(TFile node, FileMode mode);
 
         FileStream IFileSystemStorage.Open(IFileEntry entry, FileMode mode)
         {
             return Open(Verify<TFile, IFileEntry>(entry), mode);
         }
-        
+
         protected internal abstract FileStream Open(TFile node, FileMode mode, FileAccess access);
 
         FileStream IFileSystemStorage.Open(IFileEntry entry, FileMode mode, FileAccess access)
         {
             return Open(Verify<TFile, IFileEntry>(entry), mode, access);
         }
-        
+
         protected internal abstract FileStream Open(TFile node, FileMode mode, FileAccess access, FileShare share);
 
         FileStream IFileSystemStorage.Open(IFileEntry entry, FileMode mode, FileAccess access, FileShare share)
         {
             return Open(Verify<TFile, IFileEntry>(entry), mode, access, share);
         }
-        
+
         protected internal abstract FileStream Open(TFile node, FileStreamOptions options);
 
         FileStream IFileSystemStorage.Open(IFileEntry entry, FileStreamOptions options)
         {
             return Open(Verify<TFile, IFileEntry>(entry), options);
         }
-        
+
         protected internal abstract FileStream OpenRead(TFile node);
 
         FileStream IFileSystemStorage.OpenRead(IFileEntry entry)
         {
             return OpenRead(Verify<TFile, IFileEntry>(entry));
         }
-        
+
         protected internal abstract FileStream OpenWrite(TFile node);
 
         FileStream IFileSystemStorage.OpenWrite(IFileEntry entry)
         {
             return OpenWrite(Verify<TFile, IFileEntry>(entry));
         }
-        
+
         protected internal abstract StreamReader OpenText(TFile node);
 
         StreamReader IFileSystemStorage.OpenText(IFileEntry entry)
         {
             return OpenText(Verify<TFile, IFileEntry>(entry));
         }
-        
+
         protected internal abstract FileStream Create(TFile node);
 
         FileStream IFileSystemStorage.Create(IFileEntry entry)
         {
             return Create(Verify<TFile, IFileEntry>(entry));
         }
-        
+
         protected internal abstract StreamWriter AppendText(TFile node);
 
         StreamWriter IFileSystemStorage.AppendText(IFileEntry entry)
@@ -459,77 +473,77 @@ namespace NetExtender.FileSystems
         {
             MoveTo(Verify<TFile, IFileEntry>(entry), destination);
         }
-        
+
         protected internal abstract void MoveTo(TFile node, String destination, Boolean overwrite);
 
         void IFileSystemStorage.MoveTo(IFileEntry entry, String destination, Boolean overwrite)
         {
             MoveTo(Verify<TFile, IFileEntry>(entry), destination, overwrite);
         }
-        
+
         protected internal abstract TFile CopyTo(TFile node, String destination);
 
         IFileEntry IFileSystemStorage.CopyTo(IFileEntry entry, String destination)
         {
             return CopyTo(Verify<TFile, IFileEntry>(entry), destination);
         }
-        
+
         protected internal abstract TFile CopyTo(TFile node, String destination, Boolean overwrite);
 
         IFileEntry IFileSystemStorage.CopyTo(IFileEntry entry, String destination, Boolean overwrite)
         {
             return CopyTo(Verify<TFile, IFileEntry>(entry), destination, overwrite);
         }
-        
+
         protected internal abstract TFile Replace(TFile node, String destination, String? backup);
 
         IFileEntry IFileSystemStorage.Replace(IFileEntry entry, String destination, String? backup)
         {
             return Replace(Verify<TFile, IFileEntry>(entry), destination, backup);
         }
-        
+
         protected internal abstract TFile Replace(TFile node, String destination, String? backup, Boolean suppress);
 
         IFileEntry IFileSystemStorage.Replace(IFileEntry entry, String destination, String? backup, Boolean suppress)
         {
             return Replace(Verify<TFile, IFileEntry>(entry), destination, backup, suppress);
         }
-        
+
         protected internal abstract void Delete(TFile node);
 
         void IFileSystemStorage.Delete(IFileEntry entry)
         {
             Delete(Verify<TFile, IFileEntry>(entry));
         }
-        
+
         protected internal abstract void Refresh(TFile node);
 
         void IFileSystemStorage.Refresh(IFileEntry entry)
         {
             Refresh(Verify<TFile, IFileEntry>(entry));
         }
-        
+
         protected internal abstract Int32 GetHashCode(TFile? node);
 
         Int32 IFileSystemStorage.GetHashCode(IFileEntry? entry)
         {
             return GetHashCode(Verify<TFile, IFileEntry>(entry));
         }
-        
+
         protected internal abstract Boolean Equals(TFile? node, FileInfo? other);
 
         Boolean IFileSystemStorage.Equals(IFileEntry? entry, FileInfo? other)
         {
             return Equals(Verify<TFile, IFileEntry>(entry), other);
         }
-        
+
         protected internal abstract Boolean Equals(TFile? node, IFileInfo? other);
 
         Boolean IFileSystemStorage.Equals(IFileEntry? entry, IFileInfo? other)
         {
             return Equals(Verify<TFile, IFileEntry>(entry), other);
         }
-        
+
         [return: NotNullIfNotNull("node")]
         protected internal abstract String? ToString(TFile? node);
 
@@ -595,7 +609,7 @@ namespace NetExtender.FileSystems
                 return ref INode<TInitializer>.Verify(this, ref initializer);
             }
         }
-        
+
         public abstract class FileNode : FileInfoEntry, IFileNode
         {
             public Guid Id { get; }
@@ -611,7 +625,7 @@ namespace NetExtender.FileSystems
                     Storage = value;
                 }
             }
-            
+
             IFileSystemStorage INode.Storage
             {
                 get

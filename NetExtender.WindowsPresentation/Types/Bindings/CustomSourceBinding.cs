@@ -40,7 +40,7 @@ namespace NetExtender.WindowsPresentation.Types.Bindings
         {
             RelativeSource = CreateRelativeSource();
         }
-        
+
         private static Boolean Initialize([MaybeNullWhen(false)] out Assembly assembly)
         {
             const String name = $"{nameof(NetExtender)}.{nameof(UserInterface)}.{nameof(WindowsPresentation)}.{nameof(Localization)}";
@@ -59,7 +59,7 @@ namespace NetExtender.WindowsPresentation.Types.Bindings
             {
                 throw new ArgumentNullException(nameof(factory));
             }
-            
+
             return Factory.TryAdd(typeof(T), factory);
         }
     }

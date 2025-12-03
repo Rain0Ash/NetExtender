@@ -14,27 +14,27 @@ namespace NetExtender.Types.Lists
             : this(source, 0, size, count)
         {
         }
-        
+
         public PaginationPartialListWrapper(TCollection source, Int32 index, Int32 size, Int32 count)
             : base(source, index, size, count)
         {
         }
-        
+
         public Int32 IndexOf(T item)
         {
             return Source.IndexOf(item);
         }
-        
+
         public void Insert(Int32 index, T item)
         {
             Source.Insert(index, item);
         }
-        
+
         public void RemoveAt(Int32 index)
         {
             Source.RemoveAt(index);
         }
-        
+
         public T this[Int32 index]
         {
             get
@@ -47,14 +47,14 @@ namespace NetExtender.Types.Lists
             }
         }
     }
-    
+
     public class PaginationListWrapper<T, TCollection> : PaginationCollectionWrapper<T, TCollection>, IPaginationList<T, TCollection> where TCollection : class, IList<T>
     {
         public PaginationListWrapper(TCollection source, Int32 size)
             : this(source, 0, size)
         {
         }
-        
+
         public PaginationListWrapper(TCollection source, Int32 index, Int32 size)
             : base(source, index, size)
         {

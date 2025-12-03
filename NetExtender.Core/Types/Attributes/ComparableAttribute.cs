@@ -14,12 +14,12 @@ namespace NetExtender.Utilities.Core
     public class ComparableAttribute : ComparisonAttribute
     {
         public Boolean Inverse { get; init; }
-        
+
         public ComparableAttribute()
             : this(null, null)
         {
         }
-        
+
         public ComparableAttribute(Int32 order)
             : this(null, null, order)
         {
@@ -60,7 +60,7 @@ namespace NetExtender.Utilities.Core
             Int32 result = typeof(T) == typeof(String) ? Compare(Unsafe.As<T?, String?>(ref x), Unsafe.As<T?, String?>(ref y), false) : Comparer<T>.Default.Compare(x, y);
             return Inverse ? -result : result;
         }
-        
+
         public Int32 Compare(String? x, String? y)
         {
             return Compare(x, y, Comparison);
@@ -82,7 +82,7 @@ namespace NetExtender.Utilities.Core
             return inverse ? -result : result;
         }
     }
-    
+
     public class ComparableAttribute<T> : ComparisonAttribute<T, ComparableAttribute<T>.CompareDelegate>
     {
         public delegate Int32 CompareDelegate(T? x, T? y);
@@ -96,20 +96,20 @@ namespace NetExtender.Utilities.Core
         {
             return Build<ComparableAttribute>(name);
         }
-        
+
         //TODO:
         protected virtual Expression<CompareDelegate> Build<TAttribute>(String? name) where TAttribute : ComparableAttribute
         {
             ParameterExpression x = Expression.Parameter(typeof(T), nameof(x));
             ParameterExpression y = Expression.Parameter(typeof(T), nameof(y));
             ImmutableArray<Member<TAttribute>> members = Members<TAttribute>(name);
-            
+
             const BindingFlags binding = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
-            
+
             var methods = new
             {
                 String = typeof(ComparableAttribute).GetMethod(nameof(ComparableAttribute.Compare), binding, new[] { typeof(String), typeof(String) }),
-                Generic = typeof(ComparableAttribute).GetMethod(nameof(ComparableAttribute.Compare), 1, binding, new[] { Type.MakeGenericMethodParameter(0), Type.MakeGenericMethodParameter(0) }),
+                Generic = typeof(ComparableAttribute).GetMethod(nameof(ComparableAttribute.Compare), 1, binding, new[] { Type.MakeGenericMethodParameter(0), Type.MakeGenericMethodParameter(0) })
             };
 
             if (methods.String is null || methods.Generic is null)
@@ -134,13 +134,13 @@ namespace NetExtender.Utilities.Core
 
                 MethodInfo? method = type == typeof(String) ? methods.String : methods.Generic.MakeGenericMethod(type);
                 Expression call = Expression.Call(Expression.Constant(attribute), method, accessX, accessY);
-                
+
                 Expression assign = Expression.Assign(result, call);
 
                 Expression @if = Expression.IfThen(Expression.NotEqual(assign, Expression.Constant(0, typeof(Int32))), Expression.Return(@return, result));
                 body = Expression.Block(@if, body);
             }
-            
+
             body = Expression.Block
             (
                 Expression.IfThen(Expression.ReferenceEqual(x, y), Expression.Return(@return, Expression.Constant(0, typeof(Int32)))),

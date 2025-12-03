@@ -69,7 +69,7 @@ namespace NetExtender.Utilities.UserInterface.Types
                 _ => throw new EnumUndefinedOrNotSupportedException<MessageBoxResult>(value, nameof(value), null)
             };
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean None(this MessageBoxResult value)
         {
@@ -87,7 +87,7 @@ namespace NetExtender.Utilities.UserInterface.Types
         {
             return value == MessageBoxResult.Cancel;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean Yes(this MessageBoxResult value)
         {

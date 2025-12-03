@@ -17,12 +17,12 @@ namespace NetExtender.Utilities.UserInterface
             {
                 throw new ArgumentNullException(nameof(collection));
             }
-            
+
             if (element is null)
             {
                 return;
             }
-            
+
             collection.Add(element);
         }
     }

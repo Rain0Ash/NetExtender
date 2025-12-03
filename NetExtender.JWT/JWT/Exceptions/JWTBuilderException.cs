@@ -12,7 +12,7 @@ namespace NetExtender.JWT
     {
         private new const String Message = "Can't instantiate '{0}'.";
         private const String MethodMessage = "Can't instantiate '{0}'. Invoke '{1}'.";
-        
+
         public JWTBuilderInstantiateException(String? message)
             : base(message)
         {
@@ -33,6 +33,10 @@ namespace NetExtender.JWT
         {
         }
 
+#if NET8_0_OR_GREATER
+        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
         protected JWTBuilderInstantiateException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
@@ -44,16 +48,16 @@ namespace NetExtender.JWT
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             return method is not null ? MethodMessage.Format(type.Name, method) : Message.Format(type);
         }
     }
-    
+
     [Serializable]
     public class JWTBuilderEncodeException : JWTBuilderException
     {
         private new const String Message = "Can't encode token.";
-        
+
         public JWTBuilderEncodeException(String? message)
             : base(message ?? Message)
         {
@@ -69,17 +73,21 @@ namespace NetExtender.JWT
         {
         }
 
+#if NET8_0_OR_GREATER
+        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
         protected JWTBuilderEncodeException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
         }
     }
-    
+
     [Serializable]
     public class JWTBuilderDecodeException : JWTBuilderException
     {
         private new const String Message = "Can't decode token.";
-        
+
         public JWTBuilderDecodeException(String? message)
             : base(message ?? Message)
         {
@@ -95,12 +103,16 @@ namespace NetExtender.JWT
         {
         }
 
+#if NET8_0_OR_GREATER
+        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
         protected JWTBuilderDecodeException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
         }
     }
-    
+
     [Serializable]
     public class JWTBuilderException : JWTException
     {
@@ -119,6 +131,10 @@ namespace NetExtender.JWT
         {
         }
 
+#if NET8_0_OR_GREATER
+        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
         protected JWTBuilderException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {

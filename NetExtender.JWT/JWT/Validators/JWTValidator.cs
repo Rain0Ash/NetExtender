@@ -322,7 +322,7 @@ namespace NetExtender.JWT
             {
                 return false;
             }
-            
+
             if (crypto.Length != signature.Length)
             {
                 return false;
@@ -332,7 +332,7 @@ namespace NetExtender.JWT
             {
                 throw new InvalidOperationException("Can't count JWT crypto.");
             }
-            
+
             Span<Byte> crypt = count.IsStack ? stackalloc Byte[count] : new Byte[count];
             count.GetBytes(crypt);
 
@@ -340,7 +340,7 @@ namespace NetExtender.JWT
             {
                 throw new InvalidOperationException("Can't count JWT signature.");
             }
-            
+
             Span<Byte> sign = count.IsStack ? stackalloc Byte[count] : new Byte[count];
             count.GetBytes(sign);
 

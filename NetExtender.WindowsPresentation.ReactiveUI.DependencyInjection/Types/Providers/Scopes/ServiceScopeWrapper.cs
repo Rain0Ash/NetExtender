@@ -19,7 +19,7 @@ namespace NetExtender.WindowsPresentation.ReactiveUI.DependencyInjection.Types.P
                 return Scope.ServiceProvider;
             }
         }
-        
+
         public IServiceProvider ServiceProvider
         {
             get
@@ -27,22 +27,22 @@ namespace NetExtender.WindowsPresentation.ReactiveUI.DependencyInjection.Types.P
                 return Scope.ServiceProvider;
             }
         }
-        
+
         public ServiceScopeWrapper(Microsoft.Extensions.DependencyInjection.IServiceScope scope)
         {
             Scope = scope ?? throw new ArgumentNullException(nameof(scope));
         }
-        
+
         public void Dispose()
         {
             Scope.Dispose();
         }
     }
-    
+
     internal sealed class AsyncServiceScopeWrapper : Microsoft.Extensions.DependencyInjection.IServiceScope, IAsyncServiceScope
     {
         private readonly AsyncServiceScope Scope;
-        
+
         public IServiceProvider Provider
         {
             get
@@ -50,7 +50,7 @@ namespace NetExtender.WindowsPresentation.ReactiveUI.DependencyInjection.Types.P
                 return Scope.ServiceProvider;
             }
         }
-        
+
         public IServiceProvider ServiceProvider
         {
             get
@@ -58,12 +58,12 @@ namespace NetExtender.WindowsPresentation.ReactiveUI.DependencyInjection.Types.P
                 return Scope.ServiceProvider;
             }
         }
-        
+
         public AsyncServiceScopeWrapper(ref AsyncServiceScope scope)
         {
             Scope = scope;
         }
-        
+
         public void Dispose()
         {
             Scope.Dispose();

@@ -9,7 +9,7 @@ namespace NetExtender.Types.Storages.Interfaces
     public interface IStorage<T> : IWeakSet<T> where T : class
     {
     }
-    
+
     public interface IStorage<TKey, TValue> : IWeakDictionary<TKey, TValue> where TKey : class
     {
     }

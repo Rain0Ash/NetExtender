@@ -220,7 +220,7 @@ namespace NetExtender.FileSystems
         {
             return Storage.ResolveLinkTarget(this, final);
         }
-        
+
         public IFileSystemInfo[] GetFileSystemInfos()
         {
             return Storage.GetFileSystemInfos(this).ConvertAll<IFileSystemEntry, IFileSystemInfo>();
@@ -538,7 +538,7 @@ namespace NetExtender.FileSystems
         {
             return value?.Info;
         }
-        
+
         [return: NotNullIfNotNull("value")]
         public static implicit operator DirectoryInfoWrapper?(DirectoryInfo? value)
         {

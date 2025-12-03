@@ -24,7 +24,7 @@ namespace NetExtender.Utilities.JWT
             algorithm.ApplyCertificate(certificate);
             return algorithm;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsAsymmetric(this IJWTAlgorithm algorithm)
         {
@@ -35,7 +35,7 @@ namespace NetExtender.Utilities.JWT
 
             return algorithm is IJWTAsymmetricAlgorithm;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T Deserialize<T>(this IJWTSerializer serializer, String json)
         {
@@ -51,7 +51,7 @@ namespace NetExtender.Utilities.JWT
 
             return (T) serializer.Deserialize(typeof(T), json);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static JWTValidationInfo With(this JWTValidationInfo value, Action<JWTValidationInfo>? action)
         {

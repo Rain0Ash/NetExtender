@@ -33,7 +33,7 @@ namespace NetExtender.Types.History
         {
             return History.TryPop(out entry);
         }
-            
+
         public void Push(T entry)
         {
             if (entry is null)

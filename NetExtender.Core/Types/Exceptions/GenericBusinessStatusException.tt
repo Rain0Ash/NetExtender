@@ -76,14 +76,18 @@ namespace NetExtender.Types.Exceptions
         WriteLine("\t\t{");
         WriteLine("\t\t}");
         WriteLine(String.Empty);
+        WriteLine("#if NET8_0_OR_GREATER");
+        WriteLine("\t\t[Obsolete(\"This API supports obsolete formatter-based serialization. It should not be called or extended by application code.\", DiagnosticId=\"SYSLIB0051\", UrlFormat=\"https://aka.ms/dotnet-warnings/{0}\")]");
+        WriteLine("\t\t[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]");
+        WriteLine("#endif");
         WriteLine($"\t\tprotected {name}({nameof(SerializationInfo)} info, {nameof(StreamingContext)} context)");
         WriteLine("\t\t\t: base(info, context)");
         WriteLine("\t\t{");
         WriteLine("\t\t}");
         WriteLine("\t}");
-        
+
         WriteLine(String.Empty);
-        
+
         WriteLine("\t[Serializable]");
         WriteLine($"\tpublic class {name}<T> : {inherit}<T>");
         WriteLine("\t{");
@@ -119,6 +123,10 @@ namespace NetExtender.Types.Exceptions
         WriteLine("\t\t{");
         WriteLine("\t\t}");
         WriteLine(String.Empty);
+        WriteLine("#if NET8_0_OR_GREATER");
+        WriteLine("\t\t[Obsolete(\"This API supports obsolete formatter-based serialization. It should not be called or extended by application code.\", DiagnosticId=\"SYSLIB0051\", UrlFormat=\"https://aka.ms/dotnet-warnings/{0}\")]");
+        WriteLine("\t\t[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]");
+        WriteLine("#endif");
         WriteLine($"\t\tprotected {name}({nameof(SerializationInfo)} info, {nameof(StreamingContext)} context)");
         WriteLine("\t\t\t: base(info, context)");
         WriteLine("\t\t{");
@@ -156,7 +164,7 @@ namespace NetExtender.Types.Exceptions
             { "NotExtended", 510 },
             { "NetworkAuthenticationRequired", 511 }
         };
-        
+
         String[] names = Enum.GetNames(typeof(HttpStatusCode));
         KeyValuePair<String, Int32>[] values = names.Select(Core).Union(special).OrderBy(value => value.Value).ToArray();
         ForEach(values, GeneratorImplementation);

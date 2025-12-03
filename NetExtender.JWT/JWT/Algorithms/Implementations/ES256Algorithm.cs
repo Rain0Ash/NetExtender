@@ -29,7 +29,7 @@ namespace NetExtender.JWT.Algorithms
                     return HashAlgorithmName.SHA256;
                 }
             }
-        
+
             public ES256Algorithm()
             {
             }

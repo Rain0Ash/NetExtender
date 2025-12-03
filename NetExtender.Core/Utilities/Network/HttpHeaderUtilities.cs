@@ -21,13 +21,13 @@ namespace NetExtender.Utilities.Network
             {
                 return;
             }
-            
+
             foreach ((String key, String value) in source)
             {
                 collection.Add(key, value);
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void AddRange(this HttpHeaders collection, IEnumerable<KeyValuePair<String, IEnumerable<String>>>? source)
         {
@@ -40,13 +40,13 @@ namespace NetExtender.Utilities.Network
             {
                 return;
             }
-            
+
             foreach ((String key, IEnumerable<String> value) in source)
             {
                 collection.Add(key, value);
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void AddRange(this HttpHeaders collection, HttpHeaders? source)
         {
@@ -59,13 +59,13 @@ namespace NetExtender.Utilities.Network
             {
                 return;
             }
-            
+
             foreach ((String key, IEnumerable<String> value) in source)
             {
                 collection.Add(key, value);
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void With(this HttpHeaders collection, IEnumerable<KeyValuePair<String, String>>? source)
         {
@@ -77,7 +77,7 @@ namespace NetExtender.Utilities.Network
             collection.Clear();
             collection.AddRange(source);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void With(this HttpHeaders collection, IEnumerable<KeyValuePair<String, IEnumerable<String>>>? source)
         {
@@ -89,7 +89,7 @@ namespace NetExtender.Utilities.Network
             collection.Clear();
             collection.AddRange(source);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void With(this HttpHeaders collection, HttpHeaders? source)
         {
@@ -101,7 +101,7 @@ namespace NetExtender.Utilities.Network
             collection.Clear();
             collection.AddRange(source);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String ToHeaderString(this HttpHeaders? headers, HttpHeaders? content)
         {
@@ -112,15 +112,15 @@ namespace NetExtender.Utilities.Network
         public static String ToHeaderString(this HttpHeaders? headers, HttpHeaders? content, Int32 buffer)
         {
             IEnumerable<KeyValuePair<String, IEnumerable<String>>> source = headers ?? Enumerable.Empty<KeyValuePair<String, IEnumerable<String>>>();
-            
+
             if (content is not null)
             {
                 source = source.Concat(content);
             }
-            
+
             return ToHeaderString(source, buffer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String ToHeaderString(IEnumerable<KeyValuePair<String, IEnumerable<String>>> source)
         {
@@ -136,7 +136,7 @@ namespace NetExtender.Utilities.Network
             }
 
             StringBuilder builder = new StringBuilder(buffer > 0 ? buffer : 2048);
-            
+
             using IEnumerator<KeyValuePair<String, IEnumerable<String>>> enumerator = source.GetEnumerator();
 
             if (!enumerator.MoveNext())

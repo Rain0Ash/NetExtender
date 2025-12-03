@@ -42,7 +42,7 @@ namespace NetExtender.Utilities.UserInterface
 
             SetDialogResultAction = DialogResult();
         }
-        
+
         public static IntPtr GetHandle(this Window window)
         {
             if (window is null)

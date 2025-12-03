@@ -24,32 +24,32 @@ namespace NetExtender.Types.Streams
                 public delegate void ValidateHandle(SafeFileHandle handle, FileAccess access, Int32 bufferSize);
                 public delegate void ValidateHandleAsync(SafeFileHandle handle, FileAccess access, Int32 bufferSize, Boolean isAsync);
             }
-            
+
             [ReflectionSignature]
             public static Signature.ValidateArguments? ValidateArguments { get; }
             public static Signature.ValidateHandle? ValidateHandle { get; }
             public static Signature.ValidateHandleAsync? ValidateHandleAsync { get; }
-            
+
             static FileStreamHelpers()
             {
                 const BindingFlags binding = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
                 Type? helper = Type.GetType($"{nameof(System)}.{nameof(System.IO)}.Strategies.{nameof(FileStreamHelpers)}");
-                
+
                 ParameterInfo[]? parameters = typeof(Signature.ValidateArguments).GetMethod(nameof(Action.Invoke))?.GetSafeParameters();
                 ValidateArguments = parameters is not null ? helper?.GetMethod(nameof(Signature.ValidateArguments), binding, parameters)?.CreateDelegate<Signature.ValidateArguments>() : null;
-                
+
                 parameters = typeof(Signature.ValidateHandle).GetMethod(nameof(Action.Invoke))?.GetSafeParameters();
                 ValidateHandle = parameters is not null ? typeof(FileStream).GetMethod(nameof(Signature.ValidateHandle), binding, parameters)?.CreateDelegate<Signature.ValidateHandle>() : null;
-                
+
                 parameters = typeof(Signature.ValidateHandleAsync).GetMethod(nameof(Action.Invoke))?.GetSafeParameters();
                 ValidateHandleAsync = parameters is not null ? typeof(FileStream).GetMethod(nameof(Signature.ValidateHandle), binding, parameters)?.CreateDelegate<Signature.ValidateHandleAsync>() : null;
             }
         }
-        
+
         internal const Int32 DefaultBufferSize = 4096;
         internal const FileShare DefaultShare = FileShare.Read;
         private const Boolean DefaultIsAsync = false;
-        
+
         public CustomFileStreamWrapper(String path, FileMode mode)
             : base(path, mode)
         {
@@ -84,7 +84,7 @@ namespace NetExtender.Types.Streams
             : base(path, options)
         {
         }
-        
+
         [Obsolete]
         public CustomFileStreamWrapper(IntPtr handle, FileAccess access)
             : base(handle, access)
@@ -122,7 +122,7 @@ namespace NetExtender.Types.Streams
             : base(handle, access, buffer, async)
         {
         }
-            
+
         protected static Object ValidateHandle(SafeFileHandle handle, FileAccess access, Int32 bufferSize)
         {
             FileStreamHelpers.ValidateHandle?.Invoke(handle, access, bufferSize);

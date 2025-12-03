@@ -88,7 +88,7 @@ namespace NetExtender.Utilities.UserInterface
 
             return screens.Select(MakeScreenshot);
         }
-        
+
         public static Bitmap? MakeScreenshot(this Form form)
         {
             if (form is null)
@@ -98,7 +98,7 @@ namespace NetExtender.Utilities.UserInterface
 
             return WindowsScreenshotUtilities.MakeScreenshot(form.Handle);
         }
-        
+
         public static Bitmap? MakeScreenshot(this Form form, ScreenshotType type)
         {
             if (form is null)
@@ -108,7 +108,7 @@ namespace NetExtender.Utilities.UserInterface
 
             return WindowsScreenshotUtilities.MakeScreenshot(form.Handle, type);
         }
-        
+
         public static Boolean TryMakeScreenshot(this Form form, [MaybeNullWhen(false)] out Bitmap screenshot)
         {
             if (form is null)
@@ -118,7 +118,7 @@ namespace NetExtender.Utilities.UserInterface
 
             return WindowsScreenshotUtilities.TryMakeScreenshot(form.Handle, out screenshot);
         }
-        
+
         public static Boolean TryMakeScreenshot(this Form form, ScreenshotType type, [MaybeNullWhen(false)] out Bitmap screenshot)
         {
             if (form is null)

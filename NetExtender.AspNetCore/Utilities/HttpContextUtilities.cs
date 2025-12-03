@@ -45,7 +45,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
             {
                 throw new ArgumentNullException(nameof(context));
             }
-            
+
             context.Request.Headers.TryGetValue("Authorization", out StringValues headers);
             return (authorization = headers) is { Length: > 0 };
         }
@@ -75,10 +75,10 @@ namespace NetExtender.Utilities.AspNetCore.Types
             {
                 throw new ArgumentNullException(nameof(context));
             }
-            
+
             return Exception(context, new T());
         }
-        
+
         public static Task RejectAsync(this HttpContext context)
         {
             if (context is null)

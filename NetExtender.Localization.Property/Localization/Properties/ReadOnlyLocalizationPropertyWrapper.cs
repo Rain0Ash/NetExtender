@@ -337,7 +337,7 @@ namespace NetExtender.Localization.Properties
         {
             return Internal.GetValue();
         }
-        
+
         ILocalizationString? IGetter<ILocalizationString?>.Get()
         {
             return GetValue();
@@ -352,7 +352,7 @@ namespace NetExtender.Localization.Properties
         {
             return Internal.GetValueAsync();
         }
-        
+
         async ValueTask<ILocalizationString?> IAsyncGetter<ILocalizationString?>.GetAsync()
         {
             return await GetValueAsync();
@@ -362,7 +362,7 @@ namespace NetExtender.Localization.Properties
         {
             return Internal.GetValueAsync(token);
         }
-        
+
         async ValueTask<ILocalizationString?> IAsyncGetter<ILocalizationString?>.GetAsync(CancellationToken token)
         {
             return await GetValueAsync(token);
@@ -587,7 +587,7 @@ namespace NetExtender.Localization.Properties
                 return Internal.IsAlwaysDefault;
             }
         }
-        
+
         public Boolean IsThreadSafe
         {
             get

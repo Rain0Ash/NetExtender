@@ -24,7 +24,7 @@ namespace NetExtender.Types.Numerics
         /// Represents the zero <see cref="AngleRevolution"/> value (0 degrees).
         /// </summary>
         public static AngleRevolution Zero { get; } = new AngleRevolution(AngleUtilities.Revolution.Double.Zero);
-        
+
         /// <summary>
         /// Represents the golden <see cref="AngleRevolution"/> value (~137.508 degrees).
         /// </summary>
@@ -39,7 +39,7 @@ namespace NetExtender.Types.Numerics
         /// Represents the straight <see cref="AngleRevolution"/> value (180 degrees).
         /// </summary>
         public static AngleRevolution Straight { get; } = new AngleRevolution(AngleUtilities.Revolution.Double.Straight);
-        
+
         /// <summary>
         /// Represents the three quarter <see cref="AngleRevolution"/> value (270 degrees).
         /// </summary>

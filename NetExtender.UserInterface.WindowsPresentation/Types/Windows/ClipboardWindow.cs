@@ -21,7 +21,7 @@ namespace NetExtender.UserInterface.WindowsPresentation
     public abstract class ClipboardWindow : WndProcWindow, IClipboardExceptionHandler
     {
         public static readonly DependencyProperty AllowMonitorClipboardProperty = DependencyProperty.Register(nameof(AllowMonitorClipboard), typeof(Boolean), typeof(ClipboardWindow), new PropertyMetadata(false, AllowMonitorClipboardChanged));
-        
+
         public Boolean AllowMonitorClipboard
         {
             [System.Diagnostics.DebuggerStepThrough]
@@ -35,12 +35,12 @@ namespace NetExtender.UserInterface.WindowsPresentation
                 SetValue(AllowMonitorClipboardProperty, value);
             }
         }
-        
+
         public Boolean IsMonitorClipboardReady { get; protected set; }
-        
+
         public event ClipboardChangedEventHandler? ClipboardChanged;
         public event ClipboardChangedEventHandler? ClipboardDataChanged;
-        
+
         protected virtual ClipboardSource ClipboardSource
         {
             get
@@ -49,11 +49,11 @@ namespace NetExtender.UserInterface.WindowsPresentation
                 {
                     IntPtr handle = GetForegroundWindow();
                     Process process = Process.GetProcessById(GetProcessId(handle.ToInt32()));
-                    
+
                     String? name;
                     String? title;
                     String? path;
-                    
+
                     try
                     {
                         name = process.ProcessName;
@@ -62,7 +62,7 @@ namespace NetExtender.UserInterface.WindowsPresentation
                     {
                         name = null;
                     }
-                    
+
                     try
                     {
                         title = GetWindowTitle(handle) ?? process.MainWindowTitle;
@@ -71,7 +71,7 @@ namespace NetExtender.UserInterface.WindowsPresentation
                     {
                         title = null;
                     }
-                    
+
                     try
                     {
                         path = process.MainModule?.FileName;
@@ -80,7 +80,7 @@ namespace NetExtender.UserInterface.WindowsPresentation
                     {
                         path = null;
                     }
-                    
+
                     return new ClipboardSource(process, handle, name, title, path?.Substring(path.LastIndexOf(@"\", StringComparison.InvariantCulture) + 1), path);
                 }
                 catch (Exception)
@@ -89,18 +89,18 @@ namespace NetExtender.UserInterface.WindowsPresentation
                 }
             }
         }
-        
+
         protected ClipboardWindow()
         {
             Started += OnStarted;
             Closed += OnClosed;
         }
-        
+
         private async void OnStarted(Object? sender, EventArgs args)
         {
             ClipboardUtilities.Changed += OnClipboardChanged;
             ClipboardUtilities.DataChanged += OnClipboardDataChanged;
-            
+
             try
             {
                 await Do(() => AddClipboardFormatListener(Handle), Time.Millisecond.Hundred, 10);
@@ -110,17 +110,17 @@ namespace NetExtender.UserInterface.WindowsPresentation
             {
             }
         }
-        
+
         private async void OnClosed(Object? sender, EventArgs args)
         {
             ClipboardUtilities.Changed -= OnClipboardChanged;
             ClipboardUtilities.DataChanged -= OnClipboardDataChanged;
-            
+
             try
             {
                 await Do(() => RemoveClipboardFormatListener(Handle), Time.Millisecond.Hundred, 10);
                 IsMonitorClipboardReady = false;
-                
+
                 if (ReferenceEquals(ClipboardUtilities.EventSender, this))
                 {
                     ClipboardUtilities.EventSender = null;
@@ -130,7 +130,7 @@ namespace NetExtender.UserInterface.WindowsPresentation
             {
             }
         }
-        
+
         private void OnClipboardChanged(Object? sender, ClipboardChangedEventArgs args)
         {
             if (!args.Handled)
@@ -138,7 +138,7 @@ namespace NetExtender.UserInterface.WindowsPresentation
                 ClipboardChanged?.Invoke(this, args);
             }
         }
-        
+
         private void OnClipboardDataChanged(Object? sender, ClipboardChangedEventArgs args)
         {
             if (!args.Handled)
@@ -146,7 +146,7 @@ namespace NetExtender.UserInterface.WindowsPresentation
                 ClipboardDataChanged?.Invoke(this, args);
             }
         }
-        
+
         private Debounce<ClipboardType> _debounce = new Debounce<ClipboardType>(Time.Millisecond.Fifty);
         protected virtual void UpdateClipboard()
         {
@@ -154,10 +154,10 @@ namespace NetExtender.UserInterface.WindowsPresentation
             {
                 return;
             }
-            
+
             ClipboardType type = ClipboardType.NoContent;
             Func<Object?>? getter = null;
-            
+
             if (ClipboardUtilities.ContainsText())
             {
                 type = ClipboardType.Text;
@@ -188,23 +188,23 @@ namespace NetExtender.UserInterface.WindowsPresentation
                 type = ClipboardType.Data;
                 getter = ClipboardUtilities.GetData;
             }
-            
+
             if (_debounce.Set(type, out _debounce))
             {
                 ClipboardUtilities.InvokeClipboardChanged(this, ClipboardSource, type, getter);
             }
         }
-        
+
         protected virtual Boolean HandleClipboardException(Exception? exception)
         {
             return true;
         }
-        
+
         Boolean IClipboardExceptionHandler.Handle(Exception? exception)
         {
             return HandleClipboardException(exception);
         }
-        
+
         protected override Boolean WndProc(ref WindowsMessage message)
         {
             switch (message.Message)
@@ -216,34 +216,34 @@ namespace NetExtender.UserInterface.WindowsPresentation
                     return base.WndProc(ref message);
             }
         }
-        
+
         [DllImport("user32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern Boolean AddClipboardFormatListener(IntPtr handle);
-        
+
         [DllImport("user32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern Boolean RemoveClipboardFormatListener(IntPtr handle);
-        
+
         [DllImport("user32.dll")]
         private static extern IntPtr GetForegroundWindow();
-        
+
         [DllImport("user32.dll")]
         private static extern IntPtr GetForegroundWindowPtr();
-        
+
         [DllImport("user32.dll", CharSet = CharSet.Unicode)]
         private static extern Int32 GetWindowText(IntPtr handle, StringBuilder text, Int32 count);
-        
+
         [DllImport("user32")]
         private static extern UInt32 GetWindowThreadProcessId(Int32 handle, ref Int32 lpdw);
-        
+
         private static Int32 GetProcessId(Int32 handle)
         {
             Int32 process = 1;
             GetWindowThreadProcessId(handle, ref process);
             return process;
         }
-        
+
         private static String? GetWindowTitle(IntPtr handle)
         {
             try
@@ -257,16 +257,16 @@ namespace NetExtender.UserInterface.WindowsPresentation
                 return null;
             }
         }
-        
+
         private static async Task Do(Action action, TimeSpan interval, Int32 count)
         {
             await Do<Object?>(() => { action(); return null; }, interval, count);
         }
-        
+
         private static async Task<T> Do<T>(Func<T> action, TimeSpan interval, Int32 count)
         {
             List<Exception> exceptions = new List<Exception>();
-            
+
             for (Int32 attempted = 0; attempted < count; attempted++)
             {
                 try
@@ -275,7 +275,7 @@ namespace NetExtender.UserInterface.WindowsPresentation
                     {
                         await Task.Delay(interval);
                     }
-                    
+
                     return action();
                 }
                 catch (Exception exception)
@@ -286,30 +286,30 @@ namespace NetExtender.UserInterface.WindowsPresentation
 
             throw new AggregateException(exceptions);
         }
-        
+
         private static void AllowMonitorClipboardChanged(DependencyObject? sender, DependencyPropertyChangedEventArgs args)
         {
             if (sender is not Window window || args.NewValue is not Boolean value)
             {
                 return;
             }
-            
+
             if (ClipboardUtilities.EventSender is null && value)
             {
                 ClipboardUtilities.EventSender = window;
                 return;
             }
-            
+
             if (ReferenceEquals(ClipboardUtilities.EventSender, window))
             {
                 if (!value)
                 {
                     ClipboardUtilities.EventSender = null;
                 }
-                
+
                 return;
             }
-            
+
             if (value)
             {
                 throw new InvalidOperationException("Clipboard event sender must be unique.");

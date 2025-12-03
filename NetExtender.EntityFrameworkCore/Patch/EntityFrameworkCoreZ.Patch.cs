@@ -21,7 +21,7 @@ namespace NetExtender.Patch
         {
             public delegate void Add(String key, String value);
         }
-        
+
         [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
         protected class Patch : AutoReflectionPatch
         {
@@ -34,7 +34,7 @@ namespace NetExtender.Patch
                     return _manager ??= Load(type) ?? throw new ReflectionOperationException($"Can't get '{nameof(Manager)}' type.");
                 }
             }
-            
+
             protected virtual Signature.Add? Add
             {
                 get
@@ -43,7 +43,7 @@ namespace NetExtender.Patch
                     {
                         return null;
                     }
-                    
+
                     const BindingFlags binding = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
                     foreach (MethodInfo method in Manager.GetMethods(binding).Where(static method => method.Name.StartsWith(nameof(Signature.Add))))
                     {
@@ -51,17 +51,17 @@ namespace NetExtender.Patch
                         {
                             continue;
                         }
-                        
+
                         if (parameters.Zip(signature).All(static zip => zip.First.ParameterType == zip.Second.ParameterType))
                         {
                             return method.CreateDelegate<Signature.Add>();
                         }
                     }
-                    
+
                     return null;
                 }
             }
-            
+
             protected virtual Type? CustomManager
             {
                 get
@@ -69,7 +69,7 @@ namespace NetExtender.Patch
                     return Manager.Assembly.GetSafeTypes().FirstOrDefault(static type => type.GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic, typeof(Boolean), typeof(String).MakeByRefType(), new Predicate<Type>(static type => type.IsEnum), typeof(Boolean?), typeof(Boolean?), typeof(Boolean?), typeof(Boolean)).Any());
                 }
             }
-            
+
             protected virtual MethodInfo? Access
             {
                 get
@@ -86,7 +86,7 @@ namespace NetExtender.Patch
                     return GetName(typeof(EntityFrameworkCoreZPatch));
                 }
             }
-            
+
             public sealed override ReflectionPatchCategory Category
             {
                 get
@@ -115,19 +115,19 @@ namespace NetExtender.Patch
                 {
                     return ReflectionPatchState.NotRequired;
                 }
-                
+
                 if (Add is not { } add || Access is not { } access)
                 {
                     return ReflectionPatchState.Failed;
                 }
-                
+
                 Harmony harmony = new Harmony($"{nameof(NetExtender)}.{nameof(EntityFrameworkCore)}.{nameof(EntityFrameworkCoreZPatch)}");
-                
+
                 if (!harmony.Instructions<OrderedSet<MethodInfo>>(access, Getters, out OrderedSet<MethodInfo>? getters) || getters.Count <= 0)
                 {
                     return ReflectionPatchState.Failed;
                 }
-                
+
                 foreach (MethodInfo getter in getters)
                 {
                     ImmutableArray<CodeInstruction> instructions = harmony.Instructions(getter);
@@ -136,34 +136,34 @@ namespace NetExtender.Patch
                         field.SetValue(null, true);
                     }
                 }
-                
+
                 add(nameof(NetExtender), nameof(ReflectionPatchCategory.Aphilargyria));
                 return ReflectionPatchState.Apply;
             }
-            
+
             protected virtual Boolean Getters(ImmutableArray<CodeInstruction> instructions, [MaybeNullWhen(false)] out OrderedSet<MethodInfo> result)
             {
                 result = new OrderedSet<MethodInfo>();
-                
+
                 foreach (CodeInstruction instruction in instructions)
                 {
                     if (instruction.opcode != OpCodes.Call || instruction.operand is not MethodInfo method)
                     {
                         continue;
                     }
-                    
+
                     const String name = "get_";
                     if (method.ReturnType != typeof(Boolean?) || !method.Name.StartsWith(name))
                     {
                         continue;
                     }
-                    
+
                     result.Add(method);
                 }
-                
+
                 return result.Count > 0;
             }
-            
+
             protected virtual FieldInfo? Field(ImmutableArray<CodeInstruction> instructions)
             {
                 foreach (CodeInstruction instruction in instructions)
@@ -173,22 +173,22 @@ namespace NetExtender.Patch
                         return field;
                     }
                 }
-                
+
                 return null;
             }
-            
+
             protected Type? Load(ReadOnlySpan<Char> name)
             {
                 return TypeName(name) is { } type ? Type.GetType(type) : null;
             }
-            
+
             protected virtual unsafe String? TypeName(ReadOnlySpan<Char> name)
             {
                 if (name.Length <= 0)
                 {
                     return null;
                 }
-                
+
                 Char* result = stackalloc Char[name.Length];
                 for (Int32 i = 0; i < name.Length; i++)
                 {
@@ -197,7 +197,7 @@ namespace NetExtender.Patch
 
                 return new String(result, 0, name.Length);
             }
-            
+
             protected override void Dispose(Boolean disposing)
             {
                 _manager = null;

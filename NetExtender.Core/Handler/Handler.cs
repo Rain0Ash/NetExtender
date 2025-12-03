@@ -19,7 +19,7 @@ namespace NetExtender
     public delegate Int32 HashHandler<in T>(T value);
 
     public delegate void FuncHandler<out T, in TResult>(Func<T, TResult> function);
-    
+
     public delegate TResult UnaryOperatorHandler<in T, out TResult>(T value);
     public delegate TResult BinaryOperatorHandler<in TFirst, in TSecond, out TResult>(TFirst first, TSecond second);
 
@@ -52,7 +52,7 @@ namespace NetExtender
     public delegate Boolean TryConverter<in TSource, TResult>(TSource value, [MaybeNullWhen(false)] out TResult result);
     public delegate Boolean TryGetter<in TSource, TResult>(TSource value, [MaybeNullWhen(false)] out TResult result);
     public delegate Boolean TrySetter<in TSource, in TValue>(TSource value, TValue result);
-    
+
     public delegate void SenderAction<in T>(Object? sender, T value);
     public delegate Boolean Predicate<in T1, in T2>(T1 first, T2 second);
     public delegate Boolean Predicate<in T1, in T2, in T3>(T1 first, T2 second, T3 third);
@@ -72,16 +72,15 @@ namespace NetExtender
     public delegate Boolean SenderPredicate<in T1, in T2, in T3, in T4, in T5, in T6, in T7, in T8>(Object? sender, T1 first, T2 second, T3 third, T4 fourth, T5 fifth, T6 sixth, T7 seventh, T8 eighth);
     public delegate Boolean SenderPredicate<in T1, in T2, in T3, in T4, in T5, in T6, in T7, in T8, in T9>(Object? sender, T1 first, T2 second, T3 third, T4 fourth, T5 fifth, T6 sixth, T7 seventh, T8 eighth, T9 ninth);
 
-    
     [SuppressMessage("ReSharper", "TypeParameterCanBeVariant")]
     public delegate void EventHandler<in TSender, TArgument>(TSender sender, TArgument argument);
-    
+
     [SuppressMessage("ReSharper", "TypeParameterCanBeVariant")]
     public delegate ValueTask EventAsyncHandler<TArgument>(Object? sender, TArgument argument);
-    
+
     [SuppressMessage("ReSharper", "TypeParameterCanBeVariant")]
     public delegate ValueTask EventAsyncHandler<in TSender, TArgument>(TSender sender, TArgument argument);
-    
+
     public delegate Object? PlatformNotSupportedHandler(String method, Type? @return, PlatformNotSupportedException exception, params Object?[]? arguments);
     public delegate T PlatformNotSupportedHandler<out T>(String method, PlatformNotSupportedException exception, params Object?[]? arguments);
     public delegate T PlatformNotSupportedHandler<out T, in TArgument>(String method, PlatformNotSupportedException exception, TArgument argument);

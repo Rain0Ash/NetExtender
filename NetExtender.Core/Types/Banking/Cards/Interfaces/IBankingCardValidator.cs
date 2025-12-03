@@ -8,7 +8,7 @@ namespace NetExtender.Types.Banking.Cards.Interfaces
     public interface IBankingCardValidator
     {
         public BankingCardType Type { get; }
-        
+
         public Boolean Validate(UInt64 number);
         public Boolean Validate(String number);
         public IBankingCardValidator With(IBankingCardChecksumValidator? validator);

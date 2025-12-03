@@ -17,12 +17,12 @@ namespace NetExtender.UserInterface.WindowsPresentation
         private static Object IconThickness { get; } = new Thickness(-30, 0, 0, 0);
         private static Object CheckMarkThickness { get; } = new Thickness(0, 0, -40, 0);
         private static Object TextThickness { get; } = new Thickness(-30, 0, -40, 0);
-        
+
         public static readonly DependencyProperty MenuItemMarginProperty = DependencyProperty.Register(nameof(MenuItemMargin), typeof(Thickness), typeof(TextContextMenu), new PropertyMetadata(TextThickness, ThicknessChanged));
         public static readonly DependencyProperty MenuItemBackgroundProperty = DependencyProperty.Register(nameof(MenuItemBackground), typeof(Brush), typeof(TextContextMenu), new PropertyMetadata(Brushes.White));
         public static readonly DependencyProperty MenuItemAllowIconProperty = DependencyProperty.Register(nameof(MenuItemAllowIcon), typeof(Boolean), typeof(TextContextMenu), new PropertyMetadata(false, ThicknessChanged));
         public static readonly DependencyProperty MenuItemAllowCheckMarkProperty = DependencyProperty.Register(nameof(MenuItemAllowCheckMark), typeof(Boolean), typeof(TextContextMenu), new PropertyMetadata(false, ThicknessChanged));
-        
+
         static TextContextMenu()
         {
             FrameworkElementFactory factory = new FrameworkElementFactory(typeof(StackPanel));
@@ -44,7 +44,7 @@ namespace NetExtender.UserInterface.WindowsPresentation
                 SetValue(MenuItemMarginProperty, value);
             }
         }
-        
+
         public Brush MenuItemBackground
         {
             [System.Diagnostics.DebuggerStepThrough]
@@ -58,7 +58,7 @@ namespace NetExtender.UserInterface.WindowsPresentation
                 SetValue(MenuItemBackgroundProperty, value);
             }
         }
-        
+
         public Boolean MenuItemAllowIcon
         {
             [System.Diagnostics.DebuggerStepThrough]
@@ -72,7 +72,7 @@ namespace NetExtender.UserInterface.WindowsPresentation
                 SetValue(MenuItemAllowIconProperty, value);
             }
         }
-        
+
         public Boolean MenuItemAllowCheckMark
         {
             [System.Diagnostics.DebuggerStepThrough]
@@ -93,13 +93,13 @@ namespace NetExtender.UserInterface.WindowsPresentation
             {
                 return;
             }
-            
+
             Object? margin = menu.GetValue(MenuItemMarginProperty);
             if (!ReferenceEquals(margin, FullThickness) && !ReferenceEquals(margin, IconThickness) && !ReferenceEquals(margin, CheckMarkThickness) && !ReferenceEquals(margin, TextThickness))
             {
                 return;
             }
-            
+
             menu.SetValue(MenuItemMarginProperty, menu.MenuItemAllowIcon switch
             {
                 true when menu.MenuItemAllowCheckMark => FullThickness,

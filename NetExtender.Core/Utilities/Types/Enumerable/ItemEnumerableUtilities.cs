@@ -8,30 +8,15 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using NetExtender.Types.Dictionaries;
+using NetExtender.Types.Exceptions;
 using NetExtender.Types.Indexers.Interfaces;
-using NetExtender.Types.Reflection;
-using NetExtender.Utilities.Core;
 using NetExtender.Utilities.Numerics;
+using TSR = System.Collections.Generic.IEnumerable<NetExtender.Types.Entities.Any.Value>;
 
 namespace NetExtender.Utilities.Types
 {
     public static partial class EnumerableUtilities
     {
-        [ReflectionSystemResource(typeof(Enumerable))]
-        internal static class SR
-        {
-            private static Type SRType { get; } = SRUtilities.SRType(typeof(Enumerable).Assembly);
-
-            [ReflectionSystemResource(typeof(Enumerable))]
-            public static SRInfo NoElements { get; } = new SRInfo(SRType);
-
-            [ReflectionSystemResource(typeof(Enumerable))]
-            public static SRInfo NoMatch { get; } = new SRInfo(SRType);
-
-            [ReflectionSystemResource(typeof(Enumerable))]
-            public static SRInfo MoreThanOneElement { get; } = new SRInfo(SRType);
-        }
-        
         public static Boolean Any<T>(this IEnumerable<T> source, Func<T, Int32, Boolean> predicate)
         {
             if (source is null)
@@ -565,7 +550,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             (value, Boolean result) = source switch
             {
                 IList<T> collection => index >= 0 && index < collection.Count ? (collection[index], true) : (alternate, false),
@@ -589,7 +574,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(alternate));
             }
-            
+
             (value, Boolean result) = source switch
             {
                 IList<T> collection => index >= 0 && index < collection.Count ? (collection[index], true) : (alternate(), false),
@@ -702,21 +687,21 @@ namespace NetExtender.Utilities.Types
                 _ => Random(source, out T? result) ? result : default
             };
         }
-        
+
         private static Boolean Random<T>(IEnumerable<T> source, [MaybeNullWhen(false)] out T result)
         {
             return Random(source, null, out result);
         }
-        
+
         private static Boolean Random<T>(IEnumerable<T> source, Random? random, [MaybeNullWhen(false)] out T result)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             random ??= new Random();
-            
+
             Int64 count = 0;
             result = default!;
             foreach (T element in source)
@@ -726,7 +711,7 @@ namespace NetExtender.Utilities.Types
                     result = element;
                 }
             }
-            
+
             return count > 0;
         }
 
@@ -780,14 +765,14 @@ namespace NetExtender.Utilities.Types
                 {
                     if (predicate(argument, enumerator.Current))
                     {
-                        throw new InvalidOperationException(SR.MoreThanOneElement);
+                        throw new InvalidOperationMoreThanOneElementException<TSR>();
                     }
                 }
 
                 return result;
             }
 
-            throw new InvalidOperationException(SR.NoMatch);
+            throw new InvalidOperationNoMatchException<TSR>();
         }
 
         public static T? SingleOrDefault<T, TArgument>(this IEnumerable<T> source, TArgument argument, Func<TArgument, T, Boolean> predicate)
@@ -816,7 +801,7 @@ namespace NetExtender.Utilities.Types
                 {
                     if (predicate(argument, enumerator.Current))
                     {
-                        throw new InvalidOperationException(SR.MoreThanOneElement);
+                        throw new InvalidOperationMoreThanOneElementException<TSR>();
                     }
                 }
 
@@ -967,31 +952,31 @@ namespace NetExtender.Utilities.Types
 
             return alternate.Invoke();
         }
-        
+
         public static T? SingleOrNullable<T>(this IEnumerable<T> source) where T : struct
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             using IEnumerator<T> enumerator = source.GetEnumerator();
-            
+
             if (!enumerator.MoveNext())
             {
                 return null;
             }
-            
+
             T item = enumerator.Current;
-            
+
             if (enumerator.MoveNext())
             {
                 return null;
             }
-            
+
             return item;
         }
-        
+
         // ReSharper disable once CognitiveComplexity
         public static T? SingleOrNullable<T>(this IEnumerable<T> source, Func<T, Boolean> predicate) where T : struct
         {
@@ -999,28 +984,28 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (predicate is null)
             {
                 throw new ArgumentNullException(nameof(predicate));
             }
-            
+
             using IEnumerator<T> enumerator = source.GetEnumerator();
-            
+
             if (!enumerator.MoveNext())
             {
                 return null;
             }
-            
+
             do
             {
                 T item = enumerator.Current;
-                
+
                 if (!predicate(item))
                 {
                     continue;
                 }
-                
+
                 while (enumerator.MoveNext())
                 {
                     if (predicate(enumerator.Current))
@@ -1028,11 +1013,11 @@ namespace NetExtender.Utilities.Types
                         return null;
                     }
                 }
-                
+
                 return item;
-                
+
             } while (enumerator.MoveNext());
-            
+
             return null;
         }
 
@@ -1194,39 +1179,39 @@ namespace NetExtender.Utilities.Types
 
             return alternate.Invoke();
         }
-        
+
         public static T? FirstOrNullable<T>(this IEnumerable<T> source) where T : struct
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             foreach (T item in source)
             {
                 return item;
             }
-            
+
             return null;
         }
-        
+
         public static T? FirstOrNullable<T>(this IEnumerable<T> source, Func<T, Boolean> predicate) where T : struct
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (predicate is null)
             {
                 throw new ArgumentNullException(nameof(predicate));
             }
-            
+
             foreach (T item in source.Where(predicate))
             {
                 return item;
             }
-            
+
             return null;
         }
 
@@ -1291,29 +1276,29 @@ namespace NetExtender.Utilities.Types
 
             return FirstOrDefault(source.Reverse(), predicate, alternate);
         }
-        
+
         public static T? LastOrNullable<T>(this IEnumerable<T> source) where T : struct
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             return source.Reverse().FirstOrNullable();
         }
-        
+
         public static T? LastOrNullable<T>(this IEnumerable<T> source, Func<T, Boolean> predicate) where T : struct
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (predicate is null)
             {
                 throw new ArgumentNullException(nameof(predicate));
             }
-            
+
             return source.Reverse().FirstOrNullable(predicate);
         }
 
@@ -3923,7 +3908,7 @@ namespace NetExtender.Utilities.Types
             while (enumerator.MoveNext())
             {
             }
-            
+
             if (enumerator is IDisposable disposable)
             {
                 disposable.Dispose();

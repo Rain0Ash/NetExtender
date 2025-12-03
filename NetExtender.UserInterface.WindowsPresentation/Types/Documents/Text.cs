@@ -13,7 +13,7 @@ namespace NetExtender.UserInterface.WindowsPresentation
         {
             TextProperty.OverrideMetadataOneWay<Text>();
         }
-        
+
         public Text()
         {
         }

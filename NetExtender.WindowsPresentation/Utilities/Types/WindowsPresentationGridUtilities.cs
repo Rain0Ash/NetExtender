@@ -15,7 +15,7 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
         {
             return new GridLength(value.Value, value.UnitType.ToGridUnitType());
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static DataGridLength ToDataGridLength(this GridLength value)
         {

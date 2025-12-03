@@ -32,19 +32,19 @@ namespace NetExtender.Utilities.Windows.IO
         {
             DataFormats = typeof(DataFormats).GetFields(BindingFlags.Static | BindingFlags.Public).Select(static x => x.Name).ToImmutableList();
         }
-        
+
         internal static void InvokeClipboardChanged(Object? sender, ClipboardSource source, ClipboardType type, Func<Object?>? getter)
         {
             try
             {
                 ClipboardChangedEventArgs? args = null;
                 Changed?.Invoke(sender, args = new ClipboardChangedEventArgs(source, new ClipboardObject(type, getter)));
-                
+
                 if (args?.Handled is true)
                 {
                     return;
                 }
-                
+
                 DataChanged?.Invoke(sender, args?.Materialize() ?? new ClipboardChangedEventArgs(source, new ClipboardObject(type, getter?.Invoke())));
             }
             catch (Exception exception) when(sender is IClipboardExceptionHandler handler)
@@ -52,7 +52,7 @@ namespace NetExtender.Utilities.Windows.IO
                 handler.Handle(exception);
             }
         }
-        
+
         public static Boolean IsEmpty
         {
             get
@@ -60,12 +60,12 @@ namespace NetExtender.Utilities.Windows.IO
                 return !Contains();
             }
         }
-        
+
         public static Boolean Contains()
         {
             return ThreadUtilities.IsSTA ? DataFormats.Any(Clipboard.ContainsData) : ThreadUtilities.STA(static () => DataFormats.Any(Clipboard.ContainsData));
         }
-        
+
         public static Boolean ContainsText()
         {
             return ThreadUtilities.IsSTA ? Clipboard.ContainsText() : ThreadUtilities.STA(Clipboard.ContainsText);
@@ -90,14 +90,14 @@ namespace NetExtender.Utilities.Windows.IO
         {
             return ThreadUtilities.IsSTA ? Clipboard.ContainsFileDropList() : ThreadUtilities.STA(Clipboard.ContainsFileDropList);
         }
-        
+
         public static Boolean ContainsRaw()
         {
             static Boolean Core()
             {
                 return Clipboard.GetDataObject() is { } data && data.GetDataPresent("rawbinary");
             }
-            
+
             return ThreadUtilities.IsSTA ? Core() : ThreadUtilities.STA(Core);
         }
 
@@ -130,11 +130,11 @@ namespace NetExtender.Utilities.Windows.IO
                 _ => throw new EnumUndefinedOrNotSupportedException<ClipboardType>(type, nameof(type), null)
             };
         }
-        
+
         public new static ClipboardType GetType()
         {
             ClipboardType type = ClipboardType.NoContent;
-            
+
             if (ContainsText())
             {
                 type = ClipboardType.Text;
@@ -159,10 +159,10 @@ namespace NetExtender.Utilities.Windows.IO
             {
                 type = ClipboardType.Data;
             }
-            
+
             return type;
         }
-        
+
         public static Func<Object?>? Get()
         {
             ClipboardType type = GetType();
@@ -203,7 +203,7 @@ namespace NetExtender.Utilities.Windows.IO
         {
             return ThreadUtilities.IsSTA ? Clipboard.GetFileDropList() : ThreadUtilities.STA(Clipboard.GetFileDropList) ?? new StringCollection();
         }
-        
+
         public static Byte[]? GetRaw()
         {
             static Byte[]? Core()
@@ -212,11 +212,11 @@ namespace NetExtender.Utilities.Windows.IO
                 {
                     return null;
                 }
-                
+
                 using MemoryStream? raw = data.GetData("rawbinary") as MemoryStream;
                 return raw?.ToArray();
             }
-            
+
             return ThreadUtilities.IsSTA ? Core() : ThreadUtilities.STA(Core);
         }
 

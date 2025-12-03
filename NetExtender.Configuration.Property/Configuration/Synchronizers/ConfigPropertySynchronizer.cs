@@ -18,7 +18,7 @@ namespace NetExtender.Configuration.Synchronizers
     public sealed class ConfigPropertySynchronizer : IConfigPropertySynchronizer
     {
         private ImmutableList<IConfigPropertyInfo>? Internal { get; set; }
-        
+
         private SyncRoot SyncRoot { get; } = SyncRoot.Create();
 
         public Int32 Count
@@ -130,7 +130,7 @@ namespace NetExtender.Configuration.Synchronizers
             {
                 successful |= await info.ReadAsync().ConfigureAwait(false);
             }
-            
+
             return successful;
         }
 
@@ -151,10 +151,10 @@ namespace NetExtender.Configuration.Synchronizers
                 {
                     return successful;
                 }
-                
+
                 successful |= await info.ReadAsync(token).ConfigureAwait(false);
             }
-            
+
             return successful;
         }
 
@@ -182,7 +182,7 @@ namespace NetExtender.Configuration.Synchronizers
             {
                 successful |= await info.SaveAsync().ConfigureAwait(false);
             }
-            
+
             return successful;
         }
 
@@ -203,10 +203,10 @@ namespace NetExtender.Configuration.Synchronizers
                 {
                     return successful;
                 }
-                
+
                 successful |= await info.SaveAsync(token).ConfigureAwait(false);
             }
-            
+
             return successful;
         }
 
@@ -234,7 +234,7 @@ namespace NetExtender.Configuration.Synchronizers
             {
                 successful |= await info.ResetAsync().ConfigureAwait(false);
             }
-            
+
             return successful;
         }
 
@@ -255,13 +255,13 @@ namespace NetExtender.Configuration.Synchronizers
                 {
                     return successful;
                 }
-                
+
                 successful |= await info.ResetAsync(token).ConfigureAwait(false);
             }
-            
+
             return successful;
         }
-        
+
         public IEnumerator<IConfigPropertyInfo> GetEnumerator()
         {
             return Internal?.GetEnumerator() ?? ImmutableList<IConfigPropertyInfo>.Empty.GetEnumerator();

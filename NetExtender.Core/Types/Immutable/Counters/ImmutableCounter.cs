@@ -24,22 +24,22 @@ namespace NetExtender.Types.Immutable.Counters
                 ImmutableCounter<T, Int32> result = ImmutableCounter<T>.Empty;
                 return Unsafe.As<ImmutableCounter<T, Int32>, ImmutableCounter<T, TCount>>(ref result);
             }
-            
+
             if (typeof(TCount) == typeof(Int64))
             {
                 ImmutableCounter<T, Int64> result = ImmutableCounter64<T>.Empty;
                 return Unsafe.As<ImmutableCounter<T, Int64>, ImmutableCounter<T, TCount>>(ref result);
             }
-            
+
             if (typeof(TCount) == typeof(Decimal))
             {
                 ImmutableCounter<T, Decimal> result = ImmutableDecimalCounter<T>.Empty;
                 return Unsafe.As<ImmutableCounter<T, Decimal>, ImmutableCounter<T, TCount>>(ref result);
             }
-            
+
             return ImmutableCounter<T, TCount>.Empty;
         }
-        
+
         public static ImmutableCounter<T, TCount> Create<T, TCount>(IEqualityComparer<T>? comparer) where T : notnull where TCount : unmanaged, IConvertible
         {
             if (typeof(TCount) == typeof(Int32))
@@ -47,19 +47,19 @@ namespace NetExtender.Types.Immutable.Counters
                 ImmutableCounter<T, Int32> result = new ImmutableCounter<T>(ImmutableDictionary.Create<T, Int32>(comparer));
                 return Unsafe.As<ImmutableCounter<T, Int32>, ImmutableCounter<T, TCount>>(ref result);
             }
-            
+
             if (typeof(TCount) == typeof(Int64))
             {
                 ImmutableCounter<T, Int64> result = new ImmutableCounter64<T>(ImmutableDictionary.Create<T, Int64>(comparer));
                 return Unsafe.As<ImmutableCounter<T, Int64>, ImmutableCounter<T, TCount>>(ref result);
             }
-            
+
             if (typeof(TCount) == typeof(Decimal))
             {
                 ImmutableCounter<T, Decimal> result = new ImmutableDecimalCounter<T>(ImmutableDictionary.Create<T, Decimal>(comparer));
                 return Unsafe.As<ImmutableCounter<T, Decimal>, ImmutableCounter<T, TCount>>(ref result);
             }
-            
+
             return new ImmutableCounter<T, TCount>(ImmutableDictionary.Create<T, TCount>(comparer));
         }
 
@@ -167,11 +167,11 @@ namespace NetExtender.Types.Immutable.Counters
             return source is ImmutableCounter<TKey, TCount> counter ? counter.WithComparers(comparer) : ImmutableCounter<TKey, TCount>.Empty.WithComparers(comparer).AddRange(source.Pair(keySelector, elementSelector));
         }
     }
-    
+
     public class ImmutableCounter<T> : ImmutableCounter<T, Int32> where T : notnull
     {
         public new static ImmutableCounter<T, Int32> Empty { get; } = new ImmutableCounter<T>(ImmutableDictionary<T, Int32>.Empty);
-        
+
         internal ImmutableCounter(ImmutableDictionary<T, Int32> @internal)
             : base(@internal)
         {
@@ -203,12 +203,12 @@ namespace NetExtender.Types.Immutable.Counters
         {
             return new Counter<T>(Internal);
         }
-        
+
         protected sealed override Boolean Less(Int32 value, Int32 count)
         {
             return value < count;
         }
-        
+
         protected sealed override Boolean LessOrEquals(Int32 value, Int32 count)
         {
             return value <= count;
@@ -244,11 +244,11 @@ namespace NetExtender.Types.Immutable.Counters
             return first - second;
         }
     }
-    
+
     public class ImmutableCounter64<T> : ImmutableCounter<T, Int64> where T : notnull
     {
         public new static ImmutableCounter<T, Int64> Empty { get; } = new ImmutableCounter64<T>(ImmutableDictionary<T, Int64>.Empty);
-        
+
         internal ImmutableCounter64(ImmutableDictionary<T, Int64> @internal)
             : base(@internal)
         {
@@ -280,12 +280,12 @@ namespace NetExtender.Types.Immutable.Counters
         {
             return new Counter64<T>(Internal);
         }
-        
+
         protected sealed override Boolean Less(Int64 value, Int64 count)
         {
             return value < count;
         }
-        
+
         protected sealed override Boolean LessOrEquals(Int64 value, Int64 count)
         {
             return value <= count;
@@ -321,11 +321,11 @@ namespace NetExtender.Types.Immutable.Counters
             return first - second;
         }
     }
-    
+
     public class ImmutableDecimalCounter<T> : ImmutableCounter<T, Decimal> where T : notnull
     {
         public new static ImmutableCounter<T, Decimal> Empty { get; } = new ImmutableDecimalCounter<T>(ImmutableDictionary<T, Decimal>.Empty);
-        
+
         internal ImmutableDecimalCounter(ImmutableDictionary<T, Decimal> @internal)
             : base(@internal)
         {
@@ -357,12 +357,12 @@ namespace NetExtender.Types.Immutable.Counters
         {
             return new DecimalCounter<T>(Internal);
         }
-        
+
         protected sealed override Boolean Less(Decimal value, Decimal count)
         {
             return value < count;
         }
-        
+
         protected sealed override Boolean LessOrEquals(Decimal value, Decimal count)
         {
             return value <= count;
@@ -398,16 +398,16 @@ namespace NetExtender.Types.Immutable.Counters
             return first - second;
         }
     }
-    
+
     public class ImmutableCounter<T, TCount> : ImmutableCounter<T, TCount, ImmutableCounter<T, TCount>> where T : notnull where TCount : unmanaged, IConvertible
     {
         public static ImmutableCounter<T, TCount> Empty { get; } = new ImmutableCounter<T, TCount>(ImmutableDictionary<T, TCount>.Empty);
-        
+
         internal ImmutableCounter(ImmutableDictionary<T, TCount> @internal)
             : base(@internal)
         {
         }
-        
+
         [return: NotNullIfNotNull("internal")]
         protected override ImmutableCounter<T, TCount>? Convert(IImmutableDictionary<T, TCount>? @internal)
         {
@@ -435,11 +435,11 @@ namespace NetExtender.Types.Immutable.Counters
             return new Counter<T, TCount>(Internal);
         }
     }
-    
+
     public abstract class ImmutableCounter<T, TCount, TCounter> : ImmutableCounterBase<T, TCount, TCounter> where T : notnull where TCount : unmanaged, IConvertible where TCounter : class, IImmutableCounter<T, TCount>
     {
         protected sealed override ImmutableDictionary<T, TCount> Internal { get; }
-        
+
         public IEqualityComparer<T> KeyComparer
         {
             get
@@ -447,7 +447,7 @@ namespace NetExtender.Types.Immutable.Counters
                 return Internal.KeyComparer;
             }
         }
-        
+
         public IEqualityComparer<TCount> ValueComparer
         {
             get

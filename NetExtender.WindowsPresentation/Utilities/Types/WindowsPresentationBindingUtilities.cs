@@ -16,7 +16,7 @@ namespace NetExtender.WindowsPresentation.Utilities
             {
                 throw new ArgumentNullException(nameof(element));
             }
-            
+
             if (path is null)
             {
                 throw new ArgumentNullException(nameof(path));

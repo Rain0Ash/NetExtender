@@ -13,7 +13,7 @@ namespace NetExtender.Utilities.IO
         {
             private delegate EnumerationOptions Delegate(SearchOption option);
             private static Delegate Execute { get; }
-            
+
             static FromSearchOption()
             {
                 const BindingFlags binding = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
@@ -27,7 +27,7 @@ namespace NetExtender.Utilities.IO
                 return Execute(option);
             }
         }
-        
+
         public static EnumerationOptions Options(this SearchOption option)
         {
             return FromSearchOption.Convert(option);

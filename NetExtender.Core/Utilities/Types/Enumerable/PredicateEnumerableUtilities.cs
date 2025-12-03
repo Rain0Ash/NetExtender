@@ -210,7 +210,7 @@ namespace NetExtender.Utilities.Types
 
             return source.Where((item, index) => !predicate(selector(item, index), index));
         }
-        
+
         public static IEnumerable<T> Where<T, TArgument>(this IEnumerable<T> source, TArgument argument, Func<TArgument, T, Boolean> predicate)
         {
             if (source is null)
@@ -231,7 +231,7 @@ namespace NetExtender.Utilities.Types
                 }
             }
         }
-        
+
         public static IEnumerable<T> Where<T, TArgument>(this IEnumerable<T> source, TArgument argument, Func<TArgument, T, Int32, Boolean> predicate)
         {
             if (source is null)
@@ -973,7 +973,7 @@ namespace NetExtender.Utilities.Types
 
             return source.Where(item => item.CompareInRange(minimum, maximum, comparer));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<T> WhereCompareInRange<T>(this IEnumerable<T> source, T minimum, T maximum, MathPositionType comparison) where T : IComparable<T>
         {
@@ -989,7 +989,7 @@ namespace NetExtender.Utilities.Types
 
             return source.Where(item => item.CompareInRange(minimum, maximum, comparer, comparison));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<T> WhereCompareInRangeBy<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, TKey minimum, TKey maximum) where TKey : IComparable<TKey>
         {
@@ -1016,7 +1016,7 @@ namespace NetExtender.Utilities.Types
                 }
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<T> WhereCompareInRangeBy<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, TKey minimum, TKey maximum, MathPositionType comparison) where TKey : IComparable<TKey>
         {
@@ -1076,7 +1076,7 @@ namespace NetExtender.Utilities.Types
         {
             return Without(source, without, comparer);
         }
-        
+
         /// <summary>
         /// Returns all elements of <paramref name="source"/> without <paramref name="without"/> using the specified equality comparer to compare values.
         /// Does not throw an exception if <paramref name="source"/> does not contain <paramref name="without"/>.
@@ -1119,13 +1119,13 @@ namespace NetExtender.Utilities.Types
             HashSet<T> remove = new HashSet<T>(without, comparer);
             return source.Where(item => !remove.Contains(item));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<T> IntersectNotUnique<T>(this IEnumerable<T> source, IEnumerable<T> other)
         {
             return IntersectNotUnique(source, other, null);
         }
-        
+
         // ReSharper disable once CognitiveComplexity
         public static IEnumerable<T> IntersectNotUnique<T>(this IEnumerable<T> source, IEnumerable<T> other, IEqualityComparer<T>? comparer)
         {
@@ -1133,39 +1133,39 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (other is null)
             {
                 throw new ArgumentNullException(nameof(other));
             }
-            
+
             if (source.CountIfMaterialized(out Int32 first) && first <= 0 || other.CountIfMaterialized(out Int32 second) && second <= 0)
             {
                 yield break;
             }
-            
+
             Counter64<T> counter = new Counter64<T>(other, comparer);
-            
+
             foreach (T item in source)
             {
                 if (counter.Count <= 0)
                 {
                     yield break;
                 }
-                
+
                 if (counter.Remove(item))
                 {
                     yield return item;
                 }
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<TSource> IntersectByNotUnique<TSource, TResult>(this IEnumerable<TSource> source, IEnumerable<TSource> other, Func<TSource, TResult> selector)
         {
             return IntersectByNotUnique(source, other, selector, null);
         }
-        
+
         // ReSharper disable once CognitiveComplexity
         public static IEnumerable<TSource> IntersectByNotUnique<TSource, TResult>(this IEnumerable<TSource> source, IEnumerable<TSource> other, Func<TSource, TResult> selector, IEqualityComparer<TResult>? comparer)
         {
@@ -1173,44 +1173,44 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (other is null)
             {
                 throw new ArgumentNullException(nameof(other));
             }
-            
+
             if (selector is null)
             {
                 throw new ArgumentNullException(nameof(selector));
             }
-            
+
             if (source.CountIfMaterialized(out Int32 first) && first <= 0 || other.CountIfMaterialized(out Int32 second) && second <= 0)
             {
                 yield break;
             }
-            
+
             Counter64<TResult> counter = new Counter64<TResult>(other.Select(selector), comparer);
-            
+
             foreach (TSource item in source)
             {
                 if (counter.Count <= 0)
                 {
                     yield break;
                 }
-                
+
                 if (counter.Remove(selector(item)))
                 {
                     yield return item;
                 }
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<T> ExceptNotUnique<T>(this IEnumerable<T> source, IEnumerable<T> other)
         {
             return ExceptNotUnique(source, other, null);
         }
-        
+
         // ReSharper disable once CognitiveComplexity
         public static IEnumerable<T> ExceptNotUnique<T>(this IEnumerable<T> source, IEnumerable<T> other, IEqualityComparer<T>? comparer)
         {
@@ -1218,31 +1218,31 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (other is null)
             {
                 throw new ArgumentNullException(nameof(other));
             }
-            
+
             if (source.CountIfMaterialized(out Int32 first) && first <= 0)
             {
                 yield break;
             }
-            
+
             if (other.CountIfMaterialized(out Int32 second) && second <= 0)
             {
                 foreach (T item in source)
                 {
                     yield return item;
                 }
-                
+
                 yield break;
             }
-            
+
             static IEnumerable<T> Core(IEnumerable<T> source, IEnumerable<T> other, IEqualityComparer<T>? comparer)
             {
                 Counter64<T> counter = new Counter64<T>(other, comparer);
-                
+
                 foreach (T item in source.Reverse())
                 {
                     if (counter.Count <= 0 || !counter.Remove(item))
@@ -1251,19 +1251,19 @@ namespace NetExtender.Utilities.Types
                     }
                 }
             }
-            
+
             foreach (T item in Core(source, other, comparer).Reverse())
             {
                 yield return item;
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<TSource> ExceptNotUnique<TSource, TResult>(this IEnumerable<TSource> source, IEnumerable<TSource> other, Func<TSource, TResult> selector)
         {
             return ExceptNotUnique(source, other, selector, null);
         }
-        
+
         // ReSharper disable once CognitiveComplexity
         public static IEnumerable<TSource> ExceptNotUnique<TSource, TResult>(this IEnumerable<TSource> source, IEnumerable<TSource> other, Func<TSource, TResult> selector, IEqualityComparer<TResult>? comparer)
         {
@@ -1271,36 +1271,36 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (other is null)
             {
                 throw new ArgumentNullException(nameof(other));
             }
-            
+
             if (selector is null)
             {
                 throw new ArgumentNullException(nameof(selector));
             }
-            
+
             if (source.CountIfMaterialized(out Int32 first) && first <= 0)
             {
                 yield break;
             }
-            
+
             if (other.CountIfMaterialized(out Int32 second) && second <= 0)
             {
                 foreach (TSource item in source)
                 {
                     yield return item;
                 }
-                
+
                 yield break;
             }
-            
+
             static IEnumerable<TSource> Core(IEnumerable<TSource> source, IEnumerable<TSource> other, Func<TSource, TResult> selector, IEqualityComparer<TResult>? comparer)
             {
                 Counter64<TResult> counter = new Counter64<TResult>(other.Select(selector), comparer);
-                
+
                 foreach (TSource item in source.Reverse())
                 {
                     if (counter.Count <= 0 || !counter.Remove(selector(item)))
@@ -1309,19 +1309,19 @@ namespace NetExtender.Utilities.Types
                     }
                 }
             }
-            
+
             foreach (TSource item in Core(source, other, selector, comparer).Reverse())
             {
                 yield return item;
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<T> SymmetricExceptNotUnique<T>(this IEnumerable<T> source, IEnumerable<T> other)
         {
             return SymmetricExceptNotUnique(source, other, null);
         }
-        
+
         // ReSharper disable once CognitiveComplexity
         public static IEnumerable<T> SymmetricExceptNotUnique<T>(this IEnumerable<T> source, IEnumerable<T> other, IEqualityComparer<T>? comparer)
         {
@@ -1329,49 +1329,49 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (other is null)
             {
                 throw new ArgumentNullException(nameof(other));
             }
-            
+
             if (source.CountIfMaterialized(out Int32 first) && first <= 0)
             {
                 foreach (T item in other)
                 {
                     yield return item;
                 }
-                
+
                 yield break;
             }
-            
+
             if (other.CountIfMaterialized(out Int32 second) && second <= 0)
             {
                 foreach (T item in source)
                 {
                     yield return item;
                 }
-                
+
                 yield break;
             }
-            
+
             Counter64<T> scounter = new Counter64<T>(source = source.Materialize(), comparer);
             Counter64<T> ocounter = new Counter64<T>(other = other.Materialize(), comparer);
-            
+
             foreach (T key in scounter.Keys.Union(ocounter.Keys, comparer))
             {
                 scounter[key] = Math.Abs(scounter[key] - ocounter[key]);
             }
-            
+
             ocounter.Clear();
-            
+
             foreach (T item in source.Concat(other))
             {
                 if (!scounter.TryGetValue(item, out Int64 total) || ocounter[item] >= total)
                 {
                     continue;
                 }
-                
+
                 ocounter.Add(item);
                 yield return item;
             }
@@ -1402,7 +1402,7 @@ namespace NetExtender.Utilities.Types
         {
             return Index(source, 0, size);
         }
-        
+
         public static IEnumerable<T> Index<T>(this IEnumerable<T> source, Int32 index, Int32 size)
         {
             if (source is null)
@@ -1428,7 +1428,7 @@ namespace NetExtender.Utilities.Types
         {
             return Page(source, 1, size);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<T> Page<T>(this IEnumerable<T> source, Int32 page, Int32 size)
         {
@@ -1528,7 +1528,7 @@ namespace NetExtender.Utilities.Types
                 yield return item;
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<T> ThrowIfNull<T>(this IEnumerable<T?> source)
         {
@@ -1552,7 +1552,7 @@ namespace NetExtender.Utilities.Types
                 yield return item;
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<T> ThrowIfNull<T>(this IEnumerable<T?> source) where T : struct
         {
@@ -1576,7 +1576,7 @@ namespace NetExtender.Utilities.Types
                 yield return item.Value;
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<T> DistinctLast<T>(this IEnumerable<T> source)
         {
@@ -1634,7 +1634,7 @@ namespace NetExtender.Utilities.Types
                 return HashCode.Combine(Key);
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<T> DistinctLastBy<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector)
         {
@@ -1668,7 +1668,7 @@ namespace NetExtender.Utilities.Types
                 yield return item.Value;
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<T> DistinctThrow<T>(this IEnumerable<T> source)
         {
@@ -1694,13 +1694,13 @@ namespace NetExtender.Utilities.Types
                 yield return item;
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<String> DistinctThrow(this IEnumerable<String> source, StringComparison comparison)
         {
             return DistinctThrow(source, comparison.ToComparer());
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<T> DistinctByThrow<T, TDistinct>(this IEnumerable<T> source, Func<T, TDistinct> selector)
         {
@@ -1732,7 +1732,7 @@ namespace NetExtender.Utilities.Types
                 yield return item;
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<T> DistinctByThrow<T>(this IEnumerable<T> source, Func<T, String> selector, StringComparison comparison)
         {
@@ -1783,13 +1783,13 @@ namespace NetExtender.Utilities.Types
             }
         }
 #endif
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<T> DistinctBy<T>(this IEnumerable<T> source, Func<T, String> selector, StringComparison comparison)
         {
             return source.DistinctBy(selector, comparison.ToComparer());
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<T> DistinctCount<T>(this IEnumerable<T> source, Int32 count)
         {
@@ -1828,7 +1828,7 @@ namespace NetExtender.Utilities.Types
                 }
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<T> DistinctCountBy<T, TDistinct>(this IEnumerable<T> source, Func<T, TDistinct> selector, Int32 count)
         {

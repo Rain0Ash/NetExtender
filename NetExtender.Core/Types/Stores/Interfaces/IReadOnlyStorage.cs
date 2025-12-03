@@ -9,7 +9,7 @@ namespace NetExtender.Types.Storages.Interfaces
     public interface IReadOnlyStorage<T> : IReadOnlyWeakSet<T> where T : class
     {
     }
-    
+
     public interface IReadOnlyStorage<TKey, TValue> : IReadOnlyWeakDictionary<TKey, TValue> where TKey : class
     {
     }

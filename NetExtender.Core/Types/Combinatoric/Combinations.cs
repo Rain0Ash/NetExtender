@@ -29,7 +29,7 @@ namespace NetExtender.Types.Combinatoric
     /// {A B}, {A C}, {B C}
     /// 
     /// Input sets with multiple equal values will generate redundant combinations in proprotion
-    /// to the likelyhood of outcome.  For example, {A A B B} and a lower index of 3 will generate:
+    /// to the likelyhood of outcome. For example, {A A B B} and a lower index of 3 will generate:
     /// {A A B} {A A B} {A B B} {A B B}
     /// </remarks>
     /// <typeparam name="T">The type of the values within the list.</typeparam>

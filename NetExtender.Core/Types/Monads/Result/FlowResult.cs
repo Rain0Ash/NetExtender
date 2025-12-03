@@ -20,7 +20,7 @@ namespace NetExtender.Types.Monads
         {
             return new FlowResult<T, Exception>(value._next, value.Result);
         }
-        
+
         public static implicit operator Boolean(FlowResult<T> value)
         {
             return value.Exception is null;
@@ -95,7 +95,7 @@ namespace NetExtender.Types.Monads
         {
             return !(first == second);
         }
-        
+
         public static Boolean operator ==(FlowResult<T> first, FlowResult<T> second)
         {
             return first.Equals(second);
@@ -214,7 +214,7 @@ namespace NetExtender.Types.Monads
         {
             get
             {
-                return _next.Unwrap(out T? result) ? result : Result;
+                return _next.Unwrap(out T? result) ? result : Result.Value;
             }
         }
 
@@ -287,13 +287,13 @@ namespace NetExtender.Types.Monads
                 Result = new Result<T>(info, context);
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static FlowResult<T> Create(T value)
         {
             return new FlowResult<T>(value);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static FlowResult<T> Create(Exception exception)
         {
@@ -332,7 +332,7 @@ namespace NetExtender.Types.Monads
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue(nameof(HasNext), HasNext);
-            
+
             if (HasNext)
             {
                 _next.GetObjectData(info, context);
@@ -364,7 +364,7 @@ namespace NetExtender.Types.Monads
             {
                 return Exception is not null ? other.Exception is not null ? 0 : 1 : -1;
             }
-    
+
             if (HasNext && other.HasNext)
             {
                 return comparer.SafeCompare(Next, other.Next) ?? 0;
@@ -374,9 +374,9 @@ namespace NetExtender.Types.Monads
             {
                 return comparer.SafeCompare(Result.Value, other.Result.Value) ?? 0;
             }
-        
+
             Int32 comparison = comparer.SafeCompare(HasNext ? Next : Result.Value, other.HasNext ? other.Next : other.Result.Value) ?? 0;
-        
+
             if (comparison != 0)
             {
                 return comparison;
@@ -396,7 +396,7 @@ namespace NetExtender.Types.Monads
             {
                 return Exception is not null ? other.Exception is not null ? 0 : 1 : -1;
             }
-    
+
             if (HasNext && other.HasNext)
             {
                 return comparer.SafeCompare(Next, other.Next) ?? 0;
@@ -406,9 +406,9 @@ namespace NetExtender.Types.Monads
             {
                 return comparer.SafeCompare(Result.Value, other.Result.Value) ?? 0;
             }
-        
+
             Int32 comparison = comparer.SafeCompare(HasNext ? Next : Result.Value, other.HasNext ? other.Next : other.Result.Value) ?? 0;
-        
+
             if (comparison != 0)
             {
                 return comparison;
@@ -428,12 +428,12 @@ namespace NetExtender.Types.Monads
             {
                 return 1;
             }
-            
+
             if (Exception is not null || other.Exception is not null)
             {
                 return Exception is not null ? other.Exception is not null ? 0 : 1 : -1;
             }
-    
+
             if (HasNext && other.HasNext)
             {
                 return comparer.SafeCompare(Next, other.Next) ?? 0;
@@ -443,9 +443,9 @@ namespace NetExtender.Types.Monads
             {
                 return comparer.SafeCompare(Result.Value, other.Result.Value) ?? 0;
             }
-        
+
             Int32 comparison = comparer.SafeCompare(HasNext ? Next : Result.Value, other.HasNext ? other.Next : other.Result.Value) ?? 0;
-        
+
             if (comparison != 0)
             {
                 return comparison;
@@ -465,17 +465,17 @@ namespace NetExtender.Types.Monads
             {
                 return 1;
             }
-            
+
             if (other is IFlowResult<T> convert)
             {
                 return CompareTo(convert, comparer);
             }
-    
+
             if (Exception is not null || other.Exception is not null)
             {
                 return Exception is not null ? other.Exception is not null ? 0 : 1 : -1;
             }
-    
+
             return comparer.SafeCompare(Value, other.Value) ?? 0;
         }
 
@@ -530,7 +530,7 @@ namespace NetExtender.Types.Monads
             {
                 return Equals(Exception, other.Exception);
             }
-    
+
             if (HasNext == other.HasNext)
             {
                 return HasNext ? _next.Equals(other.Next, comparer) : Result.Equals(other.Result, comparer);
@@ -551,7 +551,7 @@ namespace NetExtender.Types.Monads
             {
                 return Equals(Exception, other.Exception);
             }
-    
+
             if (HasNext == other.HasNext)
             {
                 return HasNext ? _next.Equals(other.Next, comparer) : Result.Equals(other.Result, comparer);
@@ -572,12 +572,12 @@ namespace NetExtender.Types.Monads
             {
                 return false;
             }
-            
+
             if (Exception is not null || other.Exception is not null)
             {
                 return Equals(Exception, other.Exception);
             }
-    
+
             if (HasNext == other.HasNext)
             {
                 return HasNext ? _next.Equals(other.Next, comparer) : Result.Equals(other.Result, comparer);
@@ -598,12 +598,12 @@ namespace NetExtender.Types.Monads
             {
                 return false;
             }
-            
+
             if (Exception is not null || other.Exception is not null)
             {
                 return Equals(Exception, other.Exception);
             }
-            
+
             if (other is IFlowResult<T> convert)
             {
                 return Equals(convert, comparer);
@@ -613,7 +613,7 @@ namespace NetExtender.Types.Monads
             {
                 return Equals(Exception, other.Exception);
             }
-    
+
             comparer ??= EqualityComparer<T>.Default;
             return comparer.Equals(Value, other.Value);
         }
@@ -707,7 +707,7 @@ namespace NetExtender.Types.Monads
         {
             return Clone();
         }
-        
+
         public override String? ToString()
         {
             return HasNext ? _next.ToString() : Result.ToString();
@@ -768,7 +768,7 @@ namespace NetExtender.Types.Monads
             return HasNext ? _next.GetString(escape, format, provider) : Result.GetString(escape, format, provider);
         }
     }
-    
+
     [Serializable]
     /*[JsonConverter(typeof(FlowResultJsonConverter<,>))]
     [System.Text.Json.Serialization.JsonConverter(typeof(NetExtender.Serialization.Json.Monads.FlowResultJsonConverter<,>))]*/
@@ -778,7 +778,7 @@ namespace NetExtender.Types.Monads
         {
             return new FlowResult<T>(value._next, value.Result);
         }
-        
+
         public static implicit operator Boolean(FlowResult<T, TException> value)
         {
             return value.Exception is null;
@@ -863,7 +863,7 @@ namespace NetExtender.Types.Monads
         {
             return !(first == second);
         }
-        
+
         public static Boolean operator ==(FlowResult<T, TException> first, FlowResult<T, TException> second)
         {
             return first.Equals(second);
@@ -982,7 +982,7 @@ namespace NetExtender.Types.Monads
         {
             get
             {
-                return _next.Unwrap(out T? result) ? result : Result;
+                return _next.Unwrap(out T? result) ? result : Result.Value;
             }
         }
 
@@ -1063,13 +1063,13 @@ namespace NetExtender.Types.Monads
                 Result = new Result<T, TException>(info, context);
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static FlowResult<T, TException> Create(T value)
         {
             return new FlowResult<T, TException>(value);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static FlowResult<T, TException> Create(TException exception)
         {
@@ -1108,7 +1108,7 @@ namespace NetExtender.Types.Monads
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue(nameof(HasNext), HasNext);
-            
+
             if (HasNext)
             {
                 _next.GetObjectData(info, context);
@@ -1140,7 +1140,7 @@ namespace NetExtender.Types.Monads
             {
                 return Exception is not null ? other.Exception is not null ? 0 : 1 : -1;
             }
-    
+
             if (HasNext && other.HasNext)
             {
                 return comparer.SafeCompare(Next, other.Next) ?? 0;
@@ -1150,9 +1150,9 @@ namespace NetExtender.Types.Monads
             {
                 return comparer.SafeCompare(Result.Value, other.Result.Value) ?? 0;
             }
-        
+
             Int32 comparison = comparer.SafeCompare(HasNext ? Next : Result.Value, other.HasNext ? other.Next : other.Result.Value) ?? 0;
-        
+
             if (comparison != 0)
             {
                 return comparison;
@@ -1172,7 +1172,7 @@ namespace NetExtender.Types.Monads
             {
                 return Exception is not null ? other.Exception is not null ? 0 : 1 : -1;
             }
-    
+
             if (HasNext && other.HasNext)
             {
                 return comparer.SafeCompare(Next, other.Next) ?? 0;
@@ -1182,9 +1182,9 @@ namespace NetExtender.Types.Monads
             {
                 return comparer.SafeCompare(Result.Value, other.Result.Value) ?? 0;
             }
-        
+
             Int32 comparison = comparer.SafeCompare(HasNext ? Next : Result.Value, other.HasNext ? other.Next : other.Result.Value) ?? 0;
-        
+
             if (comparison != 0)
             {
                 return comparison;
@@ -1204,12 +1204,12 @@ namespace NetExtender.Types.Monads
             {
                 return 1;
             }
-            
+
             if (Exception is not null || other.Exception is not null)
             {
                 return Exception is not null ? other.Exception is not null ? 0 : 1 : -1;
             }
-    
+
             if (HasNext && other.HasNext)
             {
                 return comparer.SafeCompare(Next, other.Next) ?? 0;
@@ -1219,9 +1219,9 @@ namespace NetExtender.Types.Monads
             {
                 return comparer.SafeCompare(Result.Value, other.Result.Value) ?? 0;
             }
-        
+
             Int32 comparison = comparer.SafeCompare(HasNext ? Next : Result.Value, other.HasNext ? other.Next : other.Result.Value) ?? 0;
-        
+
             if (comparison != 0)
             {
                 return comparison;
@@ -1241,17 +1241,17 @@ namespace NetExtender.Types.Monads
             {
                 return 1;
             }
-            
+
             if (other is IFlowResult<T> convert)
             {
                 return CompareTo(convert, comparer);
             }
-    
+
             if (Exception is not null || other.Exception is not null)
             {
                 return Exception is not null ? other.Exception is not null ? 0 : 1 : -1;
             }
-    
+
             return comparer.SafeCompare(Value, other.Value) ?? 0;
         }
 
@@ -1306,7 +1306,7 @@ namespace NetExtender.Types.Monads
             {
                 return Equals(Exception, other.Exception);
             }
-    
+
             if (HasNext == other.HasNext)
             {
                 return HasNext ? _next.Equals(other.Next, comparer) : Result.Equals(other.Result, comparer);
@@ -1327,7 +1327,7 @@ namespace NetExtender.Types.Monads
             {
                 return Equals(Exception, other.Exception);
             }
-    
+
             if (HasNext == other.HasNext)
             {
                 return HasNext ? _next.Equals(other.Next, comparer) : Result.Equals(other.Result, comparer);
@@ -1348,12 +1348,12 @@ namespace NetExtender.Types.Monads
             {
                 return false;
             }
-            
+
             if (Exception is not null || other.Exception is not null)
             {
                 return Equals(Exception, other.Exception);
             }
-    
+
             if (HasNext == other.HasNext)
             {
                 return HasNext ? _next.Equals(other.Next, comparer) : Result.Equals(other.Result, comparer);
@@ -1374,12 +1374,12 @@ namespace NetExtender.Types.Monads
             {
                 return false;
             }
-            
+
             if (Exception is not null || other.Exception is not null)
             {
                 return Equals(Exception, other.Exception);
             }
-            
+
             if (other is IFlowResult<T> convert)
             {
                 return Equals(convert, comparer);
@@ -1389,7 +1389,7 @@ namespace NetExtender.Types.Monads
             {
                 return Equals(Exception, other.Exception);
             }
-    
+
             comparer ??= EqualityComparer<T>.Default;
             return comparer.Equals(Value, other.Value);
         }
@@ -1483,7 +1483,7 @@ namespace NetExtender.Types.Monads
         {
             return Clone();
         }
-        
+
         public override String? ToString()
         {
             return HasNext ? _next.ToString() : Result.ToString();

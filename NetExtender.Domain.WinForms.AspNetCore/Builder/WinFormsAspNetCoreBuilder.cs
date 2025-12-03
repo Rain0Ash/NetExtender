@@ -21,7 +21,7 @@ namespace NetExtender.Domains.WinForms.AspNetCore.Builder
         {
             return Host(New<THostBuilder>(arguments));
         }
-        
+
         protected virtual THost Host(THostBuilder builder)
         {
             if (builder is null)
@@ -31,7 +31,7 @@ namespace NetExtender.Domains.WinForms.AspNetCore.Builder
 
             return builder.Build() is THost host ? Host(host) : throw new InvalidOperationException();
         }
-        
+
         public override WinFormsAspNetCoreContext<TForm, THost> Build()
         {
             return Build(ImmutableArray<String>.Empty);
@@ -41,25 +41,25 @@ namespace NetExtender.Domains.WinForms.AspNetCore.Builder
         {
             return Build(arguments?.ToImmutableArray() ?? ImmutableArray<String>.Empty);
         }
-        
+
         public override WinFormsAspNetCoreContext<TForm, THost> Build(ImmutableArray<String> arguments)
         {
             return new WinFormsAspNetCoreContext<TForm, THost>(Form(arguments), Host(arguments));
         }
     }
-    
+
     public class WinFormsAspNetCoreBuilder<TForm, THost> : WinFormsAspNetCoreBuilder<TForm>, IApplicationBuilder<WinFormsAspNetCoreContext<TForm, THost>> where TForm : Form where THost : class, IHost
     {
         protected override THost Host(ImmutableArray<String> arguments)
         {
             return Host(New<THost>(arguments));
         }
-        
+
         protected virtual THost Host(THost host)
         {
             return host ?? throw new ArgumentNullException(nameof(host));
         }
-        
+
         public override WinFormsAspNetCoreContext<TForm, THost> Build()
         {
             return Build(ImmutableArray<String>.Empty);
@@ -69,7 +69,7 @@ namespace NetExtender.Domains.WinForms.AspNetCore.Builder
         {
             return Build(arguments?.ToImmutableArray() ?? ImmutableArray<String>.Empty);
         }
-        
+
         public override WinFormsAspNetCoreContext<TForm, THost> Build(ImmutableArray<String> arguments)
         {
             return new WinFormsAspNetCoreContext<TForm, THost>(Form(arguments), Host(arguments));
@@ -92,7 +92,7 @@ namespace NetExtender.Domains.WinForms.AspNetCore.Builder
         {
             return Build(arguments?.ToImmutableArray() ?? ImmutableArray<String>.Empty);
         }
-        
+
         public override WinFormsAspNetCoreContext<TForm> Build(ImmutableArray<String> arguments)
         {
             return new WinFormsAspNetCoreContext<TForm, IHost>(Form(arguments), Host(arguments));
@@ -102,7 +102,7 @@ namespace NetExtender.Domains.WinForms.AspNetCore.Builder
     public abstract class WinFormsAspNetCoreBuilder : ApplicationBuilder<WinFormsAspNetCoreContext>
     {
         public virtual Boolean UseDefaultHostBuilder { get; init; } = true;
-        
+
         protected abstract Form Form(ImmutableArray<String> arguments);
 
         protected virtual IHost Host(ImmutableArray<String> arguments)
@@ -116,7 +116,7 @@ namespace NetExtender.Domains.WinForms.AspNetCore.Builder
 
             return builder.ConfigureWebHostDefaults(Build).Build();
         }
-        
+
         public override WinFormsAspNetCoreContext Build(ImmutableArray<String> arguments)
         {
             return new WinFormsAspNetCoreContext<Form, IHost>(Form(arguments), Host(arguments));
@@ -126,14 +126,14 @@ namespace NetExtender.Domains.WinForms.AspNetCore.Builder
         {
         }
     }
-    
+
     public class WinFormsAspNetCoreWebBuilder<TForm, THost, THostBuilder> : WinFormsAspNetCoreWebBuilder<TForm, THost> where TForm : Form where THost : class, IWebHost where THostBuilder : class, IWebHostBuilder
     {
         protected override THost Host(ImmutableArray<String> arguments)
         {
             return Host(New<THostBuilder>(arguments));
         }
-        
+
         protected virtual THost Host(THostBuilder builder)
         {
             if (builder is null)
@@ -143,7 +143,7 @@ namespace NetExtender.Domains.WinForms.AspNetCore.Builder
 
             return builder.Build() is THost host ? Host(host) : throw new InvalidOperationException();
         }
-        
+
         public override WinFormsAspNetCoreWebContext<TForm, THost> Build()
         {
             return Build(ImmutableArray<String>.Empty);
@@ -153,25 +153,25 @@ namespace NetExtender.Domains.WinForms.AspNetCore.Builder
         {
             return Build(arguments?.ToImmutableArray() ?? ImmutableArray<String>.Empty);
         }
-        
+
         public override WinFormsAspNetCoreWebContext<TForm, THost> Build(ImmutableArray<String> arguments)
         {
             return new WinFormsAspNetCoreWebContext<TForm, THost>(Form(arguments), Host(arguments));
         }
     }
-    
+
     public class WinFormsAspNetCoreWebBuilder<TForm, THost> : WinFormsAspNetCoreWebBuilder<TForm>, IApplicationBuilder<WinFormsAspNetCoreWebContext<TForm, THost>> where TForm : Form where THost : class, IWebHost
     {
         protected override THost Host(ImmutableArray<String> arguments)
         {
             return Host(New<THost>(arguments));
         }
-        
+
         protected virtual THost Host(THost host)
         {
             return host ?? throw new ArgumentNullException(nameof(host));
         }
-        
+
         public override WinFormsAspNetCoreWebContext<TForm, THost> Build()
         {
             return Build(ImmutableArray<String>.Empty);
@@ -181,7 +181,7 @@ namespace NetExtender.Domains.WinForms.AspNetCore.Builder
         {
             return Build(arguments?.ToImmutableArray() ?? ImmutableArray<String>.Empty);
         }
-        
+
         public override WinFormsAspNetCoreWebContext<TForm, THost> Build(ImmutableArray<String> arguments)
         {
             return new WinFormsAspNetCoreWebContext<TForm, THost>(Form(arguments), Host(arguments));
@@ -204,7 +204,7 @@ namespace NetExtender.Domains.WinForms.AspNetCore.Builder
         {
             return Build(arguments?.ToImmutableArray() ?? ImmutableArray<String>.Empty);
         }
-        
+
         public override WinFormsAspNetCoreWebContext<TForm> Build(ImmutableArray<String> arguments)
         {
             return new WinFormsAspNetCoreWebContext<TForm, IWebHost>(Form(arguments), Host(arguments));
@@ -234,7 +234,7 @@ namespace NetExtender.Domains.WinForms.AspNetCore.Builder
         {
             return application ?? throw new ArgumentNullException(nameof(application));
         }
-        
+
         public override WinFormsAspNetCoreWebContext Build(ImmutableArray<String> arguments)
         {
             return new WinFormsAspNetCoreWebContext<Form, IWebHost>(Form(arguments), Host(arguments));
@@ -244,7 +244,7 @@ namespace NetExtender.Domains.WinForms.AspNetCore.Builder
         {
         }
     }
-    
+
     public abstract class WinFormsAspNetCoreWebApplicationBuilder<TForm> : WinFormsAspNetCoreBuilder<TForm, WebApplication, WebApplicationBuilderWrapper>, IApplicationBuilder<WinFormsAspNetCoreWebApplicationContext<TForm>> where TForm : Form
     {
         public override WinFormsAspNetCoreWebApplicationContext<TForm> Build()
@@ -262,7 +262,7 @@ namespace NetExtender.Domains.WinForms.AspNetCore.Builder
             return new WinFormsAspNetCoreWebApplicationContext<TForm>(Form(arguments), Host(arguments));
         }
     }
-    
+
     public abstract class WinFormsAspNetCoreWebApplicationBuilder : WinFormsAspNetCoreBuilder<Form, WebApplication, WebApplicationBuilderWrapper>, IApplicationBuilder<WinFormsAspNetCoreWebApplicationContext<Form>>
     {
         public override WinFormsAspNetCoreWebApplicationContext<Form> Build()

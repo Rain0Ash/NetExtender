@@ -32,7 +32,7 @@ namespace NetExtender.Utilities.Types
     public static partial class ColorUtilities
     {
         public const ColorType DefaultColorType = ColorType.RGB;
-        
+
         private const Double Minimum = Byte.MinValue;
         private const Double Maximum = Byte.MaxValue;
 
@@ -299,7 +299,7 @@ namespace NetExtender.Utilities.Types
         public static Color ToContrast(this Color color, Double value)
         {
             const Double contrast = 0.5;
-            
+
             Int32 red = (Int32) Math.Clamp(((color.R / Maximum - contrast) * value + contrast) * Maximum, Minimum, Maximum);
             Int32 green = (Int32) Math.Clamp(((color.G / Maximum - contrast) * value + contrast) * Maximum, Minimum, Maximum);
             Int32 blue = (Int32) Math.Clamp(((color.B / Maximum - contrast) * value + contrast) * Maximum, Minimum, Maximum);
@@ -656,7 +656,7 @@ namespace NetExtender.Utilities.Types
             g = (Byte) Math.Round(GetHue(p, q, hd) * Maximum);
             b = (Byte) Math.Round(GetHue(p, q, hd - 1.0 / 3) * Maximum);
         }
-        
+
         public static Double GetHue(Double p, Double q, Double t)
         {
             t += t switch
@@ -1113,7 +1113,7 @@ namespace NetExtender.Utilities.Types
         {
             return ColorTranslator.ToHtml(Color.FromArgb(a, r, g, b));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IColor ToColor(this Color color, Type type)
         {
@@ -1461,13 +1461,13 @@ namespace NetExtender.Utilities.Types
             Double difference = Math.Pow(first.L - second.L, 2) + Math.Pow(first.A - second.A, 2) + Math.Pow(first.B - second.B, 2);
             return Math.Sqrt(difference);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double DifferenceCmc(this Color first, Color second)
         {
             return DifferenceCmc(first, second, 1.0, 2.0);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double DifferenceCmc(this Color first, Color second, Double chroma, Double lightness)
         {

@@ -243,7 +243,7 @@ namespace NetExtender.Types.Network
             {
                 return !@throw ? false : throw new ArgumentException($"Traditional style array without '[]' is not supported with nested object at location {BuildPath(path, path.Length - 1)}.");
             }
-            
+
             if (item.Type == JTokenType.String)
             {
                 jobject[key] = new JObject
@@ -251,7 +251,7 @@ namespace NetExtender.Types.Network
                     { "0", item.ToObject<String>() },
                     { "1", value }
                 };
-                
+
                 return true;
             }
 
@@ -424,7 +424,7 @@ namespace NetExtender.Types.Network
             }
 
             JArray jarray = new JArray();
-            
+
             foreach (JToken? item in keys.Select(property => jobject[property]))
             {
                 jarray.Add(item!);

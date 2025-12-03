@@ -29,7 +29,7 @@ namespace NetExtender.Types.Attributes
     public sealed class StaticInitializerRequiredAttribute : StaticInitializerAttribute
     {
     }
-    
+
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface, Inherited = false, AllowMultiple = true)]
     internal sealed class StaticInitializerNetExtenderAttribute : StaticInitializerAttribute
     {

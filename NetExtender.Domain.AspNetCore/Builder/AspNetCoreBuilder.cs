@@ -20,16 +20,16 @@ namespace NetExtender.Domains.AspNetCore.Builder
     public class AspNetCoreBuilder : ApplicationBuilder<IHost>, IAspNetCoreBuilder<IHost>
     {
         public virtual Boolean UseDefaultHostBuilder { get; init; } = true;
-        
+
         public override IHost Build(ImmutableArray<String> arguments)
         {
             IHostBuilder builder = new HostBuilder();
-            
+
             if (UseDefaultHostBuilder)
             {
                 builder.ConfigureDefaults(arguments.ToArray());
             }
-            
+
             // ReSharper disable once VariableHidesOuterVariable
             void Handler(IWebHostBuilder builder)
             {
@@ -44,7 +44,7 @@ namespace NetExtender.Domains.AspNetCore.Builder
         {
         }
     }
-    
+
     public class AspNetCoreBuilder<T> : ApplicationBuilder<T>, IAspNetCoreBuilder<T> where T : class, IHost
     {
         protected virtual Boolean DotNetWatch
@@ -54,7 +54,7 @@ namespace NetExtender.Domains.AspNetCore.Builder
                 return false;
             }
         }
-        
+
         protected virtual String? DotNetWatchArgument
         {
             get
@@ -102,7 +102,7 @@ namespace NetExtender.Domains.AspNetCore.Builder
                 return null;
             }
         }
-        
+
         protected virtual WebApplicationOptions WebApplicationOptions(ImmutableArray<String> arguments)
         {
             return new WebApplicationOptions
@@ -140,7 +140,7 @@ namespace NetExtender.Domains.AspNetCore.Builder
                 base.Setup(arguments);
                 return;
             }
-            
+
             String? argument = DotNetWatchArgument;
             if (String.IsNullOrEmpty(argument) || arguments.Contains(argument))
             {
@@ -185,7 +185,7 @@ namespace NetExtender.Domains.AspNetCore.Builder
         protected override TType New<TType>(ImmutableArray<String> arguments)
         {
             Setup(arguments);
-            
+
             try
             {
                 WebApplicationOptions options = WebApplicationOptions(arguments);
@@ -195,7 +195,7 @@ namespace NetExtender.Domains.AspNetCore.Builder
                     WebApplication builder = WebApplication.Create(options.Args);
                     return builder as TType ?? throw new InvalidOperationException();
                 }
-                
+
                 if (typeof(TType) == typeof(WebApplicationBuilder))
                 {
                     WebApplicationBuilder builder = WebApplication.CreateBuilder(options);
@@ -209,7 +209,7 @@ namespace NetExtender.Domains.AspNetCore.Builder
                     ApplySettings(builder);
                     return builder as TType ?? throw new InvalidOperationException();
                 }
-                
+
                 return base.New<TType>(Arguments ?? ImmutableArray<String>.Empty);
             }
             finally
@@ -231,7 +231,7 @@ namespace NetExtender.Domains.AspNetCore.Builder
             return application ?? throw new InvalidOperationException();
         }
     }
-    
+
     public class AspNetCoreBuilder<T, TBuilder> : AspNetCoreBuilder<T> where T : class, IHost where TBuilder : class, IHostBuilder
     {
         public override T Build(ImmutableArray<String> arguments)
@@ -247,7 +247,7 @@ namespace NetExtender.Domains.AspNetCore.Builder
             }
 
             Manager?.Invoke(this, builder);
-            
+
             try
             {
                 return builder.Build() is T application ? Build(application) : throw new InvalidOperationException();
@@ -258,7 +258,7 @@ namespace NetExtender.Domains.AspNetCore.Builder
             }
         }
     }
-    
+
     public class AspNetCoreWebBuilder : ApplicationBuilder<IWebHost>, IAspNetCoreBuilder<IWebHost>
     {
         public override IWebHost Build(ImmutableArray<String> arguments)
@@ -273,7 +273,7 @@ namespace NetExtender.Domains.AspNetCore.Builder
             {
                 throw new ArgumentNullException(nameof(builder));
             }
-            
+
             Manager?.Invoke(this, builder);
 
             try
@@ -364,35 +364,35 @@ namespace NetExtender.Domains.AspNetCore.Builder
                 builder.WebHost.UseSetting(key, value);
             }
         }
-        
+
         protected override TType New<TType>(ImmutableArray<String> arguments)
         {
             Setup(arguments);
-            
+
             try
             {
                 WebApplicationOptions options = WebApplicationOptions(arguments);
-                
+
                 if (typeof(TType) == typeof(WebApplication))
                 {
                     WebApplication builder = WebApplication.Create(options.Args);
                     return builder as TType ?? throw new InvalidOperationException();
                 }
-                
+
                 if (typeof(TType) == typeof(WebApplicationBuilder))
                 {
                     WebApplicationBuilder builder = WebApplication.CreateBuilder(options);
                     ApplySettings(builder);
                     return builder as TType ?? throw new InvalidOperationException();
                 }
-                
+
                 if (typeof(TType) == typeof(WebApplicationBuilderWrapper))
                 {
                     WebApplicationBuilderWrapper builder = new WebApplicationBuilderWrapper(options);
                     ApplySettings(builder);
                     return builder as TType ?? throw new InvalidOperationException();
                 }
-                
+
                 return base.New<TType>(Arguments ?? ImmutableArray<String>.Empty);
             }
             finally
@@ -400,7 +400,7 @@ namespace NetExtender.Domains.AspNetCore.Builder
                 Finish();
             }
         }
-        
+
         public override T Build(ImmutableArray<String> arguments)
         {
             return New(arguments);
@@ -412,7 +412,7 @@ namespace NetExtender.Domains.AspNetCore.Builder
             return application ?? throw new ArgumentNullException(nameof(application));
         }
     }
-    
+
     public class AspNetCoreWebBuilder<T, TBuilder> : AspNetCoreWebBuilder<T> where T : class, IWebHost where TBuilder : class, IWebHostBuilder
     {
         public override T Build(ImmutableArray<String> arguments)
@@ -426,7 +426,7 @@ namespace NetExtender.Domains.AspNetCore.Builder
             {
                 throw new ArgumentNullException(nameof(builder));
             }
-            
+
             Manager?.Invoke(this, this);
             Manager?.Invoke(this, builder);
 
@@ -440,7 +440,7 @@ namespace NetExtender.Domains.AspNetCore.Builder
             }
         }
     }
-    
+
     public class AspNetCoreWebApplicationBuilder : AspNetCoreBuilder<WebApplication, WebApplicationBuilderWrapper>
     {
         protected sealed override WebApplication Build(WebApplicationBuilderWrapper wrapper)

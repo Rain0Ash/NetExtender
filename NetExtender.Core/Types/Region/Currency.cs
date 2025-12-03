@@ -55,7 +55,7 @@ namespace NetExtender.Types.Region
                     return counter;
                 }
             }
-            
+
             public Boolean IsEmpty
             {
                 get

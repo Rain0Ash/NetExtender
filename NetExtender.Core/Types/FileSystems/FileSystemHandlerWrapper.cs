@@ -14,7 +14,7 @@ namespace NetExtender.FileSystems
         {
         }
     }
-    
+
     public partial class FileSystemHandlerWrapper<T> : FileSystemHandler where T : class, IFileSystem
     {
         protected sealed override T FileSystem { get; }

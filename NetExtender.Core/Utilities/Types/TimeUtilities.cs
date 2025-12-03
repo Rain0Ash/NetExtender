@@ -7,13 +7,15 @@ using NetExtender.Types.Exceptions;
 
 namespace NetExtender.Utilities.Types
 {
-    public enum TimeType
+    public enum TimeType : Byte
     {
-        Milliseconds,
-        Seconds,
-        Minutes,
+        Days,
         Hours,
-        Days
+        Minutes,
+        Seconds,
+        Milliseconds,
+        Microseconds,
+        Nanoseconds
     }
 
     public static class TimeUtilities
@@ -32,7 +34,7 @@ namespace NetExtender.Utilities.Types
         {
             return time - OffsetEpoch;
         }
-        
+
         /// <summary>
         /// Return unix time in seconds
         /// </summary>
@@ -41,7 +43,7 @@ namespace NetExtender.Utilities.Types
         {
             return (Int64) (DateTime.Now - Epoch).TotalSeconds;
         }
-        
+
         /// <summary>
         /// Return unix time in seconds
         /// </summary>
@@ -67,11 +69,18 @@ namespace NetExtender.Utilities.Types
 
             return type switch
             {
-                TimeType.Milliseconds => time.TotalMilliseconds,
-                TimeType.Seconds => time.TotalSeconds,
-                TimeType.Minutes => time.TotalMinutes,
-                TimeType.Hours => time.TotalHours,
                 TimeType.Days => time.TotalDays,
+                TimeType.Hours => time.TotalHours,
+                TimeType.Minutes => time.TotalMinutes,
+                TimeType.Seconds => time.TotalSeconds,
+                TimeType.Milliseconds => time.TotalMilliseconds,
+#if NET7_0_OR_GREATER
+                TimeType.Microseconds => time.TotalMicroseconds,
+                TimeType.Nanoseconds => time.TotalNanoseconds,
+#else
+                TimeType.Microseconds => time.TotalMilliseconds * 1000,
+                TimeType.Nanoseconds => time.TotalMilliseconds * 1000000,
+#endif
                 _ => throw new EnumUndefinedOrNotSupportedException<TimeType>(type, nameof(type), null)
             };
         }
@@ -82,11 +91,18 @@ namespace NetExtender.Utilities.Types
 
             return type switch
             {
-                TimeType.Milliseconds => time.TotalMilliseconds,
-                TimeType.Seconds => time.TotalSeconds,
-                TimeType.Minutes => time.TotalMinutes,
-                TimeType.Hours => time.TotalHours,
                 TimeType.Days => time.TotalDays,
+                TimeType.Hours => time.TotalHours,
+                TimeType.Minutes => time.TotalMinutes,
+                TimeType.Seconds => time.TotalSeconds,
+                TimeType.Milliseconds => time.TotalMilliseconds,
+#if NET7_0_OR_GREATER
+                TimeType.Microseconds => time.TotalMicroseconds,
+                TimeType.Nanoseconds => time.TotalNanoseconds,
+#else
+                TimeType.Microseconds => time.TotalMilliseconds * 1000,
+                TimeType.Nanoseconds => time.TotalMilliseconds * 1000000,
+#endif
                 _ => throw new EnumUndefinedOrNotSupportedException<TimeType>(type, nameof(type), null)
             };
         }

@@ -15,7 +15,7 @@ namespace NetExtender.JWT.Algorithms
         public abstract class CertificateAlgorithm<T> : JWTAlgorithm, IJWTCertificateAlgorithm where T : class
         {
             private Boolean? _lateinit;
-            
+
             private T? _public;
             protected T Public
             {
@@ -111,7 +111,7 @@ namespace NetExtender.JWT.Algorithms
             {
                 return SignAsync(source, CancellationToken.None);
             }
-            
+
             public abstract ValueTask<Byte[]?> SignAsync(Byte[] source, CancellationToken token);
 
             public Boolean TrySign(ReadOnlySpan<Byte> source, ref Span<Byte> destination)
@@ -124,7 +124,7 @@ namespace NetExtender.JWT.Algorithms
                 destination = destination.Slice(written);
                 return true;
             }
-            
+
             public abstract Boolean TrySign(ReadOnlySpan<Byte> source, Span<Byte> destination, out Int32 written);
 
             public override Byte[] Sign(JWTKey key, Byte[] source)

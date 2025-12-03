@@ -10,7 +10,7 @@ namespace NetExtender.EntityFrameworkCore.Transactions.Interfaces
     public interface IDbTransactionManager
     {
         public Boolean HasTransaction { get; }
-        
+
         public Task BeginTransactionAsync();
         public Task BeginTransactionAsync(CancellationToken token);
         public Task CommitTransactionAsync();

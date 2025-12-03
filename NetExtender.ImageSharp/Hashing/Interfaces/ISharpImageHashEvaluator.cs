@@ -9,6 +9,6 @@ namespace NetExtender.ImageSharp.Hashing.Interfaces
 {
     public interface ISharpImageHashEvaluator
     {
-        UInt64 Hash(Image<Rgba32> image);
+        public UInt64 Hash(Image<Rgba32> image);
     }
 }

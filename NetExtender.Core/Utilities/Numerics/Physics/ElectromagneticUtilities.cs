@@ -168,7 +168,7 @@ namespace NetExtender.Utilities.Numerics.Physics
 
             return PhysicsUtilities.Constants.Single.C / wavelength;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Frequency(Double wavelength)
         {
@@ -179,7 +179,7 @@ namespace NetExtender.Utilities.Numerics.Physics
 
             return PhysicsUtilities.Constants.Double.C / wavelength;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Decimal Frequency(Decimal wavelength)
         {
@@ -190,7 +190,7 @@ namespace NetExtender.Utilities.Numerics.Physics
 
             return PhysicsUtilities.Constants.Decimal.C / wavelength;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Single Wavelength(Single frequency)
         {
@@ -201,7 +201,7 @@ namespace NetExtender.Utilities.Numerics.Physics
 
             return PhysicsUtilities.Constants.Single.C / frequency;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Wavelength(Double frequency)
         {
@@ -212,7 +212,7 @@ namespace NetExtender.Utilities.Numerics.Physics
 
             return PhysicsUtilities.Constants.Double.C / frequency;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Decimal Wavelength(Decimal frequency)
         {
@@ -223,25 +223,25 @@ namespace NetExtender.Utilities.Numerics.Physics
 
             return PhysicsUtilities.Constants.Decimal.C / frequency;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Single DoplerWavelength(Single wavelength, Single velocity)
         {
             return DoplerWavelength(wavelength, velocity, 0);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double DoplerWavelength(Double wavelength, Double velocity)
         {
             return DoplerWavelength(wavelength, velocity, 0);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Decimal DoplerWavelength(Decimal wavelength, Decimal velocity)
         {
             return DoplerWavelength(wavelength, velocity, 0);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static Single DoplerWavelength(Single wavelength, Single velocity, Single angle)
         {
@@ -249,7 +249,7 @@ namespace NetExtender.Utilities.Numerics.Physics
             {
                 throw new ArgumentOutOfRangeException(nameof(wavelength), wavelength, null);
             }
-            
+
             return velocity switch
             {
                 < Single.Epsilon => wavelength,
@@ -257,7 +257,7 @@ namespace NetExtender.Utilities.Numerics.Physics
                 _ => Wavelength(DoplerFrequency(Frequency(wavelength), velocity, angle))
             };
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static Double DoplerWavelength(Double wavelength, Double velocity, Double angle)
         {
@@ -273,7 +273,7 @@ namespace NetExtender.Utilities.Numerics.Physics
                 _ => Wavelength(DoplerFrequency(Frequency(wavelength), velocity, angle))
             };
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static Decimal DoplerWavelength(Decimal wavelength, Decimal velocity, Decimal angle)
         {
@@ -289,25 +289,25 @@ namespace NetExtender.Utilities.Numerics.Physics
                 _ => Wavelength(DoplerFrequency(Frequency(wavelength), velocity, angle))
             };
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Single DoplerFrequency(Single frequency, Single velocity)
         {
             return DoplerFrequency(frequency, velocity, 0);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double DoplerFrequency(Double frequency, Double velocity)
         {
             return DoplerFrequency(frequency, velocity, 0);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Decimal DoplerFrequency(Decimal frequency, Decimal velocity)
         {
             return DoplerFrequency(frequency, velocity, 0);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static Single DoplerFrequency(Single frequency, Single velocity, Single angle)
         {
@@ -323,7 +323,7 @@ namespace NetExtender.Utilities.Numerics.Physics
                 _ => frequency * MathF.Sqrt(1 - velocity * velocity / PhysicsUtilities.Constants.Single.SquareC) / (1 - velocity / PhysicsUtilities.Constants.Single.C * MathF.Cos(angle))
             };
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static Double DoplerFrequency(Double frequency, Double velocity, Double angle)
         {

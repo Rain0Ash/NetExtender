@@ -44,10 +44,10 @@ namespace NetExtender.Types.Immutable.Counters
 
         [return: NotNullIfNotNull("internal")]
         protected abstract TCounter? Convert(IImmutableDictionary<T, TCount>? @internal);
-        
+
         [return: NotNullIfNotNull("internal")]
         protected abstract TCounter? Convert(IImmutableCounter<T, TCount>? @internal);
-        
+
         protected abstract ICounter<T, TCount> ToCounter();
 
         public Boolean Contains(T item)
@@ -107,7 +107,7 @@ namespace NetExtender.Types.Immutable.Counters
                 result = Increment(current);
                 return Convert(Internal.SetItem(item, result));
             }
-            
+
             result = Increment(current);
             return Convert(Internal.Add(item, result));
         }
@@ -149,7 +149,7 @@ namespace NetExtender.Types.Immutable.Counters
             result = Add(current, count);
             return Convert(Internal.Add(item, result));
         }
-        
+
         IImmutableCounter<T, TCount> IImmutableCounter<T, TCount>.Add(T item, TCount count, out TCount result)
         {
             return Add(item, count, out result);
@@ -186,7 +186,7 @@ namespace NetExtender.Types.Immutable.Counters
         {
             return AddRange(source);
         }
-        
+
         public TCounter SetItem(T item, TCount count)
         {
             if (item is null)
@@ -196,12 +196,12 @@ namespace NetExtender.Types.Immutable.Counters
 
             return LessOrEquals(count, default) ? Clear(item) : Convert(Internal.SetItem(item, count));
         }
-        
+
         IImmutableCounter<T, TCount> IImmutableCounter<T, TCount>.SetItem(T item, TCount count)
         {
             return SetItem(item, count);
         }
-        
+
         public TCounter SetItemRange(IEnumerable<KeyValuePair<T, TCount>> source)
         {
             if (source is null)
@@ -217,10 +217,10 @@ namespace NetExtender.Types.Immutable.Counters
                 counter[item] = value;
                 successful = true;
             }
-            
+
             return successful ? Convert(Internal.Clear().AddRange(counter)) : Convert(this);
         }
-        
+
         IImmutableCounter<T, TCount> IImmutableCounter<T, TCount>.SetItemRange(IEnumerable<KeyValuePair<T, TCount>> source)
         {
             return SetItemRange(source);
@@ -230,7 +230,7 @@ namespace NetExtender.Types.Immutable.Counters
         {
             return Remove(item, out _);
         }
-        
+
         IImmutableCounter<T, TCount> IImmutableCounter<T, TCount>.Remove(T item)
         {
             return Remove(item);
@@ -337,14 +337,14 @@ namespace NetExtender.Types.Immutable.Counters
         {
             return RemoveRange(source);
         }
-        
+
         public TCounter Clear(T item)
         {
             if (item is null)
             {
                 throw new ArgumentNullException(nameof(item));
             }
-            
+
             return Internal.TryGetValue(item, out _) ? Convert(Internal.Remove(item)) : Convert(this);
         }
 
@@ -352,7 +352,7 @@ namespace NetExtender.Types.Immutable.Counters
         {
             return Clear(item);
         }
-        
+
         public TCounter Clear(IEnumerable<T> source)
         {
             if (source is null)
@@ -373,7 +373,7 @@ namespace NetExtender.Types.Immutable.Counters
         {
             return Internal.ToArray();
         }
-        
+
         public T[]? ToItemsArray()
         {
             return ToItemsArray(null);
@@ -412,7 +412,7 @@ namespace NetExtender.Types.Immutable.Counters
                     {
                         return null;
                     }
-            
+
                     capacity += count;
                 }
 
@@ -425,7 +425,7 @@ namespace NetExtender.Types.Immutable.Counters
                         array[index++] = item;
                     }
                 }
-                
+
                 return array;
             }
             catch (OverflowException)

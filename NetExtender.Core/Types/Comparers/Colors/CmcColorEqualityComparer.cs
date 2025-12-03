@@ -13,30 +13,30 @@ namespace NetExtender.Types.Comparers.Colors
     public class CmcColorEqualityComparer : IEqualityComparer<Color>
     {
         public static CmcColorEqualityComparer Default { get; } = new CmcColorEqualityComparer();
-        
+
         public Double Epsilon { get; }
-        
+
         public CmcColorEqualityComparer()
             : this(1)
         {
         }
-        
+
         public CmcColorEqualityComparer(Double epsilon)
         {
             Epsilon = epsilon;
         }
-        
+
         public Boolean Equals(Color x, Color y)
         {
             return x.DifferenceCmc(y) < Epsilon;
         }
-        
+
         public Int32 GetHashCode(Color color)
         {
             return color.GetHashCode();
         }
     }
-    
+
     public class CmcColorEqualityComparer<TColor> : CmcColorEqualityComparer, IEqualityComparer<TColor> where TColor : IColor
     {
         public new static CmcColorEqualityComparer<TColor> Default { get; } = new CmcColorEqualityComparer<TColor>();
@@ -49,14 +49,14 @@ namespace NetExtender.Types.Comparers.Colors
             : base(epsilon)
         {
         }
-        
+
         public Boolean Equals(TColor? x, TColor? y)
         {
             if (x is null || y is null)
             {
                 return !(x is null ^ y is null);
             }
-            
+
             return Equals(x.ToColor(), y.ToColor());
         }
 
@@ -65,7 +65,7 @@ namespace NetExtender.Types.Comparers.Colors
             return color is not null ? GetHashCode(color.ToColor()) : 0;
         }
     }
-    
+
     public class CmcColorEqualityComparer<TColor1, TColor2> : CmcColorEqualityComparer<TColor1>, IEqualityComparer<TColor2>, IEqualityComparer<TColor1, TColor2> where TColor1 : IColor where TColor2 : IColor
     {
         public new static CmcColorEqualityComparer<TColor1, TColor2> Default { get; } = new CmcColorEqualityComparer<TColor1, TColor2>();
@@ -73,19 +73,19 @@ namespace NetExtender.Types.Comparers.Colors
         public CmcColorEqualityComparer()
         {
         }
-        
+
         public CmcColorEqualityComparer(Double epsilon)
             : base(epsilon)
         {
         }
-        
+
         public Boolean Equals(TColor1? x, TColor2? y)
         {
             if (x is null || y is null)
             {
                 return !(x is null ^ y is null);
             }
-            
+
             return Equals(x.ToColor(), y.ToColor());
         }
 
@@ -95,7 +95,7 @@ namespace NetExtender.Types.Comparers.Colors
             {
                 return !(x is null ^ y is null);
             }
-            
+
             return Equals(x.ToColor(), y.ToColor());
         }
 

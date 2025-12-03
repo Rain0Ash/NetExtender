@@ -12,7 +12,7 @@ namespace NetExtender.WindowsPresentation.Types.Applications.Interfaces
         public WindowsPresentationServiceProvider Provider { get; }
         public IDispatcher? Dispatcher { get; }
         public ShutdownMode ShutdownMode { get; set; }
-        
+
         public void Shutdown();
         public void Shutdown(Int32 code);
     }

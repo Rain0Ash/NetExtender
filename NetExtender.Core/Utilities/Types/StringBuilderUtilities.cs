@@ -801,7 +801,7 @@ namespace NetExtender.Utilities.Types
         {
             return Pop(builder, start, length, out result);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static StringBuilder Remove(this StringBuilder builder, String remove)
         {

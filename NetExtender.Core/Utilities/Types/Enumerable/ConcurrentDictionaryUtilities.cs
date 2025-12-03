@@ -30,7 +30,7 @@ namespace NetExtender.Utilities.Types
                 return false;
             }
         }
-        
+
         public static Boolean TryGetOrAdd<TKey, TValue>(this ConcurrentDictionary<TKey, TValue> dictionary, TKey key, Func<TValue> factory, [MaybeNullWhen(false)] out TValue result) where TKey : notnull
         {
             if (dictionary is null)
@@ -54,7 +54,7 @@ namespace NetExtender.Utilities.Types
                 return false;
             }
         }
-        
+
         public static Boolean TryGetOrAdd<TKey, TValue>(this ConcurrentDictionary<TKey, TValue> dictionary, TKey key, Func<TKey, TValue> factory, [MaybeNullWhen(false)] out TValue result) where TKey : notnull
         {
             if (dictionary is null)
@@ -78,7 +78,7 @@ namespace NetExtender.Utilities.Types
                 return false;
             }
         }
-        
+
         public static TValue ConcurrentGetOrAdd<TKey, TValue>(this ConcurrentDictionary<TKey, TValue> dictionary, TKey key, Func<TValue> factory) where TKey : notnull
         {
             if (dictionary is null)
@@ -117,7 +117,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(dictionary));
             }
-            
+
             if (!dictionary.TryGetValue(key, out WeakReference<TValue>? reference))
             {
                 result = null;

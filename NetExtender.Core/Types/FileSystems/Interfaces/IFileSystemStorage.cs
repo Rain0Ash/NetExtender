@@ -4,6 +4,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Runtime.Serialization;
 
+#pragma warning disable CS0108
+
 namespace NetExtender.FileSystems.Interfaces
 {
     internal interface IFileSystemStorage : IUnsafeFileSystemHandler
@@ -26,6 +28,8 @@ namespace NetExtender.FileSystems.Interfaces
         public Boolean Exists(IFileSystemEntry entry);
         public FileAttributes Attributes(IFileSystemEntry entry);
         public void Attributes(IFileSystemEntry entry, FileAttributes value);
+        public UnixFileMode UnixFileMode(IFileSystemEntry entry);
+        public void UnixFileMode(IFileSystemEntry entry, UnixFileMode value);
         public String? LinkTarget(IFileSystemEntry entry);
         public DateTime CreationTime(IFileSystemEntry entry);
         public void CreationTime(IFileSystemEntry entry, DateTime value);
@@ -48,7 +52,7 @@ namespace NetExtender.FileSystems.Interfaces
         public Int32 GetHashCode(IFileSystemEntry? entry);
         public Boolean Equals(IFileSystemEntry? entry, FileSystemInfo? other);
         public Boolean Equals(IFileSystemEntry? entry, IFileSystemInfo? other);
-        
+
         [return: NotNullIfNotNull("entry")]
         public String? ToString(IFileSystemEntry? entry);
 #endregion
@@ -63,6 +67,8 @@ namespace NetExtender.FileSystems.Interfaces
         public Boolean Exists(ILinkEntry entry);
         public FileAttributes Attributes(ILinkEntry entry);
         public void Attributes(ILinkEntry entry, FileAttributes value);
+        public UnixFileMode UnixFileMode(ILinkEntry entry);
+        public void UnixFileMode(ILinkEntry entry, UnixFileMode value);
         public String? LinkTarget(ILinkEntry entry);
         public DateTime CreationTime(ILinkEntry entry);
         public void CreationTime(ILinkEntry entry, DateTime value);
@@ -88,7 +94,7 @@ namespace NetExtender.FileSystems.Interfaces
         public Int32 GetHashCode(ILinkEntry? entry);
         public Boolean Equals(ILinkEntry? entry, FileSystemInfo? other);
         public Boolean Equals(ILinkEntry? entry, IFileSystemInfo? other);
-        
+
         [return: NotNullIfNotNull("entry")]
         public String? ToString(ILinkEntry? entry);
 #endregion
@@ -106,6 +112,8 @@ namespace NetExtender.FileSystems.Interfaces
         public void IsReadOnly(IFileEntry entry, Boolean value);
         public FileAttributes Attributes(IFileEntry entry);
         public void Attributes(IFileEntry entry, FileAttributes value);
+        public UnixFileMode UnixFileMode(IFileEntry entry);
+        public void UnixFileMode(IFileEntry entry, UnixFileMode value);
         public String? LinkTarget(IFileEntry entry);
         public DateTime CreationTime(IFileEntry entry);
         public void CreationTime(IFileEntry entry, DateTime value);
@@ -147,7 +155,7 @@ namespace NetExtender.FileSystems.Interfaces
         public Int32 GetHashCode(IFileEntry? entry);
         public Boolean Equals(IFileEntry? entry, FileInfo? other);
         public Boolean Equals(IFileEntry? entry, IFileInfo? other);
-        
+
         [return: NotNullIfNotNull("entry")]
         public String? ToString(IFileEntry? entry);
 #endregion
@@ -207,6 +215,7 @@ namespace NetExtender.FileSystems.Interfaces
         public IEnumerable<IDirectoryEntry> EnumerateDirectories(IDirectoryEntry entry, String? pattern, EnumerationOptions options);
         public void MoveTo(IDirectoryEntry entry, String destination);
         public void Create(IDirectoryEntry entry);
+        public void Create(IDirectoryEntry entry, UnixFileMode mode);
         public IDirectoryEntry CreateSubdirectory(IDirectoryEntry entry, String path);
         public void Delete(IDirectoryEntry entry);
         public void Delete(IDirectoryEntry entry, Boolean recursive);
@@ -214,7 +223,7 @@ namespace NetExtender.FileSystems.Interfaces
         public Int32 GetHashCode(IDirectoryEntry? entry);
         public Boolean Equals(IDirectoryEntry? entry, DirectoryInfo? other);
         public Boolean Equals(IDirectoryEntry? entry, IDirectoryInfo? other);
-        
+
         [return: NotNullIfNotNull("entry")]
         public String? ToString(IDirectoryEntry? entry);
 #endregion
@@ -237,7 +246,7 @@ namespace NetExtender.FileSystems.Interfaces
         public Int32 GetHashCode(IDriveEntry? entry);
         public Boolean Equals(IDriveEntry? entry, DriveInfo? other);
         public Boolean Equals(IDriveEntry? entry, IDriveInfo? other);
-        
+
         [return: NotNullIfNotNull("entry")]
         public String? ToString(IDriveEntry? entry);
 #endregion

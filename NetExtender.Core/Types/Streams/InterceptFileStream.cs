@@ -43,12 +43,12 @@ namespace NetExtender.Types.Streams
         Equals = 13,
         ToString = 14
     }
-    
+
     [SuppressMessage("Design", "CA1041")]
     public class InterceptFileStream : FileStreamWrapper, IInterceptIdentifierTarget<InterceptFileStream>, IPropertyIntercept<InterceptFileStream, IPropertyInterceptEventArgs>, IInterceptTargetRaise<IPropertyInterceptEventArgs>, IMethodIntercept<InterceptFileStream, IFileStreamInterceptEventArgs>, IInterceptTargetRaise<IFileStreamInterceptEventArgs>
     {
         protected IAnyMemberInterceptor<InterceptFileStream, IPropertyInterceptEventArgs, FileStreamInterceptEventArgs, Info> Interceptor { get; }
-        
+
         public event EventHandler<InterceptFileStream, IPropertyInterceptEventArgs>? PropertyIntercept
         {
             add
@@ -62,7 +62,7 @@ namespace NetExtender.Types.Streams
                 PropertySetIntercept -= value;
             }
         }
-        
+
         public event EventHandler<InterceptFileStream, IPropertyInterceptEventArgs>? PropertyIntercepting
         {
             add
@@ -76,7 +76,7 @@ namespace NetExtender.Types.Streams
                 PropertySetIntercepting -= value;
             }
         }
-        
+
         public event EventHandler<InterceptFileStream, IPropertyInterceptEventArgs>? PropertyIntercepted
         {
             add
@@ -90,7 +90,7 @@ namespace NetExtender.Types.Streams
                 PropertySetIntercepted -= value;
             }
         }
-        
+
         public event EventHandler<InterceptFileStream, IPropertyInterceptEventArgs>? PropertyGetIntercept
         {
             add
@@ -104,7 +104,7 @@ namespace NetExtender.Types.Streams
                 PropertyGetIntercepted -= value;
             }
         }
-        
+
         public event EventHandler<InterceptFileStream, IPropertyInterceptEventArgs>? PropertySetIntercept
         {
             add
@@ -118,12 +118,12 @@ namespace NetExtender.Types.Streams
                 PropertySetIntercepted -= value;
             }
         }
-        
+
         public event EventHandler<InterceptFileStream, IPropertyInterceptEventArgs>? PropertyGetIntercepting;
         public event EventHandler<InterceptFileStream, IPropertyInterceptEventArgs>? PropertySetIntercepting;
         public event EventHandler<InterceptFileStream, IPropertyInterceptEventArgs>? PropertyGetIntercepted;
         public event EventHandler<InterceptFileStream, IPropertyInterceptEventArgs>? PropertySetIntercepted;
-        
+
         public event EventHandler<InterceptFileStream, IFileStreamInterceptEventArgs>? MethodIntercept
         {
             add
@@ -137,10 +137,10 @@ namespace NetExtender.Types.Streams
                 MethodIntercepted -= value;
             }
         }
-        
+
         public event EventHandler<InterceptFileStream, IFileStreamInterceptEventArgs>? MethodIntercepting;
         public event EventHandler<InterceptFileStream, IFileStreamInterceptEventArgs>? MethodIntercepted;
-        
+
         private protected String? _identifier;
         public virtual String Identifier
         {
@@ -153,7 +153,7 @@ namespace NetExtender.Types.Streams
                 _identifier = value ?? throw new ArgumentNullException(nameof(value));
             }
         }
-        
+
         public override String Name
         {
             get
@@ -262,7 +262,7 @@ namespace NetExtender.Types.Streams
                 Interceptor.InterceptSet(this, value);
             }
         }
-        
+
         protected static ArrayPool<Byte> Pool { get; } = ArrayPool<Byte>.Create();
 
         public InterceptFileStream(String path, FileMode mode)
@@ -352,7 +352,7 @@ namespace NetExtender.Types.Streams
         {
             Interceptor = new FileStreamInterceptor(this);
         }
-        
+
         [UnsupportedOSPlatform("ios")]
         [UnsupportedOSPlatform("macos")]
         [UnsupportedOSPlatform("tvos")]
@@ -409,7 +409,7 @@ namespace NetExtender.Types.Streams
             {
                 return stream.ReadCore(buffer.Span);
             }
-            
+
             Info info = new Info(FileStreamIntercept.Read) { Buffer = buffer };
             return Interceptor.Intercept(this, info, Core, this, buffer);
         }
@@ -670,7 +670,7 @@ namespace NetExtender.Types.Streams
                 Token = CancellationToken.None;
             }
         }
-        
+
         [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
         protected sealed class FileStreamInterceptor : AnyMemberInterceptor<InterceptFileStream, IPropertyInterceptEventArgs, FileStreamInterceptEventArgs, Info>
         {

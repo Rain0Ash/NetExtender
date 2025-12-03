@@ -33,7 +33,7 @@ namespace NetExtender.Types.Enumerators
             {
                 return Array.Empty<T>();
             }
-            
+
             T[] array = new T[count];
             for (Int32 i = 0; i < array.Length && enumerator.MoveNext(); i++)
             {
@@ -62,7 +62,7 @@ namespace NetExtender.Types.Enumerators
 
             return builder.MoveToImmutable();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public List<T> ToList()
         {
@@ -73,7 +73,7 @@ namespace NetExtender.Types.Enumerators
             {
                 return new List<T>(0);
             }
-            
+
             List<T> list = new List<T>(count);
             for (Int32 i = 0; i < count && enumerator.MoveNext(); i++)
             {
@@ -82,7 +82,7 @@ namespace NetExtender.Types.Enumerators
 
             return list;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public ImmutableList<T> ToImmutableList()
         {
@@ -128,7 +128,7 @@ namespace NetExtender.Types.Enumerators
 
             return set;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public ImmutableHashSet<T> ToImmutableHashSet()
         {
@@ -139,7 +139,7 @@ namespace NetExtender.Types.Enumerators
             {
                 return ImmutableHashSet<T>.Empty.WithComparer(Comparer);
             }
-            
+
             ImmutableHashSet<T>.Builder builder = ImmutableHashSet.CreateBuilder(Comparer);
             for (Int32 i = 0; i < count && enumerator.MoveNext(); i++)
             {
@@ -148,7 +148,7 @@ namespace NetExtender.Types.Enumerators
 
             return builder.ToImmutable();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public SortedSet<T> ToSortedSet()
         {
@@ -159,7 +159,7 @@ namespace NetExtender.Types.Enumerators
             {
                 return new SortedSet<T>(Comparer);
             }
-            
+
             SortedSet<T> set = new SortedSet<T>(Comparer);
             for (Int32 i = 0; i < count && enumerator.MoveNext(); i++)
             {
@@ -168,7 +168,7 @@ namespace NetExtender.Types.Enumerators
 
             return set;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public ImmutableSortedSet<T> ToImmutableSortedSet()
         {
@@ -179,7 +179,7 @@ namespace NetExtender.Types.Enumerators
             {
                 return ImmutableSortedSet<T>.Empty.WithComparer(Comparer);
             }
-            
+
             ImmutableSortedSet<T>.Builder builder = ImmutableSortedSet.CreateBuilder(Comparer);
             for (Int32 i = 0; i < count && enumerator.MoveNext(); i++)
             {
@@ -231,7 +231,7 @@ namespace NetExtender.Types.Enumerators
         public Boolean TryCopyTo(Span<T> destination, out Int32 written)
         {
             using TEnumerator enumerator = Enumerator.Clone();
-            
+
             written = 0;
             if (destination.Length < enumerator.Count)
             {

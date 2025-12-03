@@ -24,7 +24,7 @@ namespace NetExtender.Domains.AspNetCore.Builder.Middlewares
         {
             Idempotency = MiddlewareIdempotencyMode.Argument;
         }
-        
+
         public override void Invoke(Object? sender, IServiceCollection services)
         {
             if (services is null)
@@ -63,14 +63,14 @@ namespace NetExtender.Domains.AspNetCore.Builder.Middlewares
                     throw new MiddlewareConvertNoInvokeException();
             }
         }
-        
+
         public IServiceCollection Convert(Object? sender, IWebHostBuilder builder)
         {
             if (builder is null)
             {
                 throw new ArgumentNullException(nameof(builder));
             }
-            
+
             builder.ConfigureServices(collection => Invoke(sender, collection));
             throw new MiddlewareConvertNoInvokeException();
         }
@@ -81,7 +81,7 @@ namespace NetExtender.Domains.AspNetCore.Builder.Middlewares
             {
                 throw new ArgumentNullException(nameof(builder));
             }
-            
+
             return builder.Services;
         }
     }

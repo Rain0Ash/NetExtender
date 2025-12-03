@@ -7,7 +7,7 @@ namespace NetExtender.FileSystems.Interfaces
     internal interface IFileSystemEntry : IFileSystemInfo, IFileSystemStorageEntry
     {
         public new IDriveEntry? Drive { get; }
-        
+
         /// <inheritdoc cref="FileSystemInfo.ResolveLinkTarget(Boolean)"/>
         public new IFileSystemEntry? ResolveLinkTarget();
 
@@ -18,7 +18,7 @@ namespace NetExtender.FileSystems.Interfaces
     public interface IFileSystemInfo : IEquatable<FileSystemInfo>, IFileSystemStorageInfo, INotifyProperty
     {
         public FileSystemInfo? Info { get; }
-        
+
         public Guid Storage { get; }
 
         /// <inheritdoc cref="FileSystemInfo.Name"/>
@@ -39,6 +39,11 @@ namespace NetExtender.FileSystems.Interfaces
         /// <inheritdoc cref="FileSystemInfo.LinkTarget"/>
         public String? LinkTarget { get; }
 
+#if NET7_0_OR_GREATER
+        /// <inheritdoc cref="FileSystemInfo.UnixFileMode"/>
+#endif
+        public UnixFileMode UnixFileMode { get; set; }
+
         /// <inheritdoc cref="FileSystemInfo.CreationTime"/>
         public DateTime CreationTime { get; set; }
 
@@ -56,7 +61,7 @@ namespace NetExtender.FileSystems.Interfaces
 
         /// <inheritdoc cref="FileSystemInfo.LastWriteTimeUtc"/>
         public DateTime LastWriteTimeUtc { get; set; }
-        
+
         public IDriveInfo? Drive { get; }
 
         /// <inheritdoc cref="FileSystemInfo.CreateAsSymbolicLink(String)"/>

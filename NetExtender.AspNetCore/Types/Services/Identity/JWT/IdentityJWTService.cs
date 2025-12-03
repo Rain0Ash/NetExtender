@@ -83,7 +83,7 @@ namespace NetExtender.AspNetCore.Identity
             {
                 return new IdentityTokenInvalidSchemeException();
             }
-            
+
             try
             {
                 JWTKey secret = Secret.Key;
@@ -111,7 +111,7 @@ namespace NetExtender.AspNetCore.Identity
             {
                 throw new ArgumentNullException(nameof(user));
             }
-            
+
             return Encoder.Encode(Secret.Key, new IdentityJWTPayload<TId, TUser, TRole>(user, expire));
         }
 

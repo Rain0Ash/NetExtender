@@ -18,7 +18,7 @@ namespace NetExtender.Utilities.Numerics
                 return Vector.IsHardwareAccelerated;
             }
         }
-        
+
         public static Vector<T> Create<T>(params T[] items) where T : struct
         {
             return new Vector<T>(items);
@@ -792,7 +792,7 @@ namespace NetExtender.Utilities.Numerics
         {
             return Vector2.TransformNormal(normal, matrix);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Single Rotation(this Vector2 value)
         {

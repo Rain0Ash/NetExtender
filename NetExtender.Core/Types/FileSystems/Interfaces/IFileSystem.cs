@@ -19,7 +19,7 @@ namespace NetExtender.FileSystems.Interfaces
                 return NetExtender.FileSystems.FileSystem.Instance;
             }
         }
-        
+
         public Guid Id { get; }
         public String? Name { get; }
         public Object SyncRoot { get; }
@@ -29,8 +29,8 @@ namespace NetExtender.FileSystems.Interfaces
         public Boolean IsReal { get; }
         public StringComparer Comparer { get; }
         public Boolean IsCaseSensitive { get; }
-        
-        [Obsolete($"Use {nameof(IFileSystemHandler)} as specified interface {nameof(IPathHandler)}; {nameof(IFileHandler)}; {nameof(IDirectoryHandler)}.")]
+
+        [Obsolete($"Use IFileSystemHandler as specified interface {nameof(IPathHandler)}; {nameof(ILinkHandler)}; {nameof(IFileHandler)}; {nameof(IDirectoryHandler)}; {nameof(IDriveHandler)}; {nameof(IEnvironmentHandler)}.")]
         public IFileSystemHandler FileSystem { get; }
         public IPathHandler Path { get; }
         public ILinkHandler Link { get; }

@@ -20,7 +20,7 @@ namespace NetExtender.Types.Enums.Attributes
 
             return new KeyValuePair<LocalizationIdentifier, String>(value.Identifier, value.Description);
         }
-        
+
         public LocalizationIdentifier Identifier { get; }
 
         public EnumDescriptionAttribute(CultureIdentifier identifier, String description)

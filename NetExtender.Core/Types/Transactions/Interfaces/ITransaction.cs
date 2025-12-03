@@ -9,7 +9,7 @@ namespace NetExtender.Types.Transactions.Interfaces
     {
         public Boolean? IsCommit { get; }
         public TransactionCommitPolicy Policy { get; }
-        
+
         public Boolean Commit();
         public Boolean Rollback();
     }

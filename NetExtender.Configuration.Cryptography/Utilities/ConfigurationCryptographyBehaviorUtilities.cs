@@ -23,7 +23,7 @@ namespace NetExtender.Configuration.Cryptography.Utilities
 
             return new CryptographyConfigBehavior(behavior, AesCryptographyKey.Default.Cryptor());
         }
-        
+
         public static ICryptographyConfigBehavior Cryptography(this IConfigBehavior behavior, CryptographyConfigOptions options)
         {
             if (behavior is null)

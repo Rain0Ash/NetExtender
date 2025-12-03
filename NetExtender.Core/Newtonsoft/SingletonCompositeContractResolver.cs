@@ -22,7 +22,7 @@ namespace NetExtender.Newtonsoft
                 return Resolvers.Count;
             }
         }
-        
+
         public SingletonCompositeContractResolver()
         {
         }

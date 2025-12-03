@@ -14,7 +14,7 @@ namespace NetExtender.Utilities.Types
         {
             yield return item;
         }
-        
+
         public static Boolean IsReadOnly<T>(this IEnumerable<T> source)
         {
             return source switch

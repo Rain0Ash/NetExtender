@@ -18,7 +18,7 @@ namespace NetExtender.Utilities.Core
                 return Initializer.Initializer.PatchUtilities.Applied.Cast<IReflectionPatchInfo>();
             }
         }
-        
+
         public static IEnumerable<KeyValuePair<IReflectionPatchInfo, Exception?>> Failed
         {
             get
@@ -27,11 +27,11 @@ namespace NetExtender.Utilities.Core
                 {
                     return new KeyValuePair<IReflectionPatchInfo, Exception?>((IReflectionPatchInfo) pair.Key, pair.Value);
                 }
-                
+
                 return Initializer.Initializer.PatchUtilities.Failed.Select(Selector);
             }
         }
-        
+
         public static IEnumerable<IReflectionPatchInfo> NotRequired
         {
             get
@@ -64,12 +64,12 @@ namespace NetExtender.Utilities.Core
         {
             return Initializer.Initializer.PatchUtilities.Exception(patch?.Patch);
         }
-        
+
         internal static Boolean Set(IReflectionPatchInfo? patch)
         {
             return Set(patch, null);
         }
-        
+
         internal static Boolean Set(IReflectionPatchInfo? patch, Exception? exception)
         {
             return Initializer.Initializer.PatchUtilities.Set(patch?.Patch, exception);

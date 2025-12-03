@@ -19,7 +19,7 @@ namespace NetExtender.Utilities.Types
     public static class TupleUtilities
     {
         public const Int32 TupleMaximumGeneric = 7;
-        
+
         public static IImmutableDictionary<Type, Int32> TupleType { get; } = new HashSet<Type>
         {
             typeof(Tuple<>), typeof(Tuple<,>), typeof(Tuple<,,>), typeof(Tuple<,,,>),
@@ -31,7 +31,7 @@ namespace NetExtender.Utilities.Types
             typeof(ValueTuple<>), typeof(ValueTuple<,>), typeof(ValueTuple<,,>), typeof(ValueTuple<,,,>),
             typeof(ValueTuple<,,,,>), typeof(ValueTuple<,,,,,>), typeof(ValueTuple<,,,,,,>), typeof(ValueTuple<,,,,,,,>)
         }.ToImmutableDictionary(static type => type, ReflectionUtilities.GetGenericArgumentsCount);
-        
+
         private static class TupleCache
         {
             private static ConcurrentDictionary<Type, ImmutableArray<Func<ITuple, Object>>> Cache { get; } = new ConcurrentDictionary<Type, ImmutableArray<Func<ITuple, Object>>>();
@@ -65,12 +65,12 @@ namespace NetExtender.Utilities.Types
                 {
                     throw new ArgumentNullException(nameof(type));
                 }
-                
+
                 if (!type.IsTuple(out Int32 count))
                 {
                     throw new NotSupportedException();
                 }
-                
+
                 Func<ITuple, Object>[] array = new Func<ITuple, Object>[count];
 
                 for (Int32 index = 0; index < count; index++)
@@ -238,7 +238,7 @@ namespace NetExtender.Utilities.Types
 
             return new TupleEnumerator<T>(value);
         }
-        
+
         public static IEnumerable<T> AsEnumerable<T>(this Tuple<T> value)
         {
             if (value is null)

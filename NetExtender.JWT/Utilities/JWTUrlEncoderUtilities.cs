@@ -21,7 +21,7 @@ namespace NetExtender.JWT.Utilities
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             return encoder.Encode((ReadOnlySpan<Byte>) source);
         }
 

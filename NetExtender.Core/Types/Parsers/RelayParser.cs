@@ -17,59 +17,59 @@ namespace NetExtender.Types.Parsers
         public StyleTryParseHandler<T?, TResult>? StyleTryParseHandler { get; init; }
         public FormatTryParseHandler<T?, TResult>? FormatTryParseHandler { get; init; }
         public NumericTryParseHandler<T?, TResult>? NumericTryParseHandler { get; init; }
-        
+
         public sealed override TResult Parse(T value)
         {
             return ParseHandler is not null ? ParseHandler(value) : base.Parse(value);
         }
-        
+
         public sealed override TResult Parse(T value, NumberStyles style)
         {
             return StyleParseHandler is not null ? StyleParseHandler(value, style) : base.Parse(value, style);
         }
-        
+
         public sealed override TResult Parse(T value, IFormatProvider? provider)
         {
             return FormatParseHandler is not null ? FormatParseHandler(value, provider) : base.Parse(value, provider);
         }
-        
+
         public sealed override TResult Parse(T value, NumberStyles style, IFormatProvider? provider)
         {
             if (NumericParseHandler is not null)
             {
                 return NumericParseHandler(value, style, provider);
             }
-            
+
             if (NumericTryParseHandler is not null)
             {
                 return NumericTryParseHandler(value, style, provider, out TResult? result) ? result : throw new InvalidOperationException();
             }
-            
+
             if (FormatParseHandler is not null)
             {
                 return FormatParseHandler(value, provider);
             }
-            
+
             if (FormatTryParseHandler is not null)
             {
                 return FormatTryParseHandler(value, provider, out TResult? result) ? result : throw new InvalidOperationException();
             }
-            
+
             if (StyleParseHandler is not null)
             {
                 return StyleParseHandler(value, style);
             }
-            
+
             if (StyleTryParseHandler is not null)
             {
                 return StyleTryParseHandler(value, style, out TResult? result) ? result : throw new InvalidOperationException();
             }
-            
+
             if (ParseHandler is not null)
             {
                 return ParseHandler(value);
             }
-            
+
             if (TryParseHandler is not null)
             {
                 return TryParseHandler(value, out TResult? result) ? result : throw new InvalidOperationException();
@@ -77,22 +77,22 @@ namespace NetExtender.Types.Parsers
 
             throw new ParserException();
         }
-        
+
         public sealed override Boolean TryParse(T? value, [MaybeNullWhen(false)] out TResult result)
         {
             return TryParseHandler is not null ? TryParseHandler(value, out result) : base.TryParse(value, out result);
         }
-        
+
         public sealed override Boolean TryParse(T? value, NumberStyles style, [MaybeNullWhen(false)] out TResult result)
         {
             return StyleTryParseHandler is not null ? StyleTryParseHandler(value, style, out result) : base.TryParse(value, style, out result);
         }
-        
+
         public sealed override Boolean TryParse(T? value, IFormatProvider? provider, [MaybeNullWhen(false)] out TResult result)
         {
             return FormatTryParseHandler is not null ? FormatTryParseHandler(value, provider, out result) : base.TryParse(value, provider, out result);
         }
-        
+
         public sealed override Boolean TryParse(T? value, NumberStyles style, IFormatProvider? provider, [MaybeNullWhen(false)] out TResult result)
         {
             try
@@ -107,18 +107,18 @@ namespace NetExtender.Types.Parsers
                     result = NumericParseHandler(value!, style, provider);
                     return true;
                 }
-                
+
                 if (FormatTryParseHandler is not null)
                 {
                     return FormatTryParseHandler(value, provider, out result);
                 }
-                
+
                 if (FormatParseHandler is not null)
                 {
                     result = FormatParseHandler(value!, provider);
                     return true;
                 }
-                
+
                 if (StyleTryParseHandler is not null)
                 {
                     return StyleTryParseHandler(value, style, out result);
@@ -134,7 +134,7 @@ namespace NetExtender.Types.Parsers
                 {
                     return TryParseHandler(value, out result);
                 }
-                
+
                 if (ParseHandler is not null)
                 {
                     result = ParseHandler(value!);

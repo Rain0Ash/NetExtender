@@ -41,7 +41,7 @@ namespace NetExtender.WindowsPresentation.Types.Commands
         {
             return action is not null ? parameter => action(EnumerableUtilities.Factory(parameter)) : null;
         }
-        
+
         protected void DefaultExecute(T? parameter)
         {
             base.Execute(parameter);
@@ -53,18 +53,18 @@ namespace NetExtender.WindowsPresentation.Types.Commands
             {
                 return;
             }
-            
+
             foreach (T? value in parameter)
             {
                 Execute(value);
             }
         }
-        
+
         public Boolean CanExecute(IEnumerable<T?>? parameter)
         {
             return CanExecute(null, parameter);
         }
-        
+
         [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
         public Boolean CanExecute(Object? sender, IEnumerable<T?>? parameter)
         {
@@ -79,16 +79,16 @@ namespace NetExtender.WindowsPresentation.Types.Commands
                 {
                     throw;
                 }
-                
+
                 return result;
             }
         }
-        
+
         public Boolean CanExecute(IEnumerable? parameter)
         {
             return CanExecute(null, parameter);
         }
-        
+
         public Boolean CanExecute(Object? sender, IEnumerable? parameter)
         {
             return CanExecute(sender, parameter?.OfType<T>());
@@ -105,12 +105,12 @@ namespace NetExtender.WindowsPresentation.Types.Commands
                 _ => base.CanExecuteImplementation(sender, parameter)
             };
         }
-        
+
         public void Execute(IEnumerable<T?>? parameter)
         {
             Execute(null, parameter);
         }
-        
+
         [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
         public void Execute(Object? sender, IEnumerable<T?>? parameter)
         {
@@ -127,17 +127,17 @@ namespace NetExtender.WindowsPresentation.Types.Commands
                 }
             }
         }
-        
+
         public void Execute(IEnumerable? parameter)
         {
             Execute(null, parameter);
         }
-        
+
         public void Execute(Object? sender, IEnumerable? parameter)
         {
             Execute(sender, parameter?.OfType<T>());
         }
-        
+
         protected override void ExecuteImplementation(Object? sender, Object? parameter)
         {
             switch (parameter)
@@ -160,7 +160,7 @@ namespace NetExtender.WindowsPresentation.Types.Commands
             }
         }
     }
-    
+
     public class RelaySenderMultiCommand<T> : RelaySenderCommand<T>, IMultiCommand<T>
     {
         public SenderAction<IEnumerable<T?>?> ExecuteMultiHandler { get; }
@@ -188,7 +188,7 @@ namespace NetExtender.WindowsPresentation.Types.Commands
         {
             return action is not null ? (sender, parameter) => action(sender, EnumerableUtilities.Factory(parameter)) : null;
         }
-        
+
         protected void DefaultExecute(Object? sender, T? parameter)
         {
             base.Execute(sender, parameter);
@@ -200,18 +200,18 @@ namespace NetExtender.WindowsPresentation.Types.Commands
             {
                 return;
             }
-            
+
             foreach (T? value in parameter)
             {
                 Execute(sender, value);
             }
         }
-        
+
         public Boolean CanExecute(IEnumerable<T?>? parameter)
         {
             return CanExecute(null, parameter);
         }
-        
+
         [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
         public Boolean CanExecute(Object? sender, IEnumerable<T?>? parameter)
         {
@@ -226,21 +226,21 @@ namespace NetExtender.WindowsPresentation.Types.Commands
                 {
                     throw;
                 }
-                
+
                 return result;
             }
         }
-        
+
         public Boolean CanExecute(IEnumerable? parameter)
         {
             return CanExecute(null, parameter);
         }
-        
+
         public Boolean CanExecute(Object? sender, IEnumerable? parameter)
         {
             return CanExecute(sender, parameter?.OfType<T>());
         }
-        
+
         protected override Boolean CanExecuteImplementation(Object? sender, Object? parameter)
         {
             return parameter switch
@@ -252,12 +252,12 @@ namespace NetExtender.WindowsPresentation.Types.Commands
                 _ => base.CanExecuteImplementation(sender, parameter)
             };
         }
-        
+
         public void Execute(IEnumerable<T?>? parameter)
         {
             Execute(null, parameter);
         }
-        
+
         [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
         public void Execute(Object? sender, IEnumerable<T?>? parameter)
         {
@@ -274,17 +274,17 @@ namespace NetExtender.WindowsPresentation.Types.Commands
                 }
             }
         }
-        
+
         public void Execute(IEnumerable? parameter)
         {
             Execute(null, parameter);
         }
-        
+
         public void Execute(Object? sender, IEnumerable? parameter)
         {
             Execute(sender, parameter?.OfType<T>());
         }
-        
+
         protected override void ExecuteImplementation(Object? sender, Object? parameter)
         {
             switch (parameter)

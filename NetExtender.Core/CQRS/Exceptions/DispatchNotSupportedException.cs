@@ -12,9 +12,9 @@ namespace NetExtender.Initializer.CQRS.Exceptions
     {
         private new const String Message = "Dispatch of entity '{0}' not supported for dispatch.";
         private const String DispatchMessage = "Dispatch of entity '{0}' not supported for dispatcher '{1}'.";
-        
+
         public Type? Dispatcher { get; }
-        
+
         public Type Type
         {
             get
@@ -40,38 +40,46 @@ namespace NetExtender.Initializer.CQRS.Exceptions
         {
             Dispatcher = dispatcher;
         }
-        
+
+#if NET8_0_OR_GREATER
+        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
         protected DispatchNotSupportedException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
         }
-        
+
         private static String Format(Type? dispatcher, String? message)
         {
-            return message ?? (dispatcher is not null ? DispatchMessage.Format(typeof(TEntity), dispatcher?.GetType()) : Message.Format(typeof(TEntity)));
+            return message ?? (dispatcher is not null ? DispatchMessage.Format(typeof(TEntity), dispatcher?.Name) : Message.Format(typeof(TEntity)));
         }
     }
-    
+
     [Serializable]
     public class DispatchNotSupportedException : NotSupportedException
     {
         private new const String Message = "Dispatch not supported.";
-        
+
         public DispatchNotSupportedException()
             : base(Message)
         {
         }
-        
+
         public DispatchNotSupportedException(String? message)
             : base(message ?? Message)
         {
         }
-        
+
         public DispatchNotSupportedException(String? message, Exception? exception)
             : base(message ?? Message, exception)
         {
         }
-        
+
+#if NET8_0_OR_GREATER
+        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
         protected DispatchNotSupportedException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {

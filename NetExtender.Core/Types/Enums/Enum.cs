@@ -38,7 +38,7 @@ namespace NetExtender.Types.Enums
                 return (TEnum) this;
             }
         }
-        
+
         [JsonIgnore]
         [System.Text.Json.Serialization.JsonIgnore]
         public sealed override Boolean IsFlags
@@ -89,7 +89,7 @@ namespace NetExtender.Types.Enums
                 return Flags.Interface;
             }
         }
-        
+
         [JsonIgnore]
         [System.Text.Json.Serialization.JsonIgnore]
         public sealed override Boolean IsIntern
@@ -100,7 +100,7 @@ namespace NetExtender.Types.Enums
                 return EnumUtilities.EnumStorage<T>.IsIntern(This);
             }
         }
-        
+
         protected Enum()
         {
         }
@@ -114,12 +114,12 @@ namespace NetExtender.Types.Enums
             : base(value, title)
         {
         }
-        
+
         protected override TEnum Initialize()
         {
             return This;
         }
-        
+
         public override TEnum Intern()
         {
             TryIntern(out TEnum result);
@@ -149,49 +149,49 @@ namespace NetExtender.Types.Enums
             result = This;
             return false;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public new static TEnum Create(T value)
         {
             return Create<TEnum>(value);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public new static TEnum Create(T value, LocalizationIdentifier identifier)
         {
             return Create<TEnum>(value, identifier);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public new static TEnum Create(T value, String title)
         {
             return Create<TEnum>(value, title);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public new static TEnum Create(T value, String title, LocalizationIdentifier identifier)
         {
             return Create<TEnum>(value, title, identifier);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public new static ImmutableSortedSet<TEnum> Get()
         {
             return Get<TEnum>();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public new static ImmutableSortedSet<TEnum>? Get(LocalizationIdentifier identifier)
         {
             return Get<TEnum>(identifier);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryParse(T value, [MaybeNullWhen(false)] out TEnum result)
         {
             return TryParse<TEnum>(value, out result);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryParse(LocalizationIdentifier identifier, T value, [MaybeNullWhen(false)] out TEnum result)
         {
@@ -209,14 +209,14 @@ namespace NetExtender.Types.Enums
         {
             return Enum<T>.TryParse(identifier, value, out result);
         }
-        
+
         public sealed override Int32 CompareTo(Object? other)
         {
             if (ReferenceEquals(this, other))
             {
                 return 0;
             }
-            
+
             return other switch
             {
                 TEnum value => CompareTo(value),
@@ -273,7 +273,7 @@ namespace NetExtender.Types.Enums
                 _ => false
             };
         }
-        
+
         public sealed override Boolean Equals(IEnum<T>? other)
         {
             return other is Enum<T, TEnum> @enum ? Equals(@enum) : base.Equals(other);
@@ -304,7 +304,7 @@ namespace NetExtender.Types.Enums
             return EqualityComparer<T>.Default.Equals(Id, other.Id) && Identifier == other.Identifier && String.Equals(Title, other.Title, StringComparison.Ordinal);
         }
     }
-    
+
     [JsonConverter(typeof(EnumJsonConverter))]
     public partial class Enum<T> : IEnum<T>, IEquality<Enum<T>> where T : unmanaged, Enum
     {
@@ -422,7 +422,7 @@ namespace NetExtender.Types.Enums
                 return Id;
             }
         }
-        
+
         public String Title { get; private init; }
 
         [JsonIgnore]
@@ -434,7 +434,7 @@ namespace NetExtender.Types.Enums
                 return Identifier is not null && Identifier != LocalizationIdentifier.Invariant;
             }
         }
-        
+
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]
         public LocalizationIdentifier? Identifier { get; private init; }
@@ -693,13 +693,13 @@ namespace NetExtender.Types.Enums
         {
             return EnumUtilities.EnumStorage<T>.TryParse(identifier, value, out result);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryParse(String value, [MaybeNullWhen(false)] out Enum<T> result)
         {
             return EnumUtilities.EnumStorage<T>.TryParse(value, out result);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryParse(LocalizationIdentifier identifier, String value, [MaybeNullWhen(false)] out Enum<T> result)
         {
@@ -729,14 +729,14 @@ namespace NetExtender.Types.Enums
         {
             return EnumUtilities.EnumStorage<T>.TryParse(identifier, value, out result);
         }
-        
+
         public virtual Int32 CompareTo(Object? other)
         {
             if (ReferenceEquals(this, other))
             {
                 return 0;
             }
-            
+
             return other switch
             {
                 Enum<T> value => CompareTo(value),
@@ -812,7 +812,7 @@ namespace NetExtender.Types.Enums
         {
             return Title;
         }
-        
+
         public String ToString(String? format)
         {
             return ToString(format, null);

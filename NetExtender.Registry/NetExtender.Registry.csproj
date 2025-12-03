@@ -1,11 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net6.0-windows</TargetFramework>
+        <TargetFrameworks>net6.0-windows;net7.0-windows;net8.0-windows;net9.0-windows;net10.0-windows</TargetFrameworks>
         <Nullable>enable</Nullable>
         <ImplicitUsings>disable</ImplicitUsings>
         <OutputType>Library</OutputType>
-        <LangVersion>10</LangVersion>
         <Authors>Rain0Ash</Authors>
         <PackageProjectUrl>https://github.com/Rain0Ash/NetExtender</PackageProjectUrl>
         <Version>0.8.9</Version>
@@ -23,11 +22,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.Win32.Registry" Version="6.0.0-preview.5.21301.5"/>
+        <ProjectReference Include="..\NetExtender.Core\NetExtender.Core.csproj"/>
     </ItemGroup>
 
-    <ItemGroup>
-        <ProjectReference Include="..\NetExtender.Core\NetExtender.Core.csproj"/>
+    <ItemGroup Condition="'$(TargetFramework)' == 'net5.0-windows'">
+        <PackageReference Include="Microsoft.Win32.Registry" Version="5.0.0"/>
     </ItemGroup>
 
 </Project>

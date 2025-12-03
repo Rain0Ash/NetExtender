@@ -18,7 +18,7 @@ namespace NetExtender.Utilities.Types
             }
         }
     }
-    
+
     public static class ValueTaskUtilities
     {
         public static ValueTask<Boolean> True
@@ -58,13 +58,13 @@ namespace NetExtender.Utilities.Types
         {
             return ValueTaskUtilities<T>.Default;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ValueTask<Boolean> ToValueTask(this Boolean value)
         {
             return value ? True : False;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ValueTask<T> ToValueTask<T>(this T value)
         {

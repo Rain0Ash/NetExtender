@@ -38,7 +38,7 @@ namespace Microsoft.AspNetCore.Identity.Data
             : this(String.Empty, String.Empty)
         {
         }
-        
+
         public RegisterRequest(String email, String password)
         {
             Email = email ?? throw new ArgumentNullException(nameof(email));

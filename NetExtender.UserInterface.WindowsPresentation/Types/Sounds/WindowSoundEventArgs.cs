@@ -7,7 +7,7 @@ using System.ComponentModel;
 namespace NetExtender.UserInterface.WindowsPresentation.Sounds
 {
     public delegate void WindowSoundEventHandler(Object? sender, WindowSoundEventArgs args);
-    
+
     public class WindowSoundEventArgs : HandledEventArgs
     {
         public String Sound { get; }
@@ -16,7 +16,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.Sounds
         {
             Sound = sound ?? throw new ArgumentNullException(nameof(sound));
         }
-        
+
         public WindowSoundEventArgs(String sound, Boolean handled)
             : base(handled)
         {

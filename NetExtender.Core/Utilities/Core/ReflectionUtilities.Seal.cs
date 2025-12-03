@@ -38,7 +38,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(type));
             }
-                
+
             try
             {
                 return assembly.Storage.GetOrAdd(type, type is { IsAbstract: true, IsSealed: true } ? StaticStorage.Static(assembly, type, name, builder) : Initializer.Initializer.ReflectionUtilities.Seal(type, name, builder, assembly));
@@ -53,7 +53,7 @@ namespace NetExtender.Utilities.Core
                 throw exception;
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Type Seal(this Type type)
         {
@@ -65,7 +65,7 @@ namespace NetExtender.Utilities.Core
         {
             return Seal(type, (Func<Type, String, String?>?) null, builder);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Type Seal(this Type type, String? name)
         {
@@ -106,7 +106,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             return type is { IsAbstract: true, IsSealed: true } ? StaticStorage.Static(type, name, builder) : SealStorage.Seal(type, name, builder);
         }
     }

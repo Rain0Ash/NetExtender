@@ -65,7 +65,7 @@ namespace NetExtender.Types.Dictionaries
         }
     }
 #endif
-    
+
     public abstract class FrozenSortedDictionary<TKey, TValue, TDictionary> : FrozenDictionary<TKey, TValue, TDictionary, SortedDictionaryCollection<TKey, TValue>>, ISortedDictionary<TKey, TValue>, IReadOnlySortedDictionary<TKey, TValue> where TKey : notnull where TDictionary : class, ISortedDictionary<TKey, TValue>
     {
         protected override ISortedDictionary<TKey, TValue> Dictionary
@@ -94,7 +94,7 @@ namespace NetExtender.Types.Dictionaries
             return new SortedDictionaryCollection<TKey, TValue>(set, set.Comparer);
         }
     }
-    
+
     public abstract class FrozenHashDictionary<TKey, TValue, TDictionary> : FrozenDictionary<TKey, TValue, TDictionary, DictionaryCollection<TKey, TValue>>, IHashDictionary<TKey, TValue> where TKey : notnull where TDictionary : class, IHashDictionary<TKey, TValue>
     {
         protected override IHashDictionary<TKey, TValue> Dictionary
@@ -123,7 +123,7 @@ namespace NetExtender.Types.Dictionaries
             return new DictionaryCollection<TKey, TValue>(dictionary, dictionary.Comparer);
         }
     }
-    
+
     public abstract class FrozenDictionary<TKey, TValue, TDictionary, TModify> : IDictionary, IDictionary<TKey, TValue>, IReadOnlyDictionary<TKey, TValue> where TDictionary : class, IDictionary<TKey, TValue> where TModify : class, IDictionary<TKey, TValue>
     {
         protected TDictionary Internal { get; private set; }
@@ -341,12 +341,12 @@ namespace NetExtender.Types.Dictionaries
             {
                 throw new ArgumentException($"The key '{key}' is not of type '{typeof(TKey).Name}'.", nameof(key));
             }
-            
+
             if (value is not TValue cvalue)
             {
                 throw new ArgumentException($"The value '{value}' is not of type '{typeof(TValue).Name}'.", nameof(value));
             }
-            
+
             Add(ckey, cvalue);
         }
 
@@ -368,7 +368,7 @@ namespace NetExtender.Types.Dictionaries
             {
                 throw new ArgumentException($"The key '{key}' is not of type '{typeof(TKey).Name}'.", nameof(key));
             }
-            
+
             Remove(convert);
         }
 
@@ -383,7 +383,7 @@ namespace NetExtender.Types.Dictionaries
             Unfreeze();
             return Dictionary.Remove(item);
         }
-        
+
         public void Clear()
         {
             Unfreeze();
@@ -410,7 +410,7 @@ namespace NetExtender.Types.Dictionaries
                     throw new ArgumentException($"Array must be of type '{typeof(KeyValuePair<TKey, TValue>[]).Name}'.", nameof(array));
             }
         }
-        
+
         public void CopyTo(KeyValuePair<TKey, TValue>[] array, Int32 index)
         {
             Dictionary.CopyTo(array, index);
@@ -453,7 +453,7 @@ namespace NetExtender.Types.Dictionaries
                 {
                     throw new ArgumentException($"The key '{key}' is not of type '{typeof(TKey).Name}'.", nameof(key));
                 }
-                
+
                 if (value is not TValue cvalue)
                 {
                     throw new ArgumentException($"The value '{value}' is not of type '{typeof(TValue).Name}'.", nameof(value));

@@ -197,7 +197,7 @@ namespace NetExtender.Utilities.Types
                 enumerator._current.X = x;
                 return true;
             }
-            
+
             if (x >= enumerator._size.Width && enumerator._current.X < enumerator._size.Width)
             {
                 enumerator._current.X = enumerator._size.Width;
@@ -211,7 +211,7 @@ namespace NetExtender.Utilities.Types
                 enumerator._current.Y = y;
                 return true;
             }
-            
+
             if (y >= enumerator._size.Height && enumerator._current.Y < enumerator._size.Height)
             {
                 enumerator._current.X = 0;
@@ -294,7 +294,7 @@ namespace NetExtender.Utilities.Types
                 enumerator._current.Y = y;
                 return true;
             }
-            
+
             if (y >= enumerator._size.Height && enumerator._current.Y < enumerator._size.Height)
             {
                 enumerator._current.Y = enumerator._size.Height;
@@ -308,7 +308,7 @@ namespace NetExtender.Utilities.Types
                 enumerator._current.X = x;
                 return true;
             }
-            
+
             if (x >= enumerator._size.Width && enumerator._current.X < enumerator._size.Width)
             {
                 enumerator._current.Y = 0;

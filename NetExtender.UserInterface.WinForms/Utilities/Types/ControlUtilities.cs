@@ -27,7 +27,7 @@ namespace NetExtender.Utilities.UserInterface.Types
         {
             return SetEnabled(@object as Control, enabled);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [return: NotNullIfNotNull("control")]
         public static T? SetEnabled<T>(this T? control, Boolean enabled) where T : Control
@@ -36,42 +36,42 @@ namespace NetExtender.Utilities.UserInterface.Types
             {
                 control.Enabled = enabled;
             }
-            
+
             return control;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Control? Enable(Object? @object)
         {
             return Enable(@object as Control);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [return: NotNullIfNotNull("control")]
         public static T? Enable<T>(this T? control) where T : Control
         {
             return SetEnabled(control, true);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Control? Disable(Object? @object)
         {
             return Disable(@object as Control);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [return: NotNullIfNotNull("control")]
         public static T? Disable<T>(this T? control) where T : Control
         {
             return SetEnabled(control, false);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Control? SetVisible(Object? @object, Boolean visible)
         {
             return SetVisible(@object as Control, visible);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [return: NotNullIfNotNull("control")]
         public static T? SetVisible<T>(this T? control, Boolean visible) where T : Control
@@ -80,36 +80,36 @@ namespace NetExtender.Utilities.UserInterface.Types
             {
                 control.Visible = visible;
             }
-            
+
             return control;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Control? Visible(Object? @object)
         {
             return Visible(@object as Control);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [return: NotNullIfNotNull("control")]
         public static T? Visible<T>(this T? control) where T : Control
         {
             return SetVisible(control, true);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Control? Invisible(Object? @object)
         {
             return Invisible(@object as Control);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [return: NotNullIfNotNull("control")]
         public static T? Invisible<T>(this T? control) where T : Control
         {
             return SetVisible(control, false);
         }
-        
+
         private static IDisposable BindTo(Control relative, String name, Action<EventPattern<Object>> action)
         {
             if (relative is null)

@@ -60,13 +60,13 @@ namespace System.Collections.Concurrent
             {
                 Int32 count = 0;
                 Int32 acquired = 0;
-                
+
                 try
                 {
                     AcquireAllLocks(ref acquired);
 
                     Int32[] locks = _tables.CountPerLock;
-                    
+
                     for (Int32 i = 0; i < locks.Length; i++)
                     {
                         count += locks[i];
@@ -96,7 +96,7 @@ namespace System.Collections.Concurrent
                 }
 
                 Int32 acquired = 0;
-                
+
                 try
                 {
                     AcquireAllLocks(ref acquired);
@@ -292,7 +292,7 @@ namespace System.Collections.Concurrent
         {
             return AddCore(item, item is not null ? Comparer.GetHashCode(item) : 0, true, out _);
         }
-        
+
         /// <summary>
         /// Adds the specified item to the <see cref="ConcurrentHashSet{T}"/>.
         /// </summary>
@@ -313,7 +313,7 @@ namespace System.Collections.Concurrent
         public void Clear()
         {
             Int32 acquired = 0;
-            
+
             try
             {
                 AcquireAllLocks(ref acquired);
@@ -392,7 +392,7 @@ namespace System.Collections.Concurrent
         public Boolean TryRemove(T item)
         {
             Int32 hashcode = item is not null ? Comparer.GetHashCode(item) : 0;
-            
+
             while (true)
             {
                 Tables tables = _tables;
@@ -601,7 +601,7 @@ namespace System.Collections.Concurrent
         private Boolean IsBucketsEmpty()
         {
             Int32[] count = _tables.CountPerLock;
-            
+
             for (Int32 i = 0; i < count.Length; i++)
             {
                 if (count[i] != 0)
@@ -616,7 +616,7 @@ namespace System.Collections.Concurrent
         private void GrowTable(Tables tables)
         {
             Int32 acquired = 0;
-            
+
             try
             {
                 // The thread that first obtains _locks[0] will be the one doing the resize operation
@@ -633,7 +633,7 @@ namespace System.Collections.Concurrent
 
                 // Compute the (approx.) total size. Use an Int64 accumulation variable to avoid an overflow.
                 Int64 approximation = 0;
-                
+
                 for (Int32 i = 0; i < tables.CountPerLock.Length; i++)
                 {
                     approximation += tables.CountPerLock[i];
@@ -655,7 +655,7 @@ namespace System.Collections.Concurrent
 
                 // Compute the new table size. We find the smallest integer larger than twice the previous table size, and not divisible by
                 // 2,3,5 or 7. We can consider a different table-sizing policy in the future.
-                
+
                 const Int32 maximum = 0X7FEFFFFF;
                 Int32 newLength = 0;
                 Boolean maximize = false;
@@ -765,7 +765,7 @@ namespace System.Collections.Concurrent
             for (Int32 i = from; i < to; i++)
             {
                 Boolean taken = false;
-                
+
                 try
                 {
                     Monitor.Enter(locks[i], ref taken);
@@ -791,7 +791,7 @@ namespace System.Collections.Concurrent
         private void CopyToItems(IList<T> array, Int32 index)
         {
             Node?[] buckets = _tables.Buckets;
-            
+
             for (Int32 i = 0; i < buckets.Length; i++)
             {
                 for (Node? current = buckets[i]; current is not null; current = current.Next)
@@ -874,7 +874,7 @@ namespace System.Collections.Concurrent
             private const Int32 StateOuterloop = 1;
             private const Int32 StateInnerLoop = 2;
             private const Int32 StateDone = 3;
-            
+
             private readonly ConcurrentHashSet<T> _set;
 
             private Node?[]? _buckets;
@@ -929,7 +929,7 @@ namespace System.Collections.Concurrent
                         {
                             return false;
                         }
-                        
+
                         Int32 i = ++_i;
                         if ((UInt32) i < (UInt32) buckets.Length)
                         {

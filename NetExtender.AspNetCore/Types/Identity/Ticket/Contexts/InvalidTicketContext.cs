@@ -66,7 +66,7 @@ namespace NetExtender.AspNetCore.Identity
         {
             return !(first == second);
         }
-        
+
         InvalidTicketContext InvalidTicketContext.ITicketContext.Ticket
         {
             get
@@ -85,7 +85,7 @@ namespace NetExtender.AspNetCore.Identity
                 return Context ?? throw new IdentityNoContextException();
             }
         }
-        
+
         public JWTAuthenticationOptions? Options { get; private init; }
         public IdentityException<T> Exception { get; private init; }
 
@@ -293,7 +293,7 @@ namespace NetExtender.AspNetCore.Identity
                 return Context ?? throw new IdentityNoContextException();
             }
         }
-        
+
         public JWTAuthenticationOptions? Options { get; private init; }
         internal IIdentityException Exception { get; private init; }
 

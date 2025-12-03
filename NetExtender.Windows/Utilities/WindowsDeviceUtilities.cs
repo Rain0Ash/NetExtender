@@ -77,7 +77,7 @@ namespace NetExtender.Utilities.Windows
             {
                 return monitor is not null ? new MonitorInfo(new String(monitor.Device), monitor.Area, monitor.WorkingArea) : default;
             }
-            
+
             public Int32 Size = Marshal.SizeOf(typeof(Monitor));
             public WinRectangle Area = new WinRectangle();
             public WinRectangle WorkingArea = new WinRectangle();
@@ -86,7 +86,7 @@ namespace NetExtender.Utilities.Windows
             public Char[] Device = new Char[32];
         }
 #pragma warning restore CS0414
-        
+
         [DllImport("user32.dll", SetLastError = true)]
         private static extern IntPtr MonitorFromWindow(IntPtr hwnd, UInt32 dwFlags);
 

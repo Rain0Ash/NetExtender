@@ -70,7 +70,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(value));
             }
-            
+
             return DefineAnonymousType(generator, Expando(value));
         }
 
@@ -172,7 +172,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(value));
             }
-            
+
             return CreateAnonymousActivator(generator, Expando(value));
         }
 
@@ -194,7 +194,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(properties));
             }
-            
+
             return CreateAnonymousActivator(generator, properties.Select(property => (AnonymousTypePropertyInfo) property).ToProperties());
         }
 
@@ -216,7 +216,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(properties));
             }
-            
+
             return CreateAnonymousActivator(generator, properties.Select(property => (AnonymousTypePropertyInfo) property).ToProperties());
         }
 
@@ -238,7 +238,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(properties));
             }
-            
+
             lock (generator)
             {
                 return generator.CreateActivator(properties);

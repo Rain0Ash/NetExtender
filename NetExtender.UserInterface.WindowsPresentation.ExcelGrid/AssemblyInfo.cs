@@ -10,4 +10,3 @@ using System.Windows;
 
 [assembly: XmlnsPrefix("http://schemas.netextender.net/xaml/spreadsheet", "excel")]
 [assembly: XmlnsDefinition("http://schemas.netextender.net/xaml/spreadsheet", "NetExtender.UserInterface.WindowsPresentation.ExcelGrid")]
-

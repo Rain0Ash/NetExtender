@@ -10,32 +10,32 @@ namespace NetExtender.AspNetCore.Types.Middlewares.Interfaces
     {
         public void Invoke(HttpContext context);
     }
-    
+
     public interface IMiddleware<in TArgument>
     {
         public void Invoke(HttpContext context, TArgument argument);
     }
-    
+
     public interface IMiddleware<in TArgument1, in TArgument2>
     {
         public void Invoke(HttpContext context, TArgument1 first, TArgument2 second);
     }
-    
+
     public interface IMiddleware<in TArgument1, in TArgument2, in TArgument3>
     {
         public void Invoke(HttpContext context, TArgument1 first, TArgument2 second, TArgument3 third);
     }
-    
+
     public interface IMiddleware<in TArgument1, in TArgument2, in TArgument3, in TArgument4>
     {
         public void Invoke(HttpContext context, TArgument1 first, TArgument2 second, TArgument3 third, TArgument4 fourth);
     }
-    
+
     public interface IMiddleware<in TArgument1, in TArgument2, in TArgument3, in TArgument4, in TArgument5>
     {
         public void Invoke(HttpContext context, TArgument1 first, TArgument2 second, TArgument3 third, TArgument4 fourth, TArgument5 fifth);
     }
-    
+
     public interface IMiddleware<in TArgument1, in TArgument2, in TArgument3, in TArgument4, in TArgument5, in TArgument6>
     {
         public void Invoke(HttpContext context, TArgument1 first, TArgument2 second, TArgument3 third, TArgument4 fourth, TArgument5 fifth, TArgument6 sixth);

@@ -522,7 +522,7 @@ namespace NetExtender.Utilities.Types
         {
             return source is not null ? source as ImmutableMap<TKey, TValue> ?? source.ToImmutableMap(keyComparer, valueComparer) : ImmutableMap<TKey, TValue>.Empty.WithComparers(keyComparer, valueComparer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IImmutableCounter<TKey, TValue> AsIImmutableCounter<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>>? source) where TKey : notnull where TValue : unmanaged, IConvertible
         {
@@ -558,7 +558,7 @@ namespace NetExtender.Utilities.Types
         {
             return source is not null ? source as ImmutableSortedCounter<TKey, TValue> ?? source.ToImmutableSortedCounter(comparer) : ImmutableSortedCounter<TKey, TValue>.Empty.WithComparers(comparer);
         }
-        
+
         private const Int32 IndexAccessThreshold = 100;
         private const Double SkipRatioThreshold = 0.1;
 
@@ -570,7 +570,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (source.IsEmpty)
             {
                 return source;
@@ -582,7 +582,7 @@ namespace NetExtender.Utilities.Types
             }
 
             Int32 start = lower is not null && source.IndexOf(lower) is var s ? s >= 0 ? s : ~s : 0;
-            
+
             if (start >= source.Count)
             {
                 return source.Clear();
@@ -590,22 +590,22 @@ namespace NetExtender.Utilities.Types
 
             Int32 last = source.Count - 1;
             Int32 end = upper is not null && source.IndexOf(upper) is var e ? e >= 0 ? e : ~e - 1 : last;
-            
+
             if (end < 0 || start > end)
             {
                 return source.Clear();
             }
-            
+
             Int32 count = end - start + 1;
 
             if (count <= 0 || start == 0 && end == last)
             {
                 return source;
             }
-            
+
             return ShouldUseEnumeratorStrategy(last + 1, start, end, count) ? CreateViewWithEnumerator(source, start, end, count) : CreateViewWithIndexAccess(source, start, end);
         }
-            
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static Boolean ShouldUseEnumeratorStrategy(Int32 count, Int32 start, Int32 end, Int32 range)
         {
@@ -624,12 +624,12 @@ namespace NetExtender.Utilities.Types
         private static ImmutableSortedSet<T> CreateViewWithIndexAccess<T>(ImmutableSortedSet<T> source, Int32 start, Int32 end)
         {
             ImmutableSortedSet<T>.Builder builder = ImmutableSortedSet.CreateBuilder(source.KeyComparer);
-            
+
             for (Int32 i = start; i <= end; i++)
             {
                 builder.Add(source[i]);
             }
-            
+
             return builder.ToImmutable();
         }
 
@@ -643,9 +643,9 @@ namespace NetExtender.Utilities.Types
             if (start <= reverse)
             {
                 using ImmutableSortedSet<T>.Enumerator enumerator = source.GetEnumerator();
-                
+
                 for (Int32 i = 0; i < start && enumerator.MoveNext(); i++) { }
-                
+
                 for (Int32 i = 0; i < count && enumerator.MoveNext(); i++)
                 {
                     builder.Add(enumerator.Current);
@@ -654,9 +654,9 @@ namespace NetExtender.Utilities.Types
             else
             {
                 using IEnumerator<T> enumerator = source.Reverse().GetEnumerator();
-                
+
                 for (Int32 i = 0; i < reverse && enumerator.MoveNext(); i++) { }
-                
+
                 for (Int32 i = 0; i < count && enumerator.MoveNext(); i++)
                 {
                     builder.Add(enumerator.Current);
@@ -728,7 +728,7 @@ namespace NetExtender.Utilities.Types
         {
             return source.Length > 0 ? source[RandomUtilities.NextNonNegative(source.Length - 1)] : default;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableArray<T> AddIf<T>(this ImmutableArray<T> source, T item, Boolean condition)
         {
@@ -808,7 +808,7 @@ namespace NetExtender.Utilities.Types
 
             return predicate(item) ? source : source.Remove(item);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableList<T> AddIf<T>(this ImmutableList<T> source, T item, Boolean condition)
         {
@@ -938,7 +938,7 @@ namespace NetExtender.Utilities.Types
 
             return predicate(item) ? source : source.Remove(item);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IImmutableList<T> AddIf<T>(this IImmutableList<T> source, T item, Boolean condition)
         {
@@ -1068,7 +1068,7 @@ namespace NetExtender.Utilities.Types
 
             return predicate(item) ? source : source.Remove(item);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableHashSet<T> AddIf<T>(this ImmutableHashSet<T> source, T item, Boolean condition)
         {
@@ -1187,7 +1187,7 @@ namespace NetExtender.Utilities.Types
 
             return predicate(item) ? source : source.Remove(item);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableSortedSet<T> AddIf<T>(this ImmutableSortedSet<T> source, T item, Boolean condition)
         {
@@ -1306,7 +1306,7 @@ namespace NetExtender.Utilities.Types
 
             return predicate(item) ? source : source.Remove(item);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IImmutableSet<T> AddIf<T>(this IImmutableSet<T> source, T item, Boolean condition)
         {
@@ -1425,7 +1425,7 @@ namespace NetExtender.Utilities.Types
 
             return predicate(item) ? source : source.Remove(item);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableArray<T> AddRange<T>(this ImmutableArray<T> source, params T[] values)
         {

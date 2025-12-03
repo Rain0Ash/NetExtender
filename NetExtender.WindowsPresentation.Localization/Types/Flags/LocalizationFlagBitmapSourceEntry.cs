@@ -14,7 +14,7 @@ namespace NetExtender.WindowsPresentation.Localization.Types.Flags
         {
             return new LocalizationFlagBitmapSourceEntry(value);
         }
-        
+
         static LocalizationFlagBitmapSourceEntry()
         {
             WindowsPresentationLocalizationFlagsUtilities.Initialize();
@@ -24,7 +24,7 @@ namespace NetExtender.WindowsPresentation.Localization.Types.Flags
             : base(identifier)
         {
         }
-        
+
         public new static LocalizationFlagBitmapSourceEntry Convert(LocalizationIdentifier identifier)
         {
             return identifier;

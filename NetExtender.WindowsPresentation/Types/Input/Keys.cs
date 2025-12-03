@@ -13,27 +13,49 @@ using NetExtender.Utilities.Types;
 namespace NetExtender.WindowsPresentation.Types
 {
     [Serializable]
-    public readonly struct Keys : IFlag, IEquatable<Keys>, IReadOnlyCollection<Key>
+    public readonly unsafe struct Keys : IFlag, IEquatable<Keys>, IReadOnlyCollection<Key>
     {
         public static implicit operator ReadOnlySpan<Byte>(in Keys value)
         {
-            return value.Internal;
+            fixed (void* pointer = &value)
+            {
+                return new ReadOnlySpan<Byte>(pointer, sizeof(Flag256) / sizeof(Byte));
+            }
         }
 
         public static implicit operator ReadOnlySpan<UInt16>(in Keys value)
         {
-            return value.Internal;
+            fixed (void* pointer = &value)
+            {
+                return new ReadOnlySpan<UInt16>(pointer, sizeof(Flag256) / sizeof(UInt16));
+            }
         }
 
         public static implicit operator ReadOnlySpan<UInt32>(in Keys value)
         {
-            return value.Internal;
+            fixed (void* pointer = &value)
+            {
+                return new ReadOnlySpan<UInt32>(pointer, sizeof(Flag256) / sizeof(UInt32));
+            }
         }
 
         public static implicit operator ReadOnlySpan<UInt64>(in Keys value)
         {
-            return value.Internal;
+            fixed (void* pointer = &value)
+            {
+                return new ReadOnlySpan<UInt64>(pointer, sizeof(Flag256) / sizeof(UInt64));
+            }
         }
+
+#if NET7_0_OR_GREATER
+        public static implicit operator ReadOnlySpan<UInt128>(in Keys value)
+        {
+            fixed (void* pointer = &value)
+            {
+                return new ReadOnlySpan<UInt128>(pointer, sizeof(Flag256) / sizeof(UInt128));
+            }
+        }
+#endif
 
         public static Boolean operator ==(Keys first, Keys second)
         {
@@ -126,7 +148,10 @@ namespace NetExtender.WindowsPresentation.Types
 
         ReadOnlySpan<Byte> IFlag.AsSpan()
         {
-            return Internal.AsSpan();
+            fixed (void* pointer = &this)
+            {
+                return new ReadOnlySpan<Byte>(pointer, sizeof(Flag256) / sizeof(Byte));
+            }
         }
 
         Boolean IEquatable<IFlag>.Equals(IFlag? other)

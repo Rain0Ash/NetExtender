@@ -46,7 +46,7 @@ namespace NetExtender.Utilities.Numerics
         {
             return value is not null;
         }
-        
+
         /// <summary>
         /// Return NOT (!)
         /// </summary>
@@ -57,7 +57,7 @@ namespace NetExtender.Utilities.Numerics
         {
             return !value;
         }
-        
+
         /// <summary>
         /// Return NOT (!)
         /// </summary>
@@ -68,7 +68,7 @@ namespace NetExtender.Utilities.Numerics
         {
             return !value;
         }
-        
+
         /// <summary>
         /// Return NOT (!)
         /// </summary>
@@ -79,7 +79,7 @@ namespace NetExtender.Utilities.Numerics
         {
             return !value;
         }
-        
+
         /// <summary>
         /// Return NOT (!)
         /// </summary>

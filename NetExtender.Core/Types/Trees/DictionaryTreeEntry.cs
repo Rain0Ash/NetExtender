@@ -66,7 +66,7 @@ namespace NetExtender.Types.Trees
             {
                 throw new InvalidOperationException("Entry without value can't be flatten");
             }
-            
+
             return new FlattenDictionaryTreeEntry<TKey, TValue>(Key, Value, separator, Sections);
         }
 

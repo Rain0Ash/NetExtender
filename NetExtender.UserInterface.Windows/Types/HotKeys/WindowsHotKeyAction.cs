@@ -22,22 +22,22 @@ namespace NetExtender.Types.HotKeys
         {
             return !(first == second);
         }
-        
+
         public static implicit operator String?(WindowsHotKeyAction value)
         {
             return value.Title;
         }
-        
+
         public static implicit operator Char(WindowsHotKeyAction value)
         {
             return value.Key;
         }
-        
+
         public static implicit operator HotKeyModifierKeys(WindowsHotKeyAction value)
         {
             return value.Modifier;
         }
-        
+
         public String? Title { get; }
         public Char Key { get; }
         public HotKeyModifierKeys Modifier { get; }
@@ -133,7 +133,7 @@ namespace NetExtender.Types.HotKeys
                 .ToString();
         }
     }
-    
+
     public readonly struct WindowsHotKeyAction<T> : IWindowsHotKeyAction<WindowsHotKeyAction<T>, T> where T : unmanaged, IComparable<T>, IConvertible
     {
         public static Boolean operator ==(WindowsHotKeyAction<T> first, WindowsHotKeyAction<T> second)
@@ -145,32 +145,32 @@ namespace NetExtender.Types.HotKeys
         {
             return !(first == second);
         }
-        
+
         public static implicit operator WindowsHotKeyAction(WindowsHotKeyAction<T> value)
         {
             return new WindowsHotKeyAction(value.VirtualKey, value.Modifier);
         }
-        
+
         public static implicit operator T(WindowsHotKeyAction<T> value)
         {
             return value.Id;
         }
-        
+
         public static implicit operator String?(WindowsHotKeyAction<T> value)
         {
             return value.Title;
         }
-        
+
         public static implicit operator Char(WindowsHotKeyAction<T> value)
         {
             return value.Key;
         }
-        
+
         public static implicit operator HotKeyModifierKeys(WindowsHotKeyAction<T> value)
         {
             return value.Modifier;
         }
-        
+
         public T Id { get; }
         public String? Title { get; }
         public Char Key { get; }
@@ -215,7 +215,7 @@ namespace NetExtender.Types.HotKeys
             Key = key;
             Modifier = modifier;
         }
-        
+
         public WindowsHotKeyAction(T id, WindowsHotKeyAction hotkey)
             : this(id, hotkey, hotkey, hotkey)
         {
@@ -241,7 +241,7 @@ namespace NetExtender.Types.HotKeys
         {
             return HashCode.Combine(Id, Title, Key, Modifier);
         }
-        
+
         public override Boolean Equals(Object? other)
         {
             return other is WindowsHotKeyAction<T> action && Equals(action);
@@ -251,7 +251,7 @@ namespace NetExtender.Types.HotKeys
         {
             return EqualityComparer<T>.Default.Equals(Id, other.Id) && Title == other.Title && Key == other.Key && Modifier == other.Modifier;
         }
-        
+
         public Boolean Equals(Char key, HotKeyModifierKeys modifier)
         {
             return Key == key && Modifier == modifier;
@@ -261,7 +261,7 @@ namespace NetExtender.Types.HotKeys
         {
             return Equals(other.Key, other.Modifier);
         }
-        
+
         public Int32 CompareTo(WindowsHotKeyAction<T> other)
         {
             Int32 comparison = Id.CompareTo(other.Id);

@@ -143,7 +143,7 @@ namespace NetExtender.AspNetCore.Identity
     public sealed class IdentityJWTAsymmetricAlgorithm<TId, TUser, TRole, TAlgorithm> : IIdentityJWTAsymmetricAlgorithm<TId, TUser, TRole> where TId : struct, IEquatable<TId> where TUser : class, IUserInfo<TId, TRole> where TRole : IEquatable<TRole> where TAlgorithm : class, IJWTAsymmetricAlgorithm, new()
     {
         private TAlgorithm Internal { get; } = new TAlgorithm();
-        
+
         public String Name
         {
             get

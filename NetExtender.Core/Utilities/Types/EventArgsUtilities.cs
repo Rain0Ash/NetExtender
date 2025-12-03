@@ -9,7 +9,7 @@ namespace NetExtender.Utilities.Types
         private static class ElapsedEventArgs
         {
             public static Action<System.Timers.ElapsedEventArgs, DateTime>? SignalTime { get; }
-        
+
             static ElapsedEventArgs()
             {
                 const BindingFlags binding = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
@@ -19,7 +19,7 @@ namespace NetExtender.Utilities.Types
                 }
             }
         }
-        
+
         public static Boolean SetSignalTime(this System.Timers.ElapsedEventArgs args, DateTime value)
         {
             if (args is null)

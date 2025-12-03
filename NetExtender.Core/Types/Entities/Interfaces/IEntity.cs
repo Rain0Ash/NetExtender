@@ -9,17 +9,17 @@ namespace NetExtender.Types.Entities.Interfaces
     {
         public T Id { get; }
     }
-    
+
     public interface IEntityValue<out T> : IEntity<T>
     {
         public T Value { get; }
     }
-    
+
     public interface IEntity<out T> : IEntity
     {
         public T Get();
     }
-    
+
     public interface IEntity
     {
         public Type Self

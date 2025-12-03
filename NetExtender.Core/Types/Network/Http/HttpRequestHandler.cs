@@ -18,7 +18,7 @@ using Newtonsoft.Json;
 namespace NetExtender.Types.Network
 {
     public delegate ExceptionHandlerAction HttpExceptionHandler(HttpRequestException? exception);
-    
+
     [SuppressMessage("ReSharper", "CognitiveComplexity")]
     public abstract class HttpRequestHandler : ExceptionHandler
     {
@@ -28,7 +28,7 @@ namespace NetExtender.Types.Network
             {
                 throw new ArgumentNullException(nameof(request));
             }
-            
+
             try
             {
                 result = request.Invoke();
@@ -50,7 +50,7 @@ namespace NetExtender.Types.Network
                             ExceptionHandlerAction.Default => ExceptionHandlerAction.Ignore,
                             var value => value
                         };
-                        
+
                         goto start;
                     case ExceptionHandlerAction.Throw:
                     case ExceptionHandlerAction.Rethrow:
@@ -75,7 +75,7 @@ namespace NetExtender.Types.Network
                             ExceptionHandlerAction.Default => ExceptionHandlerAction.Ignore,
                             var value => value
                         };
-                        
+
                         goto start;
                     case ExceptionHandlerAction.Throw:
                     case ExceptionHandlerAction.Rethrow:
@@ -100,7 +100,7 @@ namespace NetExtender.Types.Network
                             ExceptionHandlerAction.Default => ExceptionHandlerAction.Ignore,
                             var value => value
                         };
-                        
+
                         goto start;
                     case ExceptionHandlerAction.Throw:
                         throw socket;
@@ -126,7 +126,7 @@ namespace NetExtender.Types.Network
                             ExceptionHandlerAction.Default => ExceptionHandlerAction.Ignore,
                             var value => value
                         };
-                        
+
                         goto start;
                     case ExceptionHandlerAction.Throw:
                         throw io;
@@ -152,7 +152,7 @@ namespace NetExtender.Types.Network
                             ExceptionHandlerAction.Default => ExceptionHandlerAction.Ignore,
                             var value => value
                         };
-                        
+
                         goto start;
                     case ExceptionHandlerAction.Throw:
                     case ExceptionHandlerAction.Rethrow:
@@ -211,7 +211,7 @@ namespace NetExtender.Types.Network
                             ExceptionHandlerAction.Default => ExceptionHandlerAction.Ignore,
                             var value => value
                         };
-                        
+
                         goto start;
                     case ExceptionHandlerAction.Throw:
                     case ExceptionHandlerAction.Rethrow:
@@ -235,7 +235,7 @@ namespace NetExtender.Types.Network
                             ExceptionHandlerAction.Default => ExceptionHandlerAction.Ignore,
                             var value => value
                         };
-                        
+
                         goto start;
                     case ExceptionHandlerAction.Throw:
                     case ExceptionHandlerAction.Rethrow:

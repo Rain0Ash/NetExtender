@@ -9,23 +9,23 @@ namespace NetExtender.Types.Sets.Interfaces
     public interface IReadOnlyObservableSortedSet<T> : IReadOnlyObservableSet<T>, IReadOnlySortedSet<T>
     {
     }
-    
+
     public interface IReadOnlyIndexObservableSortedSet<T> : IReadOnlyObservableSortedSet<T>, IReadOnlyIndexSortedSet<T>
     {
     }
-    
+
     public interface IReadOnlyObservableHashSet<T> : IReadOnlyObservableSet<T>, IReadOnlyHashSet<T>
     {
     }
-    
+
     public interface IReadOnlyIndexObservableHashSet<T> : IReadOnlyObservableHashSet<T>
     {
     }
-    
+
     public interface IReadOnlyObservableSet<T> : IReadOnlySet<T>, INotifyCollection
     {
     }
-    
+
     public interface IReadOnlyIndexObservableIndexSortedSet<T> : IReadOnlyObservableSet<T>, IReadOnlyIndexSortedSet<T>
     {
     }

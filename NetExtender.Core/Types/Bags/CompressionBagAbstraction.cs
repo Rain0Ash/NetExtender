@@ -6,9 +6,9 @@ namespace NetExtender.Types.Bags
     /*public abstract class CompressionBagBase<T> : ICompressionBag<T>, IReadOnlyCompressionBag<T>, INotifyCollectionChanged where T : notnull
     {
         public event NotifyCollectionChangedEventHandler? CollectionChanged;
-        
+
         public abstract Constraint Constraints { get; }
-        
+
         ICounter64<T> ICompressionBag<T>.Constraints
         {
             get
@@ -24,7 +24,7 @@ namespace NetExtender.Types.Bags
                 return Constraints;
             }
         }
-        
+
         public abstract IReadOnlyList<T> Bag { get; }
         protected Decimal Budget { get; set; }
         protected Func<T, Decimal> Converter { get; }
@@ -33,10 +33,10 @@ namespace NetExtender.Types.Bags
         {
             get
             {
-                
+
             }
         }
-        
+
         public Boolean IsReadOnly
         {
             get
@@ -57,7 +57,6 @@ namespace NetExtender.Types.Bags
 
         public virtual Boolean TryGetValue(Int32 index, out T result)
         {
-            
         }
 
         protected Boolean Build([MaybeNullWhen(false)] out ImmutableList<T> result)
@@ -76,7 +75,7 @@ namespace NetExtender.Types.Bags
         protected virtual Boolean Build(out ImmutableSortedCounter<T, Int64> result)
         {
             SortedCounter64<T> counter = new SortedCounter64<T>(Constraints.Comparer);
-            
+
             Decimal budget = Budget;
             foreach ((T item, Int64 quantity) in Constraints)
             {
@@ -90,11 +89,11 @@ namespace NetExtender.Types.Bags
             result = ImmutableSortedCounter.CreateRange(counter.Comparer, counter);
             return result.Count > 0;
         }
-        
+
         public virtual IEnumerator<T> GetEnumerator()
         {
             Decimal budget = Budget;
-            
+
             foreach ((T item, Int64 quantity) in Constraints)
             {
                 Decimal cost = Converter(item);
@@ -130,7 +129,7 @@ namespace NetExtender.Types.Bags
                     return Internal.Comparer;
                 }
             }
-            
+
             public Int32 Count
             {
                 get
@@ -220,7 +219,7 @@ namespace NetExtender.Types.Bags
                 Bag.Update();
                 return value;
             }
-            
+
             void IDictionary<T, Int64>.Add(T key, Int64 value)
             {
                 Add(key, value);
@@ -268,7 +267,7 @@ namespace NetExtender.Types.Bags
                 {
                     return false;
                 }
-                
+
                 Bag.Update();
                 return true;
             }
@@ -279,11 +278,11 @@ namespace NetExtender.Types.Bags
                 {
                     return false;
                 }
-                
+
                 Bag.Update();
                 return true;
             }
-            
+
             Boolean IDictionary<T, Int64>.Remove(T key)
             {
                 return Remove(key, 1);
@@ -326,7 +325,7 @@ namespace NetExtender.Types.Bags
                 {
                     return false;
                 }
-                
+
                 Bag.Update();
                 return true;
             }
@@ -337,7 +336,7 @@ namespace NetExtender.Types.Bags
                 {
                     return false;
                 }
-                
+
                 Bag.Update();
                 return true;
             }

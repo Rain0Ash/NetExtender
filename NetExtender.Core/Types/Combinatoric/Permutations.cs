@@ -330,7 +330,7 @@ namespace NetExtender.Types.Combinatoric
                         Values.Clear();
                         Values.AddRange(Parent.Values);
                         Array.Sort(Orders);
-                        
+
                         Position = EnumeratorPosition.InSet;
                         return Position != EnumeratorPosition.AfterLast;
                     case EnumeratorPosition.InSet when Values.Count < 2:
@@ -349,7 +349,7 @@ namespace NetExtender.Types.Combinatoric
                         throw new EnumUndefinedOrNotSupportedException<EnumeratorPosition>(Position, nameof(Position), null);
                 }
 
-                
+
             }
 
             /// <summary>

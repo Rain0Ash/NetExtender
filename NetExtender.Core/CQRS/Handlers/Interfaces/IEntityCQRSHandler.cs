@@ -12,7 +12,7 @@ namespace NetExtender.CQRS.Handlers.Interfaces
         public new Task<TResult> HandleAsync(TEntity entity);
         public new Task<TResult> HandleAsync(TEntity entity, CancellationToken token);
     }
-    
+
     public interface IEntityCQRSHandler<in TEntity> where TEntity : IEntityCQRS
     {
         public Task HandleAsync(TEntity entity);

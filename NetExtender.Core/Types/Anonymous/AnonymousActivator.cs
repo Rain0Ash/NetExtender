@@ -75,7 +75,7 @@ namespace NetExtender.Types.Anonymous
             return Activate();
         }
     }
-    
+
     public readonly struct AnonymousActivator<TSource, T> : IAnonymousActivator<T> where TSource : IAnonymousObject
     {
         private static ReflectionActivator<TSource, T> Internal { get; }
@@ -111,7 +111,7 @@ namespace NetExtender.Types.Anonymous
             return Activate(argument);
         }
     }
-    
+
     public readonly struct AnonymousActivator<TSource, T1, T2> : IAnonymousActivator<T1, T2> where TSource : IAnonymousObject
     {
         private static ReflectionActivator<TSource, T1, T2> Internal { get; }
@@ -147,7 +147,7 @@ namespace NetExtender.Types.Anonymous
             return Activate(first, second);
         }
     }
-    
+
     public readonly struct AnonymousActivator<TSource, T1, T2, T3> : IAnonymousActivator<T1, T2, T3> where TSource : IAnonymousObject
     {
         private static ReflectionActivator<TSource, T1, T2, T3> Internal { get; }
@@ -183,7 +183,7 @@ namespace NetExtender.Types.Anonymous
             return Activate(first, second, third);
         }
     }
-    
+
     public readonly struct AnonymousActivator<TSource, T1, T2, T3, T4> : IAnonymousActivator<T1, T2, T3, T4> where TSource : IAnonymousObject
     {
         private static ReflectionActivator<TSource, T1, T2, T3, T4> Internal { get; }
@@ -219,7 +219,7 @@ namespace NetExtender.Types.Anonymous
             return Activate(first, second, third, fourth);
         }
     }
-    
+
     public readonly struct AnonymousActivator<TSource, T1, T2, T3, T4, T5> : IAnonymousActivator<T1, T2, T3, T4, T5> where TSource : IAnonymousObject
     {
         private static ReflectionActivator<TSource, T1, T2, T3, T4, T5> Internal { get; }
@@ -255,7 +255,7 @@ namespace NetExtender.Types.Anonymous
             return Activate(first, second, third, fourth, fifth);
         }
     }
-    
+
     public readonly struct AnonymousActivator<TSource, T1, T2, T3, T4, T5, T6> : IAnonymousActivator<T1, T2, T3, T4, T5, T6> where TSource : IAnonymousObject
     {
         private static ReflectionActivator<TSource, T1, T2, T3, T4, T5, T6> Internal { get; }
@@ -291,7 +291,7 @@ namespace NetExtender.Types.Anonymous
             return Activate(first, second, third, fourth, fifth, sixth);
         }
     }
-    
+
     public readonly struct AnonymousActivator<TSource, T1, T2, T3, T4, T5, T6, T7> : IAnonymousActivator<T1, T2, T3, T4, T5, T6, T7> where TSource : IAnonymousObject
     {
         private static ReflectionActivator<TSource, T1, T2, T3, T4, T5, T6, T7> Internal { get; }
@@ -321,13 +321,13 @@ namespace NetExtender.Types.Anonymous
         {
             return Internal.Activate(first, second, third, fourth, fifth, sixth, seventh);
         }
-        
+
         IAnonymousObject IReflectionActivator<IAnonymousObject, T1, T2, T3, T4, T5, T6, T7>.Activate(T1 first, T2 second, T3 third, T4 fourth, T5 fifth, T6 sixth, T7 seventh)
         {
             return Activate(first, second, third, fourth, fifth, sixth, seventh);
         }
     }
-    
+
     public readonly struct AnonymousActivator<TSource, T1, T2, T3, T4, T5, T6, T7, T8> : IAnonymousActivator<T1, T2, T3, T4, T5, T6, T7, T8> where TSource : IAnonymousObject
     {
         private static ReflectionActivator<TSource, T1, T2, T3, T4, T5, T6, T7, T8> Internal { get; }
@@ -357,13 +357,13 @@ namespace NetExtender.Types.Anonymous
         {
             return Internal.Activate(first, second, third, fourth, fifth, sixth, seventh, eighth);
         }
-        
+
         IAnonymousObject IReflectionActivator<IAnonymousObject, T1, T2, T3, T4, T5, T6, T7, T8>.Activate(T1 first, T2 second, T3 third, T4 fourth, T5 fifth, T6 sixth, T7 seventh, T8 eighth)
         {
             return Activate(first, second, third, fourth, fifth, sixth, seventh, eighth);
         }
     }
-    
+
     public readonly struct AnonymousActivator<TSource, T1, T2, T3, T4, T5, T6, T7, T8, T9> : IAnonymousActivator<T1, T2, T3, T4, T5, T6, T7, T8, T9> where TSource : IAnonymousObject
     {
         private static ReflectionActivator<TSource, T1, T2, T3, T4, T5, T6, T7, T8, T9> Internal { get; }
@@ -393,7 +393,7 @@ namespace NetExtender.Types.Anonymous
         {
             return Internal.Activate(first, second, third, fourth, fifth, sixth, seventh, eighth, ninth);
         }
-        
+
         IAnonymousObject IReflectionActivator<IAnonymousObject, T1, T2, T3, T4, T5, T6, T7, T8, T9>.Activate(T1 first, T2 second, T3 third, T4 fourth, T5 fifth, T6 sixth, T7 seventh, T8 eighth, T9 ninth)
         {
             return Activate(first, second, third, fourth, fifth, sixth, seventh, eighth, ninth);

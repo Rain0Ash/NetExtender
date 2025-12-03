@@ -11,7 +11,7 @@
             </Setter.Value>
         </Setter>
     </Style>
-    
+
     <Style TargetType="{x:Type local:ExcelTextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
         <Style.Triggers>
             <Trigger Property="IsEnabled" Value="False">

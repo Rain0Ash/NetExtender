@@ -18,36 +18,36 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
         {
             ReactiveViewModelServiceProviderUtilities.Initialize();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static IServiceProvider GetProvider()
         {
             return ReactiveViewModelServiceProviderUtilities.Provider();
         }
-        
+
         [ReflectionNaming]
         [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
         private static class ReactiveViewModelServiceProviderUtilities
         {
             private const String ReactiveUI = nameof(ReactiveUI);
-            
+
             [ReflectionNaming]
             public static Func<IServiceProvider> Provider { get; }
-            
+
             static ReactiveViewModelServiceProviderUtilities()
             {
                 if (!Initialize(out MethodInfo? provider))
                 {
                     throw new NotSupportedReflectionException($"Not supported. Please, check dependency '{nameof(NetExtender)}.{nameof(WindowsPresentation)}.{nameof(ReactiveUI)}.{nameof(DependencyInjection)}'.");
                 }
-                
+
                 Provider = provider.CreateDelegate<Func<IServiceProvider>>();
             }
-            
+
             public static void Initialize()
             {
             }
-            
+
             private static Boolean Initialize([MaybeNullWhen(false)] out MethodInfo provider)
             {
                 try

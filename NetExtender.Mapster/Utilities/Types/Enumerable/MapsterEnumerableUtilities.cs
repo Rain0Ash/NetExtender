@@ -23,7 +23,7 @@ namespace NetExtender.Utilities.Types
             TDestination[] items = array.Adapt<TSource[], TDestination[]>();
             return new PaginationPartialListWrapper<TDestination, TDestination[]>(items, index, size, array.Length);
         }
-        
+
         public static TCollection Pagination<TSource, TDestination, TCollection>(this IEnumerable<TSource> source, Int32 index, Int32 size, Func<IPaginationList<TDestination, TDestination[]>, TCollection> converter) where TCollection : class, ICollection<TDestination>
         {
             if (source is null)

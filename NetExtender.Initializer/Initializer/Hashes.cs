@@ -38,6 +38,7 @@ namespace NetExtender.Initializer
                 throw new ArgumentNullException(nameof(assembly));
             }
 
+#pragma warning disable SYSLIB0056
             try
             {
                 return hash is not null ? Assembly.LoadFrom(assembly, hash, algorithm) : Assembly.LoadFrom(assembly);
@@ -48,13 +49,9 @@ namespace NetExtender.Initializer
             }
             catch (Exception exception)
             {
-                if (isThrow)
-                {
-                    throw new CryptographicException($"Invalid cryptography for assembly '{assembly}'", exception);
-                }
-
-                return null;
+                return isThrow ? throw new CryptographicException($"Invalid cryptography for assembly '{assembly}'", exception) : null;
             }
+#pragma warning restore SYSLIB0056
         }
 
         // ReSharper disable once CognitiveComplexity

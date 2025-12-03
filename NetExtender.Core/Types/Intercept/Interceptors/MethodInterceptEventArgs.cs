@@ -31,7 +31,7 @@ namespace NetExtender.Types.Intercept
                 Exception = exception;
             }
         }
-        
+
         public sealed override ImmutableArray<Object?> Arguments
         {
             get
@@ -93,7 +93,7 @@ namespace NetExtender.Types.Intercept
             base.Clear();
         }
     }
-    
+
     public class MethodInterceptEventArgs<T> : MethodInterceptBaseEventArgs<MethodInterceptEventArgs<T>.Information, T>
     {
         public readonly struct Information : IMemberInterceptArgumentInfo<MethodInfo, T>
@@ -217,7 +217,7 @@ namespace NetExtender.Types.Intercept
                 {
                     throw new InvalidOperationException("Cannot change value when intercept is seal.");
                 }
-                
+
                 _value = value;
                 Seal();
             }
@@ -234,7 +234,7 @@ namespace NetExtender.Types.Intercept
                 Value = (TResult) value!;
             }
         }
-        
+
         protected MethodInterceptBaseEventArgs(T value)
             : base(value)
         {
@@ -257,7 +257,7 @@ namespace NetExtender.Types.Intercept
                 return Member;
             }
         }
-        
+
         Object? ISimpleInterceptEventArgs.Value
         {
             get

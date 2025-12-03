@@ -39,7 +39,7 @@ namespace NetExtender.Types.Concurrent.Observable
                     return false;
                 }
             }
-            
+
             Boolean IList.IsFixedSize
             {
                 get

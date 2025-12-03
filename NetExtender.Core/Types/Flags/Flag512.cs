@@ -76,7 +76,7 @@ namespace NetExtender.Types.Flags
         {
             fixed (void* pointer = &value)
             {
-                return new ReadOnlySpan<Byte>(pointer, sizeof(UInt64) * 4 / sizeof(Byte));
+                return new ReadOnlySpan<Byte>(pointer, sizeof(Flag512) / sizeof(Byte));
             }
         }
 
@@ -84,7 +84,7 @@ namespace NetExtender.Types.Flags
         {
             fixed (void* pointer = &value)
             {
-                return new ReadOnlySpan<UInt16>(pointer, sizeof(UInt64) * 4 / sizeof(UInt16));
+                return new ReadOnlySpan<UInt16>(pointer, sizeof(Flag512) / sizeof(UInt16));
             }
         }
 
@@ -92,7 +92,7 @@ namespace NetExtender.Types.Flags
         {
             fixed (void* pointer = &value)
             {
-                return new ReadOnlySpan<UInt32>(pointer, sizeof(UInt64) * 4 / sizeof(UInt32));
+                return new ReadOnlySpan<UInt32>(pointer, sizeof(Flag512) / sizeof(UInt32));
             }
         }
 
@@ -100,9 +100,19 @@ namespace NetExtender.Types.Flags
         {
             fixed (void* pointer = &value)
             {
-                return new ReadOnlySpan<UInt64>(pointer, sizeof(UInt64) * 4 / sizeof(UInt64));
+                return new ReadOnlySpan<UInt64>(pointer, sizeof(Flag512) / sizeof(UInt64));
             }
         }
+
+#if NET7_0_OR_GREATER
+        public static implicit operator ReadOnlySpan<UInt128>(in Flag512 value)
+        {
+            fixed (void* pointer = &value)
+            {
+                return new ReadOnlySpan<UInt128>(pointer, sizeof(Flag512) / sizeof(UInt128));
+            }
+        }
+#endif
 
         public static Boolean operator ==(Flag512 first, Flag512 second)
         {
@@ -248,7 +258,10 @@ namespace NetExtender.Types.Flags
 
         public ReadOnlySpan<Byte> AsSpan()
         {
-            return this;
+            fixed (void* pointer = &this)
+            {
+                return new ReadOnlySpan<Byte>(pointer, sizeof(Flag512) / sizeof(Byte));
+            }
         }
 
         public Boolean HasFlag(ReadOnlySpan<Byte> value)

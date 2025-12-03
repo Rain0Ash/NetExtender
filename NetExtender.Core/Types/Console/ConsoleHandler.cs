@@ -220,7 +220,7 @@ namespace NetExtender.Types.Console
                 {
                     return;
                 }
-                
+
                 try
                 {
                     System.Console.InputEncoding = value;
@@ -253,7 +253,7 @@ namespace NetExtender.Types.Console
                 {
                     return;
                 }
-                
+
                 try
                 {
                     System.Console.InputEncoding = value;
@@ -614,7 +614,7 @@ namespace NetExtender.Types.Console
         /// <inheritdoc cref="System.Console.CursorTop"/>
         public virtual Int32 CursorTop
         {
-            
+
             get
             {
                 try
@@ -667,7 +667,7 @@ namespace NetExtender.Types.Console
                 try
                 {
                     Rectangle rectangle = Window;
-                    
+
                     try
                     {
                         System.Console.SetWindowPosition(value.Left, value.Top);
@@ -1329,7 +1329,7 @@ namespace NetExtender.Types.Console
                 return false;
             }
         }
-        
+
         /// <inheritdoc cref="System.Console.Beep(System.Int32,System.Int32)"/>
         public virtual Boolean Beep(Int32 frequency, Int32 duration)
         {
@@ -2481,7 +2481,7 @@ namespace NetExtender.Types.Console
         private sealed class Seal : ConsoleHandler
         {
             public static Seal Instance { get; } = new Seal();
-            
+
             private Seal()
             {
             }

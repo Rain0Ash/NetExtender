@@ -40,7 +40,7 @@ namespace NetExtender.Types.Dictionaries
                 return Dictionary.Keys.IsReadOnly;
             }
         }
-        
+
         public DictionaryKeyCollection(IDictionary<TKey, TValue> dictionary)
         {
             Dictionary = dictionary ?? throw new ArgumentNullException(nameof(dictionary));
@@ -112,7 +112,7 @@ namespace NetExtender.Types.Dictionaries
             return Dictionary.Keys.ToString();
         }
     }
-    
+
     public sealed class DictionaryKeyCollection<TKey, TValue, TDictionary> : ICollection, ICollection<TKey> where TKey : notnull where TDictionary : IDictionary<TKey, TValue>
     {
         private TDictionary Dictionary { get; }
@@ -148,7 +148,7 @@ namespace NetExtender.Types.Dictionaries
                 return Dictionary.Keys.IsReadOnly;
             }
         }
-        
+
         public DictionaryKeyCollection(TDictionary dictionary)
         {
             Dictionary = dictionary ?? throw new ArgumentNullException(nameof(dictionary));

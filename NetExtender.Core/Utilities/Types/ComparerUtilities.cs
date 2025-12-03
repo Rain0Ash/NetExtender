@@ -73,7 +73,7 @@ namespace NetExtender.Utilities.Types
                 return false;
             }
         }
-        
+
         public static IComparer<T> Reverse<T>(this IComparer<T> comparer)
         {
             return comparer switch
@@ -725,7 +725,7 @@ namespace NetExtender.Utilities.Types
         public static Boolean CompareInRange<T>(this T value, T minimum, T maximum, IComparer<T>? comparer, MathPositionType comparison)
         {
             comparer ??= Comparer<T>.Default;
-            
+
             Int32 min = comparer.Compare(value, minimum);
             Int32 max = comparer.Compare(value,  maximum);
 

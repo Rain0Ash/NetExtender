@@ -40,20 +40,20 @@ namespace NetExtender.WindowsPresentation.Types.Commands.History
             {
                 throw new ArgumentNullException(nameof(command));
             }
-            
+
             return Factory(command, parameter, options);
         }
-        
+
         protected TNode Create(ICommand<T> command, TId? id, T parameter)
         {
             return Create(command, id, parameter, Options);
         }
-        
+
         protected virtual TNode Create(ICommand<T> command, TId? id, T parameter, CommandHistoryEntryOptions options)
         {
             NullableConcurrentDictionary<TId?, TContainer> entries = Entries.GetOrAdd(parameter, static _ => new NullableConcurrentDictionary<TId?, TContainer>());
             TContainer container = entries.GetOrAdd(id, static _ => new TContainer());
-            
+
             lock (container)
             {
                 TNode node = Node(command, id, parameter, options);
@@ -62,116 +62,116 @@ namespace NetExtender.WindowsPresentation.Types.Commands.History
                 return node;
             }
         }
-        
+
         public TNode Create(ICommand<T> command, T parameter)
         {
             return Create(command, default(TId?), parameter);
         }
-        
+
         ICommandHistoryLinkedEntry ICommandHistoryManager<T>.Create(ICommand<T> command, T parameter)
         {
             return CommandHistoryLink.Convert(Create(command, parameter));
         }
-        
+
         public TNode Create(ICommand<T> command, T parameter, CommandHistoryEntryOptions options)
         {
             return Create(command, default(TId?), parameter, options);
         }
-        
+
         ICommandHistoryLinkedEntry ICommandHistoryManager<T>.Create(ICommand<T> command, T parameter, CommandHistoryEntryOptions options)
         {
             return CommandHistoryLink.Convert(Create(command, parameter, options));
         }
-        
+
         public TNode Create(ICommand<T> command, TId id, T parameter)
         {
             return Create(command, (TId?) id, parameter);
         }
-        
+
         ICommandHistoryLinkedEntry ICommandHistoryIdManager<T, TId>.Create(ICommand<T> command, TId id, T parameter)
         {
             return CommandHistoryLink.Convert(Create(command, id, parameter));
         }
-        
+
         public TNode Create(ICommand<T> command, TId id, T parameter, CommandHistoryEntryOptions options)
         {
             return Create(command, (TId?) id, parameter, options);
         }
-        
+
         ICommandHistoryLinkedEntry ICommandHistoryIdManager<T, TId>.Create(ICommand<T> command, TId id, T parameter, CommandHistoryEntryOptions options)
         {
             return CommandHistoryLink.Convert(Create(command, id, parameter, options));
         }
-        
+
         protected TNode Execute(ICommand<T> command, TId? id, T parameter)
         {
             return Execute(command, id, parameter, Options);
         }
-        
+
         protected virtual TNode Execute(ICommand<T> command, TId? id, T parameter, CommandHistoryEntryOptions options)
         {
             TNode node = Create(command, id, parameter, options);
-            
+
             if (node is ICommandHistoryEntry history)
             {
                 history.Execute();
             }
-            
+
             return node;
         }
-        
+
         public TNode Execute(ICommand<T> command, T parameter)
         {
             return Execute(command, default(TId?), parameter);
         }
-        
+
         ICommandHistoryLinkedEntry ICommandHistoryManager<T>.Execute(ICommand<T> command, T parameter)
         {
             return CommandHistoryLink.Convert(Execute(command, parameter));
         }
-        
+
         public TNode Execute(ICommand<T> command, T parameter, CommandHistoryEntryOptions options)
         {
             return Execute(command, default(TId?), parameter, options);
         }
-        
+
         ICommandHistoryLinkedEntry ICommandHistoryManager<T>.Execute(ICommand<T> command, T parameter, CommandHistoryEntryOptions options)
         {
             return CommandHistoryLink.Convert(Execute(command, parameter, options));
         }
-        
+
         public TNode Execute(ICommand<T> command, TId id, T parameter)
         {
             return Execute(command, (TId?) id, parameter);
         }
-        
+
         ICommandHistoryLinkedEntry ICommandHistoryIdManager<T, TId>.Execute(ICommand<T> command, TId id, T parameter)
         {
             return CommandHistoryLink.Convert(Execute(command, id, parameter));
         }
-        
+
         public TNode Execute(ICommand<T> command, TId id, T parameter, CommandHistoryEntryOptions options)
         {
             return Execute(command, (TId?) id, parameter, options);
         }
-        
+
         ICommandHistoryLinkedEntry ICommandHistoryIdManager<T, TId>.Execute(ICommand<T> command, TId id, T parameter, CommandHistoryEntryOptions options)
         {
             return CommandHistoryLink.Convert(Execute(command, id, parameter, options));
         }
-        
+
         protected virtual Boolean Clear(TId? id, T parameter)
         {
             if (!Entries.TryGetValue(parameter, out NullableConcurrentDictionary<TId?, TContainer>? entries))
             {
                 return false;
             }
-            
+
             if (!entries.TryRemove(id, out TContainer? container))
             {
                 return false;
             }
-            
+
             lock (container)
             {
                 foreach (TNode node in container)
@@ -182,17 +182,17 @@ namespace NetExtender.WindowsPresentation.Types.Commands.History
 
             return true;
         }
-        
+
         public Boolean Clear(T parameter)
         {
             return Clear(default(TId?), parameter);
         }
-        
+
         public Boolean Clear(TId id, T parameter)
         {
             return Clear((TId?) id, parameter);
         }
-        
+
         public virtual TContainer? this[TNode node]
         {
             get
@@ -201,7 +201,7 @@ namespace NetExtender.WindowsPresentation.Types.Commands.History
                 {
                     throw new ArgumentNullException(nameof(node));
                 }
-                
+
                 return Storage.TryGetValue(node, out TContainer? container) ? container : null;
             }
         }
@@ -213,7 +213,7 @@ namespace NetExtender.WindowsPresentation.Types.Commands.History
                 return this[node];
             }
         }
-        
+
         ICommandHistoryLinkedContainer? ICommandHistoryManager<T>.this[ICommandHistoryInfo node]
         {
             get
@@ -237,7 +237,7 @@ namespace NetExtender.WindowsPresentation.Types.Commands.History
                 return this[default(TId?), parameter];
             }
         }
-        
+
         ICommandHistoryLinkedContainer<TNode>? ICommandHistoryManager<T, TNode>.this[T parameter]
         {
             get
@@ -245,7 +245,7 @@ namespace NetExtender.WindowsPresentation.Types.Commands.History
                 return this[parameter];
             }
         }
-        
+
         ICommandHistoryLinkedContainer? ICommandHistoryManager<T>.this[T parameter]
         {
             get
@@ -261,7 +261,7 @@ namespace NetExtender.WindowsPresentation.Types.Commands.History
                 return this[(TId?) id, parameter];
             }
         }
-        
+
         ICommandHistoryLinkedContainer<TNode>? ICommandHistoryIdManager<T, TId, TNode>.this[TId id, T parameter]
         {
             get
@@ -269,7 +269,7 @@ namespace NetExtender.WindowsPresentation.Types.Commands.History
                 return this[(TId?) id, parameter];
             }
         }
-        
+
         ICommandHistoryLinkedContainer? ICommandHistoryIdManager<T, TId>.this[TId id, T parameter]
         {
             get

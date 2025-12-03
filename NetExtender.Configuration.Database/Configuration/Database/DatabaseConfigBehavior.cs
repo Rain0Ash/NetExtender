@@ -72,7 +72,7 @@ namespace NetExtender.Configuration.Database.Configuration.Database
             {
                 return null;
             }
-            
+
             try
             {
                 T? entity = Storage.FirstOrDefault(entity => entity.Key == key);
@@ -94,7 +94,7 @@ namespace NetExtender.Configuration.Database.Configuration.Database
             {
                 return null;
             }
-            
+
             try
             {
                 T? entity = await Storage.FirstOrDefaultAsync(entity => entity.Key == key, token).ConfigureAwait(false);
@@ -116,7 +116,7 @@ namespace NetExtender.Configuration.Database.Configuration.Database
             {
                 return false;
             }
-            
+
             try
             {
                 T? entity = Storage.FirstOrDefault(entity => entity.Key == key);
@@ -161,7 +161,7 @@ namespace NetExtender.Configuration.Database.Configuration.Database
             {
                 return false;
             }
-            
+
             try
             {
                 T? entity = await Storage.FirstOrDefaultAsync(entity => entity.Key == key, token).ConfigureAwait(false);

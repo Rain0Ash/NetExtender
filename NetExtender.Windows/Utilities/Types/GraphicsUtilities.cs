@@ -92,7 +92,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(graphics));
             }
-            
+
             SizeF length = graphics.MeasureString(value, font);
             point = alignment.Alignment(point, length);
             graphics.DrawString(value, font, brush, point, format);

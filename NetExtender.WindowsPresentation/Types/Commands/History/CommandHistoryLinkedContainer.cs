@@ -18,7 +18,7 @@ namespace NetExtender.WindowsPresentation.Types.Commands.History
                 return First;
             }
         }
-        
+
         ICommandHistoryLinkedEntry? IReadOnlyLinkedContainer<ICommandHistoryLinkedEntry>.Last
         {
             get
@@ -26,23 +26,23 @@ namespace NetExtender.WindowsPresentation.Types.Commands.History
                 return Last;
             }
         }
-        
+
         ICommandHistoryLinkedEntry? IReadOnlyLinkedContainer<ICommandHistoryLinkedEntry>.Find(Predicate<ICommandHistoryLinkedEntry> predicate)
         {
             return Find(predicate);
         }
-        
+
         ICommandHistoryLinkedEntry? IReadOnlyLinkedContainer<ICommandHistoryLinkedEntry>.FindLast(Predicate<ICommandHistoryLinkedEntry> predicate)
         {
             return FindLast(predicate);
         }
-        
+
         IEnumerator<ICommandHistoryLinkedEntry> IEnumerable<ICommandHistoryLinkedEntry>.GetEnumerator()
         {
             return GetEnumerator();
         }
     }
-    
+
     public class CommandHistoryLinkedContainer<TNode> : LinkedContainer<TNode>, ICommandHistoryLinkedContainer<TNode> where TNode : LinkedNode<TNode>, ICommandHistoryLink<TNode>
     {
     }

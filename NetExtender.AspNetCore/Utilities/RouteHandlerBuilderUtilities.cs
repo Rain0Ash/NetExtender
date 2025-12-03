@@ -53,7 +53,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
             _method = method ?? throw new ArgumentNullException(nameof(method));
         }
     }
-    
+
     public static class RouteHandlerBuilderUtilities
     {
 #if !NET7_0_OR_GREATER
@@ -61,7 +61,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
         {
             HttpMethod.Patch.Method
         };
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEndpointConventionBuilder MapPatch(this IEndpointRouteBuilder endpoints, String pattern, Delegate @delegate)
         {
@@ -82,7 +82,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
 
             return endpoints.MapMethods(pattern, PatchVerb, @delegate);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEndpointConventionBuilder MapPatch(this IEndpointRouteBuilder endpoints, String pattern, RequestDelegate @delegate)
         {
@@ -104,7 +104,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
             return endpoints.MapMethods(pattern, PatchVerb, @delegate);
         }
 #endif
-        
+
         public static IEndpointConventionBuilder? Map(this IEndpointRouteBuilder builder, RouteHandler handler)
         {
             if (builder is null)
@@ -124,7 +124,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
                 { } @delegate => Map(builder, handler.Endpoint, handler.Method, @delegate)
             };
         }
-        
+
 #if NET7_0_OR_GREATER
         public static IEndpointConventionBuilder Map(this IEndpointRouteBuilder builder, [System.Diagnostics.CodeAnalysis.StringSyntax("Route")] String pattern, HttpMethod method, Delegate @delegate)
 #else
@@ -161,7 +161,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
                 _ => throw new NotSupportedException($"Http method '{method.Method}' is not support mapping.")
             };
         }
-        
+
 #if NET7_0_OR_GREATER
         public static IEndpointConventionBuilder Map(this IEndpointRouteBuilder builder, [System.Diagnostics.CodeAnalysis.StringSyntax("Route")] String pattern, HttpMethod method, RequestDelegate @delegate)
 #else

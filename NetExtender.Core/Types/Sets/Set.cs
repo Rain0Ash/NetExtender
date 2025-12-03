@@ -77,7 +77,7 @@ namespace NetExtender.Types.Sets
             return Internal.GetEnumerator();
         }
     }
-    
+
     public class Set<T> : ISet, ISet<T>
     {
         [return: NotNullIfNotNull("set")]

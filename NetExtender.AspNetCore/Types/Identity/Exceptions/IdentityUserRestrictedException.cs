@@ -16,7 +16,7 @@ namespace NetExtender.AspNetCore.Identity
         public new static HttpStatusCode Status { get; set; } = HttpStatusCode.Unauthorized;
         public new static String? Message { get; set; } = "Identity user restricted.";
         public new static String? Code { get; set; } = $"{nameof(Identity)}.User.Restrict";
-        
+
         public IdentityUserRestrictedException()
             : base(Code)
         {
@@ -52,6 +52,10 @@ namespace NetExtender.AspNetCore.Identity
         {
         }
 
+#if NET8_0_OR_GREATER
+        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
         protected IdentityUserRestrictedException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
@@ -96,7 +100,7 @@ namespace NetExtender.AspNetCore.Identity
                 return User;
             }
         }
-        
+
         public IdentityUserRestrictedException(T code)
             : base(IdentityUserRestrictedException.Message, IdentityUserRestrictedException.Status, code)
         {
@@ -127,6 +131,10 @@ namespace NetExtender.AspNetCore.Identity
         {
         }
 
+#if NET8_0_OR_GREATER
+        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
         protected IdentityUserRestrictedException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {

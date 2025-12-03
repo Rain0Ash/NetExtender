@@ -24,32 +24,32 @@ namespace NetExtender.Types.Exceptions
         {
             return Create(value.Status, value.Code);
         }
-        
+
         public static implicit operator BusinessException<T>((HttpStatusCode Status, T Code, String? Message) value)
         {
             return Create(value.Status, value.Code, value.Message);
         }
-        
+
         public static implicit operator BusinessException<T>((HttpStatusCode Status, T Code, String? Message, String? Description) value)
         {
             return Create(value.Status, value.Code, value.Message, value.Description);
         }
-        
+
         public static implicit operator BusinessException<T>((HttpStatusCode Status, T Code, Exception? Exception) value)
         {
             return Create(value.Status, value.Code, value.Exception);
         }
-        
+
         public static implicit operator BusinessException<T>((HttpStatusCode Status, T Code, String? Message, Exception? Exception) value)
         {
             return Create(value.Status, value.Code, value.Message, value.Exception);
         }
-        
+
         public static implicit operator BusinessException<T>((HttpStatusCode Status, T Code, String? Message, String? Description, Exception? Exception) value)
         {
             return Create(value.Status, value.Code, value.Message, value.Description, value.Exception);
         }
-        
+
         public T Code { get; }
 
         public override Type Type
@@ -219,12 +219,20 @@ namespace NetExtender.Types.Exceptions
             Code = code;
         }
 
+#if NET8_0_OR_GREATER
+        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
         protected BusinessException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
             Code = info.GetValue<T>(nameof(Code));
         }
 
+#if NET8_0_OR_GREATER
+        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId = "SYSLIB0051", UrlFormat = "https://aka.ms/dotnet-warnings/{0}")]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             base.GetObjectData(info, context);
@@ -243,7 +251,7 @@ namespace NetExtender.Types.Exceptions
 
         protected override BusinessInfo ToBusinessInfo(BusinessException.BusinessInfo? inner, Boolean include)
         {
-            return new BusinessInfo(Id, Message, Name, Code, Description, Status, inner, ToBusinessInfoReason(include)) { Business = true, Include = include, Data = Data };
+            return new BusinessInfo(Id, Message, Name, Code, Description, When, RetryAfter, Status, inner, ToBusinessInfoReason(include)) { Business = true, Include = include, Data = Data };
         }
 
 #if NET7_0_OR_GREATER
@@ -266,40 +274,45 @@ namespace NetExtender.Types.Exceptions
                 Code = code;
             }
 
-            public BusinessInfo(Guid id, String? message, String? name, T code, String? description, HttpStatusCode? status, ImmutableList<BusinessException.BusinessInfo>? reason)
-                : base(id, message, name, description, status, reason)
+            public BusinessInfo(Guid id, String? message, String? name, T code, String? description, DateTime? when, TimeSpan? retry, HttpStatusCode? status, ImmutableList<BusinessException.BusinessInfo>? reason)
+                : base(id, message, name, description, when, retry, status, reason)
             {
                 Code = code;
             }
 
-            public BusinessInfo(Guid id, String? message, String? name, T code, String? description, HttpStatusCode? status, BusinessException.BusinessInfo? inner, ImmutableList<BusinessException.BusinessInfo>? reason)
-                : base(id, message, name, description, status, inner, reason)
+            public BusinessInfo(Guid id, String? message, String? name, T code, String? description, DateTime? when, TimeSpan? retry, HttpStatusCode? status, BusinessException.BusinessInfo? inner, ImmutableList<BusinessException.BusinessInfo>? reason)
+                : base(id, message, name, description, when, retry, status, inner, reason)
             {
                 Code = code;
             }
 
-            public void Deconstruct(out String? message, out String? name, out T code, out String? description, out HttpStatusCode? status)
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public void Deconstruct(out Guid? id, out String? message, out String? name, out T code, out String? description, out DateTime? when, out TimeSpan? retry, out HttpStatusCode? status)
             {
-                Deconstruct(out message, out name, out code, out description, out status, out _);
+                Deconstruct(out id, out message, out name, out code, out description, out when, out retry, out status, out _);
             }
 
-            public void Deconstruct(out String? message, out String? name, out T code, out String? description, out HttpStatusCode? status, out BusinessException.BusinessInfo? inner)
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public void Deconstruct(out Guid? id, out String? message, out String? name, out T code, out String? description, out DateTime? when, out TimeSpan? retry, out HttpStatusCode? status, out BusinessException.BusinessInfo? inner)
             {
-                Deconstruct(out message, out name, out code, out description, out status, out inner, out _);
+                Deconstruct(out id, out message, out name, out code, out description, out when, out retry, out status, out inner, out _);
             }
 
-            public void Deconstruct(out String? message, out String? name, out T code, out String? description, out HttpStatusCode? status, out BusinessException.BusinessInfo? inner, out ImmutableList<BusinessException.BusinessInfo>? reason)
+            public void Deconstruct(out Guid? id, out String? message, out String? name, out T code, out String? description, out DateTime? when, out TimeSpan? retry, out HttpStatusCode? status, out BusinessException.BusinessInfo? inner, out ImmutableList<BusinessException.BusinessInfo>? reason)
             {
+                id = Id;
                 code = Code;
                 message = Message;
                 name = Name;
                 description = Description;
+                when = When;
+                retry = RetryAfter;
                 status = Status;
                 inner = Inner;
                 reason = Reason;
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BusinessException<T> Create(HttpStatusCode status, T code)
         {
@@ -471,46 +484,38 @@ namespace NetExtender.Types.Exceptions
         {
             return Create(value);
         }
-        
+
         public static implicit operator BusinessException((HttpStatusCode Status, String? Message) value)
         {
             return Create(value.Status, value.Message);
         }
-        
+
         public static implicit operator BusinessException((HttpStatusCode Status, String? Message, String? Description) value)
         {
             return Create(value.Status, value.Message, value.Description);
         }
-        
+
         public static implicit operator BusinessException((HttpStatusCode Status, Exception? Exception) value)
         {
             return Create(value.Status, value.Exception);
         }
-        
+
         public static implicit operator BusinessException((HttpStatusCode Status, String? Message, Exception? Exception) value)
         {
             return Create(value.Status, value.Message, value.Exception);
         }
-        
+
         public static implicit operator BusinessException((HttpStatusCode Status, String? Message, String? Description, Exception? Exception) value)
         {
             return Create(value.Status, value.Message, value.Description, value.Exception);
         }
 
-        public static TimeSpan DefaultLifeTime { get; set; } = Time.Hour.Quarter;
-
-        [JsonIgnore]
-        [System.Text.Json.Serialization.JsonIgnore]
-        private DateTime _creation = DateTime.UtcNow;
-
-        [JsonIgnore]
-        [System.Text.Json.Serialization.JsonIgnore]
         private Guid? _id;
-        public Guid Id
+        public virtual Guid Id
         {
             get
             {
-                return _id ??= _creation.NewGuid();
+                return _id ??= _when.NewGuid();
             }
             init
             {
@@ -518,26 +523,87 @@ namespace NetExtender.Types.Exceptions
             }
         }
 
-        //TODO: To Business Info
-        public String? Name { get; init; }
-        public String? Description { get; init; }
-        
-        public DateTime CreationTime
+        private readonly String? _name;
+        public virtual String? Name
         {
             get
             {
-                return _creation;
+                return _name;
             }
             init
             {
-                _creation = value;
+                _name = value;
             }
         }
 
+        private readonly String? _description;
+        public virtual String? Description
+        {
+            get
+            {
+                return _description;
+            }
+            init
+            {
+                _description = value;
+            }
+        }
+
+        private DateTime _when = DateTime.UtcNow;
+        public virtual DateTime When
+        {
+            get
+            {
+                return _when;
+            }
+            init
+            {
+                _when = value;
+            }
+        }
+
+        private readonly TimeSpan? _lifetime;
+
         [JsonIgnore]
         [System.Text.Json.Serialization.JsonIgnore]
-        public TimeSpan LifeTime { get; init; } = DefaultLifeTime;
-        public HttpStatusCode? Status { get; init; }
+        public virtual TimeSpan? LifeTime
+        {
+            get
+            {
+                return _lifetime;
+            }
+            init
+            {
+                _lifetime = value;
+            }
+        }
+
+        private readonly TimeSpan? _retry;
+        public virtual TimeSpan? RetryAfter
+        {
+            get
+            {
+                return _retry;
+            }
+            init
+            {
+                _retry = value;
+            }
+        }
+
+        private readonly HttpStatusCode? _status;
+        public virtual HttpStatusCode? Status
+        {
+            get
+            {
+                return _status;
+            }
+            init
+            {
+                _status = value;
+            }
+        }
+
         protected Exception? Inner { get; }
 
         public virtual Type? Type
@@ -678,7 +744,7 @@ namespace NetExtender.Types.Exceptions
         public BusinessException(String? message, HttpStatusCode status, Exception? exception, params BusinessException?[]? reason)
             : base(Format(message, status), Create(exception, reason))
         {
-            Status = status;
+            _status = status;
             Inner = exception;
         }
 
@@ -687,18 +753,36 @@ namespace NetExtender.Types.Exceptions
         {
         }
 
+#if NET8_0_OR_GREATER
+        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
         protected BusinessException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
-            Description = info.GetString(nameof(Description));
-            Status = info.GetValueOrDefault<HttpStatusCode?>(nameof(Status));
+            _id = info.GetValue<Guid>(nameof(Id));
+            _name = info.GetString(nameof(Name));
+            _description = info.GetString(nameof(Description));
+            _when = info.GetDateTime(nameof(When));
+            _lifetime = info.GetValue<TimeSpan?>(nameof(LifeTime));
+            _retry = info.GetValue<TimeSpan?>(nameof(RetryAfter));
+            _status = info.GetValueOrDefault<HttpStatusCode?>(nameof(Status));
             Inner = info.GetValueOrDefault<Exception?>(nameof(Inner));
         }
 
+#if NET8_0_OR_GREATER
+        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId = "SYSLIB0051", UrlFormat = "https://aka.ms/dotnet-warnings/{0}")]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             base.GetObjectData(info, context);
+            info.AddValue(nameof(Id), Id);
+            info.AddValue(nameof(Name), Name);
             info.AddValue(nameof(Description), Description);
+            info.AddValue(nameof(When), When);
+            info.AddValue(nameof(LifeTime), LifeTime);
+            info.AddValue(nameof(RetryAfter), RetryAfter);
             info.AddValue(nameof(Status), Status);
             info.AddValue(nameof(Inner), Inner);
         }
@@ -735,7 +819,7 @@ namespace NetExtender.Types.Exceptions
             {
                 return Array.Empty<Exception>();
             }
-            
+
             Exception[] result = new Exception[count];
 
             Int32 index = 0;
@@ -795,7 +879,7 @@ namespace NetExtender.Types.Exceptions
 
                 if (exception is not BusinessException business)
                 {
-                    return include ? new BusinessInfo((exception as ITraceException)?.Id, exception.Message, null, null, null, inner, null) { Business = false, Include = include, Data = exception.Data } : inner;
+                    return include ? new BusinessInfo((exception as ITraceException)?.Id, exception.Message, null, null, null, null, null, inner, null) { Business = false, Include = include, Data = exception.Data } : inner;
                 }
 
                 if (include || inner.Business)
@@ -812,7 +896,7 @@ namespace NetExtender.Types.Exceptions
                 {
                     null => throw new ArgumentNullException(nameof(exception)),
                     BusinessException business => business.ToBusinessInfo(include),
-                    _ => include ? new BusinessInfo((exception as ITraceException)?.Id, exception.Message, null, null, null, null) { Business = false, Include = include, Data = exception.Data } : null
+                    _ => include ? new BusinessInfo((exception as ITraceException)?.Id, exception.Message, null, null, (exception as ITraceException)?.When, null, null, null) { Business = false, Include = include, Data = exception.Data } : null
                 };
             }
 
@@ -822,7 +906,7 @@ namespace NetExtender.Types.Exceptions
                 {
                     BusinessException inner => exception = inner.Inner,
                     AggregateException => exception = null,
-                    _ => exception = exception?.InnerException,
+                    _ => exception = exception?.InnerException
                 } is not null;
             }
 
@@ -836,7 +920,7 @@ namespace NetExtender.Types.Exceptions
 
         protected virtual BusinessInfo ToBusinessInfo(BusinessInfo? inner, Boolean include)
         {
-            return new BusinessInfo(Id, Message, Name, Description, Status, inner, ToBusinessInfoReason(include)) { Business = true, Include = include, Data = Data };
+            return new BusinessInfo(Id, Message, Name, Description, When, RetryAfter, Status, inner, ToBusinessInfoReason(include)) { Business = true, Include = include, Data = Data };
         }
 
         protected virtual ImmutableList<BusinessInfo>? ToBusinessInfoReason(Boolean include)
@@ -849,10 +933,10 @@ namespace NetExtender.Types.Exceptions
                 {
                     continue;
                 }
-                
+
                 builder.Add(business.ToBusinessInfo(include));
             }
-            
+
             return builder.Count > 0 ? builder.ToImmutable() : null;
         }
 
@@ -867,7 +951,7 @@ namespace NetExtender.Types.Exceptions
             [System.Text.Json.Serialization.JsonPropertyOrder(0)]
             [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]
             public Guid? Id { get; init; }
-            
+
             [JsonProperty(NullValueHandling = NullValueHandling.Ignore, Order = 1)]
             [System.Text.Json.Serialization.JsonPropertyOrder(1)]
             [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]
@@ -877,13 +961,13 @@ namespace NetExtender.Types.Exceptions
             [System.Text.Json.Serialization.JsonPropertyOrder(2)]
             [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]
             public String? Name { get; init; }
-            
+
             [JsonProperty(PropertyName = nameof(Data), NullValueHandling = NullValueHandling.Ignore, Order = 4)]
             [System.Text.Json.Serialization.JsonPropertyName(nameof(Data))]
             [System.Text.Json.Serialization.JsonPropertyOrder(4)]
             [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]
             private Dictionary<Object, Object?>? _data;
-            
+
             [JsonIgnore]
             [System.Text.Json.Serialization.JsonIgnore]
             public IDictionary Data
@@ -909,19 +993,29 @@ namespace NetExtender.Types.Exceptions
             [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]
             public String? Description { get; init; }
 
-            [JsonProperty(NullValueHandling = NullValueHandling.Ignore, DefaultValueHandling = DefaultValueHandling.Ignore, Order = 6)]
+            [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, Order = 6)]
             [System.Text.Json.Serialization.JsonPropertyOrder(6)]
+            [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]
+            public DateTime? When { get; init; }
+
+            [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, Order = 7)]
+            [System.Text.Json.Serialization.JsonPropertyOrder(7)]
+            [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]
+            public TimeSpan? RetryAfter { get; init; }
+
+            [JsonProperty(NullValueHandling = NullValueHandling.Ignore, DefaultValueHandling = DefaultValueHandling.Ignore, Order = 8)]
+            [System.Text.Json.Serialization.JsonPropertyOrder(8)]
             [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]
             public HttpStatusCode? Status { get; init; }
 
-            [System.Text.Json.Serialization.JsonIgnore]
             [JsonIgnore]
+            [System.Text.Json.Serialization.JsonIgnore]
             public Boolean Business { get; init; }
 
             [JsonProperty(NullValueHandling = NullValueHandling.Ignore, Order = Int32.MaxValue - 2)]
             [System.Text.Json.Serialization.JsonInclude]
             [System.Text.Json.Serialization.JsonPropertyOrder(Int32.MaxValue - 2)]
-            [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+            [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]
             private Boolean? IsBusiness
             {
                 get
@@ -940,14 +1034,14 @@ namespace NetExtender.Types.Exceptions
             [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]
             [System.Text.Json.Serialization.PolymorphicJsonConverter]
             public BusinessInfo? Inner { get; init; }
-            
+
             [JsonProperty(NullValueHandling = NullValueHandling.Ignore, Order = Int32.MaxValue)]
             [JsonConverter(typeof(Newtonsoft.PolymorphicJsonConverter))]
             [System.Text.Json.Serialization.JsonPropertyOrder(Int32.MaxValue)]
             [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]
             [System.Text.Json.Serialization.PolymorphicJsonConverter]
             public ImmutableList<BusinessInfo>? Reason { get; init; }
-            
+
             [JsonIgnore]
             [System.Text.Json.Serialization.JsonIgnore]
             protected internal Boolean Include { get; init; }
@@ -956,37 +1050,44 @@ namespace NetExtender.Types.Exceptions
             {
             }
 
-            public BusinessInfo(Guid? id, String? message, String? name, String? description, HttpStatusCode? status, ImmutableList<BusinessInfo>? reason)
-                : this(id, message, name, description, status, null, reason)
+            public BusinessInfo(Guid? id, String? message, String? name, String? description, DateTime? when, TimeSpan? retry, HttpStatusCode? status, ImmutableList<BusinessInfo>? reason)
+                : this(id, message, name, description, when, retry, status, null, reason)
             {
             }
 
-            public BusinessInfo(Guid? id, String? message, String? name, String? description, HttpStatusCode? status, BusinessInfo? inner, ImmutableList<BusinessInfo>? reason)
+            public BusinessInfo(Guid? id, String? message, String? name, String? description, DateTime? when, TimeSpan? retry, HttpStatusCode? status, BusinessInfo? inner, ImmutableList<BusinessInfo>? reason)
             {
                 Id = id;
                 Message = message;
                 Name = name;
                 Description = description;
+                When = when;
+                RetryAfter = retry;
                 Status = status;
                 Inner = inner;
                 Reason = reason;
             }
 
-            public void Deconstruct(out String? message, out String? name, out String? description, out HttpStatusCode? status)
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public void Deconstruct(out Guid? id, out String? message, out String? name, out String? description, out DateTime? when, out TimeSpan? retry, out HttpStatusCode? status)
             {
-                Deconstruct(out message, out name, out description, out status, out _);
+                Deconstruct(out id, out message, out name, out description, out when, out retry, out status, out _);
             }
 
-            public void Deconstruct(out String? message, out String? name, out String? description, out HttpStatusCode? status, out BusinessInfo? reason)
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public void Deconstruct(out Guid? id, out String? message, out String? name, out String? description, out DateTime? when, out TimeSpan? retry, out HttpStatusCode? status, out BusinessInfo? reason)
             {
-                Deconstruct(out message, out name, out description, out status, out reason, out _);
+                Deconstruct(out id, out message, out name, out description, out when, out retry, out status, out reason, out _);
             }
 
-            public void Deconstruct(out String? message, out String? name, out String? description, out HttpStatusCode? status, out BusinessInfo? reason, out ImmutableList<BusinessInfo>? inner)
+            public void Deconstruct(out Guid? id, out String? message, out String? name, out String? description, out DateTime? when, out TimeSpan? retry, out HttpStatusCode? status, out BusinessInfo? reason, out ImmutableList<BusinessInfo>? inner)
             {
+                id = Id;
                 message = Message;
                 name = Name;
                 description = Description;
+                when = When;
+                retry = RetryAfter;
                 status = Status;
                 reason = Inner;
                 inner = Reason;
@@ -1154,7 +1255,7 @@ namespace NetExtender.Types.Exceptions
                 _ => new BusinessStatusException(message, status, exception)
             };
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BusinessException<T> Create<T>(HttpStatusCode status, T code)
         {
@@ -1230,6 +1331,10 @@ namespace NetExtender.Types.Exceptions
         {
         }
 
+#if NET8_0_OR_GREATER
+        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
         protected BusinessStatusException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
@@ -1274,6 +1379,10 @@ namespace NetExtender.Types.Exceptions
         {
         }
 
+#if NET8_0_OR_GREATER
+        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
         protected BusinessStatusException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
@@ -1355,6 +1464,10 @@ namespace NetExtender.Types.Exceptions
         {
         }
 
+#if NET8_0_OR_GREATER
+        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
         protected BusinessValidationException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
@@ -1365,7 +1478,7 @@ namespace NetExtender.Types.Exceptions
     public class BusinessValidationException<T> : BusinessStatusException<T>
     {
         private new const HttpStatusCode Status = HttpStatusCode.UnprocessableEntity;
-        
+
         public BusinessValidationException(T code)
             : this(Status, code)
         {
@@ -1436,6 +1549,10 @@ namespace NetExtender.Types.Exceptions
         {
         }
 
+#if NET8_0_OR_GREATER
+        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+#endif
         protected BusinessValidationException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {

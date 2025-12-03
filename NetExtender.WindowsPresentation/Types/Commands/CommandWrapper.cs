@@ -10,7 +10,7 @@ namespace NetExtender.WindowsPresentation.Types.Commands
     {
         private ICommand<T> Command { get; }
         public override event EventHandler? CanExecuteChanged;
-        
+
         public CommandWrapper(ICommand<T> command)
         {
             Command = command ?? throw new ArgumentNullException(nameof(command));
@@ -21,12 +21,12 @@ namespace NetExtender.WindowsPresentation.Types.Commands
         {
             CanExecuteChanged?.Invoke(this, args);
         }
-        
+
         protected override Boolean CanExecuteImplementation(Object? sender, T? parameter)
         {
             return Command.CanExecute(sender, parameter);
         }
-        
+
         protected override Boolean CanExecuteImplementation(Object? sender, Object? parameter)
         {
             return Command.CanExecute(sender, parameter);
@@ -36,7 +36,7 @@ namespace NetExtender.WindowsPresentation.Types.Commands
         {
             Command.Execute(sender, parameter);
         }
-        
+
         protected override void ExecuteImplementation(Object? sender, Object? parameter)
         {
             Command.Execute(sender, parameter);
@@ -57,12 +57,12 @@ namespace NetExtender.WindowsPresentation.Types.Commands
             return Command.ToString();
         }
     }
-    
+
     public sealed class CommandWrapper : Command
     {
         private ISenderCommand Command { get; }
         public override event EventHandler? CanExecuteChanged;
-        
+
         public CommandWrapper(ICommand command)
         {
             Command = command switch
@@ -74,32 +74,32 @@ namespace NetExtender.WindowsPresentation.Types.Commands
 
             Command.CanExecuteChanged += OnCanExecuteChanged;
         }
-        
+
         private void OnCanExecuteChanged(Object? sender, EventArgs args)
         {
             CanExecuteChanged?.Invoke(this, args);
         }
-        
+
         protected override Boolean CanExecuteImplementation(Object? sender, Object? parameter)
         {
             return Command.CanExecute(sender, parameter);
         }
-        
+
         protected override void ExecuteImplementation(Object? sender, Object? parameter)
         {
             Command.Execute(sender, parameter);
         }
-        
+
         public override Int32 GetHashCode()
         {
             return Command.GetHashCode();
         }
-        
+
         public override Boolean Equals(Object? other)
         {
             return ReferenceEquals(this, other) || Command.Equals(other);
         }
-        
+
         public override String? ToString()
         {
             return Command.ToString();
@@ -109,38 +109,38 @@ namespace NetExtender.WindowsPresentation.Types.Commands
         {
             private ICommand Command { get; }
             public override event EventHandler? CanExecuteChanged;
-            
+
             public Wrapper(ICommand command)
             {
                 Command = command ?? throw new ArgumentNullException(nameof(command));
                 Command.CanExecuteChanged += OnCanExecuteChanged;
             }
-            
+
             private void OnCanExecuteChanged(Object? sender, EventArgs args)
             {
                 CanExecuteChanged?.Invoke(this, args);
             }
-            
+
             protected override Boolean CanExecuteImplementation(Object? sender, Object? parameter)
             {
                 return Command.CanExecute(parameter);
             }
-            
+
             protected override void ExecuteImplementation(Object? sender, Object? parameter)
             {
                 Command.Execute(parameter);
             }
-            
+
             public override Int32 GetHashCode()
             {
                 return Command.GetHashCode();
             }
-            
+
             public override Boolean Equals(Object? other)
             {
                 return ReferenceEquals(this, other) || Command.Equals(other);
             }
-            
+
             public override String? ToString()
             {
                 return Name ?? Command.ToString();

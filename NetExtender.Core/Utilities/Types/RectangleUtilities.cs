@@ -15,7 +15,7 @@ namespace NetExtender.Utilities.Types
         {
             return checked(rectangle.Width * rectangle.Height);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryCount(this Rectangle rectangle, out Int32 result)
         {
@@ -30,13 +30,13 @@ namespace NetExtender.Utilities.Types
                 return false;
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Int32 Count(this RectangleF rectangle)
         {
             return checked((Int32) rectangle.Width * (Int32) rectangle.Height);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryCount(this RectangleF rectangle, out Int32 result)
         {
@@ -51,13 +51,13 @@ namespace NetExtender.Utilities.Types
                 return false;
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Int64 LongCount(this Rectangle rectangle)
         {
             return checked((Int64) rectangle.Width * rectangle.Height);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryLongCount(this Rectangle rectangle, out Int64 result)
         {
@@ -72,13 +72,13 @@ namespace NetExtender.Utilities.Types
                 return false;
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Int64 LongCount(this RectangleF rectangle)
         {
             return checked((Int64) rectangle.Width * (Int64) rectangle.Height);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryLongCount(this RectangleF rectangle, out Int64 result)
         {
@@ -121,7 +121,7 @@ namespace NetExtender.Utilities.Types
             rectangle.Offset(point);
             return rectangle;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static RectangleEnumerator GetEnumerator(this Rectangle rectangle)
         {
@@ -145,7 +145,7 @@ namespace NetExtender.Utilities.Types
         {
             return new RectangleEnumerator(rectangle, bounds, rotation);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static RectangleEnumerator GetEnumerator(this Rectangle rectangle, Size step)
         {
@@ -169,7 +169,7 @@ namespace NetExtender.Utilities.Types
         {
             return new RectangleEnumerator(rectangle, step, bounds, rotation);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static RectangleFEnumerator GetEnumerator(this RectangleF rectangle)
         {
@@ -187,13 +187,13 @@ namespace NetExtender.Utilities.Types
         {
             return GetEnumerator(rectangle, GeometryBoundsType.Bound, rotation);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static RectangleFEnumerator GetEnumerator(this RectangleF rectangle, GeometryBoundsType bounds, GeometryRotationType rotation)
         {
             return new RectangleFEnumerator(rectangle, bounds, rotation);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static RectangleFEnumerator GetEnumerator(this RectangleF rectangle, SizeF step)
         {
@@ -211,7 +211,7 @@ namespace NetExtender.Utilities.Types
         {
             return GetEnumerator(rectangle, step, GeometryBoundsType.Bound, rotation);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static RectangleFEnumerator GetEnumerator(this RectangleF rectangle, SizeF step, GeometryBoundsType bounds, GeometryRotationType rotation)
         {
@@ -319,7 +319,7 @@ namespace NetExtender.Utilities.Types
         {
             return rectangle.Size.GetAspectRatio();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double GetAspectRatio(this RectangleF rectangle)
         {

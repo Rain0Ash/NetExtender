@@ -50,7 +50,7 @@ namespace NetExtender.Utilities.Types
             value.TryWriteBytes(bytes);
             return ToDateTime(bytes);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         private static void WriteDateTime(Span<Byte> destination, DateTimeOffset timestamp)
         {

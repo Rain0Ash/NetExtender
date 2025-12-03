@@ -18,7 +18,7 @@ namespace NetExtender.Types.Parsers.Interfaces
         public Boolean TryParse(T? value, IFormatProvider? provider, [MaybeNullWhen(false)] out TResult result);
         public Boolean TryParse(T? value, NumberStyles style, IFormatProvider? provider, [MaybeNullWhen(false)] out TResult result);
     }
-    
+
     public interface IParser<in T> : IParser
     {
         public Object? Parse(T value);
@@ -30,7 +30,7 @@ namespace NetExtender.Types.Parsers.Interfaces
         public Boolean TryParse(T? value, IFormatProvider? provider, out Object? result);
         public Boolean TryParse(T? value, NumberStyles style, IFormatProvider? provider, out Object? result);
     }
-    
+
     public interface IParser
     {
         public Object? Parse(Object? value);

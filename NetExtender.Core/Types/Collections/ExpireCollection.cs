@@ -40,7 +40,7 @@ namespace NetExtender.Types.Collections
                 {
                     throw new ThisObjectDisposedException(this);
                 }
-                
+
                 return Timer.Interval;
             }
             set
@@ -49,7 +49,7 @@ namespace NetExtender.Types.Collections
                 {
                     throw new ThisObjectDisposedException(this);
                 }
-                
+
                 Timer.Interval = value;
             }
         }
@@ -185,7 +185,7 @@ namespace NetExtender.Types.Collections
             {
                 return;
             }
-            
+
             Timer.Stop();
             Timer.Dispose();
             Timer = null;

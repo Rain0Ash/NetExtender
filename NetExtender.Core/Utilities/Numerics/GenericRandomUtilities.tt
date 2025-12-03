@@ -17,6 +17,10 @@ using NetExtender.Utilities.Types;
 namespace NetExtender.Utilities.Numerics
 {
 <#
+    const String Int128 = nameof(Int128);
+    const String UInt128 = nameof(UInt128);
+    const String Half = nameof(Half);
+
     List<String> Types = new List<String>
     {
         nameof(SByte),
@@ -39,30 +43,23 @@ namespace NetExtender.Utilities.Numerics
 
     static Boolean IsUnsignedType(String type)
     {
-        return type == nameof(Char) || type == nameof(Byte) || type == nameof(UInt16) || type == nameof(UInt32) || type == nameof(UInt64);
+        return type == nameof(Char) || type == nameof(Byte) || type == nameof(UInt16) || type == nameof(UInt32) || type == nameof(UInt64) || type == UInt128;
     }
 
     static Boolean IsIntType(String type)
     {
         return type == nameof(Char) || type == nameof(SByte) || type == nameof(Byte) || type == nameof(Int16) || type == nameof(UInt16) || type == nameof(Int32) ||
-               type == nameof(UInt32) || type == nameof(Int64) || type == nameof(UInt64);
+               type == nameof(UInt32) || type == nameof(Int64) || type == nameof(UInt64) || type == Int128 || type == UInt128;
     }
 
     static Boolean IsFloatType(String type)
     {
-        return type == nameof(Single) || type == nameof(Double);
+        return type == Half || type == nameof(Single) || type == nameof(Double);
     }
 
-    static String ToSignedType(String type)
+    static Boolean IsNET7_0_OR_GREATER(String type)
     {
-        return type switch
-        {
-            nameof(Byte) => nameof(SByte),
-            nameof(UInt16) => nameof(Int16),
-            nameof(UInt32) => nameof(Int32),
-            nameof(UInt64) => nameof(Int64),
-            _ => type
-        };
+        return type == Int128 || type == UInt128 || type == Half;
     }
 
     static String ToUnsignedType(String type)
@@ -73,6 +70,7 @@ namespace NetExtender.Utilities.Numerics
             nameof(Int16) => nameof(UInt16),
             nameof(Int32) => nameof(UInt32),
             nameof(Int64) => nameof(UInt64),
+            Int128 => UInt128,
             _ => type
         };
     }
@@ -83,7 +81,18 @@ namespace NetExtender.Utilities.Numerics
 
         for (Int32 i = 0; i < type.Length; i++)
         {
-            action(type[i]);
+            String current = type[i];
+            if (IsNET7_0_OR_GREATER(current))
+            {
+                WriteLine("#if NET7_0_OR_GREATER");
+                action(current);
+                Write("#endif");
+                WriteLine(String.Empty);
+            }
+            else
+            {
+                action(current);
+            }
 
             if (line && i <= type.Length - 2)
             {
@@ -498,8 +507,8 @@ namespace NetExtender.Utilities.Numerics
     {
         String positive = $"Positive{type}Sign";
         String negative = $"Negative{type}Sign";
-        WriteLine($"\t\tprivate const {type} {positive} = 1;");
-        WriteLine($"\t\tprivate const {type} {negative} = -1;");
+        WriteLine($"\t\tprivate {(IsNET7_0_OR_GREATER(type) ? "static readonly" : "const")} {type} {positive} = 1;");
+        WriteLine($"\t\tprivate {(IsNET7_0_OR_GREATER(type) ? "static readonly" : "const")} {type} {negative} = -1;");
 
         WriteLine(String.Empty);
 

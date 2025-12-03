@@ -85,13 +85,13 @@ namespace NetExtender.Utilities.Core
                 return ((ICollection<CodeInstruction>) Memory).IsReadOnly;
             }
         }
-        
+
         private Thread? Thread { get; set; }
 
         private ManualResetEventSlim TranspilerSignal { get; } = new ManualResetEventSlim(false);
         private ManualResetEventSlim ProcessSignal { get; } = new ManualResetEventSlim(false);
         private ManualResetEventSlim DisposeSignal { get; } = new ManualResetEventSlim(false);
-        
+
         private Boolean IsCancel { get; set; }
 
         private HarmonyTranspiler(String harmony)
@@ -183,7 +183,7 @@ namespace NetExtender.Utilities.Core
             {
                 Instructions();
             }
-            
+
             return Generator!.DefineLabel();
         }
 
@@ -232,7 +232,7 @@ namespace NetExtender.Utilities.Core
             }
 
             Instance._instructions = instructions.ToImmutableArray();
-            
+
             List<CodeInstruction> memory = new List<CodeInstruction>(Instance._instructions.Value.Length);
             memory.AddRange(Instance._instructions);
             Instance._memory = memory;
@@ -256,15 +256,15 @@ namespace NetExtender.Utilities.Core
             {
                 return _instructions.Value;
             }
-            
+
             using IEnumerator<CodeInstruction> enumerator = GetEnumerator();
-            
+
             List<CodeInstruction> instructions = new List<CodeInstruction>();
             while (enumerator.MoveNext())
             {
                 instructions.Add(enumerator.Current);
             }
-            
+
             _instructions = instructions.ToImmutableArray();
             return _instructions.Value;
         }
@@ -287,7 +287,7 @@ namespace NetExtender.Utilities.Core
 
                     yield break;
                 }
-                
+
                 Instance = this;
 
                 Thread = new Thread<HarmonyLib.Harmony>(harmony =>
@@ -343,14 +343,14 @@ namespace NetExtender.Utilities.Core
             Dispose(false);
         }
     }
-    
+
     public static partial class HarmonyUtilities
     {
         internal static HarmonyLib.Harmony NetExtender { get; } = new HarmonyLib.Harmony(nameof(NetExtender));
-        
+
         [field: ThreadStatic]
         private static ImmutableArray<CodeInstruction> Memory { get; set; }
-        
+
         [field: ThreadStatic]
         private static ChangeInstantiationMemory InstantiationMemory { get; set; }
 
@@ -377,7 +377,7 @@ namespace NetExtender.Utilities.Core
             public static HarmonyMethod InstantiationTranspiler { get; } = new HarmonyMethod(HarmonyUtilities.InstantiationTranspiler);
             public static HarmonyMethod HttpClientTranspiler { get; } = new HarmonyMethod(HarmonyUtilities.HttpClientTranspiler);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static MethodInfo? Transpiler(this MethodBase original, Signature.Transpiler transpiler)
         {
@@ -405,7 +405,7 @@ namespace NetExtender.Utilities.Core
             HarmonyMethod method = new HarmonyMethod(transpiler);
             return Transpiler(harmony, method, original);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static MethodInfo? Transpiler(this MethodBase original, Signature.GeneratorTranspiler transpiler)
         {
@@ -470,7 +470,7 @@ namespace NetExtender.Utilities.Core
                 return original as MethodInfo;
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableArray<KeyValuePair<T, MethodInfo>> Transpiler<T>(this Signature.Transpiler transpiler, IEnumerable<T?>? originals) where T : MethodBase
         {
@@ -497,7 +497,7 @@ namespace NetExtender.Utilities.Core
 
             List<KeyValuePair<T, MethodInfo>> result = new List<KeyValuePair<T, MethodInfo>>(8);
             List<Exception> exceptions = new List<Exception>(4);
-            
+
             foreach (T? original in originals)
             {
                 try
@@ -517,10 +517,10 @@ namespace NetExtender.Utilities.Core
             {
                 return result.ToImmutableArray();
             }
-            
+
             throw new AggregateException<ImmutableArray<KeyValuePair<T, MethodInfo>>>(result.ToImmutableArray(), exceptions);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableArray<KeyValuePair<T, MethodInfo>> Transpiler<T>(this Signature.GeneratorTranspiler transpiler, IEnumerable<T?>? originals) where T : MethodBase
         {
@@ -547,7 +547,7 @@ namespace NetExtender.Utilities.Core
 
             List<KeyValuePair<T, MethodInfo>> result = new List<KeyValuePair<T, MethodInfo>>(8);
             List<Exception> exceptions = new List<Exception>(4);
-            
+
             foreach (T? original in originals)
             {
                 try
@@ -567,10 +567,10 @@ namespace NetExtender.Utilities.Core
             {
                 return result.ToImmutableArray();
             }
-            
+
             throw new AggregateException<ImmutableArray<KeyValuePair<T, MethodInfo>>>(result.ToImmutableArray(), exceptions);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableArray<KeyValuePair<T, MethodInfo>> Transpiler<T>(HarmonyMethod transpiler, IEnumerable<T?>? originals) where T : MethodBase
         {
@@ -617,7 +617,7 @@ namespace NetExtender.Utilities.Core
             {
                 return result.ToImmutableArray();
             }
-            
+
             throw new AggregateException<ImmutableArray<KeyValuePair<T, MethodInfo>>>(result.ToImmutableArray(), exceptions);
         }
 
@@ -763,7 +763,7 @@ namespace NetExtender.Utilities.Core
             {
                 yield break;
             }
-            
+
             ImmutableHashSet<Type?>? allow = Allow(method, declaring);
             ConcurrentHashSet<T> set = new ConcurrentHashSet<T>();
             foreach (CodeInstruction instruction in instructions)
@@ -920,7 +920,7 @@ namespace NetExtender.Utilities.Core
             {
                 null => Methods(harmony, method),
                 false => Methods(harmony, method).WhereNot(IsSpecialMethod),
-                true => Methods(harmony, method).Where(IsSpecialMethod),
+                true => Methods(harmony, method).Where(IsSpecialMethod)
             };
         }
 
@@ -937,7 +937,7 @@ namespace NetExtender.Utilities.Core
             {
                 null => Methods(harmony, method, declaring),
                 false => Methods(harmony, method, declaring).WhereNot(IsSpecialMethod),
-                true => Methods(harmony, method, declaring).Where(IsSpecialMethod),
+                true => Methods(harmony, method, declaring).Where(IsSpecialMethod)
             };
         }
 
@@ -1017,7 +1017,7 @@ namespace NetExtender.Utilities.Core
             {
                 yield break;
             }
-            
+
             foreach (CodeInstruction instruction in harmony.Instructions(method))
             {
                 if (instruction.operand is TMember member && contains.Contains(member))
@@ -1248,19 +1248,19 @@ namespace NetExtender.Utilities.Core
         {
             return AlwaysPatch.Apply(harmony, original, @return, values);
         }
-        
+
         private readonly struct ChangeInstantiationMemory
         {
             public Type New { get; }
             public Type Old { get; }
             public MethodBase Method { get; }
-            
+
             public ChangeInstantiationMemory(Type @new, Type old, MethodBase method)
             {
                 New = @new ?? throw new ArgumentNullException(nameof(@new));
                 Old = old ?? throw new ArgumentNullException(nameof(old));
                 Method = method ?? throw new ArgumentNullException(nameof(method));
-                
+
                 if (!New.IsAssignableTo(Old))
                 {
                     throw new ArgumentException($"The type '{New.FullName}' must be assignable to '{Old.FullName}'.");
@@ -1292,7 +1292,7 @@ namespace NetExtender.Utilities.Core
             foreach (ConstructorInfo constructor in constructors)
             {
                 Type[] newtypes = constructor.GetParameterTypes();
-                
+
                 if (newtypes.Length != oldtypes.Length)
                 {
                     continue;
@@ -1312,7 +1312,7 @@ namespace NetExtender.Utilities.Core
 
             return null;
         }
-        
+
         private static IEnumerable<CodeInstruction> InstantiationTranspiler(IEnumerable<CodeInstruction> instructions)
         {
             if (InstantiationMemory.New is not { } @new || InstantiationMemory.Old is not { } old || InstantiationMemory.Method is null)
@@ -1328,7 +1328,7 @@ namespace NetExtender.Utilities.Core
                     yield return instruction;
                     continue;
                 }
-                
+
                 constructor = FindConstructorForInstantiation(@new, constructor) ?? throw new MissingMemberException($"Could not find a constructor for '{@new}'.");
                 instruction.operand = constructor;
                 yield return instruction;
@@ -1489,7 +1489,7 @@ namespace NetExtender.Utilities.Core
                     {
                         throw new NotSupportedException($"Operand '{instruction.operand}' is not supported.");
                     }
-                    
+
                     generator.Emit(instruction.opcode);
                     return;
             }
@@ -1523,7 +1523,7 @@ namespace NetExtender.Utilities.Core
                 FieldInfo field when field.DeclaringType == type => inherit.Find(field) ?? instruction.operand,
                 _ => instruction.operand
             };
-            
+
             Emit(generator, instruction);
         }
 
@@ -1556,7 +1556,7 @@ namespace NetExtender.Utilities.Core
                 FieldInfo field when field.DeclaringType == type => (members is not null ? inherit.Find(members, field) as FieldInfo : inherit.Find(field)) ?? instruction.operand,
                 _ => instruction.operand
             };
-            
+
             Emit(generator, instruction);
         }
 
@@ -1591,7 +1591,7 @@ namespace NetExtender.Utilities.Core
                 {
                     instruction.labels[i] = labels[instruction.labels[i].Id()];
                 }
-                
+
                 generator.Emit(type, inherit, instruction);
             }
         }

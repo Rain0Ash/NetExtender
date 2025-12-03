@@ -11,35 +11,35 @@ namespace NetExtender.Types.Nodes.Interfaces
     {
         /// <inheritdoc cref="ICollection{T}.Count"/>
         public new Int32 Count { get; }
-        
+
         /// <inheritdoc cref="LinkedContainer{TNode}.First"/>
         public new TNode? First { get; }
-        
+
         /// <inheritdoc cref="LinkedContainer{TNode}.First"/>
         public new TNode? Last { get; }
-        
+
         /// <inheritdoc cref="LinkedContainer{TNode}.Find(System.Predicate{TNode})"/>
         public TNode? Find(Predicate<TNode> predicate);
-        
+
         /// <inheritdoc cref="LinkedContainer{TNode}.FindLast(System.Predicate{TNode})"/>
         public TNode? FindLast(Predicate<TNode> predicate);
-        
+
         /// <inheritdoc cref="LinkedContainer{TNode}.AddFirst(TNode)"/>
         public void AddFirst(TNode node);
-        
+
         /// <inheritdoc cref="LinkedContainer{TNode}.AddLast(TNode)"/>
         public void AddLast(TNode node);
-        
+
         /// <inheritdoc cref="LinkedContainer{TNode}.AddBefore(TNode,TNode)"/>
         public void AddBefore(TNode node, TNode @new);
-        
+
         /// <inheritdoc cref="LinkedContainer{TNode}.AddBefore(TNode,TNode)"/>
         public void AddAfter(TNode node, TNode @new);
-        
+
         /// <inheritdoc cref="LinkedContainer{TNode}.Remove(TNode)"/>
         public new Boolean Remove(TNode? node);
     }
-    
+
     public interface ILinkedContainer : ICollection
     {
         /// <inheritdoc cref="LinkedContainer{TNode}.First"/>

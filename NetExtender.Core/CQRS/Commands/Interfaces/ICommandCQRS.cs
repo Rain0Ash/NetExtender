@@ -9,15 +9,15 @@ namespace NetExtender.CQRS.Commands.Interfaces
     public interface IBusinessCommandCQRS<TResult> : ICommandCQRS<BusinessResult<TResult>>
     {
     }
-    
+
     public interface IBusinessCommandCQRS : ICommandCQRS<BusinessResult>
     {
     }
-    
+
     public interface ICommandCQRS<TResult> : ICommandCQRS, IEntityCQRS<TResult>
     {
     }
-    
+
     public interface ICommandCQRS : IEntityCQRS
     {
     }

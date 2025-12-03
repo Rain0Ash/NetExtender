@@ -15,7 +15,7 @@ namespace NetExtender.Types.Network
             Name,
             Value
         }
-        
+
         private Int64 Size { get; }
 
         private NameValueState _state;
@@ -35,7 +35,7 @@ namespace NetExtender.Types.Network
                 return _read;
             }
         }
-        
+
         private ICollection<KeyValuePair<String, String>> Collection { get; }
         private CurrentNameValuePair Pair { get; }
 
@@ -62,7 +62,7 @@ namespace NetExtender.Types.Network
             {
                 return final ? CopyCurrent(HttpParserState.NeedMoreData) : HttpParserState.NeedMoreData;
             }
-            
+
             try
             {
                 HttpParserState state = ParseNameValuePairs(Collection, buffer, ready, ref read, ref _state, Size, ref _read, Pair);
@@ -79,14 +79,14 @@ namespace NetExtender.Types.Network
         {
             Int32 startread = read;
             Int64 endread = length <= 0 ? Int64.MaxValue : length - total + startread;
-            
+
             HttpParserState parserstate = HttpParserState.DataTooBig;
             if (ready < endread)
             {
                 parserstate = HttpParserState.NeedMoreData;
                 endread = ready;
             }
-            
+
             switch (state)
             {
                 case NameValueState.Name:
@@ -102,17 +102,17 @@ namespace NetExtender.Types.Network
 
                             String value = Encoding.UTF8.GetString(buffer, index, read - index);
                             current.Name.Append(value);
-                                
+
                             total += read - startread;
                             return parserstate;
                         }
-                        
+
                         if (read > index)
                         {
                             String value = Encoding.UTF8.GetString(buffer, index, read - index);
                             current.Name.Append(value);
                         }
-                        
+
                         if (buffer[read] == 61)
                         {
                             state = NameValueState.Value;
@@ -126,7 +126,7 @@ namespace NetExtender.Types.Network
 
                         current.CopyTo(source, false);
                     } while (++read != endread);
-                    
+
                     break;
                 }
                 case NameValueState.Value:
@@ -141,20 +141,20 @@ namespace NetExtender.Types.Network
 
                         String value = Encoding.UTF8.GetString(buffer, index, read - index);
                         current.Value.Append(value);
-                        
+
                         total += read - startread;
                         return parserstate;
                     }
-                    
+
                     if (read > index)
                     {
                         String value = Encoding.UTF8.GetString(buffer, index, read - index);
                         current.Value.Append(value);
                     }
-                    
+
                     current.CopyTo(source);
                     state = NameValueState.Name;
-                    
+
                     if (++read != endread)
                     {
                         goto case NameValueState.Name;

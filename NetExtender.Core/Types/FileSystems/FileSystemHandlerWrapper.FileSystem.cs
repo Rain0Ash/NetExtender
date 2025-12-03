@@ -103,6 +103,42 @@ namespace NetExtender.FileSystems
             }
         }
 
+        protected override UnixFileMode GetUnixFileMode(String path, FileSystemHandlerType handler)
+        {
+            return handler switch
+            {
+                FileSystemHandlerType.Unknown => throw new AmbiguousFileSystemHandlerException(),
+                FileSystemHandlerType.Path => throw new NotSupportedException(),
+                FileSystemHandlerType.Link => FileSystem.Link.GetUnixFileMode(path),
+                FileSystemHandlerType.File => FileSystem.File.GetUnixFileMode(path),
+                FileSystemHandlerType.Directory => throw new NotSupportedException(),
+                FileSystemHandlerType.Drive => throw new NotSupportedException(),
+                _ => throw new EnumUndefinedOrNotSupportedException<FileSystemHandlerType>(handler, nameof(handler), null)
+            };
+        }
+
+        protected override void SetUnixFileMode(String path, UnixFileMode mode, FileSystemHandlerType handler)
+        {
+            switch (handler)
+            {
+                case FileSystemHandlerType.Unknown:
+                    throw new AmbiguousFileSystemHandlerException();
+                case FileSystemHandlerType.Path:
+                    throw new NotSupportedException();
+                case FileSystemHandlerType.Link:
+                    FileSystem.File.SetUnixFileMode(path, mode);
+                    return;
+                case FileSystemHandlerType.File:
+                    FileSystem.File.SetUnixFileMode(path, mode);
+                    return;
+                case FileSystemHandlerType.Directory:
+                case FileSystemHandlerType.Drive:
+                    throw new NotSupportedException();
+                default:
+                    throw new EnumUndefinedOrNotSupportedException<FileSystemHandlerType>(handler, nameof(handler), null);
+            }
+        }
+
         protected override DateTime GetCreationTime(String path, FileSystemHandlerType handler)
         {
             return handler switch

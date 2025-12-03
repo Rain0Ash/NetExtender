@@ -12,12 +12,12 @@ namespace NetExtender.Types.Drawing.Colors
         {
             return value.Point;
         }
-        
+
         public static implicit operator Color(ColorPoint value)
         {
             return value.Color;
         }
-        
+
         public Point Point { get; }
 
         public Int32 X
@@ -35,7 +35,7 @@ namespace NetExtender.Types.Drawing.Colors
                 return Point.Y;
             }
         }
-        
+
         public Color Color { get; }
 
         public Int32 A
@@ -45,7 +45,7 @@ namespace NetExtender.Types.Drawing.Colors
                 return Color.A;
             }
         }
-        
+
         public Int32 R
         {
             get
@@ -53,7 +53,7 @@ namespace NetExtender.Types.Drawing.Colors
                 return Color.R;
             }
         }
-        
+
         public Int32 G
         {
             get
@@ -61,7 +61,7 @@ namespace NetExtender.Types.Drawing.Colors
                 return Color.G;
             }
         }
-        
+
         public Int32 B
         {
             get
@@ -69,7 +69,7 @@ namespace NetExtender.Types.Drawing.Colors
                 return Color.B;
             }
         }
-        
+
         public ColorPoint(Point point, Color color)
         {
             Point = point;

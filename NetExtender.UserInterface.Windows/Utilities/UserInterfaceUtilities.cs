@@ -23,7 +23,7 @@ namespace NetExtender.Utilities.UserInterface
         Monitor = 1,
         ExcludeFromCapture = 0x11
     }
-    
+
     public static class UserInterfaceUtilities
     {
         public static UserInterfaceActionType Additional(this UserInterfaceActionType action, Byte additional)
@@ -57,21 +57,21 @@ namespace NetExtender.Utilities.UserInterface
         [DllImport("user32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern Boolean GetClientRect(IntPtr handle, out WinRectangle rectangle);
-        
+
         [DllImport("user32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern Boolean GetWindowRect(IntPtr handle, out WinRectangle rectangle);
-        
+
         [DllImport("user32.dll", SetLastError = true)]
         private static extern Int32 GetWindowLong(IntPtr handle, Int32 index);
-        
+
         [DllImport("user32.dll")]
         private static extern Int32 SetWindowLong(IntPtr handle, Int32 index, Int32 value);
-        
+
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern Boolean GetWindowDisplayAffinity(IntPtr hWnd, out UInt32 affinity);
-        
+
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern Boolean SetWindowDisplayAffinity(IntPtr handle, UInt32 affinity);
@@ -93,7 +93,7 @@ namespace NetExtender.Utilities.UserInterface
                 _ => false
             };
         }
-        
+
         public static Boolean SetWindowDisplayAffinity(IntPtr handle, WindowDisplayAffinity affinity)
         {
             switch (affinity)
@@ -113,7 +113,7 @@ namespace NetExtender.Utilities.UserInterface
             {
                 return null;
             }
-            
+
             const Int32 gwlstyle = -16;
             const Int32 sysmenu = 0x80000;
 
@@ -125,19 +125,19 @@ namespace NetExtender.Utilities.UserInterface
         {
             const Int32 gwlstyle = -16;
             const Int32 sysmenu = 0x80000;
-            
+
             if (handle == IntPtr.Zero)
             {
                 return false;
             }
-            
+
             Int32 current = GetWindowLong(handle, gwlstyle);
 
             if (value)
             {
                 return SetWindowLong(handle, gwlstyle,  current | sysmenu) == 0;
             }
-            
+
             return SetWindowLong(handle, gwlstyle,  current & ~sysmenu) == 0;
         }
 
@@ -395,7 +395,7 @@ namespace NetExtender.Utilities.UserInterface
             IntPtr menu = GetSystemMenu(handle);
             return menu != IntPtr.Zero && InsertMenu(menu, position, (UInt32) WindowsMenuItemType.Separator, 0, String.Empty);
         }
-        
+
         private static Boolean ContainsMenu(IntPtr handle, String item)
         {
             if (handle == IntPtr.Zero)
@@ -413,7 +413,7 @@ namespace NetExtender.Utilities.UserInterface
                     TypeData = new String(' ', 256),
                     Length = 256
                 };
-                
+
                 if (!GetMenuItemInfoByPosition(menu, i, info))
                 {
                     continue;
@@ -424,7 +424,7 @@ namespace NetExtender.Utilities.UserInterface
                     return true;
                 }
             }
-            
+
             return false;
         }
 

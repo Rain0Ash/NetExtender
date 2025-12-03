@@ -564,7 +564,7 @@ namespace NetExtender.Utilities.Numerics
             {
                 for (Int32 i = 0; i < alloc.Length; i++)
                 {
-                    alloc[i] = (Byte) (~pointer[i]);
+                    alloc[i] = (Byte) ~pointer[i];
                 }
             }
 
@@ -596,7 +596,7 @@ namespace NetExtender.Utilities.Numerics
             {
                 for (UInt32 i = 0; i < length; i++)
                 {
-                    pointer[i] = (Byte) (~pointer[i]);
+                    pointer[i] = (Byte) ~pointer[i];
                 }
             }
         }

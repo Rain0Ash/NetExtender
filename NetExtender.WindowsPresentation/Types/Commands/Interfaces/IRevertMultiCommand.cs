@@ -9,7 +9,7 @@ namespace System.Windows.Input
     {
         public new IMultiCommand<T> Reverter { get; }
     }
-    
+
     public interface IRevertMultiCommand : IMultiCommand, IRevertCommand
     {
     }

@@ -11,7 +11,7 @@ using System.Threading;
 namespace NetExtender.Types.Threads
 {
     public delegate void ParameterizedThreadStart<in T>(T parameter);
-    
+
     public sealed class Thread<T>
     {
         [return: NotNullIfNotNull("value")]
@@ -19,13 +19,13 @@ namespace NetExtender.Types.Threads
         {
             return value?.Internal;
         }
-        
+
         [return: NotNullIfNotNull("value")]
         public static implicit operator Thread<T>?(Thread? value)
         {
             return value is not null ? new Thread<T>(value) : null;
         }
-        
+
         private Thread Internal { get; }
 
         /// <inheritdoc cref="Thread.Name"/>

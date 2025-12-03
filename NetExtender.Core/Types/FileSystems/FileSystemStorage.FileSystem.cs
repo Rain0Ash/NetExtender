@@ -7,6 +7,8 @@ using System.IO;
 using System.Runtime.Serialization;
 using NetExtender.FileSystems.Interfaces;
 
+#pragma warning disable CS8600
+
 namespace NetExtender.FileSystems
 {
     public abstract partial class FileSystemStorage<TLink, TFile, TDirectory, TDrive>
@@ -17,6 +19,8 @@ namespace NetExtender.FileSystems
         protected abstract override IDirectoryInfo? GetParent(String path, FileSystemHandlerType handler);
         protected abstract override FileAttributes GetAttributes(String path, FileSystemHandlerType handler);
         protected abstract override void SetAttributes(String path, FileAttributes attributes, FileSystemHandlerType handler);
+        protected abstract override UnixFileMode GetUnixFileMode(String path, FileSystemHandlerType handler);
+        protected abstract override void SetUnixFileMode(String path, UnixFileMode mode, FileSystemHandlerType handler);
         protected abstract override DateTime GetCreationTime(String path, FileSystemHandlerType handler);
         protected abstract override DateTime GetCreationTimeUtc(String path, FileSystemHandlerType handler);
         protected abstract override DateTime GetLastAccessTime(String path, FileSystemHandlerType handler);
@@ -73,7 +77,7 @@ namespace NetExtender.FileSystems
                 _ => throw NotSupported(node, nameof(Info))
             };
         }
-        
+
         FileSystemInfo? IFileSystemStorage.Info(IFileSystemEntry entry)
         {
             return Info(Verify<INode, IFileSystemEntry>(entry));
@@ -101,7 +105,7 @@ namespace NetExtender.FileSystems
                     throw NotSupported(node, nameof(GetObjectData));
             }
         }
-        
+
         void IFileSystemStorage.GetObjectData(IFileSystemEntry entry, SerializationInfo info, StreamingContext context)
         {
             GetObjectData(Verify<INode, IFileSystemEntry>(entry), info, context);
@@ -240,6 +244,44 @@ namespace NetExtender.FileSystems
         void IFileSystemStorage.Attributes(IFileSystemEntry entry, FileAttributes value)
         {
             Attributes(Verify<INode, IFileSystemEntry>(entry), value);
+        }
+
+        protected virtual UnixFileMode UnixFileMode(INode node)
+        {
+            return (node = Verify(node)) switch
+            {
+                null => throw new ArgumentNullException(nameof(node)),
+                TLink link => UnixFileMode(link),
+                TFile file => UnixFileMode(file),
+                _ => throw NotSupported(node, nameof(UnixFileMode))
+            };
+        }
+
+        UnixFileMode IFileSystemStorage.UnixFileMode(IFileSystemEntry entry)
+        {
+            return UnixFileMode(Verify<INode, IFileSystemEntry>(entry));
+        }
+
+        protected virtual void UnixFileMode(INode node, UnixFileMode value)
+        {
+            switch (node = Verify(node))
+            {
+                case null:
+                    throw new ArgumentNullException(nameof(node));
+                case TLink link:
+                    UnixFileMode(link, value);
+                    return;
+                case TFile file:
+                    UnixFileMode(file, value);
+                    return;
+                default:
+                    throw NotSupported(node, nameof(UnixFileMode));
+            }
+        }
+
+        void IFileSystemStorage.UnixFileMode(IFileSystemEntry entry, UnixFileMode value)
+        {
+            UnixFileMode(Verify<INode, IFileSystemEntry>(entry), value);
         }
 
         protected virtual String? LinkTarget(INode node)

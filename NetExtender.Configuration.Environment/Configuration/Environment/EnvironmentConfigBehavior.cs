@@ -74,7 +74,7 @@ namespace NetExtender.Configuration.Environment
             {
                 return new ConfigurationSingleKeyEntry(entry.Key, entry.Value);
             }
-            
+
             return EnvironmentUtilities.TryGetExistsValuesEnvironmentVariables(Target)?.Select(Convert).ToArray();
         }
 

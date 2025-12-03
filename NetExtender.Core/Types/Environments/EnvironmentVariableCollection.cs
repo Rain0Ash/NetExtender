@@ -31,7 +31,7 @@ namespace NetExtender.Types.Environments
                             count += container.Count;
                         }
                     }
-                
+
                     return count;
                 }
             }
@@ -156,7 +156,7 @@ namespace NetExtender.Types.Environments
             Machine = machine ?? throw new ArgumentNullException(nameof(machine));
             _collection = new Collection(this);
         }
-        
+
         public EnvironmentVariableCollection Fill()
         {
             return Fill(static target => EnvironmentUtilities.WrapEnvironmentVariables(Environment.GetEnvironmentVariables(target)));
@@ -184,7 +184,7 @@ namespace NetExtender.Types.Environments
                     }
                 }
             });
-            
+
             return this;
         }
 
@@ -216,7 +216,7 @@ namespace NetExtender.Types.Environments
                     }
                 }
             });
-            
+
             return this;
         }
 
@@ -263,7 +263,7 @@ namespace NetExtender.Types.Environments
             {
                 return false;
             }
-            
+
             foreach ((_, ConcurrentDictionary<String, String> container) in this)
             {
                 if (!container.TryGetValue(variable, out String? result))
@@ -366,7 +366,7 @@ namespace NetExtender.Types.Environments
                     {
                         continue;
                     }
-                    
+
                     foreach ((String variable, String value) in container)
                     {
                         array[index++] = new KeyValuePair<(EnvironmentVariableTarget, String), String?>((target, variable), value);
@@ -439,7 +439,7 @@ namespace NetExtender.Types.Environments
                 {
                     return null;
                 }
-                
+
                 foreach ((_, ConcurrentDictionary<String, String> value) in this)
                 {
                     if (value.TryGetValue(variable, out String? result))
@@ -464,9 +464,9 @@ namespace NetExtender.Types.Environments
                 {
                     return;
                 }
-                
+
                 ConcurrentDictionary<String, String> container = this[target];
-                
+
                 if (value is null)
                 {
                     container.TryRemove(variable, out _);
@@ -515,7 +515,7 @@ namespace NetExtender.Types.Environments
                                 count += container.Count;
                             }
                         }
-                
+
                         return count;
                     }
                 }
@@ -535,7 +535,7 @@ namespace NetExtender.Types.Environments
                                 count += container.Values.Count;
                             }
                         }
-                
+
                         return count;
                     }
                 }
@@ -573,7 +573,7 @@ namespace NetExtender.Types.Environments
                 {
                     return false;
                 }
-                
+
                 lock (Internal.SyncRoot)
                 {
                     foreach (EnvironmentVariableTarget target in EnumUtilities.GetValues<EnvironmentVariableTarget>())
@@ -624,7 +624,7 @@ namespace NetExtender.Types.Environments
                 {
                     throw new ArgumentOutOfRangeException(nameof(index), index, null);
                 }
-                
+
                 lock (Internal.SyncRoot)
                 {
                     if (array.Length - index < Count)
@@ -638,7 +638,7 @@ namespace NetExtender.Types.Environments
                         {
                             continue;
                         }
-                        
+
                         foreach (String? variable in container.Keys)
                         {
                             array[index++] = (target, variable);
@@ -653,21 +653,21 @@ namespace NetExtender.Types.Environments
                 {
                     throw new ArgumentOutOfRangeException(nameof(index), index, null);
                 }
-                
+
                 lock (Internal.SyncRoot)
                 {
                     if (array.Length - index < Count)
                     {
                         throw new ArgumentOutOfRangeException(nameof(array), array, null);
                     }
-                    
+
                     foreach (EnvironmentVariableTarget target in EnumUtilities.GetValues<EnvironmentVariableTarget>())
                     {
                         if (!Internal.TryGetValue(target, out ConcurrentDictionary<String, String>? container))
                         {
                             continue;
                         }
-                        
+
                         foreach (String? value in container.Values)
                         {
                             array[index++] = value;
@@ -697,7 +697,7 @@ namespace NetExtender.Types.Environments
                     {
                         continue;
                     }
-                    
+
                     foreach ((String? variable, String? value) in container)
                     {
                         yield return new KeyValuePair<(EnvironmentVariableTarget, String), String>((target, variable), value);

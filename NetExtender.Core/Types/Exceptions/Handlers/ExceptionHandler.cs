@@ -17,7 +17,7 @@ namespace NetExtender.Types.Exceptions.Handlers
         Throw,
         Rethrow
     }
-    
+
     public delegate ExceptionHandlerAction ExceptionHandlerDelegate(Exception? exception);
     public delegate ExceptionHandlerAction ArgumentExceptionHandlerDelegate(Object? argument, Exception? exception);
     public delegate ExceptionHandlerAction ArgumentExceptionHandlerDelegate<in T>(T? argument, Exception? exception);
@@ -39,9 +39,9 @@ namespace NetExtender.Types.Exceptions.Handlers
 
             return Invoke(Action, out _);
         }
-        
+
         public abstract Boolean Invoke<T>(Func<T> action, [MaybeNullWhen(false)] out T result);
-        
+
         public async ValueTask<Boolean> Invoke(Func<Task> action)
         {
             async Task<Unit> Action()
@@ -53,7 +53,7 @@ namespace NetExtender.Types.Exceptions.Handlers
             Maybe<Unit> result = await Invoke(Action);
             return result.HasValue;
         }
-        
+
         public abstract ValueTask<Maybe<T>> Invoke<T>(Func<Task<T>> request);
 
         protected virtual ExceptionHandlerAction Handle(Exception? exception)

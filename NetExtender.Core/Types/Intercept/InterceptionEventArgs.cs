@@ -15,7 +15,7 @@ namespace NetExtender.Types.Intercept
             Info = value;
         }
     }
-    
+
     public abstract class InterceptionEventArgs : EventArgs, IInterceptionEventArgs, IDisposable
     {
         public event EventHandler? Intercepted;
@@ -47,7 +47,7 @@ namespace NetExtender.Types.Intercept
             {
                 throw new InvalidOperationException();
             }
-            
+
             IsIntercept = true;
             Clear();
         }
@@ -62,7 +62,7 @@ namespace NetExtender.Types.Intercept
             Dispose(true);
             GC.SuppressFinalize(this);
         }
-        
+
         protected virtual void Dispose(Boolean disposing)
         {
             Intercepted = null;

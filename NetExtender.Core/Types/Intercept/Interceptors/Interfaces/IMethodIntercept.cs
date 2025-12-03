@@ -19,7 +19,7 @@ namespace NetExtender.Types.Intercept.Interfaces
                 ((IMethodIntercept<Object?, TArgument>) this).MethodIntercept -= value.Unsafe<EventHandler<Object?, TArgument>>();
             }
         }
-        
+
         public new event EventHandler<TArgument> MethodIntercepting
         {
             add
@@ -31,7 +31,7 @@ namespace NetExtender.Types.Intercept.Interfaces
                 ((IMethodIntercept<Object?, TArgument>) this).MethodIntercepting -= value.Unsafe<EventHandler<Object?, TArgument>>();
             }
         }
-        
+
         public new event EventHandler<TArgument> MethodIntercepted
         {
             add
@@ -60,7 +60,7 @@ namespace NetExtender.Types.Intercept.Interfaces
                 MethodIntercepted -= value;
             }
         }
-        
+
         public event EventHandler<TSender, TArgument> MethodIntercepting;
         public event EventHandler<TSender, TArgument> MethodIntercepted;
     }

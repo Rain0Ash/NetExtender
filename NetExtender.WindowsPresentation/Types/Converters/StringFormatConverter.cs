@@ -11,14 +11,14 @@ namespace NetExtender.WindowsPresentation.Types.Converters
     public class StringFormatConverter : IMultiValueConverter
     {
         public static StringFormatConverter Instance { get; } = new StringFormatConverter();
-        
+
         public Object? Convert(Object?[]? values, Type? targetType, Object? parameter, CultureInfo? culture)
         {
             if (targetType is not null && targetType != typeof(String))
             {
                 return null;
             }
-            
+
             if (values is null || values.Length <= 0)
             {
                 return null;

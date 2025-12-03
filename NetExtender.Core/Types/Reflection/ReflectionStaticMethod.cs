@@ -22,7 +22,7 @@ namespace NetExtender.Types.Reflection
             : base(typeof(TSelf), @delegate)
         {
         }
-        
+
         internal static ReflectionStaticMethod<TSelf, TGeneric>? Create(TGeneric @delegate)
         {
             try
@@ -41,14 +41,14 @@ namespace NetExtender.Types.Reflection
     {
         public override Type Type { get; }
         protected sealed override MethodInfo Method { get; }
-        
+
         private readonly Dictionary<Int32, Int32> _parameterMapping;
         private readonly Int32? _returnTypeMapping;
 
         protected ReflectionStaticMethod(Type type, TGeneric @delegate)
         {
             Type = type ?? throw new ArgumentNullException(nameof(type));
-            
+
             if (@delegate is null)
             {
                 throw new ArgumentNullException(nameof(@delegate));
@@ -68,7 +68,7 @@ namespace NetExtender.Types.Reflection
             // Ищем generic методы с подходящим именем
             const BindingFlags bindingFlags = BindingFlags.Static | BindingFlags.Public | 
                                              BindingFlags.NonPublic | BindingFlags.FlattenHierarchy;
-            
+
             MethodInfo[] methods = type.GetMethods(bindingFlags)
                 .Where(m => m.IsGenericMethodDefinition && 
                            m.Name.Equals(delegateMethod.Name, StringComparison.Ordinal))
@@ -91,7 +91,7 @@ namespace NetExtender.Types.Reflection
 
                 Type[] genericParams = method.GetGenericArguments();
                 ParameterInfo[] methodParameters = method.GetParameters();
-                
+
                 if (methodParameters.Length != delegateParameters.Length)
                 {
                     continue;
@@ -182,7 +182,7 @@ namespace NetExtender.Types.Reflection
             _parameterMapping = new Dictionary<Int32, Int32>(parameterMapping);
             _returnTypeMapping = returnMapping;
         }
-        
+
         internal static ReflectionStaticMethod<TGeneric>? Create(Type type, TGeneric @delegate)
         {
             if (type is null)
@@ -225,7 +225,7 @@ namespace NetExtender.Types.Reflection
             // Определяем типы для generic параметров
             Type[] genericParameters = Method.GetGenericArguments();
             Type[] typeArguments = new Type[genericParameters.Length];
-            
+
             // Инициализируем неопределенные параметры
             for (Int32 i = 0; i < typeArguments.Length; i++)
             {
@@ -236,14 +236,14 @@ namespace NetExtender.Types.Reflection
             foreach ((Int32 paramIndex, Int32 genericIndex) in _parameterMapping)
             {
                 Type concreteType = delegateParameters[paramIndex].ParameterType;
-                
+
                 if (typeArguments[genericIndex] != typeof(void) && 
                     typeArguments[genericIndex] != concreteType)
                 {
                     // Конфликт типов - один generic параметр получает разные типы
                     return null!;
                 }
-                
+
                 typeArguments[genericIndex] = concreteType;
             }
 
@@ -252,14 +252,14 @@ namespace NetExtender.Types.Reflection
             {
                 Type concreteReturnType = delegateReturnType;
                 Int32 genericIndex = _returnTypeMapping.Value;
-                
+
                 if (typeArguments[genericIndex] != typeof(void) && 
                     typeArguments[genericIndex] != concreteReturnType)
                 {
                     // Конфликт типов
                     return null!;
                 }
-                
+
                 typeArguments[genericIndex] = concreteReturnType;
             }
 
@@ -315,18 +315,18 @@ namespace NetExtender.Types.Reflection
                 return Container.GetValue(@this, static @this => @this.New<TDelegate>());
             }
         }
-        
+
         public abstract Type Type { get; }
         protected abstract MethodInfo Method { get; }
 
         public abstract TDelegate Create<TDelegate>() where TDelegate : Delegate;
         protected abstract TDelegate New<TDelegate>() where TDelegate : Delegate;
-        
+
         public static ReflectionStaticMethod<TGeneric>? Create<TGeneric>(Type type, TGeneric @delegate) where TGeneric : Delegate
         {
             return ReflectionStaticMethod<TGeneric>.Create(type, @delegate);
         }
-        
+
         public static ReflectionStaticMethod<TGeneric>? Create<TSelf, TGeneric>(TGeneric @delegate) where TGeneric : Delegate
         {
             return ReflectionStaticMethod<TSelf, TGeneric>.Create(@delegate);

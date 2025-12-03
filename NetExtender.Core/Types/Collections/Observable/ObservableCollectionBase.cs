@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using NetExtender.Types.Collections.Interfaces;
 using NetExtender.Utilities.Types;
@@ -15,7 +16,7 @@ namespace NetExtender.Types.Collections
     public abstract class ObservableCollectionBase<T, TCollection> : IObservableCollectionBase<T>, IReadOnlyObservableCollectionBase<T>, ICollection where TCollection : ICollection<T>
     {
         protected TCollection Internal { get; private set; }
-        
+
         public event NotifyCollectionChangedEventHandler? CollectionChanged;
         public event PropertyChangingEventHandler? PropertyChanging;
         public event PropertyChangedEventHandler? PropertyChanged;
@@ -43,7 +44,7 @@ namespace NetExtender.Types.Collections
                 return Internal is ICollection collection ? collection.SyncRoot : this;
             }
         }
-        
+
         Boolean ICollection<T>.IsReadOnly
         {
             get
@@ -56,7 +57,7 @@ namespace NetExtender.Types.Collections
         {
             Internal = collection ?? throw new ArgumentNullException(nameof(collection));
         }
-        
+
         protected virtual void OnCollectionChanged(NotifyCollectionChangedEventArgs args)
         {
             CollectionChanged?.Invoke(this, args);
@@ -86,6 +87,7 @@ namespace NetExtender.Types.Collections
             return Internal.Contains(item);
         }
 
+        [SuppressMessage("ReSharper", "RedundantLambdaParameterType")]
         public virtual Boolean Add(T item)
         {
             if (Internal.Contains(item))
@@ -96,7 +98,7 @@ namespace NetExtender.Types.Collections
             State state = Factory();
             state.Invoke();
             state.PropertyChanging(nameof(Count));
-            
+
             static Boolean Handler(ref TCollection @internal, T argument)
             {
                 @internal.Add(argument);
@@ -107,7 +109,7 @@ namespace NetExtender.Types.Collections
             {
                 return state.Fallback();
             }
-            
+
             state.CollectionChanged(NotifyCollectionChangedAction.Add, item);
             state.PropertyChanged(nameof(Count));
             return state.Return();
@@ -129,7 +131,7 @@ namespace NetExtender.Types.Collections
             State state = Factory();
             state.Invoke();
             state.PropertyChanging(nameof(Count));
-            
+
             static Boolean Handler(ref TCollection @internal, T argument)
             {
                 return @internal.Remove(argument);
@@ -156,7 +158,7 @@ namespace NetExtender.Types.Collections
             State state = Factory();
             state.Invoke();
             state.PropertyChanging(nameof(Count));
-            
+
             // ReSharper disable once RedundantAssignment
             static Boolean Handler(ref TCollection @internal, ref List<T>? old)
             {
@@ -164,7 +166,7 @@ namespace NetExtender.Types.Collections
                 @internal.Clear();
                 return true;
             }
-            
+
             if (!state.Update(static (ref TCollection collection, T? _, ref List<T>? _, ref List<T>? old) => Handler(ref collection, ref old)))
             {
                 state.Fallback();
@@ -205,7 +207,7 @@ namespace NetExtender.Types.Collections
 
             Internal.CopyTo(array, index);
         }
-        
+
         protected abstract TCollection Clone();
 
         public virtual IEnumerator<T> GetEnumerator()
@@ -235,7 +237,7 @@ namespace NetExtender.Types.Collections
             Fallback,
             Return
         }
-        
+
         protected record State
         {
             public delegate Boolean Handler<in TArgument>(ref TCollection @internal, TArgument argument, ref List<T>? @new, ref List<T>? old);
@@ -292,7 +294,7 @@ namespace NetExtender.Types.Collections
                     Update(reference);
                     return true;
                 }
-                
+
                 Handle(Step.Updated);
                 return true;
             }

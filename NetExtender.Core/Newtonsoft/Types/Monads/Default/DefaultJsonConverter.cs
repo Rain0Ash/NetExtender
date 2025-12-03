@@ -77,7 +77,7 @@ namespace NetExtender.Newtonsoft.Types.Monads
         {
             return Create(@default, default);
         }
-        
+
         protected abstract TDefault Create(T @default, Maybe<T> value);
         protected abstract T Default(TDefault @default);
 
@@ -95,7 +95,7 @@ namespace NetExtender.Newtonsoft.Types.Monads
                     {
                         return Create(default!);
                     }
-                    
+
                     JToken jdefault = @object.GetValue(nameof(MutableDefault<T>.Default), options) ?? throw new JsonSerializationException($"Missing required property '{nameof(MutableDefault<T>.Default)}'.");
                     T? @default = jdefault.ToObject<T>(options);
 
@@ -136,7 +136,7 @@ namespace NetExtender.Newtonsoft.Types.Monads
             }
 
             writer.WriteStartObject();
-            
+
             writer.WritePropertyName(nameof(MutableDefault<T>.Default), options);
             options.Serialize(writer, @default);
 
@@ -152,7 +152,7 @@ namespace NetExtender.Newtonsoft.Types.Monads
 namespace NetExtender.Serialization.Json.Monads
 {
     using System.Text.Json;
-    
+
     public sealed class NotifyMutableValueDefaultJsonConverter<T> : DefaultJsonConverter<T, NotifyMutableValueDefault<T>>
     {
         protected override NotifyMutableValueDefault<T> Create(T @default, Maybe<T> value)
@@ -224,7 +224,7 @@ namespace NetExtender.Serialization.Json.Monads
         {
             return Create(@default, default);
         }
-        
+
         protected abstract TDefault Create(T @default, Maybe<T> value);
         protected abstract T Default(TDefault @default);
 
@@ -237,7 +237,7 @@ namespace NetExtender.Serialization.Json.Monads
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
             JsonElement root = document.RootElement;
-            
+
             switch (root.ValueKind)
             {
                 case JsonValueKind.Object:
@@ -246,7 +246,7 @@ namespace NetExtender.Serialization.Json.Monads
                     {
                         return Create(default!);
                     }
-                    
+
                     if (!root.TryGetProperty(nameof(MutableDefault<T>.Default), options, out JsonElement jdefault))
                     {
                         throw new JsonException($"Missing required property '{nameof(MutableDefault<T>.Default)}'.");
@@ -294,15 +294,15 @@ namespace NetExtender.Serialization.Json.Monads
                 writer.WriteEndObject();
                 return true;
             }
-            
+
             writer.WriteStartObject();
-            
+
             writer.WritePropertyName(nameof(MutableDefault<T>.Default), options);
             JsonSerializer.Serialize(writer, @default, options);
 
             writer.WritePropertyName(nameof(MutableDefault<T>.Value), options);
             JsonSerializer.Serialize(writer, value.Value, options);
-            
+
             writer.WriteEndObject();
             return true;
         }

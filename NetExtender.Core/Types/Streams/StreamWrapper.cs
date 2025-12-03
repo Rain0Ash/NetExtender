@@ -87,7 +87,7 @@ namespace NetExtender.Types.Streams
                 Stream.WriteTimeout = value;
             }
         }
-        
+
         protected StreamWrapper(Stream stream)
         {
             Stream = stream ?? throw new ArgumentNullException(nameof(stream));
