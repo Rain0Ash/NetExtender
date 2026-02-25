@@ -41,10 +41,11 @@ namespace NetExtender.WindowsPresentation.Types.Bindings
             RelativeSource = CreateRelativeSource();
         }
 
+        [SuppressMessage("ReSharper", "ParameterHidesMember")]
         private static Boolean Initialize([MaybeNullWhen(false)] out Assembly assembly)
         {
             const String name = $"{nameof(NetExtender)}.{nameof(UserInterface)}.{nameof(WindowsPresentation)}.{nameof(Localization)}";
-            assembly = AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(assembly => assembly.GetName().Name == name);
+            assembly = AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(static assembly => assembly.GetName().Name == name);
             return assembly is not null;
         }
 

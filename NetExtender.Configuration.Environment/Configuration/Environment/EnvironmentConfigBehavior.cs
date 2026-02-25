@@ -8,8 +8,7 @@ using System.Threading.Tasks;
 using NetExtender.Configuration.Behavior;
 using NetExtender.Configuration.Common;
 using NetExtender.Types.Environments;
-using NetExtender.Utilities.Application;
-using NetExtender.Utilities.Types;
+using NetExtender.Utilities.IO;
 
 namespace NetExtender.Configuration.Environment
 {

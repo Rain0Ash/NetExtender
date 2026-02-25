@@ -8,7 +8,7 @@ using System.Reflection;
 using System.Threading;
 using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 using NetExtender.Utilities.Core;
 using NetExtender.Utilities.Types;
 

@@ -89,7 +89,7 @@ namespace NetExtender.Types.Tries
                     continue;
                 }
 
-                if (current.IsTerminal && current.Item is not null)
+                if (current is { IsTerminal: true, Item: not null })
                 {
                     yield return current.Item;
                 }
@@ -354,13 +354,13 @@ namespace NetExtender.Types.Tries
                 throw new ArgumentNullException(nameof(array));
             }
 
-            IEnumerable<T>[] entries = GetAllNodes(Root).Select(node => node.Item).WhereNotNull().ToArray();
+            IEnumerable<T>[] entries = GetAllNodes(Root).Select(static node => node.Item).WhereNotNull().ToArray();
             Array.Copy(entries, 0, array, index, Count);
         }
 
         public IEnumerator<IEnumerable<T>> GetEnumerator()
         {
-            return GetAllNodes(Root).Select(node => node.Item).WhereNotNull().GetEnumerator();
+            return GetAllNodes(Root).Select(static node => node.Item).WhereNotNull().GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()

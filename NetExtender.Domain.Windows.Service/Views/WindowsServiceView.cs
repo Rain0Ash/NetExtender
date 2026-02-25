@@ -9,7 +9,7 @@ using NetExtender.Domains.Service.Applications;
 using NetExtender.Domains.Service.Builder;
 using NetExtender.Domains.View;
 using NetExtender.Domains.View.Interfaces;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 using NetExtender.Windows.Services.Types.Services.Interfaces;
 
 namespace NetExtender.Domains.Service.Views

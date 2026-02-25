@@ -46,6 +46,9 @@
         <Compile Update="Patch\DependencyInjection.Patch.cs">
           <DependentUpon>DependencyInjectionPatch.cs</DependentUpon>
         </Compile>
+        <Compile Update="Utilities\ServiceCollectionUtilities.Split.cs">
+          <DependentUpon>ServiceCollectionUtilities.cs</DependentUpon>
+        </Compile>
     </ItemGroup>
 
 </Project>

@@ -96,17 +96,6 @@ namespace NetExtender.AspNetCore.Identity
             };
         }
 
-        internal static FailTicketContext From<T>(InvalidTicketContext<T> context)
-        {
-            return new FailTicketContext
-            {
-                Logger = context.Logger,
-                Context = context.Context,
-                Options = context.Options,
-                Exception = context.Exception
-            };
-        }
-
         internal static FailTicketContext From(InvalidTicketContext context)
         {
             return new FailTicketContext

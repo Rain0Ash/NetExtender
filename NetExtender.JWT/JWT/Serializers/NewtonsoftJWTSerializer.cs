@@ -4,7 +4,7 @@
 using System;
 using System.IO;
 using System.Text;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 using Newtonsoft.Json;
 
 namespace NetExtender.JWT

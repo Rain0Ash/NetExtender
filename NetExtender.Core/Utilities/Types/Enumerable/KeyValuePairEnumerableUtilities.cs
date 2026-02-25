@@ -16,43 +16,19 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<KeyValuePair<NullMaybe<TKey>, NullMaybe<TValue>>> Nullable<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source)
         {
-            if (source is null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-
-            foreach (KeyValuePair<TKey, TValue> pair in source)
-            {
-                yield return pair.Nullable();
-            }
+            return EnumerableBaseUtilities.Nullable(source);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<KeyValuePair<NullMaybe<TKey>, TValue>> KeyNullable<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source)
         {
-            if (source is null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-
-            foreach (KeyValuePair<TKey, TValue> pair in source)
-            {
-                yield return pair.KeyNullable();
-            }
+            return EnumerableBaseUtilities.KeyNullable(source);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<KeyValuePair<TKey, NullMaybe<TValue>>> ValueNullable<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source)
         {
-            if (source is null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-
-            foreach (KeyValuePair<TKey, TValue> pair in source)
-            {
-                yield return pair.ValueNullable();
-            }
+            return EnumerableBaseUtilities.ValueNullable(source);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -871,12 +847,7 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<KeyValuePair<TKey, TValue>> WhereKeyNotNull<TKey, TValue>(this IEnumerable<KeyValuePair<TKey?, TValue>> source)
         {
-            if (source is null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-
-            return source.Where(static item => item.Key is not null)!;
+            return EnumerableBaseUtilities.WhereKeyNotNull(source);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

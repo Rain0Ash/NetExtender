@@ -258,7 +258,7 @@ namespace NetExtender.Types.Interprocess
                 }
 
                 Task task = Task.Run(Core);
-                List<Task> tasks = HandlerTasks.Where(item => item.Status == TaskStatus.Running).ToList();
+                List<Task> tasks = HandlerTasks.Where(static item => item.Status is TaskStatus.Running).ToList();
                 tasks.Add(task);
 
                 HandlerTasks = tasks;

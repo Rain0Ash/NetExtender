@@ -3,17 +3,17 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
+using NetExtender.Cecil;
 using NetExtender.Domains.Applications;
 using NetExtender.Domains.Applications.Interfaces;
 using NetExtender.Domains.Initializer.Interfaces;
 using NetExtender.Domains.Interfaces;
 using NetExtender.Domains.View.Interfaces;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 using NetExtender.Utilities.Core;
 using NetExtender.Utilities.Types;
 
@@ -70,7 +70,7 @@ namespace NetExtender.Domains.Utilities
             }
 
             Inherit.Result inherit = ReflectionUtilities.Inherit;
-            if (inherit.Attribute[typeof(ApplicationInitializerAttribute)].Types is not { Count: > 0 } initializer)
+            if (inherit.Attributes[typeof(ApplicationInitializerAttribute)].Types is not { Count: > 0 } initializer)
             {
                 return Find(assembly, source, @namespace);
             }
@@ -80,25 +80,25 @@ namespace NetExtender.Domains.Utilities
                 throw new ScanAmbiguousException($"Ambiguous '{nameof(ApplicationInitializerAttribute)}' types: {initializer.GetString()}.");
             }
 
-            Type type = initializer.Single();
+            MonoCecilType single = initializer.Single;
 
-            if (type.IsInterface || type.IsAbstract || type.IsValueType)
+            if (single.IsInterface || single.IsAbstract || single.IsValueType)
             {
-                throw new TypeNotSupportedException(type);
+                throw new TypeNotSupportedException(single);
             }
 
-            if (!inherit[typeof(IApplication)].Contains(type))
+            if (!inherit[typeof(IApplication)].Contains(single))
             {
-                throw new TypeNotSupportedException(type, $"Type '{type}' must implement '{nameof(IApplication)}'.");
+                throw new TypeNotSupportedException(single, $"Type '{single.Name}' must implement '{nameof(IApplication)}'.");
+            }
+
+            if (single.Type is not { } type)
+            {
+                throw new TypeNotSupportedException(single, $"Type '{single.Name}' is not real.");
             }
 
             const BindingFlags binding = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.CreateInstance;
-            if (type.GetConstructor(binding, Type.EmptyTypes) is null)
-            {
-                throw new TypeNotSupportedException(type, $"Type '{type}' must have {ReflectionUtilities.Constructor}().");
-            }
-
-            return type;
+            return type.GetConstructor(binding, Type.EmptyTypes) is not null ? single : throw new TypeNotSupportedException(single, $"Type '{single.Name}' must have {TypeUtilities.Constructor}().");
         }
 
         private static IApplication AutoInitializeCore(IDomain source)

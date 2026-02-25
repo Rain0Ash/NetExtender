@@ -4,7 +4,7 @@
 using System;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 using NetExtender.Windows;
 using NetExtender.Windows.Utilities.Native;
 using NetExtenderMouseAction = NetExtender.Types.Mouse.MouseAction;

@@ -1,6 +1,6 @@
 using System;
 using System.Runtime.CompilerServices;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 
 namespace NetExtender.Types.Phone
 {

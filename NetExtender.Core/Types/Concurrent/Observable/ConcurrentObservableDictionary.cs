@@ -10,7 +10,7 @@ using System.Runtime.Serialization;
 using NetExtender.Types.Comparers;
 using NetExtender.Types.Concurrent.Observable.Interfaces;
 using NetExtender.Types.Enumerators;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 using NetExtender.Types.Immutable.Dictionaries;
 using NetExtender.Types.Monads;
 using NetExtender.Types.Sizes;
@@ -38,111 +38,111 @@ namespace NetExtender.Types.Concurrent.Observable
             }
         }
 
-        protected ConcurrentObservableDictionary()
+        public ConcurrentObservableDictionary()
         {
         }
 
-        protected ConcurrentObservableDictionary(Boolean @lock)
+        public ConcurrentObservableDictionary(Boolean @lock)
             : base(@lock)
         {
         }
 
-        protected ConcurrentObservableDictionary(IEqualityComparer<TKey>? comparer)
+        public ConcurrentObservableDictionary(IEqualityComparer<TKey>? comparer)
             : base(comparer)
         {
         }
 
-        protected ConcurrentObservableDictionary(IEqualityComparer<TKey>? comparer, Boolean @lock)
+        public ConcurrentObservableDictionary(IEqualityComparer<TKey>? comparer, Boolean @lock)
             : base(comparer, @lock)
         {
         }
 
-        protected ConcurrentObservableDictionary(IEqualityComparer<NullMaybe<TKey>>? comparer)
+        public ConcurrentObservableDictionary(IEqualityComparer<NullMaybe<TKey>>? comparer)
             : base(comparer)
         {
         }
 
-        protected ConcurrentObservableDictionary(IEqualityComparer<NullMaybe<TKey>>? comparer, Boolean @lock)
+        public ConcurrentObservableDictionary(IEqualityComparer<NullMaybe<TKey>>? comparer, Boolean @lock)
             : base(comparer, @lock)
         {
         }
 
-        protected ConcurrentObservableDictionary(IEqualityComparer<TKey>? keyComparer, IEqualityComparer<TValue>? valueComparer)
+        public ConcurrentObservableDictionary(IEqualityComparer<TKey>? keyComparer, IEqualityComparer<TValue>? valueComparer)
             : base(keyComparer, valueComparer)
         {
         }
 
-        protected ConcurrentObservableDictionary(IEqualityComparer<TKey>? keyComparer, IEqualityComparer<TValue>? valueComparer, Boolean @lock)
+        public ConcurrentObservableDictionary(IEqualityComparer<TKey>? keyComparer, IEqualityComparer<TValue>? valueComparer, Boolean @lock)
             : base(keyComparer, valueComparer, @lock)
         {
         }
 
-        protected ConcurrentObservableDictionary(IEqualityComparer<NullMaybe<TKey>>? keyComparer, IEqualityComparer<TValue>? valueComparer)
+        public ConcurrentObservableDictionary(IEqualityComparer<NullMaybe<TKey>>? keyComparer, IEqualityComparer<TValue>? valueComparer)
             : base(keyComparer, valueComparer)
         {
         }
 
-        protected ConcurrentObservableDictionary(IEqualityComparer<NullMaybe<TKey>>? keyComparer, IEqualityComparer<TValue>? valueComparer, Boolean @lock)
+        public ConcurrentObservableDictionary(IEqualityComparer<NullMaybe<TKey>>? keyComparer, IEqualityComparer<TValue>? valueComparer, Boolean @lock)
             : base(keyComparer, valueComparer, @lock)
         {
         }
 
-        protected ConcurrentObservableDictionary(IEnumerable<KeyValuePair<TKey, TValue>>? source)
+        public ConcurrentObservableDictionary(IEnumerable<KeyValuePair<TKey, TValue>>? source)
             : base(source)
         {
         }
 
-        protected ConcurrentObservableDictionary(IEnumerable<KeyValuePair<TKey, TValue>>? source, Boolean @lock)
+        public ConcurrentObservableDictionary(IEnumerable<KeyValuePair<TKey, TValue>>? source, Boolean @lock)
             : base(source, @lock)
         {
         }
 
-        protected ConcurrentObservableDictionary(IEnumerable<KeyValuePair<TKey, TValue>>? source, IEqualityComparer<TKey>? comparer)
+        public ConcurrentObservableDictionary(IEnumerable<KeyValuePair<TKey, TValue>>? source, IEqualityComparer<TKey>? comparer)
             : base(source, comparer)
         {
         }
 
-        protected ConcurrentObservableDictionary(IEnumerable<KeyValuePair<TKey, TValue>>? source, IEqualityComparer<TKey>? comparer, Boolean @lock)
+        public ConcurrentObservableDictionary(IEnumerable<KeyValuePair<TKey, TValue>>? source, IEqualityComparer<TKey>? comparer, Boolean @lock)
             : base(source, comparer, @lock)
         {
         }
 
-        protected ConcurrentObservableDictionary(IEnumerable<KeyValuePair<TKey, TValue>>? source, IEqualityComparer<NullMaybe<TKey>>? comparer)
+        public ConcurrentObservableDictionary(IEnumerable<KeyValuePair<TKey, TValue>>? source, IEqualityComparer<NullMaybe<TKey>>? comparer)
             : base(source, comparer)
         {
         }
 
-        protected ConcurrentObservableDictionary(IEnumerable<KeyValuePair<TKey, TValue>>? source, IEqualityComparer<NullMaybe<TKey>>? comparer, Boolean @lock)
+        public ConcurrentObservableDictionary(IEnumerable<KeyValuePair<TKey, TValue>>? source, IEqualityComparer<NullMaybe<TKey>>? comparer, Boolean @lock)
             : base(source, comparer, @lock)
         {
         }
 
-        protected ConcurrentObservableDictionary(IEnumerable<KeyValuePair<TKey, TValue>>? source, IEqualityComparer<TKey>? keyComparer, IEqualityComparer<TValue>? valueComparer)
+        public ConcurrentObservableDictionary(IEnumerable<KeyValuePair<TKey, TValue>>? source, IEqualityComparer<TKey>? keyComparer, IEqualityComparer<TValue>? valueComparer)
             : base(source, keyComparer, valueComparer)
         {
         }
 
-        protected ConcurrentObservableDictionary(IEnumerable<KeyValuePair<TKey, TValue>>? source, IEqualityComparer<TKey>? keyComparer, IEqualityComparer<TValue>? valueComparer, Boolean @lock)
+        public ConcurrentObservableDictionary(IEnumerable<KeyValuePair<TKey, TValue>>? source, IEqualityComparer<TKey>? keyComparer, IEqualityComparer<TValue>? valueComparer, Boolean @lock)
             : base(source, keyComparer, valueComparer, @lock)
         {
         }
 
-        protected ConcurrentObservableDictionary(IEnumerable<KeyValuePair<TKey, TValue>>? source, IEqualityComparer<NullMaybe<TKey>>? keyComparer, IEqualityComparer<TValue>? valueComparer)
+        public ConcurrentObservableDictionary(IEnumerable<KeyValuePair<TKey, TValue>>? source, IEqualityComparer<NullMaybe<TKey>>? keyComparer, IEqualityComparer<TValue>? valueComparer)
             : base(source, keyComparer, valueComparer)
         {
         }
 
-        protected ConcurrentObservableDictionary(IEnumerable<KeyValuePair<TKey, TValue>>? source, IEqualityComparer<NullMaybe<TKey>>? keyComparer, IEqualityComparer<TValue>? valueComparer, Boolean @lock)
+        public ConcurrentObservableDictionary(IEnumerable<KeyValuePair<TKey, TValue>>? source, IEqualityComparer<NullMaybe<TKey>>? keyComparer, IEqualityComparer<TValue>? valueComparer, Boolean @lock)
             : base(source, keyComparer, valueComparer, @lock)
         {
         }
 
-        protected ConcurrentObservableDictionary(ImmutableNullableDictionary<TKey, TValue>? source)
+        public ConcurrentObservableDictionary(ImmutableNullableDictionary<TKey, TValue>? source)
             : base(source)
         {
         }
 
-        protected ConcurrentObservableDictionary(ImmutableNullableDictionary<TKey, TValue>? source, Boolean @lock)
+        public ConcurrentObservableDictionary(ImmutableNullableDictionary<TKey, TValue>? source, Boolean @lock)
             : base(source, @lock)
         {
         }
@@ -248,15 +248,31 @@ namespace NetExtender.Types.Concurrent.Observable
     }
 
     [Serializable]
-    public class ConcurrentObservableDictionary<TKey, TValue, TSelf> : ConcurrentObservableBase<KeyValuePair<TKey, TValue>, ImmutableNullableDictionary<TKey, TValue>, TSelf>, IConcurrentObservableHashDictionary<TKey, TValue>, IDictionary where TSelf : ConcurrentObservableDictionary<TKey, TValue, TSelf>
+    public class ConcurrentObservableDictionary<TKey, TValue, TSelf> : ConcurrentObservableBase<KeyValuePair<TKey, TValue>, ImmutableNullableDictionary<TKey, TValue>, ImmutableNullableDictionary<TKey, TValue>, TSelf>, IConcurrentObservableHashDictionary<TKey, TValue>, IReadOnlyConcurrentObservableHashDictionary<TKey, TValue>, IDictionary where TSelf : ConcurrentObservableDictionary<TKey, TValue, TSelf>
     {
         protected sealed override ImmutableNullableDictionary<TKey, TValue> Collection { get; set; }
 
-        public sealed override IDictionary<TKey, TValue> View
+        public sealed override ImmutableNullableDictionary<TKey, TValue> View
         {
             get
             {
                 return Collection;
+            }
+        }
+
+        IDictionary<TKey, TValue> IConcurrentObservableDictionary<TKey, TValue>.View
+        {
+            get
+            {
+                return View;
+            }
+        }
+
+        IReadOnlyDictionary<TKey, TValue> IReadOnlyConcurrentObservableDictionary<TKey, TValue>.View
+        {
+            get
+            {
+                return View;
             }
         }
 
@@ -294,6 +310,14 @@ namespace NetExtender.Types.Concurrent.Observable
         }
 
         IImmutableDictionary<TKey, TValue> IConcurrentObservableDictionary<TKey, TValue>.Immutable
+        {
+            get
+            {
+                return Immutable;
+            }
+        }
+
+        IImmutableDictionary<TKey, TValue> IReadOnlyConcurrentObservableDictionary<TKey, TValue>.Immutable
         {
             get
             {

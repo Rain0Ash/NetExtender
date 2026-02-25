@@ -8,7 +8,7 @@ using System.Runtime.CompilerServices;
 using NetExtender.Cryptography.Keys.AES;
 using NetExtender.Cryptography.Keys.Interfaces;
 using NetExtender.Cryptography.Keys.RSA;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 using NetExtender.Utilities.Cryptography;
 
 namespace NetExtender.Cryptography.Keys

@@ -5,7 +5,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 using NetExtender.Types.Trees;
 using NetExtender.Types.Trees.Interfaces;
 using NetExtender.Utilities.Core;

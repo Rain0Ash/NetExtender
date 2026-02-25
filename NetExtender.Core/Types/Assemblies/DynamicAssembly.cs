@@ -5,7 +5,7 @@ using System;
 using System.Reflection;
 using System.Reflection.Emit;
 using NetExtender.Types.Assemblies.Interfaces;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 
 namespace NetExtender.Types.Assemblies
 {

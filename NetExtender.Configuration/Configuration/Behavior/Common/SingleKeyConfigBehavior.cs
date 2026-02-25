@@ -350,13 +350,13 @@ namespace NetExtender.Configuration.Behavior
 
             if (values is null || values.Length <= 0)
             {
-                return entries.DistinctLastBy(item => (ConfigurationEntry) item).Aggregate(false, (current, entry) => current | Set(entry.Key, entry.Value, entry.Sections));
+                return entries.DistinctLastBy(static item => (ConfigurationEntry) item).Aggregate(false, (current, entry) => current | Set(entry.Key, entry.Value, entry.Sections));
             }
 
-            IndexDictionary<ConfigurationEntry, ConfigurationValueEntry> dictionary = values.ToIndexDictionary(item => (ConfigurationEntry) item, item => item);
+            IndexDictionary<ConfigurationEntry, ConfigurationValueEntry> dictionary = values.ToIndexDictionary(static item => (ConfigurationEntry) item, static item => item);
             List<ConfigurationValueEntry>? changes = !IsIgnoreEvent ? new List<ConfigurationValueEntry>(dictionary.Count) : null;
 
-            foreach (ConfigurationValueEntry entry in entries.DistinctLastBy(item => (ConfigurationEntry) item))
+            foreach (ConfigurationValueEntry entry in entries.DistinctLastBy(static item => (ConfigurationEntry) item))
             {
                 if (entry.Key is null)
                 {
@@ -433,13 +433,13 @@ namespace NetExtender.Configuration.Behavior
 
             if (values is null || values.Length <= 0)
             {
-                return entries.DistinctLastBy(item => (ConfigurationEntry) item).Aggregate(false, (current, entry) => current | Set(entry.Key, entry.Value, entry.Sections));
+                return entries.DistinctLastBy(static item => (ConfigurationEntry) item).Aggregate(false, (current, entry) => current | Set(entry.Key, entry.Value, entry.Sections));
             }
 
-            IndexDictionary<ConfigurationEntry, ConfigurationValueEntry> dictionary = values.ToIndexDictionary(item => (ConfigurationEntry) item, item => item);
+            IndexDictionary<ConfigurationEntry, ConfigurationValueEntry> dictionary = values.ToIndexDictionary(static item => (ConfigurationEntry) item, static item => item);
             List<ConfigurationValueEntry>? changes = !IsIgnoreEvent ? new List<ConfigurationValueEntry>(dictionary.Count) : null;
 
-            foreach (ConfigurationValueEntry entry in entries.DistinctLastBy(item => (ConfigurationEntry) item))
+            foreach (ConfigurationValueEntry entry in entries.DistinctLastBy(static item => (ConfigurationEntry) item))
             {
                 if (entry.Key is null)
                 {
@@ -519,10 +519,10 @@ namespace NetExtender.Configuration.Behavior
                 return Merge(entries);
             }
 
-            IndexDictionary<ConfigurationEntry, ConfigurationValueEntry> dictionary = values.ToIndexDictionary(item => (ConfigurationEntry) item, item => item);
+            IndexDictionary<ConfigurationEntry, ConfigurationValueEntry> dictionary = values.ToIndexDictionary(static item => (ConfigurationEntry) item, static item => item);
             List<ConfigurationValueEntry>? changes = !IsIgnoreEvent ? new List<ConfigurationValueEntry>(dictionary.Count) : null;
 
-            foreach (ConfigurationValueEntry entry in entries.DistinctLastBy(item => (ConfigurationEntry) item))
+            foreach (ConfigurationValueEntry entry in entries.DistinctLastBy(static item => (ConfigurationEntry) item))
             {
                 if (entry.Key is null)
                 {
@@ -617,10 +617,10 @@ namespace NetExtender.Configuration.Behavior
                 return await MergeAsync(entries, token).ConfigureAwait(false);
             }
 
-            IndexDictionary<ConfigurationEntry, ConfigurationValueEntry> dictionary = values.ToIndexDictionary(item => (ConfigurationEntry) item, item => item);
+            IndexDictionary<ConfigurationEntry, ConfigurationValueEntry> dictionary = values.ToIndexDictionary(static item => (ConfigurationEntry) item, static item => item);
             List<ConfigurationValueEntry>? changes = !IsIgnoreEvent ? new List<ConfigurationValueEntry>(dictionary.Count) : null;
 
-            foreach (ConfigurationValueEntry entry in entries.DistinctLastBy(item => (ConfigurationEntry) item))
+            foreach (ConfigurationValueEntry entry in entries.DistinctLastBy(static item => (ConfigurationEntry) item))
             {
                 if (entry.Key is null)
                 {

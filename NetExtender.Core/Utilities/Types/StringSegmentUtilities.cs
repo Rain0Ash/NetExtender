@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using Microsoft.Extensions.Primitives;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 
 namespace NetExtender.Utilities.Types
 {

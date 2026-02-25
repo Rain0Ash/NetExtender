@@ -11,7 +11,7 @@ using System.Runtime.CompilerServices;
 using NetExtender.Types.Collections;
 using NetExtender.Types.Dictionaries;
 using NetExtender.Types.Dictionaries.Interfaces;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 using NetExtender.Types.Immutable.Dictionaries.Interfaces;
 using NetExtender.Types.Immutable.Maps.Interfaces;
 using NetExtender.Types.Maps;
@@ -697,47 +697,17 @@ namespace NetExtender.Utilities.Types
 
             private static Boolean Is(Type? type, ConcurrentDictionary<Type, Status> cache, Func<Type, Status> factory)
             {
-                if (type is null)
-                {
-                    return false;
-                }
-
-                if (type.IsAbstract && type.IsSealed)
-                {
-                    return false;
-                }
-
-                return cache.GetOrAdd(type.TryGetGenericTypeDefinition(), factory).IsType;
+                return type is not null && type is not { IsAbstract: true, IsSealed: true } && cache.GetOrAdd(type.TryGetGenericTypeDefinition(), factory).IsType;
             }
 
             private static Boolean IsNonGeneric(Type? type, ConcurrentDictionary<Type, Status> cache, Func<Type, Status> factory)
             {
-                if (type is null)
-                {
-                    return false;
-                }
-
-                if (type.IsGenericType || type.IsAbstract && type.IsSealed)
-                {
-                    return false;
-                }
-
-                return cache.GetOrAdd(type, factory).IsNonGenericType;
+                return type is not null && !type.IsGenericType && type is not { IsAbstract: true, IsSealed: true } && cache.GetOrAdd(type, factory).IsNonGenericType;
             }
 
             private static Boolean IsGeneric(Type? type, ConcurrentDictionary<Type, Status> cache, Func<Type, Status> factory)
             {
-                if (type is null)
-                {
-                    return false;
-                }
-
-                if (!type.IsGenericType || type.IsAbstract && type.IsSealed)
-                {
-                    return false;
-                }
-
-                return cache.GetOrAdd(type.GetGenericTypeDefinition(), factory).IsGenericType;
+                return type is not null && type.IsGenericType && type is not { IsAbstract: true, IsSealed: true } && cache.GetOrAdd(type.GetGenericTypeDefinition(), factory).IsGenericType;
             }
 
             public static Boolean IsArray(Type? type)
@@ -747,12 +717,12 @@ namespace NetExtender.Utilities.Types
 
             public static Boolean IsNonGenericArray(Type? type)
             {
-                return type is not null && type.IsArray && !type.IsGenericType;
+                return type is { IsArray: true, IsGenericType: false };
             }
 
             public static Boolean IsGenericArray(Type? type)
             {
-                return type is not null && type.IsArray && type.IsGenericType;
+                return type is { IsArray: true, IsGenericType: true };
             }
 
             public static Boolean IsEnumerable(Type? type)

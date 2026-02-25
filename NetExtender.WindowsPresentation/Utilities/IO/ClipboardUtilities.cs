@@ -13,7 +13,7 @@ using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media.Imaging;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 using NetExtender.Utilities.Threading;
 using NetExtender.Utilities.Types;
 using NetExtender.WindowsPresentation.Types.Clipboard;

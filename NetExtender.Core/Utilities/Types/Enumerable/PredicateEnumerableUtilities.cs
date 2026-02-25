@@ -211,90 +211,28 @@ namespace NetExtender.Utilities.Types
             return source.Where((item, index) => !predicate(selector(item, index), index));
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<T> Where<T, TArgument>(this IEnumerable<T> source, TArgument argument, Func<TArgument, T, Boolean> predicate)
         {
-            if (source is null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-
-            if (predicate is null)
-            {
-                throw new ArgumentNullException(nameof(predicate));
-            }
-
-            foreach (T item in source)
-            {
-                if (predicate(argument, item))
-                {
-                    yield return item;
-                }
-            }
+            return EnumerableBaseUtilities.Where(source, argument, predicate);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<T> Where<T, TArgument>(this IEnumerable<T> source, TArgument argument, Func<TArgument, T, Int32, Boolean> predicate)
         {
-            if (source is null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-
-            if (predicate is null)
-            {
-                throw new ArgumentNullException(nameof(predicate));
-            }
-
-            Int32 i = -1;
-            foreach (T item in source)
-            {
-                if (predicate(argument, item, checked(++i)))
-                {
-                    yield return item;
-                }
-            }
+            return EnumerableBaseUtilities.Where(source, argument, predicate);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<T> WhereNot<T>(this IEnumerable<T> source, Func<T, Boolean> predicate)
         {
-            if (source is null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-
-            if (predicate is null)
-            {
-                throw new ArgumentNullException(nameof(predicate));
-            }
-
-            foreach (T item in source)
-            {
-                if (!predicate(item))
-                {
-                    yield return item;
-                }
-            }
+            return EnumerableBaseUtilities.WhereNot(source, predicate);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<T> WhereNot<T>(this IEnumerable<T> source, Func<T, Int32, Boolean> predicate)
         {
-            if (source is null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-
-            if (predicate is null)
-            {
-                throw new ArgumentNullException(nameof(predicate));
-            }
-
-            Int32 i = -1;
-            foreach (T item in source)
-            {
-                if (!predicate(item, checked(++i)))
-                {
-                    yield return item;
-                }
-            }
+            return EnumerableBaseUtilities.WhereNot(source, predicate);
         }
 
         public static IEnumerable<T> WhereNot<T, TArgument>(this IEnumerable<T> source, TArgument argument, Func<TArgument, T, Boolean> predicate)
@@ -340,75 +278,34 @@ namespace NetExtender.Utilities.Types
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<T> WhereNotNull<T>(this IEnumerable<T?> source)
         {
-            if (source is null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-
-            return source.Where(static item => item is not null)!;
+            return EnumerableBaseUtilities.WhereNotNull(source);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<T?> WhereNotNull<T>(this IEnumerable<T?> source) where T : struct
         {
-            if (source is null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-
-            return source.Where(static item => item.HasValue);
+            return EnumerableBaseUtilities.WhereNotNull(source);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<T> WhereNotNull<T, TItem>(this IEnumerable<T?> source, Func<T, TItem> predicate)
         {
-            if (source is null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-
-            if (predicate is null)
-            {
-                throw new ArgumentNullException(nameof(predicate));
-            }
-
-            foreach (T? item in source)
-            {
-                if (item is not null && predicate(item) is not null)
-                {
-                    yield return item;
-                }
-            }
+            return EnumerableBaseUtilities.WhereNotNull(source, predicate);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<T> WhereNotNull<T>(this IEnumerable<T?> source, Func<T, Boolean> predicate)
         {
-            if (source is null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-
-            if (predicate is null)
-            {
-                throw new ArgumentNullException(nameof(predicate));
-            }
-
-            return source.WhereNotNull().Where(predicate);
+            return EnumerableBaseUtilities.WhereNotNull(source, predicate);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<T> WhereNotNull<T>(this IEnumerable<T?> source, Func<T, Int32, Boolean> predicate)
         {
-            if (source is null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-
-            if (predicate is null)
-            {
-                throw new ArgumentNullException(nameof(predicate));
-            }
-
-            return source.WhereNotNull().Where(predicate);
+            return EnumerableBaseUtilities.WhereNotNull(source, predicate);
         }
 
         public static IEnumerable<T> WhereNotNull<T, TArgument>(this IEnumerable<T?> source, TArgument argument, Func<TArgument, T, Boolean> predicate)

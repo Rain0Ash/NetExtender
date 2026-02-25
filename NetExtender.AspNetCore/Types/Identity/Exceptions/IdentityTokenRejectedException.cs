@@ -4,100 +4,64 @@
 using System;
 using System.Net;
 using System.Runtime.Serialization;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 
 namespace NetExtender.AspNetCore.Identity
 {
     [Serializable]
-    public class IdentityTokenRejectedException : IdentityTokenRejectedException<String?>
+    public class IdentityTokenRejectedException : IdentityException
     {
         public new static HttpStatusCode Status { get; set; } = HttpStatusCode.Forbidden;
         public new static String? Message { get; set; } = "Identity token has rejected.";
-        public new static String? Code { get; set; } = $"{nameof(Identity)}.Token.Reject";
+        public new static String? Name { get; set; } = $"{nameof(AspNetCore.Identity)}.Token.Reject";
+
+        public sealed override Id Known
+        {
+            get
+            {
+                return Id.Reject;
+            }
+        }
+
+        public override String? Identity
+        {
+            get
+            {
+                return base.Name ?? Name;
+            }
+            init
+            {
+                base.Name = value;
+            }
+        }
 
         public IdentityTokenRejectedException()
-            : base(Code)
+            : base(Message, Status)
         {
         }
 
         public IdentityTokenRejectedException(String? message)
-            : base(message, Code)
+            : base(message ?? Message, Status)
         {
         }
 
         public IdentityTokenRejectedException(String? message, Exception? exception)
-            : base(message, Code, exception)
-        {
-        }
-
-        public IdentityTokenRejectedException(String? message, BusinessException? exception)
-            : base(message, Code, exception)
+            : base(message ?? Message, Status, exception)
         {
         }
 
         public IdentityTokenRejectedException(String? message, params BusinessException?[]? reason)
-            : base(message, Code, reason)
+            : base(message ?? Message, Status, reason)
         {
         }
 
         public IdentityTokenRejectedException(String? message, Exception? exception, params BusinessException?[]? reason)
-            : base(message, Code, exception, reason)
+            : base(message ?? Message, Status, exception, reason)
         {
         }
 
         public IdentityTokenRejectedException(String? message, BusinessException? exception, params BusinessException?[]? reason)
-            : base(message, Code, exception, reason)
-        {
-        }
-
-#if NET8_0_OR_GREATER
-        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
-        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-#endif
-        protected IdentityTokenRejectedException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
-        {
-        }
-    }
-
-    [Serializable]
-    public class IdentityTokenRejectedException<T> : IdentityException<T>
-    {
-        public sealed override IdentityException.Known Known
-        {
-            get
-            {
-                return IdentityException.Known.Reject;
-            }
-        }
-
-        public IdentityTokenRejectedException(T code)
-            : base(IdentityTokenRejectedException.Message, IdentityTokenRejectedException.Status, code)
-        {
-        }
-
-        public IdentityTokenRejectedException(String? message, T code)
-            : base(message ?? IdentityTokenRejectedException.Message, IdentityTokenRejectedException.Status, code)
-        {
-        }
-
-        public IdentityTokenRejectedException(String? message, T code, Exception? exception)
-            : base(message ?? IdentityTokenRejectedException.Message, IdentityTokenRejectedException.Status, code, exception)
-        {
-        }
-
-        public IdentityTokenRejectedException(String? message, T code, params BusinessException?[]? reason)
-            : base(message ?? IdentityTokenRejectedException.Message, IdentityTokenRejectedException.Status, code, reason)
-        {
-        }
-
-        public IdentityTokenRejectedException(String? message, T code, Exception? exception, params BusinessException?[]? reason)
-            : base(message ?? IdentityTokenRejectedException.Message, IdentityTokenRejectedException.Status, code, exception, reason)
-        {
-        }
-
-        public IdentityTokenRejectedException(String? message, T code, BusinessException? exception, params BusinessException?[]? reason)
-            : base(message ?? IdentityTokenRejectedException.Message, IdentityTokenRejectedException.Status, code, exception, reason)
+            : base(message ?? Message, Status, exception, reason)
         {
         }
 

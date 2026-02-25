@@ -1,0 +1,103 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
+using System;
+using System.Diagnostics.CodeAnalysis;
+using System.IO;
+using System.Text;
+
+namespace NetExtender.FileSystems.Interfaces
+{
+#pragma warning disable CS0618
+    internal interface INetExtenderUnsafeFileSystemHandler : IUnsafeFileSystemHandler, INetExtenderFileSystemHandler
+    {
+    }
+#pragma warning restore CS0618
+
+    [Obsolete($"Use IUnsafeFileSystemHandler as specified interface {nameof(IUnsafePathHandler)}; {nameof(IUnsafeLinkHandler)}; {nameof(IUnsafeFileHandler)}; {nameof(IUnsafeDirectoryHandler)}; {nameof(IUnsafeDriveHandler)}; {nameof(IUnsafeEnvironmentHandler)}.")]
+    public interface IUnsafeFileSystemHandler : IFileSystemHandler, IUnsafePathHandler, IUnsafeLinkHandler, IUnsafeFileHandler, IUnsafeDirectoryHandler, IUnsafeDriveHandler, IUnsafeEnvironmentHandler, IUnsafeFileSystem
+    {
+        #region FileSystem
+
+        public new FileSystemInfo CreateSymbolicLink(String path, String target);
+        public new FileSystemInfo? ResolveLinkTarget(String path, Boolean target);
+
+        #endregion
+
+        #region Directory
+
+        public new DirectoryInfo? GetParent(String path);
+
+        #endregion
+    }
+
+#pragma warning disable CS0618
+    internal interface INetExtenderFileSystemHandler : IFileSystemHandler
+    {
+    }
+#pragma warning restore CS0618
+
+    [Obsolete($"Use IFileSystemHandler as specified interface {nameof(IPathHandler)}; {nameof(ILinkHandler)}; {nameof(IFileHandler)}; {nameof(IDirectoryHandler)}; {nameof(IDriveHandler)}; {nameof(IEnvironmentHandler)}.")]
+    public interface IFileSystemHandler : IPathHandler, ILinkHandler, IFileHandler, IDirectoryHandler, IDriveHandler, IEnvironmentHandler, IFileSystem
+    {
+        public new Guid Id { get; }
+        public new String? Name { get; }
+        public new Object SyncRoot { get; }
+        public new Boolean IsSynchronized { get; }
+        public new DateTime CreationTime { get; }
+        public new DateTime CreationTimeUtc { get; }
+        public new Boolean IsReal { get; }
+        public new Encoding? Encoding { get; }
+        public new Encoding ReadEncoding { get; }
+        public new Encoding WriteEncoding { get; }
+        public new StringComparer? Comparer { get; }
+        public new Boolean? IsCaseSensitive { get; }
+
+        #region FileSystem
+
+        public new IFileSystemInfo CreateSymbolicLink(String path, String target);
+        public new IFileSystemInfo? ResolveLinkTarget(String path, Boolean target);
+        public new Boolean Exists([NotNullWhen(true)] String? path);
+        public new DateTime GetCreationTime(String path);
+        public new DateTime GetCreationTimeUtc(String path);
+        public new DateTime GetLastAccessTime(String path);
+        public new DateTime GetLastAccessTimeUtc(String path);
+        public new DateTime GetLastWriteTime(String path);
+        public new DateTime GetLastWriteTimeUtc(String path);
+        public new void SetCreationTime(String path, DateTime time);
+        public new void SetCreationTimeUtc(String path, DateTime time);
+        public new void SetLastAccessTime(String path, DateTime time);
+        public new void SetLastAccessTimeUtc(String path, DateTime time);
+        public new void SetLastWriteTime(String path, DateTime time);
+        public new void SetLastWriteTimeUtc(String path, DateTime time);
+        public new void Move(String source, String destination);
+        public new void Delete(String path);
+
+        #endregion
+
+        #region File
+
+        public new FileAttributes GetAttributes(String path);
+        public new void SetAttributes(String path, FileAttributes attributes);
+        public new UnixFileMode GetUnixFileMode(String path);
+        public new void SetUnixFileMode(String path, UnixFileMode mode);
+        public new FileStream Create(String path);
+        public new void Move(String source, String destination, Boolean overwrite);
+        public new void Copy(String source, String destination);
+        public new void Copy(String source, String destination, Boolean overwrite);
+        public new void Replace(String source, String destination, String? backup);
+        public new void Replace(String source, String destination, String? backup, Boolean suppress);
+        public new Boolean Encrypt(String path);
+        public new Boolean Decrypt(String path);
+
+        #endregion
+
+        #region Directory
+
+        public new String[]? GetLogicalDrives();
+        public new IDirectoryInfo? GetParent(String path);
+        public new void Delete(String path, Boolean recursive);
+
+        #endregion
+    }
+}

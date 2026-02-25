@@ -4,10 +4,15 @@
 using System;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
+using NetExtender.Types.Strings;
+using NetExtender.Types.Strings.Interfaces;
+using NetExtender.Utilities.Application;
 using NetExtender.Utilities.Core;
+using NetExtender.Utilities.IO;
 
 [assembly: IgnoresAccessChecksTo("System.Private.CoreLib")]
+
 namespace NetExtender.Initializer
 {
     internal static class NetExtenderInitializer
@@ -40,6 +45,9 @@ namespace NetExtender.Initializer
             {
                 ReflectionUtilities.CallStaticInitializerRequiredAttribute();
             }
+
+            IStringProvider.Default = new StringProvider();
+            DirectoryUtilities.SetCurrentDirectoryHandler(static () => ApplicationUtilities.Directory);
 
             NetExtenderFrameworkInitializer.Successful = true;
         }

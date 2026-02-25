@@ -8,7 +8,7 @@ using System.Drawing;
 using System.Runtime.CompilerServices;
 using NetExtender.Types.Drawing.Colors;
 using NetExtender.Types.Drawing.Colors.Interfaces;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 using NetExtender.Types.Immutable.Maps.Interfaces;
 using NetExtender.Types.Random.Interfaces;
 using NetExtender.Utilities.Numerics;
@@ -1719,7 +1719,7 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Color GetRandomColor<T>(this T random) where T : IRandom
+        public static Color GetRandomColor<TRandom>(this TRandom random) where TRandom : IRandom
         {
             if (random is null)
             {
@@ -1747,7 +1747,7 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Color GetRandomAlphaColor<T>(this T random) where T : IRandom
+        public static Color GetRandomAlphaColor<TRandom>(this TRandom random) where TRandom : IRandom
         {
             if (random is null)
             {
@@ -1770,7 +1770,7 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IColor GetRandomColor<T>(this ColorType type, T random) where T : IRandom
+        public static IColor GetRandomColor<TRandom>(this ColorType type, TRandom random) where TRandom : IRandom
         {
             return GetRandomColor(random, type);
         }
@@ -1787,7 +1787,7 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IColor GetRandomColor<T>(this T random, ColorType type) where T : IRandom
+        public static IColor GetRandomColor<TRandom>(this TRandom random, ColorType type) where TRandom : IRandom
         {
             if (random is null)
             {
@@ -1818,7 +1818,7 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Color GetRandomLightColor<T>(this T random) where T : IRandom
+        public static Color GetRandomLightColor<TRandom>(this TRandom random) where TRandom : IRandom
         {
             if (random is null)
             {
@@ -1853,7 +1853,7 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Color GetRandomLightAlphaColor<T>(this T random) where T : IRandom
+        public static Color GetRandomLightAlphaColor<TRandom>(this TRandom random) where TRandom : IRandom
         {
             if (random is null)
             {
@@ -1880,7 +1880,7 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IColor GetRandomLightColor<T>(this ColorType type, T random) where T : IRandom
+        public static IColor GetRandomLightColor<TRandom>(this ColorType type, TRandom random) where TRandom : IRandom
         {
             return GetRandomLightColor(random, type);
         }
@@ -1904,7 +1904,7 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IColor GetRandomLightColor<T>(this T random, ColorType type) where T : IRandom
+        public static IColor GetRandomLightColor<TRandom>(this TRandom random, ColorType type) where TRandom : IRandom
         {
             if (random is null)
             {
@@ -1939,7 +1939,7 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Color GetRandomDarkColor<T>(this T random) where T : IRandom
+        public static Color GetRandomDarkColor<TRandom>(this TRandom random) where TRandom : IRandom
         {
             if (random is null)
             {
@@ -1974,7 +1974,7 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Color GetRandomDarkAlphaColor<T>(this T random) where T : IRandom
+        public static Color GetRandomDarkAlphaColor<TRandom>(this TRandom random) where TRandom : IRandom
         {
             if (random is null)
             {
@@ -2001,7 +2001,7 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IColor GetRandomDarkColor<T>(this ColorType type, T random) where T : IRandom
+        public static IColor GetRandomDarkColor<TRandom>(this ColorType type, TRandom random) where TRandom : IRandom
         {
             return GetRandomDarkColor(random, type);
         }
@@ -2022,7 +2022,7 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IColor GetRandomDarkColor<T>(this T random, ColorType type) where T : IRandom
+        public static IColor GetRandomDarkColor<TRandom>(this TRandom random, ColorType type) where TRandom : IRandom
         {
             if (random is null)
             {

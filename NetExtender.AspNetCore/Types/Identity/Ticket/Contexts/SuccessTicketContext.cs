@@ -81,17 +81,6 @@ namespace NetExtender.AspNetCore.Identity
             Options = options;
         }
 
-        public static SuccessTicketContext From<T>(InvalidTicketContext<T> context, AuthenticationTicket ticket)
-        {
-            return new SuccessTicketContext
-            {
-                Logger = context.Logger,
-                Context = context.Context,
-                Ticket = ticket ?? throw new ArgumentNullException(nameof(ticket)),
-                Options = context.Options
-            };
-        }
-
         public static SuccessTicketContext From(InvalidTicketContext context, AuthenticationTicket ticket)
         {
             return new SuccessTicketContext
@@ -112,16 +101,6 @@ namespace NetExtender.AspNetCore.Identity
                 Ticket = ticket ?? throw new ArgumentNullException(nameof(ticket)),
                 Options = context.Options
             };
-        }
-
-        public InvalidTicketContext<T> Fail<T>(IdentityException<T> exception)
-        {
-            if (exception is null)
-            {
-                throw new ArgumentNullException(nameof(exception));
-            }
-
-            return InvalidTicketContext<T>.From(this, exception);
         }
 
         public InvalidTicketContext Fail(IIdentityException exception)

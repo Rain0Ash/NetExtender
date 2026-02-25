@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 using NetExtender.Utilities.Threading;
 using NetExtender.Utilities.Types;
 
@@ -50,7 +50,7 @@ namespace NetExtender.Types.TaskSchedulers
                 return thread;
             }
 
-            Threads = Enumerable.Range(0, threads).Select(Selector).ForEach(thread => thread.Start()).ToList();
+            Threads = Enumerable.Range(0, threads).Select(Selector).ForEach(static thread => thread.Start()).ToList();
         }
 
         protected override void QueueTask(Task task)

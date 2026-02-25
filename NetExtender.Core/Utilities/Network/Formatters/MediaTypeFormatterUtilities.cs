@@ -8,7 +8,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Runtime.CompilerServices;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 using NetExtender.Types.Network.Formatters;
 using NetExtender.Types.Network.Formatters.Exceptions;
 using NetExtender.Types.Network.Formatters.Interfaces;
@@ -342,7 +342,7 @@ namespace NetExtender.Utilities.Network.Formatters
                 return false;
             }
 
-            return source.Parameters.Select(item => Enumerable.Contains(destination.Parameters, item)).All(flag => flag);
+            return source.Parameters.Select(item => Enumerable.Contains(destination.Parameters, item)).All(static flag => flag);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

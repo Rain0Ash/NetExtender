@@ -38,7 +38,7 @@ namespace NetExtender.Utilities.Windows.IO
         /// The specified <paramref name="file"/> does not exist.
         /// </exception>
         /// <exception cref="SecurityException">
-        /// The caller does not have the required permission. 
+        /// The caller does not have the required permission.
         /// </exception>
         /// <exception cref="UnauthorizedAccessException">
         /// The caller does not have the required permission.
@@ -73,7 +73,7 @@ namespace NetExtender.Utilities.Windows.IO
         /// The specified <paramref name="path"/> does not exist.
         /// </exception>
         /// <exception cref="SecurityException">
-        /// The caller does not have the required permission. 
+        /// The caller does not have the required permission.
         /// </exception>
         /// <exception cref="UnauthorizedAccessException">
         /// The caller does not have the required permission.
@@ -92,7 +92,7 @@ namespace NetExtender.Utilities.Windows.IO
 
             return GetDataStreams(path)
                 .Select(info => new AlternateDataStreamInfo(path, info))
-                .ToImmutableDictionary(info => info.Name, info => info);
+                .ToImmutableDictionary(static info => info.Name, static info => info);
         }
 
         /// <summary>
@@ -205,7 +205,7 @@ namespace NetExtender.Utilities.Windows.IO
         /// <para><paramref name="mode"/> is <see cref="FileMode.CreateNew"/>, and the stream already exists.</para>
         /// </exception>
         /// <exception cref="SecurityException">
-        /// The caller does not have the required permission. 
+        /// The caller does not have the required permission.
         /// </exception>
         /// <exception cref="UnauthorizedAccessException">
         /// The caller does not have the required permission, or the file is read-only.
@@ -260,7 +260,7 @@ namespace NetExtender.Utilities.Windows.IO
         /// <para><paramref name="mode"/> is <see cref="FileMode.CreateNew"/>, and the stream already exists.</para>
         /// </exception>
         /// <exception cref="SecurityException">
-        /// The caller does not have the required permission. 
+        /// The caller does not have the required permission.
         /// </exception>
         /// <exception cref="UnauthorizedAccessException">
         /// The caller does not have the required permission, or the file is read-only.
@@ -363,13 +363,13 @@ namespace NetExtender.Utilities.Windows.IO
         /// <paramref name="name"/> contains invalid characters.
         /// </exception>
         /// <exception cref="SecurityException">
-        /// The caller does not have the required permission. 
+        /// The caller does not have the required permission.
         /// </exception>
         /// <exception cref="UnauthorizedAccessException">
         /// The caller does not have the required permission, or the file is read-only.
         /// </exception>
         /// <exception cref="IOException">
-        /// The specified file is in use. 
+        /// The specified file is in use.
         /// </exception>
         public static Boolean DeleteAlternateDataStream(this FileSystemInfo file, String name)
         {
@@ -403,13 +403,13 @@ namespace NetExtender.Utilities.Windows.IO
         /// <para><paramref name="name"/> contains invalid characters.</para>
         /// </exception>
         /// <exception cref="SecurityException">
-        /// The caller does not have the required permission. 
+        /// The caller does not have the required permission.
         /// </exception>
         /// <exception cref="UnauthorizedAccessException">
         /// The caller does not have the required permission, or the file is read-only.
         /// </exception>
         /// <exception cref="IOException">
-        /// The specified file is in use. 
+        /// The specified file is in use.
         /// </exception>
         public static Boolean DeleteAlternateDataStream(String path, String name)
         {
@@ -434,7 +434,7 @@ namespace NetExtender.Utilities.Windows.IO
 
         public const Char StreamSeparator = ':';
 
-        private static readonly Char[] InvalidStreamNameChars = Path.GetInvalidFileNameChars().Where(c => c < 1 || c > 31).ToArray();
+        private static readonly Char[] InvalidStreamNameChars = Path.GetInvalidFileNameChars().Where(static character => character < 1 || character > 31).ToArray();
 
         [StructLayout(LayoutKind.Sequential)]
         private readonly struct LargeInteger

@@ -128,7 +128,7 @@ namespace NetExtender.Types.Notify
                 throw new ArgumentException("Expression does not represent a property.", nameof(when));
             }
 
-            return Register(property.Name, properties?.WhereNotNull().Select(ExpressionUtilities.GetPropertyInfo).WhereNotNull().Select(info => info.Name));
+            return Register(property.Name, properties?.WhereNotNull().Select(ExpressionUtilities.GetPropertyInfo).WhereNotNull().Select(static info => info.Name));
         }
 
         public PropertySubnotifier<T> Unregister(String when, params String?[]? properties)
@@ -180,7 +180,7 @@ namespace NetExtender.Types.Notify
                 throw new ArgumentException("Expression does not represent a property.", nameof(when));
             }
 
-            return Unregister(property.Name, properties?.WhereNotNull().Select(ExpressionUtilities.GetPropertyInfo).WhereNotNull().Select(info => info.Name));
+            return Unregister(property.Name, properties?.WhereNotNull().Select(ExpressionUtilities.GetPropertyInfo).WhereNotNull().Select(static info => info.Name));
         }
     }
 
@@ -227,7 +227,7 @@ namespace NetExtender.Types.Notify
                 return;
             }
 
-            foreach (String? property in collection)
+            foreach (String property in collection)
             {
                 Changing?.Invoke(sender, new PropertyChanging(property));
             }
@@ -247,7 +247,7 @@ namespace NetExtender.Types.Notify
                 return;
             }
 
-            foreach (String? property in collection)
+            foreach (String property in collection)
             {
                 Changed?.Invoke(sender, new PropertyChanged(property));
             }

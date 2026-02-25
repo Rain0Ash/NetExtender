@@ -9,7 +9,7 @@ using NetExtender.Domains.WindowsPresentation.Applications;
 using NetExtender.Domains.WindowsPresentation.Builder;
 using NetExtender.Domains.WindowsPresentation.View;
 using NetExtender.Initializer;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 using NetExtender.Types.Middlewares;
 
 namespace NetExtender.Domains.Initializer

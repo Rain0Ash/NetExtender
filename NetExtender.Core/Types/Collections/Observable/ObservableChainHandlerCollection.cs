@@ -9,7 +9,7 @@ using System.ComponentModel;
 using System.Linq;
 using NetExtender.Interfaces.Notify;
 using NetExtender.Types.Collections.Interfaces;
-using NetExtender.Types.Handlers.Chain.Interfaces;
+using NetExtender.Types.Collections.Chain.Interfaces;
 
 namespace NetExtender.Types.Collections
 {
@@ -198,7 +198,7 @@ namespace NetExtender.Types.Collections
 
         public T Handle(T value)
         {
-            return Internal.Aggregate(value, (current, handler) => handler.Handle(current));
+            return Internal.Aggregate(value, static (current, handler) => handler.Handle(current));
         }
 
         public Boolean Contains(THandler item)

@@ -5,70 +5,22 @@ using System;
 using System.Net;
 using System.Runtime.Serialization;
 using NetExtender.AspNetCore.Identity.Interfaces;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 
 namespace NetExtender.AspNetCore.Identity
 {
     [Serializable]
-    public class IdentityNoUserException : IdentityNoUserException<String?>
+    public class IdentityNoUserException : IdentityException, IIdentityException
     {
         public new static HttpStatusCode Status { get; set; } = HttpStatusCode.Unauthorized;
         public new static String? Message { get; set; } = "Identity user not exists.";
-        public new static String? Code { get; set; } = $"{nameof(Identity)}.User.NoUser";
+        public new static String? Name { get; set; } = $"{nameof(AspNetCore.Identity)}.User.NoUser";
 
-        public IdentityNoUserException()
-            : base(Code)
-        {
-        }
-
-        public IdentityNoUserException(String? message)
-            : base(message, Code)
-        {
-        }
-
-        public IdentityNoUserException(String? message, Exception? exception)
-            : base(message, Code, exception)
-        {
-        }
-
-        public IdentityNoUserException(String? message, BusinessException? exception)
-            : base(message, Code, exception)
-        {
-        }
-
-        public IdentityNoUserException(String? message, params BusinessException?[]? reason)
-            : base(message, Code, reason)
-        {
-        }
-
-        public IdentityNoUserException(String? message, Exception? exception, params BusinessException?[]? reason)
-            : base(message, Code, exception, reason)
-        {
-        }
-
-        public IdentityNoUserException(String? message, BusinessException? exception, params BusinessException?[]? reason)
-            : base(message, Code, exception, reason)
-        {
-        }
-
-#if NET8_0_OR_GREATER
-        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
-        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-#endif
-        protected IdentityNoUserException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
-        {
-        }
-    }
-
-    [Serializable]
-    public class IdentityNoUserException<T> : IdentityException<T>, IIdentityException
-    {
-        public sealed override IdentityException.Known Known
+        public sealed override Id Known
         {
             get
             {
-                return IdentityException.Known.NoUser;
+                return IdentityException.Id.NoUser;
             }
         }
 
@@ -82,33 +34,45 @@ namespace NetExtender.AspNetCore.Identity
             }
         }
 
-        public IdentityNoUserException(T code)
-            : base(IdentityNoUserException.Message, IdentityNoUserException.Status, code)
+        public override String? Identity
+        {
+            get
+            {
+                return base.Name ?? Name;
+            }
+            init
+            {
+                base.Name = value;
+            }
+        }
+
+        public IdentityNoUserException()
+            : base(Message, Status)
         {
         }
 
-        public IdentityNoUserException(String? message, T code)
-            : base(message ?? IdentityNoUserException.Message, IdentityNoUserException.Status, code)
+        public IdentityNoUserException(String? message)
+            : base(message ?? Message, Status)
         {
         }
 
-        public IdentityNoUserException(String? message, T code, Exception? exception)
-            : base(message ?? IdentityNoUserException.Message, IdentityNoUserException.Status, code, exception)
+        public IdentityNoUserException(String? message, Exception? exception)
+            : base(message ?? Message, Status, exception)
         {
         }
 
-        public IdentityNoUserException(String? message, T code, params BusinessException?[]? reason)
-            : base(message ?? IdentityNoUserException.Message, IdentityNoUserException.Status, code, reason)
+        public IdentityNoUserException(String? message, params BusinessException?[]? reason)
+            : base(message ?? Message, Status, reason)
         {
         }
 
-        public IdentityNoUserException(String? message, T code, Exception? exception, params BusinessException?[]? reason)
-            : base(message ?? IdentityNoUserException.Message, IdentityNoUserException.Status, code, exception, reason)
+        public IdentityNoUserException(String? message, Exception? exception, params BusinessException?[]? reason)
+            : base(message ?? Message, Status, exception, reason)
         {
         }
 
-        public IdentityNoUserException(String? message, T code, BusinessException? exception, params BusinessException?[]? reason)
-            : base(message ?? IdentityNoUserException.Message, IdentityNoUserException.Status, code, exception, reason)
+        public IdentityNoUserException(String? message, BusinessException? exception, params BusinessException?[]? reason)
+            : base(message ?? Message, Status, exception, reason)
         {
         }
 

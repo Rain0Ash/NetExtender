@@ -66,7 +66,7 @@ namespace NetExtender.NAudio.Types.Playlist
             {
                 lock (Queue)
                 {
-                    return Queue.Sum(stream => stream.Length);
+                    return Queue.Sum(static stream => stream.Length);
                 }
             }
         }
@@ -77,7 +77,7 @@ namespace NetExtender.NAudio.Types.Playlist
             {
                 lock (Queue)
                 {
-                    return Queue.Take(Index).Sum(stream => stream.Length) + StreamPosition;
+                    return Queue.Take(Index).Sum(static stream => stream.Length) + StreamPosition;
                 }
             }
             set
@@ -132,7 +132,7 @@ namespace NetExtender.NAudio.Types.Playlist
             {
                 lock (Queue)
                 {
-                    return Queue.Sum(stream => stream.TotalTime);
+                    return Queue.Sum(static stream => stream.TotalTime);
                 }
             }
         }
@@ -143,7 +143,7 @@ namespace NetExtender.NAudio.Types.Playlist
             {
                 lock (Queue)
                 {
-                    return Queue.Take(Index).Sum(stream => stream.TotalTime) + StreamCurrentTime;
+                    return Queue.Take(Index).Sum(static stream => stream.TotalTime) + StreamCurrentTime;
                 }
             }
             set

@@ -30,7 +30,7 @@ namespace NetExtender.Utilities
 #if NET8_0_OR_GREATER
             MapperConfiguration config = new MapperConfiguration(_ => { }, null);
 #else
-            MapperConfiguration config = new MapperConfiguration(_ => { });
+            MapperConfiguration config = new MapperConfiguration(static _ => { });
 #endif
             instance = config.CreateMapper();
         }

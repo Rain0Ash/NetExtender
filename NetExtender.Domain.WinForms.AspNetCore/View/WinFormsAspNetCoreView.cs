@@ -16,7 +16,7 @@ using NetExtender.Domains.WinForms.AspNetCore.Applications;
 using NetExtender.Domains.WinForms.AspNetCore.Builder;
 using NetExtender.Domains.WinForms.AspNetCore.Context;
 using NetExtender.Domains.WinForms.View;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 
 namespace NetExtender.Domains.WinForms.AspNetCore.View
 {

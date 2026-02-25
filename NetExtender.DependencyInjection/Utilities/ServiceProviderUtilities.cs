@@ -15,7 +15,7 @@ using NetExtender.Types.Storages.Interfaces;
 
 namespace NetExtender.Utilities.Types
 {
-    public interface IAssemblyServiceProvider : IChangeableServiceProvider, ILazy<IServiceProvider>, IScannable
+    public interface IAssemblyServiceProvider : IChangeableRequiredServiceProvider, ILazy<IServiceProvider>, IScannable
     {
         public IReadOnlyCollection<Assembly>? Assemblies { get; }
     }

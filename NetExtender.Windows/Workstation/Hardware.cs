@@ -65,7 +65,7 @@ namespace NetExtender.Workstation
 
             String? value = GetWmiPropertyValueAsString(query, property);
             return !String.IsNullOrEmpty(value) ? ManagementDateTimeConverter.ToDateTime(value) : throw new ManagementException();
-        } 
+        }
 
         public static DateTime GetBootDateTime()
         {
@@ -76,7 +76,7 @@ namespace NetExtender.Workstation
         {
             using ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT processorID FROM win32_processor");
             using ManagementObjectCollection collection = searcher.Get();
-            return collection.AsEnumerable().Select(management => management["processorID"]).FirstOrDefault()?.ToString();
+            return collection.AsEnumerable().Select(static management => management["processorID"]).FirstOrDefault()?.ToString();
         }
 
         public static ProcessorArchitecture GetProcessorBits()
@@ -88,11 +88,11 @@ namespace NetExtender.Workstation
 
                 return info.ProcessorInfo.Architecture switch
                 {
-                    12 => ProcessorArchitecture.Arm64, // ARM64
-                    9 => ProcessorArchitecture.Bit64, // AMD64
-                    6 => ProcessorArchitecture.Itanium64, // IA64
-                    5 => ProcessorArchitecture.Arm, // ARM
-                    0 => ProcessorArchitecture.Bit32, // Intel
+                    12 => ProcessorArchitecture.Arm64,
+                    9 => ProcessorArchitecture.Bit64,
+                    6 => ProcessorArchitecture.Itanium64,
+                    5 => ProcessorArchitecture.Arm,
+                    0 => ProcessorArchitecture.Bit32,
                     _ => ProcessorArchitecture.Unknown
                 };
             }
@@ -123,8 +123,8 @@ namespace NetExtender.Workstation
             using ManagementObjectCollection collection = searcher.Get();
 
             return collection.AsEnumerable()
-                .Where(management => management["IPEnabled"] is true)
-                .Select(management => management["MacAddress"]).FirstOrDefault()?.ToString();
+                .Where(static management => management["IPEnabled"] is true)
+                .Select(static management => management["MacAddress"]).FirstOrDefault()?.ToString();
         }
 
         private static String? GetStringFromSearcher(String property, String table)
@@ -175,7 +175,7 @@ namespace NetExtender.Workstation
             using ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT Capacity FROM Win32_PhysicalMemory");
             using ManagementObjectCollection collection = searcher.Get();
 
-            return collection.AsEnumerable().TrySelect(management => Convert.ToInt64(management["Capacity"])).Sum();
+            return collection.AsEnumerable().TrySelect(static management => Convert.ToInt64(management["Capacity"])).Sum();
         }
 
         public static Int32 GetRAMSlots()
@@ -202,7 +202,7 @@ namespace NetExtender.Workstation
             using ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT CurrentClockSpeed FROM Win32_Processor");
             using ManagementObjectCollection collection = searcher.Get();
 
-            return collection.AsEnumerable().TrySelect(management => (Int32?) Convert.ToInt32(management["CurrentClockSpeed"])).FirstOrDefault();
+            return collection.AsEnumerable().TrySelect(static management => (Int32?) Convert.ToInt32(management["CurrentClockSpeed"])).FirstOrDefault();
         }
 
         public static String? GetDefaultIPGateway()
@@ -211,8 +211,8 @@ namespace NetExtender.Workstation
             using ManagementObjectCollection collection = searcher.Get();
 
             return collection.AsEnumerable()
-                .Where(management => management["IPEnabled"] is true)
-                .Select(management => management["DefaultIPGateway"]).FirstOrDefault()?.ToString();
+                .Where(static management => management["IPEnabled"] is true)
+                .Select(static management => management["DefaultIPGateway"]).FirstOrDefault()?.ToString();
         }
 
         public static UInt32? GetCPUSpeedInMHz()
@@ -220,7 +220,7 @@ namespace NetExtender.Workstation
             using ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT CurrentClockSpeed FROM Win32_Processor");
             using ManagementObjectCollection collection = searcher.Get();
 
-            return collection.AsEnumerable().TrySelect(management => (UInt32?) Convert.ToUInt32(management["CurrentClockSpeed"])).FirstOrDefault();
+            return collection.AsEnumerable().TrySelect(static management => (UInt32?) Convert.ToUInt32(management["CurrentClockSpeed"])).FirstOrDefault();
         }
 
         public static String? GetCurrentLanguage()
@@ -354,7 +354,7 @@ namespace NetExtender.Workstation
                 return Array.Empty<LogicalDriveInfo>();
             }
 
-            using ManagementObjectSearcher searcher = new ManagementObjectSearcher(letter is not null ? $"SELECT * FROM Win32_LogicalDisk WHERE {letter.Select(character => $"DeviceId='{Char.ToUpperInvariant(character)}:'").Distinct().Join(" OR ")}" : "SELECT * FROM Win32_LogicalDisk");
+            using ManagementObjectSearcher searcher = new ManagementObjectSearcher(letter is not null ? $"SELECT * FROM Win32_LogicalDisk WHERE {letter.Select(static character => $"DeviceId='{Char.ToUpperInvariant(character)}:'").Distinct().Join(" OR ")}" : "SELECT * FROM Win32_LogicalDisk");
             using ManagementObjectCollection collection = searcher.Get();
 
             return collection.AsEnumerable().Select(GetLogicalDrive).ToArray();
@@ -382,7 +382,7 @@ namespace NetExtender.Workstation
 
         public static IEnumerable<NetworkInterface> GetNetworkInterfaces()
         {
-            return NetworkInterface.GetAllNetworkInterfaces().Where(network => network.OperationalStatus == OperationalStatus.Up && network.NetworkInterfaceType != NetworkInterfaceType.Loopback);
+            return NetworkInterface.GetAllNetworkInterfaces().Where(static network => network is { OperationalStatus: OperationalStatus.Up, NetworkInterfaceType: not NetworkInterfaceType.Loopback });
         }
     }
 }

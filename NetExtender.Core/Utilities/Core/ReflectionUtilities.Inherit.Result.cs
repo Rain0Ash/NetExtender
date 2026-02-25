@@ -9,13 +9,14 @@ using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using NetExtender.Types.Immutable.Dictionaries;
+using NetExtender.Cecil;
+using NetExtender.Utilities.Types;
 
 namespace NetExtender.Utilities.Core
 {
     public static partial class ReflectionUtilities
     {
-        public static ReflectionInheritResult Get(this ImmutableDictionary<Type, ReflectionInheritResult> source, Type type)
+        public static ReflectionInheritResult Get(this ImmutableDictionary<MonoCecilType, ReflectionInheritResult> source, MonoCecilType type)
         {
             if (source is null)
             {
@@ -45,7 +46,7 @@ namespace NetExtender.Utilities.Core
             return source.TryGetValue(assembly, out ReflectionInheritResult? result) ? result : ReflectionInheritResult.Empty;
         }
 
-        public static ReflectionInheritResult Get(this ImmutableDictionary<Type, ImmutableDictionary<Assembly, ReflectionInheritResult>> source, Assembly assembly, Type type)
+        public static ReflectionInheritResult Get(this ImmutableDictionary<MonoCecilType, ImmutableDictionary<Assembly, ReflectionInheritResult>> source, Assembly assembly, MonoCecilType type)
         {
             if (source is null)
             {
@@ -66,9 +67,9 @@ namespace NetExtender.Utilities.Core
         }
     }
 
-    public sealed class Inherit : IImmutableDictionary<Type, ReflectionInheritResult>
+    public sealed class Inherit : IReadOnlyDictionary<MonoCecilType, ReflectionInheritResult>
     {
-        public readonly struct Result : IImmutableDictionary<Type, ReflectionInheritResult>
+        public readonly struct Result : IReadOnlyDictionary<MonoCecilType, ReflectionInheritResult>
         {
             public static implicit operator Inherit(Result value)
             {
@@ -77,14 +78,15 @@ namespace NetExtender.Utilities.Core
 
             public static implicit operator AttributeInherit(Result value)
             {
-                return value.Attribute;
+                return value.Attributes;
             }
 
             public Inherit Type { get; }
-            public AttributeInherit Attribute { get; }
+            public AttributeInherit Attributes { get; }
 
-            public IImmutableDictionary<Type,IImmutableDictionary<Assembly,ReflectionInheritResult>> Assembly
+            public TypeMap<MonoCecilType, TypeMap<Assembly, ReflectionInheritResult>> Assembly
             {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 get
                 {
                     return Type.Assembly;
@@ -93,14 +95,16 @@ namespace NetExtender.Utilities.Core
 
             public Int32 Count
             {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 get
                 {
                     return Type.Count;
                 }
             }
 
-            public IEnumerable<Type> Keys
+            public IEnumerable<MonoCecilType> Keys
             {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 get
                 {
                     return Type.Keys;
@@ -109,6 +113,7 @@ namespace NetExtender.Utilities.Core
 
             public IEnumerable<ReflectionInheritResult> Values
             {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 get
                 {
                     return Type.Values;
@@ -118,84 +123,57 @@ namespace NetExtender.Utilities.Core
             public Result(Inherit type, AttributeInherit attribute)
             {
                 Type = type ?? throw new ArgumentNullException(nameof(type));
-                Attribute = attribute ?? throw new ArgumentNullException(nameof(attribute));
+                Attributes = attribute ?? throw new ArgumentNullException(nameof(attribute));
             }
 
-            public Boolean Contains(KeyValuePair<Type, ReflectionInheritResult> pair)
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public Boolean Contains(MonoCecilType key)
             {
-                return Type.Contains(pair);
+                return Type.Contains(key);
             }
 
-            public Boolean ContainsKey(Type key)
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            Boolean IReadOnlyDictionary<MonoCecilType, ReflectionInheritResult>.ContainsKey(MonoCecilType key)
             {
-                return Type.ContainsKey(key);
+                return Contains(key);
             }
 
-            public Boolean TryGetKey(Type equalKey, out Type actualKey)
-            {
-                return Type.TryGetKey(equalKey, out actualKey);
-            }
-
-            public Boolean TryGetValue(Type key, [MaybeNullWhen(false)] out ReflectionInheritResult value)
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public Boolean TryGetValue(MonoCecilType key, [MaybeNullWhen(false)] out ReflectionInheritResult value)
             {
                 return Type.TryGetValue(key, out value);
             }
 
-            public IImmutableDictionary<Type, ReflectionInheritResult> Add(Type key, ReflectionInheritResult value)
-            {
-                return Type.Add(key, value);
-            }
-
-            public IImmutableDictionary<Type, ReflectionInheritResult> AddRange(IEnumerable<KeyValuePair<Type, ReflectionInheritResult>> pairs)
-            {
-                return Type.AddRange(pairs);
-            }
-
-            public IImmutableDictionary<Type, ReflectionInheritResult> SetItem(Type key, ReflectionInheritResult value)
-            {
-                return Type.SetItem(key, value);
-            }
-
-            public IImmutableDictionary<Type, ReflectionInheritResult> SetItems(IEnumerable<KeyValuePair<Type, ReflectionInheritResult>> items)
-            {
-                return Type.SetItems(items);
-            }
-
-            public IImmutableDictionary<Type, ReflectionInheritResult> Remove(Type key)
-            {
-                return Type.Remove(key);
-            }
-
-            public IImmutableDictionary<Type, ReflectionInheritResult> RemoveRange(IEnumerable<Type> keys)
-            {
-                return Type.RemoveRange(keys);
-            }
-
-            public IImmutableDictionary<Type, ReflectionInheritResult> Clear()
-            {
-                return Type.Clear();
-            }
-
-            public IEnumerator<KeyValuePair<Type, ReflectionInheritResult>> GetEnumerator()
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public TypeMap<MonoCecilType, ReflectionInheritResult>.Enumerator GetEnumerator()
             {
                 return Type.GetEnumerator();
             }
 
-            IEnumerator IEnumerable.GetEnumerator()
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            IEnumerator<KeyValuePair<MonoCecilType, ReflectionInheritResult>> IEnumerable<KeyValuePair<MonoCecilType, ReflectionInheritResult>>.GetEnumerator()
             {
-                return ((IEnumerable) Type).GetEnumerator();
+                return GetEnumerator();
             }
 
-            public ReflectionInheritResult this[Type key]
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            IEnumerator IEnumerable.GetEnumerator()
             {
+                return GetEnumerator();
+            }
+
+            public ReflectionInheritResult this[MonoCecilType key]
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 get
                 {
                     return Type[key];
                 }
             }
 
-            public ReflectionInheritResult this[Assembly assembly, Type key]
+            public ReflectionInheritResult this[Assembly assembly, MonoCecilType key]
             {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 get
                 {
                     return Type[assembly, key];
@@ -203,19 +181,21 @@ namespace NetExtender.Utilities.Core
             }
         }
 
-        private ImmutableDictionary<Type, ReflectionInheritResult> Type { get; }
-        public IImmutableDictionary<Type, IImmutableDictionary<Assembly, ReflectionInheritResult>> Assembly { get; }
+        private TypeMap<MonoCecilType, ReflectionInheritResult> Type { get; }
+        public TypeMap<MonoCecilType, TypeMap<Assembly, ReflectionInheritResult>> Assembly { get; }
 
         public Int32 Count
         {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
                 return Type.Count;
             }
         }
 
-        public IEnumerable<Type> Keys
+        public IEnumerable<MonoCecilType> Keys
         {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
                 return Type.Keys;
@@ -224,687 +204,286 @@ namespace NetExtender.Utilities.Core
 
         public IEnumerable<ReflectionInheritResult> Values
         {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
                 return Type.Values;
             }
         }
 
-        internal Inherit(ConcurrentDictionary<Type, ConcurrentHashSet<Type>> type)
+        internal Inherit(TypeMap<MonoCecilType, ReflectionInheritResult> inherit)
         {
-            if (type is null)
-            {
-                throw new ArgumentNullException(nameof(type));
-            }
-
-            Type = Builder(type);
-            Assembly = Type.ToImmutableDictionary(static pair => pair.Key, Assemblies);
+            Type = inherit ?? throw new ArgumentNullException(nameof(inherit));
+            Assembly = TypeMap<MonoCecilType, TypeMap<Assembly, ReflectionInheritResult>>.Create<ReflectionInheritResult, TypeMap<MonoCecilType, ReflectionInheritResult>.Enumerator>(Type.GetEnumerator(), Assemblies);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-        private static ImmutableDictionary<Type, ReflectionInheritResult> Builder(ConcurrentDictionary<Type, ConcurrentHashSet<Type>> concurrent)
+        private static TypeMap<Assembly, ReflectionInheritResult> Assemblies(ReflectionInheritResult result)
         {
-            ImmutableDictionary<Type, ReflectionInheritResult>.Builder builder = ImmutableDictionary.CreateBuilder<Type, ReflectionInheritResult>();
+            Dictionary<Assembly, ConcurrentHashSet<MonoCecilType>> assemblies = new Dictionary<Assembly, ConcurrentHashSet<MonoCecilType>>(500);
 
-            lock (concurrent)
+            foreach (MonoCecilType type in result)
             {
-                foreach ((Type type, ConcurrentHashSet<Type> set) in concurrent)
+                if (type.Assembly is { } assembly)
                 {
-                    lock (set)
-                    {
-                        builder[type] = Set(set);
-                    }
+                    DictionaryBaseUtilities.GetOrNew(assemblies, assembly).Add(type);
                 }
             }
 
-            return builder.ToImmutable();
+            return TypeMap<Assembly, ReflectionInheritResult>.Create<ConcurrentHashSet<MonoCecilType>, Dictionary<Assembly, ConcurrentHashSet<MonoCecilType>>.Enumerator>(assemblies.GetEnumerator(), ReflectionInheritResult.Create);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static ReflectionInheritResult Set(ConcurrentHashSet<Type> set)
+        public Boolean Contains(MonoCecilType key)
         {
-            return ReflectionInheritResult.Create(set);
+            return Type.Contains(key);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static ReflectionInheritResult Set(KeyValuePair<Type, ConcurrentHashSet<Type>> pair)
+        Boolean IReadOnlyDictionary<MonoCecilType, ReflectionInheritResult>.ContainsKey(MonoCecilType key)
         {
-            return ReflectionInheritResult.Create(pair.Value);
+            return Contains(key);
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-        private static IImmutableDictionary<Assembly, ReflectionInheritResult> Assemblies(KeyValuePair<Type, ReflectionInheritResult> pair)
-        {
-            // ReSharper disable once LocalFunctionHidesMethod
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            static ReflectionInheritResult Set(KeyValuePair<Assembly, ConcurrentHashSet<Type>> pair)
-            {
-                return ReflectionInheritResult.Create(pair.Value);
-            }
-
-            ConcurrentDictionary<Assembly, ConcurrentHashSet<Type>> assemblies = new ConcurrentDictionary<Assembly, ConcurrentHashSet<Type>>();
-
-            foreach (Type type in pair.Value)
-            {
-                assemblies.GetOrAdd(type.Assembly, static _ => new ConcurrentHashSet<Type>()).Add(type);
-            }
-
-            return assemblies.ToImmutableDictionary(static pair => pair.Key, Set);
-        }
-
-        public Boolean Contains(KeyValuePair<Type, ReflectionInheritResult> pair)
-        {
-            return Type.Contains(pair);
-        }
-
-        public Boolean ContainsKey(Type key)
-        {
-            return Type.ContainsKey(key);
-        }
-
-        public Boolean TryGetKey(Type equalKey, out Type actualKey)
-        {
-            return Type.TryGetKey(equalKey, out actualKey);
-        }
-
-        public Boolean TryGetValue(Type key, [MaybeNullWhen(false)] out ReflectionInheritResult value)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public Boolean TryGetValue(MonoCecilType key, [MaybeNullWhen(false)] out ReflectionInheritResult value)
         {
             return Type.TryGetValue(key, out value);
         }
 
-        public IImmutableDictionary<Type, ReflectionInheritResult> Add(Type key, ReflectionInheritResult value)
-        {
-            return Type.Add(key, value);
-        }
-
-        public IImmutableDictionary<Type, ReflectionInheritResult> AddRange(IEnumerable<KeyValuePair<Type, ReflectionInheritResult>> pairs)
-        {
-            return Type.AddRange(pairs);
-        }
-
-        public IImmutableDictionary<Type, ReflectionInheritResult> SetItem(Type key, ReflectionInheritResult value)
-        {
-            return Type.SetItem(key, value);
-        }
-
-        public IImmutableDictionary<Type, ReflectionInheritResult> SetItems(IEnumerable<KeyValuePair<Type, ReflectionInheritResult>> items)
-        {
-            return Type.SetItems(items);
-        }
-
-        public IImmutableDictionary<Type, ReflectionInheritResult> Remove(Type key)
-        {
-            return Type.Remove(key);
-        }
-
-        public IImmutableDictionary<Type, ReflectionInheritResult> RemoveRange(IEnumerable<Type> keys)
-        {
-            return Type.RemoveRange(keys);
-        }
-
-        public IImmutableDictionary<Type, ReflectionInheritResult> Clear()
-        {
-            return Type.Clear();
-        }
-
-        public IEnumerator<KeyValuePair<Type, ReflectionInheritResult>> GetEnumerator()
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public TypeMap<MonoCecilType, ReflectionInheritResult>.Enumerator GetEnumerator()
         {
             return Type.GetEnumerator();
         }
 
-        IEnumerator IEnumerable.GetEnumerator()
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        IEnumerator<KeyValuePair<MonoCecilType, ReflectionInheritResult>> IEnumerable<KeyValuePair<MonoCecilType, ReflectionInheritResult>>.GetEnumerator()
         {
-            return ((IEnumerable) Type).GetEnumerator();
+            return GetEnumerator();
         }
 
-        public ReflectionInheritResult this[Type key]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        IEnumerator IEnumerable.GetEnumerator()
         {
+            return GetEnumerator();
+        }
+
+        public ReflectionInheritResult this[MonoCecilType key]
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
                 return Type.TryGetValue(key, out ReflectionInheritResult? result) ? result : ReflectionInheritResult.Empty;
             }
         }
 
-        public ReflectionInheritResult this[Assembly assembly, Type key]
+        public ReflectionInheritResult this[Assembly assembly, MonoCecilType key]
         {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
-                return Assembly.TryGetValue(key, out IImmutableDictionary<Assembly, ReflectionInheritResult>? immutable) && immutable.TryGetValue(assembly, out ReflectionInheritResult? result) ? result : ReflectionInheritResult.Empty;
+                return Assembly.TryGetValue(key, out TypeMap<Assembly, ReflectionInheritResult>? immutable) && immutable.TryGetValue(assembly, out ReflectionInheritResult? result) ? result : ReflectionInheritResult.Empty;
             }
         }
     }
 
-    public sealed class AttributeInherit : IImmutableDictionary<Type, ReflectionInheritResult>, IImmutableDictionary<Attribute, ReflectionInheritResult>
+    public sealed class AttributeInherit : IReadOnlyDictionary<MonoCecilType, ReflectionInheritResult>
     {
-        private IImmutableDictionary<Type, ReflectionInheritResult> Type { get; }
-        private IImmutableDictionary<Attribute, ReflectionInheritResult> Attribute { get; }
+        private TypeMap<MonoCecilType, ReflectionInheritResult> Type { get; }
+        private TypeMap<MonoCecilType, ReflectionInheritResult> Direct { get; }
 
         public AttributeAssemblyInherit Assembly { get; }
 
         public Int32 Count
         {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
                 return Type.Count;
             }
         }
 
-        Int32 IReadOnlyCollection<KeyValuePair<Attribute, ReflectionInheritResult>>.Count
+        public IEnumerable<MonoCecilType> Keys
         {
-            get
-            {
-                return Attribute.Count;
-            }
-        }
-
-        public IEnumerable<Type> Keys
-        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
                 return Type.Keys;
-            }
-        }
-
-        IEnumerable<Attribute> IReadOnlyDictionary<Attribute, ReflectionInheritResult>.Keys
-        {
-            get
-            {
-                return Attribute.Keys;
             }
         }
 
         public IEnumerable<ReflectionInheritResult> Values
         {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
                 return Type.Values;
             }
         }
 
-        IEnumerable<ReflectionInheritResult> IReadOnlyDictionary<Attribute, ReflectionInheritResult>.Values
+        internal AttributeInherit(TypeMap<MonoCecilType, ReflectionInheritResult> type, TypeMap<MonoCecilType, ReflectionInheritResult> direct)
         {
-            get
-            {
-                return Attribute.Values;
-            }
-        }
-
-        internal AttributeInherit(ConcurrentDictionary<Type, ConcurrentHashSet<Type>> type, ConcurrentDictionary<Attribute, ConcurrentHashSet<Type>> attribute)
-        {
-            if (type is null)
-            {
-                throw new ArgumentNullException(nameof(type));
-            }
-
-            if (attribute is null)
-            {
-                throw new ArgumentNullException(nameof(attribute));
-            }
-
-            Type = Builder(type);
-            Attribute = Builder(attribute);
-            Assembly = new AttributeAssemblyInherit(Type, Attribute);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-        private static ImmutableDictionary<Type, ReflectionInheritResult> Builder(ConcurrentDictionary<Type, ConcurrentHashSet<Type>> concurrent)
-        {
-            ImmutableDictionary<Type, ReflectionInheritResult>.Builder builder = ImmutableDictionary.CreateBuilder<Type, ReflectionInheritResult>();
-
-            lock (concurrent)
-            {
-                foreach ((Type type, ConcurrentHashSet<Type> set) in concurrent)
-                {
-                    lock (set)
-                    {
-                        builder[type] = Set(set);
-                    }
-                }
-            }
-
-            return builder.ToImmutable();
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-        private static ImmutableDictionary<Attribute, ReflectionInheritResult> Builder(ConcurrentDictionary<Attribute, ConcurrentHashSet<Type>> concurrent)
-        {
-            ImmutableDictionary<Attribute, ReflectionInheritResult>.Builder builder = ImmutableDictionary.CreateBuilder<Attribute, ReflectionInheritResult>();
-
-            lock (concurrent)
-            {
-                foreach ((Attribute attribute, ConcurrentHashSet<Type> set) in concurrent)
-                {
-                    lock (set)
-                    {
-                        builder[attribute] = Set(set);
-                    }
-                }
-            }
-
-            return builder.ToImmutable();
+            Type = type ?? throw new ArgumentNullException(nameof(type));
+            Direct = direct ?? throw new ArgumentNullException(nameof(direct));
+            Assembly = new AttributeAssemblyInherit(Type, Direct);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static ReflectionInheritResult Set(ConcurrentHashSet<Type> set)
+        public Boolean Contains(MonoCecilType key)
         {
-            return ReflectionInheritResult.Create(set);
+            return Type.Contains(key);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static ReflectionInheritResult Set(KeyValuePair<Type, ConcurrentHashSet<Type>> pair)
+        Boolean IReadOnlyDictionary<MonoCecilType, ReflectionInheritResult>.ContainsKey(MonoCecilType key)
         {
-            return ReflectionInheritResult.Create(pair.Value);
+            return Contains(key);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static ReflectionInheritResult Set(KeyValuePair<Attribute, ConcurrentHashSet<Type>> pair)
-        {
-            return ReflectionInheritResult.Create(pair.Value);
-        }
-
-        public Boolean Contains(KeyValuePair<Type, ReflectionInheritResult> pair)
-        {
-            return Type.Contains(pair);
-        }
-
-        public Boolean Contains(KeyValuePair<Attribute, ReflectionInheritResult> pair)
-        {
-            return Attribute.Contains(pair);
-        }
-
-        public Boolean ContainsKey(Type key)
-        {
-            return Type.ContainsKey(key);
-        }
-
-        public Boolean ContainsKey(Attribute key)
-        {
-            return Attribute.ContainsKey(key);
-        }
-
-        public Boolean TryGetKey(Type equalKey, out Type actualKey)
-        {
-            return Type.TryGetKey(equalKey, out actualKey);
-        }
-
-        public Boolean TryGetKey(Attribute equalKey, out Attribute actualKey)
-        {
-            return Attribute.TryGetKey(equalKey, out actualKey);
-        }
-
-        public Boolean TryGetValue(Type key, [MaybeNullWhen(false)] out ReflectionInheritResult value)
+        public Boolean TryGetValue(MonoCecilType key, [MaybeNullWhen(false)] out ReflectionInheritResult value)
         {
             return Type.TryGetValue(key, out value);
         }
 
-        public Boolean TryGetValue(Attribute key, [MaybeNullWhen(false)] out ReflectionInheritResult value)
-        {
-            return Attribute.TryGetValue(key, out value);
-        }
-
-        public IImmutableDictionary<Type, ReflectionInheritResult> Add(Type key, ReflectionInheritResult value)
-        {
-            return Type.Add(key, value);
-        }
-
-        public IImmutableDictionary<Attribute, ReflectionInheritResult> Add(Attribute key, ReflectionInheritResult value)
-        {
-            return Attribute.Add(key, value);
-        }
-
-        public IImmutableDictionary<Type, ReflectionInheritResult> AddRange(IEnumerable<KeyValuePair<Type, ReflectionInheritResult>> pairs)
-        {
-            return Type.AddRange(pairs);
-        }
-
-        public IImmutableDictionary<Attribute, ReflectionInheritResult> AddRange(IEnumerable<KeyValuePair<Attribute, ReflectionInheritResult>> pairs)
-        {
-            return Attribute.AddRange(pairs);
-        }
-
-        public IImmutableDictionary<Type, ReflectionInheritResult> SetItem(Type key, ReflectionInheritResult value)
-        {
-            return Type.SetItem(key, value);
-        }
-
-        public IImmutableDictionary<Attribute, ReflectionInheritResult> SetItem(Attribute key, ReflectionInheritResult value)
-        {
-            return Attribute.SetItem(key, value);
-        }
-
-        public IImmutableDictionary<Type, ReflectionInheritResult> SetItems(IEnumerable<KeyValuePair<Type, ReflectionInheritResult>> items)
-        {
-            return Type.SetItems(items);
-        }
-
-        public IImmutableDictionary<Attribute, ReflectionInheritResult> SetItems(IEnumerable<KeyValuePair<Attribute, ReflectionInheritResult>> items)
-        {
-            return Attribute.SetItems(items);
-        }
-
-        public IImmutableDictionary<Type, ReflectionInheritResult> Remove(Type key)
-        {
-            return Type.Remove(key);
-        }
-
-        public IImmutableDictionary<Attribute, ReflectionInheritResult> Remove(Attribute key)
-        {
-            return Attribute.Remove(key);
-        }
-
-        public IImmutableDictionary<Type, ReflectionInheritResult> RemoveRange(IEnumerable<Type> keys)
-        {
-            return Type.RemoveRange(keys);
-        }
-
-        public IImmutableDictionary<Attribute, ReflectionInheritResult> RemoveRange(IEnumerable<Attribute> keys)
-        {
-            return Attribute.RemoveRange(keys);
-        }
-
-        public IImmutableDictionary<Type, ReflectionInheritResult> Clear()
-        {
-            return Type.Clear();
-        }
-
-        IImmutableDictionary<Attribute, ReflectionInheritResult> IImmutableDictionary<Attribute, ReflectionInheritResult>.Clear()
-        {
-            return Attribute.Clear();
-        }
-
-        public IEnumerator<KeyValuePair<Type, ReflectionInheritResult>> GetEnumerator()
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public TypeMap<MonoCecilType, ReflectionInheritResult>.Enumerator GetEnumerator()
         {
             return Type.GetEnumerator();
         }
 
-        IEnumerator<KeyValuePair<Attribute, ReflectionInheritResult>> IEnumerable<KeyValuePair<Attribute, ReflectionInheritResult>>.GetEnumerator()
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        IEnumerator<KeyValuePair<MonoCecilType, ReflectionInheritResult>> IEnumerable<KeyValuePair<MonoCecilType, ReflectionInheritResult>>.GetEnumerator()
         {
-            return Attribute.GetEnumerator();
+            return GetEnumerator();
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return ((IEnumerable) Type).GetEnumerator();
+            return GetEnumerator();
         }
 
-        public ReflectionInheritResult this[Type key]
+        public ReflectionInheritResult this[MonoCecilType key]
         {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
                 return Type.TryGetValue(key, out ReflectionInheritResult? result) ? result : ReflectionInheritResult.Empty;
             }
         }
-
-        public ReflectionInheritResult this[Attribute key]
-        {
-            get
-            {
-                return Attribute.TryGetValue(key, out ReflectionInheritResult? result) ? result : ReflectionInheritResult.Empty;
-            }
-        }
     }
 
-    public sealed class AttributeAssemblyInherit : IImmutableDictionary<Type, IImmutableDictionary<Assembly, ReflectionInheritResult>>, IImmutableDictionary<Attribute, IImmutableDictionary<Assembly, ReflectionInheritResult>>
+    public sealed class AttributeAssemblyInherit : IReadOnlyDictionary<MonoCecilType, TypeMap<Assembly, ReflectionInheritResult>>
     {
-        private IImmutableDictionary<Type, IImmutableDictionary<Assembly, ReflectionInheritResult>> Type { get; }
-        private IImmutableDictionary<Attribute, IImmutableDictionary<Assembly, ReflectionInheritResult>> Attribute { get; }
+        private TypeMap<MonoCecilType, TypeMap<Assembly, ReflectionInheritResult>> Type { get; }
+        private TypeMap<MonoCecilType, TypeMap<Assembly, ReflectionInheritResult>> Direct { get; }
 
         public Int32 Count
         {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
                 return Type.Count;
             }
         }
 
-        Int32 IReadOnlyCollection<KeyValuePair<Attribute, IImmutableDictionary<Assembly, ReflectionInheritResult>>>.Count
+        public IEnumerable<MonoCecilType> Keys
         {
-            get
-            {
-                return Attribute.Count;
-            }
-        }
-
-        public IEnumerable<Type> Keys
-        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
                 return Type.Keys;
             }
         }
 
-        IEnumerable<Attribute> IReadOnlyDictionary<Attribute, IImmutableDictionary<Assembly, ReflectionInheritResult>>.Keys
+        public IEnumerable<TypeMap<Assembly, ReflectionInheritResult>> Values
         {
-            get
-            {
-                return Attribute.Keys;
-            }
-        }
-
-        public IEnumerable<IImmutableDictionary<Assembly, ReflectionInheritResult>> Values
-        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
                 return Type.Values;
             }
         }
 
-        IEnumerable<IImmutableDictionary<Assembly, ReflectionInheritResult>> IReadOnlyDictionary<Attribute, IImmutableDictionary<Assembly, ReflectionInheritResult>>.Values
-        {
-            get
-            {
-                return Attribute.Values;
-            }
-        }
-
-        internal AttributeAssemblyInherit(IImmutableDictionary<Type, ReflectionInheritResult> type, IImmutableDictionary<Attribute, ReflectionInheritResult> attribute)
+        internal AttributeAssemblyInherit(TypeMap<MonoCecilType, ReflectionInheritResult> type, TypeMap<MonoCecilType, ReflectionInheritResult> direct)
         {
             if (type is null)
             {
                 throw new ArgumentNullException(nameof(type));
             }
 
-            if (attribute is null)
+            if (direct is null)
             {
-                throw new ArgumentNullException(nameof(attribute));
+                throw new ArgumentNullException(nameof(direct));
             }
 
-            Type = type.ToImmutableDictionary(static pair => pair.Key, Assemblies);
-            Attribute = attribute.ToImmutableDictionary(static pair => pair.Key, Assemblies);
+            Type = TypeMap<MonoCecilType, TypeMap<Assembly, ReflectionInheritResult>>.Create<ReflectionInheritResult, TypeMap<MonoCecilType, ReflectionInheritResult>.Enumerator>(type.GetEnumerator(), Assemblies);
+            Direct = TypeMap<MonoCecilType, TypeMap<Assembly, ReflectionInheritResult>>.Create<ReflectionInheritResult, TypeMap<MonoCecilType, ReflectionInheritResult>.Enumerator>(direct.GetEnumerator(), Assemblies);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-        private static IImmutableDictionary<Assembly, ReflectionInheritResult> Assemblies(KeyValuePair<Type, ReflectionInheritResult> pair)
+        private static TypeMap<Assembly, ReflectionInheritResult> Assemblies(ReflectionInheritResult result)
         {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            static ReflectionInheritResult Set(KeyValuePair<Assembly, ConcurrentHashSet<Type>> pair)
+            Dictionary<Assembly, ConcurrentHashSet<MonoCecilType>> assemblies = new Dictionary<Assembly, ConcurrentHashSet<MonoCecilType>>();
+
+            foreach (MonoCecilType type in result)
             {
-                return ReflectionInheritResult.Create(pair.Value);
+                if (type.Assembly is { } assembly)
+                {
+                    DictionaryBaseUtilities.GetOrNew(assemblies, assembly).Add(type);
+                }
             }
 
-            ConcurrentDictionary<Assembly, ConcurrentHashSet<Type>> assemblies = new ConcurrentDictionary<Assembly, ConcurrentHashSet<Type>>();
-
-            foreach (Type type in pair.Value)
-            {
-                assemblies.GetOrAdd(type.Assembly, static _ => new ConcurrentHashSet<Type>()).Add(type);
-            }
-
-            return assemblies.ToImmutableDictionary(static pair => pair.Key, Set);
+            return TypeMap<Assembly, ReflectionInheritResult>.Create<ConcurrentHashSet<MonoCecilType>, Dictionary<Assembly, ConcurrentHashSet<MonoCecilType>>.Enumerator>(assemblies.GetEnumerator(), ReflectionInheritResult.Create);
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-        private static IImmutableDictionary<Assembly, ReflectionInheritResult> Assemblies(KeyValuePair<Attribute, ReflectionInheritResult> pair)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public Boolean Contains(MonoCecilType key)
         {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            static ReflectionInheritResult Set(KeyValuePair<Assembly, ConcurrentHashSet<Type>> pair)
-            {
-                return ReflectionInheritResult.Create(pair.Value);
-            }
-
-            ConcurrentDictionary<Assembly, ConcurrentHashSet<Type>> assemblies = new ConcurrentDictionary<Assembly, ConcurrentHashSet<Type>>();
-
-            foreach (Type type in pair.Value)
-            {
-                assemblies.GetOrAdd(type.Assembly, static _ => new ConcurrentHashSet<Type>()).Add(type);
-            }
-
-            return assemblies.ToImmutableDictionary(static pair => pair.Key, Set);
+            return Type.Contains(key);
         }
 
-        public Boolean Contains(KeyValuePair<Type, IImmutableDictionary<Assembly, ReflectionInheritResult>> pair)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        Boolean IReadOnlyDictionary<MonoCecilType, TypeMap<Assembly, ReflectionInheritResult>>.ContainsKey(MonoCecilType key)
         {
-            return Type.Contains(pair);
+            return Contains(key);
         }
 
-        public Boolean Contains(KeyValuePair<Attribute, IImmutableDictionary<Assembly, ReflectionInheritResult>> pair)
-        {
-            return Attribute.Contains(pair);
-        }
-
-        public Boolean ContainsKey(Type key)
-        {
-            return Type.ContainsKey(key);
-        }
-
-        public Boolean ContainsKey(Attribute key)
-        {
-            return Attribute.ContainsKey(key);
-        }
-
-        public Boolean TryGetKey(Type equalKey, out Type actualKey)
-        {
-            return Type.TryGetKey(equalKey, out actualKey);
-        }
-
-        public Boolean TryGetKey(Attribute equalKey, out Attribute actualKey)
-        {
-            return Attribute.TryGetKey(equalKey, out actualKey);
-        }
-
-        public Boolean TryGetValue(Type key, [MaybeNullWhen(false)] out IImmutableDictionary<Assembly, ReflectionInheritResult> value)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public Boolean TryGetValue(MonoCecilType key, [MaybeNullWhen(false)] out TypeMap<Assembly, ReflectionInheritResult> value)
         {
             return Type.TryGetValue(key, out value);
         }
 
-        public Boolean TryGetValue(Attribute key, [MaybeNullWhen(false)] out IImmutableDictionary<Assembly, ReflectionInheritResult> value)
-        {
-            return Attribute.TryGetValue(key, out value);
-        }
-
-        public IImmutableDictionary<Type, IImmutableDictionary<Assembly, ReflectionInheritResult>> Add(Type key, IImmutableDictionary<Assembly, ReflectionInheritResult> value)
-        {
-            return Type.Add(key, value);
-        }
-
-        public IImmutableDictionary<Attribute, IImmutableDictionary<Assembly, ReflectionInheritResult>> Add(Attribute key, IImmutableDictionary<Assembly, ReflectionInheritResult> value)
-        {
-            return Attribute.Add(key, value);
-        }
-
-        public IImmutableDictionary<Type, IImmutableDictionary<Assembly, ReflectionInheritResult>> AddRange(IEnumerable<KeyValuePair<Type, IImmutableDictionary<Assembly, ReflectionInheritResult>>> pairs)
-        {
-            return Type.AddRange(pairs);
-        }
-
-        public IImmutableDictionary<Attribute, IImmutableDictionary<Assembly, ReflectionInheritResult>> AddRange(IEnumerable<KeyValuePair<Attribute, IImmutableDictionary<Assembly, ReflectionInheritResult>>> pairs)
-        {
-            return Attribute.AddRange(pairs);
-        }
-
-        public IImmutableDictionary<Type, IImmutableDictionary<Assembly, ReflectionInheritResult>> SetItem(Type key, IImmutableDictionary<Assembly, ReflectionInheritResult> value)
-        {
-            return Type.SetItem(key, value);
-        }
-
-        public IImmutableDictionary<Attribute, IImmutableDictionary<Assembly, ReflectionInheritResult>> SetItem(Attribute key, IImmutableDictionary<Assembly, ReflectionInheritResult> value)
-        {
-            return Attribute.SetItem(key, value);
-        }
-
-        public IImmutableDictionary<Type, IImmutableDictionary<Assembly, ReflectionInheritResult>> SetItems(IEnumerable<KeyValuePair<Type, IImmutableDictionary<Assembly, ReflectionInheritResult>>> items)
-        {
-            return Type.SetItems(items);
-        }
-
-        public IImmutableDictionary<Attribute, IImmutableDictionary<Assembly, ReflectionInheritResult>> SetItems(IEnumerable<KeyValuePair<Attribute, IImmutableDictionary<Assembly, ReflectionInheritResult>>> items)
-        {
-            return Attribute.SetItems(items);
-        }
-
-        public IImmutableDictionary<Type, IImmutableDictionary<Assembly, ReflectionInheritResult>> Remove(Type key)
-        {
-            return Type.Remove(key);
-        }
-
-        public IImmutableDictionary<Attribute, IImmutableDictionary<Assembly, ReflectionInheritResult>> Remove(Attribute key)
-        {
-            return Attribute.Remove(key);
-        }
-
-        public IImmutableDictionary<Type, IImmutableDictionary<Assembly, ReflectionInheritResult>> RemoveRange(IEnumerable<Type> keys)
-        {
-            return Type.RemoveRange(keys);
-        }
-
-        public IImmutableDictionary<Attribute, IImmutableDictionary<Assembly, ReflectionInheritResult>> RemoveRange(IEnumerable<Attribute> keys)
-        {
-            return Attribute.RemoveRange(keys);
-        }
-
-        public IImmutableDictionary<Type, IImmutableDictionary<Assembly, ReflectionInheritResult>> Clear()
-        {
-            return Type.Clear();
-        }
-
-        IImmutableDictionary<Attribute, IImmutableDictionary<Assembly, ReflectionInheritResult>> IImmutableDictionary<Attribute, IImmutableDictionary<Assembly, ReflectionInheritResult>>.Clear()
-        {
-            return Attribute.Clear();
-        }
-
-        public IEnumerator<KeyValuePair<Type, IImmutableDictionary<Assembly, ReflectionInheritResult>>> GetEnumerator()
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public IEnumerator<KeyValuePair<MonoCecilType, TypeMap<Assembly, ReflectionInheritResult>>> GetEnumerator()
         {
             return Type.GetEnumerator();
         }
 
-        IEnumerator<KeyValuePair<Attribute, IImmutableDictionary<Assembly, ReflectionInheritResult>>> IEnumerable<KeyValuePair<Attribute, IImmutableDictionary<Assembly, ReflectionInheritResult>>>.GetEnumerator()
-        {
-            return Attribute.GetEnumerator();
-        }
-
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return ((IEnumerable) Type).GetEnumerator();
+            return GetEnumerator();
         }
 
-        public IImmutableDictionary<Assembly, ReflectionInheritResult> this[Type key]
+        public TypeMap<Assembly, ReflectionInheritResult> this[MonoCecilType key]
         {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
-                return Type.TryGetValue(key, out IImmutableDictionary<Assembly, ReflectionInheritResult>? result) ? result : ImmutableDictionary<Assembly, ReflectionInheritResult>.Empty;
+                return Type.TryGetValue(key, out TypeMap<Assembly, ReflectionInheritResult>? result) ? result : TypeMap<Assembly, ReflectionInheritResult>.Empty;
             }
         }
 
-        public IImmutableDictionary<Assembly, ReflectionInheritResult> this[Attribute key]
+        public ReflectionInheritResult this[Assembly assembly, MonoCecilType key]
         {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
-                return Attribute.TryGetValue(key, out IImmutableDictionary<Assembly, ReflectionInheritResult>? result) ? result : ImmutableMultiDictionary<Assembly, ReflectionInheritResult>.Empty;
-            }
-        }
-
-        public ReflectionInheritResult this[Assembly assembly, Type key]
-        {
-            get
-            {
-                return Type.TryGetValue(key, out IImmutableDictionary<Assembly, ReflectionInheritResult>? immutable) && immutable.TryGetValue(assembly, out ReflectionInheritResult? result) ? result : ReflectionInheritResult.Empty;
-            }
-        }
-
-        public ReflectionInheritResult this[Assembly assembly, Attribute key]
-        {
-            get
-            {
-                return Attribute.TryGetValue(key, out IImmutableDictionary<Assembly, ReflectionInheritResult>? immutable) && immutable.TryGetValue(assembly, out ReflectionInheritResult? result) ? result : ReflectionInheritResult.Empty;
+                return Type.TryGetValue(key, out TypeMap<Assembly, ReflectionInheritResult>? immutable) && immutable.TryGetValue(assembly, out ReflectionInheritResult? result) ? result : ReflectionInheritResult.Empty;
             }
         }
     }

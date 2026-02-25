@@ -7,8 +7,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
-using HarmonyLib;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
+using NetExtender.Harmony.Types.Interfaces;
 using NetExtender.Types.Reflection;
 using NetExtender.Types.Streams;
 using NetExtender.Utilities.Core;
@@ -42,25 +42,25 @@ namespace NetExtender.Patch
                 }
             }
 
-            protected virtual HarmonyUtilities.Signature.GeneratorTranspiler ChooseStrategyTranspiler
+            protected virtual HarmonySignatureUtilities.GeneratorTranspiler ChooseStrategyTranspiler
             {
                 get
                 {
-                    static IEnumerable<CodeInstruction> Factory(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
+                    static IEnumerable<IHarmonyInstruction> Factory(IEnumerable<IHarmonyInstruction> instructions, ILGenerator generator)
                     {
-                        yield return new CodeInstruction(OpCodes.Ldarg_0);
-                        yield return new CodeInstruction(OpCodes.Isinst, typeof(FileStreamWrapper2));
+                        yield return IHarmonyInstruction.Create(OpCodes.Ldarg_0);
+                        yield return IHarmonyInstruction.Create(OpCodes.Isinst, typeof(FileStreamWrapper2));
 
                         Label label = generator.DefineLabel();
-                        yield return new CodeInstruction(OpCodes.Brfalse_S, label);
-                        yield return new CodeInstruction(OpCodes.Ldnull);
-                        yield return new CodeInstruction(OpCodes.Ret);
+                        yield return IHarmonyInstruction.Create(OpCodes.Brfalse_S, label);
+                        yield return IHarmonyInstruction.Create(OpCodes.Ldnull);
+                        yield return IHarmonyInstruction.Create(OpCodes.Ret);
 
-                        using IEnumerator<CodeInstruction> enumerator = instructions.GetEnumerator();
+                        using IEnumerator<IHarmonyInstruction> enumerator = instructions.GetEnumerator();
 
                         if (enumerator.MoveNext())
                         {
-                            enumerator.Current.labels.Add(label);
+                            enumerator.Current.Labels.Add(label);
                             yield return enumerator.Current;
                         }
 
@@ -102,10 +102,10 @@ namespace NetExtender.Patch
 
             protected override ReflectionPatchState Make()
             {
-                Harmony harmony = new Harmony($"{nameof(NetExtender)}.{nameof(NetExtenderFileStreamPatch)}");
+                IHarmony harmony = IHarmony.Create($"{nameof(NetExtender)}.{nameof(NetExtenderFileStreamPatch)}");
 
                 Boolean any = false;
-                HarmonyMethod transpiler = new HarmonyMethod(ChooseStrategyTranspiler);
+                IHarmonyMethod transpiler = IHarmonyMethod.Create(ChooseStrategyTranspiler);
                 foreach (MethodInfo method in ChooseStrategy)
                 {
                     harmony.Transpiler(transpiler, method);

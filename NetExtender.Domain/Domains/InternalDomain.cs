@@ -11,7 +11,7 @@ using NetExtender.Domains.Applications.Interfaces;
 using NetExtender.Domains.Interfaces;
 using NetExtender.Domains.View.Interfaces;
 using NetExtender.Types.Dispatchers.Interfaces;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 
 namespace NetExtender.Domains
 {

@@ -968,7 +968,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(bitmap));
             }
 
-            return MakeTransparent(bitmap, transparent?.Select(item => unchecked((UInt32) item.ToArgb())));
+            return MakeTransparent(bitmap, transparent?.Select(static item => unchecked((UInt32) item.ToArgb())));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -979,7 +979,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(bitmap));
             }
 
-            return MakeTransparent(bitmap, transparent?.Select(item => unchecked((UInt32) item)));
+            return MakeTransparent(bitmap, transparent?.Select(static item => unchecked((UInt32) item)));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
@@ -991,7 +991,7 @@ namespace NetExtender.Utilities.Types
             }
 
             const UInt32 alpha = Byte.MaxValue;
-            ImmutableHashSet<UInt32> set = transparent?.Select(value => value | alpha).ToImmutableHashSet() ?? ImmutableHashSet<UInt32>.Empty;
+            ImmutableHashSet<UInt32> set = transparent?.Select(static value => value | alpha).ToImmutableHashSet() ?? ImmutableHashSet<UInt32>.Empty;
 
             if (set.Count <= 0)
             {
@@ -1145,7 +1145,7 @@ namespace NetExtender.Utilities.Types
             direct.Lock();
             return direct;
         }
-	
+
         public static DirectBitmap Direct(this Bitmap bitmap, DirectBitmapLockFormat format)
         {
             if (bitmap is null)

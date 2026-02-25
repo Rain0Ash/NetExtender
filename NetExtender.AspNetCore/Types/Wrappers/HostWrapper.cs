@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.Hosting;
 
+#pragma warning disable ASPDEPR008
+
 namespace NetExtender.AspNetCore.Types.Wrappers
 {
     public sealed class HostWrapper : IHost, IWebHost

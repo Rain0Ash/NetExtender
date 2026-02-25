@@ -1,0 +1,18 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
+using System.Collections.Generic;
+using NetExtender.Types.Collections.Interfaces;
+
+namespace NetExtender.Types.Concurrent.Observable.Interfaces
+{
+    public interface IConcurrentObservableBase<T> : IObservableCollectionBase<T>
+    {
+        public ICollection<T> View { get; }
+    }
+
+    public interface IReadOnlyConcurrentObservableBase<out T> : IReadOnlyObservableCollectionBase<T>
+    {
+        public IReadOnlyCollection<T> View { get; }
+    }
+}

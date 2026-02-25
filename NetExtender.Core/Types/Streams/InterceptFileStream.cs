@@ -14,7 +14,7 @@ using System.Runtime.Versioning;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Win32.SafeHandles;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 using NetExtender.Types.Intercept;
 using NetExtender.Types.Intercept.Interfaces;
 using NetExtender.Types.Memory;

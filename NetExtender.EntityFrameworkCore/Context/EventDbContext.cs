@@ -13,17 +13,17 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using NetExtender.CQRS;
 using NetExtender.CQRS.Events.Dispatchers.Interfaces;
 using NetExtender.CQRS.Events.Interfaces;
 using NetExtender.DependencyInjection.Context.Interfaces;
 using NetExtender.Types.Entities.Interfaces;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 using NetExtender.Utilities.EntityFrameworkCore;
+using NetExtender.Utilities.Types;
 
 namespace NetExtender.EntityFrameworkCore.Context
 {
-    public delegate Task DbContextEventHandler(IEventCQRSDispatcher dispatcher, IEventCQRS @event, CancellationToken token);
-
     public enum DbContextBehavior
     {
         Default,
@@ -31,18 +31,21 @@ namespace NetExtender.EntityFrameworkCore.Context
         Eager
     }
 
-    public class EventDbContext : DbContext, ISaveDbContext
+    public delegate Task DbContextEventHandler<TContext>(IEventCQRSDispatcher<TContext> dispatcher, IEventCQRS @event, CancellationToken token) where TContext : CQRS<TContext>.IContext;
+
+    [SuppressMessage("ReSharper", "StaticMemberInGenericType")]
+    public class EventDbContext<TContext> : DbContext, ISaveDbContext where TContext : CQRS<TContext>.IContext
     {
         public Assembly? Assembly { get; }
         protected SaveChangesInterceptor? SaveInterceptor { get; }
-        protected IEventCQRSDispatcher? EventDispatcher { get; }
-        protected ConcurrentDictionary<Type, DbContextEventHandler> EventHandler { get; } = new ConcurrentDictionary<Type, DbContextEventHandler>();
+        protected IEventCQRSDispatcher<TContext>? EventDispatcher { get; }
+        protected ConcurrentDictionary<Type, DbContextEventHandler<TContext>> EventHandler { get; } = new ConcurrentDictionary<Type, DbContextEventHandler<TContext>>();
         protected DbContextBehavior ContextBehavior { get; private set; }
         private static MethodInfo Dispatch { get; }
 
         static EventDbContext()
         {
-            Dispatch = typeof(IEventCQRSDispatcher).GetMethod(nameof(IEventCQRSDispatcher.DispatchAsync), new []{ Type.MakeGenericMethodParameter(0), typeof(CancellationToken) }) ?? throw new NeverOperationException();
+            Dispatch = typeof(IEventCQRSDispatcher<TContext>).GetMethod(nameof(IEventCQRSDispatcher<TContext>.Async), new []{ Type.MakeGenericMethodParameter(0), typeof(CancellationToken) }) ?? throw new NeverOperationException();
         }
 
         public EventDbContext(Assembly? assembly, SaveChangesInterceptor? interceptor)
@@ -50,7 +53,7 @@ namespace NetExtender.EntityFrameworkCore.Context
         {
         }
 
-        public EventDbContext(Assembly? assembly, SaveChangesInterceptor? interceptor, IEventCQRSDispatcher? dispatcher)
+        public EventDbContext(Assembly? assembly, SaveChangesInterceptor? interceptor, IEventCQRSDispatcher<TContext>? dispatcher)
         {
             Assembly = assembly;
             SaveInterceptor = interceptor;
@@ -93,7 +96,7 @@ namespace NetExtender.EntityFrameworkCore.Context
         {
             if (ContextBehavior is DbContextBehavior.Eager)
             {
-                throw new NotSupportedException($"Сan't save changes at eager {nameof(DbContext)}.");
+                throw new NotSupportedException($"Can't save changes at eager {nameof(DbContext)}.");
             }
 
             IReadOnlyCollection<IAfterSaveEventCQRS> events = await ProcessEventsBeforeSaveChanges(token);
@@ -111,20 +114,35 @@ namespace NetExtender.EntityFrameworkCore.Context
 
         private async Task<IReadOnlyCollection<IAfterSaveEventCQRS>> ProcessEventsBeforeSaveChanges(CancellationToken token)
         {
-            foreach (EntityEntry<IEntity> entity in ChangeTracker.Entries<IEntity>().Where(static entity => entity.State == EntityState.Deleted))
+            foreach (EntityEntry<IEntity> entity in ChangeTracker.Entries<IEntity>().Where(static entity => entity.State is EntityState.Deleted))
             {
                 entity.Entity.Delete();
             }
 
-            IEntity[] entities = ChangeTracker.Entries<IEntity>().Where(static entity => entity.Entity.Events.Count > 0).Select(static entity => entity.Entity).ToArray();
-            IEnumerable<IBeforeSaveEventCQRS> events = entities.SelectMany(static entity => entity.Events).OfType<IBeforeSaveEventCQRS>();
+            IEntity[] entities = ChangeTracker.Entries<IEntity>().Where(static entity => entity.Entity.HasEvents).Select(static entity => entity.Entity).ToArray();
 
-            await DispatchEvents(events, EventDispatcher, token).ConfigureAwait(false);
-            return entities.SelectMany(static entity => entity.Events).OfType<IAfterSaveEventCQRS>().ToList();
+            List<IBeforeSaveEventCQRS> before = new List<IBeforeSaveEventCQRS>();
+            List<IAfterSaveEventCQRS> after = new List<IAfterSaveEventCQRS>();
+
+            foreach (IEntity entity in entities.Events())
+            {
+                switch (entity)
+                {
+                    case IBeforeSaveEventCQRS @event:
+                        before.Add(@event);
+                        break;
+                    case IAfterSaveEventCQRS @event:
+                        after.Add(@event);
+                        break;
+                }
+            }
+
+            await DispatchEvents(before, EventDispatcher, token).ConfigureAwait(false);
+            return after;
         }
 
         [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
-        protected virtual async Task DispatchEvents(IEnumerable<IEventCQRS> source, IEventCQRSDispatcher? dispatcher, CancellationToken token)
+        protected virtual async Task DispatchEvents(IEnumerable<IEventCQRS> source, IEventCQRSDispatcher<TContext>? dispatcher, CancellationToken token)
         {
             if (source is null)
             {
@@ -143,7 +161,7 @@ namespace NetExtender.EntityFrameworkCore.Context
                 foreach (IEventCQRS @event in events.Where(static @event => !@event.Resolved))
                 {
                     @event.Resolved = true;
-                    DbContextEventHandler handler = EventHandler.GetOrAdd(@event.Self, CreateEventHandler);
+                    DbContextEventHandler<TContext> handler = EventHandler.GetOrAdd(@event.Self, CreateEventHandler);
                     await handler.Invoke(dispatcher, @event, token).WaitAsync(token).ConfigureAwait(false);
                 }
 
@@ -154,7 +172,7 @@ namespace NetExtender.EntityFrameworkCore.Context
             }
         }
 
-        protected static DbContextEventHandler CreateEventHandler(Type type)
+        protected static DbContextEventHandler<TContext> CreateEventHandler(Type type)
         {
             if (type is null)
             {
@@ -163,13 +181,13 @@ namespace NetExtender.EntityFrameworkCore.Context
 
             MethodInfo method = Dispatch.MakeGenericMethod(type);
 
-            ParameterExpression dispatcher = Expression.Parameter(typeof(IEventCQRSDispatcher), nameof(dispatcher));
+            ParameterExpression dispatcher = Expression.Parameter(typeof(IEventCQRSDispatcher<TContext>), nameof(dispatcher));
             ParameterExpression @event = Expression.Parameter(typeof(IEventCQRS), nameof(@event));
             ParameterExpression token = Expression.Parameter(typeof(CancellationToken), nameof(token));
             UnaryExpression convert = Expression.Convert(@event, type);
 
             MethodCallExpression call = Expression.Call(dispatcher, method, convert, token);
-            return Expression.Lambda<DbContextEventHandler>(call, dispatcher, @event, token).Compile();
+            return Expression.Lambda<DbContextEventHandler<TContext>>(call, dispatcher, @event, token).Compile();
         }
     }
 }

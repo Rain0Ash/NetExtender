@@ -5,7 +5,7 @@ using System;
 using System.Collections.Immutable;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 using NetExtender.Utilities.Threading;
 using NetExtender.Utilities.Types;
 using NetExtender.WindowsPresentation.Types;
@@ -26,7 +26,7 @@ namespace NetExtender.Utilities.Windows.IO
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
-                return ThreadUtilities.STA(() => Keyboard.Modifiers);
+                return ThreadUtilities.STA(static () => Keyboard.Modifiers);
             }
         }
 

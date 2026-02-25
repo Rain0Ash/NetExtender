@@ -8,8 +8,10 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
+using System.Xml.Serialization;
 using NetExtender.Newtonsoft.Types.Trees;
 using NetExtender.Types.Trees.Interfaces;
+using NetExtender.Utilities.Core;
 using NetExtender.Utilities.Types;
 using Newtonsoft.Json;
 
@@ -18,10 +20,12 @@ namespace NetExtender.Types.Trees
     [JsonConverter(typeof(DictionaryTreeJsonConverter<,>))]
     public class DictionaryTree<TKey, TValue> : Dictionary<TKey, IDictionaryTreeNode<TKey, TValue>>, IDictionaryTree<TKey, TValue>, IReadOnlyDictionaryTree<TKey, TValue> where TKey : notnull
     {
-        [JsonIgnore]
+        [JsonIgnore, IgnoreDataMember, XmlIgnore, SoapIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         private IDictionaryTreeNode<TKey, TValue>? _node;
 
-        [JsonIgnore]
+        [JsonIgnore, IgnoreDataMember, XmlIgnore, SoapIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public IDictionaryTreeNode<TKey, TValue> Node
         {
             get
@@ -30,7 +34,8 @@ namespace NetExtender.Types.Trees
             }
         }
 
-        [JsonIgnore]
+        [JsonIgnore, IgnoreDataMember, XmlIgnore, SoapIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public Int64 FullCount
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -40,7 +45,8 @@ namespace NetExtender.Types.Trees
             }
         }
 
-        [JsonIgnore]
+        [JsonIgnore, IgnoreDataMember, XmlIgnore, SoapIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public Boolean IsEmpty
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -50,7 +56,8 @@ namespace NetExtender.Types.Trees
             }
         }
 
-        [JsonIgnore]
+        [JsonIgnore, IgnoreDataMember, XmlIgnore, SoapIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public Boolean HasValue
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -60,7 +67,8 @@ namespace NetExtender.Types.Trees
             }
         }
 
-        [JsonIgnore]
+        [JsonIgnore, IgnoreDataMember, XmlIgnore, SoapIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public Boolean HasTree
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -70,7 +78,8 @@ namespace NetExtender.Types.Trees
             }
         }
 
-        [JsonIgnore]
+        [JsonIgnore, IgnoreDataMember, XmlIgnore, SoapIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public Boolean TreeIsEmpty
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -101,7 +110,7 @@ namespace NetExtender.Types.Trees
         }
 
         public DictionaryTree(Dictionary<TKey, DictionaryTreeNode<TKey, TValue>> dictionary, IEqualityComparer<TKey>? comparer)
-            : this(dictionary is not null ? dictionary.Select(item => new KeyValuePair<TKey, IDictionaryTreeNode<TKey, TValue>>(item.Key, item.Value)) : throw new ArgumentNullException(nameof(dictionary)), comparer)
+            : this(dictionary is not null ? dictionary.Select(static item => new KeyValuePair<TKey, IDictionaryTreeNode<TKey, TValue>>(item.Key, item.Value)) : throw new ArgumentNullException(nameof(dictionary)), comparer)
         {
         }
 
@@ -454,7 +463,7 @@ namespace NetExtender.Types.Trees
 
         public FlattenDictionaryTreeEntry<TKey, TValue>[]? Flatten(String? separator)
         {
-            return Dump()?.Where(entry => entry.Value is not null).Select(entry => entry.Flatten(separator)).OrderBy(entry => entry.Section).ThenBy(entry => entry.Key).ToArray();
+            return Dump()?.Where(static entry => entry.Value is not null).Select(entry => entry.Flatten(separator)).OrderBy(static entry => entry.Section).ThenBy(static entry => entry.Key).ToArray();
         }
 
         public FlattenDictionaryTreeEntry<TKey, TValue>[]? Flatten(params TKey[]? sections)
@@ -464,7 +473,7 @@ namespace NetExtender.Types.Trees
 
         public FlattenDictionaryTreeEntry<TKey, TValue>[]? Flatten(String? separator, params TKey[]? sections)
         {
-            return Dump(sections)?.Where(entry => entry.Value is not null).Select(entry => entry.Flatten(separator)).OrderBy(entry => entry.Section).ThenBy(entry => entry.Key).ToArray();
+            return Dump(sections)?.Where(static entry => entry.Value is not null).Select(entry => entry.Flatten(separator)).OrderBy(static entry => entry.Section).ThenBy(static entry => entry.Key).ToArray();
         }
 
         public FlattenDictionaryTreeEntry<TKey, TValue>[]? Flatten(IEnumerable<TKey>? sections)
@@ -474,7 +483,7 @@ namespace NetExtender.Types.Trees
 
         public FlattenDictionaryTreeEntry<TKey, TValue>[]? Flatten(String? separator, IEnumerable<TKey>? sections)
         {
-            return Dump(sections)?.Where(entry => entry.Value is not null).Select(entry => entry.Flatten(separator)).OrderBy(entry => entry.Section).ThenBy(entry => entry.Key).ToArray();
+            return Dump(sections)?.Where(static entry => entry.Value is not null).Select(entry => entry.Flatten(separator)).OrderBy(static entry => entry.Section).ThenBy(static entry => entry.Key).ToArray();
         }
 
         public DictionaryTreeEntry<TKey, TValue>[]? Dump()
@@ -556,7 +565,7 @@ namespace NetExtender.Types.Trees
                     return node[key];
                 }
 
-                node = sections.WhereNotNull().Aggregate(node, (current, section) => current[section]);
+                node = sections.WhereNotNull().Aggregate(node, static (current, section) => current[section]);
 
                 return node[key];
             }
@@ -575,7 +584,7 @@ namespace NetExtender.Types.Trees
                     return;
                 }
 
-                node = sections.WhereNotNull().Aggregate(node, (current, section) => current[section]);
+                node = sections.WhereNotNull().Aggregate(node, static (current, section) => current[section]);
 
                 node[key] = value;
             }

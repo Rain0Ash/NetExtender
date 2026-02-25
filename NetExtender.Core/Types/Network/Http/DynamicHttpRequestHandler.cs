@@ -10,7 +10,7 @@ using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Net.Sockets;
-using NetExtender.Types.Exceptions.Handlers;
+using NetExtender.Exceptions.Handlers;
 using NetExtender.Types.Network.Exceptions;
 using NetExtender.Types.Network.Formatters.Exceptions;
 using NetExtender.Types.Network.Interfaces;

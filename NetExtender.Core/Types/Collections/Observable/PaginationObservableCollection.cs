@@ -6,42 +6,61 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using NetExtender.Interfaces.Notify;
 using NetExtender.Types.Collections.Interfaces;
-using NetExtender.Utilities.Types;
+using NetExtender.Utilities.Core;
 
 namespace NetExtender.Types.Collections
 {
     public class PaginationItemObservableCollection<T> : PaginationItemObservableCollection<T, ItemObservableCollection<T>> where T : class
     {
-        public PaginationItemObservableCollection(Int32 size)
+        [return: NotNullIfNotNull("value")]
+        public static implicit operator PaginationItemObservableCollection<T>?(ItemObservableCollection<T>? value)
+        {
+            return value is not null ? new PaginationItemObservableCollection<T>(value, null) : null;
+        }
+
+        public PaginationItemObservableCollection(Int32? size)
             : this(0, size)
         {
         }
 
-        public PaginationItemObservableCollection(Int32 index, Int32 size)
+        public PaginationItemObservableCollection(Int32 index, Int32? size)
             : base(new ItemObservableCollection<T>(), index, size)
         {
         }
 
-        public PaginationItemObservableCollection(IEnumerable<T> collection, Int32 size)
+        public PaginationItemObservableCollection(IEnumerable<T> collection, Int32? size)
             : this(collection, 0, size)
         {
         }
 
-        public PaginationItemObservableCollection(IEnumerable<T> collection, Int32 index, Int32 size)
+        public PaginationItemObservableCollection(IEnumerable<T> collection, Int32 index, Int32? size)
             : base(collection is not null ? new ItemObservableCollection<T>(collection) : throw new ArgumentNullException(nameof(collection)), index, size)
         {
         }
 
-        public PaginationItemObservableCollection(List<T> list, Int32 size)
+        public PaginationItemObservableCollection(List<T> list, Int32? size)
             : this(list, 0, size)
         {
         }
 
-        public PaginationItemObservableCollection(List<T> list,Int32 index, Int32 size)
+        public PaginationItemObservableCollection(List<T> list,Int32 index, Int32? size)
             : base(list is not null ? new ItemObservableCollection<T>(list) : throw new ArgumentNullException(nameof(list)), index, size)
         {
+        }
+
+        public override PaginationItemObservableCollection<T> WithTimestamp()
+        {
+            SetTimestamp();
+            return this;
+        }
+
+        public override PaginationItemObservableCollection<T> WithTimestamp(DateTimeOffset timestamp)
+        {
+            SetTimestamp(timestamp);
+            return this;
         }
 
         public override Pagination View()
@@ -63,44 +82,74 @@ namespace NetExtender.Types.Collections
         {
             protected override PaginationItemObservableCollection<T, ItemObservableCollection<T>> Internal { get; }
 
-            public Pagination(PaginationItemObservableCollection<T, ItemObservableCollection<T>> @internal, Int32 index, Int32 size)
+            public Pagination(PaginationItemObservableCollection<T, ItemObservableCollection<T>> @internal, Int32 index, Int32? size)
                 : base(@internal, index, size)
             {
                 Internal = @internal ?? throw new ArgumentNullException(nameof(@internal));
+            }
+
+            public override Pagination WithTimestamp()
+            {
+                SetTimestamp();
+                return this;
+            }
+
+            public override Pagination WithTimestamp(DateTimeOffset timestamp)
+            {
+                SetTimestamp(timestamp);
+                return this;
             }
         }
     }
 
     public class PaginationSuppressObservableCollection<T> : PaginationSuppressObservableCollection<T, SuppressObservableCollection<T>>
     {
-        public PaginationSuppressObservableCollection(Int32 size)
+        [return: NotNullIfNotNull("value")]
+        public static implicit operator PaginationSuppressObservableCollection<T>?(SuppressObservableCollection<T>? value)
+        {
+            return value is not null ? new PaginationSuppressObservableCollection<T>(value, null) : null;
+        }
+
+        public PaginationSuppressObservableCollection(Int32? size)
             : this(0, size)
         {
         }
 
-        public PaginationSuppressObservableCollection(Int32 index, Int32 size)
+        public PaginationSuppressObservableCollection(Int32 index, Int32? size)
             : base(new SuppressObservableCollection<T>(), index, size)
         {
         }
 
-        public PaginationSuppressObservableCollection(IEnumerable<T> collection, Int32 size)
+        public PaginationSuppressObservableCollection(IEnumerable<T> collection, Int32? size)
             : this(collection, 0, size)
         {
         }
 
-        public PaginationSuppressObservableCollection(IEnumerable<T> collection, Int32 index, Int32 size)
+        public PaginationSuppressObservableCollection(IEnumerable<T> collection, Int32 index, Int32? size)
             : base(collection is not null ? new SuppressObservableCollection<T>(collection) : throw new ArgumentNullException(nameof(collection)), index, size)
         {
         }
 
-        public PaginationSuppressObservableCollection(List<T> list, Int32 size)
+        public PaginationSuppressObservableCollection(List<T> list, Int32? size)
             : this(list, 0, size)
         {
         }
 
-        public PaginationSuppressObservableCollection(List<T> list,Int32 index, Int32 size)
+        public PaginationSuppressObservableCollection(List<T> list,Int32 index, Int32? size)
             : base(list is not null ? new SuppressObservableCollection<T>(list) : throw new ArgumentNullException(nameof(list)), index, size)
         {
+        }
+
+        public override PaginationSuppressObservableCollection<T> WithTimestamp()
+        {
+            SetTimestamp();
+            return this;
+        }
+
+        public override PaginationSuppressObservableCollection<T> WithTimestamp(DateTimeOffset timestamp)
+        {
+            SetTimestamp(timestamp);
+            return this;
         }
 
         public override Pagination View()
@@ -122,20 +171,33 @@ namespace NetExtender.Types.Collections
         {
             protected override PaginationSuppressObservableCollection<T, SuppressObservableCollection<T>> Internal { get; }
 
-            public Pagination(PaginationSuppressObservableCollection<T, SuppressObservableCollection<T>> @internal, Int32 index, Int32 size)
+            public Pagination(PaginationSuppressObservableCollection<T, SuppressObservableCollection<T>> @internal, Int32 index, Int32? size)
                 : base(@internal, index, size)
             {
                 Internal = @internal ?? throw new ArgumentNullException(nameof(@internal));
             }
+
+            public override Pagination WithTimestamp()
+            {
+                SetTimestamp();
+                return this;
+            }
+
+            public override Pagination WithTimestamp(DateTimeOffset timestamp)
+            {
+                SetTimestamp(timestamp);
+                return this;
+            }
         }
     }
 
+    // TODO: Notify Total, Notify Timestamp
     public abstract class PaginationItemObservableCollection<T, TCollection> : PaginationSuppressObservableCollection<T, TCollection>, INotifyItemCollection where TCollection : class, ISuppressObservableCollection<T>, INotifyItemCollection
     {
         public event PropertyChangingEventHandler? ItemChanging;
         public event PropertyChangedEventHandler? ItemChanged;
 
-        protected PaginationItemObservableCollection(TCollection collection, Int32 index, Int32 size)
+        protected PaginationItemObservableCollection(TCollection collection, Int32 index, Int32? size)
             : base(collection, index, size)
         {
             Internal.ItemChanging += OnItemChanging;
@@ -171,7 +233,7 @@ namespace NetExtender.Types.Collections
             public event PropertyChangingEventHandler? ItemChanging;
             public event PropertyChangedEventHandler? ItemChanged;
 
-            protected Pagination(PaginationItemObservableCollection<T, TCollection> @internal, Int32 index, Int32 size)
+            protected Pagination(PaginationItemObservableCollection<T, TCollection> @internal, Int32 index, Int32? size)
                 : base(@internal, index, size)
             {
                 @internal.ItemChanging += OnItemChanging;
@@ -216,7 +278,7 @@ namespace NetExtender.Types.Collections
             }
         }
 
-        protected PaginationSuppressObservableCollection(TCollection collection, Int32 index, Int32 size)
+        protected PaginationSuppressObservableCollection(TCollection collection, Int32 index, Int32? size)
             : base(collection, index, size)
         {
         }
@@ -271,15 +333,14 @@ namespace NetExtender.Types.Collections
                 }
             }
 
-            protected Pagination(PaginationSuppressObservableCollection<T, TCollection> @internal, Int32 index, Int32 size)
+            protected Pagination(PaginationSuppressObservableCollection<T, TCollection> @internal, Int32 index, Int32? size)
                 : base(@internal, index, size)
             {
             }
 
-            //TODO:
             public IDisposable? Suppress()
             {
-                return null;
+                return Internal.Suppress();
             }
         }
     }
@@ -319,22 +380,6 @@ namespace NetExtender.Types.Collections
             }
         }
 
-        public sealed override Int32 Total
-        {
-            get
-            {
-                return Math.Abs((Int32) Math.Ceiling(Count / (Double) Size));
-            }
-        }
-
-        public sealed override Int32 Items
-        {
-            get
-            {
-                return Math.Max(Math.Min(Size, Count - Index * Size), 0);
-            }
-        }
-
         public override Int32 Size
         {
             get
@@ -351,7 +396,7 @@ namespace NetExtender.Types.Collections
                 this.RaisePropertyChanging();
                 this.RaisePropertyChanging(nameof(Index));
                 this.RaisePropertyChanging(nameof(Page));
-                this.RaisePropertyChanging(nameof(Total));
+                this.RaisePropertyChanging(nameof(Pages));
                 this.RaisePropertyChanging(nameof(Items));
                 this.RaisePropertyChanging(nameof(HasPrevious));
                 this.RaisePropertyChanging(nameof(HasNext));
@@ -359,7 +404,7 @@ namespace NetExtender.Types.Collections
                 this.RaisePropertyChanged();
                 this.RaisePropertyChanged(nameof(Index));
                 this.RaisePropertyChanged(nameof(Page));
-                this.RaisePropertyChanged(nameof(Total));
+                this.RaisePropertyChanged(nameof(Pages));
                 this.RaisePropertyChanged(nameof(Items));
                 this.RaisePropertyChanged(nameof(HasPrevious));
                 this.RaisePropertyChanged(nameof(HasNext));
@@ -390,7 +435,7 @@ namespace NetExtender.Types.Collections
             }
         }
 
-        protected PaginationObservableCollection(TCollection collection, Int32 index, Int32 size)
+        protected PaginationObservableCollection(TCollection collection, Int32 index, Int32? size)
             : base(index, size)
         {
             Internal = collection ?? throw new ArgumentNullException(nameof(collection));
@@ -414,7 +459,7 @@ namespace NetExtender.Types.Collections
                 return;
             }
 
-            this.RaisePropertyChanging(nameof(Total));
+            this.RaisePropertyChanging(nameof(Pages));
             this.RaisePropertyChanging(nameof(Items));
             this.RaisePropertyChanging(nameof(HasPrevious));
             this.RaisePropertyChanging(nameof(HasNext));
@@ -429,7 +474,7 @@ namespace NetExtender.Types.Collections
                 return;
             }
 
-            this.RaisePropertyChanged(nameof(Total));
+            this.RaisePropertyChanged(nameof(Pages));
             this.RaisePropertyChanged(nameof(Items));
             this.RaisePropertyChanged(nameof(HasPrevious));
             this.RaisePropertyChanged(nameof(HasNext));
@@ -460,7 +505,7 @@ namespace NetExtender.Types.Collections
         public void Add(T item)
         {
             Int32 items = Items;
-            Int32 total = Total;
+            Int32 total = Pages;
 
             Internal.Add(item);
 
@@ -469,16 +514,16 @@ namespace NetExtender.Types.Collections
                 this.RaiseProperty(nameof(Items));
             }
 
-            if (total != Total)
+            if (total != Pages)
             {
-                this.RaiseProperty(nameof(Total));
+                this.RaiseProperty(nameof(Pages));
             }
         }
 
         public void Insert(Int32 index, T item)
         {
             Int32 items = Items;
-            Int32 total = Total;
+            Int32 total = Pages;
 
             Internal.Insert(index, item);
 
@@ -487,16 +532,16 @@ namespace NetExtender.Types.Collections
                 this.RaiseProperty(nameof(Items));
             }
 
-            if (total != Total)
+            if (total != Pages)
             {
-                this.RaiseProperty(nameof(Total));
+                this.RaiseProperty(nameof(Pages));
             }
         }
 
         public Boolean Remove(T item)
         {
             Int32 items = Items;
-            Int32 total = Total;
+            Int32 total = Pages;
 
             if (!Internal.Remove(item))
             {
@@ -508,9 +553,9 @@ namespace NetExtender.Types.Collections
                 this.RaiseProperty(nameof(Items));
             }
 
-            if (total != Total)
+            if (total != Pages)
             {
-                this.RaiseProperty(nameof(Total));
+                this.RaiseProperty(nameof(Pages));
             }
 
             return true;
@@ -519,7 +564,7 @@ namespace NetExtender.Types.Collections
         public void RemoveAt(Int32 index)
         {
             Int32 items = Items;
-            Int32 total = Total;
+            Int32 total = Pages;
 
             Internal.RemoveAt(index);
 
@@ -528,16 +573,16 @@ namespace NetExtender.Types.Collections
                 this.RaiseProperty(nameof(Items));
             }
 
-            if (total != Total)
+            if (total != Pages)
             {
-                this.RaiseProperty(nameof(Total));
+                this.RaiseProperty(nameof(Pages));
             }
         }
 
         public void Clear()
         {
             Int32 items = Items;
-            Int32 total = Total;
+            Int32 total = Pages;
 
             Internal.Clear();
 
@@ -546,9 +591,9 @@ namespace NetExtender.Types.Collections
                 this.RaiseProperty(nameof(Items));
             }
 
-            if (total != Total)
+            if (total != Pages)
             {
-                this.RaiseProperty(nameof(Total));
+                this.RaiseProperty(nameof(Pages));
             }
         }
 
@@ -614,23 +659,6 @@ namespace NetExtender.Types.Collections
                 }
             }
 
-            public sealed override Int32 Total
-            {
-                get
-                {
-                    return Math.Abs((Int32) Math.Ceiling(Count / (Double) Size));
-                }
-            }
-
-            //TODO: fix, неправильное количество на странице
-            public sealed override Int32 Items
-            {
-                get
-                {
-                    return Math.Max(Math.Min(Size, Count - Index * Size), 0);
-                }
-            }
-
             public override Int32 Size
             {
                 get
@@ -647,7 +675,7 @@ namespace NetExtender.Types.Collections
                     this.RaisePropertyChanging();
                     this.RaisePropertyChanging(nameof(Index));
                     this.RaisePropertyChanging(nameof(Page));
-                    this.RaisePropertyChanging(nameof(Total));
+                    this.RaisePropertyChanging(nameof(Pages));
                     this.RaisePropertyChanging(nameof(Items));
                     this.RaisePropertyChanging(nameof(HasPrevious));
                     this.RaisePropertyChanging(nameof(HasNext));
@@ -655,7 +683,7 @@ namespace NetExtender.Types.Collections
                     this.RaisePropertyChanged();
                     this.RaisePropertyChanged(nameof(Index));
                     this.RaisePropertyChanged(nameof(Page));
-                    this.RaisePropertyChanged(nameof(Total));
+                    this.RaisePropertyChanged(nameof(Pages));
                     this.RaisePropertyChanged(nameof(Items));
                     this.RaisePropertyChanged(nameof(HasPrevious));
                     this.RaisePropertyChanged(nameof(HasNext));
@@ -686,7 +714,7 @@ namespace NetExtender.Types.Collections
                 }
             }
 
-            protected Pagination(PaginationObservableCollection<T, TCollection> @internal, Int32 index, Int32 size)
+            protected Pagination(PaginationObservableCollection<T, TCollection> @internal, Int32 index, Int32? size)
                 : base(index, size)
             {
                 if (@internal is null)
@@ -699,9 +727,14 @@ namespace NetExtender.Types.Collections
                 @internal.PropertyChanged += OnPropertyChanged;
             }
 
-            //TODO:
             protected void OnCollectionChanged(Object? sender, NotifyCollectionChangedEventArgs args)
             {
+                this.RaisePropertyChanged(nameof(Count));
+                this.RaisePropertyChanged(nameof(Pages));
+                this.RaisePropertyChanged(nameof(Items));
+                this.RaisePropertyChanged(nameof(HasPrevious));
+                this.RaisePropertyChanged(nameof(HasNext));
+
                 CollectionChanged?.Invoke(this, args);
             }
 
@@ -714,7 +747,7 @@ namespace NetExtender.Types.Collections
 
                 PropertyChanging?.Invoke(this, args);
 
-                this.RaisePropertyChanged(nameof(Total));
+                this.RaisePropertyChanged(nameof(Pages));
                 this.RaisePropertyChanged(nameof(Items));
                 this.RaisePropertyChanged(nameof(HasPrevious));
                 this.RaisePropertyChanged(nameof(HasNext));
@@ -729,7 +762,7 @@ namespace NetExtender.Types.Collections
 
                 PropertyChanged?.Invoke(this, args);
 
-                this.RaisePropertyChanged(nameof(Total));
+                this.RaisePropertyChanged(nameof(Pages));
                 this.RaisePropertyChanged(nameof(Items));
                 this.RaisePropertyChanged(nameof(HasPrevious));
                 this.RaisePropertyChanged(nameof(HasNext));
@@ -765,7 +798,7 @@ namespace NetExtender.Types.Collections
             public Int32 IndexOf(T item)
             {
                 Int32 start = Index * Size;
-                for (Int32 i = start; i < start + Items - 1; i++)
+                for (Int32 i = start; i < start + Items; i++)
                 {
                     if (EqualityComparer<T>.Default.Equals(Internal[i], item))
                     {

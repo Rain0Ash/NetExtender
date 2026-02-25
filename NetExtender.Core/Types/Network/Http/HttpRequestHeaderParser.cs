@@ -46,20 +46,15 @@ namespace NetExtender.Types.Network
                         state = HttpParserState.Invalid;
                     }
 
-                    switch (state)
+                    if (state is not HttpParserState.Done)
                     {
-                        case HttpParserState.NeedMoreData:
-                            break;
-                        case HttpParserState.Done:
-                            Status = HttpRequestState.RequestHeaders;
-                            goto RequestHeaders;
-                        default:
-                            return state;
+                        return state;
                     }
 
-                    return HttpParserState.NeedMoreData;
+                    Status = HttpRequestState.RequestHeaders;
+                    goto case HttpRequestState.RequestHeaders;
                 }
-                case HttpRequestState.RequestHeaders: RequestHeaders:
+                case HttpRequestState.RequestHeaders:
                 {
                     if (consumed >= ready)
                     {
@@ -76,17 +71,7 @@ namespace NetExtender.Types.Network
                         state = HttpParserState.Invalid;
                     }
 
-                    switch (state)
-                    {
-                        case HttpParserState.NeedMoreData:
-                            break;
-                        case HttpParserState.Done:
-                            return state;
-                        default:
-                            return state;
-                    }
-
-                    return HttpParserState.NeedMoreData;
+                    return state;
                 }
             }
 

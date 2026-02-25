@@ -4,7 +4,7 @@
 using System;
 using System.Runtime.CompilerServices;
 using System.Windows;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 using NetExtender.UserInterface;
 
 namespace NetExtender.Utilities.UserInterface.Types

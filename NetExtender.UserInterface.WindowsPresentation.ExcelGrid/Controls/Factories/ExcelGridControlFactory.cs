@@ -11,6 +11,7 @@ using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using NetExtender.UserInterface.WindowsPresentation.ExcelGrid.Interfaces;
+using NetExtender.Utilities.Core;
 using NetExtender.Utilities.Types;
 using NetExtender.WindowsPresentation.Types.Converters;
 using NetExtender.WindowsPresentation.Utilities;
@@ -571,7 +572,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 return true;
             }
 
-            foreach (Type @interface in first.GetInterfaces())
+            foreach (Type @interface in first.GetSafeInterfacesUnsafe())
             {
                 if (@interface.IsGenericType && second == @interface.GetGenericTypeDefinition() || second == @interface)
                 {

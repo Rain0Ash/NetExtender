@@ -104,12 +104,12 @@ namespace NetExtender.Utilities.AspNetCore.Types
                 throw new ArgumentNullException(nameof(services));
             }
 
-            if (services.All(service => service.ServiceType != typeof(IHttpContextAccessor)))
+            if (services.All(static service => service.ServiceType != typeof(IHttpContextAccessor)))
             {
                 services = services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             }
 
-            if (services.All(service => service.ServiceType != typeof(IActionContextAccessor)))
+            if (services.All(static service => service.ServiceType != typeof(IActionContextAccessor)))
             {
                 services = services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
             }

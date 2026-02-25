@@ -7,7 +7,7 @@ using System.Collections.Immutable;
 using System.Globalization;
 using System.Linq;
 using NetExtender.Types.Culture;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 using NetExtender.Types.Network.UserAgents;
 using NetExtender.Types.Network.UserAgents.Interfaces;
 using NetExtender.Types.Network.UserAgents.Specific;

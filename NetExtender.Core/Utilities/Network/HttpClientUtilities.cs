@@ -216,7 +216,7 @@ namespace NetExtender.Utilities.Network
             }
 
             handler.ClientCertificateOptions = ClientCertificateOption.Manual;
-            handler.ServerCertificateCustomValidationCallback = (_, _, _, _) => true;
+            handler.ServerCertificateCustomValidationCallback = static (_, _, _, _) => true;
             return handler;
         }
 

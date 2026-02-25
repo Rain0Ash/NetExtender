@@ -2,6 +2,8 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Threading.Tasks;
+using System.Transactions;
 using NetExtender.Types.Transactions;
 using NetExtender.Types.History.Interfaces;
 using NetExtender.Utilities.Types;
@@ -14,6 +16,8 @@ namespace NetExtender.Types.History
         private T Entry { get; }
         public Boolean? IsCommit { get; protected set; }
         public TransactionCommitPolicy Policy { get; init; }
+        public IsolationLevel Isolation { get; init; }
+        public TimeSpan Timeout { get; init; }
 
         public HistoryTransaction(History<T, TCollection> history)
         {
@@ -48,6 +52,13 @@ namespace NetExtender.Types.History
 
             History.Past.Push(Entry);
             History.Future.Clear();
+        }
+
+        public ValueTask DisposeAsync()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+            return ValueTask.CompletedTask;
         }
 
         ~HistoryTransaction()

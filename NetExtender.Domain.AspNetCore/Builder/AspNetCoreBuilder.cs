@@ -12,7 +12,7 @@ using Microsoft.Extensions.Hosting;
 using NetExtender.AspNetCore.Types.Wrappers;
 using NetExtender.Domains.AspNetCore.Builder.Interfaces;
 using NetExtender.Domains.Builder;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Domains.AspNetCore.Builder

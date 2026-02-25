@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Xml.Serialization;
 using NetExtender.Localization.Common.Interfaces;
 using NetExtender.Types.Culture;
 using NetExtender.Types.Strings;
@@ -28,16 +30,19 @@ namespace NetExtender.Localization.Common
             return value is not null ? new FakeLocalizationString(identifier, value) : null;
         }
 
-        [JsonIgnore]
+        [JsonIgnore, IgnoreDataMember, XmlIgnore, SoapIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         protected ILocalizationInfo Info { get; }
 
         [JsonProperty(PropertyName = null)]
         protected SortedDictionary<LocalizationIdentifier, String> Localization { get; }
 
-        [JsonIgnore]
+        [JsonIgnore, IgnoreDataMember, XmlIgnore, SoapIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         protected Dictionary<String, Int32> LocalizationArguments { get; }
 
-        [JsonIgnore]
+        [JsonIgnore, IgnoreDataMember, XmlIgnore, SoapIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public Int32 Count
         {
             get
@@ -46,7 +51,8 @@ namespace NetExtender.Localization.Common
             }
         }
 
-        [JsonIgnore]
+        [JsonIgnore, IgnoreDataMember, XmlIgnore, SoapIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public IComparer<LocalizationIdentifier> Comparer
         {
             get
@@ -55,7 +61,8 @@ namespace NetExtender.Localization.Common
             }
         }
 
-        [JsonIgnore]
+        [JsonIgnore, IgnoreDataMember, XmlIgnore, SoapIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public IEnumerable<LocalizationIdentifier> Keys
         {
             get
@@ -64,6 +71,8 @@ namespace NetExtender.Localization.Common
             }
         }
 
+        [JsonIgnore, IgnoreDataMember, XmlIgnore, SoapIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         IEnumerable<LocalizationIdentifier> IReadOnlyDictionary<LocalizationIdentifier, String>.Keys
         {
             get
@@ -72,7 +81,8 @@ namespace NetExtender.Localization.Common
             }
         }
 
-        [JsonIgnore]
+        [JsonIgnore, IgnoreDataMember, XmlIgnore, SoapIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public IReadOnlyDictionary<LocalizationIdentifier, String> Values
         {
             get
@@ -81,6 +91,8 @@ namespace NetExtender.Localization.Common
             }
         }
 
+        [JsonIgnore, IgnoreDataMember, XmlIgnore, SoapIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         IEnumerable<String> IReadOnlyDictionary<LocalizationIdentifier, String>.Values
         {
             get
@@ -89,7 +101,8 @@ namespace NetExtender.Localization.Common
             }
         }
 
-        [JsonIgnore]
+        [JsonIgnore, IgnoreDataMember, XmlIgnore, SoapIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public override Boolean Constant
         {
             get
@@ -106,7 +119,8 @@ namespace NetExtender.Localization.Common
             }
         }
 
-        [JsonIgnore]
+        [JsonIgnore, IgnoreDataMember, XmlIgnore, SoapIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public override String Text
         {
             get
@@ -157,8 +171,8 @@ namespace NetExtender.Localization.Common
             }
 
             Info = info ?? throw new ArgumentNullException(nameof(info));
-            Localization = localization.WhereNotNull(entry => entry.Value).ToSortedDictionary(comparer ?? Info.Comparer.Comparer);
-            LocalizationArguments = Localization.Values.Distinct().ToDictionary(value => value, value => value.CountExpectedFormatArguments());
+            Localization = localization.WhereNotNull(static entry => entry.Value).ToSortedDictionary(comparer ?? Info.Comparer.Comparer);
+            LocalizationArguments = Localization.Values.Distinct().ToDictionary(static value => value, static value => value.CountExpectedFormatArguments());
         }
 
         public LocalizationString(ILocalizationInfo info, IEnumerable<LocalizationValueEntry> localization)
@@ -174,8 +188,8 @@ namespace NetExtender.Localization.Common
             }
 
             Info = info ?? throw new ArgumentNullException(nameof(info));
-            Localization = localization.WhereNotNull(entry => entry.Value).ToSortedDictionary(entry => entry.Identifier, entry => entry.Value!, comparer ?? Info.Comparer.Comparer);
-            LocalizationArguments = Localization.Values.Distinct().ToDictionary(value => value, value => value.CountExpectedFormatArguments());
+            Localization = localization.WhereNotNull(static entry => entry.Value).ToSortedDictionary(static entry => entry.Identifier, static entry => entry.Value!, comparer ?? Info.Comparer.Comparer);
+            LocalizationArguments = Localization.Values.Distinct().ToDictionary(static value => value, static value => value.CountExpectedFormatArguments());
         }
 
         public virtual Boolean Contains(LocalizationIdentifier identifier)

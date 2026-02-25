@@ -12,16 +12,49 @@ namespace NetExtender.Types.Collections
     {
         public TCollection Source { get; }
 
-        protected PaginationCollection(TCollection source, Int32 index, Int32 size)
+        protected PaginationCollection(TCollection source, Int32 index, Int32? size)
             : base(index, size)
         {
             Source = source ?? throw new ArgumentNullException(nameof(source));
+        }
+
+        public override IEnumerator<T> GetEnumerator()
+        {
+            if (!HasSize)
+            {
+                return Source.GetEnumerator();
+            }
+
+            static IEnumerator<T> Core(PaginationCollection<T, TCollection> collection)
+            {
+                (Int32 index, Int32 count, Int32 size) = (collection.Index, collection.Count, collection.Size);
+
+                Int32 start = index * size;
+                Int32 end = Math.Min(start + size, count);
+                Int32 current = 0;
+
+                foreach (T item in collection)
+                {
+                    if (current >= start && current < end)
+                    {
+                        yield return item;
+                    }
+                    else if (current >= end)
+                    {
+                        break;
+                    }
+
+                    current++;
+                }
+            }
+
+            return Core(this);
         }
     }
 
     public abstract class PaginationCollection<T> : PaginationCollection, IPaginationEnumerable<T>
     {
-        protected PaginationCollection(Int32 index, Int32 size)
+        protected PaginationCollection(Int32 index, Int32? size)
             : base(index, size)
         {
         }
@@ -34,7 +67,6 @@ namespace NetExtender.Types.Collections
         }
     }
 
-    //TODO: Fix logic
     public abstract class PaginationCollection : IPaginationEnumerable
     {
         private Int32 _index;
@@ -42,11 +74,11 @@ namespace NetExtender.Types.Collections
         {
             get
             {
-                return _index;
+                return HasSize ? _index : 0;
             }
             protected set
             {
-                _index = value;
+                _index = value >= 0 ? value : throw new ArgumentOutOfRangeException(nameof(value), value, null);
             }
         }
 
@@ -58,26 +90,45 @@ namespace NetExtender.Types.Collections
             }
         }
 
-        public virtual Int32 Total
+        public virtual Int32 Pages
         {
             get
             {
-                return Math.Abs((Int32) Math.Ceiling(Count / (Double) Size));
+                if (!HasSize)
+                {
+                    return 1;
+                }
+
+                Int32 total = Total;
+
+                if (total <= 0)
+                {
+                    return 0;
+                }
+
+                return (Int32) Math.Ceiling(total / (Double) Size);
             }
         }
 
-        public abstract Int32 Items { get; }
+        public Boolean HasSize
+        {
+            get
+            {
+                return _size <= 0;
+            }
+        }
 
         private Int32 _size;
         public virtual Int32 Size
         {
             get
             {
-                return _size;
+                (Int32 size, Int32 count) = (_size, Count);
+                return size > 0 && size < count ? size : count;
             }
             protected set
             {
-                _size = value;
+                _size = value > 0 ? value : throw new ArgumentOutOfRangeException(nameof(value), value, null);
             }
         }
 
@@ -91,6 +142,30 @@ namespace NetExtender.Types.Collections
 
         public abstract Int32 Count { get; }
 
+        public virtual Int32 Items
+        {
+            get
+            {
+                if (!HasSize)
+                {
+                    return Count;
+                }
+
+                (Int32 index, Int32 count, Int32 size) = (Index, Count, Size);
+                Int32 start = index * size;
+
+                return start >= count ? 0 : Math.Min(size, count - start);
+            }
+        }
+
+        public virtual Int32 Total
+        {
+            get
+            {
+                return Count;
+            }
+        }
+
         public Boolean HasPrevious
         {
             get
@@ -103,15 +178,48 @@ namespace NetExtender.Types.Collections
         {
             get
             {
-                return Page < Total;
+                return Page < Pages;
             }
         }
 
-        protected PaginationCollection(Int32 index, Int32 size)
+        private DateTimeOffset? _timestamp;
+        public DateTimeOffset? Timestamp
+        {
+            get
+            {
+                return _timestamp;
+            }
+            init
+            {
+                _timestamp = value;
+            }
+        }
+
+        protected PaginationCollection(Int32 index, Int32? size)
         {
             _index = index >= 0 ? index : throw new ArgumentOutOfRangeException(nameof(index), index, null);
-            _size = size > 0 ? size : throw new ArgumentOutOfRangeException(nameof(size), size, null);
+
+            _size = size switch
+            {
+                null => 0,
+                > 0 => size.Value,
+                _ => throw new ArgumentOutOfRangeException(nameof(size), size, null)
+            };
         }
+
+        public Boolean SetTimestamp()
+        {
+            return SetTimestamp(DateTimeOffset.UtcNow);
+        }
+
+        public Boolean SetTimestamp(DateTimeOffset? timestamp)
+        {
+            _timestamp = timestamp;
+            return true;
+        }
+
+        public abstract PaginationCollection WithTimestamp();
+        public abstract PaginationCollection WithTimestamp(DateTimeOffset timestamp);
 
         public Boolean Resize(Int32 size)
         {
@@ -131,7 +239,7 @@ namespace NetExtender.Types.Collections
             }
 
             Size = size;
-            Index = resize ? Math.Clamp(Index * Size / size, 0, Total - 1) : 0;
+            Index = resize && HasSize ? Math.Clamp(Index * Size / size, 0, Pages > 0 ? Pages - 1 : 0) : 0;
             return true;
         }
 

@@ -24,6 +24,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\NetExtender.Core\NetExtender.Core.csproj"/>
+        <ProjectReference Include="..\NetExtender.CQRS\NetExtender.CQRS.csproj"/>
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework)' == 'net6.0' or '$(TargetFramework)' == 'net7.0'">

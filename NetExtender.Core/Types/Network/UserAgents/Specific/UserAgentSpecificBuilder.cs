@@ -3,7 +3,7 @@
 
 using System;
 using System.Globalization;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 using NetExtender.Types.Network.UserAgents.Interfaces;
 using NetExtender.Types.Random.Interfaces;
 using NetExtender.Utilities.Numerics;

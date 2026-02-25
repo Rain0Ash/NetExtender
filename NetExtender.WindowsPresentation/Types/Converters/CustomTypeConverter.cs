@@ -28,7 +28,7 @@ namespace NetExtender.WindowsPresentation.Types.Converters
 
         private Dictionary<Type, Handler> Build()
         {
-            return Initialize().DistinctBy(pair => pair.Key).ToDictionary();
+            return Initialize().DistinctBy(static pair => pair.Key).ToDictionary();
         }
 
         protected abstract IEnumerable<KeyValuePair<Type, Handler>> Initialize();

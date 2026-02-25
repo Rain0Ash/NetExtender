@@ -9,7 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Resources;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 using NetExtender.Utilities.Core;
 
 namespace NetExtender.Utilities.Application
@@ -131,7 +131,7 @@ namespace NetExtender.Utilities.Application
                 throw new ArgumentNullException(nameof(entries));
             }
 
-            foreach ((String? key, Object? value) in entries)
+            foreach ((String key, Object? value) in entries)
             {
                 if (value is Stream stream)
                 {

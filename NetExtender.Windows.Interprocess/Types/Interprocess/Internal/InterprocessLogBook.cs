@@ -21,7 +21,7 @@ namespace NetExtender.Types.Interprocess
         {
             get
             {
-                return sizeof(Int64) + Entries.Sum(entry => InterprocessLogEntry.Overhead + entry.Message.Length);
+                return sizeof(Int64) + Entries.Sum(static entry => InterprocessLogEntry.Overhead + entry.Message.Length);
             }
         }
 

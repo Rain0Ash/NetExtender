@@ -109,7 +109,7 @@ namespace NetExtender.Windows.Types
             }
 
             Int32 depth = Image.GetPixelFormatSize(bitmap.PixelFormat);
-            if (depth != BitUtilities.BitInByte * BytesPerPixel)
+            if (depth != BitUtilities.BitsInByte * BytesPerPixel)
             {
                 throw new ArgumentException($@"Bitmap must have a 32bpp depth instead of '{depth}'.", nameof(bitmap));
             }

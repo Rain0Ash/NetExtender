@@ -8,7 +8,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Utilities.Threading
@@ -800,7 +800,6 @@ namespace NetExtender.Utilities.Threading
                 }
                 catch (Exception)
                 {
-                    //ignored
                 }
             }
 

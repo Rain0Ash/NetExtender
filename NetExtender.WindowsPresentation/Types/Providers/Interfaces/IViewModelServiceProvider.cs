@@ -3,13 +3,15 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using Microsoft.Extensions.DependencyInjection;
 using NetExtender.DependencyInjection.Interfaces;
 
 namespace NetExtender.WindowsPresentation.Types.Interfaces
 {
-    public interface IViewModelServiceProvider : IServiceProvider
+    public interface IViewModelServiceProvider : IServiceProvider, ISupportRequiredService
     {
         public new Object? GetService(Type service);
+        public new Object? GetRequiredService(Type service);
         public T? Get<T>() where T : class, IDependencyViewModel;
         public Boolean Get<T>([MaybeNullWhen(false)] out T result) where T : class, IDependencyViewModel;
         public T Get<T>(Func<T> alternate) where T : class, IDependencyViewModel;

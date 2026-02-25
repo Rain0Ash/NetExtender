@@ -703,30 +703,25 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T GetRandom<T>(this ImmutableArray<T> source)
         {
-            return source.Length > 0 ? source[RandomUtilities.NextNonNegative(source.Length - 1)] : throw new InvalidOperationException();
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T GetRandomOrDefault<T>(this ImmutableArray<T> source, T alternate)
-        {
-            return source.Length > 0 ? source[RandomUtilities.NextNonNegative(source.Length - 1)] : alternate;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T GetRandomOrDefault<T>(this ImmutableArray<T> source, Func<T> alternate)
-        {
-            if (alternate is null)
-            {
-                throw new ArgumentNullException(nameof(alternate));
-            }
-
-            return source.Length > 0 ? source[RandomUtilities.NextNonNegative(source.Length - 1)] : alternate();
+            return ListBaseUtilities.GetRandom(source);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T? GetRandomOrDefault<T>(this ImmutableArray<T> source)
         {
-            return source.Length > 0 ? source[RandomUtilities.NextNonNegative(source.Length - 1)] : default;
+            return ListBaseUtilities.GetRandomOrDefault(source);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T GetRandomOrDefault<T>(this ImmutableArray<T> source, T alternate)
+        {
+            return ListBaseUtilities.GetRandomOrDefault(source, alternate);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T GetRandomOrDefault<T>(this ImmutableArray<T> source, Func<T> alternate)
+        {
+            return ListBaseUtilities.GetRandomOrDefault(source, alternate);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

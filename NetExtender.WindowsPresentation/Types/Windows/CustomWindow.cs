@@ -4,7 +4,7 @@
 using System;
 using System.Windows;
 using System.Windows.Input;
-using NetExtender.Types.Exceptions.Handlers;
+using NetExtender.Exceptions.Handlers;
 using NetExtender.WindowsPresentation.Types.Exceptions;
 using NetExtender.WindowsPresentation.Utilities.Types;
 

@@ -4,7 +4,8 @@
 using System;
 using System.Runtime.Serialization;
 using NetExtender.Patch;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
+using NetExtender.Harmony.Types;
 using NetExtender.Types.Reflection.Interfaces;
 using NetExtender.Utilities.Core;
 using NetExtender.Utilities.Types;
@@ -425,10 +426,15 @@ namespace NetExtender.Types.Reflection
                     }
                     else if (State is default(ReflectionPatchState))
                     {
-                        State = IsAutoInit ? Make() : ReflectionPatchState.NotRequired;
+                        State = Category is not ReflectionPatchCategory.None && IsAutoInit ? Make() : ReflectionPatchState.NotRequired;
                     }
 
                     ReflectionPatchUtilities.Set(this);
+                }
+                catch (NoHarmonyException exception)
+                {
+                    State = ReflectionPatchState.NoHarmony;
+                    ReflectionPatchUtilities.Set(this, exception);
                 }
                 catch (Exception exception)
                 {

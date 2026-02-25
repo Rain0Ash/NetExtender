@@ -4,7 +4,7 @@
 using System;
 using System.Runtime.Serialization;
 
-namespace NetExtender.Types.Exceptions
+namespace NetExtender.Exceptions
 {
     [Serializable]
     public class ShutdownException : Exception

@@ -471,7 +471,7 @@ namespace NetExtender.Utilities.Core
                 return Difference(value.First, value.Second);
             }
 
-            Boolean equals = first.Zip(second).Select(Check).All(difference => difference.Equality == ReflectionEqualityType.Equals);
+            Boolean equals = first.Zip(second).Select(Check).All(static difference => difference.Equality == ReflectionEqualityType.Equals);
             return new ReflectionDifferenceItem<ConstructorInfo>(source, other, equals ? ReflectionEqualityType.Equals : ReflectionEqualityType.SignatureNotEquals);
         }
 

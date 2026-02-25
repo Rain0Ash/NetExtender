@@ -47,7 +47,7 @@ namespace NetExtender.Types.Banking.Cards
 
             foreach (Char character in value)
             {
-                if (character >= '0' && character <= '9')
+                if (character is >= '0' and <= '9')
                 {
                     builder.Append(ToChar(character - '0'));
                     continue;

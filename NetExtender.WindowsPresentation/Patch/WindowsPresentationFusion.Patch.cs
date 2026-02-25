@@ -7,8 +7,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
-using HarmonyLib;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
+using NetExtender.Harmony.Types.Interfaces;
 using NetExtender.Types.Reflection;
 using NetExtender.Utilities.Core;
 
@@ -112,8 +112,8 @@ namespace NetExtender.Patch
                     return ReflectionPatchState.NotRequired;
                 }
 
-                Harmony harmony = new Harmony($"{nameof(NetExtender)}.{nameof(WindowsPresentation)}.{nameof(WindowsPresentationFusionPatch)}");
-                HarmonyMethod transpiler = new HarmonyMethod(Transpiler());
+                IHarmony harmony = IHarmony.Create($"{nameof(NetExtender)}.{nameof(WindowsPresentation)}.{nameof(WindowsPresentationFusionPatch)}");
+                IHarmonyMethod transpiler = IHarmonyMethod.Create(Transpiler());
 
                 Boolean any = false;
                 if (Mode is { } mode)
@@ -132,20 +132,20 @@ namespace NetExtender.Patch
                 return any ? ReflectionPatchState.Apply : ReflectionPatchState.Failed;
             }
 
-            protected virtual HarmonyUtilities.Signature.Transpiler Transpiler()
+            protected virtual HarmonySignatureUtilities.Transpiler Transpiler()
             {
-                static IEnumerable<CodeInstruction> Factory(IEnumerable<CodeInstruction> instructions)
+                static IEnumerable<IHarmonyInstruction> Factory(IEnumerable<IHarmonyInstruction> instructions)
                 {
                     String name = TypeName("ljehrxk")!;
                     const BindingFlags binding = BindingFlags.Static | BindingFlags.NonPublic;
                     foreach (FieldInfo field in Provider.GetFields(binding).Where(field => field.FieldType == typeof(Boolean) && field.Name.Contains(name)))
                     {
-                        yield return new CodeInstruction(OpCodes.Ldc_I4_1);
-                        yield return new CodeInstruction(OpCodes.Stsfld, field);
+                        yield return IHarmonyInstruction.Create(OpCodes.Ldc_I4_1);
+                        yield return IHarmonyInstruction.Create(OpCodes.Stsfld, field);
                     }
 
-                    yield return new CodeInstruction(OpCodes.Ldc_I4_0);
-                    yield return new CodeInstruction(OpCodes.Ret);
+                    yield return IHarmonyInstruction.Create(OpCodes.Ldc_I4_0);
+                    yield return IHarmonyInstruction.Create(OpCodes.Ret);
                 }
 
                 return Factory;

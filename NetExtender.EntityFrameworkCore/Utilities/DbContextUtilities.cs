@@ -17,7 +17,7 @@ using NetExtender.EntityFrameworkCore.Entities.Auditing.Interfaces;
 using NetExtender.EntityFrameworkCore.Entities.Concurrent.Interfaces;
 using NetExtender.EntityFrameworkCore.Entities.Logging;
 using NetExtender.EntityFrameworkCore.Entities.Tracking.Interfaces;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 
 namespace NetExtender.Utilities.EntityFrameworkCore
 {
@@ -315,7 +315,7 @@ namespace NetExtender.Utilities.EntityFrameworkCore
                 throw new ArgumentNullException(nameof(context));
             }
 
-            foreach (EntityEntry entity in context.ChangeTracker.Entries().Where(entity => entity.State == EntityState.Modified || entity.State == EntityState.Deleted))
+            foreach (EntityEntry entity in context.ChangeTracker.Entries().Where(static entity => entity.State == EntityState.Modified || entity.State == EntityState.Deleted))
             {
                 switch (entity.Entity)
                 {

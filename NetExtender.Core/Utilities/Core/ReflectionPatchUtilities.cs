@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using NetExtender.Harmony.Types;
 using NetExtender.Patch;
 using NetExtender.Types.Reflection.Interfaces;
 
@@ -40,6 +41,14 @@ namespace NetExtender.Utilities.Core
             }
         }
 
+        public static IEnumerable<IReflectionPatchInfo> NoHarmony
+        {
+            get
+            {
+                return Initializer.Initializer.PatchUtilities.NoHarmony.Cast<IReflectionPatchInfo>();
+            }
+        }
+
         public static Exception? Require(this IReflectionPatch? patch)
         {
             if (patch is null)
@@ -56,6 +65,7 @@ namespace NetExtender.Utilities.Core
             {
                 ReflectionPatchState.Apply => null,
                 ReflectionPatchState.NotRequired => new NotSupportedException(),
+                ReflectionPatchState.NoHarmony => new NoHarmonyException(),
                 _ => Exception(patch) ?? new NotSupportedException()
             };
         }

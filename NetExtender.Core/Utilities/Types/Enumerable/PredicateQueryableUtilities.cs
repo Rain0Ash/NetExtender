@@ -46,12 +46,7 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IQueryable<T> WhereNotNull<T>(this IQueryable<T?> source)
         {
-            if (source is null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-
-            return source.Where(item => item != null)!;
+            return QueryableBaseUtilities.WhereNotNull(source);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -146,22 +141,58 @@ namespace NetExtender.Utilities.Types
             return condition ? source.WhereNot(predicate) : source;
         }
 
-        /// <summary>
-        /// Extracts <paramref name="count"/> elements from a sequence at a particular zero-based starting index.
-        /// </summary>
-        /// <remarks>
-        /// If the starting position or count specified result in slice extending past the end of the sequence,
-        /// it will return all elements up to that point. There is no guarantee that the resulting sequence will
-        /// contain the number of elements requested - it may have anywhere from 0 to <paramref name="count"/>.
-        /// </remarks>
-        /// <typeparam name="T">The type of the elements in the source sequence.</typeparam>
-        /// <param name="source">The sequence from which to extract elements.</param>
-        /// <param name="index">The zero-based index at which to begin slicing.</param>
-        /// <param name="count">The number of items to slice out of the index.</param>
-        /// <returns>
-        /// A new sequence containing any elements sliced out from the source sequence.
-        /// </returns>
+        public static IQueryable<T> Skip<T>(this IQueryable<T> source, UInt32 count)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return count switch
+            {
+                0 => source,
+                UInt32.MaxValue => Queryable.Skip(Skip(source, UInt32.MaxValue - 1), 1),
+                <= Int32.MaxValue => source.Skip((Int32) count),
+                _ => Queryable.Skip(source, Int32.MaxValue).Skip((Int32) (count - Int32.MaxValue))
+            };
+        }
+
+        public static IQueryable<T> Take<T>(this IQueryable<T> source, UInt32 count)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return count switch
+            {
+                0 => Queryable.Take(source, 0),
+                <= Int32.MaxValue => source.Take((Int32) count),
+                _ => throw new NotSupportedException($"Standard IQueryable providers do not support Take with a count larger than int.MaxValue ({Int32.MaxValue}). Requested: {count}.")
+            };
+        }
+
         public static IQueryable<T> Slice<T>(this IQueryable<T> source, Int32 index, Int32 count)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (index > 0)
+            {
+                source = source.Skip(index);
+            }
+
+            if (count > 0)
+            {
+                source = source.Take(count);
+            }
+
+            return source;
+        }
+
+        public static IQueryable<T> Slice<T>(this IQueryable<T> source, UInt32 index, UInt32 count)
         {
             if (source is null)
             {
@@ -183,6 +214,12 @@ namespace NetExtender.Utilities.Types
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IQueryable<T> Index<T>(this IQueryable<T> source, Int32 size)
+        {
+            return Index(source, 0, size);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IQueryable<T> Index<T>(this IQueryable<T> source, UInt32 size)
         {
             return Index(source, 0, size);
         }
@@ -218,7 +255,34 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IQueryable<T> Index<T>(this IQueryable<T> source, UInt32 index, UInt32 size)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (index > 0 && size > 0)
+            {
+                source = source.Skip(index * size);
+            }
+
+            if (size > 0)
+            {
+                source = source.Take(size);
+            }
+
+            return source;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IQueryable<T> Page<T>(this IQueryable<T> source, Int32 size)
+        {
+            return Page(source, 1, size);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IQueryable<T> Page<T>(this IQueryable<T> source, UInt32 size)
         {
             return Page(source, 1, size);
         }
@@ -234,6 +298,11 @@ namespace NetExtender.Utilities.Types
         /// A new sequence containing elements are at the specified <paramref name="page"/> from the source sequence.
         /// </returns>
         public static IQueryable<T> Page<T>(this IQueryable<T> source, Int32 page, Int32 size)
+        {
+            return Index(source, page - 1, size);
+        }
+
+        public static IQueryable<T> Page<T>(this IQueryable<T> source, UInt32 page, UInt32 size)
         {
             return Index(source, page - 1, size);
         }

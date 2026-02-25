@@ -4,72 +4,13 @@
 using System;
 using System.Net;
 using System.Runtime.Serialization;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 
 namespace NetExtender.AspNetCore.Identity
 {
     [Serializable]
-    public class IdentityUnknownException : IdentityUnknownException<String?>
+    public class IdentityUnknownException : IdentityException
     {
-        public new static String? Message { get; set; } = "Identity unknown exception.";
-        public new static String? Code { get; set; } = $"{nameof(Identity)}.Unknown";
-
-        public IdentityUnknownException()
-            : base(Code)
-        {
-        }
-
-        public IdentityUnknownException(String? message)
-            : base(message, Code)
-        {
-        }
-
-        public IdentityUnknownException(String? message, Exception? exception)
-            : base(message, Code, exception)
-        {
-        }
-
-        public IdentityUnknownException(String? message, BusinessException? exception)
-            : base(message, Code, exception)
-        {
-        }
-
-        public IdentityUnknownException(String? message, params BusinessException?[]? reason)
-            : base(message, Code, reason)
-        {
-        }
-
-        public IdentityUnknownException(String? message, Exception? exception, params BusinessException?[]? reason)
-            : base(message, Code, exception, reason)
-        {
-        }
-
-        public IdentityUnknownException(String? message, BusinessException? exception, params BusinessException?[]? reason)
-            : base(message, Code, exception, reason)
-        {
-        }
-
-#if NET8_0_OR_GREATER
-        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
-        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-#endif
-        protected IdentityUnknownException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
-        {
-        }
-    }
-
-    [Serializable]
-    public class IdentityUnknownException<T> : IdentityException<T>
-    {
-        public sealed override IdentityException.Known Known
-        {
-            get
-            {
-                return IdentityException.Known.Unknown;
-            }
-        }
-
         private new static HttpStatusCode Status
         {
             get
@@ -78,33 +19,56 @@ namespace NetExtender.AspNetCore.Identity
             }
         }
 
-        public IdentityUnknownException(T code)
-            : base(IdentityUnknownException.Message, IdentityUnknownException.Status, code)
+        public new static String? Message { get; set; } = "Identity unknown exception.";
+        public new static String? Name { get; set; } = $"{nameof(AspNetCore.Identity)}.Unknown";
+
+        public sealed override Id Known
+        {
+            get
+            {
+                return Id.Unknown;
+            }
+        }
+
+        public override String? Identity
+        {
+            get
+            {
+                return base.Name ?? Name;
+            }
+            init
+            {
+                base.Name = value;
+            }
+        }
+
+        public IdentityUnknownException()
+            : base(Message, Status)
         {
         }
 
-        public IdentityUnknownException(String? message, T code)
-            : base(message ?? IdentityUnknownException.Message, IdentityUnknownException.Status, code)
+        public IdentityUnknownException(String? message)
+            : base(message ?? Message, Status)
         {
         }
 
-        public IdentityUnknownException(String? message, T code, Exception? exception)
-            : base(message ?? IdentityUnknownException.Message, IdentityUnknownException.Status, code, exception)
+        public IdentityUnknownException(String? message, Exception? exception)
+            : base(message ?? Message, Status, exception)
         {
         }
 
-        public IdentityUnknownException(String? message, T code, params BusinessException?[]? reason)
-            : base(message ?? IdentityUnknownException.Message, IdentityUnknownException.Status, code, reason)
+        public IdentityUnknownException(String? message, params BusinessException?[]? reason)
+            : base(message ?? Message, Status, reason)
         {
         }
 
-        public IdentityUnknownException(String? message, T code, Exception? exception, params BusinessException?[]? reason)
-            : base(message ?? IdentityUnknownException.Message, IdentityUnknownException.Status, code, exception, reason)
+        public IdentityUnknownException(String? message, Exception? exception, params BusinessException?[]? reason)
+            : base(message ?? Message, Status, exception, reason)
         {
         }
 
-        public IdentityUnknownException(String? message, T code, BusinessException? exception, params BusinessException?[]? reason)
-            : base(message ?? IdentityUnknownException.Message, IdentityUnknownException.Status, code, exception, reason)
+        public IdentityUnknownException(String? message, BusinessException? exception, params BusinessException?[]? reason)
+            : base(message ?? Message, Status, exception, reason)
         {
         }
 

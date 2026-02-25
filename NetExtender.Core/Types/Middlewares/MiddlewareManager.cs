@@ -9,7 +9,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 using NetExtender.Types.Middlewares.Exceptions;
 using NetExtender.Types.Middlewares.Interfaces;
 using NetExtender.Utilities.Core;
@@ -26,7 +26,7 @@ namespace NetExtender.Types.Middlewares
     public class MiddlewareManager : IMiddlewareManager
     {
         private static Object Sender { get; } = new Object();
-        protected static ConcurrentDictionary<Type, Func<IMiddlewareInfo>?> Activator { get; } = new ConcurrentDictionary<Type, Func<IMiddlewareInfo>?>(); 
+        protected static ConcurrentDictionary<Type, Func<IMiddlewareInfo>?> Activator { get; } = new ConcurrentDictionary<Type, Func<IMiddlewareInfo>?>();
         protected ConcurrentDictionary<MiddlewareExecutionContext, List<IMiddlewareInfo>> Internal { get; } = new ConcurrentDictionary<MiddlewareExecutionContext, List<IMiddlewareInfo>>();
 
         public Int32 Count
@@ -89,7 +89,7 @@ namespace NetExtender.Types.Middlewares
                 return @interface == typeof(IMiddleware<>) || @interface == typeof(IAsyncMiddleware<>);
             }
 
-            return type.GetInterfaces().Any(Predicate) ? ExpressionUtilities.CreateNewExpression<IMiddlewareInfo>(type).Compile() : null;
+            return type.GetSafeInterfaces().Any(Predicate) ? ExpressionUtilities.CreateNewExpression<IMiddlewareInfo>(type).Compile() : null;
         }
 
         protected virtual List<IMiddlewareInfo>? Context(MiddlewareExecutionContext context, Boolean require = true)

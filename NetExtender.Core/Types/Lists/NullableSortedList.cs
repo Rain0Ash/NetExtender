@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using NetExtender.Types.Collections;
 using NetExtender.Types.Monads;
 using NetExtender.Utilities.Types;
 

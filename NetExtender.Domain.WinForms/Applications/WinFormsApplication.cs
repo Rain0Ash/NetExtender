@@ -36,7 +36,7 @@ namespace NetExtender.Domains.WinForms.Applications
         public override Task<IApplication> RunAsync(Form? form, CancellationToken token)
         {
             RegisterShutdownToken(token);
-            System.Windows.Forms.Application.Run(form);
+            System.Windows.Forms.Application.Run(form!);
             return Task.FromResult<IApplication>(this);
         }
     }

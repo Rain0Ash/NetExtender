@@ -3,17 +3,19 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Runtime.CompilerServices;
+using System.Runtime.Serialization;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NetExtender.Interfaces;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 using NetExtender.Types.Monads.Interfaces;
 using NetExtender.Types.Monads;
-using NetExtender.Utilities.Types;
 using Newtonsoft.Json;
 using Unit = System.Reactive.Unit;
 
@@ -41,6 +43,7 @@ namespace NetExtender.AspNetCore.Types.Monads
         }
 #endif
 
+        [StackTraceHidden]
         public static implicit operator AspResult(BusinessException? value)
         {
             return new AspResult(value);
@@ -66,31 +69,37 @@ namespace NetExtender.AspNetCore.Types.Monads
             return value.Result;
         }
 
+        [StackTraceHidden]
         public static implicit operator AspResult(HttpStatusCode value)
         {
             return new AspResult(value);
         }
 
+        [StackTraceHidden]
         public static implicit operator AspResult((HttpStatusCode Status, String? Message) value)
         {
             return new AspResult(value);
         }
 
+        [StackTraceHidden]
         public static implicit operator AspResult((HttpStatusCode Status, String? Message, String? Description) value)
         {
             return new AspResult(value);
         }
 
+        [StackTraceHidden]
         public static implicit operator AspResult((HttpStatusCode Status, Exception? Exception) value)
         {
             return new AspResult(value);
         }
 
+        [StackTraceHidden]
         public static implicit operator AspResult((HttpStatusCode Status, String? Message, Exception? Exception) value)
         {
             return new AspResult(value);
         }
 
+        [StackTraceHidden]
         public static implicit operator AspResult((HttpStatusCode Status, String? Message, String? Description, Exception? Exception) value)
         {
             return new AspResult(value);
@@ -99,10 +108,12 @@ namespace NetExtender.AspNetCore.Types.Monads
         public static AspResult Default { get; } = new AspResult(HttpStatusCode.OK);
         public static AspResult None { get; } = new NoneAspResult();
 
+        [JsonIgnore, IgnoreDataMember, XmlIgnore, SoapIgnore]
         [System.Text.Json.Serialization.JsonIgnore]
-        [JsonIgnore]
         public BusinessResult Result { get; }
 
+        [JsonIgnore, IgnoreDataMember, XmlIgnore, SoapIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         Object NetExtender.Types.Monads.Interfaces.IResult.Value
         {
             get
@@ -113,6 +124,8 @@ namespace NetExtender.AspNetCore.Types.Monads
 
         public Int32? StatusCode { get; init; }
 
+        [JsonIgnore, IgnoreDataMember, XmlIgnore, SoapIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         HttpStatusCode IBusinessResult.Status
         {
             get
@@ -121,6 +134,8 @@ namespace NetExtender.AspNetCore.Types.Monads
             }
         }
 
+        [JsonIgnore, IgnoreDataMember, XmlIgnore, SoapIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public BusinessException.BusinessInfo Info
         {
             get
@@ -129,6 +144,8 @@ namespace NetExtender.AspNetCore.Types.Monads
             }
         }
 
+        [JsonIgnore, IgnoreDataMember, XmlIgnore, SoapIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public BusinessException.BusinessInfo Business
         {
             get
@@ -145,6 +162,8 @@ namespace NetExtender.AspNetCore.Types.Monads
             }
         }
 
+        [JsonIgnore, IgnoreDataMember, XmlIgnore, SoapIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         Exception? NetExtender.Types.Monads.Interfaces.IResult.Exception
         {
             get
@@ -153,6 +172,8 @@ namespace NetExtender.AspNetCore.Types.Monads
             }
         }
 
+        [JsonIgnore, IgnoreDataMember, XmlIgnore, SoapIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public Boolean IsEmpty
         {
             get
@@ -170,6 +191,12 @@ namespace NetExtender.AspNetCore.Types.Monads
             Result = result;
             StatusCode = (Int32) Result.Status;
             _ = result.Value;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void Throw()
+        {
+            Result.Throw();
         }
 
         Boolean IMonad.Unwrap(out Object? value)
@@ -357,6 +384,7 @@ namespace NetExtender.AspNetCore.Types.Monads
             return new AspResult<T>(value);
         }
 
+        [StackTraceHidden]
         public static implicit operator AspResult<T>(BusinessException value)
         {
             return new AspResult<T>(value);
@@ -377,31 +405,37 @@ namespace NetExtender.AspNetCore.Types.Monads
             return value.Result;
         }
 
+        [StackTraceHidden]
         public static implicit operator AspResult<T>(HttpStatusCode value)
         {
             return new AspResult<T>(value);
         }
 
+        [StackTraceHidden]
         public static implicit operator AspResult<T>((HttpStatusCode Status, String? Message) value)
         {
             return new AspResult<T>(value);
         }
 
+        [StackTraceHidden]
         public static implicit operator AspResult<T>((HttpStatusCode Status, String? Message, String? Description) value)
         {
             return new AspResult<T>(value);
         }
 
+        [StackTraceHidden]
         public static implicit operator AspResult<T>((HttpStatusCode Status, Exception? Exception) value)
         {
             return new AspResult<T>(value);
         }
 
+        [StackTraceHidden]
         public static implicit operator AspResult<T>((HttpStatusCode Status, String? Message, Exception? Exception) value)
         {
             return new AspResult<T>(value);
         }
 
+        [StackTraceHidden]
         public static implicit operator AspResult<T>((HttpStatusCode Status, String? Message, String? Description, Exception? Exception) value)
         {
             return new AspResult<T>(value);
@@ -497,6 +531,16 @@ namespace NetExtender.AspNetCore.Types.Monads
         public override Int32 GetHashCode()
         {
             return Result.GetHashCode();
+        }
+
+        public Boolean ReferenceEquals(T? other)
+        {
+            return Result.ReferenceEquals(other);
+        }
+
+        public Boolean ReferenceEquals(IResult<T>? other)
+        {
+            return Result.ReferenceEquals(other);
         }
 
         public sealed override Boolean Equals(Object? other)
@@ -646,7 +690,7 @@ namespace NetExtender.AspNetCore.Types.Monads
         }
 
         [System.Text.Json.Serialization.JsonIgnore]
-        [JsonIgnore]
+        [JsonIgnore, IgnoreDataMember, XmlIgnore, SoapIgnore]
         public T Result { get; }
 
         HttpStatusCode IBusinessResult.Status
@@ -703,6 +747,12 @@ namespace NetExtender.AspNetCore.Types.Monads
             Result = result;
             StatusCode = (Int32) Result.Status;
             Value = Result.Value;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void Throw()
+        {
+            Result.Throw();
         }
 
         Boolean IMonad.Unwrap(out Object? value)

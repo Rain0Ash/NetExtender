@@ -1,11 +1,11 @@
 using System;
 using System.Net.Http;
-using NetExtender.CQRS.Interfaces;
+using NetExtender.Types.Entities.Interfaces;
 using NetExtender.Utilities.Network;
 
 namespace NetExtender.Types.Network.API.Interfaces
 {
-    public interface IHttpApiEndpoint<in TRequest, TResponse> : IHttpApiEndpoint where TRequest : IEntityCQRS
+    public interface IHttpApiEndpoint<in TRequest, TResponse> : IHttpApiEndpoint where TRequest : IEntity
     {
     }
 

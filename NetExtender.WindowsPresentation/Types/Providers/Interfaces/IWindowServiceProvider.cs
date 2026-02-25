@@ -4,12 +4,14 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace NetExtender.WindowsPresentation.Types.Interfaces
 {
-    public interface IWindowServiceProvider : IServiceProvider
+    public interface IWindowServiceProvider : IServiceProvider, ISupportRequiredService
     {
         public new Object? GetService(Type service);
+        public new Object? GetRequiredService(Type service);
         public T? Get<T>() where T : Window;
         public Boolean Get<T>([MaybeNullWhen(false)] out T result) where T : Window;
         public T Get<T>(Func<T> alternate) where T : Window;

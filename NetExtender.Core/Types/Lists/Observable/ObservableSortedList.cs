@@ -8,7 +8,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using NetExtender.Types.Collections;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 using NetExtender.Types.Lists.Interfaces;
 using NetExtender.Utilities.Core;
 using NetExtender.Utilities.Types;
@@ -592,7 +592,7 @@ namespace NetExtender.Types.Lists
 
             try
             {
-                constructor = ReflectionUtilities.New<TCollection, IEnumerable<T>>();
+                constructor = TypeUtilities.New<TCollection, IEnumerable<T>>();
             }
             catch (MissingMemberException)
             {
@@ -613,7 +613,7 @@ namespace NetExtender.Types.Lists
 
             try
             {
-                constructor = ReflectionUtilities.New<TCollection, List<T>>();
+                constructor = TypeUtilities.New<TCollection, List<T>>();
             }
             catch (MissingMemberException)
             {

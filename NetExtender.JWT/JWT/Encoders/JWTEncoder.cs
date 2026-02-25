@@ -7,7 +7,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using NetExtender.JWT.Algorithms.Interfaces;
 using NetExtender.JWT.Interfaces;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 using NetExtender.Utilities.JWT;
 using NetExtender.Utilities.Types;
 

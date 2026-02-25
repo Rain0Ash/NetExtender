@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using NetExtender.AspNetCore.Types.Wrappers;
 
+#pragma warning disable ASPDEPR008
+
 namespace NetExtender.Utilities.AspNetCore.Types
 {
     public static class WebHostUtilities

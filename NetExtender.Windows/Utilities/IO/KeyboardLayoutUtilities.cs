@@ -77,7 +77,7 @@ namespace NetExtender.Windows.Utilities.IO
         {
             get
             {
-                return ThreadUtilities.STA(() => KeyboardLayout.Create(GetKeyboardLayout(0)));
+                return ThreadUtilities.STA(static () => KeyboardLayout.Create(GetKeyboardLayout(0)));
             }
             set
             {

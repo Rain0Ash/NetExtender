@@ -1,0 +1,45 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFrameworks>net6.0;net7.0;net8.0;net9.0;net10.0</TargetFrameworks>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>disable</ImplicitUsings>
+        <OutputType>Library</OutputType>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <Authors>Rain0Ash</Authors>
+        <PackageProjectUrl>https://github.com/Rain0Ash/NetExtender</PackageProjectUrl>
+        <Version>0.8.9</Version>
+        <SignAssembly>true</SignAssembly>
+        <AssemblyOriginatorKeyFile>../SignTool/Private/NetExtender.snk</AssemblyOriginatorKeyFile>
+        <Title>NetExtender.CQRS.DependencyInjection</Title>
+        <Description>CQRS Dependency Injection module of NetExtender Framework</Description>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <RepositoryUrl>https://github.com/Rain0Ash/NetExtender</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <PackageTags>Extension</PackageTags>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <IsPackable>true</IsPackable>
+        <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\NetExtender.CQRS\NetExtender.CQRS.csproj"/>
+        <ProjectReference Include="..\NetExtender.DependencyInjection\NetExtender.DependencyInjection.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Dispatchers\CQRS.Command.cs">
+        <DependentUpon>CQRS.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Dispatchers\CQRS.Event.cs">
+        <DependentUpon>CQRS.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Dispatchers\CQRS.Query.cs">
+        <DependentUpon>CQRS.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Dispatchers\CQRS.Request.cs">
+        <DependentUpon>CQRS.cs</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
+</Project>

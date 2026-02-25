@@ -5,7 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using NetExtender.Interfaces;
 using NetExtender.Types.Comparers;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 using NetExtender.Types.Mathematics.Interfaces;
 using NetExtender.Types.Monads;
 using NetExtender.Types.Numerics;
@@ -718,7 +718,7 @@ namespace NetExtender.Types.Mathematics
             MathExpression<Decimal>.Register(MathUnaryOperator.Promille, static @operator => Wrap<Decimal>(@operator, static value => value / 1000));
             MathExpression<Decimal>.Register(MathUnaryOperator.UnaryNegation, static @operator => Wrap<Decimal>(@operator, static value => -value));
             MathExpression<Decimal>.Register(MathUnaryOperator.OnesComplement, static @operator => Wrap<Decimal>(@operator, static value => (Decimal) ~(Int64) value));
-            MathExpression<Decimal>.Register(MathUnaryOperator.LogicalNot, static @operator => Wrap<Decimal>(@operator, ConvertUtilities.ToNotBoolean<Decimal>));
+            MathExpression<Decimal>.Register(MathUnaryOperator.LogicalNot, static @operator => Wrap<Decimal>(@operator, BooleanUtilities.ToNotBoolean<Decimal>));
 
             MathExpression<Decimal>.Register(MathBinaryOperator.Addition, static @operator => Wrap<Decimal>(@operator, static (first, second) => first + second));
             MathExpression<Decimal>.Register(MathBinaryOperator.Subtraction, static @operator => Wrap<Decimal>(@operator, static (first, second) => first - second));

@@ -11,7 +11,7 @@ using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Text.RegularExpressions;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 using NetExtender.Utilities.IO;
 using NetExtender.Utilities.Numerics;
 using NetExtender.Utilities.Types;
@@ -63,7 +63,7 @@ namespace NetExtender.Utilities.Windows.IO
                     switch (remove)
                     {
                         case PathAction.Standard:
-                            if (GetFiles(path).All(file => file.Equals("desktop.ini", StringComparison.OrdinalIgnoreCase)) && !GetDirectories(path).Any())
+                            if (GetFiles(path).All(static file => file.Equals("desktop.ini", StringComparison.OrdinalIgnoreCase)) && !GetDirectories(path).Any())
                             {
                                 Directory.Delete(path, true);
                             }
@@ -292,7 +292,7 @@ namespace NetExtender.Utilities.Windows.IO
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<KeyValuePair<String, FileData>> GetFilesData(String path, Boolean recursive)
         {
-            return GetFilesWindowsData(path, recursive).Select(pair => new KeyValuePair<String, FileData>(pair.Key, pair.Value));
+            return GetFilesWindowsData(path, recursive).Select(static pair => new KeyValuePair<String, FileData>(pair.Key, pair.Value));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -305,7 +305,7 @@ namespace NetExtender.Utilities.Windows.IO
         public static IEnumerable<KeyValuePair<String, UInt64>> GetFilesSize(String path, Boolean recursive)
         {
             return GetFilesWindowsData(path, recursive)
-                .Select(pair => new KeyValuePair<String, UInt64>(pair.Key, BitUtilities.ToUInt64(pair.Value.nFileSizeHigh, pair.Value.nFileSizeLow)));
+                .Select(static pair => new KeyValuePair<String, UInt64>(pair.Key, BitUtilities.ToUInt64(pair.Value.nFileSizeHigh, pair.Value.nFileSizeLow)));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -317,7 +317,7 @@ namespace NetExtender.Utilities.Windows.IO
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<FileInfo> GetFilesInfo(String path, Boolean recursive)
         {
-            return GetFiles(path, recursive).Select(entry => new FileInfo(entry));
+            return GetFiles(path, recursive).Select(static entry => new FileInfo(entry));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

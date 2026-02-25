@@ -37,7 +37,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return source.OrderBy(item => item, comparer);
+            return source.OrderBy(static item => item, comparer);
         }
 
         public static IOrderedEnumerable<T> OrderBy<T>(this IEnumerable<T> source, Comparison<T> comparison)
@@ -52,7 +52,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(comparison));
             }
 
-            return source.OrderBy(item => item, comparison.ToComparer());
+            return source.OrderBy(static item => item, comparison.ToComparer());
         }
 
         public static IOrderedEnumerable<T> OrderBy<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, Comparison<TKey> comparison)
@@ -92,7 +92,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return source.OrderByDescending(item => item, comparer);
+            return source.OrderByDescending(static item => item, comparer);
         }
 
         public static IOrderedEnumerable<T> OrderByDescending<T>(this IEnumerable<T> source, Comparison<T> comparison)
@@ -107,7 +107,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(comparison));
             }
 
-            return source.OrderByDescending(item => item, comparison.ToComparer());
+            return source.OrderByDescending(static item => item, comparison.ToComparer());
         }
 
         public static IOrderedEnumerable<T> OrderByDescending<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, Comparison<TKey> comparison)
@@ -137,7 +137,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return source.ThenBy(item => item, comparer);
+            return source.ThenBy(static item => item, comparer);
         }
 
         public static IOrderedEnumerable<T> ThenBy<T>(this IOrderedEnumerable<T> source, Comparison<T> comparison)
@@ -152,7 +152,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(comparison));
             }
 
-            return source.ThenBy(item => item, comparison.ToComparer());
+            return source.ThenBy(static item => item, comparison.ToComparer());
         }
 
         public static IOrderedEnumerable<T> ThenByDescending<T>(this IOrderedEnumerable<T> source, IComparer<T>? comparer)
@@ -162,7 +162,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return source.ThenByDescending(item => item, comparer);
+            return source.ThenByDescending(static item => item, comparer);
         }
 
         public static IOrderedEnumerable<T> ThenByDescending<T>(this IOrderedEnumerable<T> source, Comparison<T> comparison)
@@ -177,7 +177,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(comparison));
             }
 
-            return source.ThenByDescending(item => item, comparison.ToComparer());
+            return source.ThenByDescending(static item => item, comparison.ToComparer());
         }
 
         public static IOrderedEnumerable<T> Sort<T>(this IEnumerable<T> source)

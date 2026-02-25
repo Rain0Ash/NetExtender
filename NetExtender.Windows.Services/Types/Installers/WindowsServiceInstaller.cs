@@ -5,7 +5,7 @@ using System;
 using System.Collections.Immutable;
 using System.IO;
 using System.ServiceProcess;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 using NetExtender.Windows.Services.Exceptions;
 using NetExtender.Windows.Services.Utilities;
 

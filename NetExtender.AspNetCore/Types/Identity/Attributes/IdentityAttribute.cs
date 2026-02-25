@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.CompilerServices;
 using NetExtender.Types.Enums.Interfaces;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.AspNetCore.Identity.Attributes

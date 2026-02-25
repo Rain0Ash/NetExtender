@@ -83,7 +83,7 @@ namespace NetExtender.WindowsPresentation.Types.Converters
 
         protected override Boolean IsNull(Object? value)
         {
-            return value is null || value is IEnumerable enumerable && enumerable.CountIfMaterializedByReflection() is 0;
+            return value is null || value is IEnumerable enumerable && enumerable.CountIfMaterializedByReflection() <= 0;
         }
 
         private sealed class CollapsedNotNullOrEmptyToVisibilityConverter : NotNullOrEmptyToVisibilityConverter
@@ -129,7 +129,7 @@ namespace NetExtender.WindowsPresentation.Types.Converters
 
         protected override Boolean IsNull(Object? value)
         {
-            return value is null || Equals(value, ReflectionUtilities.Default(value.GetType())) || value is IEnumerable enumerable && enumerable.CountIfMaterializedByReflection() is 0;
+            return value is null || Equals(value, ReflectionUtilities.Default(value.GetType())) || value is IEnumerable enumerable && enumerable.CountIfMaterializedByReflection() <= 0;
         }
 
         private sealed class CollapsedNotNullOrDefaultToVisibilityConverter : NotNullOrDefaultToVisibilityConverter

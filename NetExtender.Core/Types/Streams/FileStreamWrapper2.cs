@@ -20,10 +20,10 @@ namespace NetExtender.Types.Streams
     {
         static FileStreamWrapper2()
         {
-            if (NetExtenderFileStreamPatch.Require() is { } exception)
+            /*if (NetExtenderFileStreamPatch.Require() is { } exception)
             {
                 throw exception;
-            }
+            }*/
         }
 
         protected Lazy<FileStream> Internal { get; } = null!;

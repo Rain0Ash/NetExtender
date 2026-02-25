@@ -521,7 +521,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
             Map.Cells.Clear();
         }
 
-        protected void ClearGrid(Grid? grid)
+        protected static void ClearGrid(Grid? grid)
         {
             if (grid is null)
             {

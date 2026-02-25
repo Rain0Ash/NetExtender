@@ -4,7 +4,7 @@
 using System;
 using System.ComponentModel;
 using NetExtender.Interfaces.Notify;
-using NetExtender.Utilities.Types;
+using NetExtender.Utilities.Core;
 
 namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
 {

@@ -440,7 +440,7 @@ namespace NetExtender.Utilities.Core
             }
 
             generator.InheritStack(original);
-            generator.Emit(type, inherit, members, original.Instructions());
+            generator.Emit(type, inherit, members, HarmonySignatureUtilities.NetExtender.Instructions(original));
             return method;
         }
 
@@ -499,7 +499,7 @@ namespace NetExtender.Utilities.Core
                 result.DefineParameter(i + 1, parameters[i].Attributes, parameters[i].Name);
             }
 
-            Storage.Parameters.MethodBuilder[result] = parameters;
+            CodeGeneratorStorageUtilities.Parameters.MethodBuilder[result] = parameters;
             return result;
         }
 
@@ -602,7 +602,7 @@ namespace NetExtender.Utilities.Core
             }
 
             generator.InheritStack(original);
-            generator.Emit(type, inherit, members, original.Instructions());
+            generator.Emit(type, inherit, members, HarmonySignatureUtilities.NetExtender.Instructions(original));
             return constructor;
         }
 
@@ -619,7 +619,7 @@ namespace NetExtender.Utilities.Core
             }
 
             ConstructorBuilder result = builder.DefineTypeInitializer();
-            Storage.Parameters.ConstructorBuilder[result] = constructor.GetParameters();
+            CodeGeneratorStorageUtilities.Parameters.ConstructorBuilder[result] = constructor.GetParameters();
             return result;
         }
 

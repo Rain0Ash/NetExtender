@@ -3,7 +3,7 @@
 
 using System;
 using System.Collections.Generic;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 using NetExtender.Types.Queues;
 
 namespace NetExtender.Utilities.Threading

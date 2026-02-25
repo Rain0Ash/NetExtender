@@ -36,9 +36,7 @@ namespace NetExtender.Configuration.Microsoft
                 return Array.Empty<IConfigurationSection>();
             }
 
-            return exists
-                .Where(entry => entry.Length <= 0)
-                .Select(entry => new ConfigurationSection(Config, entry.Key, entry.Sections));
+            return exists.Where(static entry => entry.Length <= 0).Select(entry => new ConfigurationSection(Config, entry.Key, entry.Sections));
         }
 
         public IChangeToken GetReloadToken()

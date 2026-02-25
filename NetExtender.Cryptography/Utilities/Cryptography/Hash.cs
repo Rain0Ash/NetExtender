@@ -4,7 +4,7 @@
 using System;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 using NetExtender.Utilities.Numerics;
 using NetExtender.Utilities.Types;
 using Md5 = System.Security.Cryptography.MD5;
@@ -52,7 +52,7 @@ namespace NetExtender.Utilities.Cryptography
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Int32 BitSize(this HashType type)
         {
-            return Size(type) * BitUtilities.BitInByte;
+            return Size(type) * BitUtilities.BitsInByte;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -538,7 +538,7 @@ namespace NetExtender.Utilities.Cryptography
 
                 UInt16 checksum = Crc16(value);
                 destination[0] = (Byte) checksum;
-                destination[1] = (Byte) (checksum >> BitUtilities.BitInByte);
+                destination[1] = (Byte) (checksum >> BitUtilities.BitsInByte);
                 written = sizeof(UInt16);
                 return true;
             }
@@ -578,7 +578,7 @@ namespace NetExtender.Utilities.Cryptography
                 for (written = 0; written < sizeof(UInt32); written++)
                 {
                     destination[written] = (Byte) checksum;
-                    checksum >>= BitUtilities.BitInByte;
+                    checksum >>= BitUtilities.BitsInByte;
                 }
 
                 return true;
@@ -619,7 +619,7 @@ namespace NetExtender.Utilities.Cryptography
                 for (written = 0; written < sizeof(UInt64); written++)
                 {
                     destination[written] = (Byte) checksum;
-                    checksum >>= BitUtilities.BitInByte;
+                    checksum >>= BitUtilities.BitsInByte;
                 }
 
                 return true;

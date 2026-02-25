@@ -50,7 +50,7 @@ namespace NetExtender.Types.Tries
 
         public IEnumerable<String> Get(ReadOnlySpan<Char> prefix)
         {
-            return Trie.Get(prefix).Select(entry => new String(entry.ToArray()));
+            return Trie.Get(prefix).Select(static entry => new String(entry.ToArray()));
         }
 
         public Boolean Contains(String item)
@@ -128,13 +128,13 @@ namespace NetExtender.Types.Tries
                 throw new ArgumentNullException(nameof(array));
             }
 
-            String[] entries = Trie.Select(item => new String(item.ToArray())).ToArray();
+            String[] entries = Trie.Select(static item => new String(item.ToArray())).ToArray();
             Array.Copy(entries, 0, array, index, Count);
         }
 
         public IEnumerator<String> GetEnumerator()
         {
-            return Trie.Select(item => new String(item.ToArray())).GetEnumerator();
+            return Trie.Select(static item => new String(item.ToArray())).GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()

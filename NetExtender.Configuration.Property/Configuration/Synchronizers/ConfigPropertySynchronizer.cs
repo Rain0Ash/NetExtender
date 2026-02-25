@@ -111,7 +111,7 @@ namespace NetExtender.Configuration.Synchronizers
             lock (SyncRoot)
             {
                 ImmutableList<IConfigPropertyInfo>? collection = Internal;
-                return collection is not null && collection.OfType<IReadableBehavior>().Aggregate(false, (current, info) => current | info.Read());
+                return collection is not null && collection.OfType<IReadableBehavior>().Aggregate(false, static (current, info) => current | info.Read());
             }
         }
 
@@ -163,7 +163,7 @@ namespace NetExtender.Configuration.Synchronizers
             lock (SyncRoot)
             {
                 ImmutableList<IConfigPropertyInfo>? collection = Internal;
-                return collection is not null && collection.OfType<ISaveableBehavior>().Aggregate(false, (current, info) => current | info.Save());
+                return collection is not null && collection.OfType<ISaveableBehavior>().Aggregate(false, static (current, info) => current | info.Save());
             }
         }
 
@@ -215,7 +215,7 @@ namespace NetExtender.Configuration.Synchronizers
             lock (SyncRoot)
             {
                 ImmutableList<IConfigPropertyInfo>? collection = Internal;
-                return collection is not null && collection.OfType<IResetableBehavior>().Aggregate(false, (current, info) => current | info.Reset());
+                return collection is not null && collection.OfType<IResetableBehavior>().Aggregate(false, static (current, info) => current | info.Reset());
             }
         }
 

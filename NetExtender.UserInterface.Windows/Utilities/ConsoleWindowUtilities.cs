@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 using NetExtender.Types.Attributes;
 using NetExtender.Types.Console.Interfaces;
 using NetExtender.Types.Events;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 using NetExtender.UserInterface;
 using NetExtender.Utilities.Core;
 using NetExtender.Utilities.IO;

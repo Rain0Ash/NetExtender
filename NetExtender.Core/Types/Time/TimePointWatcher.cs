@@ -4,7 +4,7 @@
 using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 using NetExtender.Types.Times.Interfaces;
 
 namespace NetExtender.Types.Times

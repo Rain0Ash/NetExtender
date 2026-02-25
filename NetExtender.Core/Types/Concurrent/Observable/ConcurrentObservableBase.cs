@@ -14,13 +14,14 @@ using System.Threading;
 using NetExtender.Types.Concurrent.Observable.Interfaces;
 using NetExtender.Types.Disposable;
 using NetExtender.Types.Monads;
+using NetExtender.Utilities.Core;
 using NetExtender.Utilities.Delegates;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Concurrent.Observable
 {
     [Serializable]
-    public abstract class ConcurrentObservableBase<T, TCollection, TSelf> : IConcurrentObservableBase<T>, ISerializable where TCollection : class where TSelf : ConcurrentObservableBase<T, TCollection, TSelf>
+    public abstract class ConcurrentObservableBase<T, TCollection, TView, TSelf> : IConcurrentObservableBase<T>, IReadOnlyConcurrentObservableBase<T>, ISerializable where TCollection : class where TView : class, ICollection<T>, IReadOnlyCollection<T> where TSelf : ConcurrentObservableBase<T, TCollection, TView, TSelf>
     {
         protected delegate FlowResult<TResult> Read<in TArgument, TResult>(TSelf @this, TCollection collection, TArgument argument);
 
@@ -34,7 +35,24 @@ namespace NetExtender.Types.Concurrent.Observable
         protected delegate NotifyCollectionChangedEventArgs? Args<in TArgument, in TResult>(TSelf @this, TCollection @new, TCollection old, TArgument argument, TResult value);
 
         protected abstract TCollection Collection { get; set; }
-        public abstract ICollection<T> View { get; }
+        public abstract TView View { get; }
+
+        ICollection<T> IConcurrentObservableBase<T>.View
+        {
+            get
+            {
+                return View;
+            }
+        }
+
+        IReadOnlyCollection<T> IReadOnlyConcurrentObservableBase<T>.View
+        {
+            get
+            {
+                return View;
+            }
+        }
+
         public abstract TCollection Immutable { get; }
         public abstract Int32 Count { get; }
         public abstract Boolean IsEmpty { get; }
@@ -79,9 +97,9 @@ namespace NetExtender.Types.Concurrent.Observable
             }
         }
 
-        private static readonly ThrottleAction<ConcurrentObservableBase<T, TCollection, TSelf>> view = new ThrottleAction<ConcurrentObservableBase<T, TCollection, TSelf>>(OnViewChanged, TimeSpan.FromMilliseconds(20));
-        private readonly ThrottleAction<ConcurrentObservableBase<T, TCollection, TSelf>> _view = view;
-        private ThrottleAction<ConcurrentObservableBase<T, TCollection, TSelf>> ViewChanged
+        private static readonly ThrottleAction<ConcurrentObservableBase<T, TCollection, TView, TSelf>> view = new ThrottleAction<ConcurrentObservableBase<T, TCollection, TView, TSelf>>(OnViewChanged, TimeSpan.FromMilliseconds(20));
+        private readonly ThrottleAction<ConcurrentObservableBase<T, TCollection, TView, TSelf>> _view = view;
+        private ThrottleAction<ConcurrentObservableBase<T, TCollection, TView, TSelf>> ViewChanged
         {
             get
             {
@@ -97,7 +115,7 @@ namespace NetExtender.Types.Concurrent.Observable
         public event PropertyChangedEventHandler? PropertyChanged;
 
         protected ReaderWriterLockSlim? Lock { get; }
-        public EventHandler<Exception>? ExceptionHandler { get; set; } = (_, _) => { };
+        public EventHandler<Exception>? ExceptionHandler { get; set; } = static (_, _) => { };
 
         protected ConcurrentObservableBase(Boolean @lock)
         {
@@ -133,7 +151,7 @@ namespace NetExtender.Types.Concurrent.Observable
             }
         }
 
-        private static void OnViewChanged(ConcurrentObservableBase<T, TCollection, TSelf> collection)
+        private static void OnViewChanged(ConcurrentObservableBase<T, TCollection, TView, TSelf> collection)
         {
             collection.RaisePropertyChanged(nameof(View), nameof(Count));
         }

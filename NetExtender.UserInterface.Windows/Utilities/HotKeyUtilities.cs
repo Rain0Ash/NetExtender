@@ -2,13 +2,10 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
-using System.Collections;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Runtime.InteropServices;
-using NetExtender.Types.Exceptions;
 using NetExtender.Types.HotKeys;
 using NetExtender.UserInterface.Interfaces;
 
@@ -77,7 +74,7 @@ namespace NetExtender.Utilities.UserInterface
                 return false;
             }
 
-            ConcurrentDictionary<Int32, WindowsHotKeyAction<Int32>> hotkeys = HotKeys.GetOrAdd(handle, _ => new ConcurrentDictionary<Int32, WindowsHotKeyAction<Int32>>());
+            ConcurrentDictionary<Int32, WindowsHotKeyAction<Int32>> hotkeys = HotKeys.GetOrAdd(handle, static _ => new ConcurrentDictionary<Int32, WindowsHotKeyAction<Int32>>());
 
             if (hotkeys.TryAdd(id, new WindowsHotKeyAction<Int32>(id, key, modifiers)))
             {
@@ -96,7 +93,7 @@ namespace NetExtender.Utilities.UserInterface
                 return false;
             }
 
-            id = Counter.AddOrUpdate(handle, 0, (_, i) => ++i);
+            id = Counter.AddOrUpdate(handle, 0, static (_, i) => ++i);
             return RegisterHotKey(handle, new WindowsHotKeyAction<Int32>(id, hotkey));
         }
 

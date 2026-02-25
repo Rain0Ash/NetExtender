@@ -4,7 +4,7 @@
 using System;
 using System.Net.Http.Headers;
 using System.Runtime.CompilerServices;
-using NetExtender.Utilities.Types;
+using NetExtender.Utilities.Core;
 
 namespace NetExtender.Types.Network.Formatters
 {

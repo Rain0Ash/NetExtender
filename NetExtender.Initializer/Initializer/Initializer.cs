@@ -8,7 +8,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 
 namespace NetExtender.Initializer
 {
@@ -28,7 +28,7 @@ namespace NetExtender.Initializer
         {
             get
             {
-                return Stop.ContinueWith(_ => -1);
+                return Stop.ContinueWith(static _ => -1);
             }
         }
 
@@ -36,7 +36,7 @@ namespace NetExtender.Initializer
         {
             get
             {
-                return Stop.ContinueWith(_ => 0);
+                return Stop.ContinueWith(static _ => 0);
             }
         }
 
@@ -44,7 +44,7 @@ namespace NetExtender.Initializer
         {
             get
             {
-                return Stop.ContinueWith(_ => 1);
+                return Stop.ContinueWith(static _ => 1);
             }
         }
 
@@ -52,7 +52,7 @@ namespace NetExtender.Initializer
         {
             get
             {
-                return Stop.ContinueWith(_ => 2);
+                return Stop.ContinueWith(static _ => 2);
             }
         }
 
@@ -60,7 +60,7 @@ namespace NetExtender.Initializer
         {
             get
             {
-                return Stop.ContinueWith(_ => 3);
+                return Stop.ContinueWith(static _ => 3);
             }
         }
 
@@ -68,7 +68,7 @@ namespace NetExtender.Initializer
         {
             get
             {
-                return Stop.ContinueWith(_ => 4);
+                return Stop.ContinueWith(static _ => 4);
             }
         }
 
@@ -76,7 +76,7 @@ namespace NetExtender.Initializer
         {
             get
             {
-                return Stop.ContinueWith(_ => 5);
+                return Stop.ContinueWith(static _ => 5);
             }
         }
 
@@ -84,7 +84,7 @@ namespace NetExtender.Initializer
         {
             get
             {
-                return Stop.ContinueWith(_ => 6);
+                return Stop.ContinueWith(static _ => 6);
             }
         }
 
@@ -92,7 +92,7 @@ namespace NetExtender.Initializer
         {
             get
             {
-                return Stop.ContinueWith(_ => 7);
+                return Stop.ContinueWith(static _ => 7);
             }
         }
 
@@ -100,7 +100,7 @@ namespace NetExtender.Initializer
         {
             get
             {
-                return Stop.ContinueWith(_ => 8);
+                return Stop.ContinueWith(static _ => 8);
             }
         }
 
@@ -108,7 +108,7 @@ namespace NetExtender.Initializer
         {
             get
             {
-                return Stop.ContinueWith(_ => 9);
+                return Stop.ContinueWith(static _ => 9);
             }
         }
 
@@ -116,7 +116,7 @@ namespace NetExtender.Initializer
         {
             get
             {
-                return Stop.ContinueWith(_ => 10);
+                return Stop.ContinueWith(static _ => 10);
             }
         }
 
@@ -124,7 +124,7 @@ namespace NetExtender.Initializer
         {
             get
             {
-                return Stop.ContinueWith(_ => 11);
+                return Stop.ContinueWith(static _ => 11);
             }
         }
 
@@ -132,7 +132,7 @@ namespace NetExtender.Initializer
         {
             get
             {
-                return Stop.ContinueWith(_ => 12);
+                return Stop.ContinueWith(static _ => 12);
             }
         }
 
@@ -140,7 +140,7 @@ namespace NetExtender.Initializer
         {
             get
             {
-                return Stop.ContinueWith(_ => System.Random.Shared.Next());
+                return Stop.ContinueWith(static _ => System.Random.Shared.Next());
             }
         }
 

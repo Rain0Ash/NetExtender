@@ -4,7 +4,7 @@
 using System;
 using System.IO;
 using System.Security.AccessControl;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 
 namespace NetExtender.Utilities.Windows.IO
 {

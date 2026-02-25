@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Windows.Input;
-using NetExtender.Types.Exceptions.Handlers;
+using NetExtender.Exceptions.Handlers;
 using NetExtender.Utilities.Types;
 #pragma warning disable CA2200
 // ReSharper disable PossibleIntendedRethrow

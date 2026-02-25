@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 using Microsoft.Win32;
 using NetExtender.Registry;
 using NetExtender.Registry.Interfaces;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 using NetExtender.Utilities.IO;
 using NetExtender.Utilities.Registry;
 using NetExtender.Utilities.Types;
@@ -56,19 +56,19 @@ namespace NetExtender.Windows.Protocols
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<KeyValuePair<String?, String?>> GetFileTypeAssociationProgId()
         {
-            return GetFileTypeAssociation().Select(entry => new KeyValuePair<String?, String?>(entry.Key, entry.Value.Key));
+            return GetFileTypeAssociation().Select(static entry => new KeyValuePair<String?, String?>(entry.Key, entry.Value.Key));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<KeyValuePair<String?, String?>> GetFileTypeAssociationHash()
         {
-            return GetFileTypeAssociation().Select(entry => new KeyValuePair<String?, String?>(entry.Key, entry.Value.Value));
+            return GetFileTypeAssociation().Select(static entry => new KeyValuePair<String?, String?>(entry.Key, entry.Value.Value));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<KeyValuePair<String, KeyValuePair<String?, String?>>> GetFileTypeAssociationUserChoice()
         {
-            return GetFileTypeAssociation().Where(entry => entry.Value.Key is not null || entry.Value.Value is not null);
+            return GetFileTypeAssociation().Where(static entry => entry.Value.Key is not null || entry.Value.Value is not null);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -94,7 +94,7 @@ namespace NetExtender.Windows.Protocols
                 yield break;
             }
 
-            foreach (String? entry in subkeys)
+            foreach (String entry in subkeys)
             {
                 String? progid = registry.GetValue("ProgId", entry, "UserChoice");
                 String? hash = registry.GetValue("Hash", entry, "UserChoice");
@@ -133,19 +133,19 @@ namespace NetExtender.Windows.Protocols
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<KeyValuePair<String?, String?>> GetProtocolTypeAssociationProgId()
         {
-            return GetProtocolTypeAssociation().Select(entry => new KeyValuePair<String?, String?>(entry.Key, entry.Value.Key));
+            return GetProtocolTypeAssociation().Select(static entry => new KeyValuePair<String?, String?>(entry.Key, entry.Value.Key));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<KeyValuePair<String?, String?>> GetProtocolTypeAssociationHash()
         {
-            return GetProtocolTypeAssociation().Select(entry => new KeyValuePair<String?, String?>(entry.Key, entry.Value.Value));
+            return GetProtocolTypeAssociation().Select(static entry => new KeyValuePair<String?, String?>(entry.Key, entry.Value.Value));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<KeyValuePair<String, KeyValuePair<String?, String?>>> GetProtocolTypeAssociationUserChoice()
         {
-            return GetProtocolTypeAssociation().Where(entry => entry.Value.Key is not null || entry.Value.Value is not null);
+            return GetProtocolTypeAssociation().Where(static entry => entry.Value.Key is not null || entry.Value.Value is not null);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -434,8 +434,8 @@ namespace NetExtender.Windows.Protocols
 
             return UserExperience ??= stream.ReadAsSequential(Encoding.Unicode)
                 .Select(Index)
-                .SelectWhere(item => item.Index > -1, Find)
-                .SelectWhere(item => item.End > -1, Substring)
+                .SelectWhere(static item => item.Index > -1, Find)
+                .SelectWhere(static item => item.End > -1, Substring)
                 .FirstOrDefault();
         }
 

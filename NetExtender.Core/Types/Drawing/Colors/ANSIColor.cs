@@ -6,7 +6,7 @@ using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Text;
 using NetExtender.Types.Drawing.Colors.Interfaces;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Drawing.Colors

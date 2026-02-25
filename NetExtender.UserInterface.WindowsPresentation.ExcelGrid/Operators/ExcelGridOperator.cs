@@ -185,18 +185,18 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 return ReflectionUtilities.Default(type)!;
             }
 
+#if DEBUG
+            return Activator.CreateInstance(type);
+#else
             try
             {
                 return Activator.CreateInstance(type);
             }
             catch (Exception)
             {
-#if DEBUG
-                throw;
-#else
                 return null;
-#endif
             }
+#endif
         }
 
         public virtual Object? GetCellValue(ExcelCell cell)
@@ -402,7 +402,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
                 throw new ArgumentNullException(nameof(descriptor));
             }
 
-            if (descriptor.GetAttributeValue<System.ComponentModel.ReadOnlyAttribute, Boolean>(static attribute => attribute.IsReadOnly) || descriptor.GetAttributeValue<NetExtender.Utilities.Core.ReadOnlyAttribute, Boolean>(a => a.IsReadOnly) || descriptor.IsReadOnly)
+            if (descriptor.GetAttributeValue<System.ComponentModel.ReadOnlyAttribute, Boolean>(static attribute => attribute.IsReadOnly) || descriptor.GetAttributeValue<NetExtender.Utilities.Core.ReadOnlyAttribute, Boolean>(static attribute => attribute.IsReadOnly) || descriptor.IsReadOnly)
             {
                 definition.IsReadOnly = true;
             }

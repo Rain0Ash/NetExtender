@@ -34,7 +34,7 @@ namespace NetExtender.Types.Memento
         {
             get
             {
-                return Internal.Any(item => item.HasValue);
+                return Internal.Any(static item => item.HasValue);
             }
         }
 
@@ -105,7 +105,7 @@ namespace NetExtender.Types.Memento
 
         public MementoGroupProperty<TSource> New()
         {
-            IEnumerable<IMementoProperty<TSource>> selector = this.Select(property => property.New());
+            IEnumerable<IMementoProperty<TSource>> selector = this.Select(static property => property.New());
             return new MementoGroupProperty<TSource>(selector);
         }
 
@@ -121,7 +121,7 @@ namespace NetExtender.Types.Memento
                 throw new ArgumentNullException(nameof(source));
             }
 
-            IEnumerable<IMementoProperty<TSource>> selector = this.Select(property => property.New());
+            IEnumerable<IMementoProperty<TSource>> selector = this.Select(static property => property.New());
             return new MementoGroup<TSource>(source, selector);
         }
 
@@ -132,7 +132,7 @@ namespace NetExtender.Types.Memento
 
         public MementoGroupProperty<TSource> Item()
         {
-            IEnumerable<IMementoProperty<TSource>> selector = this.Select(property => property.Item());
+            IEnumerable<IMementoProperty<TSource>> selector = this.Select(static property => property.Item());
             return new MementoGroupProperty<TSource>(selector);
         }
 
@@ -148,7 +148,7 @@ namespace NetExtender.Types.Memento
                 throw new ArgumentNullException(nameof(source));
             }
 
-            IEnumerable<IMementoProperty<TSource>> selector = this.Select(property => property.Item());
+            IEnumerable<IMementoProperty<TSource>> selector = this.Select(static property => property.Item());
             return new MementoGroup<TSource>(source, selector);
         }
 

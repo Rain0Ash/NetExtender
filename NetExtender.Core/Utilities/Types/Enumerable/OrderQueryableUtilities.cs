@@ -27,7 +27,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return source.OrderBy(item => item, comparer);
+            return source.OrderBy(static item => item, comparer);
         }
 
         public static IOrderedQueryable<T> OrderByDescending<T>(this IQueryable<T> source)
@@ -47,7 +47,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return source.OrderByDescending(item => item, comparer);
+            return source.OrderByDescending(static item => item, comparer);
         }
 
         public static IOrderedQueryable<T> ThenBy<T>(this IOrderedQueryable<T> source, IComparer<T>? comparer)
@@ -57,7 +57,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return source.ThenBy(item => item, comparer);
+            return source.ThenBy(static item => item, comparer);
         }
 
         public static IOrderedQueryable<T> ThenByDescending<T>(this IOrderedQueryable<T> source, IComparer<T>? comparer)
@@ -67,7 +67,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return source.ThenByDescending(item => item, comparer);
+            return source.ThenByDescending(static item => item, comparer);
         }
 
         /// <summary>

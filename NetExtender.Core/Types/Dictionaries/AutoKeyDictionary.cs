@@ -6,7 +6,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using NetExtender.Interfaces.Notify;
 using NetExtender.Types.Collections;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 
 namespace NetExtender.Types.Dictionaries
 {

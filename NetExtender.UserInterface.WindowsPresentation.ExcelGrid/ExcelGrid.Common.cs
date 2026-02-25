@@ -8,6 +8,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows.Data;
 using NetExtender.UserInterface.WindowsPresentation.Types.Comparers;
+using NetExtender.Utilities.Core;
 
 namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
 {
@@ -191,7 +192,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
             }
             catch (ArgumentException)
             {
-                return source.GetType().GetInterfaces().FirstOrDefault(static type => type.IsGenericType && type.GetGenericTypeDefinition() == typeof(IEnumerable<>))?.GetGenericArguments()[0];
+                return source.GetType().GetSafeInterfacesUnsafe().FirstOrDefault(static type => type.IsGenericType && type.GetGenericTypeDefinition() == typeof(IEnumerable<>))?.GetGenericArguments()[0];
             }
         }
 
@@ -222,7 +223,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.ExcelGrid
 
         protected static Type? ElementType(Type type)
         {
-            foreach (Type @interface in type.GetInterfaces())
+            foreach (Type @interface in type.GetSafeInterfacesUnsafe())
             {
                 if (!@interface.IsGenericType || @interface.GetGenericTypeDefinition() != typeof(IEnumerable<>))
                 {

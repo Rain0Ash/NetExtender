@@ -25,10 +25,10 @@ namespace NetExtender.Types.Interprocess
 
         public Int64 MaximumFileSize { get; }
 
-        public const Int32 DefaultMaxFileSize = 1024 * 1024;
+        public const Int32 DefaultMaximumFileSize = 1024 * 1024;
 
         public InterprocessMemoryMappedFile(String name)
-            : this(name, DefaultMaxFileSize)
+            : this(name, DefaultMaximumFileSize)
         {
         }
 

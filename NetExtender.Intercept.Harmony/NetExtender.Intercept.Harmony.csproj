@@ -1,0 +1,49 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFrameworks>net6.0;net7.0;net8.0;net9.0;net10.0</TargetFrameworks>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>disable</ImplicitUsings>
+        <OutputType>Library</OutputType>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <Authors>Rain0Ash</Authors>
+        <PackageProjectUrl>https://github.com/Rain0Ash/NetExtender</PackageProjectUrl>
+        <Version>0.8.9</Version>
+        <SignAssembly>true</SignAssembly>
+        <AssemblyOriginatorKeyFile>../SignTool/Private/NetExtender.snk</AssemblyOriginatorKeyFile>
+        <Title>NetExtender.Harmony.Intercept</Title>
+        <Description>Harmony intercept module of NetExtender Framework</Description>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <RepositoryUrl>https://github.com/Rain0Ash/NetExtender</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <PackageTags>Extension</PackageTags>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <IsPackable>true</IsPackable>
+        <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\NetExtender.Core\NetExtender.Core.csproj"/>
+        <ProjectReference Include="..\NetExtender.Intercept\NetExtender.Intercept.csproj"/>
+        <ProjectReference Include="..\NetExtender.Harmony\NetExtender.Harmony.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Types\FileSystems\Intercept\FileSystemIntercept.Directory.cs">
+        <DependentUpon>FileSystemIntercept.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Types\FileSystems\Intercept\FileSystemIntercept.Drive.cs">
+        <DependentUpon>FileSystemIntercept.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Types\FileSystems\Intercept\FileSystemIntercept.File.cs">
+        <DependentUpon>FileSystemIntercept.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Types\FileSystems\Intercept\FileSystemIntercept.Link.cs">
+        <DependentUpon>FileSystemIntercept.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Types\FileSystems\Intercept\FileSystemIntercept.Path.cs">
+        <DependentUpon>FileSystemIntercept.cs</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
+</Project>

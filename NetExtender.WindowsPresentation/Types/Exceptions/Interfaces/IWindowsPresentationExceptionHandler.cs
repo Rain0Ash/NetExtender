@@ -3,7 +3,7 @@
 
 using System;
 using System.Windows.Input;
-using NetExtender.Types.Exceptions.Handlers;
+using NetExtender.Exceptions.Handlers;
 
 namespace NetExtender.WindowsPresentation.Types.Exceptions
 {

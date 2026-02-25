@@ -4,9 +4,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using NetExtender.Types.Handlers.Chain;
+using NetExtender.Types.Collections.Chain;
 using NetExtender.Types.Collections.Interfaces;
-using NetExtender.Types.Handlers.Chain.Interfaces;
+using NetExtender.Types.Collections.Chain.Interfaces;
 
 namespace NetExtender.Utilities.Types
 {

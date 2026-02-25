@@ -10,10 +10,9 @@ using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
+using NetExtender.Harmony.Types.Interfaces;
 using NetExtender.Types.Immutable.Dictionaries;
-using NetExtender.Types.Storages;
-using NetExtender.Types.Storages.Interfaces;
 
 namespace NetExtender.Utilities.Core
 {
@@ -123,16 +122,6 @@ namespace NetExtender.Utilities.Core
 
         private static ImmutableMultiDictionary<OpCodeCategory, OpCode> CategoryOpCodeStorage { get; } = ImmutableMultiDictionary<OpCodeCategory, OpCode>.Empty.AddRange(Initialize(OpCodeCategoryStorage));
 
-        internal static class Storage
-        {
-            public static class Parameters
-            {
-                public static IStorage<ConstructorBuilder, ParameterInfo[]> ConstructorBuilder { get; } = new WeakStorage<ConstructorBuilder, ParameterInfo[]>();
-                public static IStorage<MethodBuilder, ParameterInfo[]> MethodBuilder { get; } = new WeakStorage<MethodBuilder, ParameterInfo[]>();
-                public static IStorage<PropertyBuilder, ParameterInfo[]> PropertyBuilder { get; } = new WeakStorage<PropertyBuilder, ParameterInfo[]>();
-            }
-        }
-
         private static IEnumerable<KeyValuePair<OpCodeCategory, ImmutableHashSet<OpCode>>> Initialize(ImmutableDictionary<OpCode, OpCodeCategory> storage)
         {
             if (storage is null)
@@ -142,7 +131,7 @@ namespace NetExtender.Utilities.Core
 
             static KeyValuePair<OpCodeCategory, ImmutableHashSet<OpCode>> Selector(IGrouping<OpCodeCategory, KeyValuePair<OpCode, OpCodeCategory>> group)
             {
-                return new KeyValuePair<OpCodeCategory, ImmutableHashSet<OpCode>>(group.Key, group.Select(pair => pair.Key).ToImmutableHashSet());
+                return new KeyValuePair<OpCodeCategory, ImmutableHashSet<OpCode>>(group.Key, group.Select(static pair => pair.Key).ToImmutableHashSet());
             }
 
             return storage.GroupBy(static pair => pair.Value).Select(Selector);
@@ -164,199 +153,220 @@ namespace NetExtender.Utilities.Core
             };
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Int32 Id(this Label label)
-        {
-            return label.GetHashCode();
-        }
-
-        public static void EmitInstance(this ILGenerator generator, Type type)
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static void Emit(this ILGenerator generator, IHarmonyInstruction instruction)
         {
             if (generator is null)
             {
                 throw new ArgumentNullException(nameof(generator));
             }
 
-            if (type is null)
+            if (instruction is null)
             {
-                throw new ArgumentNullException(nameof(type));
+                throw new ArgumentNullException(nameof(instruction));
             }
 
-            generator.Emit(OpCodes.Ldarg_0);
-            generator.EmitUnbox(type);
-        }
-
-        public static void EmitDefault(this ILGenerator generator, Type type)
-        {
-            if (generator is null)
+            foreach (Label label in instruction.Labels)
             {
-                throw new ArgumentNullException(nameof(generator));
+                generator.MarkLabel(label);
             }
 
-            if (type is null)
+            switch (instruction.Operand)
             {
-                throw new ArgumentNullException(nameof(type));
-            }
-
-            if (!type.IsValueType)
-            {
-                generator.Emit(OpCodes.Ldnull);
-                return;
-            }
-
-            LocalBuilder local = generator.DeclareLocal(type);
-            generator.Emit(OpCodes.Ldloca, local);
-            generator.Emit(OpCodes.Initobj, type);
-            generator.Emit(OpCodes.Ldloc, local);
-        }
-
-        public static void EmitLdarg(this ILGenerator generator, Int32 position)
-        {
-            if (generator is null)
-            {
-                throw new ArgumentNullException(nameof(generator));
-            }
-
-            switch (position)
-            {
-                case 0:
-                    generator.Emit(OpCodes.Ldarg_0);
+                case Type type:
+                    generator.Emit(instruction.OpCode, type);
                     return;
-                case 1:
-                    generator.Emit(OpCodes.Ldarg_1);
+                case LocalBuilder builder:
+                    generator.Emit(instruction.OpCode, builder);
                     return;
-                case 2:
-                    generator.Emit(OpCodes.Ldarg_2);
+                case ConstructorInfo constructor:
+                    generator.Emit(instruction.OpCode, constructor);
                     return;
-                case 3:
-                    generator.Emit(OpCodes.Ldarg_3);
+                case MethodInfo method:
+                    generator.Emit(instruction.OpCode, method);
+                    return;
+                case FieldInfo field:
+                    generator.Emit(instruction.OpCode, field);
+                    return;
+                case SignatureHelper signature:
+                    generator.Emit(instruction.OpCode, signature);
+                    return;
+                case Label label:
+                    generator.Emit(instruction.OpCode, label);
+                    return;
+                case Label[] labels:
+                    generator.Emit(instruction.OpCode, labels);
+                    return;
+                case SByte @sbyte:
+                    generator.Emit(instruction.OpCode, @sbyte);
+                    return;
+                case Byte @byte:
+                    generator.Emit(instruction.OpCode, @byte);
+                    return;
+                case Int16 @short:
+                    generator.Emit(instruction.OpCode, @short);
+                    return;
+                case UInt16 @ushort:
+                    generator.Emit(instruction.OpCode, unchecked((Int16) @ushort));
+                    return;
+                case Int32 @int:
+                    generator.Emit(instruction.OpCode, @int);
+                    return;
+                case UInt32 @uint:
+                    generator.Emit(instruction.OpCode, unchecked((Int32) @uint));
+                    return;
+                case Int64 @long:
+                    generator.Emit(instruction.OpCode, @long);
+                    return;
+                case UInt64 @ulong:
+                    generator.Emit(instruction.OpCode, unchecked((Int64) @ulong));
+                    return;
+                case Single @float:
+                    generator.Emit(instruction.OpCode, @float);
+                    return;
+                case Double @double:
+                    generator.Emit(instruction.OpCode, @double);
                     return;
                 default:
-                    generator.Emit((Byte) position == position ? OpCodes.Ldarg_S : OpCodes.Ldarg, position);
+                    if (instruction.Operand is not null)
+                    {
+                        throw new NotSupportedException($"Operand '{instruction.Operand}' is not supported.");
+                    }
+
+                    generator.Emit(instruction.OpCode);
                     return;
             }
         }
 
-        public static void EmitLdcI4(this ILGenerator generator, Int32 value)
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static void Emit(this ILGenerator generator, Type? type, Type? inherit, IHarmonyInstruction instruction)
         {
             if (generator is null)
             {
                 throw new ArgumentNullException(nameof(generator));
             }
 
-            switch (value)
+            if (instruction is null)
             {
-                case -1:
-                    generator.Emit(OpCodes.Ldc_I4_M1);
-                    return;
-                case 0:
-                    generator.Emit(OpCodes.Ldc_I4_0);
-                    return;
-                case 1:
-                    generator.Emit(OpCodes.Ldc_I4_1);
-                    return;
-                case 2:
-                    generator.Emit(OpCodes.Ldc_I4_2);
-                    return;
-                case 3:
-                    generator.Emit(OpCodes.Ldc_I4_3);
-                    return;
-                case 4:
-                    generator.Emit(OpCodes.Ldc_I4_4);
-                    return;
-                case 5:
-                    generator.Emit(OpCodes.Ldc_I4_5);
-                    return;
-                case 6:
-                    generator.Emit(OpCodes.Ldc_I4_6);
-                    return;
-                case 7:
-                    generator.Emit(OpCodes.Ldc_I4_7);
-                    return;
-                case 8:
-                    generator.Emit(OpCodes.Ldc_I4_8);
-                    return;
-                default:
-                    generator.Emit(unchecked((SByte) value == value) ? OpCodes.Ldc_I4_S : OpCodes.Ldc_I4, value);
-                    return;
+                throw new ArgumentNullException(nameof(instruction));
             }
+
+            if (inherit is null)
+            {
+                Emit(generator, instruction);
+                return;
+            }
+
+            instruction.Operand = instruction.Operand switch
+            {
+                ConstructorInfo constructor when constructor.DeclaringType == type => inherit.Find(constructor) ?? instruction.Operand,
+                MethodInfo method when method.DeclaringType == type => inherit.Find(method) ?? instruction.Operand,
+                EventInfo @event when @event.DeclaringType == type => inherit.Find(@event) ?? instruction.Operand,
+                PropertyInfo property when property.DeclaringType == type => inherit.Find(property) ?? instruction.Operand,
+                FieldInfo field when field.DeclaringType == type => inherit.Find(field) ?? instruction.Operand,
+                _ => instruction.Operand
+            };
+
+            Emit(generator, instruction);
         }
 
-        public static void EmitBox(this ILGenerator generator, Type type)
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        internal static void Emit(this ILGenerator generator, Type? type, Type? inherit, MemberInfo[]? members, IHarmonyInstruction instruction)
         {
             if (generator is null)
             {
                 throw new ArgumentNullException(nameof(generator));
             }
 
-            if (type is null)
+            if (instruction is null)
             {
-                throw new ArgumentNullException(nameof(type));
+                throw new ArgumentNullException(nameof(instruction));
             }
 
-            if (type.IsGenericParameter)
+            if (inherit is null)
             {
-                generator.Emit(OpCodes.Box, type);
+                Emit(generator, instruction);
                 return;
             }
 
-            if (type.IsByRef || type.IsPointer)
+            instruction.Operand = instruction.Operand switch
             {
-                generator.Emit(OpCodes.Box, typeof(IntPtr));
-                return;
-            }
+                Type info when info == type => inherit,
+                ConstructorInfo constructor when constructor.DeclaringType == type => (members is not null ? inherit.Find(members, constructor) as ConstructorInfo : inherit.Find(constructor)) ?? instruction.Operand,
+                MethodInfo method when method.DeclaringType == type => (members is not null ? inherit.Find(members, method) as MethodInfo : inherit.Find(method)) ?? instruction.Operand,
+                EventInfo @event when @event.DeclaringType == type => (members is not null ? inherit.Find(members, @event) as EventInfo : inherit.Find(@event)) ?? instruction.Operand,
+                PropertyInfo property when property.DeclaringType == type => (members is not null ? inherit.Find(members, property) as PropertyInfo : inherit.Find(property)) ?? instruction.Operand,
+                FieldInfo field when field.DeclaringType == type => (members is not null ? inherit.Find(members, field) as FieldInfo : inherit.Find(field)) ?? instruction.Operand,
+                _ => instruction.Operand
+            };
 
-            if (type.IsValueType)
-            {
-                generator.Emit(OpCodes.Box, type);
-            }
+            Emit(generator, instruction);
         }
 
-        public static void EmitUnbox(this ILGenerator generator, Type type)
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static void Emit(this ILGenerator generator, IReadOnlyCollection<IHarmonyInstruction> instructions)
+        {
+            Emit(generator, null, null, instructions);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static void Emit(this ILGenerator generator, Type? type, Type? inherit, IReadOnlyCollection<IHarmonyInstruction> instructions)
         {
             if (generator is null)
             {
                 throw new ArgumentNullException(nameof(generator));
             }
 
-            if (type is null)
+            if (instructions is null)
             {
-                throw new ArgumentNullException(nameof(type));
+                throw new ArgumentNullException(nameof(instructions));
             }
 
-            if (type.IsGenericParameter)
+            Label[] labels = instructions.SelectMany(static instruction => instruction.Labels).DistinctBy(static label => label.Id()).OrderBy(static label => label.Id()).ToArray();
+            for (Int32 i = 0; i < labels.Length; i++)
             {
-                generator.Emit(OpCodes.Unbox_Any, type);
-                return;
+                labels[i] = generator.DefineLabel();
             }
 
-            if (type.IsByRef || type.IsPointer)
+            foreach (IHarmonyInstruction instruction in instructions)
             {
-                generator.Emit(OpCodes.Unbox_Any, typeof(IntPtr));
-                return;
-            }
+                for (Int32 i = 0; i < instruction.Labels.Count; i++)
+                {
+                    instruction.Labels[i] = labels[instruction.Labels[i].Id()];
+                }
 
-            if (type.IsValueType)
-            {
-                generator.Emit(OpCodes.Unbox_Any, type);
-                return;
-            }
-
-            if (type != typeof(Object))
-            {
-                generator.Emit(OpCodes.Castclass, type);
+                generator.Emit(type, inherit, instruction);
             }
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Return(this ILGenerator generator)
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static void Emit(this ILGenerator generator, Type? type, Type? inherit, MemberInfo[]? members, IReadOnlyCollection<IHarmonyInstruction> instructions)
         {
             if (generator is null)
             {
                 throw new ArgumentNullException(nameof(generator));
             }
 
-            generator.Emit(OpCodes.Ret);
+            if (instructions is null)
+            {
+                throw new ArgumentNullException(nameof(instructions));
+            }
+
+            Label[] labels = instructions.SelectMany(static instruction => instruction.Labels).DistinctBy(static label => label.Id()).OrderBy(static label => label.Id()).ToArray();
+            for (Int32 i = 0; i < labels.Length; i++)
+            {
+                labels[i] = generator.DefineLabel();
+            }
+
+            foreach (IHarmonyInstruction instruction in instructions)
+            {
+                for (Int32 i = 0; i < instruction.Labels.Count; i++)
+                {
+                    instruction.Labels[i] = labels[instruction.Labels[i].Id()];
+                }
+
+                generator.Emit(type, inherit, members, instruction);
+            }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -416,7 +426,7 @@ namespace NetExtender.Utilities.Core
             }
 
             const BindingFlags binding = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
-            ConstructorInfo constructor = parent.GetConstructor(binding, Type.EmptyTypes) ?? throw new MissingMethodException(parent.FullName, ReflectionUtilities.Constructor);
+            ConstructorInfo constructor = parent.GetConstructor(binding, Type.EmptyTypes) ?? throw new MissingMethodException(parent.FullName, TypeUtilities.Constructor);
             return DefineConstructor(builder, constructor, parameters, attributes);
         }
 
@@ -493,7 +503,7 @@ namespace NetExtender.Utilities.Core
 
             static IgnoresAccessChecksToAttribute()
             {
-                Constructor = typeof(System.Runtime.CompilerServices.IgnoresAccessChecksToAttribute).GetConstructor(new[] { typeof(String) }) ?? throw new MissingMethodException(nameof(System.Runtime.CompilerServices.IgnoresAccessChecksToAttribute), ".ctor");
+                Constructor = typeof(System.Runtime.CompilerServices.IgnoresAccessChecksToAttribute).GetConstructor(new[] { typeof(String) }) ?? throw new MissingMethodException(nameof(System.Runtime.CompilerServices.IgnoresAccessChecksToAttribute), TypeUtilities.Constructor);
             }
         }
 
@@ -738,7 +748,7 @@ namespace NetExtender.Utilities.Core
                 private static CustomAttributeBuilder GetCompilerGeneratedAttribute()
                 {
                     Type type = typeof(CompilerGeneratedAttribute);
-                    ConstructorInfo constructor = type.GetConstructor(Type.EmptyTypes) ?? throw new MissingMethodException(type.FullName, ReflectionUtilities.Constructor);
+                    ConstructorInfo constructor = type.GetConstructor(Type.EmptyTypes) ?? throw new MissingMethodException(type.FullName, TypeUtilities.Constructor);
                     return new CustomAttributeBuilder(constructor, Array.Empty<Object>());
                 }
 
@@ -746,7 +756,7 @@ namespace NetExtender.Utilities.Core
                 private static CustomAttributeBuilder GetDebuggerBrowsableAttribute()
                 {
                     Type type = typeof(DebuggerBrowsableAttribute);
-                    ConstructorInfo constructor = type.GetConstructor(new[] { typeof(DebuggerBrowsableState) }) ?? throw new MissingMethodException(type.FullName, ReflectionUtilities.Constructor);
+                    ConstructorInfo constructor = type.GetConstructor(new[] { typeof(DebuggerBrowsableState) }) ?? throw new MissingMethodException(type.FullName, TypeUtilities.Constructor);
                     return new CustomAttributeBuilder(constructor, new Object[] { DebuggerBrowsableState.Never });
                 }
 
@@ -754,7 +764,7 @@ namespace NetExtender.Utilities.Core
                 private static CustomAttributeBuilder GetDebuggerHiddenAttribute()
                 {
                     Type type = typeof(DebuggerHiddenAttribute);
-                    ConstructorInfo constructor = type.GetConstructor(Type.EmptyTypes) ?? throw new MissingMethodException(type.FullName, ReflectionUtilities.Constructor);
+                    ConstructorInfo constructor = type.GetConstructor(Type.EmptyTypes) ?? throw new MissingMethodException(type.FullName, TypeUtilities.Constructor);
                     return new CustomAttributeBuilder(constructor, Array.Empty<Object>());
                 }
             }
@@ -871,7 +881,7 @@ namespace NetExtender.Utilities.Core
                         typeof(Single), typeof(Double), typeof(Decimal),
                         typeof(String), typeof(System.Text.StringBuilder), typeof(Char[]),
                         typeof(Object)
-                    }.ToImmutableDictionary(type => type, Find);
+                    }.ToImmutableDictionary(static type => type, Find);
                 }
 
                 private static MethodInfo Find<T>()

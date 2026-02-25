@@ -67,7 +67,7 @@ namespace NetExtender.WindowsPresentation.ReactiveUI
             Identifier = initializer.InitializeIdentifier(Config, Languages);
 
             Config.Changed += LocalizationChanged;
-            this.WhenPropertyChanged(model => model.Identifier).Subscribe(model => Config.Localization = model.Value);
+            this.WhenPropertyChanged(static model => model.Identifier).Subscribe(model => Config.Localization = model.Value);
         }
 
         private void LocalizationChanged(Object? sender, LocalizationChangedEventArgs args)

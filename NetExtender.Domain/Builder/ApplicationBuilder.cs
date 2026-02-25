@@ -10,7 +10,7 @@ using NetExtender.Domains.Builder.Interfaces;
 using NetExtender.Patch;
 using NetExtender.Types.Attributes.Interfaces;
 using NetExtender.Types.Console.Interfaces;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 using NetExtender.Types.Middlewares;
 using NetExtender.Types.Middlewares.Interfaces;
 using NetExtender.Types.Reflection.Interfaces;
@@ -88,7 +88,7 @@ namespace NetExtender.Domains.Builder
         {
             Arguments = arguments;
 
-            foreach (IInvokeAttribute attribute in ReflectionUtilities.GetCustomAttributes<PatchAttribute>(GetType()).OfType<IInvokeAttribute>())
+            foreach (IInvokeAttribute attribute in AttributeUtilities.GetCustomAttributes<PatchAttribute>(GetType()).OfType<IInvokeAttribute>())
             {
                 attribute.Invoke(this, null);
             }

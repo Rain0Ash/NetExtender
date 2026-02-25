@@ -4,7 +4,7 @@
 using System;
 using System.Globalization;
 using System.Windows.Data;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 using NetExtender.Types.Numerics;
 
 namespace NetExtender.WindowsPresentation.Types.Converters
@@ -35,7 +35,7 @@ namespace NetExtender.WindowsPresentation.Types.Converters
     [ValueConversion(typeof(Decimal), typeof(Boolean))]
     public class OperationConverter : IValueConverter
     {
-        public ConverterMathOperation Operation { get; set; } 
+        public ConverterMathOperation Operation { get; set; }
 
         public OperationConverter()
         {

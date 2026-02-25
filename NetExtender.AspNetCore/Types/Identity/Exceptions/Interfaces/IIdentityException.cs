@@ -1,11 +1,11 @@
 using System;
-using NetExtender.Types.Exceptions.Interfaces;
+using NetExtender.Exceptions.Interfaces;
 
 namespace NetExtender.AspNetCore.Identity.Interfaces
 {
-    public interface IIdentityException : IBusinessException
+    public interface IIdentityException : IUnsafeBusinessException
     {
-        public IdentityException.Known Known { get; }
+        public IdentityException.Id Known { get; }
         public new Object? Id { get; }
         public IUserInfo? User { get; }
     }

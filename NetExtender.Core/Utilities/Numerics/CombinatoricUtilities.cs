@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using NetExtender.Types.Combinatoric;
 using NetExtender.Types.Combinatoric.Interfaces;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 
 namespace NetExtender.Utilities.Numerics
 {

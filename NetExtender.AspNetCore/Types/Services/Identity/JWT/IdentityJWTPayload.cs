@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using System.Runtime.Serialization;
+using System.Xml.Serialization;
 using NetExtender.AspNetCore.Identity.Interfaces;
 using NetExtender.Types.Entities.Interfaces;
 using NetExtender.Utilities.Types;
@@ -10,7 +12,7 @@ namespace NetExtender.AspNetCore.Identity
 {
     public readonly struct IdentityJWTPayload<TId, TUser, TRole> : IEntityId<TId>, IStruct<IdentityJWTPayload<TId, TUser, TRole>> where TId : struct, IEquatable<TId> where TUser : class, IUserInfo<TId, TRole> where TRole : IEquatable<TRole>
     {
-        [JsonIgnore]
+        [JsonIgnore, IgnoreDataMember, XmlIgnore, SoapIgnore]
         [System.Text.Json.Serialization.JsonIgnore]
         private TUser User { get; }
 
@@ -36,7 +38,7 @@ namespace NetExtender.AspNetCore.Identity
         [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]
         public Int32 Expire { get; }
 
-        [JsonIgnore]
+        [JsonIgnore, IgnoreDataMember, XmlIgnore, SoapIgnore]
         [System.Text.Json.Serialization.JsonIgnore]
         public Boolean IsEmpty
         {

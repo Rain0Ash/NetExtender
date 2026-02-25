@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using NetExtender.Domains.Applications;
 using NetExtender.Domains.Applications.Interfaces;
 using NetExtender.Types.Dispatchers.Interfaces;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 using NetExtender.Utilities.Application;
 using NetExtender.Windows.Services.Types.Installers;
 using NetExtender.Windows.Services.Types.Services;

@@ -32,7 +32,7 @@ namespace NetExtender.Types.Comparers
         }
 
         public LocalizationComparer(params LocalizationIdentifiers[]? order)
-            : base(order?.SelectMany(identifier => identifier).Distinct())
+            : base(order?.SelectMany(static identifier => identifier).Distinct())
         {
         }
 
@@ -42,7 +42,7 @@ namespace NetExtender.Types.Comparers
         }
 
         public LocalizationComparer(IEnumerable<LocalizationIdentifiers>? order)
-            : base(order?.SelectMany(identifier => identifier).Distinct())
+            : base(order?.SelectMany(static identifier => identifier).Distinct())
         {
         }
 
@@ -57,7 +57,7 @@ namespace NetExtender.Types.Comparers
         }
 
         public LocalizationComparer(IEnumerable<LocalizationIdentifiers>? order, IComparer<LocalizationIdentifier>? comparer)
-            : base(order?.SelectMany(identifier => identifier).Distinct(), comparer)
+            : base(order?.SelectMany(static identifier => identifier).Distinct(), comparer)
         {
         }
 

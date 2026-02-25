@@ -177,17 +177,33 @@ namespace NetExtender.Types.Concurrent.Observable
     }
 
     [Serializable]
-    public abstract class ConcurrentObservableCollection<T, TSelf> : ConcurrentObservableBase<T, ImmutableList<T>, TSelf>, IConcurrentObservableList<T>, IReadOnlyList<T>, IList where TSelf : ConcurrentObservableCollection<T, TSelf>
+    public abstract class ConcurrentObservableCollection<T, TSelf> : ConcurrentObservableBase<T, ImmutableList<T>, ImmutableList<T>, TSelf>, IConcurrentObservableList<T>, IReadOnlyConcurrentObservableList<T>, IList where TSelf : ConcurrentObservableCollection<T, TSelf>
     {
         private ConcurrentDictionary<Int32, ImmutableList<T>> Storage { get; } = new ConcurrentDictionary<Int32, ImmutableList<T>>();
         protected sealed override ImmutableList<T> Collection { get; set; }
         private ConcurrentObservableCollection<T>.Bridge _view;
 
-        public sealed override IList<T> View
+        public sealed override ImmutableList<T> View
         {
             get
             {
                 return Collection;
+            }
+        }
+
+        IList<T> IConcurrentObservableList<T>.View
+        {
+            get
+            {
+                return View;
+            }
+        }
+
+        IReadOnlyList<T> IReadOnlyConcurrentObservableList<T>.View
+        {
+            get
+            {
+                return View;
             }
         }
 
@@ -409,7 +425,7 @@ namespace NetExtender.Types.Concurrent.Observable
 
         public virtual void AddRange(IEnumerable<T>? items)
         {
-            if (items is null || items.CountIfMaterialized() <= 0)
+            if (items.CantHaveCount())
             {
                 return;
             }

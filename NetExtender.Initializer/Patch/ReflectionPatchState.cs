@@ -10,6 +10,7 @@ namespace NetExtender.Patch
         None,
         Apply,
         Failed,
-        NotRequired
+        NotRequired,
+        NoHarmony
     }
 }

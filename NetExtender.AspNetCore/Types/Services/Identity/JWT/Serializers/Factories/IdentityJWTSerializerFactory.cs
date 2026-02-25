@@ -6,7 +6,7 @@ using System.Runtime.CompilerServices;
 using NetExtender.AspNetCore.Identity.Interfaces;
 using NetExtender.JWT;
 using NetExtender.JWT.Interfaces;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 
 namespace NetExtender.AspNetCore.Identity
 {

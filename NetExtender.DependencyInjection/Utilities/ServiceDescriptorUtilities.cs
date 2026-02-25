@@ -13,13 +13,13 @@ namespace NetExtender.Utilities.Types
     {
         static ServiceDescriptorUtilities()
         {
-            ConvertUtilities.RegisterStringHandler<ServiceDescriptor>(GetString);
+            StringConvertUtilities.RegisterStringHandler<ServiceDescriptor>(GetString);
         }
 
         [SuppressMessage("ReSharper", "InvokeAsExtensionMethod")]
         private static String? GetString(ServiceDescriptor? value, EscapeType escape, IFormatProvider? provider)
         {
-            return value is not null ? $"{value.Lifetime}({value.ServiceType}:[{value.ImplementationType}])" : ConvertUtilities.GetString((Object?) null, escape, provider);
+            return value is not null ? $"{value.Lifetime}({value.ServiceType}:[{value.ImplementationType}])" : StringConvertUtilities.GetString((Object?) null, escape, provider);
         }
     }
 }

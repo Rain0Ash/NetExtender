@@ -8,7 +8,6 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using NetExtender.Types.Monads;
 using NetExtender.Types.Random.Interfaces;
-using NetExtender.Utilities.Numerics;
 
 namespace NetExtender.Utilities.Types
 {
@@ -39,43 +38,19 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<Maybe<T>> Maybe<T>(this IEnumerable<T> source)
         {
-            if (source is null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-
-            foreach (T item in source)
-            {
-                yield return item;
-            }
+            return EnumerableBaseUtilities.Maybe(source);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<NullMaybe<T>> Nullable<T>(this IEnumerable<T> source)
         {
-            if (source is null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-
-            foreach (T item in source)
-            {
-                yield return item;
-            }
+            return EnumerableBaseUtilities.Nullable(source);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<WeakMaybe<T>> Weak<T>(this IEnumerable<T> source) where T : class
         {
-            if (source is null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-
-            foreach (T item in source)
-            {
-                yield return item;
-            }
+            return EnumerableBaseUtilities.Weak(source);
         }
 
         public static IEnumerable<TResult> SelectWhere<T, TResult>(this IEnumerable<T> source, TryParseHandler<T, TResult> selector)
@@ -479,7 +454,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return source.Where(item => item.HasValue).Select(item => item!.Value);
+            return source.Where(static item => item.HasValue).Select(static item => item!.Value);
         }
 
         public static IEnumerable<TResult> SelectWhereNotNull<T, TResult>(this IEnumerable<T?> source, Func<T, TResult> selector) where T : struct
@@ -3169,60 +3144,28 @@ namespace NetExtender.Utilities.Types
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<T> Shuffle<T>(this IEnumerable<T> source)
         {
-            if (source is null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-
-            return Shuffle(source, RandomUtilities.Generator);
+            return EnumerableBaseUtilities.Shuffle(source);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<T> Shuffle<T>(this IEnumerable<T> source, Random random)
         {
-            if (source is null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-
-            if (random is null)
-            {
-                throw new ArgumentNullException(nameof(random));
-            }
-
-            T[] buffer = source.ToArray();
-
-            for (Int32 i = 0; i < buffer.Length; i++)
-            {
-                Int32 j = random.Next(i, buffer.Length);
-                yield return buffer[j];
-
-                buffer[j] = buffer[i];
-            }
+            return EnumerableBaseUtilities.Shuffle(source, random);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<T> Shuffle<T>(this IEnumerable<T> source, IRandom random)
         {
-            if (source is null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
+            return EnumerableBaseUtilities.Shuffle(source, random);
+        }
 
-            if (random is null)
-            {
-                throw new ArgumentNullException(nameof(random));
-            }
-
-            T[] buffer = source.ToArray();
-
-            for (Int32 i = 0; i < buffer.Length; i++)
-            {
-                Int32 j = random.Next(i, buffer.Length);
-                yield return buffer[j];
-
-                buffer[j] = buffer[i];
-            }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<T> Shuffle<T, TRandom>(this IEnumerable<T> source, TRandom random) where TRandom : IRandom
+        {
+            return EnumerableBaseUtilities.Shuffle(source, random);
         }
 
 #if !NET6_0_OR_GREATER
@@ -3341,248 +3284,40 @@ namespace NetExtender.Utilities.Types
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<Int32> ZipChunk<T1, T2>(this IEnumerable<T1> first, IEnumerable<T2> second, T1[] chunk1, T2[] chunk2)
         {
             return ZipChunk(first, second, chunk1, chunk2, 0);
         }
 
-        // ReSharper disable once CognitiveComplexity
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<Int32> ZipChunk<T1, T2>(this IEnumerable<T1> first, IEnumerable<T2> second, T1[] chunk1, T2[] chunk2, Int32 length)
         {
-            if (first is null)
-            {
-                throw new ArgumentNullException(nameof(first));
-            }
-
-            if (second is null)
-            {
-                throw new ArgumentNullException(nameof(second));
-            }
-
-            if (chunk1 is null)
-            {
-                throw new ArgumentNullException(nameof(chunk1));
-            }
-
-            if (chunk2 is null)
-            {
-                throw new ArgumentNullException(nameof(chunk2));
-            }
-
-            Int32 chunklength = Math.Min(chunk1.Length, chunk2.Length);
-
-            if (length > chunklength)
-            {
-                throw new ArgumentOutOfRangeException(nameof(length), length, null);
-            }
-
-            if (chunklength <= 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(chunklength), chunklength, null);
-            }
-
-            length = length <= 0 ? chunklength : length;
-
-            using IEnumerator<T1> enumerator1 = first.GetEnumerator();
-            using IEnumerator<T2> enumerator2 = second.GetEnumerator();
-
-            while (enumerator1.MoveNext() && enumerator2.MoveNext())
-            {
-                chunk1[0] = enumerator1.Current;
-                chunk2[0] = enumerator2.Current;
-
-                Int32 i;
-                for (i = 1; i < length && enumerator1.MoveNext() && enumerator2.MoveNext(); i++)
-                {
-                    chunk1[i] = enumerator1.Current;
-                    chunk2[i] = enumerator2.Current;
-                }
-
-                if (i >= length)
-                {
-                    yield return i;
-                    continue;
-                }
-
-                yield return i;
-                yield break;
-            }
+            return EnumerableBaseUtilities.ZipChunk(first, second, chunk1, chunk2, length);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<Int32> ZipChunk<T1, T2, T3>(this IEnumerable<T1> first, IEnumerable<T2> second, IEnumerable<T3> third, T1[] chunk1, T2[] chunk2, T3[] chunk3)
         {
             return ZipChunk(first, second, third, chunk1, chunk2, chunk3, 0);
         }
 
-        // ReSharper disable once CognitiveComplexity
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<Int32> ZipChunk<T1, T2, T3>(this IEnumerable<T1> first, IEnumerable<T2> second, IEnumerable<T3> third, T1[] chunk1, T2[] chunk2, T3[] chunk3, Int32 length)
         {
-            if (first is null)
-            {
-                throw new ArgumentNullException(nameof(first));
-            }
-
-            if (second is null)
-            {
-                throw new ArgumentNullException(nameof(second));
-            }
-
-            if (third is null)
-            {
-                throw new ArgumentNullException(nameof(third));
-            }
-
-            if (chunk1 is null)
-            {
-                throw new ArgumentNullException(nameof(chunk1));
-            }
-
-            if (chunk2 is null)
-            {
-                throw new ArgumentNullException(nameof(chunk2));
-            }
-
-            if (chunk3 is null)
-            {
-                throw new ArgumentNullException(nameof(chunk3));
-            }
-
-            Int32 chunklength = Math.Min(chunk1.Length, Math.Min(chunk2.Length, chunk3.Length));
-
-            if (length > chunklength)
-            {
-                throw new ArgumentOutOfRangeException(nameof(length), length, null);
-            }
-
-            if (chunklength <= 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(chunklength), chunklength, null);
-            }
-
-            length = length <= 0 ? chunklength : length;
-
-            using IEnumerator<T1> enumerator1 = first.GetEnumerator();
-            using IEnumerator<T2> enumerator2 = second.GetEnumerator();
-            using IEnumerator<T3> enumerator3 = third.GetEnumerator();
-
-            while (enumerator1.MoveNext() && enumerator2.MoveNext() && enumerator3.MoveNext())
-            {
-                chunk1[0] = enumerator1.Current;
-                chunk2[0] = enumerator2.Current;
-                chunk3[0] = enumerator3.Current;
-
-                Int32 i;
-                for (i = 1; i < length && enumerator1.MoveNext() && enumerator2.MoveNext() && enumerator3.MoveNext(); i++)
-                {
-                    chunk1[i] = enumerator1.Current;
-                    chunk2[i] = enumerator2.Current;
-                    chunk3[i] = enumerator3.Current;
-                }
-
-                if (i >= length)
-                {
-                    yield return i;
-                    continue;
-                }
-
-                yield return i;
-                yield break;
-            }
+            return EnumerableBaseUtilities.ZipChunk(first, second, third, chunk1, chunk2, chunk3, length);
         }
 
-        public static IEnumerable<Int32> ZipChunk<T1, T2, T3, T4>(this IEnumerable<T1> first, IEnumerable<T2> second, IEnumerable<T3> third, IEnumerable<T4> fourth,
-            T1[] chunk1, T2[] chunk2, T3[] chunk3, T4[] chunk4)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<Int32> ZipChunk<T1, T2, T3, T4>(this IEnumerable<T1> first, IEnumerable<T2> second, IEnumerable<T3> third, IEnumerable<T4> fourth, T1[] chunk1, T2[] chunk2, T3[] chunk3, T4[] chunk4)
         {
             return ZipChunk(first, second, third, fourth, chunk1, chunk2, chunk3, chunk4, 0);
         }
 
-        // ReSharper disable once CognitiveComplexity
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<Int32> ZipChunk<T1, T2, T3, T4>(this IEnumerable<T1> first, IEnumerable<T2> second, IEnumerable<T3> third, IEnumerable<T4> fourth, T1[] chunk1, T2[] chunk2, T3[] chunk3, T4[] chunk4, Int32 length)
         {
-            if (first is null)
-            {
-                throw new ArgumentNullException(nameof(first));
-            }
-
-            if (second is null)
-            {
-                throw new ArgumentNullException(nameof(second));
-            }
-
-            if (third is null)
-            {
-                throw new ArgumentNullException(nameof(third));
-            }
-
-            if (fourth is null)
-            {
-                throw new ArgumentNullException(nameof(fourth));
-            }
-
-            if (chunk1 is null)
-            {
-                throw new ArgumentNullException(nameof(chunk1));
-            }
-
-            if (chunk2 is null)
-            {
-                throw new ArgumentNullException(nameof(chunk2));
-            }
-
-            if (chunk3 is null)
-            {
-                throw new ArgumentNullException(nameof(chunk3));
-            }
-
-            if (chunk4 is null)
-            {
-                throw new ArgumentNullException(nameof(chunk4));
-            }
-
-            Int32 chunklength = Math.Min(Math.Min(chunk1.Length, chunk2.Length), Math.Min(chunk3.Length, chunk4.Length));
-
-            if (length > chunklength)
-            {
-                throw new ArgumentOutOfRangeException(nameof(length), length, null);
-            }
-
-            if (chunklength <= 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(chunklength), chunklength, null);
-            }
-
-            length = length <= 0 ? chunklength : length;
-
-            using IEnumerator<T1> enumerator1 = first.GetEnumerator();
-            using IEnumerator<T2> enumerator2 = second.GetEnumerator();
-            using IEnumerator<T3> enumerator3 = third.GetEnumerator();
-            using IEnumerator<T4> enumerator4 = fourth.GetEnumerator();
-
-            while (enumerator1.MoveNext() && enumerator2.MoveNext() && enumerator3.MoveNext() && enumerator4.MoveNext())
-            {
-                chunk1[0] = enumerator1.Current;
-                chunk2[0] = enumerator2.Current;
-                chunk3[0] = enumerator3.Current;
-                chunk4[0] = enumerator4.Current;
-
-                Int32 i;
-                for (i = 1; i < length && enumerator1.MoveNext() && enumerator2.MoveNext() && enumerator3.MoveNext() && enumerator4.MoveNext(); i++)
-                {
-                    chunk1[i] = enumerator1.Current;
-                    chunk2[i] = enumerator2.Current;
-                    chunk3[i] = enumerator3.Current;
-                    chunk4[i] = enumerator4.Current;
-                }
-
-                if (i >= length)
-                {
-                    yield return i;
-                    continue;
-                }
-
-                yield return i;
-                yield break;
-            }
+            return EnumerableBaseUtilities.ZipChunk(first, second, third, fourth, chunk1, chunk2, chunk3, chunk4, length);
         }
     }
 }

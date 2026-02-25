@@ -5,7 +5,7 @@ using System;
 using System.Runtime.CompilerServices;
 using NetExtender.Types.Banking.Cards;
 using NetExtender.Types.Banking.Cards.Interfaces;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 
 namespace NetExtender.Utilities.Types.Banking.Cards
 {

@@ -8,7 +8,6 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
 using System.Windows.Forms;
-using NetExtender.Utilities.Windows;
 using NetExtender.Windows.Utilities;
 
 namespace NetExtender.Utilities.UserInterface
@@ -31,7 +30,7 @@ namespace NetExtender.Utilities.UserInterface
 
             try
             {
-                if (screen.Bounds.Width > 1 && screen.Bounds.Height > 1)
+                if (screen.Bounds is { Width: > 1, Height: > 1 })
                 {
                     using Graphics graphics = Graphics.FromImage(bitmap);
                     graphics.CopyFromScreen(screen.Bounds.X, screen.Bounds.Y, 0, 0, screen.Bounds.Size, CopyPixelOperation.SourceCopy);
@@ -56,12 +55,12 @@ namespace NetExtender.Utilities.UserInterface
                 throw new ArgumentNullException(nameof(screens));
             }
 
-            Rectangle rectangle = screens.Aggregate(Rectangle.Empty, (current, screen) => Rectangle.Union(current, screen.Bounds));
+            Rectangle rectangle = screens.Aggregate(Rectangle.Empty, static (current, screen) => Rectangle.Union(current, screen.Bounds));
             Bitmap bitmap = new Bitmap(rectangle.Width > 1 ? rectangle.Width : 1, rectangle.Height > 1 ? rectangle.Width : 1, PixelFormat.Format32bppArgb);
 
             try
             {
-                if (rectangle.Width > 1 && rectangle.Height > 1)
+                if (rectangle is { Width: > 1, Height: > 1 })
                 {
                     using Graphics graphics = Graphics.FromImage(bitmap);
                     graphics.CopyFromScreen(rectangle.X, rectangle.Y, 0, 0, rectangle.Size, CopyPixelOperation.SourceCopy);
@@ -81,52 +80,27 @@ namespace NetExtender.Utilities.UserInterface
         /// <returns>Returns a Bitmap containing the screenshot</returns>
         public static IEnumerable<Bitmap> MakeScreenshots(this IEnumerable<Screen> screens)
         {
-            if (screens is null)
-            {
-                throw new ArgumentNullException(nameof(screens));
-            }
-
-            return screens.Select(MakeScreenshot);
+            return screens is not null ? screens.Select(MakeScreenshot) : throw new ArgumentNullException(nameof(screens));
         }
 
         public static Bitmap? MakeScreenshot(this Form form)
         {
-            if (form is null)
-            {
-                throw new ArgumentNullException(nameof(form));
-            }
-
-            return WindowsScreenshotUtilities.MakeScreenshot(form.Handle);
+            return form is not null ? WindowsScreenshotUtilities.MakeScreenshot(form.Handle) : throw new ArgumentNullException(nameof(form));
         }
 
         public static Bitmap? MakeScreenshot(this Form form, ScreenshotType type)
         {
-            if (form is null)
-            {
-                throw new ArgumentNullException(nameof(form));
-            }
-
-            return WindowsScreenshotUtilities.MakeScreenshot(form.Handle, type);
+            return form is not null ? WindowsScreenshotUtilities.MakeScreenshot(form.Handle, type) : throw new ArgumentNullException(nameof(form));
         }
 
         public static Boolean TryMakeScreenshot(this Form form, [MaybeNullWhen(false)] out Bitmap screenshot)
         {
-            if (form is null)
-            {
-                throw new ArgumentNullException(nameof(form));
-            }
-
-            return WindowsScreenshotUtilities.TryMakeScreenshot(form.Handle, out screenshot);
+            return form is not null ? WindowsScreenshotUtilities.TryMakeScreenshot(form.Handle, out screenshot) : throw new ArgumentNullException(nameof(form));
         }
 
         public static Boolean TryMakeScreenshot(this Form form, ScreenshotType type, [MaybeNullWhen(false)] out Bitmap screenshot)
         {
-            if (form is null)
-            {
-                throw new ArgumentNullException(nameof(form));
-            }
-
-            return WindowsScreenshotUtilities.TryMakeScreenshot(form.Handle, type, out screenshot);
+            return form is not null ? WindowsScreenshotUtilities.TryMakeScreenshot(form.Handle, type, out screenshot) : throw new ArgumentNullException(nameof(form));
         }
     }
 }

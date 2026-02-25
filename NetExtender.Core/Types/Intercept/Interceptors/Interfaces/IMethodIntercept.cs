@@ -45,7 +45,7 @@ namespace NetExtender.Types.Intercept.Interfaces
         }
     }
 
-    public interface IMethodIntercept<out TSender, TArgument>
+    public interface IMethodIntercept<out TSender, out TArgument>
     {
         public event EventHandler<TSender, TArgument> MethodIntercept
         {

@@ -9,7 +9,7 @@ using System.Linq;
 using System.Security.AccessControl;
 using Microsoft.Win32;
 using NetExtender.Registry.Interfaces;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 using NetExtender.Utilities.Registry;
 using NetExtender.Utilities.Types;
 
@@ -416,7 +416,7 @@ namespace NetExtender.Registry
 
         public T? GetValue<T>(String? key, IEnumerable<String>? sections)
         {
-            if (sections?.CountIfMaterialized() > 0)
+            if (sections.CanHaveCount())
             {
                 return GetValue(key, sections, out T? result) ? result : result is null ? default : throw new InvalidCastException();
             }
@@ -442,7 +442,7 @@ namespace NetExtender.Registry
 
         public Boolean GetValue<T>(String? key, IEnumerable<String>? sections, out T? result)
         {
-            if (sections?.CountIfMaterialized() > 0)
+            if (sections.CanHaveCount())
             {
                 using IRegistry registry = NestedSubKey(sections);
                 return registry.GetValue(key, out result);
@@ -470,7 +470,7 @@ namespace NetExtender.Registry
 
         public Object? GetObjectValue(String? key, IEnumerable<String>? sections)
         {
-            if (sections?.CountIfMaterialized() > 0)
+            if (sections.CanHaveCount())
             {
                 using IRegistry registry = NestedSubKey(sections);
                 return registry.GetObjectValue(key);
@@ -510,7 +510,7 @@ namespace NetExtender.Registry
 
         public Object? GetObjectValue(String? key, IEnumerable<String>? sections, out RegistryValueKind kind)
         {
-            if (sections?.CountIfMaterialized() > 0)
+            if (sections.CanHaveCount())
             {
                 using IRegistry registry = NestedSubKey(sections);
                 return registry.GetObjectValue(key, out kind);
@@ -538,7 +538,7 @@ namespace NetExtender.Registry
 
         public String? GetValue(String? key, IEnumerable<String>? sections)
         {
-            if (sections?.CountIfMaterialized() > 0)
+            if (sections.CanHaveCount())
             {
                 using IRegistry registry = NestedSubKey(sections);
                 return registry.GetValue(key);
@@ -578,7 +578,7 @@ namespace NetExtender.Registry
 
         public String? GetValue(String? key, IEnumerable<String>? sections, out RegistryValueKind kind)
         {
-            if (sections?.CountIfMaterialized() > 0)
+            if (sections.CanHaveCount())
             {
                 using IRegistry registry = NestedSubKey(sections);
                 return registry.GetValue(key, out kind);
@@ -606,7 +606,7 @@ namespace NetExtender.Registry
 
         public RegistryValueKind GetValueKind(String? key, IEnumerable<String>? sections)
         {
-            if (sections?.CountIfMaterialized() > 0)
+            if (sections.CanHaveCount())
             {
                 using IRegistry registry = NestedSubKey(sections);
                 return registry.GetValueKind(key);
@@ -657,7 +657,7 @@ namespace NetExtender.Registry
 
         public Boolean SetValue(String? key, String? value, IEnumerable<String>? sections)
         {
-            if (sections?.CountIfMaterialized() > 0)
+            if (sections.CanHaveCount())
             {
                 using IRegistry registry = NestedSubKey(sections);
                 return registry.SetValue(key, value);
@@ -725,7 +725,7 @@ namespace NetExtender.Registry
 
         public Boolean SetValue(String? key, Object? value, IEnumerable<String>? sections, RegistryValueKind kind)
         {
-            if (sections?.CountIfMaterialized() > 0)
+            if (sections.CanHaveCount())
             {
                 using IRegistry registry = NestedSubKey(sections);
                 return registry.SetValue(key, value, kind);
@@ -776,7 +776,7 @@ namespace NetExtender.Registry
 
         public Boolean WriteValue(String? key, String? value, IEnumerable<String>? sections)
         {
-            if (sections?.CountIfMaterialized() > 0)
+            if (sections.CanHaveCount())
             {
                 using IRegistry registry = NestedSubKey(sections);
                 return registry.WriteValue(key, value);
@@ -844,7 +844,7 @@ namespace NetExtender.Registry
 
         public Boolean WriteValue(String? key, Object? value, IEnumerable<String>? sections, RegistryValueKind kind)
         {
-            if (sections?.CountIfMaterialized() > 0)
+            if (sections.CanHaveCount())
             {
                 using IRegistry registry = NestedSubKey(sections);
                 return registry.WriteValue(key, value, kind);
@@ -917,7 +917,7 @@ namespace NetExtender.Registry
 
         public Boolean RemoveKey(String? key, IEnumerable<String>? sections)
         {
-            if (sections?.CountIfMaterialized() > 0)
+            if (sections.CanHaveCount())
             {
                 using IRegistry registry = NestedSubKey(sections);
                 return registry.RemoveKey(key);
@@ -945,7 +945,7 @@ namespace NetExtender.Registry
 
         public String[]? GetValueNames(IEnumerable<String>? sections)
         {
-            if (sections?.CountIfMaterialized() > 0)
+            if (sections.CanHaveCount())
             {
                 using IRegistry registry = NestedSubKey(sections);
                 return registry.GetValueNames();
@@ -997,7 +997,7 @@ namespace NetExtender.Registry
 
         public RegistryEntry[]? GetValues(IEnumerable<String>? sections)
         {
-            if (sections?.CountIfMaterialized() > 0)
+            if (sections.CanHaveCount())
             {
                 using IRegistry registry = NestedSubKey(sections);
                 return registry.GetValues();
@@ -1025,7 +1025,7 @@ namespace NetExtender.Registry
 
         public String[]? GetSubKeyNames(IEnumerable<String>? sections)
         {
-            if (sections?.CountIfMaterialized() > 0)
+            if (sections.CanHaveCount())
             {
                 using IRegistry registry = NestedSubKey(sections);
                 return registry.GetSubKeyNames();
@@ -1090,7 +1090,7 @@ namespace NetExtender.Registry
 
         public RegistryEntry[]? Dump(IEnumerable<String>? sections)
         {
-            if (sections?.CountIfMaterialized() > 0)
+            if (sections.CanHaveCount())
             {
                 using IRegistry registry = NestedSubKey(sections);
                 return registry.Dump();
@@ -1135,7 +1135,7 @@ namespace NetExtender.Registry
 
         public Boolean RemoveSubKey(IEnumerable<String>? sections)
         {
-            if (sections?.CountIfMaterialized() > 0)
+            if (sections.CanHaveCount())
             {
                 using IRegistry registry = NestedSubKey(sections);
                 return registry.RemoveSubKey();
@@ -1188,7 +1188,7 @@ namespace NetExtender.Registry
 
         public Boolean RemoveSubKey(String? subkey, IEnumerable<String>? sections)
         {
-            if (sections?.CountIfMaterialized() > 0)
+            if (sections.CanHaveCount())
             {
                 using IRegistry registry = NestedSubKey(sections);
                 return registry.RemoveSubKey(subkey);
@@ -1237,7 +1237,6 @@ namespace NetExtender.Registry
                     }
                     catch (Exception)
                     {
-                        //ignored
                     }
                 }
 
@@ -1256,7 +1255,7 @@ namespace NetExtender.Registry
 
         public Boolean RemoveAllSubKey(IEnumerable<String>? sections)
         {
-            if (sections?.CountIfMaterialized() > 0)
+            if (sections.CanHaveCount())
             {
                 using IRegistry registry = NestedSubKey(sections);
                 return registry.RemoveAllSubKey();
@@ -1296,7 +1295,7 @@ namespace NetExtender.Registry
 
         public Boolean RemoveSubKeyTree(IEnumerable<String>? sections)
         {
-            if (sections?.CountIfMaterialized() > 0)
+            if (sections.CanHaveCount())
             {
                 using IRegistry registry = NestedSubKey(sections);
                 return registry.RemoveSubKeyTree();
@@ -1349,7 +1348,7 @@ namespace NetExtender.Registry
 
         public Boolean RemoveSubKeyTree(String? subkey, IEnumerable<String>? sections)
         {
-            if (sections?.CountIfMaterialized() > 0)
+            if (sections.CanHaveCount())
             {
                 using IRegistry registry = NestedSubKey(sections);
                 return registry.RemoveSubKeyTree(subkey);
@@ -1398,7 +1397,6 @@ namespace NetExtender.Registry
                     }
                     catch (Exception)
                     {
-                        //ignored
                     }
                 }
 
@@ -1418,7 +1416,7 @@ namespace NetExtender.Registry
 
         public Boolean RemoveAllSubKeyTree(IEnumerable<String>? sections)
         {
-            if (sections?.CountIfMaterialized() > 0)
+            if (sections.CanHaveCount())
             {
                 using IRegistry registry = NestedSubKey(sections);
                 return registry.RemoveAllSubKeyTree();

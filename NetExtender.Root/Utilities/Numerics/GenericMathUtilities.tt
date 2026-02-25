@@ -1,0 +1,1637 @@
+<#@ template language="C#v3.5" #>
+<#@ output extension=".cs" encoding="utf-8"#>
+<#@ assembly name="System.Core"#>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Linq" #>
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
+using System;
+using System.Numerics;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using NetExtender.Exceptions;
+
+namespace NetExtender.Utilities.Numerics
+{
+<#
+    const String Int128 = nameof(Int128);
+    const String UInt128 = nameof(UInt128);
+    const String Half = nameof(Half);
+    const String BigInteger = nameof(BigInteger);
+    const String Complex = nameof(Complex);
+
+    List<String> Types = new List<String>
+    {
+        nameof(Char),
+        nameof(SByte),
+        nameof(Byte),
+        nameof(Int16),
+        nameof(UInt16),
+        nameof(Int32),
+        nameof(UInt32),
+        nameof(Int64),
+        nameof(UInt64),
+        nameof(Single),
+        nameof(Double),
+        nameof(Decimal)
+    };
+
+    static Boolean NotChar(String type)
+    {
+        return type != nameof(Char);
+    }
+
+    static Boolean IsSmallType(String type)
+    {
+        return type == nameof(Char) || type == nameof(Byte) || type == nameof(SByte) || type == nameof(Int16) || type == nameof(UInt16);
+    }
+
+    static Boolean IsUnsignedType(String type)
+    {
+        return type == nameof(Char) || type == nameof(Byte) || type == nameof(UInt16) || type == nameof(UInt32) || type == nameof(UInt64) || type == UInt128;
+    }
+
+    static Boolean IsIntType(String type)
+    {
+        return type == nameof(Char) || type == nameof(SByte) || type == nameof(Byte) || type == nameof(Int16) || type == nameof(UInt16) || type == nameof(Int32) || type == nameof(UInt32) || type == nameof(Int64) || type == nameof(UInt64) || type == Int128 || type == UInt128 || type == BigInteger;
+    }
+
+    static Boolean IsNET7_0_OR_GREATER(String type)
+    {
+        return type == Int128 || type == UInt128 || type == Half;
+    }
+
+    static String ToUnsignedType(String type)
+    {
+        return type switch
+        {
+            nameof(SByte) => nameof(Byte),
+            nameof(Int16) => nameof(UInt16),
+            nameof(Int32) => nameof(UInt32),
+            nameof(Int64) => nameof(UInt64),
+            Int128 => UInt128,
+            _ => type
+        };
+    }
+
+    void ForEach(IEnumerable<String> types, Action<String> action, Boolean line = true)
+    {
+        String[] type = types.ToArray();
+
+        for (Int32 i = 0; i < type.Length; i++)
+        {
+            String current = type[i];
+            if (IsNET7_0_OR_GREATER(current))
+            {
+                WriteLine("#if NET7_0_OR_GREATER");
+                action(current);
+                WriteLine("#endif");
+            }
+            else
+            {
+                action(current);
+            }
+
+            if (line && i <= type.Length - 2)
+            {
+                WriteLine(String.Empty);
+            }
+        }
+    }
+
+    void MinImplementation(String type)
+    {
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {type} {nameof(Min)}(this {type} value, {type} compare)");
+        WriteLine("\t\t{");
+        WriteLine("\t\t\treturn value <= compare ? value : compare;");
+        WriteLine("\t\t}");
+
+        WriteLine(String.Empty);
+
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static void {nameof(Min)}(ref {type} max, ref {type} min)");
+        WriteLine("\t\t{");
+        WriteLine("\t\t\tif (max > min)");
+        WriteLine("\t\t\t{");
+        WriteLine("\t\t\t\t(max, min) = (min, max);");
+        WriteLine("\t\t\t}");
+        WriteLine("\t\t}");
+    }
+
+    void Min()
+    {
+        ForEach(Types.Append(BigInteger), MinImplementation);
+    }
+
+    void MaxImplementation(String type)
+    {
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {type} {nameof(Max)}(this {type} value, {type} compare)");
+        WriteLine("\t\t{");
+        WriteLine("\t\t\treturn value >= compare ? value : compare;");
+        WriteLine("\t\t}");
+
+        WriteLine(String.Empty);
+
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static void {nameof(Max)}(ref {type} max, ref {type} min)");
+        WriteLine("\t\t{");
+        WriteLine("\t\t\tif (max < min)");
+        WriteLine("\t\t\t{");
+        WriteLine("\t\t\t\t(max, min) = (min, max);");
+        WriteLine("\t\t\t}");
+        WriteLine("\t\t}");
+    }
+
+    void Max()
+    {
+        ForEach(Types.Append(BigInteger), MaxImplementation);
+    }
+
+    void RangeImplementation(String type)
+    {
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static IEnumerable<{type}> {nameof(Range)}({type} stop)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn {nameof(Range)}(default, stop);");
+        WriteLine("\t\t}");
+
+        WriteLine(String.Empty);
+
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static IEnumerable<{type}> {nameof(Range)}({type} start, {type} stop)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn {nameof(Range)}(start, stop, {(IsSmallType(type) ? $"({type}) " : String.Empty)}1);");
+        WriteLine("\t\t}");
+
+        WriteLine(String.Empty);
+
+        WriteLine($"\t\tpublic static IEnumerable<{type}> {nameof(Range)}({type} start, {type} stop, {type} step)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\tif ({(type == nameof(Single) || type == nameof(Double) ? $"{nameof(Math)}.Abs(step) < {type}.Epsilon" : "step == 0")})");
+        WriteLine("\t\t\t{");
+        WriteLine("\t\t\t\tthrow new ArgumentException(\"Step cannot be equals zero.\");");
+        WriteLine("\t\t\t}");
+
+        WriteLine(String.Empty);
+
+        if (IsUnsignedType(type))
+        {
+            WriteLine($"\t\t\tstop = {(IsSmallType(type) ? $"({type}) " : String.Empty)}{nameof(Math)}.{nameof(Math.Min)}(stop, {type}.MaxValue - step);");
+            WriteLine(String.Empty);
+            WriteLine($"\t\t\t{type} i;");
+            WriteLine("\t\t\tfor (i = start; i < stop; i += step)");
+            WriteLine("\t\t\t{");
+            WriteLine("\t\t\t\tyield return i;");
+            WriteLine("\t\t\t}");
+            WriteLine(String.Empty);
+            WriteLine($"\t\t\tif (i >= {type}.MaxValue - step)");
+            WriteLine("\t\t\t{");
+            WriteLine("\t\t\t\tyield return i;");
+            WriteLine("\t\t\t}");
+        }
+        else
+        {
+            WriteLine("\t\t\tif (start < stop && step > 0)");
+            WriteLine("\t\t\t{");
+            WriteLine($"\t\t\t\tstop = {(IsSmallType(type) ? $"({type}) " : String.Empty)}{nameof(Math)}.{nameof(Math.Min)}(stop, {type}.MaxValue - step);");
+            WriteLine(String.Empty);
+            WriteLine($"\t\t\t\t{type} i;");
+            WriteLine("\t\t\t\tfor (i = start; i < stop; i += step)");
+            WriteLine("\t\t\t\t{");
+            WriteLine("\t\t\t\t\tyield return i;");
+            WriteLine("\t\t\t\t}");
+            WriteLine(String.Empty);
+            WriteLine($"\t\t\t\tif (i >= {type}.MaxValue - step)");
+            WriteLine("\t\t\t\t{");
+            WriteLine("\t\t\t\t\tyield return i;");
+            WriteLine("\t\t\t\t}");
+            WriteLine("\t\t\t}");
+            WriteLine("\t\t\telse if (start > stop && step < 0)");
+            WriteLine("\t\t\t{");
+            WriteLine($"\t\t\t\tstop = {(IsSmallType(type) ? $"({type}) " : String.Empty)}{nameof(Math)}.{nameof(Math.Max)}(stop, {type}.MinValue - step);");
+            WriteLine(String.Empty);
+            WriteLine($"\t\t\t\t{type} i;");
+            WriteLine("\t\t\t\tfor (i = start; i > stop; i += step)");
+            WriteLine("\t\t\t\t{");
+            WriteLine("\t\t\t\t\tyield return i;");
+            WriteLine("\t\t\t\t}");
+            WriteLine(String.Empty);
+            WriteLine($"\t\t\t\tif (i <= {type}.MinValue - step)");
+            WriteLine("\t\t\t\t{");
+            WriteLine("\t\t\t\t\tyield return i;");
+            WriteLine("\t\t\t\t}");
+            WriteLine("\t\t\t}");
+        }
+
+        WriteLine("\t\t}");
+    }
+
+    void Range()
+    {
+        ForEach(Types.Where(NotChar).Where(IsIntType), RangeImplementation);
+    }
+
+    void RangeIncludeImplementation(String type)
+    {
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static IEnumerable<{type}> {nameof(RangeInclude)}({type} stop)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn {nameof(RangeInclude)}(default, stop);");
+        WriteLine("\t\t}");
+
+        WriteLine(String.Empty);
+
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static IEnumerable<{type}> {nameof(RangeInclude)}({type} start, {type} stop)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn {nameof(RangeInclude)}(start, stop, {(IsSmallType(type) ? $"({type}) " : String.Empty)}1);");
+        WriteLine("\t\t}");
+
+        WriteLine(String.Empty);
+
+        WriteLine($"\t\tpublic static IEnumerable<{type}> {nameof(RangeInclude)}({type} start, {type} stop, {type} step)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\tif ({(type == nameof(Single) || type == nameof(Double) ? $"{nameof(Math)}.Abs(step) < {type}.Epsilon" : "step == 0")})");
+        WriteLine("\t\t\t{");
+        WriteLine("\t\t\t\tthrow new ArgumentException(\"Step cannot be equals zero.\");");
+        WriteLine("\t\t\t}");
+
+        WriteLine(String.Empty);
+
+        if (IsUnsignedType(type))
+        {
+            WriteLine($"\t\t\tstop = {(IsSmallType(type) ? $"({type}) " : String.Empty)}{nameof(Math)}.{nameof(Math.Min)}(stop, {type}.MaxValue - step + 1);");
+            WriteLine(String.Empty);
+            WriteLine($"\t\t\t{type} i;");
+            WriteLine("\t\t\tfor (i = start; i < stop; i += step)");
+            WriteLine("\t\t\t{");
+            WriteLine("\t\t\t\tyield return i;");
+            WriteLine("\t\t\t}");
+            WriteLine(String.Empty);
+            WriteLine("\t\t\tyield return i;");
+        }
+        else
+        {
+            WriteLine("\t\t\tif (start < stop && step > 0)");
+            WriteLine("\t\t\t{");
+            WriteLine($"\t\t\t\tstop = {(IsSmallType(type) ? $"({type}) " : String.Empty)}{nameof(Math)}.{nameof(Math.Min)}(stop, {type}.MaxValue - step + 1);");
+            WriteLine(String.Empty);
+            WriteLine($"\t\t\t\t{type} i;");
+            WriteLine("\t\t\t\tfor (i = start; i < stop; i += step)");
+            WriteLine("\t\t\t\t{");
+            WriteLine("\t\t\t\t\tyield return i;");
+            WriteLine("\t\t\t\t}");
+            WriteLine(String.Empty);
+            WriteLine("\t\t\t\tyield return i;");
+            WriteLine("\t\t\t}");
+            WriteLine("\t\t\telse if (start > stop && step < 0)");
+            WriteLine("\t\t\t{");
+            WriteLine($"\t\t\t\tstop = {(IsSmallType(type) ? $"({type}) " : String.Empty)}{nameof(Math)}.{nameof(Math.Max)}(stop, {type}.MinValue - step - 1);");
+            WriteLine(String.Empty);
+            WriteLine($"\t\t\t\t{type} i;");
+            WriteLine("\t\t\t\tfor (i = start; i > stop; i += step)");
+            WriteLine("\t\t\t\t{");
+            WriteLine("\t\t\t\t\tyield return i;");
+            WriteLine("\t\t\t\t}");
+            WriteLine(String.Empty);
+            WriteLine("\t\t\t\tyield return i;");
+            WriteLine("\t\t\t}");
+        }
+
+        WriteLine("\t\t}");
+    }
+
+    void RangeInclude()
+    {
+        ForEach(Types.Where(NotChar).Where(IsIntType), RangeIncludeImplementation);
+    }
+
+    void ToRangeImplementation(String type)
+    {
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {type} {nameof(ToRange)}(this {type} value)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn {nameof(Clamp)}(value);");
+        WriteLine("\t\t}");
+
+        WriteLine(String.Empty);
+
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {type} {nameof(ToRange)}(this {type} value, {nameof(Boolean)} looped)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn {nameof(Clamp)}(value, looped);");
+        WriteLine("\t\t}");
+
+        WriteLine(String.Empty);
+
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {type} {nameof(ToRange)}(this {type} value, {type} maximum)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn {nameof(Clamp)}(value, maximum);");
+        WriteLine("\t\t}");
+
+        WriteLine(String.Empty);
+
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {type} {nameof(ToRange)}(this {type} value, {type} maximum, {nameof(Boolean)} looped)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn {nameof(Clamp)}(value, maximum, looped);");
+        WriteLine("\t\t}");
+
+        WriteLine(String.Empty);
+
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {type} {nameof(ToRange)}(this {type} value, {type} minimum, {type} maximum)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn {nameof(Clamp)}(value, minimum, maximum);");
+        WriteLine("\t\t}");
+
+        WriteLine(String.Empty);
+
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {type} {nameof(ToRange)}(this {type} value, {type} minimum, {type} maximum, {nameof(Boolean)} looped)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn {nameof(Clamp)}(value, minimum, maximum, looped);");
+        WriteLine("\t\t}");
+    }
+
+    void ToRange()
+    {
+        ForEach(Types.Append(BigInteger), ToRangeImplementation);
+    }
+
+    void InRangeImplementation(String type)
+    {
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {nameof(Boolean)} {nameof(InRange)}(this {type} value)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn {nameof(InRange)}(value, MathPositionType.Both);");
+        WriteLine("\t\t}");
+
+        WriteLine(String.Empty);
+
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {nameof(Boolean)} {nameof(InRange)}(this {type} value, MathPositionType comparison)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn {nameof(InRange)}(value, default, {type}.MaxValue, comparison);");
+        WriteLine("\t\t}");
+
+        WriteLine(String.Empty);
+
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {nameof(Boolean)} {nameof(InRange)}(this {type} value, {type} maximum)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn {nameof(InRange)}(value, maximum, MathPositionType.Both);");
+        WriteLine("\t\t}");
+
+        WriteLine(String.Empty);
+
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {nameof(Boolean)} {nameof(InRange)}(this {type} value, {type} maximum, MathPositionType comparison)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn {nameof(InRange)}(value, default, maximum, comparison);");
+        WriteLine("\t\t}");
+
+        WriteLine(String.Empty);
+
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {nameof(Boolean)} {nameof(InRange)}(this {type} value, {type} minimum, {type} maximum)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn {nameof(InRange)}(value, minimum, maximum, MathPositionType.Both);");
+        WriteLine("\t\t}");
+
+        WriteLine(String.Empty);
+
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {nameof(Boolean)} {nameof(InRange)}(this {type} value, {type} minimum, {type} maximum, MathPositionType comparison)");
+        WriteLine("\t\t{");
+        WriteLine("\t\t\treturn comparison switch");
+        WriteLine("\t\t\t{");
+        WriteLine("\t\t\t\tMathPositionType.None => value > minimum && value < maximum,");
+        WriteLine("\t\t\t\tMathPositionType.Left => value >= minimum && value < maximum,");
+        WriteLine("\t\t\t\tMathPositionType.Right => value > minimum && value <= maximum,");
+        WriteLine("\t\t\t\tMathPositionType.Both => value >= minimum && value <= maximum,");
+        WriteLine("\t\t\t\t_ => throw new EnumUndefinedOrNotSupportedException<MathPositionType>(comparison, nameof(comparison), null)");
+        WriteLine("\t\t\t};");
+        WriteLine("\t\t}");
+    }
+
+    void InRange()
+    {
+        ForEach(Types, InRangeImplementation);
+    }
+
+    void IsPositiveImplementation(String type)
+    {
+        if (IsUnsignedType(type))
+        {
+            WriteLine("\t\t[SuppressMessage(\"ReSharper\", \"UnusedParameter.Global\")]");
+        }
+
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {nameof(Boolean)} {nameof(IsPositive)}(this {type} value)");
+        WriteLine("\t\t{");
+        WriteLine(IsUnsignedType(type) ? "\t\t\treturn true;" : "\t\t\treturn value >= 0;");
+        WriteLine("\t\t}");
+    }
+
+    void IsPositive()
+    {
+        ForEach(Types.Append(BigInteger), IsPositiveImplementation);
+    }
+
+    void IsNegativeImplementation(String type)
+    {
+        if (IsUnsignedType(type))
+        {
+            WriteLine("\t\t[SuppressMessage(\"ReSharper\", \"UnusedParameter.Global\")]");
+        }
+
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {nameof(Boolean)} {nameof(IsNegative)}(this {type} value)");
+        WriteLine("\t\t{");
+        WriteLine(IsUnsignedType(type) ? "\t\t\treturn false;" : "\t\t\treturn value < 0;");
+        WriteLine("\t\t}");
+    }
+
+    void IsNegative()
+    {
+        ForEach(Types.Append(BigInteger), IsNegativeImplementation);
+    }
+
+    void ToSignImplementation(String type)
+    {
+        if (IsUnsignedType(type))
+        {
+            WriteLine("\t\t[SuppressMessage(\"ReSharper\", \"UnusedParameter.Global\")]");
+        }
+
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {nameof(Char)} {nameof(ToSign)}(this {type} value)");
+        WriteLine("\t\t{");
+        WriteLine(IsUnsignedType(type) ? "\t\t\treturn '+';" : "\t\t\treturn value >= 0 ? '+' : '-';");
+        WriteLine("\t\t}");
+    }
+
+    void ToSign()
+    {
+        ForEach(Types.Append(BigInteger), ToSignImplementation);
+    }
+
+    void RoundToMultiplierImplementation(String type)
+    {
+        Boolean integer = IsIntType(type) || type == nameof(Decimal);
+
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tprivate static {type} RoundUpToMultiplierOriginal({type} value, {type} multiplier)");
+        WriteLine("\t\t{");
+        WriteLine("\t\t\treturn RoundUpToMultiplierOriginal(value, multiplier, value % multiplier);");
+        WriteLine("\t\t}");
+
+        WriteLine(String.Empty);
+
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tprivate static {type} RoundUpToMultiplierOriginal({type} value, {type} multiplier, {(IsSmallType(type) ? nameof(Int32) : type)} remainder)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn {(integer ? "remainder == 0" : "IsEpsilon(remainder)")} ? value : {(IsSmallType(type) ? $"({type})(multiplier - remainder + value)" : "multiplier - remainder + value")};");
+        WriteLine("\t\t}");
+
+        WriteLine(String.Empty);
+
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {type} RoundUpToMultiplier({type} value)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\tconst {type} multiplier = 10;");
+        WriteLine("\t\t\treturn RoundUpToMultiplier(value, multiplier);");
+        WriteLine("\t\t}");
+
+        WriteLine(String.Empty);
+
+        WriteLine($"\t\tpublic static {type} RoundUpToMultiplier({type} value, {type} multiplier)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\tif ({(integer ? "multiplier == 0" : "IsEpsilon(multiplier)")})");
+        WriteLine("\t\t\t{");
+        WriteLine("\t\t\t\tthrow new ArgumentException(null, nameof(multiplier));");
+        WriteLine("\t\t\t}");
+
+        WriteLine(String.Empty);
+
+        WriteLine($"\t\t\tif ({(integer ? "value == 0" : "IsEpsilon(value)")} || {(integer ? $"value == multiplier || multiplier == 1{(!IsUnsignedType(type) ? " || multiplier == -1" : String.Empty)}" : "IsEpsilon(value - multiplier)")})");
+        WriteLine("\t\t\t{");
+        WriteLine("\t\t\t\treturn value;");
+        WriteLine("\t\t\t}");
+
+        WriteLine(String.Empty);
+
+        if (!IsUnsignedType(type))
+        {
+            WriteLine("\t\t\tif (value < 0 ^ multiplier < 0)");
+            WriteLine("\t\t\t{");
+            WriteLine("\t\t\t\treturn RoundDownToMultiplierOriginal(value, multiplier.Abs());");
+            WriteLine("\t\t\t}");
+
+            WriteLine(String.Empty);
+        }
+
+        WriteLine($"\t\t\t{(IsSmallType(type) ? nameof(Int32) : type)} remainder = value % multiplier;");
+        WriteLine($"\t\t\treturn {(integer ? "remainder == 0" : "IsEpsilon(remainder)")} ? value : RoundUpToMultiplierOriginal(value, multiplier, remainder);");
+        WriteLine("\t\t}");
+
+        WriteLine(String.Empty);
+
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tprivate static {type} RoundDownToMultiplierOriginal({type} value, {type} multiplier)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\t{(IsSmallType(type) ? $"{nameof(Int32)}" : $"{type}")} remainder = value % multiplier;");
+        WriteLine($"\t\t\treturn {(integer ? "remainder == 0" : "IsEpsilon(remainder)")} ? value : {(IsSmallType(type) ? $"({type})(value - remainder)" : "value - remainder")};");
+        WriteLine("\t\t}");
+
+        WriteLine(String.Empty);
+
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {type} RoundDownToMultiplier({type} value)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\tconst {type} multiplier = 10;");
+        WriteLine("\t\t\treturn RoundDownToMultiplier(value, multiplier);");
+        WriteLine("\t\t}");
+
+        WriteLine(String.Empty);
+
+        WriteLine($"\t\tpublic static {type} RoundDownToMultiplier({type} value, {type} multiplier)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\tif ({(integer ? "multiplier == 0" : "IsEpsilon(multiplier)")})");
+        WriteLine("\t\t\t{");
+        WriteLine("\t\t\t\tthrow new ArgumentException(null, nameof(multiplier));");
+        WriteLine("\t\t\t}");
+
+        WriteLine(String.Empty);
+
+        WriteLine($"\t\t\tif ({(integer ? "value == 0" : "IsEpsilon(value)")} || {(integer ? $"value == multiplier || multiplier == 1{(!IsUnsignedType(type) ? " || multiplier == -1" : String.Empty)}" : "IsEpsilon(value - multiplier)")})");
+        WriteLine("\t\t\t{");
+        WriteLine("\t\t\t\treturn value;");
+        WriteLine("\t\t\t}");
+
+        WriteLine(String.Empty);
+
+        if (!IsUnsignedType(type))
+        {
+            WriteLine("\t\t\tif (value < 0 && multiplier < 0)");
+            WriteLine("\t\t\t{");
+            WriteLine("\t\t\t\tif (value > multiplier)");
+            WriteLine("\t\t\t\t{");
+            WriteLine("\t\t\t\t\treturn 0;");
+            WriteLine("\t\t\t\t}");
+
+            WriteLine(String.Empty);
+
+            WriteLine($"\t\t\t\tmultiplier = {(IsSmallType(type) ? $"({type})(-multiplier)" : "-multiplier")};");
+            WriteLine("\t\t\t}");
+
+            WriteLine(String.Empty);
+
+            WriteLine("\t\t\tif (value < 0 || multiplier < 0)");
+            WriteLine("\t\t\t{");
+            WriteLine($"\t\t\t\treturn {(IsSmallType(type) ? $"({type})(-RoundUpToMultiplierOriginal(-value, multiplier))" : "-RoundUpToMultiplierOriginal(-value, multiplier)")};");
+            WriteLine("\t\t\t}");
+
+            WriteLine(String.Empty);
+        }
+
+        WriteLine("\t\t\treturn RoundDownToMultiplierOriginal(value, multiplier);");
+        WriteLine("\t\t}");
+
+        WriteLine(String.Empty);
+
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {type} RoundBankingToMultiplier({type} value)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\tconst {type} multiplier = 10;");
+        WriteLine("\t\t\treturn RoundBankingToMultiplier(value, multiplier);");
+        WriteLine("\t\t}");
+
+        WriteLine(String.Empty);
+
+        WriteLine($"\t\tpublic static {type} RoundBankingToMultiplier({type} value, {type} multiplier)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\tif ({(integer ? "multiplier == 0" : "IsEpsilon(multiplier)")})");
+        WriteLine("\t\t\t{");
+        WriteLine("\t\t\t\tthrow new ArgumentException(null, nameof(multiplier));");
+        WriteLine("\t\t\t}");
+
+
+        WriteLine(String.Empty);
+
+        WriteLine($"\t\t\tif ({(integer ? "value == 0" : "IsEpsilon(value)")} || {(integer ? $"value == multiplier || multiplier == 1{(!IsUnsignedType(type) ? " || multiplier == -1" : String.Empty)}" : "IsEpsilon(value - multiplier)")})");
+        WriteLine("\t\t\t{");
+        WriteLine("\t\t\t\treturn value;");
+        WriteLine("\t\t\t}");
+
+        WriteLine(String.Empty);
+
+        if (IsUnsignedType(type))
+        {
+            WriteLine("\t\t\treturn value % multiplier >= multiplier / 2D ? RoundUpToMultiplierOriginal(value, multiplier) : RoundDownToMultiplierOriginal(value, multiplier);");
+        }
+        else
+        {
+            WriteLine($"\t\t\t{(IsSmallType(type) ? nameof(Int32) : type)} remainder = value % multiplier;");
+            WriteLine($"\t\t\t{(type == nameof(Decimal) ? nameof(Decimal) : nameof(Double))} average = multiplier / 2{(type == nameof(Decimal) ? "M" : "D")};");
+
+            WriteLine(String.Empty);
+
+            WriteLine("\t\t\tif (value > 0)");
+            WriteLine("\t\t\t{");
+            WriteLine("\t\t\t\tif (multiplier > 0)");
+            WriteLine("\t\t\t\t{");
+            WriteLine("\t\t\t\t\treturn remainder >= average ? RoundUpToMultiplierOriginal(value, multiplier) : RoundDownToMultiplierOriginal(value, multiplier);");
+            WriteLine("\t\t\t\t}");
+
+            WriteLine(String.Empty);
+
+            WriteLine("\t\t\t\treturn remainder <= -average ? RoundUpToMultiplier(value, multiplier) : RoundDownToMultiplier(value, multiplier);");
+            WriteLine("\t\t\t}");
+
+            WriteLine(String.Empty);
+
+            WriteLine("\t\t\tif (multiplier > 0)");
+            WriteLine("\t\t\t{");
+            WriteLine("\t\t\t\treturn remainder >= -average ? RoundUpToMultiplier(value, multiplier) : RoundDownToMultiplier(value, multiplier);");
+            WriteLine("\t\t\t}");
+
+            WriteLine(String.Empty);
+
+            WriteLine("\t\t\treturn remainder <= average ? RoundUpToMultiplierOriginal(value, multiplier) : RoundDownToMultiplierOriginal(value, multiplier);");
+        }
+        WriteLine("\t\t}");
+
+        WriteLine(String.Empty);
+
+
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {type} RoundToZeroMultiplier({type} value, {type} multiplier)");
+        WriteLine("\t\t{");
+
+        if (IsUnsignedType(type))
+        {
+            WriteLine("\t\t\treturn RoundDownToMultiplier(value, multiplier);");
+        }
+        else
+        {
+            WriteLine("\t\t\tif (value > 0)");
+            WriteLine("\t\t\t{");
+            WriteLine($"\t\t\t\treturn multiplier > 0 ? RoundDownToMultiplier(value, multiplier) : RoundDownToMultiplier(value, {(IsSmallType(type) ? $"({type})(-multiplier)" : "-multiplier")});");
+            WriteLine("\t\t\t}");
+
+            WriteLine(String.Empty);
+
+            WriteLine($"\t\t\treturn multiplier > 0 ? RoundDownToMultiplier(value, {(IsSmallType(type) ? $"({type})(-multiplier)" : "-multiplier")}) : RoundDownToMultiplier(value, multiplier);");
+        }
+        WriteLine("\t\t}");
+
+        WriteLine(String.Empty);
+
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {type} RoundAwayFromZeroToMultiplier({type} value, {type} multiplier)");
+        WriteLine("\t\t{");
+
+        if (IsUnsignedType(type))
+        {
+            WriteLine("\t\t\treturn RoundUpToMultiplier(value, multiplier);");
+        }
+        else
+        {
+            WriteLine("\t\t\tif (value > 0)");
+            WriteLine("\t\t\t{");
+            WriteLine($"\t\t\t\treturn multiplier > 0 ? RoundUpToMultiplier(value, multiplier) : RoundUpToMultiplier(value, {(IsSmallType(type) ? $"({type})(-multiplier)" : "-multiplier")});");
+            WriteLine("\t\t\t}");
+
+            WriteLine(String.Empty);
+
+            WriteLine($"\t\t\treturn multiplier > 0 ? RoundUpToMultiplier(value, {(IsSmallType(type) ? $"({type})(-multiplier)" : "-multiplier")}) : RoundUpToMultiplier(value, multiplier);");
+        }
+        WriteLine("\t\t}");
+
+        WriteLine(String.Empty);
+
+        WriteLine($"\t\tpublic static {type} {nameof(RoundToMultiplier)}(this {type} value, {type} multiplier)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn {nameof(RoundToMultiplier)}(value, multiplier, MidpointRounding.ToEven);");
+        WriteLine("\t\t}");
+
+        WriteLine(String.Empty);
+
+        WriteLine($"\t\tpublic static {type} {nameof(RoundToMultiplier)}(this {type} value, {type} multiplier, MidpointRounding rounding)");
+        WriteLine("\t\t{");
+        WriteLine("\t\t\treturn rounding switch");
+        WriteLine("\t\t\t{");
+        WriteLine("\t\t\t\tMidpointRounding.ToEven => RoundBankingToMultiplier(value, multiplier),");
+        WriteLine("\t\t\t\tMidpointRounding.ToZero => RoundToZeroMultiplier(value, multiplier),");
+        WriteLine("\t\t\t\tMidpointRounding.AwayFromZero => RoundAwayFromZeroToMultiplier(value, multiplier),");
+        WriteLine("\t\t\t\tMidpointRounding.ToPositiveInfinity => RoundUpToMultiplier(value, multiplier),");
+        WriteLine("\t\t\t\tMidpointRounding.ToNegativeInfinity => RoundDownToMultiplier(value, multiplier),");
+        WriteLine("\t\t\t\t_ => throw new EnumUndefinedOrNotSupportedException<MidpointRounding>(rounding, nameof(rounding), null)");
+        WriteLine("\t\t\t};");
+        WriteLine("\t\t}");
+    }
+
+    void RoundToMultiplier()
+    {
+        ForEach(Types.Where(NotChar), RoundToMultiplierImplementation);
+    }
+
+    void AbsImplementation(String type)
+    {
+        if (!IsUnsignedType(type))
+        {
+            WriteLine($"\t\t/// <inheritdoc cref=\"Math.Abs({type})\"/>");
+        }
+
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static void {nameof(Abs)}(ref {type} value)");
+        WriteLine("\t\t{");
+        WriteLine("\t\t\tvalue = Abs(value);");
+        WriteLine("\t\t}");
+
+        WriteLine(String.Empty);
+
+        if (!IsUnsignedType(type))
+        {
+            WriteLine($"\t\t/// <inheritdoc cref=\"Math.Abs({type})\"/>");
+        }
+
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {type} {nameof(Abs)}(this {type} value)");
+        WriteLine("\t\t{");
+        WriteLine(!IsUnsignedType(type) ? "\t\t\treturn Math.Abs(value);" : "\t\t\treturn value;");
+        WriteLine("\t\t}");
+    }
+
+    void Abs()
+    {
+        ForEach(Types, AbsImplementation);
+    }
+
+    void MathematicalModulo()
+    {
+        ForEach(Types.Where(NotChar), MathematicalModuloImplementation);
+    }
+
+    void MathematicalModuloImplementation(String type)
+    {
+        if (IsUnsignedType(type))
+        {
+            WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+            WriteLine($"\t\tpublic static {type} {nameof(MathematicalModulo)}(this {type} value, {type} modulo)");
+            WriteLine("\t\t{");
+            WriteLine($"\t\t\treturn {(IsSmallType(type) ? $"({type}) (value % modulo)" : "value % modulo")};");
+            WriteLine("\t\t}");
+            return;
+        }
+
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {type} {nameof(MathematicalModulo)}(this {type} value, {type} modulo)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn {(IsSmallType(type) ? $"({type}) ((Math.Abs(value * modulo) + value) % modulo)" : "(Math.Abs(value * modulo) + value) % modulo")};");
+        WriteLine("\t\t}");
+    }
+
+    void PowImplementation(String type)
+    {
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {type} {nameof(Pow)}(this {type} value, {nameof(Byte)} pow)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\t{type} ret = 1;");
+        WriteLine("\t\t\twhile (pow != 0)");
+        WriteLine("\t\t\t{");
+        WriteLine("\t\t\t\tif ((pow & 1) == 1)");
+        WriteLine("\t\t\t\t{");
+        WriteLine("\t\t\t\t\tret *= value;");
+        WriteLine("\t\t\t\t}");
+
+        WriteLine(String.Empty);
+
+        WriteLine("\t\t\t\tvalue *= value;");
+        WriteLine("\t\t\t\tpow >>= 1;");
+        WriteLine("\t\t\t}");
+
+        WriteLine(String.Empty);
+
+        WriteLine("\t\t\treturn ret;");
+        WriteLine("\t\t}");
+    }
+
+    void Pow()
+    {
+        ForEach(Types.Where(static type => IsIntType(type) && !IsSmallType(type)).Append(BigInteger), PowImplementation);
+    }
+
+    void RoundUpToPowerOf2Implementation(String type)
+    {
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {ToUnsignedType(type)} {nameof(RoundUpToPowerOf2)}(this {type} value)");
+        WriteLine("\t\t{");
+        WriteLine("\t\t\tunchecked");
+        WriteLine("\t\t\t{");
+        WriteLine($"\t\t\t\treturn {(IsSmallType(type) ? $"({ToUnsignedType(type)}) " : String.Empty)}BitOperations.{nameof(RoundUpToPowerOf2)}({(!IsUnsignedType(type) ? $"({ToUnsignedType(type)}) " : String.Empty)}value);");
+        WriteLine("\t\t\t}");
+        WriteLine("\t\t}");
+    }
+
+    void RoundUpToPowerOf2()
+    {
+        ForEach(Types.Where(NotChar).Where(IsIntType), RoundUpToPowerOf2Implementation);
+    }
+
+    void SqrtImplementation(String type)
+    {
+        WriteLine("\t\t/// <inheritdoc cref=\"Math.Sqrt\"/>");
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {(type == nameof(Single) ? nameof(Single) : nameof(Double))} {nameof(Sqrt)}(this {type} value)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn {(type == nameof(Single) ? $"{nameof(Math)}F" : nameof(Math))}.Sqrt(value);");
+        WriteLine("\t\t}");
+    }
+
+    void Sqrt()
+    {
+        ForEach(Types.Where(static type => type != nameof(Decimal) && type != nameof(Char)), SqrtImplementation);
+    }
+
+    void LogImplementation(String type)
+    {
+        WriteLine("\t\t/// <inheritdoc cref=\"Math.Sqrt\"/>");
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {(type == nameof(Single) ? nameof(Single) : nameof(Double))} {nameof(Log)}(this {type} value)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn {(type == nameof(Single) ? $"{nameof(Math)}F" : nameof(Math))}.Log(value);");
+        WriteLine("\t\t}");
+
+        WriteLine(String.Empty);
+
+        WriteLine("\t\t/// <inheritdoc cref=\"Math.Sqrt\"/>");
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {(type == nameof(Single) ? nameof(Single) : nameof(Double))} {nameof(Log)}(this {type} value, {(type == nameof(Single) ? nameof(Single) : nameof(Double))} @base)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn {(type == nameof(Single) ? $"{nameof(Math)}F" : nameof(Math))}.Log(value, @base);");
+        WriteLine("\t\t}");
+
+        WriteLine(String.Empty);
+
+        if (type == nameof(Single))
+        {
+            WriteLine("\t\t/// <inheritdoc cref=\"Math.Sqrt\"/>");
+            WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+            WriteLine($"\t\tpublic static {nameof(Single)} {nameof(Log)}(this {type} value, {nameof(Double)} @base)");
+            WriteLine("\t\t{");
+            WriteLine($"\t\t\treturn {nameof(Math)}.Log(value, @base);");
+            WriteLine("\t\t}");
+
+            WriteLine(String.Empty);
+        }
+
+        WriteLine("\t\t/// <inheritdoc cref=\"Math.Sqrt\"/>");
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {(type == nameof(Single) ? nameof(Single) : nameof(Double))} {nameof(Log)}2(this {type} value)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn {(type == nameof(Single) ? $"{nameof(Math)}F" : nameof(Math))}.Log2(value);");
+        WriteLine("\t\t}");
+
+        WriteLine(String.Empty);
+
+        if (IsIntType(type))
+        {
+            WriteLine("\t\t/// <inheritdoc cref=\"Math.Sqrt\"/>");
+            WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+            WriteLine($"\t\tpublic static {nameof(Int32)} I{nameof(Log)}B(this {type} value)");
+            WriteLine("\t\t{");
+            if (IsUnsignedType(type))
+            {
+                WriteLine("\t\t\treturn BitOperations.Log2(value);");
+            }
+            else
+            {
+                WriteLine("\t\t\tunchecked");
+                WriteLine("\t\t\t{");
+                WriteLine($"\t\t\t\treturn BitOperations.Log2(({ToUnsignedType(type)}) value);");
+                WriteLine("\t\t\t}");
+            }
+
+            WriteLine("\t\t}");
+
+            WriteLine(String.Empty);
+        }
+
+        WriteLine("\t\t/// <inheritdoc cref=\"Math.Sqrt\"/>");
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {(type == nameof(Single) ? nameof(Single) : nameof(Double))} {nameof(Log)}10(this {type} value)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn {(type == nameof(Single) ? $"{nameof(Math)}F" : nameof(Math))}.Log10(value);");
+        WriteLine("\t\t}");
+    }
+
+    void Log()
+    {
+        ForEach(Types.Where(NotChar).Where(IsIntType), LogImplementation);
+    }
+
+    void ClampImplementation(String type)
+    {
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {type} {nameof(Clamp)}(this {type} value)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn {nameof(Clamp)}(value, default({type}));");
+        WriteLine("\t\t}");
+
+        WriteLine(String.Empty);
+
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {type} {nameof(Clamp)}(this {type} value, {nameof(Boolean)} looped)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn {nameof(Clamp)}(value, default, {type}.MaxValue, looped);");
+        WriteLine("\t\t}");
+
+        WriteLine(String.Empty);
+
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {type} {nameof(Clamp)}(this {type} value, {type} maximum)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn {nameof(Clamp)}(value, default, maximum);");
+        WriteLine("\t\t}");
+
+        WriteLine(String.Empty);
+
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {type} {nameof(Clamp)}(this {type} value, {type} maximum, {nameof(Boolean)} looped)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn {nameof(Clamp)}(value, default, maximum, looped);");
+        WriteLine("\t\t}");
+
+        WriteLine(String.Empty);
+
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {type} {nameof(Clamp)}(this {type} value, {type} minimum, {type} maximum)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn {(type == nameof(Char) ? $"({nameof(Char)}) " : String.Empty)}{nameof(Math)}.{nameof(Clamp)}(value, minimum, maximum);");
+        WriteLine("\t\t}");
+
+        WriteLine(String.Empty);
+
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {type} {nameof(Clamp)}(this {type} value, {type} minimum, {type} maximum, {nameof(Boolean)} looped)");
+        WriteLine("\t\t{");
+        WriteLine("\t\t\tif (value > maximum)");
+        WriteLine("\t\t\t{");
+        WriteLine("\t\t\t\treturn looped ? minimum : maximum;");
+        WriteLine("\t\t\t}");
+
+        WriteLine(String.Empty);
+
+        WriteLine("\t\t\tif (value < minimum)");
+        WriteLine("\t\t\t{");
+        WriteLine("\t\t\t\treturn looped ? maximum : minimum;");
+        WriteLine("\t\t\t}");
+
+        WriteLine(String.Empty);
+
+        WriteLine("\t\t\treturn value;");
+        WriteLine("\t\t}");
+    }
+
+    void Clamp()
+    {
+        ForEach(Types, ClampImplementation);
+    }
+
+    void DifferenceImplementation(String type)
+    {
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {ToUnsignedType(type)} {nameof(Difference)}(this {type} value, {type} between)");
+        WriteLine("\t\t{");
+        if (!IsIntType(type) || IsUnsignedType(type) || type == BigInteger)
+        {
+            WriteLine(IsUnsignedType(type)
+                ? $"\t\t\treturn value <= between ? {(IsSmallType(type) ? $"({type}) (between - value)" : "between - value")} : {(IsSmallType(type) ? $"({type}) (value - between)" : "value - between")};"
+                : $"\t\t\treturn value <= between ? Abs({(IsSmallType(type) ? $"({type}) (between - value)" : "between - value")}) : Abs({(IsSmallType(type) ? $"({type}) (value - between)" : "value - between")});");
+        }
+        else
+        {
+            WriteLine("\t\t\tunchecked");
+            WriteLine("\t\t\t{");
+            WriteLine($"\t\t\t\treturn {(IsSmallType(type) ? $"({ToUnsignedType(type)}) (value >= between ? ({ToUnsignedType(type)}) value - ({ToUnsignedType(type)}) between : ({ToUnsignedType(type)}) between - ({ToUnsignedType(type)}) value)" : $"value >= between ? ({ToUnsignedType(type)}) value - ({ToUnsignedType(type)}) between : ({ToUnsignedType(type)}) between - ({ToUnsignedType(type)}) value")};");
+            WriteLine("\t\t\t}");
+        }
+
+        WriteLine("\t\t}");
+    }
+
+    void Difference()
+    {
+        ForEach(Types.Append(BigInteger), DifferenceImplementation);
+    }
+
+    void DiscreteDifferenceImplementation(String type)
+    {
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {ToUnsignedType(type)} {nameof(DiscreteDifference)}(this {type} value, {type} between)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn {nameof(Difference)}(value, between);");
+        WriteLine("\t\t}");
+    }
+
+    void DiscreteDifference()
+    {
+        ForEach(Types.Where(IsIntType), DiscreteDifferenceImplementation);
+    }
+
+    void DiscreteIncludeDifferenceImplementation(String type)
+    {
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {ToUnsignedType(type)} {nameof(DiscreteIncludeDifference)}(this {type} value, {type} between)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn {nameof(DiscreteIncludeDifference)}(value, between, {ToUnsignedType(type)}.MaxValue);");
+        WriteLine("\t\t}");
+
+        WriteLine(String.Empty);
+
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {ToUnsignedType(type)} {nameof(DiscreteIncludeDifference)}(this {type} value, {type} between, {ToUnsignedType(type)} overflow)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\t{ToUnsignedType(type)} difference = {nameof(DiscreteDifference)}(value, between);");
+        WriteLine($"\t\t\treturn {(IsSmallType(type) ? $"difference < {ToUnsignedType(type)}.MaxValue ? ({ToUnsignedType(type)}) (difference + 1) : overflow" : $"difference < {ToUnsignedType(type)}.MaxValue ? difference + 1 : overflow")};");
+        WriteLine("\t\t}");
+    }
+
+    void DiscreteIncludeDifference()
+    {
+        ForEach(Types.Where(IsIntType), DiscreteIncludeDifferenceImplementation);
+    }
+
+    void ToRadiansImplementation(String type)
+    {
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {nameof(Double)} {nameof(ToRadians)}(this {type} value)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn ToRadians(({nameof(Double)}) value);");
+        WriteLine("\t\t}");
+    }
+
+    void ToRadians()
+    {
+        ForEach(Types.Where(static type => IsIntType(type) && type != nameof(Char)), ToRadiansImplementation);
+    }
+
+    void ToNonZeroImplementation(String type)
+    {
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static void {nameof(ToNonZero)}(ref {type} value)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\tvalue = {nameof(ToNonZero)}(value);");
+        WriteLine("\t\t}");
+
+        WriteLine(String.Empty);
+
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static void {nameof(ToNonZero)}(ref {type} value, {type} alternate)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\tvalue = {nameof(ToNonZero)}(value, alternate);");
+        WriteLine("\t\t}");
+
+        WriteLine(String.Empty);
+
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {type} {nameof(ToNonZero)}(this {type} value)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn {nameof(ToNonZero)}(value, {(IsSmallType(type) ? $"({type}) " : String.Empty)}1);");
+        WriteLine("\t\t}");
+
+        WriteLine(String.Empty);
+
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {type} {nameof(ToNonZero)}(this {type} value, {type} alternate)");
+        WriteLine("\t\t{");
+        if (IsIntType(type) || type == nameof(Decimal))
+        {
+            WriteLine("\t\t\treturn value == 0 ? alternate : value;");
+        }
+        else
+        {
+            WriteLine("\t\t\treturn IsEpsilon(value) ? alternate : value;");
+        }
+
+        WriteLine("\t\t}");
+    }
+
+    void ToNonZero()
+    {
+        ForEach(Types.Where(NotChar), ToNonZeroImplementation);
+    }
+
+    void ToNonNegativeImplementation(String type)
+    {
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static void {nameof(ToNonNegative)}(ref {type} value)");
+        WriteLine("\t\t{");
+        if (!IsUnsignedType(type))
+        {
+            WriteLine($"\t\t\tvalue = {nameof(ToNonNegative)}(value);");
+        }
+        WriteLine("\t\t}");
+
+        WriteLine(String.Empty);
+
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static void {nameof(ToNonNegative)}(ref {type} value, {type} alternate)");
+        WriteLine("\t\t{");
+        if (!IsUnsignedType(type))
+        {
+            WriteLine($"\t\t\tvalue = {nameof(ToNonNegative)}(value, alternate);");
+        }
+        WriteLine("\t\t}");
+
+        WriteLine(String.Empty);
+
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {type} {nameof(ToNonNegative)}(this {type} value)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn {(IsUnsignedType(type) ? "value" : $"value < 0 ? {(IsSmallType(type) ? $"({type}) " : String.Empty)}0 : value")};");
+        WriteLine("\t\t}");
+
+        WriteLine(String.Empty);
+
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {type} {nameof(ToNonNegative)}(this {type} value, {type} alternate)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn {(IsUnsignedType(type) ? "value" : "value < 0 ? alternate : value")};");
+        WriteLine("\t\t}");
+    }
+
+    void ToNonNegative()
+    {
+        ForEach(Types.Where(NotChar), ToNonNegativeImplementation);
+    }
+
+    void MeanImplementation(String type)
+    {
+        WriteLine("\t\t/// <summary>");
+        WriteLine("\t\t/// Calculates the mean value of the provided values.");
+        WriteLine("\t\t/// </summary>");
+        WriteLine("\t\t/// <param name=\"values\">The values.</param>");
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {type} {nameof(Mean)}(this IEnumerable<{type}> values)");
+        WriteLine("\t\t{");
+        WriteLine("\t\t\tUInt32 count = 0;");
+        WriteLine($"\t\t\t{(IsIntType(type) ? type == BigInteger ? BigInteger : IsUnsignedType(type) ? nameof(UInt64) : nameof(Int64) : type == nameof(Single) ? nameof(Double) : type)} sum = 0;");
+        WriteLine($"\t\t\tforeach ({type} value in values)");
+        WriteLine("\t\t\t{");
+        WriteLine("\t\t\t\tsum += value;");
+        WriteLine("\t\t\t\t++count;");
+        WriteLine("\t\t\t}");
+
+        WriteLine(String.Empty);
+
+        WriteLine("\t\t\tif (count == 0 || count > sum)");
+        WriteLine("\t\t\t{");
+        WriteLine("\t\t\t\treturn 0;");
+        WriteLine("\t\t\t}");
+
+        WriteLine(String.Empty);
+
+        Boolean remove = type == nameof(Int64) || type == nameof(UInt64) || type == nameof(Double) || type == nameof(Decimal) || type == BigInteger;
+        WriteLine($"\t\t\treturn {(remove ? "sum / count" : $"({type})(sum / count)")};");
+        WriteLine("\t\t}");
+    }
+
+    void Mean()
+    {
+        ForEach(Types.Where(NotChar).Append(BigInteger), MeanImplementation);
+    }
+
+    void ToBaseImplementation(String type)
+    {
+        WriteLine($"\t\tpublic static {nameof(String)} {nameof(ToBase)}(this {type} value, {nameof(Byte)} @base)");
+        WriteLine("\t\t{");
+        WriteLine("\t\t\tif (!@base.InRange(MinimumBase, MaximumBase))");
+        WriteLine("\t\t\t{");
+        WriteLine("\t\t\t\tthrow new ArgumentOutOfRangeException(nameof(@base), @base, @\"Base out of range\");");
+        WriteLine("\t\t\t}");
+
+        WriteLine(String.Empty);
+
+        if (IsUnsignedType(type))
+        {
+            WriteLine("\t\t\tif (value <= 0)");
+            WriteLine("\t\t\t{");
+            WriteLine("\t\t\t\treturn \"0\";");
+            WriteLine("\t\t\t}");
+        }
+        else
+        {
+            WriteLine("\t\t\tif (value == 0)");
+            WriteLine("\t\t\t{");
+            WriteLine("\t\t\t\treturn \"0\";");
+            WriteLine("\t\t\t}");
+
+            WriteLine(String.Empty);
+
+            WriteLine($"\t\t\t{nameof(Boolean)} negative = value < 0;");
+            WriteLine("\t\t\tif (negative)");
+            WriteLine("\t\t\t{");
+            WriteLine("\t\t\t\tAbs(ref value);");
+            WriteLine("\t\t\t}");
+        }
+
+        WriteLine(String.Empty);
+
+        if (type != BigInteger)
+        {
+            WriteLine($"\t\t\t// 64 is the worst cast buffer size for base 2 and {type}.MaxValue");
+        }
+
+        WriteLine($"\t\t\t{(type == BigInteger ? "Int32 max = (Int32) Round(Log(value, 2), MidpointRounding.ToPositiveInfinity)" : $"const Int32 max = 8 * sizeof({type})")};");
+        WriteLine($"\t\t\t{nameof(Int32)} i = max;");
+        WriteLine($"\t\t\tSpan<{nameof(Char)}> buffer = stackalloc {nameof(Char)}[max];");
+
+        WriteLine(String.Empty);
+
+        WriteLine("\t\t\tdo");
+        WriteLine("\t\t\t{");
+        WriteLine($"\t\t\t\t{(IsSmallType(type) ? $"{nameof(Int32)}" : $"{type}")} number = value % @base;");
+        WriteLine($"\t\t\t\tbuffer[--i] = ({nameof(Char)})(number < 10 ? ZeroChar + number : AlphabetStart + number);");
+        WriteLine(String.Empty);
+        WriteLine($"\t\t\t\tvalue /= {(type == nameof(SByte) ? $"({nameof(SByte)})" : String.Empty)}@base;");
+        WriteLine("\t\t\t} while (value > 0);");
+
+        WriteLine(String.Empty);
+
+        WriteLine($"\t\t\treturn {(IsUnsignedType(type) ? String.Empty : "$\"{(negative ? \"-\" : String.Empty)}\" + ")}new {nameof(String)}(buffer.Slice(i, max - i));");
+
+        WriteLine("\t\t}");
+    }
+
+    void ToBase()
+    {
+        WriteLine("\t\tprivate const Byte MinimumBase = 2;");
+        WriteLine("\t\tprivate const Byte MaximumBase = 36;");
+        WriteLine("\t\tprivate const Int32 ZeroChar = '0';");
+        WriteLine("\t\tprivate const Int32 AlphabetStart = '9' - MinimumBase;");
+
+        WriteLine(String.Empty);
+
+        ForEach(Types.Where(static type => NotChar(type) && IsIntType(type)).Append(BigInteger), ToBaseImplementation);
+    }
+
+    void SumImplementation(String type)
+    {
+        if (IsSmallType(type) || IsUnsignedType(type) || type == BigInteger || type == Complex)
+        {
+            WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+            WriteLine($"\t\tpublic static {type} {nameof(Sum)}(this IEnumerable<{type}> source)");
+            WriteLine("\t\t{");
+            WriteLine("\t\t\tchecked");
+            WriteLine("\t\t\t{");
+            WriteLine($"\t\t\t\treturn source.Aggregate{(type != nameof(Int32) ? $"<{type}, {type}>" : String.Empty)}(0, static (current, value) => {(IsSmallType(type) ? $"({type}) (current + value)" : "current + value")});");
+            WriteLine("\t\t\t}");
+            WriteLine("\t\t}");
+
+            WriteLine(String.Empty);
+        }
+
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {type} {nameof(Sum)}(this IEnumerable<{type}> source, {type} overflow)");
+        WriteLine("\t\t{");
+        WriteLine("\t\t\ttry");
+        WriteLine("\t\t\t{");
+        WriteLine($"\t\t\t\treturn source.{nameof(Sum)}();");
+        WriteLine("\t\t\t}");
+        WriteLine("\t\t\tcatch (OverflowException)");
+        WriteLine("\t\t\t{");
+        WriteLine("\t\t\t\treturn overflow;");
+        WriteLine("\t\t\t}");
+        WriteLine("\t\t}");
+    }
+
+    void Sum()
+    {
+        ForEach(Types.Where(NotChar).Append(BigInteger).Append(Complex), SumImplementation);
+    }
+
+    void MultiplyImplementation(String type)
+    {
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {type} {nameof(Multiply)}(this IEnumerable<{type}> source)");
+        WriteLine("\t\t{");
+
+        WriteLine("\t\t\tif (source is null)");
+        WriteLine("\t\t\t{");
+        WriteLine("\t\t\t\tthrow new ArgumentNullException(nameof(source));");
+        WriteLine("\t\t\t}");
+        WriteLine(String.Empty);
+        WriteLine("\t\t\tchecked");
+        WriteLine("\t\t\t{");
+        WriteLine($"\t\t\t\tusing IEnumerator<{type}> enumerator = source.GetEnumerator();");
+        WriteLine(String.Empty);
+        WriteLine("\t\t\t\tif (!enumerator.MoveNext() || enumerator.Current == 0)");
+        WriteLine("\t\t\t\t{");
+        WriteLine("\t\t\t\t\treturn 0;");
+        WriteLine("\t\t\t\t}");
+        WriteLine(String.Empty);
+        WriteLine($"\t\t\t\t{type} result = enumerator.Current;");
+        WriteLine(String.Empty);
+        WriteLine("\t\t\t\twhile (enumerator.MoveNext())");
+        WriteLine("\t\t\t\t{");
+        WriteLine("\t\t\t\t\tswitch (enumerator.Current)");
+        WriteLine("\t\t\t\t\t{");
+        WriteLine($"\t\t\t\t\t\tcase {(type == BigInteger ? "BigInteger.Zero" : "0")}:");
+        WriteLine("\t\t\t\t\t\t\treturn 0;");
+        WriteLine($"\t\t\t\t\t\tcase {(type == BigInteger ? "BigInteger.One" : "1")}:");
+        WriteLine("\t\t\t\t\t\t\tcontinue;");
+        WriteLine("\t\t\t\t\t\tdefault:");
+        WriteLine("\t\t\t\t\t\t\tresult *= enumerator.Current;");
+        WriteLine("\t\t\t\t\t\t\tbreak;");
+        WriteLine("\t\t\t\t\t}");
+        WriteLine("\t\t\t\t}");
+        WriteLine(String.Empty);
+        WriteLine("\t\t\t\treturn result;");
+        WriteLine("\t\t\t}");
+        WriteLine("\t\t}");
+
+        WriteLine(String.Empty);
+
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {type} {nameof(Multiply)}(this IEnumerable<{type}> source, {type} overflow)");
+        WriteLine("\t\t{");
+        WriteLine("\t\t\ttry");
+        WriteLine("\t\t\t{");
+        WriteLine($"\t\t\t\treturn source.{nameof(Multiply)}();");
+        WriteLine("\t\t\t}");
+        WriteLine("\t\t\tcatch (OverflowException)");
+        WriteLine("\t\t\t{");
+        WriteLine("\t\t\t\treturn overflow;");
+        WriteLine("\t\t\t}");
+        WriteLine("\t\t}");
+    }
+
+    void Multiply()
+    {
+        ForEach(Types.Where(NotChar), MultiplyImplementation);
+    }
+
+    void AverageImplementation(String type)
+    {
+        WriteLine("\t\t[SuppressMessage(\"ReSharper\", \"SuspiciousTypeConversion.Global\")]");
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {(type == nameof(Decimal) ? nameof(Decimal) : nameof(Double))} {nameof(Average)}(this IEnumerable<{type}> source)");
+        WriteLine("\t\t{");
+        WriteLine("\t\t\tif (source is null)");
+        WriteLine("\t\t\t{");
+        WriteLine("\t\t\t\tthrow new ArgumentNullException(nameof(source));");
+        WriteLine("\t\t\t}");
+
+        WriteLine(String.Empty);
+
+        WriteLine($"\t\t\treturn source.Select(static item => ({nameof(Double)}) item).Average();");
+        WriteLine("\t\t}");
+    }
+
+    void Average()
+    {
+        ForEach(Types.Where(static type => IsSmallType(type) || IsUnsignedType(type)).Where(NotChar), AverageImplementation);
+    }
+
+    void VarianceImplementation(String type)
+    {
+        WriteLine($"\t\tpublic static {(type == nameof(Decimal) ? nameof(Decimal) : nameof(Double))} {nameof(Variance)}(this IEnumerable<{type}> source)");
+        WriteLine("\t\t{");
+        WriteLine("\t\t\tif (source is null)");
+        WriteLine("\t\t\t{");
+        WriteLine("\t\t\t\tthrow new ArgumentNullException(nameof(source));");
+        WriteLine("\t\t\t}");
+
+        WriteLine(String.Empty);
+
+        WriteLine($"\t\t\tICollection<{type}> values = source as ICollection<{type}> ?? source.ToList();");
+
+        WriteLine(String.Empty);
+
+        WriteLine("\t\t\tif (values.Count <= 0)");
+        WriteLine("\t\t\t{");
+        WriteLine("\t\t\t\treturn 0;");
+        WriteLine("\t\t\t}");
+
+        WriteLine(String.Empty);
+
+        WriteLine($"\t\t\t{(type == nameof(Decimal) ? nameof(Decimal) : nameof(Double))} mean = values.Average();");
+        WriteLine($"\t\t\t{(type == nameof(Decimal) ? nameof(Decimal) : nameof(Double))} sum = values.Sum(x => (x - mean).Pow(2));");
+        WriteLine("\t\t\treturn sum / values.Count;");
+
+        WriteLine("\t\t}");
+    }
+
+    void Variance()
+    {
+        ForEach(Types.Where(NotChar), VarianceImplementation);
+    }
+
+    void StandardDeviationImplementation(String type)
+    {
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {(type == nameof(Decimal) ? nameof(Decimal) : nameof(Double))} {nameof(StandardDeviation)}(this IEnumerable<{type}> source)");
+        WriteLine("\t\t{");
+        WriteLine("\t\t\tif (source is null)");
+        WriteLine("\t\t\t{");
+        WriteLine("\t\t\t\tthrow new ArgumentNullException(nameof(source));");
+        WriteLine("\t\t\t}");
+
+        WriteLine(String.Empty);
+
+        WriteLine("\t\t\treturn source.Variance().Sqrt();");
+        WriteLine("\t\t}");
+    }
+
+    void StandardDeviation()
+    {
+        ForEach(Types.Where(NotChar), StandardDeviationImplementation, false);
+    }
+
+    void ReverseImplementation(String type)
+    {
+        WriteLine("\t\t[SuppressMessage(\"ReSharper\", \"SuspiciousTypeConversion.Global\")]");
+        WriteLine($"\t\tpublic static {(IsSmallType(type) ? nameof(Int32) : type)} {nameof(Reverse)}(this {type} value)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\t{(IsSmallType(type) ? nameof(Int32) : type)} reverse = 0;");
+        WriteLine(String.Empty);
+        WriteLine("\t\t\twhile (value != 0)");
+        WriteLine("\t\t\t{");
+        WriteLine("\t\t\t\treverse = reverse * 10 + value % 10;");
+        WriteLine("\t\t\t\tvalue /= 10;");
+        WriteLine("\t\t\t}");
+        WriteLine(String.Empty);
+        WriteLine("\t\t\treturn reverse;");
+        WriteLine("\t\t}");
+    }
+
+    void Reverse()
+    {
+        ForEach(Types.Where(NotChar).Where(IsIntType), ReverseImplementation);
+    }
+
+    void PercentImplementation(String type)
+    {
+        String[] subtypes = Types.Where(NotChar).ToArray();
+        foreach (String subtype in subtypes)
+        {
+            if (IsNET7_0_OR_GREATER(subtype))
+            {
+                WriteLine("#if NET7_0_OR_GREATER");
+            }
+
+            WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+            WriteLine($"\t\tpublic static {(type == nameof(Decimal) || subtype == nameof(Decimal) ? nameof(Decimal) : type == nameof(Double) || subtype == nameof(Double) ? nameof(Double) : type == nameof(Single) || subtype == nameof(Single) ? nameof(Single) : type == Half || subtype == Half ? Half : nameof(Double))} {nameof(Percent)}(this {type} value, {subtype} percent)");
+            WriteLine("\t\t{");
+            WriteLine($"\t\t\treturn {(subtype == nameof(Decimal) && (type == nameof(Single) || type == nameof(Double)) ? $"({nameof(Decimal)}) " : String.Empty)}value * ({(type == nameof(Decimal) && (subtype == nameof(Single) || subtype == nameof(Double)) ? $"({nameof(Decimal)}) " : String.Empty)}percent / 100{(type == nameof(Decimal) || subtype == nameof(Decimal) ? "M" : type == nameof(Double) || subtype == nameof(Double) ? "D" : type == nameof(Single) || subtype == nameof(Single) ? "F" : "D")});");
+            WriteLine("\t\t}");
+
+            if (IsNET7_0_OR_GREATER(subtype))
+            {
+                WriteLine("#endif");
+            }
+
+            if (subtypes.Last() != subtype)
+            {
+                WriteLine(String.Empty);
+            }
+        }
+    }
+
+    void Percent()
+    {
+        ForEach(Types.Where(NotChar), PercentImplementation);
+    }
+
+    void PromilleImplementation(String type)
+    {
+        String[] subtypes = Types.Where(NotChar).ToArray();
+        foreach (String subtype in subtypes)
+        {
+            if (IsNET7_0_OR_GREATER(subtype))
+            {
+                WriteLine("#if NET7_0_OR_GREATER");
+            }
+
+            WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+            WriteLine($"\t\tpublic static {(type == nameof(Decimal) || subtype == nameof(Decimal) ? nameof(Decimal) : type == nameof(Double) || subtype == nameof(Double) ? nameof(Double) : type == nameof(Single) || subtype == nameof(Single) ? nameof(Single) : type == Half || subtype == Half ? Half : nameof(Double))} {nameof(Promille)}(this {type} value, {subtype} promille)");
+            WriteLine("\t\t{");
+            WriteLine($"\t\t\treturn {(subtype == nameof(Decimal) && (type == nameof(Single) || type == nameof(Double)) ? $"({nameof(Decimal)}) " : String.Empty)}value * ({(type == nameof(Decimal) && (subtype == nameof(Single) || subtype == nameof(Double)) ? $"({nameof(Decimal)}) " : String.Empty)}promille / 1000{(type == nameof(Decimal) || subtype == nameof(Decimal) ? "M" : type == nameof(Double) || subtype == nameof(Double) ? "D" : type == nameof(Single) || subtype == nameof(Single) ? "F" : "D")});");
+            WriteLine("\t\t}");
+
+            if (IsNET7_0_OR_GREATER(subtype))
+            {
+                WriteLine("#endif");
+            }
+
+            if (subtypes.Last() != subtype)
+            {
+                WriteLine(String.Empty);
+            }
+        }
+    }
+
+    void Promille()
+    {
+        ForEach(Types.Where(NotChar), PromilleImplementation);
+    }
+
+    void IsTypeImplementation(String type)
+    {
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {nameof(Boolean)} Is{type}({nameof(String)}? value)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn {type}.TryParse(value, out _);");
+        WriteLine("\t\t}");
+    }
+
+    void IsType()
+    {
+        ForEach(Types, IsTypeImplementation);
+    }
+#>
+    [SuppressMessage("ReSharper", "CognitiveComplexity")]
+    [SuppressMessage("ReSharper", "RedundantOverflowCheckingContext")]
+    public static partial class MathUtilities
+    {
+<#
+    Min();
+    WriteLine(String.Empty);
+    Max();
+    WriteLine(String.Empty);
+    Range();
+    WriteLine(String.Empty);
+    RangeInclude();
+    WriteLine(String.Empty);
+    ToRange();
+    WriteLine(String.Empty);
+    InRange();
+    WriteLine(String.Empty);
+    IsPositive();
+    WriteLine(String.Empty);
+    IsNegative();
+    WriteLine(String.Empty);
+    ToSign();
+    WriteLine(String.Empty);
+    RoundToMultiplier();
+    WriteLine(String.Empty);
+    Abs();
+    WriteLine(String.Empty);
+    MathematicalModulo();
+    WriteLine(String.Empty);
+    Pow();
+    WriteLine(String.Empty);
+    RoundUpToPowerOf2();
+    WriteLine(String.Empty);
+    Sqrt();
+    WriteLine(String.Empty);
+    Log();
+    WriteLine(String.Empty);
+    Clamp();
+    WriteLine(String.Empty);
+    Difference();
+    WriteLine(String.Empty);
+    DiscreteDifference();
+    WriteLine(String.Empty);
+    DiscreteIncludeDifference();
+    WriteLine(String.Empty);
+    ToRadians();
+    WriteLine(String.Empty);
+    ToNonZero();
+    WriteLine(String.Empty);
+    ToNonNegative();
+    WriteLine(String.Empty);
+    Mean();
+    WriteLine(String.Empty);
+    ToBase();
+    WriteLine(String.Empty);
+    Sum();
+    WriteLine(String.Empty);
+    Multiply();
+    WriteLine(String.Empty);
+    Average();
+    WriteLine(String.Empty);
+    Variance();
+    WriteLine(String.Empty);
+    StandardDeviation();
+    WriteLine(String.Empty);
+    Reverse();
+    WriteLine(String.Empty);
+    Percent();
+    WriteLine(String.Empty);
+    Promille();
+    WriteLine(String.Empty);
+    IsType();
+#>
+    }
+}

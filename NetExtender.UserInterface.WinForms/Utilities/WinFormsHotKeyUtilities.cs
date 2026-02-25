@@ -53,7 +53,7 @@ namespace NetExtender.Utilities.UserInterface
                 throw new ArgumentNullException(nameof(hotkeys));
             }
 
-            return RegisterHotKey(form, hotkeys.Select(hotkey => (WindowsHotKeyAction) hotkey).ToArray());
+            return RegisterHotKey(form, hotkeys.Select(static hotkey => (WindowsHotKeyAction) hotkey).ToArray());
         }
 
         public static Int32?[] RegisterHotKey(this Form form, params WindowsHotKeyAction[] hotkeys)
@@ -83,7 +83,7 @@ namespace NetExtender.Utilities.UserInterface
                 throw new ArgumentNullException(nameof(hotkeys));
             }
 
-            return RegisterHotKey(form, hotkeys.Select(hotkey => (WindowsHotKeyAction<T>) hotkey).ToArray());
+            return RegisterHotKey(form, hotkeys.Select(static hotkey => (WindowsHotKeyAction<T>) hotkey).ToArray());
         }
 
         public static Int32?[] RegisterHotKey<T>(this Form form, params WindowsHotKeyAction<T>[] hotkeys) where T : unmanaged, IComparable<T>, IConvertible

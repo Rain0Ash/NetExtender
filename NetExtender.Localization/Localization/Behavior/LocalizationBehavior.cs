@@ -352,7 +352,7 @@ namespace NetExtender.Localization.Behavior
             sections = sections?.ToImmutableArray();
 
             Boolean successful = false;
-            foreach ((LocalizationIdentifier identifier, String? entry) in value)
+            foreach ((LocalizationIdentifier identifier, String entry) in value)
             {
                 successful |= Set(key, identifier, entry, sections);
             }
@@ -375,7 +375,7 @@ namespace NetExtender.Localization.Behavior
             sections = sections?.ToImmutableArray();
 
             Boolean successful = false;
-            foreach ((LocalizationIdentifier identifier, String? entry) in value)
+            foreach ((LocalizationIdentifier identifier, String entry) in value)
             {
                 successful |= await SetAsync(key, identifier, entry, sections, token).ConfigureAwait(false);
             }
@@ -461,7 +461,7 @@ namespace NetExtender.Localization.Behavior
 
         protected virtual IEnumerable<LocalizationMultiEntry> GetExistsCore(IEnumerable<ConfigurationEntry> values)
         {
-            foreach (IGrouping<ImmutableArray<String>, ConfigurationEntry> group in values.GroupBy(entry => entry.Sections))
+            foreach (IGrouping<ImmutableArray<String>, ConfigurationEntry> group in values.GroupBy(static entry => entry.Sections))
             {
                 using IEnumerator<LocalizationEntry> enumerator = Converter.Extract(group).GetEnumerator();
 
@@ -498,7 +498,7 @@ namespace NetExtender.Localization.Behavior
 
         protected virtual IEnumerable<LocalizationEntry> GetExistsCore(LocalizationIdentifier identifier, IEnumerable<ConfigurationEntry> values)
         {
-            return values.GroupBy(entry => entry.Sections).SelectMany(group => Converter.Extract(group).Where(entry => entry.Identifier == identifier));
+            return values.GroupBy(static entry => entry.Sections).SelectMany(group => Converter.Extract(group).Where(entry => entry.Identifier == identifier));
         }
 
         public virtual LocalizationEntry[]? GetExists(LocalizationIdentifier identifier, IEnumerable<String>? sections)
@@ -532,7 +532,7 @@ namespace NetExtender.Localization.Behavior
 
         protected virtual IEnumerable<LocalizationMultiValueEntry> GetExistsMultiValuesCore(IEnumerable<ConfigurationValueEntry> values)
         {
-            foreach (IGrouping<ImmutableArray<String>, ConfigurationValueEntry> group in values.GroupBy(entry => entry.Sections))
+            foreach (IGrouping<ImmutableArray<String>, ConfigurationValueEntry> group in values.GroupBy(static entry => entry.Sections))
             {
                 using IEnumerator<LocalizationValueEntry> enumerator = Converter.Extract(group).GetEnumerator();
 
@@ -571,7 +571,7 @@ namespace NetExtender.Localization.Behavior
 
         protected virtual IEnumerable<LocalizationValueEntry> GetExistsValuesCore(LocalizationIdentifier identifier, IEnumerable<ConfigurationValueEntry> values)
         {
-            return values.GroupBy(entry => entry.Sections).SelectMany(group => Converter.Extract(group).Where(entry => entry.Identifier == identifier));
+            return values.GroupBy(static entry => entry.Sections).SelectMany(group => Converter.Extract(group).Where(entry => entry.Identifier == identifier));
         }
 
         public virtual LocalizationValueEntry[]? GetExistsValues(LocalizationIdentifier identifier, IEnumerable<String>? sections)

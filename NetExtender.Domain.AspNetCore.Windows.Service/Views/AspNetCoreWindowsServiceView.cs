@@ -11,7 +11,7 @@ using NetExtender.Domains.AspNetCore.Service.Builder;
 using NetExtender.Domains.Builder.Interfaces;
 using NetExtender.Domains.View;
 using NetExtender.Domains.View.Interfaces;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 
 namespace NetExtender.Domains.AspNetCore.Service.View
 {

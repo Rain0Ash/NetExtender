@@ -30,7 +30,12 @@ namespace NetExtender.Utilities.UserInterface
                 throw new ArgumentNullException(nameof(window));
             }
 
-            window.SetScreenPercentageSize(ScreenWrapper.PrimaryScreen, width, height);
+            if (ScreenWrapper.PrimaryScreen is not { } screen)
+            {
+                throw new InvalidOperationException();
+            }
+
+            window.SetScreenPercentageSize(screen, width, height);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

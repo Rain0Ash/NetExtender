@@ -117,7 +117,7 @@ namespace NetExtender.Types.Intercept.Interfaces
         }
     }
 
-    public interface IPropertyIntercept<out TSender, TArgument>
+    public interface IPropertyIntercept<out TSender, out TArgument>
     {
         public event EventHandler<TSender, TArgument> PropertyIntercept
         {

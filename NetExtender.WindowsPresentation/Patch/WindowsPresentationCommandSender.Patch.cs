@@ -7,8 +7,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Windows.Input;
-using HarmonyLib;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
+using NetExtender.Harmony.Types.Interfaces;
 using NetExtender.Types.Reflection;
 using NetExtender.Utilities.Core;
 using NetExtender.WindowsPresentation.Types.Commands;
@@ -63,24 +63,25 @@ namespace NetExtender.Patch
                 }
             }
 
-            protected virtual HarmonyUtilities.Signature.Transpiler CanExecuteTranspiler
+            protected virtual HarmonySignatureUtilities.Transpiler CanExecuteTranspiler
             {
                 get
                 {
-                    static IEnumerable<CodeInstruction> Factory(IEnumerable<CodeInstruction> instructions)
+                    static IEnumerable<IHarmonyInstruction> Factory(IEnumerable<IHarmonyInstruction> instructions)
                     {
                         Boolean successful = false;
-                        List<CodeInstruction> result = new List<CodeInstruction>(instructions);
+                        List<IHarmonyInstruction> result = new List<IHarmonyInstruction>(instructions);
+
                         for (Int32 i = 0; i < result.Count; i++)
                         {
-                            if (i + 2 >= result.Count || result[i].opcode != OpCodes.Ldloc_0 || result[i + 1].opcode != OpCodes.Ldloc_1 || result[i + 2].opcode != OpCodes.Callvirt || result[i + 2].operand is not MethodInfo { Name: nameof(CanExecute) } method || method.DeclaringType != typeof(ICommand))
+                            if (i + 2 >= result.Count || result[i].OpCode != OpCodes.Ldloc_0 || result[i + 1].OpCode != OpCodes.Ldloc_1 || result[i + 2].OpCode != OpCodes.Callvirt || result[i + 2].Operand is not MethodInfo { Name: nameof(CanExecute) } method || method.DeclaringType != typeof(ICommand))
                             {
                                 continue;
                             }
 
-                            result[i + 1].opcode = OpCodes.Ldarg_0;
-                            result[i + 2].opcode = OpCodes.Call;
-                            result[i + 2].operand = CodeInstruction.Call(typeof(Patch), nameof(CanExecute), new[] { typeof(ICommand), typeof(ICommandSource) }).operand;
+                            result[i + 1].OpCode = OpCodes.Ldarg_0;
+                            result[i + 2].OpCode = OpCodes.Call;
+                            result[i + 2].Operand = IHarmonyInstruction.New().Call(typeof(Patch), nameof(CanExecute), new[] { typeof(ICommand), typeof(ICommandSource) }).Operand;
                             successful = true;
                             break;
                         }
@@ -97,34 +98,29 @@ namespace NetExtender.Patch
                 }
             }
 
-            protected virtual HarmonyUtilities.Signature.Transpiler ExecuteTranspiler
+            protected virtual HarmonySignatureUtilities.Transpiler ExecuteTranspiler
             {
                 get
                 {
-                    static IEnumerable<CodeInstruction> Factory(IEnumerable<CodeInstruction> instructions)
+                    static IEnumerable<IHarmonyInstruction> Factory(IEnumerable<IHarmonyInstruction> instructions)
                     {
                         Boolean successful = false;
-                        List<CodeInstruction> result = new List<CodeInstruction>(instructions);
+                        List<IHarmonyInstruction> result = new List<IHarmonyInstruction>(instructions);
                         for (Int32 i = 0; i < result.Count; i++)
                         {
-                            if (i + 3 >= result.Count || result[i].opcode != OpCodes.Ldloc_0 || result[i + 1].opcode != OpCodes.Ldloc_1 || result[i + 2].opcode != OpCodes.Callvirt || result[i + 2].operand is not MethodInfo {Name: nameof(CanExecute)} method || method.DeclaringType != typeof(ICommand) || result[i + 3].opcode != OpCodes.Brfalse_S)
+                            if (i + 3 >= result.Count || result[i].OpCode != OpCodes.Ldloc_0 || result[i + 1].OpCode != OpCodes.Ldloc_1 || result[i + 2].OpCode != OpCodes.Callvirt || result[i + 2].Operand is not MethodInfo {Name: nameof(CanExecute)} method || method.DeclaringType != typeof(ICommand) || result[i + 3].OpCode != OpCodes.Brfalse_S)
                             {
                                 continue;
                             }
 
-                            result[i + 1].opcode = OpCodes.Ldarg_0;
-                            result[i + 2].opcode = OpCodes.Call;
-                            result[i + 2].operand = CodeInstruction.Call(typeof(Patch), nameof(Execute), new[] { typeof(ICommand), typeof(ICommandSource) }).operand;
+                            result[i + 1].OpCode = OpCodes.Ldarg_0;
+                            result[i + 2].OpCode = OpCodes.Call;
+                            result[i + 2].Operand = IHarmonyInstruction.New().Call(typeof(Patch), nameof(Execute), new[] { typeof(ICommand), typeof(ICommandSource) }).Operand;
                             successful = true;
                             break;
                         }
 
-                        if (!successful)
-                        {
-                            throw new ReflectionPatchSignatureMissingException(nameof(ExecuteTranspiler));
-                        }
-
-                        return result;
+                        return successful ? result : throw new ReflectionPatchSignatureMissingException(nameof(ExecuteTranspiler));
                     }
 
                     return Factory;
@@ -164,7 +160,7 @@ namespace NetExtender.Patch
                     return ReflectionPatchState.Failed;
                 }
 
-                Harmony harmony = new Harmony($"{nameof(NetExtender)}.{nameof(WindowsPresentation)}.{nameof(WindowsPresentationCommandSenderPatch)}");
+                IHarmony harmony = IHarmony.Create($"{nameof(NetExtender)}.{nameof(WindowsPresentation)}.{nameof(WindowsPresentationCommandSenderPatch)}");
 
                 harmony.Transpiler(CanExecuteTranspiler, canexecute.Method);
                 harmony.Transpiler(ExecuteTranspiler, execute.Method);

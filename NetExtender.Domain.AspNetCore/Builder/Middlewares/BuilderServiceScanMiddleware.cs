@@ -4,8 +4,11 @@
 using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
+using NetExtender.AspNetCore.Types.Providers;
 using NetExtender.AspNetCore.Types.Wrappers;
 using NetExtender.Domains.AspNetCore.Builder.Interfaces;
 using NetExtender.Domains.Builder;
@@ -25,6 +28,21 @@ namespace NetExtender.Domains.AspNetCore.Builder.Middlewares
             Idempotency = MiddlewareIdempotencyMode.Argument;
         }
 
+        private static void FixBug(IServiceCollection services)
+        {
+            if (services is null)
+            {
+                throw new ArgumentNullException(nameof(services));
+            }
+
+            Int32 count = services.RemoveAll(static service => service.ImplementationType == typeof(DefaultApiDescriptionProvider));
+
+            if (count > 0)
+            {
+                services.TryAddEnumerable(SafeApiDescriptionProvider.ServiceDescriptor);
+            }
+        }
+
         public override void Invoke(Object? sender, IServiceCollection services)
         {
             if (services is null)
@@ -36,6 +54,8 @@ namespace NetExtender.Domains.AspNetCore.Builder.Middlewares
             {
                 return;
             }
+
+            FixBug(services);
 
             switch (sender)
             {

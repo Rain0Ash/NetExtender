@@ -46,7 +46,7 @@ namespace NetExtender.Types.Tries
         {
             get
             {
-                return Set.Cast<Entry>().Select(entry => entry.Value).ToArray();
+                return Set.Cast<Entry>().Select(static entry => entry.Value).ToArray();
             }
         }
 
@@ -104,12 +104,12 @@ namespace NetExtender.Types.Tries
                 throw new ArgumentNullException(nameof(prefix));
             }
 
-            return Set.Get(prefix).Cast<Entry>().Select(entry => new TrieEntry<TKey, TValue>(entry, entry.Value));
+            return Set.Get(prefix).Cast<Entry>().Select(static entry => new TrieEntry<TKey, TValue>(entry, entry.Value));
         }
 
         public IEnumerable<TrieEntry<TKey, TValue>> Get(ReadOnlySpan<TKey> prefix)
         {
-            return Set.Get(prefix).Cast<Entry>().Select(entry => new TrieEntry<TKey, TValue>(entry, entry.Value));
+            return Set.Get(prefix).Cast<Entry>().Select(static entry => new TrieEntry<TKey, TValue>(entry, entry.Value));
         }
 
         public Boolean TryGetValue(IEnumerable<TKey> key, [MaybeNullWhen(false)] out TValue value)
@@ -200,13 +200,13 @@ namespace NetExtender.Types.Tries
                 throw new ArgumentNullException(nameof(array));
             }
 
-            KeyValuePair<IEnumerable<TKey>, TValue>[] entries = Set.Cast<Entry>().Select(entry => new KeyValuePair<IEnumerable<TKey>, TValue>(entry, entry.Value)).ToArray();
+            KeyValuePair<IEnumerable<TKey>, TValue>[] entries = Set.Cast<Entry>().Select(static entry => new KeyValuePair<IEnumerable<TKey>, TValue>(entry, entry.Value)).ToArray();
             Array.Copy(entries, 0, array, index, Count);
         }
 
         public IEnumerator<KeyValuePair<IEnumerable<TKey>, TValue>> GetEnumerator()
         {
-            return Set.Cast<Entry>().Select(entry => new KeyValuePair<IEnumerable<TKey>, TValue>(entry, entry.Value)).GetEnumerator();
+            return Set.Cast<Entry>().Select(static entry => new KeyValuePair<IEnumerable<TKey>, TValue>(entry, entry.Value)).GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()

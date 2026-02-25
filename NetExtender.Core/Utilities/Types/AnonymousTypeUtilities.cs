@@ -11,7 +11,7 @@ using System.Runtime.CompilerServices;
 using NetExtender.Types.Anonymous;
 using NetExtender.Types.Anonymous.Interfaces;
 using NetExtender.Types.Dictionaries;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 using NetExtender.Types.Reflection;
 using NetExtender.Types.Reflection.Interfaces;
 using NetExtender.Types.Storages;
@@ -82,7 +82,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(properties));
             }
 
-            return properties.DistinctByThrow(property => property.Name).OrderBy(property => property.Name, StringComparer.Ordinal).ToArray();
+            return properties.DistinctByThrow(static property => property.Name).OrderBy(static property => property.Name, StringComparer.Ordinal).ToArray();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -104,7 +104,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(properties));
             }
 
-            return DefineAnonymousType(generator, properties.Select(property => (AnonymousTypePropertyInfo) property).ToProperties());
+            return DefineAnonymousType(generator, properties.Select(static property => (AnonymousTypePropertyInfo) property).ToProperties());
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -126,7 +126,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(properties));
             }
 
-            return DefineAnonymousType(generator, properties.Select(property => (AnonymousTypePropertyInfo) property).ToProperties());
+            return DefineAnonymousType(generator, properties.Select(static property => (AnonymousTypePropertyInfo) property).ToProperties());
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -195,7 +195,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(properties));
             }
 
-            return CreateAnonymousActivator(generator, properties.Select(property => (AnonymousTypePropertyInfo) property).ToProperties());
+            return CreateAnonymousActivator(generator, properties.Select(static property => (AnonymousTypePropertyInfo) property).ToProperties());
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -217,7 +217,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(properties));
             }
 
-            return CreateAnonymousActivator(generator, properties.Select(property => (AnonymousTypePropertyInfo) property).ToProperties());
+            return CreateAnonymousActivator(generator, properties.Select(static property => (AnonymousTypePropertyInfo) property).ToProperties());
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -260,17 +260,17 @@ namespace NetExtender.Utilities.Types
 
             Type type = value.GetType();
 
-            foreach ((String? key, Object? item) in properties)
+            foreach ((String key, Object? item) in properties)
             {
                 const BindingFlags binding = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
 
-                if (type.GetProperty(key, binding) is PropertyInfo property)
+                if (type.GetProperty(key, binding) is { } property)
                 {
                     property.SetValue(value, item);
                     continue;
                 }
 
-                if (type.GetField(key, binding) is FieldInfo field)
+                if (type.GetField(key, binding) is { } field)
                 {
                     field.SetValue(value, item);
                 }
@@ -524,7 +524,7 @@ namespace NetExtender.Utilities.Types
                     return new KeyValuePair<String, IReflectionProperty>(member.Name, property);
                 }
 
-                store.AddRange(members.OrderBy(member => member.Name, StringComparer.Ordinal).Select(Property));
+                store.AddRange(members.OrderBy(static member => member.Name, StringComparer.Ordinal).Select(Property));
                 return store;
             }
 

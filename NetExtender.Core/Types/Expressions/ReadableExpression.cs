@@ -37,7 +37,7 @@ namespace NetExtender.Types.Expressions
                 return handler(settings);
             }
 
-            handler = ExpressionUtilities.Settings;
+            handler = ReadableExpressionUtilities.Settings;
             return handler is not null ? handler(settings) : settings;
         }
     }

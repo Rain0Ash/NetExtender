@@ -11,10 +11,10 @@ namespace NetExtender.Types.Expressions.Specification
 {
     public class EntitySpecification<T> : IEntitySpecification<T>
     {
-        public static EntitySpecification<T> True { get; } = new EntitySpecification<T>(_ => true);
-        public static EntitySpecification<T> False { get; } = new EntitySpecification<T>(_ => false);
-        public static EntitySpecification<T> Null { get; } = new EntitySpecification<T>(value => value == null);
-        public static EntitySpecification<T> NotNull { get; } = new EntitySpecification<T>(value => value != null);
+        public static EntitySpecification<T> True { get; } = new EntitySpecification<T>(static _ => true);
+        public static EntitySpecification<T> False { get; } = new EntitySpecification<T>(static _ => false);
+        public static EntitySpecification<T> Null { get; } = new EntitySpecification<T>(static value => value == null);
+        public static EntitySpecification<T> NotNull { get; } = new EntitySpecification<T>(static value => value != null);
 
         public static implicit operator EntitySpecification<T>(Boolean value)
         {

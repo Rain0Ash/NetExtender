@@ -15,7 +15,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Win32;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 using NetExtender.Types.TextWriters;
 using NetExtender.Utilities.Types;
 using NetExtender.Windows.Services.Exceptions;
@@ -414,7 +414,7 @@ namespace NetExtender.Windows.Services.Utilities
                 throw new ArgumentNullException(nameof(services));
             }
 
-            Run(services.SelectWhereNotNull(service => service.Service).ToArray(), quiet);
+            Run(services.SelectWhereNotNull(static service => service.Service).ToArray(), quiet);
         }
 
         private static ServiceController CreateServiceController(String name, String? machine)

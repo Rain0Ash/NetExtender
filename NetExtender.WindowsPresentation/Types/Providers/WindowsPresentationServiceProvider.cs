@@ -6,7 +6,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 using NetExtender.Utilities.Types;
 using NetExtender.WindowsPresentation.Types.Interfaces;
 using NetExtender.WindowsPresentation.Types.Scopes.Interfaces;
@@ -130,18 +130,10 @@ namespace NetExtender.WindowsPresentation.Types
         }
     }
 
-    public abstract class WindowsPresentationServiceProviderBase : IViewModelServiceProvider, IWindowServiceProvider
+    public abstract class WindowsPresentationServiceProviderBase : IWindowServiceProvider, IViewModelServiceProvider
     {
-        protected abstract IServiceProvider ModelsProvider { get; }
         protected abstract IServiceProvider WindowsProvider { get; }
-
-        public IViewModelServiceProvider Models
-        {
-            get
-            {
-                return this;
-            }
-        }
+        protected abstract IServiceProvider ModelsProvider { get; }
 
         public IWindowServiceProvider Windows
         {
@@ -151,25 +143,46 @@ namespace NetExtender.WindowsPresentation.Types
             }
         }
 
-        public virtual Object GetService(Type serviceType)
+        public IViewModelServiceProvider Models
+        {
+            get
+            {
+                return this;
+            }
+        }
+
+        public virtual Object GetService(Type service)
         {
             throw new ImplicitImplementationNotSupportedException();
         }
 
-        Object? IViewModelServiceProvider.GetService(Type service)
+        public virtual Object GetRequiredService(Type service)
         {
-            return ModelsProvider.GetService(service);
+            return GetService(service) ?? throw new InvalidOperationException("Dependency not found.");
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         Object? IWindowServiceProvider.GetService(Type service)
         {
             return WindowsProvider.GetService(service);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        T? IViewModelServiceProvider.Get<T>() where T : class
+        Object? IViewModelServiceProvider.GetService(Type service)
         {
-            return (T?) Models.GetService(typeof(T));
+            return ModelsProvider.GetService(service);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        Object? IWindowServiceProvider.GetRequiredService(Type service)
+        {
+            return WindowsProvider.GetService(service);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        Object? IViewModelServiceProvider.GetRequiredService(Type service)
+        {
+            return ModelsProvider.GetService(service);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -179,10 +192,9 @@ namespace NetExtender.WindowsPresentation.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        Boolean IViewModelServiceProvider.Get<T>([MaybeNullWhen(false)] out T result)
+        T? IViewModelServiceProvider.Get<T>() where T : class
         {
-            result = Models.Get<T>();
-            return result is not null;
+            return (T?) Models.GetService(typeof(T));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -193,14 +205,10 @@ namespace NetExtender.WindowsPresentation.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        T IViewModelServiceProvider.Get<T>(Func<T> alternate)
+        Boolean IViewModelServiceProvider.Get<T>([MaybeNullWhen(false)] out T result)
         {
-            if (alternate is null)
-            {
-                throw new ArgumentNullException(nameof(alternate));
-            }
-
-            return Models.Get<T>() ?? alternate();
+            result = Models.Get<T>();
+            return result is not null;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -215,9 +223,14 @@ namespace NetExtender.WindowsPresentation.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        T IViewModelServiceProvider.Get<T, TAlternate>()
+        T IViewModelServiceProvider.Get<T>(Func<T> alternate)
         {
-            return Models.Get<T>() ?? new TAlternate();
+            if (alternate is null)
+            {
+                throw new ArgumentNullException(nameof(alternate));
+            }
+
+            return Models.Get<T>() ?? alternate();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -227,15 +240,21 @@ namespace NetExtender.WindowsPresentation.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        T IViewModelServiceProvider.Require<T>()
+        T IViewModelServiceProvider.Get<T, TAlternate>()
         {
-            return Models.Get<T>() ?? throw new InvalidOperationException($"Dependency view model '{typeof(T).Name}' not found.");
+            return Models.Get<T>() ?? new TAlternate();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         T IWindowServiceProvider.Require<T>()
         {
             return Windows.Get<T>() ?? throw new InvalidOperationException($"Dependency window '{typeof(T).Name}' not found.");
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        T IViewModelServiceProvider.Require<T>()
+        {
+            return Models.Get<T>() ?? throw new InvalidOperationException($"Dependency view model '{typeof(T).Name}' not found.");
         }
     }
 }

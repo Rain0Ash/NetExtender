@@ -11,7 +11,7 @@ using NetExtender.Localization.Interfaces;
 using NetExtender.Localization.Properties.Interfaces;
 using NetExtender.Types.Culture;
 using NetExtender.Types.Strings.Interfaces;
-using NetExtender.Utilities.Types;
+using NetExtender.Utilities.Core;
 
 namespace NetExtender.Localization.Properties
 {

@@ -7,9 +7,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
-using HarmonyLib;
 using Microsoft.Extensions.DependencyInjection;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
+using NetExtender.Harmony.Types.Interfaces;
 using NetExtender.Types.Reflection;
 using NetExtender.Utilities.Core;
 
@@ -97,22 +97,23 @@ namespace NetExtender.Patch
                 }
             }
 
-            protected virtual HarmonyUtilities.Signature.Transpiler Transpiler
+            protected virtual HarmonySignatureUtilities.Transpiler Transpiler
             {
                 get
                 {
-                    static IEnumerable<CodeInstruction> Factory(IEnumerable<CodeInstruction> instructions)
+                    static IEnumerable<IHarmonyInstruction> Factory(IEnumerable<IHarmonyInstruction> instructions)
                     {
                         if (instructions is null)
                         {
                             throw new ArgumentNullException(nameof(instructions));
                         }
 
+                        //TODO:
                         MethodInfo? original = typeof(Type).GetMethod(nameof(Type.GetConstructors), Type.EmptyTypes);
                         Signature.GetConstructor signature = GetConstructors;
 
                         Boolean successful = false;
-                        foreach (CodeInstruction instruction in instructions)
+                        foreach (IHarmonyInstruction instruction in instructions)
                         {
                             if (!instruction.Calls(original))
                             {
@@ -120,7 +121,7 @@ namespace NetExtender.Patch
                                 continue;
                             }
 
-                            yield return new CodeInstruction(OpCodes.Call, signature.Method);
+                            yield return IHarmonyInstruction.Create(OpCodes.Call, signature.Method);
                             successful = true;
                         }
 
@@ -167,8 +168,8 @@ namespace NetExtender.Patch
                     return ReflectionPatchState.Failed;
                 }
 
-                Harmony harmony = new Harmony($"{nameof(NetExtender)}.{nameof(DependencyInjection)}.{nameof(DependencyInjectionPatch)}");
-                HarmonyMethod transpiler = new HarmonyMethod(Transpiler);
+                IHarmony harmony = IHarmony.Create($"{nameof(NetExtender)}.{nameof(DependencyInjection)}.{nameof(DependencyInjectionPatch)}");
+                IHarmonyMethod transpiler = IHarmonyMethod.Create(Transpiler);
 
                 if (instance.Method.DeclaringType?.Assembly.GetName().Version?.Major >= 9)
                 {

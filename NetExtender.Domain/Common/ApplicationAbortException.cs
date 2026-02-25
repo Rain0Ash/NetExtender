@@ -3,7 +3,7 @@
 
 using System;
 using System.Runtime.Serialization;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 
 namespace NetExtender.Domains
 {

@@ -2,6 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using NetExtender.Types.Middlewares;
 using NetExtender.Types.Middlewares.Interfaces;
 using NetExtender.Types.Monads;
@@ -13,6 +14,7 @@ namespace NetExtender.Utilities.Types
     {
     }
 
+    [SuppressMessage("ReSharper", "LocalVariableHidesMember")]
     public static partial class MiddlewareUtilities
     {
         private static readonly IResettableLazy<IAssemblyMiddlewareManager> manager = new ResettableLazy<IAssemblyMiddlewareManager>(Create);
@@ -50,7 +52,7 @@ namespace NetExtender.Utilities.Types
                 return;
             }
 
-            manager.Reset(() =>
+            manager.Reset(static () =>
             {
                 T @new = new T();
                 @new.From(manager.Value);

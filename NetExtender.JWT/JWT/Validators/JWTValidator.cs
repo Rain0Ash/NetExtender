@@ -7,7 +7,7 @@ using System.Runtime.CompilerServices;
 using NetExtender.JWT.Algorithms.Interfaces;
 using NetExtender.JWT.Interfaces;
 using NetExtender.JWT.Utilities;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 using NetExtender.Types.Times.Interfaces;
 using NetExtender.Utilities.Types;
 using Payload = System.Collections.Generic.IReadOnlyDictionary<System.String, System.Object?>;

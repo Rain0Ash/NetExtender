@@ -170,7 +170,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return source.WhereNotNull().GroupBy(item => item!.GetType());
+            return source.WhereNotNull().GroupBy(static item => item!.GetType());
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

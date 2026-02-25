@@ -2,6 +2,8 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Threading.Tasks;
+using System.Transactions;
 using NetExtender.Configuration.Behavior.Interfaces;
 using NetExtender.Configuration.Behavior.Transactions.Interfaces;
 using NetExtender.Types.Transactions;
@@ -15,6 +17,8 @@ namespace NetExtender.Configuration.Behavior.Transactions
         public IConfigBehavior Transaction { get; }
         public Boolean? IsCommit { get; protected set; }
         public TransactionCommitPolicy Policy { get; init; } = TransactionCommitPolicy.Manual;
+        public IsolationLevel Isolation { get; init; }
+        public TimeSpan Timeout { get; init; }
 
         public ConfigBehaviorTransaction(IConfigBehavior original, IConfigBehavior transaction)
         {
@@ -48,6 +52,17 @@ namespace NetExtender.Configuration.Behavior.Transactions
             }
 
             Transaction.Dispose();
+            GC.SuppressFinalize(this);
+        }
+
+        public virtual async ValueTask DisposeAsync()
+        {
+            if (Policy.IsCommit(IsCommit))
+            {
+                Rollback();
+            }
+
+            await Transaction.DisposeAsync();
             GC.SuppressFinalize(this);
         }
     }

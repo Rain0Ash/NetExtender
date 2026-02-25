@@ -4,6 +4,8 @@
 using System;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Xml.Serialization;
 using Microsoft.Win32;
 using NetExtender.Utilities.Registry;
 using NetExtender.Utilities.Serialization;
@@ -30,7 +32,8 @@ namespace NetExtender.Registry
         public RegistryKeys Key { get; init; }
         public ImmutableArray<String> Sections { get; init; }
 
-        [JsonIgnore]
+        [JsonIgnore, IgnoreDataMember, XmlIgnore, SoapIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public Int32 Length
         {
             get
@@ -39,7 +42,8 @@ namespace NetExtender.Registry
             }
         }
 
-        [JsonIgnore]
+        [JsonIgnore, IgnoreDataMember, XmlIgnore, SoapIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public String Path
         {
             get
@@ -48,7 +52,8 @@ namespace NetExtender.Registry
             }
         }
 
-        [JsonIgnore]
+        [JsonIgnore, IgnoreDataMember, XmlIgnore, SoapIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public String FullPath
         {
             get

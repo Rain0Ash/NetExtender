@@ -25,7 +25,7 @@ namespace NetExtender.AspNetCore.Types.Rules
             }
 
             HttpRequest request = context.HttpContext.Request;
-            if (!request.Host.Value.StartsWith("www.", StringComparison.OrdinalIgnoreCase))
+            if (request.Host.Value?.StartsWith("www.", StringComparison.OrdinalIgnoreCase) is not false)
             {
                 return;
             }

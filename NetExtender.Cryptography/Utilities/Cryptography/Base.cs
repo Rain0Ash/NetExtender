@@ -6,7 +6,7 @@ using System.Text;
 using NetExtender.Cryptography.Base;
 using NetExtender.Cryptography.Base.Alphabet;
 using NetExtender.Cryptography.Base.Interfaces;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 
 namespace NetExtender.Utilities.Cryptography
 {

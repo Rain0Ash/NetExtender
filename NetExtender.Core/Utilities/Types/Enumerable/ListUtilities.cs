@@ -4,36 +4,16 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Reflection;
-using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using NetExtender.Types.Comparers;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 using NetExtender.Types.Random.Interfaces;
-using NetExtender.Types.Spans;
-using NetExtender.Utilities.Numerics;
 
 namespace NetExtender.Utilities.Types
 {
     public static class ListUtilities
     {
-        private static class ArrayAccessor<T>
-        {
-            public static Func<List<T>, T[]> Getter { get; }
-
-            static ArrayAccessor()
-            {
-                const MethodAttributes attributes = MethodAttributes.Public | MethodAttributes.Static;
-                DynamicMethod method = new DynamicMethod("get", attributes, CallingConventions.Standard, typeof(T[]), new[] { typeof(List<T>) }, typeof(ArrayAccessor<T>), true);
-                ILGenerator il = method.GetILGenerator();
-                il.Emit(OpCodes.Ldarg_0);
-                il.Emit(OpCodes.Ldfld, typeof(List<T>).GetField("_items", BindingFlags.NonPublic | BindingFlags.Instance) ?? throw new NeverOperationException());
-                il.Emit(OpCodes.Ret);
-                Getter = (Func<List<T>, T[]>) method.CreateDelegate(typeof(Func<List<T>, T[]>));
-            }
-        }
-
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T[] Internal<T>(this List<T> list)
         {
@@ -43,12 +23,7 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T[] InternalArray<T>(this List<T> list)
         {
-            if (list is null)
-            {
-                throw new ArgumentNullException(nameof(list));
-            }
-
-            return ArrayAccessor<T>.Getter(list);
+            return ListBaseUtilities.InternalArray(list);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -107,49 +82,62 @@ namespace NetExtender.Utilities.Types
             return result > capacity;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T GetRandom<T>(this IList<T> collection)
         {
-            if (collection is null)
-            {
-                throw new ArgumentNullException(nameof(collection));
-            }
-
-            return collection.Count > 0 ? collection[RandomUtilities.NextNonNegative(collection.Count - 1)] : throw new InvalidOperationException();
+            return ListBaseUtilities.GetRandom(collection);
         }
 
-        public static T GetRandomOrDefault<T>(this IList<T> collection, T alternate)
-        {
-            if (collection is null)
-            {
-                throw new ArgumentNullException(nameof(collection));
-            }
-
-            return collection.Count > 0 ? collection[RandomUtilities.NextNonNegative(collection.Count - 1)] : alternate;
-        }
-
-        public static T GetRandomOrDefault<T>(this IList<T> collection, Func<T> alternate)
-        {
-            if (collection is null)
-            {
-                throw new ArgumentNullException(nameof(collection));
-            }
-
-            if (alternate is null)
-            {
-                throw new ArgumentNullException(nameof(alternate));
-            }
-
-            return collection.Count > 0 ? collection[RandomUtilities.NextNonNegative(collection.Count - 1)] : alternate();
-        }
-
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T? GetRandomOrDefault<T>(this IList<T> collection)
         {
+            return ListBaseUtilities.GetRandomOrDefault(collection);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T GetRandomOrDefault<T>(this IList<T> collection, T alternate)
+        {
+            return ListBaseUtilities.GetRandomOrDefault(collection, alternate);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T GetRandomOrDefault<T>(this IList<T> collection, Func<T> alternate)
+        {
+            return ListBaseUtilities.GetRandomOrDefault(collection, alternate);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean AddIfNotNull<T>(this List<T> collection, T? item)
+        {
             if (collection is null)
             {
                 throw new ArgumentNullException(nameof(collection));
             }
 
-            return collection.Count > 0 ? collection[RandomUtilities.NextNonNegative(collection.Count - 1)] : default;
+            if (item is null)
+            {
+                return false;
+            }
+
+            collection.Add(item);
+            return true;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean AddIfNotNull<T>(this List<T> collection, T? item) where T : struct
+        {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
+            if (!item.HasValue)
+            {
+                return false;
+            }
+
+            collection.Add(item.Value);
+            return true;
         }
 
         public static void Insert<T>(this IList<T> collection, Index index, T item)
@@ -339,51 +327,25 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Shuffle<T>(this IList<T> collection)
         {
-            Shuffle(collection, RandomUtilities.Generator);
+            ListBaseUtilities.Shuffle(collection);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Shuffle<T>(this IList<T> collection, Random random)
         {
-            if (collection is null)
-            {
-                throw new ArgumentNullException(nameof(collection));
-            }
-
-            if (random is null)
-            {
-                throw new ArgumentNullException(nameof(random));
-            }
-
-            for (Int32 i = 0; i < collection.Count; i++)
-            {
-                Int32 j = random.Next(i, collection.Count);
-                (collection[i], collection[j]) = (collection[j], collection[i]);
-            }
+            ListBaseUtilities.Shuffle(collection, random);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Shuffle<T>(this IList<T> collection, IRandom random)
         {
-            Shuffle<T, IRandom>(collection, random);
+            ListBaseUtilities.Shuffle(collection, random);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Shuffle<T, TRandom>(this IList<T> collection, TRandom random) where TRandom : IRandom
         {
-            if (collection is null)
-            {
-                throw new ArgumentNullException(nameof(collection));
-            }
-
-            if (random is null)
-            {
-                throw new ArgumentNullException(nameof(random));
-            }
-
-            for (Int32 i = 0; i < collection.Count; i++)
-            {
-                Int32 j = random.Next(i, collection.Count);
-                (collection[i], collection[j]) = (collection[j], collection[i]);
-            }
+            ListBaseUtilities.Shuffle(collection, random);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -676,28 +638,6 @@ namespace NetExtender.Utilities.Types
             }
 
             collection.Sort(index, count, new ComparisonComparer<T>(Comparison));
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ReadOnlyPaginationObserver<T> ReadOnlyPaginationObserver<T>(this List<T> collection, Int32 size)
-        {
-            if (collection is null)
-            {
-                throw new ArgumentNullException(nameof(collection));
-            }
-
-            return new ReadOnlyPaginationObserver<T>(collection.AsReadOnlySpan(), size);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static PaginationObserver<T> PaginationObserver<T>(this List<T> collection, Int32 size)
-        {
-            if (collection is null)
-            {
-                throw new ArgumentNullException(nameof(collection));
-            }
-
-            return new PaginationObserver<T>(collection.AsSpan(), size);
         }
     }
 }

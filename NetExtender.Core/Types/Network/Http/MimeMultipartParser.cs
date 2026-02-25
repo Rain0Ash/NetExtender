@@ -3,7 +3,7 @@
 
 using System;
 using System.Text;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 
 namespace NetExtender.Types.Network
 {

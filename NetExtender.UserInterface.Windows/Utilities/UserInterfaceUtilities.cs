@@ -8,7 +8,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 using NetExtender.UserInterface;
 using NetExtender.UserInterface.Interfaces;
 using NetExtender.Utilities.Core;
@@ -96,15 +96,11 @@ namespace NetExtender.Utilities.UserInterface
 
         public static Boolean SetWindowDisplayAffinity(IntPtr handle, WindowDisplayAffinity affinity)
         {
-            switch (affinity)
+            return affinity switch
             {
-                case WindowDisplayAffinity.None:
-                case WindowDisplayAffinity.Monitor:
-                case WindowDisplayAffinity.ExcludeFromCapture:
-                    return handle != IntPtr.Zero && SetWindowDisplayAffinity(handle, (Byte) affinity);
-                default:
-                    throw new EnumUndefinedOrNotSupportedException<WindowDisplayAffinity>(affinity, nameof(affinity), null);
-            }
+                WindowDisplayAffinity.None or WindowDisplayAffinity.Monitor or WindowDisplayAffinity.ExcludeFromCapture => handle != IntPtr.Zero && SetWindowDisplayAffinity(handle, (Byte) affinity),
+                _ => throw new EnumUndefinedOrNotSupportedException<WindowDisplayAffinity>(affinity, nameof(affinity), null)
+            };
         }
 
         public static Boolean? GetWindowSystemMenu(IntPtr handle)

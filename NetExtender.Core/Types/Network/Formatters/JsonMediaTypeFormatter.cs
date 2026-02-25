@@ -229,12 +229,14 @@ namespace NetExtender.Types.Network.Formatters
                 return serializer.Deserialize(reader, type);
             }
 
+#pragma warning disable CA2254
             void Handler(Object? _, ErrorEventArgs args)
             {
                 Exception error = args.ErrorContext.Error;
                 logger.LogError(args.ErrorContext.Path, error);
                 args.ErrorContext.Handled = true;
             }
+#pragma warning restore CA2254
 
             serializer.Error += Handler;
 

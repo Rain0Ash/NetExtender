@@ -151,7 +151,7 @@ namespace NetExtender.Types.Collections
                 {
                     case INotifyCollectionChanged notify:
                     {
-                        Dictionary<Select, NotifyCollectionChangedEventHandler> storage = CollectionChangedEventHandlers.GetOrAdd(unpack, () => new Dictionary<Select, NotifyCollectionChangedEventHandler>());
+                        Dictionary<Select, NotifyCollectionChangedEventHandler> storage = CollectionChangedEventHandlers.GetOrAdd(unpack, static () => new Dictionary<Select, NotifyCollectionChangedEventHandler>());
                         NotifyCollectionChangedEventHandler handler = storage.GetOrAdd(selector, key => (sender, args) => SubCollectionChanged((sender, unpack, key), args));
 
                         notify.CollectionChanged += handler;
@@ -159,7 +159,7 @@ namespace NetExtender.Types.Collections
                     }
                     case INotifyPropertyChanged notify:
                     {
-                        Dictionary<Select, PropertyChangedEventHandler> storage = PropertyChangedEventHandlers.GetOrAdd(unpack, () => new Dictionary<Select, PropertyChangedEventHandler>());
+                        Dictionary<Select, PropertyChangedEventHandler> storage = PropertyChangedEventHandlers.GetOrAdd(unpack, static () => new Dictionary<Select, PropertyChangedEventHandler>());
                         PropertyChangedEventHandler handler = storage.GetOrAdd(selector, key => (sender, args) => SubCollectionPropertyChanged((sender, unpack, key), args));
 
                         static List<T> Factory((T, Select) value)
@@ -169,7 +169,7 @@ namespace NetExtender.Types.Collections
                         }
 
                         notify.PropertyChanged += handler;
-                        Dictionary<Select, List<T>> dictionary = Storage.GetOrAdd(unpack, () => new Dictionary<Select, List<T>>());
+                        Dictionary<Select, List<T>> dictionary = Storage.GetOrAdd(unpack, static () => new Dictionary<Select, List<T>>());
                         dictionary.GetOrAdd(selector, key => Factory((unpack, key)));
                         continue;
                     }

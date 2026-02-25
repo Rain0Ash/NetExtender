@@ -8,7 +8,7 @@ using System.Reactive;
 using System.Reactive.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 using NetExtender.Types.Numerics;
 
 namespace NetExtender.Utilities.UserInterface.Types
@@ -182,7 +182,7 @@ namespace NetExtender.Utilities.UserInterface.Types
             if (relative is null)
             {
                 throw new ArgumentNullException(nameof(relative));
-            } 
+            }
 
             if (relative is Form form)
             {

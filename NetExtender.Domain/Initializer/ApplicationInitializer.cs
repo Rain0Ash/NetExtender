@@ -17,6 +17,7 @@ using NetExtender.Types.Attributes;
 using NetExtender.Types.Tasks;
 using NetExtender.Types.Dispatchers.Interfaces;
 using NetExtender.Utilities.Application;
+using NetExtender.Utilities.Core;
 using NetExtender.Utilities.Threading;
 
 namespace NetExtender.Domains.Initializer
@@ -77,24 +78,7 @@ namespace NetExtender.Domains.Initializer
                 }
             }
 
-            static Type[] GetSafeTypes(Assembly assembly)
-            {
-                if (assembly is null)
-                {
-                    throw new ArgumentNullException(nameof(assembly));
-                }
-
-                try
-                {
-                    return assembly.GetTypes();
-                }
-                catch (ReflectionTypeLoadException exception)
-                {
-                    return exception.Types.Where(static type => type is not null).ToArray()!;
-                }
-            }
-
-            Instance = GetSafeTypes(assembly).Where(static type => type.IsSubclassOf(typeof(ApplicationInitializer))).ToArray() switch
+            Instance = assembly.GetSafeTypesUnsafe().Where(static type => type.IsSubclassOf(typeof(ApplicationInitializer))).ToArray() switch
             {
                 { Length: 0 } => throw new EntryPointNotFoundException($"Application initializer for assembly '{assembly}' not found."),
                 { Length: 1 } initializer => Initialize(initializer[0]),

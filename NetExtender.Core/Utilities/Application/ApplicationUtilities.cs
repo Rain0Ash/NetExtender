@@ -44,9 +44,7 @@ namespace NetExtender.Utilities.Application
 
         public static String? FriendlyName { get; }
         public static String? Path { get; }
-
         public static String? Directory { get; }
-
         public static DateTime? BuildTime { get; }
 
         public static Int32 ProcessId

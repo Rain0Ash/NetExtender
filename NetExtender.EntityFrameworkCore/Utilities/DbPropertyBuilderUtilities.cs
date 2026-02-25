@@ -39,8 +39,7 @@ namespace NetExtender.Utilities.EntityFrameworkCore
                 throw new ArgumentNullException(nameof(builder));
             }
 
-            return builder.HasConversion(item => item.JsonSerializeObject(),
-                json => json.JsonDeserializeObject<T>()!);
+            return builder.HasConversion(static item => item.JsonSerializeObject(), static json => json.JsonDeserializeObject<T>()!);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -56,8 +55,7 @@ namespace NetExtender.Utilities.EntityFrameworkCore
                 throw new ArgumentNullException(nameof(builder));
             }
 
-            return builder.HasConversion(item => item.JsonSerializeObject(serializer),
-                json => json.JsonDeserializeObject<T>(deserializer)!);
+            return builder.HasConversion(item => item.JsonSerializeObject(serializer), json => json.JsonDeserializeObject<T>(deserializer)!);
         }
     }
 }

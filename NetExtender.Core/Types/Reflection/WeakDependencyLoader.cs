@@ -123,7 +123,7 @@ namespace NetExtender.Types.Reflection
             try
             {
                 AssemblyName name = Name;
-                return ReflectionUtilities.Assemblies.FirstOrDefault(assembly => AssemblyName.ReferenceMatchesDefinition(assembly.GetName(), name)) ?? Assembly.Load(Name);
+                return ReflectionUtilities.Assemblies.Keys.FirstOrDefault(assembly => AssemblyName.ReferenceMatchesDefinition(assembly.GetName(), name)) ?? Assembly.Load(Name);
             }
             catch (Exception)
             {

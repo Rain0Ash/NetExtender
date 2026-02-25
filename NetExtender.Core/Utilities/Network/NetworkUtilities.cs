@@ -28,7 +28,7 @@ namespace NetExtender.Utilities.Network
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean ValidateIPv4(String ip)
         {
-            return !String.IsNullOrEmpty(ip) && ip.Count(c => c == '.') == 3 && IPAddress.TryParse(ip, out _);
+            return !String.IsNullOrEmpty(ip) && ip.Count(static character => character == '.') == 3 && IPAddress.TryParse(ip, out _);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

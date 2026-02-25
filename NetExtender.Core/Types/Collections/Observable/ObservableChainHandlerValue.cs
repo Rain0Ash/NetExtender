@@ -8,8 +8,9 @@ using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using NetExtender.Interfaces.Notify;
 using NetExtender.Types.Collections.Interfaces;
-using NetExtender.Types.Handlers.Chain.Interfaces;
+using NetExtender.Types.Collections.Chain.Interfaces;
 using NetExtender.Types.Monads;
+using NetExtender.Utilities.Core;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Collections

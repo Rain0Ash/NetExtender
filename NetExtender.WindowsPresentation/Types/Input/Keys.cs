@@ -138,12 +138,12 @@ namespace NetExtender.WindowsPresentation.Types
 
         public Keys(IEnumerable<Key>? keys)
         {
-            Internal = keys?.Aggregate(new Flag256(), (current, key) => current | new Flag256(1) << (Int32) key) ?? new Flag256();
+            Internal = keys?.Aggregate(new Flag256(), static (current, key) => current | new Flag256(1) << (Int32) key) ?? new Flag256();
         }
 
         public Keys(ReadOnlySpan<Key> keys)
         {
-            Internal = keys.Aggregate(new Flag256(), (current, key) => current | new Flag256(1) << (Int32) key);
+            Internal = keys.Aggregate(new Flag256(), static (current, key) => current | new Flag256(1) << (Int32) key);
         }
 
         ReadOnlySpan<Byte> IFlag.AsSpan()
@@ -262,7 +262,7 @@ namespace NetExtender.WindowsPresentation.Types
 
         public IEnumerator<Key> GetEnumerator()
         {
-            return Internal.Enumerate().Select(position => (Key) position).GetEnumerator();
+            return Internal.Enumerate().Select(static position => (Key) position).GetEnumerator();
         }
 
         IEnumerator<Boolean> IEnumerable<Boolean>.GetEnumerator()

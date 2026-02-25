@@ -3,7 +3,7 @@
 
 using System;
 using NetExtender.JWT.Algorithms.Interfaces;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 
 namespace NetExtender.JWT.Algorithms
 {

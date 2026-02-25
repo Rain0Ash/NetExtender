@@ -241,7 +241,7 @@ namespace NetExtender.UserInterface.WindowsPresentation
             return IsSystemMenu(click);
         }
 
-        protected Boolean IsSystemMenu(Point click)
+        protected virtual Boolean IsSystemMenu(Point click)
         {
             const Int32 icon = 32;
             return click is { X: <= icon, Y: <= 0 };

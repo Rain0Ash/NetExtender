@@ -5,7 +5,7 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Security.Cryptography;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 
 namespace NetExtender.Initializer
 {
@@ -110,7 +110,7 @@ namespace NetExtender.Initializer
 
             if (strong is not false)
             {
-                throw new CryptographicException($"Can't find cryptography for assembly: '{assembly}'");
+                throw new CryptographicException($"Can't find cryptography for assembly: '{assembly}'.");
             }
 
             return Load(assembly, true)!;

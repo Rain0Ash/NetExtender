@@ -9,7 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using NetExtender.Types.Dictionaries;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 
 namespace NetExtender.Serialization.Ini
 {
@@ -461,7 +461,7 @@ namespace NetExtender.Serialization.Ini
             }
 
             Int32 index = 0;
-            foreach ((String ini, IniSection section) in Sections.Where(section => !section.Value.IsEmpty))
+            foreach ((String ini, IniSection section) in Sections.Where(static section => !section.Value.IsEmpty))
             {
                 if (index++ > 0)
                 {
@@ -503,7 +503,7 @@ namespace NetExtender.Serialization.Ini
             }
 
             Int32 index = 0;
-            foreach ((String ini, IniSection section) in Sections.Where(section => !section.Value.IsEmpty))
+            foreach ((String ini, IniSection section) in Sections.Where(static section => !section.Value.IsEmpty))
             {
                 if (index++ > 0)
                 {

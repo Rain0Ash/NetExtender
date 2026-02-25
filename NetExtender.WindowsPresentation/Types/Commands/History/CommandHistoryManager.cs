@@ -26,7 +26,7 @@ namespace NetExtender.WindowsPresentation.Types.Commands.History
         {
             get
             {
-                return factory ??= ReflectionUtilities.New<TNode, ICommand<T>, T, CommandHistoryEntryOptions>();
+                return factory ??= TypeUtilities.New<TNode, ICommand<T>, T, CommandHistoryEntryOptions>();
             }
         }
 

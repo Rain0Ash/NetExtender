@@ -152,7 +152,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return source.Where(item => item.HasValue).Select(item => item!.Value);
+            return source.Where(static item => item.HasValue).Select(static item => item!.Value);
         }
 
         public static IQueryable<TResult> SelectWhereNotNull<T, TResult>(this IQueryable<T?> source, Expression<Func<T, TResult>> selector) where T : struct

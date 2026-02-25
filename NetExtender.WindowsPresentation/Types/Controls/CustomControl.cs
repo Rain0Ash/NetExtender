@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using NetExtender.Types.Exceptions.Handlers;
+using NetExtender.Exceptions.Handlers;
 using NetExtender.Utilities.Core;
 using NetExtender.WindowsPresentation.Types.Exceptions;
 

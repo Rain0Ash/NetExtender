@@ -12,6 +12,11 @@ namespace NetExtender.Types.Monitors
 {
     public readonly struct Monitor : IScreen, IStruct<Monitor>
     {
+        public static implicit operator Boolean(Monitor value)
+        {
+            return !value.IsEmpty;
+        }
+
         public Int32 Id { get; }
         public String Name { get; }
 

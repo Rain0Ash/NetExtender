@@ -19,9 +19,7 @@ namespace NetExtender.Types.Expressions
 
         static ExtensionExpressionVisitorExpander()
         {
-            AsQueryableMethod = typeof(Queryable).GetMethods(BindingFlags.Static | BindingFlags.Public)
-                .First(info => info.Name == nameof(Queryable.AsQueryable) && info.IsGenericMethod);
-
+            AsQueryableMethod = typeof(Queryable).GetMethods(BindingFlags.Static | BindingFlags.Public).First(static info => info is { Name: nameof(Queryable.AsQueryable), IsGenericMethod: true });
             QueryableEmptyMethod = typeof(ExtensionExpressionVisitorRebinder).GetMethod(nameof(QueryableEmpty), BindingFlags.Static | BindingFlags.NonPublic);
         }
 

@@ -40,6 +40,14 @@ namespace NetExtender.Initializer
                 }
             }
 
+            public static IEnumerable<IPatchInfo> NoHarmony
+            {
+                get
+                {
+                    return Find(ReflectionPatchState.NoHarmony).Select(static patch => patch.Key);
+                }
+            }
+
             public static ReflectionPatchCategory AutoInitPatchCategory
             {
                 get
@@ -94,7 +102,7 @@ namespace NetExtender.Initializer
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             internal static Boolean IsAllowAutoInit(IPatchInfo? patch)
             {
-                return patch is not null && (AutoInitPatchCategory.HasFlag(patch.Category) || IncludeAutoInitPatch.Contains(patch.Name)) && !ExcludeAutoInitPatch.Contains(patch.Name);
+                return patch is not null && AutoInitPatchCategory is not ReflectionPatchCategory.None && (AutoInitPatchCategory.HasFlag(patch.Category) || IncludeAutoInitPatch.Contains(patch.Name)) && !ExcludeAutoInitPatch.Contains(patch.Name);
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]

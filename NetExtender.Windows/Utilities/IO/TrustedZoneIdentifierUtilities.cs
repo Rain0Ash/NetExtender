@@ -5,7 +5,7 @@ using System;
 using System.IO;
 using System.Text;
 using NetExtender.FileSystems.NTFS.DataStreams;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 using NetExtender.Utilities.IO;
 using NetExtender.Utilities.Types;
 using NetExtender.Utilities.Windows.IO;

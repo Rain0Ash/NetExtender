@@ -217,15 +217,31 @@ namespace NetExtender.Types.Concurrent.Observable
     }
 
     [Serializable]
-    public abstract class ConcurrentObservableSortedSet<T, TSelf> : ConcurrentObservableBase<T, ImmutableSortedSet<T>, TSelf>, IConcurrentObservableSortedSet<T>, IReadOnlySortedSet<T>, ISet where TSelf : ConcurrentObservableSortedSet<T, TSelf>
+    public abstract class ConcurrentObservableSortedSet<T, TSelf> : ConcurrentObservableBase<T, ImmutableSortedSet<T>, ImmutableSortedSet<T>, TSelf>, IConcurrentObservableSortedSet<T>, IReadOnlyConcurrentObservableSortedSet<T>, ISet where TSelf : ConcurrentObservableSortedSet<T, TSelf>
     {
         protected sealed override ImmutableSortedSet<T> Collection { get; set; }
 
-        public sealed override ISet<T> View
+        public sealed override ImmutableSortedSet<T> View
         {
             get
             {
                 return Collection;
+            }
+        }
+
+        ISet<T> IConcurrentObservableSet<T>.View
+        {
+            get
+            {
+                return View;
+            }
+        }
+
+        IReadOnlySet<T> IReadOnlyConcurrentObservableSet<T>.View
+        {
+            get
+            {
+                return View;
             }
         }
 
@@ -246,6 +262,14 @@ namespace NetExtender.Types.Concurrent.Observable
         }
 
         IImmutableSet<T> IConcurrentObservableSet<T>.Immutable
+        {
+            get
+            {
+                return Immutable;
+            }
+        }
+
+        IImmutableSet<T> IReadOnlyConcurrentObservableSet<T>.Immutable
         {
             get
             {
@@ -471,7 +495,7 @@ namespace NetExtender.Types.Concurrent.Observable
         protected virtual unsafe Int32? Intersect(IEnumerable<T>? other)
         {
             Int32 count = 0;
-            if (other is null || other.CountIfMaterialized() <= 0)
+            if (other.CantHaveCount())
             {
                 Clear(out count);
                 return count;

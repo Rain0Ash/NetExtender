@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Authentication.BearerToken;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using NetExtender.AspNetCore.Identity.Interfaces;
-using NetExtender.DependencyInjection.Attributes;
+using NetExtender.DependencyInjection;
 
 namespace NetExtender.AspNetCore.Identity
 {

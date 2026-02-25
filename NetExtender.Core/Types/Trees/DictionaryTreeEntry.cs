@@ -5,6 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Xml.Serialization;
 using NetExtender.Utilities.Serialization;
 using NetExtender.Utilities.Types;
 using Newtonsoft.Json;
@@ -28,7 +30,7 @@ namespace NetExtender.Types.Trees
         public TValue? Value { get; }
         public ImmutableArray<TKey> Sections { get; }
 
-        [JsonIgnore]
+        [JsonIgnore, IgnoreDataMember, XmlIgnore, SoapIgnore]
         [System.Text.Json.Serialization.JsonIgnore]
         public Int32 Length
         {

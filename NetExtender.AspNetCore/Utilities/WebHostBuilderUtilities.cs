@@ -14,7 +14,7 @@ using Microsoft.Extensions.Hosting;
 using NetExtender.AspNetCore.Types.Exceptions;
 using NetExtender.AspNetCore.Types.Initializers;
 using NetExtender.AspNetCore.Types.Initializers.Interfaces;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 using NetExtender.Utilities.Network;
 using NetExtender.Utilities.Types;
 

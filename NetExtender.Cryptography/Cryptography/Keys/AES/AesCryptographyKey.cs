@@ -4,7 +4,7 @@
 using System;
 using System.Security.Cryptography;
 using NetExtender.Cryptography.Keys.Interfaces;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 using NetExtender.Utilities.Cryptography;
 
 namespace NetExtender.Cryptography.Keys.AES

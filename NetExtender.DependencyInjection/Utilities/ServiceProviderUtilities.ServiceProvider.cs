@@ -117,7 +117,7 @@ namespace NetExtender.Utilities.Types
                         provider.Final();
                     }
 
-                    Storage.GetOrAdd(provider, static _ => new ConcurrentHashSet<Assembly>()).AddRange(ReflectionUtilities.Assemblies);
+                    Storage.GetOrAdd(provider, static _ => new ConcurrentHashSet<Assembly>()).AddRange(ReflectionUtilities.Assemblies.Keys);
                     provider.Changed += OnChanged;
                     return provider;
                 }
@@ -133,6 +133,11 @@ namespace NetExtender.Utilities.Types
             public Object? GetService(Type service)
             {
                 return _provider.Value.GetService(service);
+            }
+
+            public Object GetRequiredService(Type service)
+            {
+                return _provider.Value.GetRequiredService(service);
             }
 
             IServiceProvider? IChangeableServiceProvider.Rebuild()

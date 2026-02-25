@@ -3,8 +3,8 @@
 
 using System;
 using System.Windows.Input;
-using NetExtender.Types.Exceptions;
-using NetExtender.Types.Exceptions.Handlers;
+using NetExtender.Exceptions;
+using NetExtender.Exceptions.Handlers;
 using NetExtender.WindowsPresentation.Types.Exceptions;
 using NetExtender.WindowsPresentation.Utilities.Types;
 #pragma warning disable CA2200

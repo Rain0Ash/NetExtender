@@ -6,6 +6,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Xml.Serialization;
 using NetExtender.Configuration.Common;
 using NetExtender.Localization.Common.Interfaces;
 using NetExtender.Types.Culture;
@@ -63,7 +65,8 @@ namespace NetExtender.Localization.Common
         public String? Value { get; }
         public ImmutableArray<String> Sections { get; }
 
-        [JsonIgnore]
+        [JsonIgnore, IgnoreDataMember, XmlIgnore, SoapIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public Int32 Length
         {
             get
@@ -150,7 +153,7 @@ namespace NetExtender.Localization.Common
                 return compare;
             }
 
-            foreach ((String? first, String? second) in Sections.Zip(other.Sections))
+            foreach ((String first, String second) in Sections.Zip(other.Sections))
             {
                 compare = String.Compare(first, second, StringComparison.Ordinal);
 
@@ -218,12 +221,12 @@ namespace NetExtender.Localization.Common
     {
         public static implicit operator ConfigurationEntry[](LocalizationMultiValueEntry value)
         {
-            return value.Select(entry => (ConfigurationEntry) entry).ToArray();
+            return value.Select(static entry => (ConfigurationEntry) entry).ToArray();
         }
 
         public static implicit operator ConfigurationValueEntry[](LocalizationMultiValueEntry value)
         {
-            return value.Select(entry => (ConfigurationValueEntry) entry).ToArray();
+            return value.Select(static entry => (ConfigurationValueEntry) entry).ToArray();
         }
 
         public static implicit operator LocalizationMultiEntry(LocalizationMultiValueEntry value)
@@ -233,7 +236,7 @@ namespace NetExtender.Localization.Common
 
         public static implicit operator LocalizationEntry[](LocalizationMultiValueEntry value)
         {
-            return value.Select(entry => (LocalizationEntry) entry).ToArray();
+            return value.Select(static entry => (LocalizationEntry) entry).ToArray();
         }
 
         public static implicit operator LocalizationValueEntry[](LocalizationMultiValueEntry value)
@@ -255,7 +258,8 @@ namespace NetExtender.Localization.Common
         public ILocalizationString Value { get; }
         public ImmutableArray<String> Sections { get; }
 
-        [JsonIgnore]
+        [JsonIgnore, IgnoreDataMember, XmlIgnore, SoapIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public Int32 Length
         {
             get
@@ -319,7 +323,7 @@ namespace NetExtender.Localization.Common
                 return compare;
             }
 
-            foreach ((String? first, String? second) in Sections.Zip(other.Sections))
+            foreach ((String first, String second) in Sections.Zip(other.Sections))
             {
                 compare = String.Compare(first, second, StringComparison.Ordinal);
 
@@ -336,7 +340,7 @@ namespace NetExtender.Localization.Common
 
         public IEnumerator<LocalizationValueEntry> GetEnumerator()
         {
-            foreach ((LocalizationIdentifier identifier, String? value) in Value)
+            foreach ((LocalizationIdentifier identifier, String value) in Value)
             {
                 yield return new LocalizationValueEntry(Key, identifier, value, Sections);
             }

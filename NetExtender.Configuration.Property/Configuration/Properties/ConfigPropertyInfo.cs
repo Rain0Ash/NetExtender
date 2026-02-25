@@ -21,7 +21,7 @@ namespace NetExtender.Configuration.Properties
         {
             get
             {
-                return Internal.IsValueCreated && Internal.Value is not null;
+                return Internal is { IsValueCreated: true, Value: not null };
             }
         }
 

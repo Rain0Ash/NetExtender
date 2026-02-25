@@ -12,13 +12,95 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
-using NetExtender.Types.Threading;
+using NetExtender.Cecil;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Utilities.Core
 {
     public static partial class ReflectionUtilities
     {
+        [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
+        internal sealed class Container
+        {
+            private static Func<ConcurrentHashSet<MonoCecilType>> Create { get; } = static () => new ConcurrentHashSet<MonoCecilType>(4, 4);
+
+            private ConcurrentHashSet<MonoCecilType>? _inherit;
+            public ConcurrentHashSet<MonoCecilType> Inherit
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get
+                {
+                    return LazyInitializer.EnsureInitialized(ref _inherit, Create);
+                }
+            }
+
+            public ConcurrentHashSet<MonoCecilType>? InheritSafe
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get
+                {
+                    return Volatile.Read(ref _inherit);
+                }
+            }
+
+            private ConcurrentHashSet<MonoCecilType>? _attribute;
+            public ConcurrentHashSet<MonoCecilType> AttributeInherit
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get
+                {
+                    return LazyInitializer.EnsureInitialized(ref _attribute, Create);
+                }
+            }
+
+            public ConcurrentHashSet<MonoCecilType>? AttributeInheritSafe
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get
+                {
+                    return Volatile.Read(ref _attribute);
+                }
+            }
+
+            private ConcurrentHashSet<MonoCecilType>? _direct;
+            public ConcurrentHashSet<MonoCecilType> DirectAttributeInherit
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get
+                {
+                    return LazyInitializer.EnsureInitialized(ref _direct, Create);
+                }
+            }
+
+            public ConcurrentHashSet<MonoCecilType>? DirectAttributeInheritSafe
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get
+                {
+                    return Volatile.Read(ref _direct);
+                }
+            }
+
+            private ConcurrentHashSet<MonoCecilType>? _type;
+            public ConcurrentHashSet<MonoCecilType> TypeToDirectAttributes
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get
+                {
+                    return LazyInitializer.EnsureInitialized(ref _type, Create);
+                }
+            }
+
+            public ConcurrentHashSet<MonoCecilType>? TypeToDirectAttributesSafe
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get
+                {
+                    return Volatile.Read(ref _type);
+                }
+            }
+        }
+
         [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
         private readonly struct InheritEvaluator : IStruct<InheritEvaluator>
         {
@@ -27,12 +109,8 @@ namespace NetExtender.Utilities.Core
                 return new Inherit.Result(value.Type, value.Attribute);
             }
 
-            private static MutexSlim Mutex { get; } = new MutexSlim();
-            private static SemaphoreSlim Semaphore { get; } = new SemaphoreSlim(1, 1);
-
-            private static ConcurrentDictionary<Type, ConcurrentHashSet<Type>> Inherit { get; } = new ConcurrentDictionary<Type, ConcurrentHashSet<Type>>();
-            private static ConcurrentDictionary<Attribute, ConcurrentHashSet<Type>> AttributeInherit { get; } = new ConcurrentDictionary<Attribute, ConcurrentHashSet<Type>>();
-            private static ConcurrentDictionary<Type, ConcurrentHashSet<Type>> AttributeTypeInherit { get; } = new ConcurrentDictionary<Type, ConcurrentHashSet<Type>>();
+            private static ConcurrentDictionary<MonoCecilType, Container> Storage { get; } = new ConcurrentDictionary<MonoCecilType, Container>(Environment.ProcessorCount, 100000);
+            private static ConcurrentHashSet<MonoCecilType> Traverse { get; } = new ConcurrentHashSet<MonoCecilType>();
 
             private Inherit Type { get; }
             private AttributeInherit Attribute { get; }
@@ -46,7 +124,7 @@ namespace NetExtender.Utilities.Core
                 }
             }
 
-            public InheritEvaluator(Inherit type, AttributeInherit attribute)
+            private InheritEvaluator(Inherit type, AttributeInherit attribute)
             {
                 Type = type ?? throw new ArgumentNullException(nameof(type));
                 Attribute = attribute ?? throw new ArgumentNullException(nameof(attribute));
@@ -54,183 +132,255 @@ namespace NetExtender.Utilities.Core
 
             public static InheritEvaluator Create()
             {
-                Semaphore.Wait();
+                ScanProcess.Wait();
+                (TypeMap<MonoCecilType, ReflectionInheritResult> Inherit, TypeMap<MonoCecilType, ReflectionInheritResult> AttributeInherit, TypeMap<MonoCecilType, ReflectionInheritResult> DirectAttributeInherit) result = Builder(Storage);
+                return new InheritEvaluator(new Inherit(result.Inherit), new AttributeInherit(result.AttributeInherit, result.DirectAttributeInherit));
+            }
 
-                try
+            [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+            private static (TypeMap<MonoCecilType, ReflectionInheritResult> Inherit, TypeMap<MonoCecilType, ReflectionInheritResult> AttributeInherit, TypeMap<MonoCecilType, ReflectionInheritResult> DirectAttributeInherit) Builder(ConcurrentDictionary<MonoCecilType, Container> storage)
+            {
+                KeyValuePair<MonoCecilType, Container>[] snapshot = storage.ToArray();
+                Dictionary<MonoCecilType, ReflectionInheritResult> inherit = new Dictionary<MonoCecilType, ReflectionInheritResult>(snapshot.Length);
+                Dictionary<MonoCecilType, ReflectionInheritResult> attributes = new Dictionary<MonoCecilType, ReflectionInheritResult>(snapshot.Length);
+                Dictionary<MonoCecilType, ReflectionInheritResult> direct = new Dictionary<MonoCecilType, ReflectionInheritResult>(snapshot.Length);
+
+                foreach ((MonoCecilType type, Container container) in snapshot)
                 {
-                    Mutex.Wait();
-                    return new InheritEvaluator(new Inherit(Inherit), new AttributeInherit(AttributeTypeInherit, AttributeInherit));
+                    ConcurrentHashSet<MonoCecilType>? set = container.InheritSafe;
+
+                    if (set is not null)
+                    {
+                        inherit[type] = ReflectionInheritResult.Create(set);
+                    }
+
+                    set = container.AttributeInheritSafe;
+
+                    if (set is not null)
+                    {
+                        attributes[type] = ReflectionInheritResult.Create(set);
+                    }
+
+                    set = container.DirectAttributeInheritSafe;
+
+                    if (set is not null)
+                    {
+                        direct[type] = ReflectionInheritResult.Create(set);
+                    }
                 }
-                finally
-                {
-                    Mutex.Release();
-                    Semaphore.Release();
-                }
+
+                return (TypeMap<MonoCecilType, ReflectionInheritResult>.Create(inherit), TypeMap<MonoCecilType, ReflectionInheritResult>.Create(attributes), TypeMap<MonoCecilType, ReflectionInheritResult>.Create(direct));
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            private static ValueTask ScanHandler(Type type, CancellationToken token)
+            private static void ScanHandler(MonoCecilType type)
             {
-                return type.IsInterface ? InterfaceScanHandler(type, token) : TypeScanHandler(type, token);
+                switch (type)
+                {
+                    case null:
+                        return;
+                    case { IsInterface: true }:
+                        InterfaceScanHandler(type);
+                        return;
+                    default:
+                        TypeScanHandler(type);
+                        return;
+                }
             }
 
             [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-            private static ValueTask<Exception?> AttributeScanHandler(Type type, CancellationToken token)
+            [SuppressMessage("ReSharper", "CognitiveComplexity")]
+            private static Exception? AttributeScanHandler(MonoCecilType type)
             {
-                if (token.IsCancellationRequested)
-                {
-                    return ValueTask.FromResult<Exception?>(null);
-                }
-
-                static IEnumerable<(Type Type, Attribute Attribute)> Get(Type type)
-                {
-                    return type.GetCustomAttributes(true).OfType<Attribute>().Select(static attribute => (attribute.GetType(), attribute));
-                }
-
                 try
                 {
-                    foreach ((Type Type, Attribute Attribute) attribute in Get(type))
+                    if (type.Attributes is not { Count: > 0 } data)
                     {
-                        AttributeInherit.GetOrAdd(attribute.Attribute, static _ => new ConcurrentHashSet<Type>()).Add(type);
-                        AttributeTypeInherit.GetOrAdd(attribute.Type, static _ => new ConcurrentHashSet<Type>()).Add(type);
-
-                        if (attribute.Type.IsGenericType)
-                        {
-                            AttributeTypeInherit.GetOrAdd(attribute.Type.GetGenericTypeDefinition(), static _ => new ConcurrentHashSet<Type>()).Add(type);
-                        }
+                        goto ancestors;
                     }
 
-                    return ValueTask.FromResult<Exception?>(null);
+                    ConcurrentHashSet<MonoCecilType> set = Storage.GetOrNew(type).TypeToDirectAttributes;
+
+                    foreach (MonoCecilType attribute in data)
+                    {
+                        if (attribute == typeof(SuppressMessageAttribute))
+                        {
+                            continue;
+                        }
+
+                        set.Add(attribute);
+                        Storage.GetOrNew(attribute).AttributeInherit.Add(type);
+                        Storage.GetOrNew(attribute).DirectAttributeInherit.Add(type);
+
+                        if (!attribute.IsGenericType)
+                        {
+                            continue;
+                        }
+
+                        if (attribute.GetGenericTypeDefinition() is not { } generic)
+                        {
+                            continue;
+                        }
+
+                        set.Add(generic);
+                        Storage.GetOrNew(generic).AttributeInherit.Add(type);
+                        Storage.GetOrNew(generic).DirectAttributeInherit.Add(type);
+                    }
+
+                    ancestors:
+                    MonoCecilType? ancestor = type.BaseType;
+
+                    while (ancestor is not null && ancestor != typeof(Object))
+                    {
+                        if (Storage.TryGetValue(ancestor, out Container? container) && container.TypeToDirectAttributesSafe is { } attributes)
+                        {
+                            foreach (MonoCecilType attribute in attributes)
+                            {
+                                Storage.GetOrNew(attribute).AttributeInherit.Add(type);
+                            }
+                        }
+
+                        ancestor = ancestor.BaseType;
+                    }
+
+                    return null;
                 }
                 catch (Exception exception)
                 {
-                    return ValueTask.FromResult<Exception?>(exception);
+                    return exception;
                 }
             }
 
             [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-            private static async ValueTask TypeScanHandler(Type type, CancellationToken token)
+            [SuppressMessage("ReSharper", "CognitiveComplexity")]
+            private static void TypeScanHandler(MonoCecilType type)
             {
-                if (token.IsCancellationRequested || type.IsInterface)
+                MonoCecilType real = type;
+
+                start:
+                if (!type.IsScan || !Traverse.Add(type))
                 {
                     return;
                 }
 
-                foreach (Type @interface in type.GetInterfaces())
+                foreach (MonoCecilType @interface in type.Interfaces)
                 {
-                    Inherit.GetOrAdd(@interface, static _ => new ConcurrentHashSet<Type>()).Add(type);
+                    Storage.GetOrNew(@interface).Inherit.Add(type);
 
                     if (@interface.IsGenericType)
                     {
-                        Inherit.GetOrAdd(@interface.GetGenericTypeDefinition(), static _ => new ConcurrentHashSet<Type>()).Add(type);
+                        Storage.GetOrNew(@interface.GetGenericTypeDefinition()).Inherit.Add(type);
                     }
+
+                    InterfaceScanHandler(@interface);
                 }
 
-                await AttributeScanHandler(type, token);
+                AttributeScanHandler(type);
 
-                if (type.BaseType is not { } @base)
+                if (type.BaseType is not { } @base || @base == typeof(Object))
                 {
                     return;
                 }
 
-                Inherit.GetOrAdd(@base, static _ => new ConcurrentHashSet<Type>()).Add(type);
-
-                if (@base.IsGenericType)
+                MonoCecilType? current = real;
+                while (current is not null && current != typeof(Object))
                 {
-                    Inherit.GetOrAdd(@base.GetGenericTypeDefinition(), static _ => new ConcurrentHashSet<Type>()).Add(type);
+                    Storage.GetOrNew(current).Inherit.Add(real);
+
+                    if (current.IsGenericType)
+                    {
+                        Storage.GetOrNew(current.GetGenericTypeDefinition()).Inherit.Add(real);
+                    }
+
+                    current = current.BaseType;
                 }
+
+                type = @base;
+                goto start;
             }
 
             [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-            private static async ValueTask InterfaceScanHandler(Type type, CancellationToken token)
+            private static void InterfaceScanHandler(MonoCecilType type)
             {
-                if (token.IsCancellationRequested || !type.IsInterface)
+                if (!type.IsScan || !Traverse.Add(type))
                 {
                     return;
                 }
 
-                if (type.GetInterfaces() is not { Length: > 0 } interfaces)
-                {
-                    return;
-                }
+                AttributeScanHandler(type);
 
-                foreach (Type @interface in interfaces)
+                foreach (MonoCecilType @interface in type.Interfaces)
                 {
-                    Inherit.GetOrAdd(@interface, static _ => new ConcurrentHashSet<Type>()).Add(type);
+                    Storage.GetOrNew(@interface).Inherit.Add(type);
 
                     if (@interface.IsGenericType)
                     {
-                        Inherit.GetOrAdd(@interface.GetGenericTypeDefinition(), static _ => new ConcurrentHashSet<Type>()).Add(type);
+                        Storage.GetOrNew(@interface.GetGenericTypeDefinition()).Inherit.Add(type);
                     }
 
-                    await AttributeScanHandler(@interface, token);
-                    await InterfaceScanHandler(@interface, token);
+                    InterfaceScanHandler(@interface);
                 }
             }
 
             [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-            // ReSharper disable once CognitiveComplexity
-            public static async ValueTask Scan(IEnumerable<Type> source)
+            public static void Scan(IEnumerable<MonoCecilType> source)
             {
                 if (source is null)
                 {
                     throw new ArgumentNullException(nameof(source));
                 }
 
-                await Mutex.WaitAsync();
-
-                try
-                {
-                    await Parallel.ForEachAsync(source, ScanHandler).ConfigureAwait(false);
-                }
-                finally
-                {
-                    await Mutex.ReleaseAsync();
-                }
+                Parallel.ForEach(source, new ParallelOptions { MaxDegreeOfParallelism = Environment.ProcessorCount }, ScanHandler);
             }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static async Task<Boolean> Scan()
+        private static Boolean Scan()
         {
-            return await Scan(AppDomain.CurrentDomain).ConfigureAwait(false);
+            return Scan(AppDomain.CurrentDomain);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static async Task<Boolean> Scan(AppDomain domain)
+        private static Boolean Scan(AppDomain domain)
         {
             if (domain is null)
             {
                 throw new ArgumentNullException(nameof(domain));
             }
 
-            return await Scan(domain.GetTypes()).ConfigureAwait(false);
+            return Scan(domain.GetCecilTypes());
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static async Task<Boolean> Scan(Assembly assembly)
+        private static Boolean Scan(Assembly assembly)
+        {
+            return Scan(assembly, out _);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static Boolean Scan(Assembly assembly, out TypeSet set)
         {
             if (assembly is null)
             {
                 throw new ArgumentNullException(nameof(assembly));
             }
 
-            return await Scan(assembly.GetSafeTypes()).ConfigureAwait(false);
+            return Scan(set = assembly.GetCecilTypes());
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static async Task<Boolean> Scan(IEnumerable<Assembly> source)
+        private static Boolean Scan(IEnumerable<Assembly> source)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return await Scan(source.GetTypes()).ConfigureAwait(false);
+            return Scan(source.GetCecilTypes());
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static async Task<Boolean> Scan(IEnumerable<Type> source)
+        private static Boolean Scan(IEnumerable<MonoCecilType> source)
         {
             if (source is null)
             {
@@ -239,7 +389,7 @@ namespace NetExtender.Utilities.Core
 
             try
             {
-                await InheritEvaluator.Scan(source).ConfigureAwait(false);
+                InheritEvaluator.Scan(source);
                 return true;
             }
             catch (Exception)
@@ -249,51 +399,26 @@ namespace NetExtender.Utilities.Core
         }
     }
 
-    public sealed class ReflectionInheritResult : IImmutableSet<Type>
+    public sealed class ReflectionInheritResult : IImmutableSet<MonoCecilType>
     {
         [return: NotNullIfNotNull("value")]
-        public static implicit operator ImmutableHashSet<Type>?(ReflectionInheritResult? value)
+        public static implicit operator TypeSet?(ReflectionInheritResult? value)
         {
             return value?.All;
         }
 
-        public static ReflectionInheritResult Empty { get; } = new ReflectionInheritResult(ReflectionInherit.Empty, ReflectionInherit.Empty, ReflectionInherit.Empty);
+        public static ReflectionInheritResult Empty { get; } = new ReflectionInheritResult(ReflectionInherit.Empty, ReflectionInherit.Empty);
 
-        public ReflectionInherit All { get; }
-        public ReflectionInherit Inherit { get; }
-        public ReflectionInherit Generic { get; }
-
-        public ImmutableHashSet<Type> Types
+        private ReflectionInherit _all;
+        public ReflectionInherit All
         {
             get
             {
-                return Inherit.Types;
-            }
-        }
+                if (!_all.IsEmpty)
+                {
+                    return _all;
+                }
 
-        public ImmutableHashSet<Type> Interfaces
-        {
-            get
-            {
-                return Inherit.Interfaces;
-            }
-        }
-
-        public Int32 Count
-        {
-            get
-            {
-                return All.Count;
-            }
-        }
-
-        private ReflectionInheritResult(ReflectionInherit? all, ReflectionInherit? @internal, ReflectionInherit? generic)
-        {
-            Inherit = @internal ?? ReflectionInherit.Empty;
-            Generic = generic ?? ReflectionInherit.Empty;
-
-            if (all is null)
-            {
                 ReflectionInherit.Builder builder = new ReflectionInherit.Builder();
 
                 builder.Types.UnionWith(Inherit.Types);
@@ -302,14 +427,56 @@ namespace NetExtender.Utilities.Core
                 builder.Interfaces.UnionWith(Inherit.Interfaces);
                 builder.Interfaces.UnionWith(Generic.Interfaces);
 
-                all = builder.ToImmutable();
+                return _all = builder.ToImmutable();
             }
+        }
 
-            All = all;
+        public readonly ReflectionInherit Inherit;
+        public readonly ReflectionInherit Generic;
+
+        public TypeSet Types
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get
+            {
+                return Inherit.Types;
+            }
+        }
+
+        public TypeSet Interfaces
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get
+            {
+                return Inherit.Interfaces;
+            }
+        }
+
+        public Int32 Count
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get
+            {
+                return All.Count;
+            }
+        }
+
+        public Int32 MaximumCount
+        {
+            get
+            {
+                return Inherit.Count + Generic.Count;
+            }
+        }
+
+        private ReflectionInheritResult(ReflectionInherit inherit, ReflectionInherit generic)
+        {
+            Inherit = inherit;
+            Generic = generic;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-        internal static ReflectionInheritResult Create(ConcurrentHashSet<Type> set)
+        internal static ReflectionInheritResult Create(ConcurrentHashSet<MonoCecilType> set)
         {
             if (set is null)
             {
@@ -318,138 +485,124 @@ namespace NetExtender.Utilities.Core
 
             Builder builder = new Builder();
 
-            foreach (Type type in set)
+            lock (set)
             {
-                (type switch
+                foreach (MonoCecilType item in set)
                 {
-                    { IsInterface: true, IsGenericTypeDefinition: true } => builder.Generic.Interfaces,
-                    { IsInterface: true } => builder.Interfaces,
-                    { IsInterface: false, IsGenericTypeDefinition: true } => builder.Generic.Types,
-                    _ => builder.Types
-                }).Add(type);
+                    builder.Add(item);
+                }
             }
 
             return builder.ToImmutable();
         }
 
-        public Boolean Contains(Type item)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private TypeSet Target(MonoCecilType item)
         {
-            return All.Contains(item);
+            return item switch
+            {
+                { IsInterface: true, IsGenericTypeDefinition: true } => Generic.Interfaces,
+                { IsInterface: true } => Inherit.Interfaces,
+                { IsGenericTypeDefinition: true } => Generic.Types,
+                _ => Inherit.Types
+            };
         }
 
-        public Boolean TryGetValue(Type equalValue, out Type actualValue)
+        public Boolean Contains(MonoCecilType? item)
         {
-            return All.TryGetValue(equalValue, out actualValue);
+            if (item is null)
+            {
+                return false;
+            }
+
+            TypeSet target = Target(item);
+            return target.Count > 0 && target.Contains(item);
         }
 
-        public Boolean IsProperSubsetOf(IEnumerable<Type> other)
+        public Boolean TryGetValue(MonoCecilType? equalValue, out MonoCecilType actualValue)
         {
-            return All.IsProperSubsetOf(other);
+            if (equalValue is not null)
+            {
+                return Target(equalValue).TryGetValue(equalValue, out actualValue);
+            }
+
+            actualValue = null!;
+            return false;
         }
 
-        public Boolean IsProperSupersetOf(IEnumerable<Type> other)
-        {
-            return All.IsProperSupersetOf(other);
-        }
-
-        public Boolean IsSubsetOf(IEnumerable<Type> other)
+        public Boolean IsSubsetOf(IEnumerable<MonoCecilType> other)
         {
             return All.IsSubsetOf(other);
         }
 
-        public Boolean IsSupersetOf(IEnumerable<Type> other)
+        public Boolean IsProperSubsetOf(IEnumerable<MonoCecilType> other)
+        {
+            return All.IsProperSubsetOf(other);
+        }
+
+        public Boolean IsSupersetOf(IEnumerable<MonoCecilType> other)
         {
             return All.IsSupersetOf(other);
         }
 
-        public Boolean Overlaps(IEnumerable<Type> other)
+        public Boolean IsProperSupersetOf(IEnumerable<MonoCecilType> other)
+        {
+            return All.IsProperSupersetOf(other);
+        }
+
+        public Boolean Overlaps(IEnumerable<MonoCecilType> other)
         {
             return All.Overlaps(other);
         }
 
-        public Boolean SetEquals(IEnumerable<Type> other)
+        public Boolean SetEquals(IEnumerable<MonoCecilType> other)
         {
             return All.SetEquals(other);
         }
 
-        public ImmutableHashSet<Type> Add(Type value)
+        public IImmutableSet<MonoCecilType> Add(MonoCecilType value)
         {
             return All.Add(value);
         }
 
-        IImmutableSet<Type> IImmutableSet<Type>.Add(Type value)
-        {
-            return All.Add(value);
-        }
-
-        public ImmutableHashSet<Type> Union(IEnumerable<Type> other)
+        public IImmutableSet<MonoCecilType> Union(IEnumerable<MonoCecilType> other)
         {
             return All.Union(other);
         }
 
-        IImmutableSet<Type> IImmutableSet<Type>.Union(IEnumerable<Type> other)
-        {
-            return All.Union(other);
-        }
-
-        public ImmutableHashSet<Type> Intersect(IEnumerable<Type> other)
+        public IImmutableSet<MonoCecilType> Intersect(IEnumerable<MonoCecilType> other)
         {
             return All.Intersect(other);
         }
 
-        IImmutableSet<Type> IImmutableSet<Type>.Intersect(IEnumerable<Type> other)
-        {
-            return All.Intersect(other);
-        }
-
-        public ImmutableHashSet<Type> Except(IEnumerable<Type> other)
+        public IImmutableSet<MonoCecilType> Except(IEnumerable<MonoCecilType> other)
         {
             return All.Except(other);
         }
 
-        IImmutableSet<Type> IImmutableSet<Type>.Except(IEnumerable<Type> other)
-        {
-            return All.Except(other);
-        }
-
-        public ImmutableHashSet<Type> SymmetricExcept(IEnumerable<Type> other)
+        public IImmutableSet<MonoCecilType> SymmetricExcept(IEnumerable<MonoCecilType> other)
         {
             return All.SymmetricExcept(other);
         }
 
-        IImmutableSet<Type> IImmutableSet<Type>.SymmetricExcept(IEnumerable<Type> other)
-        {
-            return All.SymmetricExcept(other);
-        }
-
-        public ImmutableHashSet<Type> Remove(Type value)
+        public IImmutableSet<MonoCecilType> Remove(MonoCecilType value)
         {
             return All.Remove(value);
         }
 
-        IImmutableSet<Type> IImmutableSet<Type>.Remove(Type value)
-        {
-            return All.Remove(value);
-        }
-
-        public ImmutableHashSet<Type> Clear()
+        public IImmutableSet<MonoCecilType> Clear()
         {
             return All.Clear();
         }
 
-        IImmutableSet<Type> IImmutableSet<Type>.Clear()
-        {
-            return All.Clear();
-        }
-
-        public ImmutableHashSet<Type>.Enumerator GetEnumerator()
+        public IEnumerator<MonoCecilType> GetEnumerator()
         {
             return All.GetEnumerator();
         }
 
-        IEnumerator<Type> IEnumerable<Type>.GetEnumerator()
+        IEnumerator<MonoCecilType> IEnumerable<MonoCecilType>.GetEnumerator()
         {
-            return Inherit.Types.Concat(Generic.Types).Concat(Inherit.Interfaces).Concat(Generic.Interfaces).GetEnumerator();
+            return Inherit.Types.Concat<MonoCecilType>(Generic.Types).Concat(Inherit.Interfaces).Concat(Generic.Interfaces).GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -460,184 +613,359 @@ namespace NetExtender.Utilities.Core
         [SuppressMessage("ReSharper", "UnassignedGetOnlyAutoProperty")]
         private struct Builder
         {
-            private ReflectionInherit.Builder Internal;
+            private ReflectionInherit.Builder Inherit;
             public ReflectionInherit.Builder Generic;
 
-            public ImmutableHashSet<Type>.Builder Types
+            public HashSet<MonoCecilType> Types
             {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 get
                 {
-                    return Internal.Types;
+                    return Inherit.Types;
                 }
             }
 
-            public ImmutableHashSet<Type>.Builder Interfaces
+            public HashSet<MonoCecilType> Interfaces
             {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 get
                 {
-                    return Internal.Interfaces;
+                    return Inherit.Interfaces;
                 }
             }
 
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public HashSet<MonoCecilType> Target(MonoCecilType item)
+            {
+                return item switch
+                {
+                    { IsInterface: true, IsGenericTypeDefinition: true } => Generic.Interfaces,
+                    { IsInterface: true } => Inherit.Interfaces,
+                    { IsGenericTypeDefinition: true } => Generic.Types,
+                    _ => Inherit.Types
+                };
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public Boolean Add(MonoCecilType item)
+            {
+                return Target(item).Add(item);
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public ReflectionInheritResult ToImmutable()
             {
-                return new ReflectionInheritResult(null, Internal.ToImmutable(), Generic.ToImmutable());
+                return new ReflectionInheritResult(Inherit.ToImmutable(), Generic.ToImmutable());
             }
         }
     }
 
-    public sealed class ReflectionInherit : IImmutableSet<Type>
+    [SuppressMessage("ReSharper", "LoopCanBeConvertedToQuery")]
+    [SuppressMessage("ReSharper", "ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator")]
+    [SuppressMessage("ReSharper", "ForeachCanBePartlyConvertedToQueryUsingAnotherGetEnumerator")]
+    public readonly struct ReflectionInherit : IStruct<ReflectionInherit>, IImmutableSet<MonoCecilType>
     {
-        [return: NotNullIfNotNull("value")]
-        public static implicit operator ImmutableHashSet<Type>?(ReflectionInherit? value)
+        public static implicit operator TypeSet(ReflectionInherit value)
         {
-            return value?.All;
+            return value.Types.Union(value.Interfaces);
         }
 
         public static ReflectionInherit Empty { get; } = new ReflectionInherit();
 
-        public ImmutableHashSet<Type> All { get; }
-        public ImmutableHashSet<Type> Types { get; }
-        public ImmutableHashSet<Type> Interfaces { get; }
+        private readonly TypeSet _types;
+        public TypeSet Types
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get
+            {
+                return _types ?? TypeSet.Empty;
+            }
+        }
+
+        private readonly TypeSet _interfaces;
+        public TypeSet Interfaces
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get
+            {
+                return _interfaces ?? TypeSet.Empty;
+            }
+        }
 
         public Int32 Count
         {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
                 return Types.Count + Interfaces.Count;
             }
         }
 
-        private ReflectionInherit()
-            : this(null, null)
+        public Boolean IsEmpty
         {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get
+            {
+                return _types is null || _interfaces is null;
+            }
         }
 
-        private ReflectionInherit(ImmutableHashSet<Type>? types, ImmutableHashSet<Type>? interfaces)
+        private ReflectionInherit(TypeSet? types, TypeSet? interfaces)
         {
-            Types = types ?? ImmutableHashSet<Type>.Empty;
-            Interfaces = interfaces ?? ImmutableHashSet<Type>.Empty;
-            All = ImmutableHashSet<Type>.Empty.Union(Types).Union(Interfaces);
+            _types = types ?? TypeSet.Empty;
+            _interfaces = interfaces ?? TypeSet.Empty;
         }
 
-        public Boolean Contains(Type item)
+        private TypeSet Target(MonoCecilType item)
         {
-            return All.Contains(item);
+            return item.IsInterface ? Interfaces : Types;
         }
 
-        public Boolean TryGetValue(Type equalValue, out Type actualValue)
+        public Boolean Contains(MonoCecilType? item)
         {
-            return All.TryGetValue(equalValue, out actualValue);
+            if (item is null)
+            {
+                return false;
+            }
+
+            TypeSet target = Target(item);
+            return target.Count > 0 && target.Contains(item);
         }
 
-        public Boolean IsProperSubsetOf(IEnumerable<Type> other)
+        public Boolean TryGetValue(MonoCecilType? equalValue, out MonoCecilType actualValue)
         {
-            return All.IsProperSubsetOf(other);
+            if (equalValue is not null)
+            {
+                return Target(equalValue).TryGetValue(equalValue, out actualValue);
+            }
+
+            actualValue = null!;
+            return false;
         }
 
-        public Boolean IsProperSupersetOf(IEnumerable<Type> other)
+        public Boolean IsSubsetOf(IEnumerable<MonoCecilType> other)
         {
-            return All.IsProperSupersetOf(other);
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            IReadOnlySet<MonoCecilType> set = other as IReadOnlySet<MonoCecilType> ?? TypeSet.Create(other);
+
+            foreach (MonoCecilType item in Types)
+            {
+                if (!set.Contains(item))
+                {
+                    return false;
+                }
+            }
+
+            foreach (MonoCecilType item in Interfaces)
+            {
+                if (!set.Contains(item))
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
-        public Boolean IsSubsetOf(IEnumerable<Type> other)
+        public Boolean IsProperSubsetOf(IEnumerable<MonoCecilType> other)
         {
-            return All.IsSubsetOf(other);
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            IReadOnlySet<MonoCecilType> set = other as IReadOnlySet<MonoCecilType> ?? TypeSet.Create(other);
+            return Count < set.Count && IsSubsetOf(set);
         }
 
-        public Boolean IsSupersetOf(IEnumerable<Type> other)
+        public Boolean IsSupersetOf(IEnumerable<MonoCecilType> other)
         {
-            return All.IsSupersetOf(other);
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            foreach (MonoCecilType item in other)
+            {
+                if (!Contains(item))
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
-        public Boolean Overlaps(IEnumerable<Type> other)
+        public Boolean IsProperSupersetOf(IEnumerable<MonoCecilType> other)
         {
-            return All.Overlaps(other);
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            IReadOnlySet<MonoCecilType> set = other as IReadOnlySet<MonoCecilType> ?? TypeSet.Create(other);
+            return Count > set.Count && IsSupersetOf(set);
         }
 
-        public Boolean SetEquals(IEnumerable<Type> other)
+        public Boolean Overlaps(IEnumerable<MonoCecilType> other)
         {
-            return All.SetEquals(other);
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            foreach (MonoCecilType item in other)
+            {
+                if (Contains(item))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
-        public ImmutableHashSet<Type> Add(Type value)
+        public Boolean SetEquals(IEnumerable<MonoCecilType> other)
         {
-            return All.Add(value);
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            IReadOnlySet<MonoCecilType> set = other as IReadOnlySet<MonoCecilType> ?? TypeSet.Create(other);
+            return Count == set.Count && IsSubsetOf(set);
         }
 
-        IImmutableSet<Type> IImmutableSet<Type>.Add(Type value)
+        public IImmutableSet<MonoCecilType> Add(MonoCecilType? value)
         {
-            return All.Add(value);
+            if (value is null)
+            {
+                return this;
+            }
+
+            return value.IsInterface ? new ReflectionInherit(Types, Interfaces.Add(value)) : new ReflectionInherit(Types.Add(value), Interfaces);
         }
 
-        public ImmutableHashSet<Type> Union(IEnumerable<Type> other)
+        public IImmutableSet<MonoCecilType> Union(IEnumerable<MonoCecilType> other)
         {
-            return All.Union(other);
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            HashSet<MonoCecilType?> builder = new HashSet<MonoCecilType?>(Types.Count + Interfaces.Count + (other.CountIfMaterialized() ?? 32));
+
+            builder.UnionWith(Types);
+            builder.UnionWith(Interfaces);
+            builder.UnionWith(other);
+
+            return TypeSet.Create(builder);
         }
 
-        IImmutableSet<Type> IImmutableSet<Type>.Union(IEnumerable<Type> other)
+        public IImmutableSet<MonoCecilType> Intersect(IEnumerable<MonoCecilType> other)
         {
-            return All.Union(other);
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            HashSet<MonoCecilType?> builder = new HashSet<MonoCecilType?>(Types.Count + Interfaces.Count);
+            IReadOnlySet<MonoCecilType> set = other as IReadOnlySet<MonoCecilType> ?? TypeSet.Create(other);
+
+            foreach (MonoCecilType item in Types)
+            {
+                if (set.Contains(item))
+                {
+                    builder.Add(item);
+                }
+            }
+
+            foreach (MonoCecilType item in Interfaces)
+            {
+                if (set.Contains(item))
+                {
+                    builder.Add(item);
+                }
+            }
+
+            return TypeSet.Create(builder);
         }
 
-        public ImmutableHashSet<Type> Intersect(IEnumerable<Type> other)
+        public IImmutableSet<MonoCecilType> Except(IEnumerable<MonoCecilType> other)
         {
-            return All.Intersect(other);
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            HashSet<MonoCecilType?> builder = new HashSet<MonoCecilType?>(Types.Count + Interfaces.Count);
+            IReadOnlySet<MonoCecilType> set = other as IReadOnlySet<MonoCecilType> ?? TypeSet.Create(other);
+
+            foreach (MonoCecilType item in Types)
+            {
+                if (!set.Contains(item))
+                {
+                    builder.Add(item);
+                }
+            }
+
+            foreach (MonoCecilType item in Interfaces)
+            {
+                if (!set.Contains(item))
+                {
+                    builder.Add(item);
+                }
+            }
+
+            return TypeSet.Create(builder);
         }
 
-        IImmutableSet<Type> IImmutableSet<Type>.Intersect(IEnumerable<Type> other)
+        public IImmutableSet<MonoCecilType> SymmetricExcept(IEnumerable<MonoCecilType> other)
         {
-            return All.Intersect(other);
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            HashSet<MonoCecilType?> builder = new HashSet<MonoCecilType?>(Types.Count + Interfaces.Count + (other.CountIfMaterialized() ?? 32));
+
+            builder.UnionWith(Types);
+            builder.UnionWith(Interfaces);
+            builder.SymmetricExceptWith(other);
+
+            return TypeSet.Create(builder);
         }
 
-        public ImmutableHashSet<Type> Except(IEnumerable<Type> other)
+        public IImmutableSet<MonoCecilType> Remove(MonoCecilType? value)
         {
-            return All.Except(other);
+            if (value is null)
+            {
+                return this;
+            }
+
+            return value.IsInterface ? new ReflectionInherit(Types, Interfaces.Remove(value)) : new ReflectionInherit(Types.Remove(value), Interfaces);
         }
 
-        IImmutableSet<Type> IImmutableSet<Type>.Except(IEnumerable<Type> other)
+        public IImmutableSet<MonoCecilType> Clear()
         {
-            return All.Except(other);
+            return Empty;
         }
 
-        public ImmutableHashSet<Type> SymmetricExcept(IEnumerable<Type> other)
+        public IEnumerator<MonoCecilType> GetEnumerator()
         {
-            return All.SymmetricExcept(other);
-        }
+            foreach (MonoCecilType item in Types)
+            {
+                yield return item;
+            }
 
-        IImmutableSet<Type> IImmutableSet<Type>.SymmetricExcept(IEnumerable<Type> other)
-        {
-            return All.SymmetricExcept(other);
-        }
-
-        public ImmutableHashSet<Type> Remove(Type value)
-        {
-            return All.Remove(value);
-        }
-
-        IImmutableSet<Type> IImmutableSet<Type>.Remove(Type value)
-        {
-            return All.Remove(value);
-        }
-
-        public ImmutableHashSet<Type> Clear()
-        {
-            return All.Clear();
-        }
-
-        IImmutableSet<Type> IImmutableSet<Type>.Clear()
-        {
-            return All.Clear();
-        }
-
-        public ImmutableHashSet<Type>.Enumerator GetEnumerator()
-        {
-            return All.GetEnumerator();
-        }
-
-        IEnumerator<Type> IEnumerable<Type>.GetEnumerator()
-        {
-            return Types.Concat(Interfaces).GetEnumerator();
+            foreach (MonoCecilType item in Interfaces)
+            {
+                yield return item;
+            }
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -647,27 +975,36 @@ namespace NetExtender.Utilities.Core
 
         internal struct Builder
         {
-            private ImmutableHashSet<Type>.Builder? _types;
-            public ImmutableHashSet<Type>.Builder Types
+            private HashSet<MonoCecilType?>? _types;
+            public HashSet<MonoCecilType> Types
             {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 get
                 {
-                    return _types ??= ImmutableHashSet.CreateBuilder<Type>();
+                    return (_types ??= new HashSet<MonoCecilType?>())!;
                 }
             }
 
-            private ImmutableHashSet<Type>.Builder? _interfaces;
-            public ImmutableHashSet<Type>.Builder Interfaces
+            private HashSet<MonoCecilType?>? _interfaces;
+            public HashSet<MonoCecilType> Interfaces
             {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 get
                 {
-                    return _interfaces ??= ImmutableHashSet.CreateBuilder<Type>();
+                    return (_interfaces ??= new HashSet<MonoCecilType?>())!;
                 }
             }
 
+            public Builder(Int32 types, Int32 interfaces)
+            {
+                _types = new HashSet<MonoCecilType?>(types);
+                _interfaces = new HashSet<MonoCecilType?>(interfaces);
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public ReflectionInherit ToImmutable()
             {
-                return new ReflectionInherit(_types?.ToImmutable(), _interfaces?.ToImmutable());
+                return new ReflectionInherit(TypeSet.Create(_types), TypeSet.Create(_interfaces));
             }
         }
     }

@@ -12,6 +12,7 @@ namespace NetExtender.Patch
         Capability = 1,
         Special = 2,
         Aphilargyria = 4,
-        All = Capability | Special | Aphilargyria
+        All = Capability | Special | Aphilargyria,
+        None = Int32.MaxValue
     }
 }

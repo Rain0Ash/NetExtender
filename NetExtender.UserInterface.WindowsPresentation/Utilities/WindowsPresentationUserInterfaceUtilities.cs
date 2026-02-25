@@ -6,7 +6,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Runtime.CompilerServices;
 using System.Windows;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 using NetExtender.UserInterface;
 using NetExtender.Workstation.Interfaces;
 

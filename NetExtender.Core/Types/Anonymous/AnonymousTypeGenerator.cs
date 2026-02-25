@@ -68,7 +68,7 @@ namespace NetExtender.Types.Anonymous
 
             static KeyValuePair<String, FieldBuilder> Convert((PropertyBuilder? Property, FieldBuilder Field) value)
             {
-                (PropertyBuilder? property, FieldBuilder? field) = value;
+                (PropertyBuilder? property, FieldBuilder field) = value;
 
                 String name = property?.Name ?? field.Name;
                 return new KeyValuePair<String, FieldBuilder>(name, field);
@@ -385,13 +385,13 @@ namespace NetExtender.Types.Anonymous
             ConstructorInfo[] constructors = type.GetConstructors();
             ConstructorInfo constructor = constructors.Length switch
             {
-                0 => throw new MissingMethodException(type.Name, ReflectionUtilities.Constructor),
+                0 => throw new MissingMethodException(type.Name, TypeUtilities.Constructor),
                 1 => constructors[0],
                 2 => constructors[1],
                 _ => throw new AmbiguousMatchException(type.Name)
             };
 
-            Type[] parameters = constructor.GetParameters().Select(parameter => parameter.ParameterType).ToArray();
+            Type[] parameters = constructor.GetParameters().Select(static parameter => parameter.ParameterType).ToArray();
             return AnonymousActivator.Create(type, parameters);
         }
     }

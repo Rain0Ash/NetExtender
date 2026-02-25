@@ -12,7 +12,6 @@ using System.Text.Encodings.Web;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.BearerToken;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -25,7 +24,7 @@ using Microsoft.Extensions.DependencyInjection;
 using NetExtender.AspNetCore.Identity;
 using NetExtender.AspNetCore.Identity.Interfaces;
 using NetExtender.AspNetCore.Types.Monads;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 using NetExtender.Types.Monads;
 using NetExtender.Types.Strings;
 using NetExtender.Utilities.Core;
@@ -36,6 +35,7 @@ using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 using Microsoft.Extensions.Options;
 #else
 using System.Reflection;
+using Microsoft.AspNetCore.Authentication.BearerToken;
 using NetExtender.Utilities.Numerics;
 #endif
 

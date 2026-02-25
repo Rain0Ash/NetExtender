@@ -17,15 +17,15 @@ namespace NetExtender.Workstation
         {
             get
             {
-                return Screen.AllScreens.Select(screen => (IScreen) new ScreenWrapper(screen)).ToArray();
+                return Screen.AllScreens.Select(static IScreen (screen) => new ScreenWrapper(screen)).ToArray();
             }
         }
 
-        public static IScreen PrimaryScreen
+        public static IScreen? PrimaryScreen
         {
             get
             {
-                return new ScreenWrapper(Screen.PrimaryScreen);
+                return Screen.PrimaryScreen is { } screen ? new ScreenWrapper(screen) : null;
             }
         }
 
@@ -126,7 +126,7 @@ namespace NetExtender.Workstation
             return Screen.GetHashCode();
         }
 
-        public override String? ToString()
+        public override String ToString()
         {
             return Screen.ToString();
         }

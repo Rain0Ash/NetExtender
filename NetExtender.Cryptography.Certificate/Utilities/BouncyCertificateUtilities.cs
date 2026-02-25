@@ -7,7 +7,7 @@ using System.Security.Cryptography.X509Certificates;
 using NetExtender.BouncyCastle.Types.Numerics;
 using NetExtender.BouncyCastle.Utilities;
 using NetExtender.Cryptography.Certificate;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 using NetExtender.Utilities.Types;
 using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Asn1.Pkcs;

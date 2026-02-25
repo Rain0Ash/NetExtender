@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using NetExtender.Types.Concurrent.Observable.Interfaces;
 
@@ -9,6 +10,7 @@ namespace NetExtender.Types.Concurrent.Observable
 {
     public partial class ConcurrentObservableCollection<T>
     {
+        [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
         internal sealed class Bridge : IList<T>, IList
         {
             private IConcurrentObservableList<T> Observable { get; }

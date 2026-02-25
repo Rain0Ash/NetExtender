@@ -79,12 +79,12 @@ namespace NetExtender.Utilities.Windows
 
         public static Monitor GetPrimaryMonitor()
         {
-            return GetMonitor(Screen.PrimaryScreen, 0);
+            return Screen.PrimaryScreen is { } screen ? GetMonitor(screen, 0) : default;
         }
 
         public static Monitor[] GetMonitors()
         {
-            return Screen.AllScreens.Select(screen => GetMonitor(screen)).ToArray();
+            return Screen.AllScreens.Select(static screen => GetMonitor(screen)).ToArray();
         }
     }
 }

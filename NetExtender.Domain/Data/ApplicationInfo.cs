@@ -7,7 +7,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 using NetExtender.Domains.Interfaces;
 using NetExtender.Domains.Utilities;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Domains

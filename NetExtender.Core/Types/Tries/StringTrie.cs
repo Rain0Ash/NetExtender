@@ -49,7 +49,7 @@ namespace NetExtender.Types.Tries
         {
             get
             {
-                return Trie.Keys.Select(item => new String(item.ToArray())).ToArray();
+                return Trie.Keys.Select(static item => new String(item.ToArray())).ToArray();
             }
         }
 
@@ -129,7 +129,7 @@ namespace NetExtender.Types.Tries
 
         public IEnumerable<StringTrieEntry<TValue>> Get(ReadOnlySpan<Char> prefix)
         {
-            return Trie.Get(prefix).Select(entry => new StringTrieEntry<TValue>(new String(entry.Key.ToArray()), entry.Value));
+            return Trie.Get(prefix).Select(static entry => new StringTrieEntry<TValue>(new String(entry.Key.ToArray()), entry.Value));
         }
 
         /// <summary>
@@ -249,7 +249,7 @@ namespace NetExtender.Types.Tries
                 throw new ArgumentNullException(nameof(array));
             }
 
-            KeyValuePair<String, TValue>[] entries = Trie.Select(node => new KeyValuePair<String, TValue>(new String(node.Key.ToArray()), node.Value)).ToArray();
+            KeyValuePair<String, TValue>[] entries = Trie.Select(static node => new KeyValuePair<String, TValue>(new String(node.Key.ToArray()), node.Value)).ToArray();
             Array.Copy(entries, 0, array, index, Count);
         }
 
@@ -262,7 +262,7 @@ namespace NetExtender.Types.Tries
         /// <filterpriority>1</filterpriority>
         public IEnumerator<KeyValuePair<String, TValue>> GetEnumerator()
         {
-            return Trie.Select(node => new KeyValuePair<String, TValue>(new String(node.Key.ToArray()), node.Value)).GetEnumerator();
+            return Trie.Select(static node => new KeyValuePair<String, TValue>(new String(node.Key.ToArray()), node.Value)).GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()

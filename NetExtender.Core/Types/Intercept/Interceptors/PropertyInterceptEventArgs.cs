@@ -3,7 +3,7 @@
 
 using System;
 using System.Reflection;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 using NetExtender.Types.Intercept.Interfaces;
 using NetExtender.Types.Monads;
 

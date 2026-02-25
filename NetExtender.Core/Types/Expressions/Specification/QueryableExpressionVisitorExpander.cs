@@ -24,8 +24,8 @@ namespace NetExtender.Types.Expressions.Specification
 
             var methods = typeof(Queryable)
                 .GetMethods(BindingFlags.Static | BindingFlags.Public)
-                .Where(method => method.IsDefined(typeof(ExtensionAttribute), true))
-                .Select(method => new
+                .Where(static method => method.HasAttribute<ExtensionAttribute>(true))
+                .Select(static method => new
                 {
                     method.Name,
                     Method = method,
@@ -34,8 +34,8 @@ namespace NetExtender.Types.Expressions.Specification
 
             var lookup = typeof(Enumerable)
                 .GetMethods(BindingFlags.Static | BindingFlags.Public)
-                .Where(method => method.IsDefined(typeof(ExtensionAttribute), true))
-                .ToLookup(method => method.Name, method => new
+                .Where(static method => method.HasAttribute<ExtensionAttribute>(true))
+                .ToLookup(static method => method.Name, static method => new
                 {
                     Method = method,
                     Signature = GetMethodSignature(method)
@@ -150,7 +150,7 @@ namespace NetExtender.Types.Expressions.Specification
         {
             MethodInfo method = node.Method;
 
-            if (method.DeclaringType != typeof(Queryable) || !method.IsDefined(typeof(ExtensionAttribute), true))
+            if (method.DeclaringType != typeof(Queryable) || !method.HasAttribute<ExtensionAttribute>(true))
             {
                 return base.VisitMethodCall(node);
             }

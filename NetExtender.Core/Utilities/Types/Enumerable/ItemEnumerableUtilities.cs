@@ -8,15 +8,19 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using NetExtender.Types.Dictionaries;
-using NetExtender.Types.Exceptions;
-using NetExtender.Types.Indexers.Interfaces;
-using NetExtender.Utilities.Numerics;
+using NetExtender.Exceptions;
 using TSR = System.Collections.Generic.IEnumerable<NetExtender.Types.Entities.Any.Value>;
 
 namespace NetExtender.Utilities.Types
 {
     public static partial class EnumerableUtilities
     {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean AnyNotNull<T>(this IEnumerable<T?> source)
+        {
+            return EnumerableBaseUtilities.AnyNotNull(source);
+        }
+
         public static Boolean Any<T>(this IEnumerable<T> source, Func<T, Int32, Boolean> predicate)
         {
             if (source is null)
@@ -31,6 +35,12 @@ namespace NetExtender.Utilities.Types
 
             Int32 i = 0;
             return source.Any(item => predicate(item, i++));
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean AllNotNull<T>(this IEnumerable<T?> source)
+        {
+            return EnumerableBaseUtilities.AllNotNull(source);
         }
 
         public static Boolean All<T>(this IEnumerable<T> source, Func<T, Int32, Boolean> predicate)
@@ -259,64 +269,28 @@ namespace NetExtender.Utilities.Types
             return source.Reverse().LongCountWhile(predicate);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Int32 IndexOf<T>(this IEnumerable<T> source, T value)
         {
-            if (source is null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-
-            return source switch
-            {
-                IList<T> list => list.IndexOf(value),
-                IIndexer<T> list => list.IndexOf(value),
-                _ => IndexOf(source, value, null)
-            };
+            return EnumerableBaseUtilities.IndexOf(source, value);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Int32 IndexOf<T>(this IEnumerable<T> source, T value, IEqualityComparer<T>? comparer)
         {
-            if (source is null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-
-            comparer ??= EqualityComparer<T>.Default;
-
-            Int32 index = 0;
-            foreach (T item in source)
-            {
-                if (comparer.Equals(item, value))
-                {
-                    return index;
-                }
-
-                index++;
-            }
-
-            return -1;
+            return EnumerableBaseUtilities.IndexOf(source, value, comparer);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IndexOf<T>(this IEnumerable<T> source, T value, out Int32 index)
         {
-            if (source is null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-
-            index = IndexOf(source, value);
-            return index >= 0;
+            return EnumerableBaseUtilities.IndexOf(source, value, out index);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IndexOf<T>(this IEnumerable<T> source, T value, IEqualityComparer<T>? comparer, out Int32 index)
         {
-            if (source is null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-
-            index = IndexOf(source, value, comparer);
-            return index >= 0;
+            return EnumerableBaseUtilities.IndexOf(source, value, comparer, out index);
         }
 
         public static Int32 FindIndex<T>(this IEnumerable<T> source, Func<T, Boolean> predicate)
@@ -615,104 +589,28 @@ namespace NetExtender.Utilities.Types
             return false;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T GetRandom<T>(this IEnumerable<T> source)
         {
-            if (source is null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-
-            return source switch
-            {
-                IList<T> list => list.GetRandom(),
-                IReadOnlyList<T> list => list.Count > 0 ? list[RandomUtilities.NextNonNegative(list.Count - 1)] : throw new InvalidOperationException(),
-                ICollection<T> collection => collection.Count > 0 ? collection.ElementAt(RandomUtilities.NextNonNegative(collection.Count - 1)) : throw new InvalidOperationException(),
-                IReadOnlyCollection<T> collection => collection.Count > 0 ? collection.ElementAt(RandomUtilities.NextNonNegative(collection.Count - 1)) : throw new InvalidOperationException(),
-                _ => Random(source, out T? result) ? result : throw new InvalidOperationException()
-            };
+            return EnumerableBaseUtilities.GetRandom(source);
         }
 
-        public static T GetRandomOrDefault<T>(this IEnumerable<T> source, T alternate)
-        {
-            if (source is null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-
-            return source switch
-            {
-                IList<T> list => list.GetRandomOrDefault(alternate),
-                IReadOnlyList<T> list => list.Count > 0 ? list[RandomUtilities.NextNonNegative(list.Count - 1)] : alternate,
-                ICollection<T> collection => collection.Count > 0 ? collection.ElementAt(RandomUtilities.NextNonNegative(collection.Count - 1)) : alternate,
-                IReadOnlyCollection<T> collection => collection.Count > 0 ? collection.ElementAt(RandomUtilities.NextNonNegative(collection.Count - 1)) : alternate,
-                _ => Random(source, out T? result) ? result : alternate
-            };
-        }
-
-        public static T GetRandomOrDefault<T>(this IEnumerable<T> source, Func<T> alternate)
-        {
-            if (source is null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-
-            if (alternate is null)
-            {
-                throw new ArgumentNullException(nameof(alternate));
-            }
-
-            return source switch
-            {
-                IList<T> list => list.GetRandomOrDefault(alternate),
-                IReadOnlyList<T> list => list.Count > 0 ? list[RandomUtilities.NextNonNegative(list.Count - 1)] : alternate(),
-                ICollection<T> collection => collection.Count > 0 ? collection.ElementAt(RandomUtilities.NextNonNegative(collection.Count - 1)) : alternate(),
-                IReadOnlyCollection<T> collection => collection.Count > 0 ? collection.ElementAt(RandomUtilities.NextNonNegative(collection.Count - 1)) : alternate(),
-                _ => Random(source, out T? result) ? result : alternate()
-            };
-        }
-
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T? GetRandomOrDefault<T>(this IEnumerable<T> source)
         {
-            if (source is null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-
-            return source switch
-            {
-                IList<T> list => list.GetRandomOrDefault(),
-                IReadOnlyList<T> list => list.Count > 0 ? list[RandomUtilities.NextNonNegative(list.Count - 1)] : default,
-                ICollection<T> collection => collection.Count > 0 ? collection.ElementAtOrDefault(RandomUtilities.NextNonNegative(collection.Count - 1)) : default,
-                IReadOnlyCollection<T> collection => collection.Count > 0 ? collection.ElementAtOrDefault(RandomUtilities.NextNonNegative(collection.Count - 1)) : default,
-                _ => Random(source, out T? result) ? result : default
-            };
+            return EnumerableBaseUtilities.GetRandomOrDefault(source);
         }
 
-        private static Boolean Random<T>(IEnumerable<T> source, [MaybeNullWhen(false)] out T result)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T GetRandomOrDefault<T>(this IEnumerable<T> source, T alternate)
         {
-            return Random(source, null, out result);
+            return EnumerableBaseUtilities.GetRandomOrDefault(source, alternate);
         }
 
-        private static Boolean Random<T>(IEnumerable<T> source, Random? random, [MaybeNullWhen(false)] out T result)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T GetRandomOrDefault<T>(this IEnumerable<T> source, Func<T> alternate)
         {
-            if (source is null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-
-            random ??= new Random();
-
-            Int64 count = 0;
-            result = default!;
-            foreach (T element in source)
-            {
-                if (random.NextInt64(count++) == 0)
-                {
-                    result = element;
-                }
-            }
-
-            return count > 0;
+            return EnumerableBaseUtilities.GetRandomOrDefault(source, alternate);
         }
 
         public static T Aggregate<T>(this IEnumerable<T> source, T seed, Func<T, T, T> selector)
@@ -1913,48 +1811,16 @@ namespace NetExtender.Utilities.Types
             return source.OrderBy(selector, comparer).Take(count);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static (T Min, T Max) MinMax<T>(this IEnumerable<T> source)
         {
-            return MinMax(source, null);
+            return EnumerableBaseUtilities.MinMax(source);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static (T Min, T Max) MinMax<T>(this IEnumerable<T> source, IComparer<T>? comparer)
         {
-            if (source is null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-
-            using IEnumerator<T> enumerator = source.GetEnumerator();
-
-            if (!enumerator.MoveNext())
-            {
-                throw new InvalidOperationException();
-            }
-
-            comparer ??= Comparer<T>.Default;
-
-            T current = enumerator.Current;
-
-            T min = current;
-            T max = current;
-
-            while (enumerator.MoveNext())
-            {
-                current = enumerator.Current;
-
-                if (comparer.Compare(current, min) < 0)
-                {
-                    min = current;
-                }
-
-                if (comparer.Compare(current, max) > 0)
-                {
-                    max = current;
-                }
-            }
-
-            return (min, max);
+            return EnumerableBaseUtilities.MinMax(source, comparer);
         }
 
         public static (T? Min, T? Max) MinMaxOrDefault<T>(this IEnumerable<T> source)
@@ -2253,7 +2119,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return Median(source, (x, _) => x, x => x);
+            return Median(source, static (item, _) => item, static item => item);
         }
 
         public static T? Median<T>(this IEnumerable<T> source, Func<T, T> order)
@@ -2268,7 +2134,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(order));
             }
 
-            return Median(source, (x, _) => x, order);
+            return Median(source, static (item, _) => item, order);
         }
 
         public static T? Median<T>(this IEnumerable<T> source, Func<T, T, T> average)
@@ -2283,7 +2149,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(average));
             }
 
-            return Median(source, average, x => x);
+            return Median(source, average, static item => item);
         }
 
         /// <summary>
@@ -2374,34 +2240,10 @@ namespace NetExtender.Utilities.Types
         /// <param name="source">The collection.</param>
         /// <param name="comparer">The comparer</param>
         /// <param name="value">First item</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean AllSame<T>(this IEnumerable<T> source, IEqualityComparer<T>? comparer, [MaybeNullWhen(true)] out T value)
         {
-            if (source is null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-
-            comparer ??= EqualityComparer<T>.Default;
-
-            using IEnumerator<T> enumerator = source.GetEnumerator();
-
-            if (!enumerator.MoveNext())
-            {
-                value = default;
-                return true;
-            }
-
-            value = enumerator.Current;
-
-            while (enumerator.MoveNext())
-            {
-                if (!comparer.Equals(value, enumerator.Current))
-                {
-                    return false;
-                }
-            }
-
-            return true;
+            return EnumerableBaseUtilities.AllSame(source, comparer, out value);
         }
 
         /// <summary>

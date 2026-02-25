@@ -4,7 +4,7 @@
 using System;
 using NAudio.Wave;
 using NetExtender.NAudio.Types.Sound.Interfaces;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 using NetExtender.Utilities.NAudio;
 
 namespace NetExtender.NAudio.Types.Sound

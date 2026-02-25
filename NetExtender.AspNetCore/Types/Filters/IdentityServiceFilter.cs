@@ -8,7 +8,7 @@ using NetExtender.AspNetCore.Identity;
 using NetExtender.AspNetCore.Identity.Attributes;
 using NetExtender.AspNetCore.Identity.Interfaces;
 using NetExtender.JWT;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 using NetExtender.Utilities.AspNetCore.Types;
 
 namespace NetExtender.AspNetCore.Filters
@@ -141,7 +141,7 @@ namespace NetExtender.AspNetCore.Filters
             IdentityAttributeCollection identity = Identity(context);
             TokenInfo? token = Token(context, out IIdentityException? exception);
 
-            if (exception?.Known is IdentityException.Known.IsExpired)
+            if (exception?.Known is IdentityException.Id.IsExpired)
             {
                 if (identity.IsNoIdentity)
                 {

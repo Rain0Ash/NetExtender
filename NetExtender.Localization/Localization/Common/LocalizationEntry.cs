@@ -5,6 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Xml.Serialization;
 using NetExtender.Configuration.Common;
 using NetExtender.Types.Culture;
 using NetExtender.Utilities.Serialization;
@@ -48,7 +50,8 @@ namespace NetExtender.Localization.Common
         public LocalizationIdentifier Identifier { get; }
         public ImmutableArray<String> Sections { get; }
 
-        [JsonIgnore]
+        [JsonIgnore, IgnoreDataMember, XmlIgnore, SoapIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public Int32 Length
         {
             get
@@ -123,7 +126,7 @@ namespace NetExtender.Localization.Common
                 return compare;
             }
 
-            foreach ((String? first, String? second) in Sections.Zip(other.Sections))
+            foreach ((String first, String second) in Sections.Zip(other.Sections))
             {
                 compare = String.Compare(first, second, StringComparison.Ordinal);
 
@@ -176,7 +179,8 @@ namespace NetExtender.Localization.Common
         public String? Key { get; }
         public ImmutableArray<String> Sections { get; }
 
-        [JsonIgnore]
+        [JsonIgnore, IgnoreDataMember, XmlIgnore, SoapIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public Int32 Length
         {
             get
@@ -221,7 +225,7 @@ namespace NetExtender.Localization.Common
                 return compare;
             }
 
-            foreach ((String? first, String? second) in Sections.Zip(other.Sections))
+            foreach ((String first, String second) in Sections.Zip(other.Sections))
             {
                 compare = String.Compare(first, second, StringComparison.Ordinal);
 

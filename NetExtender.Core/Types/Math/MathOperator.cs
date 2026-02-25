@@ -1,6 +1,6 @@
 using System;
 using System.Numerics;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 using NetExtender.Types.Numerics;
 using NetExtender.Utilities.Core;
 using NetExtender.Utilities.Numerics;

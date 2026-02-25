@@ -3,26 +3,22 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 
 namespace NetExtender.Utilities.Types
 {
-    [SuppressMessage("ReSharper", "IteratorNeverReturns")]
     public static partial class EnumerableUtilities
     {
-        public static IEnumerable<T> GetEnumerableFrom<T>(T item)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static IEnumerable<T> GetEnumerableFrom<T>(T item)
         {
-            yield return item;
+            return EnumerableBaseUtilities.GetEnumerableFrom(item);
         }
 
-        public static Boolean IsReadOnly<T>(this IEnumerable<T> source)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static Boolean IsReadOnly<T>(IEnumerable<T> source)
         {
-            return source switch
-            {
-                null => throw new ArgumentNullException(nameof(source)),
-                ICollection<T> collection => collection.IsReadOnly,
-                _ => true
-            };
+            return EnumerableBaseUtilities.IsReadOnly(source);
         }
     }
 }

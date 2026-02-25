@@ -162,7 +162,7 @@ namespace NetExtender.UserInterface.WindowsPresentation
         protected override void OnGotFocus(RoutedEventArgs e)
         {
             base.OnGotFocus(e);
-            if (ItemsSource == null)
+            if (ItemsSource is null)
             {
                 return;
             }
@@ -196,7 +196,7 @@ namespace NetExtender.UserInterface.WindowsPresentation
 
         private void RefreshFilter()
         {
-            if (ItemsSource == null)
+            if (ItemsSource is null)
             {
                 return;
             }

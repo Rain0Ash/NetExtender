@@ -4,7 +4,7 @@
 using System;
 using System.Drawing;
 using System.Runtime.CompilerServices;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 using NetExtender.Types.Mouse;
 using NetExtender.Windows.Types;
 using NetExtender.Utilities.Numerics;

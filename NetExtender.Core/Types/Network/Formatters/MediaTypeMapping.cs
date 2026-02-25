@@ -4,7 +4,7 @@
 using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 
 namespace NetExtender.Types.Network.Formatters
 {

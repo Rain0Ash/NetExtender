@@ -9,7 +9,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using NetExtender.AspNetCore.Identity;
 using NetExtender.AspNetCore.Identity.Interfaces;
 using NetExtender.JWT;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 using Newtonsoft.Json;
 
 namespace NetExtender.Utilities.AspNetCore.Types

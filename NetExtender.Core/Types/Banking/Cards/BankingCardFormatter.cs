@@ -53,7 +53,7 @@ namespace NetExtender.Types.Banking.Cards
                 throw new ArgumentNullException(nameof(value));
             }
 
-            String[] chunks = SplitIntoChunks(value.Reverse(), length).Select(chunk => chunk.Reverse()).ToArray();
+            String[] chunks = SplitIntoChunks(value.Reverse(), length).Select(static chunk => chunk.Reverse()).ToArray();
             return String.Join(Delimiter, chunks);
         }
 

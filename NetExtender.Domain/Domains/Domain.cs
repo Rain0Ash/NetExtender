@@ -12,7 +12,7 @@ using NetExtender.Domains.Applications.Interfaces;
 using NetExtender.Domains.Interfaces;
 using NetExtender.Domains.Utilities;
 using NetExtender.Domains.View.Interfaces;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 using NetExtender.Utilities.Application;
 using NetExtender.Utilities.Core;
 using NetExtender.Utilities.Types;

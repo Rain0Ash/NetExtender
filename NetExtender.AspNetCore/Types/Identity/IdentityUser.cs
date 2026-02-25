@@ -61,7 +61,8 @@ namespace NetExtender.AspNetCore.Identity
             }
             set
             {
-                base.Id = value;
+                String? id = value;
+                base.Id = id ?? throw new ArgumentNullException(nameof(value));
             }
         }
 

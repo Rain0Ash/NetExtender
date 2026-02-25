@@ -6,7 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using NetExtender.AspNetCore.Identity.Interfaces;
-using NetExtender.DependencyInjection.Attributes;
+using NetExtender.DependencyInjection;
 using NetExtender.JWT;
 using NetExtender.JWT.Algorithms.Interfaces;
 

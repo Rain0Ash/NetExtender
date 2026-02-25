@@ -44,7 +44,7 @@ namespace NetExtender.Types.Intercept.Interfaces
         }
     }
 
-    public interface IIntercept<out TSender, TArgument>
+    public interface IIntercept<out TSender, out TArgument>
     {
         public event EventHandler<TSender, TArgument> Intercept
         {

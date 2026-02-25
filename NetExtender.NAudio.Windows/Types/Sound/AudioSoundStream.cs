@@ -9,7 +9,7 @@ using NAudio.Flac;
 using NAudio.Wave;
 using NAudio.Wave.SampleProviders;
 using NetExtender.NAudio.Types.Providers;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 using NetExtender.Utilities.NAudio;
 using NetExtender.Utilities.Types;
 

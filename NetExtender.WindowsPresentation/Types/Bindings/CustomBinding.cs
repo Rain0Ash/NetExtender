@@ -3,7 +3,7 @@
 
 using System;
 using System.Windows.Data;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 
 namespace NetExtender.WindowsPresentation.Types.Bindings
 {

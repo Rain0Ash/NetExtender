@@ -5,7 +5,7 @@ using System;
 using System.Drawing;
 using NetExtender.Logging.Common;
 using NetExtender.Logging.Format.Interfaces;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 using NetExtender.Utilities.IO;
 using NetExtender.Utilities.Types;
 

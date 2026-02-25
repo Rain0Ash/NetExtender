@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 
 namespace NetExtender.Types.Expressions.Interfaces
 {
-    public interface IReadableExpression<T> : IReadableExpression where T : Expression
+    public interface IReadableExpression<out T> : IReadableExpression where T : Expression
     {
         public new T Expression { get; }
     }

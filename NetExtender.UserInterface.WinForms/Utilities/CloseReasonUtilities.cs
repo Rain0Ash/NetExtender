@@ -3,7 +3,7 @@
 
 using System;
 using System.Windows.Forms;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 using NetExtender.UserInterface;
 
 namespace NetExtender.Utilities.UserInterface

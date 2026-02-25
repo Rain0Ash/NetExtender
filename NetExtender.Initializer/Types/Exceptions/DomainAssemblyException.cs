@@ -5,7 +5,7 @@ using System;
 using System.Reflection;
 using System.Runtime.Serialization;
 
-namespace NetExtender.Types.Exceptions
+namespace NetExtender.Exceptions
 {
     public sealed class DomainAssemblyException : Exception
     {

@@ -64,7 +64,7 @@ namespace NetExtender.EntityFrameworkCore.Entities.Logging
 
             Object? value = type != TransactionLogOperationType.Delete ? entity.CurrentValues.ToObject() : entity.Metadata.FindPrimaryKey()?.Properties
                 .Select(property => entity.Property(property.Name))
-                .ToDictionary(property => property.Metadata.Name, property => property.CurrentValue);
+                .ToDictionary(static property => property.Metadata.Name, static property => property.CurrentValue);
 
             return new TransactionLog
             {

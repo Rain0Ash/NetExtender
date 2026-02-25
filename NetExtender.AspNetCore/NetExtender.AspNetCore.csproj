@@ -27,6 +27,12 @@
         <ProjectReference Include="..\NetExtender.JWT\NetExtender.JWT.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+        <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+            <_Parameter1>NetExtender.AspNetCore.CQRS, PublicKey=0024000004800000940000000602000000240000525341310004000001000100359dfff5ba2a92cfb1611180775465dbe63c84906c0c0a1b4f151e9ab02d759f97b9cdec45ed851894b41c9e81a91eaa9afcfda85cea21918061282e94649ddf6dd75076e5e7c3847e6541cca36a09c7f81981c783f1be78dea3132d7eb684b625ff4d0688e336e914e5836181ce44c6fbf5ef6c2a017daf829ef2aea7b10fd3</_Parameter1>
+        </AssemblyAttribute>
+    </ItemGroup>
+
     <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
         <PackageReference Include="Asp.Versioning.Mvc" Version="6.4.1"/>
     </ItemGroup>
@@ -59,6 +65,9 @@
       </Compile>
       <Compile Update="Types\Identity\IdentityUser.Restriction.cs">
         <DependentUpon>IdentityUser.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Types\Providers\SafeApiDescriptionProvider.Visitor.cs">
+        <DependentUpon>SafeApiDescriptionProvider.cs</DependentUpon>
       </Compile>
     </ItemGroup>
 

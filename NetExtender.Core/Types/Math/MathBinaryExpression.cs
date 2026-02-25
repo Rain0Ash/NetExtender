@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using NetExtender.Interfaces;
 using NetExtender.Types.Comparers;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 using NetExtender.Types.Mathematics.Interfaces;
 using NetExtender.Types.Monads;
 using NetExtender.Types.Numerics;

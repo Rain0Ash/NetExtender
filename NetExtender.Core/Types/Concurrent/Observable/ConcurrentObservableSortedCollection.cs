@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Collections.Specialized;
@@ -280,7 +279,7 @@ namespace NetExtender.Types.Concurrent.Observable
 
         public override void AddRange(IEnumerable<T>? items)
         {
-            if (items is null || items.CountIfMaterialized() <= 0)
+            if (items.CantHaveCount())
             {
                 return;
             }

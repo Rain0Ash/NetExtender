@@ -5,14 +5,14 @@ using System;
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using NetExtender.Cecil;
 using NetExtender.Types.Comparers;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 using NetExtender.Types.Middlewares;
 using NetExtender.Types.Middlewares.Attributes;
 using NetExtender.Types.Middlewares.Interfaces;
@@ -25,13 +25,13 @@ namespace NetExtender.Utilities.Types
     {
         private readonly struct Options
         {
-            public ImmutableHashSet<Type> Source { get; init; }
+            public TypeSet Source { get; init; }
             public Inherit.Result Inherit { get; init; }
         }
 
         private readonly struct MiddlewareResult : IComparableStruct<MiddlewareResult>
         {
-            public Type Type { get; }
+            public MonoCecilType Type { get; }
             public IMiddlewareInfo? Middleware { get; }
             public Exception? Exception { get; init; }
 
@@ -44,14 +44,14 @@ namespace NetExtender.Utilities.Types
                 }
             }
 
-            public MiddlewareResult(Type type)
+            public MiddlewareResult(MonoCecilType type)
             {
                 Type = type ?? throw new ArgumentNullException(nameof(type));
                 Middleware = null;
                 Exception = null;
             }
 
-            public MiddlewareResult(Type type, IMiddlewareInfo middleware)
+            public MiddlewareResult(MonoCecilType type, IMiddlewareInfo middleware)
             {
                 Type = type ?? throw new ArgumentNullException(nameof(type));
                 Middleware = middleware ?? throw new ArgumentNullException(nameof(middleware));
@@ -65,7 +65,7 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-        private static List<MiddlewareResult>? ScanStaticType(Type type, Options _, out MiddlewareResult result)
+        private static List<MiddlewareResult>? ScanStaticType(MonoCecilType type, Options _, out MiddlewareResult result)
         {
             if (type is null)
             {
@@ -73,7 +73,7 @@ namespace NetExtender.Utilities.Types
             }
 
             const BindingFlags binding = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
-            MethodInfo? method = type.GetMethod(nameof(MiddlewareRegister.Register), binding, Type.EmptyTypes);
+            MethodInfo? method = type.Type?.GetMethod(nameof(MiddlewareRegister.Register), binding, Type.EmptyTypes);
 
             static Boolean IsMiddleware(Type @interface)
             {
@@ -85,7 +85,7 @@ namespace NetExtender.Utilities.Types
                 return @interface.GetGenericArguments()[0].IsAssignableTo(typeof(IMiddlewareInfo));
             }
 
-            if (method is null || !method.ReturnType.GetInterfaces().Prepend(method.ReturnType).Any(IsMiddleware))
+            if (method is null || !method.ReturnType.GetSafeInterfacesUnsafe().Prepend(method.ReturnType).Any(IsMiddleware))
             {
                 result = new MiddlewareResult(type)
                 {
@@ -95,7 +95,7 @@ namespace NetExtender.Utilities.Types
                 return null;
             }
 
-            static IEnumerable? Source(Type type, MethodInfo method, out MiddlewareResult result)
+            static IEnumerable? Source(MonoCecilType type, MethodInfo method, out MiddlewareResult result)
             {
                 try
                 {
@@ -124,7 +124,7 @@ namespace NetExtender.Utilities.Types
                 return null;
             }
 
-            static List<MiddlewareResult> Handle(IEnumerable source, Type type)
+            static List<MiddlewareResult> Handle(IEnumerable source, MonoCecilType type)
             {
                 List<MiddlewareResult> result = new List<MiddlewareResult>();
 
@@ -150,7 +150,7 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-        private static MiddlewareResult ScanType(Type type, Options options)
+        private static MiddlewareResult ScanType(MonoCecilType type, Options options)
         {
             if (type is null)
             {
@@ -167,7 +167,7 @@ namespace NetExtender.Utilities.Types
 
             try
             {
-                if (Activator.CreateInstance(type) is not IMiddlewareInfo middleware)
+                if (type.Type is not { } instance || Activator.CreateInstance(instance) is not IMiddlewareInfo middleware)
                 {
                     return new MiddlewareResult(type)
                     {
@@ -205,9 +205,9 @@ namespace NetExtender.Utilities.Types
 
             ConcurrentBag<MiddlewareResult> bag = new ConcurrentBag<MiddlewareResult>();
 
-            void Handler(Type? type)
+            void Handler(MonoCecilType? type)
             {
-                if (type is null || type.IsInterface || !options.Inherit.Attribute[attribute].Types.Contains(type))
+                if (type is null || type.IsInterface || !options.Inherit.Attributes[attribute].Types.Contains(type))
                 {
                     return;
                 }
@@ -239,7 +239,7 @@ namespace NetExtender.Utilities.Types
                 }
             }
 
-            Parallel.ForEach(options.Source, Handler);
+            Parallel.ForEach<MonoCecilType>(options.Source, Handler);
             return Verify(manager, bag);
         }
 
@@ -296,7 +296,7 @@ namespace NetExtender.Utilities.Types
             Inherit.Result inherit = ReflectionUtilities.Inherit;
             Options options = new Options
             {
-                Source = inherit.Attribute[typeof(TAttribute)].Types,
+                Source = inherit.Attributes[typeof(TAttribute)].Types,
                 Inherit = inherit
             };
 
@@ -304,12 +304,12 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IMiddlewareManager Scan(this IMiddlewareManager manager, IEnumerable<Type?> source)
+        public static IMiddlewareManager Scan(this IMiddlewareManager manager, IEnumerable<MonoCecilType?> source)
         {
             return Scan<MiddlewareRequiredAttribute>(manager, source);
         }
 
-        public static IMiddlewareManager Scan<TAttribute>(this IMiddlewareManager manager, IEnumerable<Type?> source) where TAttribute : MiddlewareRegisterAttribute
+        public static IMiddlewareManager Scan<TAttribute>(this IMiddlewareManager manager, IEnumerable<MonoCecilType?> source) where TAttribute : MiddlewareRegisterAttribute
         {
             if (manager is null)
             {
@@ -324,7 +324,7 @@ namespace NetExtender.Utilities.Types
             Inherit.Result inherit = ReflectionUtilities.Inherit;
             Options options = new Options
             {
-                Source = inherit.Attribute[typeof(Attribute)].Types.Intersect(source!),
+                Source = inherit.Attributes[typeof(Attribute)].Types.Intersect(source!),
                 Inherit = inherit
             };
 
@@ -350,7 +350,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(assembly));
             }
 
-            return Scan<TAttribute>(manager, assembly.GetSafeTypes());
+            return Scan<TAttribute>(manager, assembly.GetCecilTypes());
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -372,7 +372,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(assemblies));
             }
 
-            return Scan<TAttribute>(manager, assemblies.GetTypes());
+            return Scan<TAttribute>(manager, assemblies.GetCecilTypes());
         }
     }
 }

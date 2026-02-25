@@ -3,7 +3,7 @@
 
 using System;
 using System.Windows.Input;
-using NetExtender.Types.Exceptions.Handlers;
+using NetExtender.Exceptions.Handlers;
 using NetExtender.WindowsPresentation.Types.Exceptions;
 #pragma warning disable CA2200
 // ReSharper disable PossibleIntendedRethrow

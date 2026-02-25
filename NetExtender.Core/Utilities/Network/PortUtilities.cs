@@ -8,7 +8,7 @@ using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Runtime.CompilerServices;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 using NetExtender.Utilities.Numerics;
 using NetExtender.Utilities.Types;
 
@@ -69,7 +69,7 @@ namespace NetExtender.Utilities.Network
             {
                 IPEndPoint[] endpoints = ActiveTcpListeners;
                 ISet<UInt16> set = new HashSet<UInt16>(endpoints.Length);
-                set.UnionWith(endpoints.Select(ip => (UInt16) ip.Port));
+                set.UnionWith(endpoints.Select(static ip => (UInt16) ip.Port));
                 return set;
             }
         }
@@ -80,7 +80,7 @@ namespace NetExtender.Utilities.Network
             {
                 IPEndPoint[] endpoints = ActiveUdpListeners;
                 ISet<UInt16> set = new HashSet<UInt16>(endpoints.Length);
-                set.UnionWith(endpoints.Select(ip => (UInt16) ip.Port));
+                set.UnionWith(endpoints.Select(static ip => (UInt16) ip.Port));
                 return set;
             }
         }

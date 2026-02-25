@@ -35,7 +35,7 @@ namespace NetExtender.Types.Memento.Builder
 
         public virtual IMementoProperty<TSource>[] Build()
         {
-            return Internal.Select(item => item.Item()).ToArray();
+            return Internal.Select(static item => item.Item()).ToArray();
         }
 
         public virtual IMementoItem<TSource> Build(TSource source)

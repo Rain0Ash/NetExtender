@@ -475,7 +475,7 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
 
         /// <inheritdoc cref="ColorUtilities.GetRandomColor{T}(T)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Color GetRandomMediaColor<T>(this T random) where T : IRandom
+        public static Color GetRandomMediaColor<TRandom>(this TRandom random) where TRandom : IRandom
         {
             return random.GetRandomColor().ToMediaColor();
         }
@@ -496,7 +496,7 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
 
         /// <inheritdoc cref="ColorUtilities.GetRandomAlphaColor{T}(T)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Color GetRandomAlphaMediaColor<T>(this T random) where T : IRandom
+        public static Color GetRandomAlphaMediaColor<TRandom>(this TRandom random) where TRandom : IRandom
         {
             return random.GetRandomAlphaColor().ToMediaColor();
         }
@@ -517,7 +517,7 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
 
         /// <inheritdoc cref="ColorUtilities.GetRandomLightColor{T}(T)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Color GetRandomLightMediaColor<T>(this T random) where T : IRandom
+        public static Color GetRandomLightMediaColor<TRandom>(this TRandom random) where TRandom : IRandom
         {
             return random.GetRandomLightColor().ToMediaColor();
         }
@@ -538,7 +538,7 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
 
         /// <inheritdoc cref="ColorUtilities.GetRandomLightAlphaColor{T}(T)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Color GetRandomLightAlphaMediaColor<T>(this T random) where T : IRandom
+        public static Color GetRandomLightAlphaMediaColor<TRandom>(this TRandom random) where TRandom : IRandom
         {
             return random.GetRandomLightAlphaColor().ToMediaColor();
         }
@@ -559,7 +559,7 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
 
         /// <inheritdoc cref="ColorUtilities.GetRandomDarkColor{T}(T)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Color GetRandomDarkMediaColor<T>(this T random) where T : IRandom
+        public static Color GetRandomDarkMediaColor<TRandom>(this TRandom random) where TRandom : IRandom
         {
             return random.GetRandomDarkColor().ToMediaColor();
         }
@@ -580,7 +580,7 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
 
         /// <inheritdoc cref="ColorUtilities.GetRandomDarkAlphaColor{T}(T)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Color GetRandomDarkAlphaMediaColor<T>(this T random) where T : IRandom
+        public static Color GetRandomDarkAlphaMediaColor<TRandom>(this TRandom random) where TRandom : IRandom
         {
             return random.GetRandomDarkAlphaColor().ToMediaColor();
         }

@@ -7,10 +7,11 @@ using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
 using NetExtender.Types.Assemblies;
 using NetExtender.Types.Assemblies.Interfaces;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 
 namespace NetExtender.Utilities.Core
 {
+    [SuppressMessage("ReSharper", "PossibleIntendedRethrow")]
     public static partial class ReflectionUtilities
     {
         [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
@@ -49,7 +50,6 @@ namespace NetExtender.Utilities.Core
             }
             catch (Exception exception)
             {
-                // ReSharper disable once PossibleIntendedRethrow
                 throw exception;
             }
         }

@@ -70,7 +70,7 @@ namespace NetExtender.EntityFrameworkCore.Expressions.Querying
 
         IAsyncEnumerator<T> IAsyncEnumerable<T>.GetAsyncEnumerator(CancellationToken token)
         {
-            return Query.GetAsyncEnumerator();
+            return Query.AsEnumerable().GetAsyncEnumerator();
         }
 
         protected class VisitableQueryProvider : IAsyncQueryProvider
@@ -143,7 +143,7 @@ namespace NetExtender.EntityFrameworkCore.Expressions.Querying
             {
                 if (!typeof(T).IsClass)
                 {
-                    Internal = (query, visitors) => new VisitableEntityQuery<T>(query, visitors);
+                    Internal = static (query, visitors) => new VisitableEntityQuery<T>(query, visitors);
                     return;
                 }
 

@@ -9,14 +9,13 @@ using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
 using NetExtender.Types.Assemblies;
 using NetExtender.Types.Assemblies.Interfaces;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Utilities.Core
 {
     public static partial class ReflectionUtilities
     {
-
         [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
         private static class StaticStorage
         {
@@ -117,7 +116,7 @@ namespace NetExtender.Utilities.Core
                         }
                         case ConstructorInfo { IsStatic: true } constructor when constructor.DeclaringType == @base && constructor.GetSafeParameters()?.Length <= 0:
                         {
-                            ConstructorBuilder builder = type.InheritStaticConstructorInit(constructor, out ILGenerator? generator);
+                            ConstructorBuilder builder = type.InheritStaticConstructorInit(constructor, out ILGenerator generator);
                             members.Add(builder);
                             storage.Add(constructor, (builder, generator));
                             continue;
@@ -151,7 +150,7 @@ namespace NetExtender.Utilities.Core
                     throw new ArgumentNullException(nameof(source));
                 }
 
-                foreach ((Object? member, Object? value) in source)
+                foreach ((Object member, Object value) in source)
                 {
                     switch (member)
                     {

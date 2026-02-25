@@ -6,7 +6,7 @@ using System.IO;
 using System.Threading.Tasks;
 using NetExtender.Logging.Common;
 using NetExtender.Logging.Format.Interfaces;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Logging.Behavior

@@ -466,14 +466,14 @@ namespace NetExtender.Types.Network
                 return false;
             }
 
-            source.Sort((x, y) => x.Key - y.Key);
-            if (source.Where((array, index) => array.Key != index).Any())
+            source.Sort(static (x, y) => x.Key - y.Key);
+            if (source.Where(static (array, index) => array.Key != index).Any())
             {
                 result = default;
                 return false;
             }
 
-            result = new List<String>(source.Select(array => array.Value));
+            result = new List<String>(source.Select(static array => array.Value));
             return true;
         }
 

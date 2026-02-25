@@ -491,6 +491,7 @@ namespace NetExtender.Utilities.Types
             return source.Where(value => value.InRange(minimum, maximum, comparison));
         }
 
+        //TODO: bug
         public static Double AverageOrDefault(this IEnumerable<Int32> source, Double seed)
         {
             if (source is null)
@@ -1055,6 +1056,22 @@ namespace NetExtender.Utilities.Types
             }
 
             return sum / count;
+        }
+
+        /// <summary>
+        /// Averages a list of TimeSpans
+        /// </summary>
+        /// <param name="source">List of TimeSpans</param>
+        /// <returns>The average value</returns>
+        public static TimeSpan Average(this IEnumerable<TimeSpan> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            Double? average = source.AverageOrDefault(static time => time.Ticks);
+            return average is not null ? new TimeSpan((Int64) average) : TimeSpan.Zero;
         }
     }
 }

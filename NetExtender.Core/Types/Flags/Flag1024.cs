@@ -178,7 +178,7 @@ namespace NetExtender.Types.Flags
         {
             get
             {
-                return Size * BitUtilities.BitInByte;
+                return Size * BitUtilities.BitsInByte;
             }
         }
 
@@ -383,7 +383,7 @@ namespace NetExtender.Types.Flags
         public Boolean HasFlag(Flag1024 value)
         {
             return (High7 & value.High7) == value.High7 && (High6 & value.High6) == value.High6 && (High5 & value.High5) == value.High5 && (High4 & value.High4) == value.High4 &&
-                   (High3 & value.High3) == value.High3 && (High2 & value.High2) == value.High2 && (High1 & value.High1) == value.High1 && (High0 & value.High0) == value.High0 && 
+                   (High3 & value.High3) == value.High3 && (High2 & value.High2) == value.High2 && (High1 & value.High1) == value.High1 && (High0 & value.High0) == value.High0 &&
                    (Low7 & value.Low7) == value.Low7 && (Low6 & value.Low6) == value.Low6 && (Low5 & value.Low5) == value.Low5 && (Low4 & value.Low4) == value.Low4 &&
                    (Low3 & value.Low3) == value.Low3 && (Low2 & value.Low2) == value.Low2 && (Low1 & value.Low1) == value.Low1 && (Low0 & value.Low0) == value.Low0;
         }
@@ -445,7 +445,7 @@ namespace NetExtender.Types.Flags
         public IEnumerable<Int32> Enumerate()
         {
             Byte[] values = AsSpan().ToArray();
-            Int32[] destination = new Int32[BitUtilities.BitInByte];
+            Int32[] destination = new Int32[BitUtilities.BitsInByte];
 
             for (Int32 counter = 0; counter < values.Length; counter++)
             {
@@ -457,14 +457,14 @@ namespace NetExtender.Types.Flags
 
                 for (Int32 i = 0; i < written; i++)
                 {
-                    yield return destination[i] + counter * BitUtilities.BitInByte;
+                    yield return destination[i] + counter * BitUtilities.BitsInByte;
                 }
             }
         }
 
         public IEnumerable<TEnum> Enumerate<TEnum>() where TEnum : unmanaged, Enum
         {
-            return Enumerate().Select(item => Unsafe.As<Int32, TEnum>(ref item));
+            return Enumerate().Select(static item => Unsafe.As<Int32, TEnum>(ref item));
         }
 
         public IEnumerator<Boolean> GetEnumerator()

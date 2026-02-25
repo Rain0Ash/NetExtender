@@ -30,9 +30,9 @@ namespace NetExtender.Types.Expressions
         protected override Expression VisitMember(MemberExpression node)
         {
             Expression? expression = node.Expression;
-            if (node.NodeType == ExpressionType.MemberAccess && expression is not null && expression.NodeType == ExpressionType.Constant && expression.Type.IsCompilerGenerated())
+            if (node.NodeType is ExpressionType.MemberAccess && expression?.NodeType is ExpressionType.Constant && expression.Type.IsCompilerGenerated())
             {
-                return Arguments.Where(pair => pair.Key == node.Member.Name).Select(pair => pair.Value).FirstOrDefault() ?? base.VisitMember(node);
+                return Arguments.Where(pair => pair.Key == node.Member.Name).Select(static pair => pair.Value).FirstOrDefault() ?? base.VisitMember(node);
             }
 
             return base.VisitMember(node);

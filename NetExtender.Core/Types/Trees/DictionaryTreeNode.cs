@@ -8,8 +8,11 @@ using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Runtime.Serialization;
+using System.Xml.Serialization;
 using NetExtender.Newtonsoft.Types.Trees;
 using NetExtender.Types.Trees.Interfaces;
+using NetExtender.Utilities.Core;
 using NetExtender.Utilities.Types;
 using Newtonsoft.Json;
 
@@ -25,7 +28,8 @@ namespace NetExtender.Types.Trees
         [JsonProperty(PropertyName = nameof(Tree), Order = 1)]
         private IDictionaryTree<TKey, TValue>? _tree;
 
-        [JsonIgnore]
+        [JsonIgnore, IgnoreDataMember, XmlIgnore, SoapIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public IDictionaryTreeNode<TKey, TValue> Node
         {
             get
@@ -34,7 +38,8 @@ namespace NetExtender.Types.Trees
             }
         }
 
-        [JsonIgnore]
+        [JsonIgnore, IgnoreDataMember, XmlIgnore, SoapIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public IDictionaryTree<TKey, TValue> Tree
         {
             get
@@ -45,7 +50,8 @@ namespace NetExtender.Types.Trees
 
         public IEqualityComparer<TKey> Comparer { get; }
 
-        [JsonIgnore]
+        [JsonIgnore, IgnoreDataMember, XmlIgnore, SoapIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public Boolean IsReadOnly
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -55,7 +61,8 @@ namespace NetExtender.Types.Trees
             }
         }
 
-        [JsonIgnore]
+        [JsonIgnore, IgnoreDataMember, XmlIgnore, SoapIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public ICollection<TKey> Keys
         {
             get
@@ -64,7 +71,8 @@ namespace NetExtender.Types.Trees
             }
         }
 
-        [JsonIgnore]
+        [JsonIgnore, IgnoreDataMember, XmlIgnore, SoapIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         IEnumerable<TKey> IReadOnlyDictionary<TKey, IDictionaryTreeNode<TKey, TValue>>.Keys
         {
             get
@@ -73,7 +81,8 @@ namespace NetExtender.Types.Trees
             }
         }
 
-        [JsonIgnore]
+        [JsonIgnore, IgnoreDataMember, XmlIgnore, SoapIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public ICollection<IDictionaryTreeNode<TKey, TValue>> Values
         {
             get
@@ -82,7 +91,8 @@ namespace NetExtender.Types.Trees
             }
         }
 
-        [JsonIgnore]
+        [JsonIgnore, IgnoreDataMember, XmlIgnore, SoapIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         IEnumerable<IDictionaryTreeNode<TKey, TValue>> IReadOnlyDictionary<TKey, IDictionaryTreeNode<TKey, TValue>>.Values
         {
             get
@@ -91,7 +101,8 @@ namespace NetExtender.Types.Trees
             }
         }
 
-        [JsonIgnore]
+        [JsonIgnore, IgnoreDataMember, XmlIgnore, SoapIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public Int32 Count
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -101,7 +112,8 @@ namespace NetExtender.Types.Trees
             }
         }
 
-        [JsonIgnore]
+        [JsonIgnore, IgnoreDataMember, XmlIgnore, SoapIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public Int64 FullCount
         {
             get
@@ -113,7 +125,7 @@ namespace NetExtender.Types.Trees
 
                 try
                 {
-                    return Tree.Values.Sum(node => node.FullCount);
+                    return Tree.Values.Sum(static node => node.FullCount);
                 }
                 catch (OverflowException)
                 {
@@ -122,7 +134,8 @@ namespace NetExtender.Types.Trees
             }
         }
 
-        [JsonIgnore]
+        [JsonIgnore, IgnoreDataMember, XmlIgnore, SoapIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public Boolean IsEmpty
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -132,7 +145,8 @@ namespace NetExtender.Types.Trees
             }
         }
 
-        [JsonIgnore]
+        [JsonIgnore, IgnoreDataMember, XmlIgnore, SoapIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public Boolean HasValue
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -142,7 +156,8 @@ namespace NetExtender.Types.Trees
             }
         }
 
-        [JsonIgnore]
+        [JsonIgnore, IgnoreDataMember, XmlIgnore, SoapIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public Boolean HasTree
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -152,13 +167,14 @@ namespace NetExtender.Types.Trees
             }
         }
 
-        [JsonIgnore]
+        [JsonIgnore, IgnoreDataMember, XmlIgnore, SoapIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public Boolean TreeIsEmpty
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
-                return !HasTree || Tree.Count <= 0 || Tree.Values.All(node => node.IsEmpty);
+                return !HasTree || Tree.Count <= 0 || Tree.Values.All(static node => node.IsEmpty);
             }
         }
 
@@ -624,7 +640,7 @@ namespace NetExtender.Types.Trees
                     return node[key];
                 }
 
-                node = sections.WhereNotNull().Aggregate(node, (current, section) => current[section]);
+                node = sections.WhereNotNull().Aggregate(node, static (current, section) => current[section]);
 
                 return node[key];
             }
@@ -643,7 +659,7 @@ namespace NetExtender.Types.Trees
                     return;
                 }
 
-                node = sections.WhereNotNull().Aggregate(node, (current, section) => current[section]);
+                node = sections.WhereNotNull().Aggregate(node, static (current, section) => current[section]);
 
                 node[key] = value;
             }

@@ -1,0 +1,362 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFrameworks>net6.0;net7.0;net8.0;net9.0;net10.0</TargetFrameworks>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>disable</ImplicitUsings>
+        <OutputType>Library</OutputType>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <Authors>Rain0Ash</Authors>
+        <PackageProjectUrl>https://github.com/Rain0Ash/NetExtender</PackageProjectUrl>
+        <Version>0.8.9</Version>
+        <SignAssembly>true</SignAssembly>
+        <AssemblyOriginatorKeyFile>../SignTool/Private/NetExtender.snk</AssemblyOriginatorKeyFile>
+        <Title>NetExtender.Root</Title>
+        <Description>Root of NetExtender Framework</Description>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <RepositoryUrl>https://github.com/Rain0Ash/NetExtender</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <PackageTags>Extension</PackageTags>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <IsPackable>true</IsPackable>
+        <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+            <_Parameter1>NetExtender.Core, PublicKey=0024000004800000940000000602000000240000525341310004000001000100359dfff5ba2a92cfb1611180775465dbe63c84906c0c0a1b4f151e9ab02d759f97b9cdec45ed851894b41c9e81a91eaa9afcfda85cea21918061282e94649ddf6dd75076e5e7c3847e6541cca36a09c7f81981c783f1be78dea3132d7eb684b625ff4d0688e336e914e5836181ce44c6fbf5ef6c2a017daf829ef2aea7b10fd3</_Parameter1>
+        </AssemblyAttribute>
+        <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+            <_Parameter1>NetExtender.Domain, PublicKey=0024000004800000940000000602000000240000525341310004000001000100359dfff5ba2a92cfb1611180775465dbe63c84906c0c0a1b4f151e9ab02d759f97b9cdec45ed851894b41c9e81a91eaa9afcfda85cea21918061282e94649ddf6dd75076e5e7c3847e6541cca36a09c7f81981c783f1be78dea3132d7eb684b625ff4d0688e336e914e5836181ce44c6fbf5ef6c2a017daf829ef2aea7b10fd3</_Parameter1>
+        </AssemblyAttribute>
+        <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+            <_Parameter1>NetExtender.AspNetCore, PublicKey=0024000004800000940000000602000000240000525341310004000001000100359dfff5ba2a92cfb1611180775465dbe63c84906c0c0a1b4f151e9ab02d759f97b9cdec45ed851894b41c9e81a91eaa9afcfda85cea21918061282e94649ddf6dd75076e5e7c3847e6541cca36a09c7f81981c783f1be78dea3132d7eb684b625ff4d0688e336e914e5836181ce44c6fbf5ef6c2a017daf829ef2aea7b10fd3</_Parameter1>
+        </AssemblyAttribute>
+        <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+            <_Parameter1>NetExtender.EntityFrameworkCore, PublicKey=0024000004800000940000000602000000240000525341310004000001000100359dfff5ba2a92cfb1611180775465dbe63c84906c0c0a1b4f151e9ab02d759f97b9cdec45ed851894b41c9e81a91eaa9afcfda85cea21918061282e94649ddf6dd75076e5e7c3847e6541cca36a09c7f81981c783f1be78dea3132d7eb684b625ff4d0688e336e914e5836181ce44c6fbf5ef6c2a017daf829ef2aea7b10fd3</_Parameter1>
+        </AssemblyAttribute>
+        <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+            <_Parameter1>NetExtender.WindowsPresentation, PublicKey=0024000004800000940000000602000000240000525341310004000001000100359dfff5ba2a92cfb1611180775465dbe63c84906c0c0a1b4f151e9ab02d759f97b9cdec45ed851894b41c9e81a91eaa9afcfda85cea21918061282e94649ddf6dd75076e5e7c3847e6541cca36a09c7f81981c783f1be78dea3132d7eb684b625ff4d0688e336e914e5836181ce44c6fbf5ef6c2a017daf829ef2aea7b10fd3</_Parameter1>
+        </AssemblyAttribute>
+        <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+            <_Parameter1>NetExtender.DependencyInjection, PublicKey=0024000004800000940000000602000000240000525341310004000001000100359dfff5ba2a92cfb1611180775465dbe63c84906c0c0a1b4f151e9ab02d759f97b9cdec45ed851894b41c9e81a91eaa9afcfda85cea21918061282e94649ddf6dd75076e5e7c3847e6541cca36a09c7f81981c783f1be78dea3132d7eb684b625ff4d0688e336e914e5836181ce44c6fbf5ef6c2a017daf829ef2aea7b10fd3</_Parameter1>
+        </AssemblyAttribute>
+        <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+            <_Parameter1>NetExtender.Harmony, PublicKey=0024000004800000940000000602000000240000525341310004000001000100359dfff5ba2a92cfb1611180775465dbe63c84906c0c0a1b4f151e9ab02d759f97b9cdec45ed851894b41c9e81a91eaa9afcfda85cea21918061282e94649ddf6dd75076e5e7c3847e6541cca36a09c7f81981c783f1be78dea3132d7eb684b625ff4d0688e336e914e5836181ce44c6fbf5ef6c2a017daf829ef2aea7b10fd3</_Parameter1>
+        </AssemblyAttribute>
+        <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+            <_Parameter1>NetExtender.UserInterface.WindowsPresentation.ExcelGrid, PublicKey=0024000004800000940000000602000000240000525341310004000001000100359dfff5ba2a92cfb1611180775465dbe63c84906c0c0a1b4f151e9ab02d759f97b9cdec45ed851894b41c9e81a91eaa9afcfda85cea21918061282e94649ddf6dd75076e5e7c3847e6541cca36a09c7f81981c783f1be78dea3132d7eb684b625ff4d0688e336e914e5836181ce44c6fbf5ef6c2a017daf829ef2aea7b10fd3</_Parameter1>
+        </AssemblyAttribute>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Mono.Cecil" Version="0.11.6"/>
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.4"/>
+        <PackageReference Include="System.Reactive" Version="6.1.0"/>
+        <PackageReference Include="System.Reactive.Core" Version="6.1.0"/>
+        <PackageReference Include="System.Reactive.Interfaces" Version="6.1.0"/>
+        <PackageReference Include="System.Reactive.Linq" Version="6.1.0"/>
+        <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="3.0.1"/>
+        <PackageReference Include="JetBrains.Annotations" Version="2025.2.4"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Compile Update="Types\FileSystems\FileSystemStorage.Directory.cs">
+            <DependentUpon>FileSystemStorage.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\FileSystems\FileSystemStorage.Drive.cs">
+            <DependentUpon>FileSystemStorage.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\FileSystems\FileSystemStorage.Dynamic.cs">
+            <DependentUpon>FileSystemStorage.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\FileSystems\FileSystemStorage.Environment.cs">
+            <DependentUpon>FileSystemStorage.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\FileSystems\FileSystemStorage.File.cs">
+            <DependentUpon>FileSystemStorage.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\FileSystems\FileSystemStorage.FileSystem.cs">
+            <DependentUpon>FileSystemStorage.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\FileSystems\FileSystemStorage.Link.cs">
+            <DependentUpon>FileSystemStorage.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\FileSystems\FileSystemStorage.Path.cs">
+            <DependentUpon>FileSystemStorage.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\FileSystems\FileSystemHandler.Directory.cs">
+            <DependentUpon>FileSystemHandler.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\FileSystems\FileSystemHandler.Drive.cs">
+            <DependentUpon>FileSystemHandler.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\FileSystems\FileSystemHandler.Environment.cs">
+            <DependentUpon>FileSystemHandler.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\FileSystems\FileSystemHandler.File.cs">
+            <DependentUpon>FileSystemHandler.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\FileSystems\FileSystemHandler.Link.cs">
+            <DependentUpon>FileSystemHandler.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\FileSystems\FileSystemHandler.Path.cs">
+            <DependentUpon>FileSystemHandler.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\FileSystems\FileSystemHandlerWrapper.Directory.cs">
+            <DependentUpon>FileSystemHandlerWrapper.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\FileSystems\FileSystemHandlerWrapper.Drive.cs">
+            <DependentUpon>FileSystemHandlerWrapper.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\FileSystems\FileSystemHandlerWrapper.Environment.cs">
+            <DependentUpon>FileSystemHandlerWrapper.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\FileSystems\FileSystemHandlerWrapper.File.cs">
+            <DependentUpon>FileSystemHandlerWrapper.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\FileSystems\FileSystemHandlerWrapper.FileSystem.cs">
+            <DependentUpon>FileSystemHandlerWrapper.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\FileSystems\FileSystemHandlerWrapper.Link.cs">
+            <DependentUpon>FileSystemHandlerWrapper.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\FileSystems\FileSystemHandlerWrapper.Path.cs">
+            <DependentUpon>FileSystemHandlerWrapper.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\FileSystems\Interfaces\IFileSystemHandler.Directory.cs">
+            <DependentUpon>IFileSystem.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\FileSystems\Interfaces\IFileSystemHandler.Drive.cs">
+            <DependentUpon>IFileSystem.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\FileSystems\Interfaces\IFileSystemHandler.Environment.cs">
+            <DependentUpon>IFileSystem.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\FileSystems\Interfaces\IFileSystemHandler.File.cs">
+            <DependentUpon>IFileSystem.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\FileSystems\Interfaces\IFileSystemHandler.Link.cs">
+            <DependentUpon>IFileSystem.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\FileSystems\Interfaces\IFileSystemHandler.Path.cs">
+            <DependentUpon>IFileSystem.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Exceptions\GenericBusinessStatusException.cs">
+            <AutoGen>True</AutoGen>
+            <DesignTime>True</DesignTime>
+            <DependentUpon>GenericBusinessStatusException.tt</DependentUpon>
+        </Compile>
+        <Compile Update="Exceptions\GenericBusinessStatusException.cs">
+            <AutoGen>True</AutoGen>
+            <DesignTime>True</DesignTime>
+            <DependentUpon>GenericBusinessStatusException.tt</DependentUpon>
+        </Compile>
+        <Compile Update="Exceptions\GenericBusinessStatusException.cs">
+            <AutoGen>True</AutoGen>
+            <DesignTime>True</DesignTime>
+            <DependentUpon>GenericBusinessStatusException.tt</DependentUpon>
+        </Compile>
+        <Compile Update="Utilities\Numerics\GenericBitUtilities.cs">
+            <AutoGen>True</AutoGen>
+            <DesignTime>True</DesignTime>
+            <DependentUpon>GenericBitUtilities.tt</DependentUpon>
+        </Compile>
+        <Compile Update="Utilities\Types\Enumerable\GenericSpanUtilities.cs">
+            <AutoGen>True</AutoGen>
+            <DesignTime>True</DesignTime>
+            <DependentUpon>GenericSpanUtilities.tt</DependentUpon>
+        </Compile>
+        <Compile Update="Utilities\Types\Enumerable\CollectionEnumerableUtilities.cs">
+            <DependentUpon>EnumerableBaseUtilities.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Utilities\Numerics\GenericRandomUtilities.cs">
+            <AutoGen>True</AutoGen>
+            <DesignTime>True</DesignTime>
+            <DependentUpon>GenericRandomUtilities.tt</DependentUpon>
+        </Compile>
+        <Compile Update="Utilities\Types\Stream\GenericBinaryReaderUtilities.cs">
+            <AutoGen>True</AutoGen>
+            <DesignTime>True</DesignTime>
+            <DependentUpon>GenericBinaryReaderUtilities.tt</DependentUpon>
+        </Compile>
+        <Compile Update="Types\FileSystems\Interfaces\IFileSystemHandler.cs">
+            <DependentUpon>IFileSystem.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Monads\Async\Async.Core.cs">
+            <DependentUpon>Async.cs</DependentUpon>
+        </Compile>
+        <Compile Update="MonoCecil\Switch.cs">
+            <DependentUpon>MonoCecilType.cs</DependentUpon>
+        </Compile>
+        <Compile Update="MonoCecil\Type.cs">
+            <DependentUpon>MonoCecilType.cs</DependentUpon>
+        </Compile>
+        <Compile Update="MonoCecil\Definition.cs">
+            <DependentUpon>MonoCecilType.cs</DependentUpon>
+        </Compile>
+        <Compile Update="MonoCecil\Key.cs">
+            <DependentUpon>MonoCecilType.cs</DependentUpon>
+        </Compile>
+        <Compile Update="MonoCecil\TypeSet.Zero.cs">
+            <DependentUpon>TypeSet.cs</DependentUpon>
+        </Compile>
+        <Compile Update="MonoCecil\TypeSet.One.cs">
+            <DependentUpon>TypeSet.cs</DependentUpon>
+        </Compile>
+        <Compile Update="MonoCecil\TypeSet.Two.cs">
+            <DependentUpon>TypeSet.cs</DependentUpon>
+        </Compile>
+        <Compile Update="MonoCecil\TypeSet.Three.cs">
+            <DependentUpon>TypeSet.cs</DependentUpon>
+        </Compile>
+        <Compile Update="MonoCecil\TypeSet.Multi.cs">
+            <DependentUpon>TypeSet.cs</DependentUpon>
+        </Compile>
+        <Compile Update="MonoCecil\TypeList.Multi.cs">
+            <DependentUpon>TypeList.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\Enums\Enum.Enumerator.cs">
+            <DependentUpon>Enum.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\Enums\Enum.FlagsEnumerator.cs">
+            <DependentUpon>Enum.cs</DependentUpon>
+        </Compile>
+        <Compile Update="MonoCecil\TypeList.Some.cs">
+          <DependentUpon>TypeList.cs</DependentUpon>
+        </Compile>
+        <Compile Update="MonoCecil\TypeMap.Zero.cs">
+          <DependentUpon>TypeMap.cs</DependentUpon>
+        </Compile>
+        <Compile Update="MonoCecil\TypeMap.Multi.cs">
+          <DependentUpon>TypeMap.cs</DependentUpon>
+        </Compile>
+        <Compile Update="MonoCecil\TypeMap.One.cs">
+          <DependentUpon>TypeMap.cs</DependentUpon>
+        </Compile>
+        <Compile Update="MonoCecil\TypeMap.Two.cs">
+          <DependentUpon>TypeMap.cs</DependentUpon>
+        </Compile>
+        <Compile Update="MonoCecil\TypeMap.Three.cs">
+          <DependentUpon>TypeMap.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Monads\Ray\RayId.Container.cs">
+          <DependentUpon>RayId.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Monads\Ray\RayIdContext.New.cs">
+          <DependentUpon>RayIdContext.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Monads\Ray\RayIdContext.Container.cs">
+          <DependentUpon>RayIdContext.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Monads\Ray\RayIdContext.Settings.cs">
+          <DependentUpon>RayIdContext.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Monads\Ray\RayId.Custom.cs">
+          <DependentUpon>RayId.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Monads\Ray\RayId.New.cs">
+          <DependentUpon>RayId.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Monads\Ray\RayId.Settings.cs">
+          <DependentUpon>RayId.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Monads\Ray\RayId.V4.cs">
+          <DependentUpon>RayId.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Monads\Ray\RayId.V7.cs">
+          <DependentUpon>RayId.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Monads\Ray\RayId.W3C.cs">
+          <DependentUpon>RayId.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Monads\Ray\RayIdPayload.Element.cs">
+          <DependentUpon>RayIdPayload.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Monads\Ray\RayIdPayload.Zero.cs">
+          <DependentUpon>RayIdPayload.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Utilities\Types\EnumUtilities.Cache.cs">
+          <DependentUpon>EnumUtilities.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Utilities\Types\EnumUtilities.Properties.cs">
+          <DependentUpon>EnumUtilities.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Monads\Ray\RayIdPayload.Comparer.cs">
+          <DependentUpon>RayIdPayload.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Monads\Ray\RayIdPayload.Many.cs">
+          <DependentUpon>RayIdPayload.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\Timers\Sheduler\Scheduler.Awaiter.cs">
+          <DependentUpon>Scheduler.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\Timers\Sheduler\Scheduler.Timeout.cs">
+          <DependentUpon>Scheduler.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\Timers\Sheduler\Scheduler.Bucket.cs">
+          <DependentUpon>Scheduler.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Monads\Ray\RayIdContext.Scope.cs">
+          <DependentUpon>RayIdContext.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\Sizes\UnsafeSizeGenerics.cs">
+          <DependentUpon>UnsafeSizeGenerics.tt</DependentUpon>
+        </Compile>
+        <Compile Update="Utilities\Numerics\GenericMathUtilities.cs">
+          <AutoGen>True</AutoGen>
+          <DesignTime>True</DesignTime>
+          <DependentUpon>GenericMathUtilities.tt</DependentUpon>
+        </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Folder Include="Types\Concurrent\Observable\"/>
+        <Folder Include="Types\Concurrent\Storages\"/>
+        <Folder Include="Types\Counters\"/>
+        <Folder Include="Types\Maps\"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Update="Exceptions\GenericBusinessStatusException.tt">
+            <DependentUpon>BusinessException.cs</DependentUpon>
+            <Generator>TextTemplatingFileGenerator</Generator>
+            <LastGenOutput>GenericBusinessStatusException.cs</LastGenOutput>
+        </None>
+        <None Update="Exceptions\GenericBusinessStatusException.tt">
+            <DependentUpon>BusinessException.cs</DependentUpon>
+            <Generator>TextTemplatingFileGenerator</Generator>
+            <LastGenOutput>GenericBusinessStatusException.cs</LastGenOutput>
+        </None>
+        <None Update="Utilities\Numerics\GenericBitUtilities.tt">
+            <Generator>TextTemplatingFileGenerator</Generator>
+            <LastGenOutput>GenericBitUtilities.cs</LastGenOutput>
+        </None>
+        <None Update="Utilities\Types\Enumerable\GenericSpanUtilities.tt">
+            <Generator>TextTemplatingFileGenerator</Generator>
+            <LastGenOutput>GenericSpanUtilities.cs</LastGenOutput>
+        </None>
+        <None Update="Utilities\Numerics\GenericRandomUtilities.tt">
+            <Generator>TextTemplatingFileGenerator</Generator>
+            <LastGenOutput>GenericRandomUtilities.cs</LastGenOutput>
+        </None>
+        <None Include="Types\Numerics\FloatDecimal.cs"/>
+        <None Update="Types\Sizes\UnsafeSizeGenerics.tt">
+            <Generator>TextTemplatingFileGenerator</Generator>
+            <LastGenOutput>UnsafeSizeGenerics.cs</LastGenOutput>
+        </None>
+        <None Update="Utilities\Numerics\GenericMathUtilities.tt">
+            <Generator>TextTemplatingFileGenerator</Generator>
+            <LastGenOutput>GenericMathUtilities.cs</LastGenOutput>
+        </None>
+        <None Update="Utilities\Types\Stream\GenericBinaryReaderUtilities.tt">
+            <Generator>TextTemplatingFileGenerator</Generator>
+            <LastGenOutput>GenericBinaryReaderUtilities.cs</LastGenOutput>
+        </None>
+        <None Update="Types\Delegates\ValueDelegate.tt">
+            <Generator>TextTemplatingFileGenerator</Generator>
+            <LastGenOutput>ValueDelegate.cs</LastGenOutput>
+        </None>
+    </ItemGroup>
+
+</Project>

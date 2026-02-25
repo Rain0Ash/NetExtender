@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IO;
 using Microsoft.Extensions.DependencyInjection;
-using NetExtender.DependencyInjection.Attributes;
+using NetExtender.DependencyInjection;
 using NetExtender.Domains.Builder;
 using NetExtender.Types.Middlewares;
 using NetExtender.Utilities.Application;

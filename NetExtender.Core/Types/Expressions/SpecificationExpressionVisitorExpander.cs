@@ -2,6 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -52,7 +53,7 @@ namespace NetExtender.Types.Expressions
                 return base.VisitMethodCall(node);
             }
 
-            Type[] interfaces = declaring.GetInterfaces();
+            IReadOnlySet<Type> interfaces = declaring.GetSafeInterfacesUnsafe();
             return interfaces.Any(HasSpecification) ? ExpandSpecification(node.Object, method) : base.VisitMethodCall(node);
         }
 

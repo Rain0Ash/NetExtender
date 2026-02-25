@@ -4,72 +4,25 @@
 using System;
 using System.Net;
 using System.Runtime.Serialization;
+using System.Xml.Serialization;
 using NetExtender.AspNetCore.Identity.Interfaces;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 using Newtonsoft.Json;
 
 namespace NetExtender.AspNetCore.Identity
 {
     [Serializable]
-    public class IdentityUserRestrictedException : IdentityUserRestrictedException<String?>
+    public class IdentityUserRestrictedException : IdentityException, IIdentityException
     {
         public new static HttpStatusCode Status { get; set; } = HttpStatusCode.Unauthorized;
         public new static String? Message { get; set; } = "Identity user restricted.";
-        public new static String? Code { get; set; } = $"{nameof(Identity)}.User.Restrict";
+        public new static String? Name { get; set; } = $"{nameof(AspNetCore.Identity)}.User.Restrict";
 
-        public IdentityUserRestrictedException()
-            : base(Code)
-        {
-        }
-
-        public IdentityUserRestrictedException(String? message)
-            : base(message, Code)
-        {
-        }
-
-        public IdentityUserRestrictedException(String? message, Exception? exception)
-            : base(message, Code, exception)
-        {
-        }
-
-        public IdentityUserRestrictedException(String? message, BusinessException? exception)
-            : base(message, Code, exception)
-        {
-        }
-
-        public IdentityUserRestrictedException(String? message, params BusinessException?[]? reason)
-            : base(message, Code, reason)
-        {
-        }
-
-        public IdentityUserRestrictedException(String? message, Exception? exception, params BusinessException?[]? reason)
-            : base(message, Code, exception, reason)
-        {
-        }
-
-        public IdentityUserRestrictedException(String? message, BusinessException? exception, params BusinessException?[]? reason)
-            : base(message, Code, exception, reason)
-        {
-        }
-
-#if NET8_0_OR_GREATER
-        [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId="SYSLIB0051", UrlFormat="https://aka.ms/dotnet-warnings/{0}")]
-        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-#endif
-        protected IdentityUserRestrictedException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
-        {
-        }
-    }
-
-    [Serializable]
-    public class IdentityUserRestrictedException<T> : IdentityException<T>, IIdentityException
-    {
-        public sealed override IdentityException.Known Known
+        public sealed override Id Known
         {
             get
             {
-                return IdentityException.Known.Restrict;
+                return IdentityException.Id.Restrict;
             }
         }
 
@@ -89,7 +42,19 @@ namespace NetExtender.AspNetCore.Identity
             }
         }
 
-        [JsonIgnore]
+        public override String? Identity
+        {
+            get
+            {
+                return base.Name ?? Name;
+            }
+            init
+            {
+                base.Name = value;
+            }
+        }
+
+        [JsonIgnore, IgnoreDataMember, XmlIgnore, SoapIgnore]
         [System.Text.Json.Serialization.JsonIgnore]
         public IUserInfo? User { get; init; }
 
@@ -101,33 +66,33 @@ namespace NetExtender.AspNetCore.Identity
             }
         }
 
-        public IdentityUserRestrictedException(T code)
-            : base(IdentityUserRestrictedException.Message, IdentityUserRestrictedException.Status, code)
+        public IdentityUserRestrictedException()
+            : base(Message, Status)
         {
         }
 
-        public IdentityUserRestrictedException(String? message, T code)
-            : base(message ?? IdentityUserRestrictedException.Message, IdentityUserRestrictedException.Status, code)
+        public IdentityUserRestrictedException(String? message)
+            : base(message ?? Message, Status)
         {
         }
 
-        public IdentityUserRestrictedException(String? message, T code, Exception? exception)
-            : base(message ?? IdentityUserRestrictedException.Message, IdentityUserRestrictedException.Status, code, exception)
+        public IdentityUserRestrictedException(String? message, Exception? exception)
+            : base(message ?? Message, Status, exception)
         {
         }
 
-        public IdentityUserRestrictedException(String? message, T code, params BusinessException?[]? reason)
-            : base(message ?? IdentityUserRestrictedException.Message, IdentityUserRestrictedException.Status, code, reason)
+        public IdentityUserRestrictedException(String? message, params BusinessException?[]? reason)
+            : base(message ?? Message, Status, reason)
         {
         }
 
-        public IdentityUserRestrictedException(String? message, T code, Exception? exception, params BusinessException?[]? reason)
-            : base(message ?? IdentityUserRestrictedException.Message, IdentityUserRestrictedException.Status, code, exception, reason)
+        public IdentityUserRestrictedException(String? message, Exception? exception, params BusinessException?[]? reason)
+            : base(message ?? Message, Status, exception, reason)
         {
         }
 
-        public IdentityUserRestrictedException(String? message, T code, BusinessException? exception, params BusinessException?[]? reason)
-            : base(message ?? IdentityUserRestrictedException.Message, IdentityUserRestrictedException.Status, code, exception, reason)
+        public IdentityUserRestrictedException(String? message, BusinessException? exception, params BusinessException?[]? reason)
+            : base(message ?? Message, Status, exception, reason)
         {
         }
 

@@ -6,7 +6,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Security;
 using Microsoft.Win32;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 using NetExtender.Types.Protocols;
 using NetExtender.Utilities.Application;
 using NetExtender.Utilities.IO;

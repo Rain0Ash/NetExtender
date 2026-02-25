@@ -15,6 +15,7 @@ namespace NetExtender.Initializer
 {
     public abstract partial class Initializer
     {
+        [SuppressMessage("ReSharper", "ParameterHidesMember")]
         internal static class ReflectionUtilities
         {
             internal const String Constructor = ".ctor";

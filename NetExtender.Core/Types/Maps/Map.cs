@@ -5,7 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 using NetExtender.Types.Maps.Interfaces;
 using NetExtender.Utilities.Types;
 using TSR = System.Collections.Generic.Dictionary<NetExtender.Types.Entities.Any.Value, NetExtender.Types.Entities.Any.Value>;

@@ -45,23 +45,10 @@ namespace NetExtender.Utilities.Types
             return new ConcurrentDictionary<TKey, TValue>(dictionary, comparer);
         }
 
-        [SuppressMessage("ReSharper", "NullCoalescingConditionIsAlwaysNotNullAccordingToAPIContract")]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Dictionary<Object, Object?> ToDictionary(this IDictionary source)
         {
-            if (source is null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-
-            Dictionary<Object, Object?> result = new Dictionary<Object, Object?>(source.Count);
-
-            foreach (Object? key in source.Keys)
-            {
-                Object? value = source[key];
-                result[key ?? ObjectUtilities.Null] = value;
-            }
-
-            return result;
+            return DictionaryBaseUtilities.ToDictionary(source);
         }
 
 #if !NET8_0_OR_GREATER
@@ -766,64 +753,22 @@ namespace NetExtender.Utilities.Types
             return ImmutableMultiDictionary<TKey, TValue>.Empty.AddRange(source);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TValue GetOrAdd<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key, TValue value)
         {
-            if (dictionary is null)
-            {
-                throw new ArgumentNullException(nameof(dictionary));
-            }
-
-            if (dictionary.TryGetValue(key, out TValue? result))
-            {
-                return result;
-            }
-
-            dictionary.Add(key, value);
-            return value;
+            return DictionaryBaseUtilities.GetOrAdd(dictionary, key, value);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TValue GetOrAdd<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key, Func<TValue> factory)
         {
-            if (dictionary is null)
-            {
-                throw new ArgumentNullException(nameof(dictionary));
-            }
-
-            if (factory is null)
-            {
-                throw new ArgumentNullException(nameof(factory));
-            }
-
-            if (dictionary.TryGetValue(key, out TValue? value))
-            {
-                return value;
-            }
-
-            value = factory.Invoke();
-            dictionary.Add(key, value);
-            return value;
+            return DictionaryBaseUtilities.GetOrAdd(dictionary, key, factory);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TValue GetOrAdd<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key, Func<TKey, TValue> factory)
         {
-            if (dictionary is null)
-            {
-                throw new ArgumentNullException(nameof(dictionary));
-            }
-
-            if (factory is null)
-            {
-                throw new ArgumentNullException(nameof(factory));
-            }
-
-            if (dictionary.TryGetValue(key, out TValue? value))
-            {
-                return value;
-            }
-
-            value = factory.Invoke(key);
-            dictionary.Add(key, value);
-            return value;
+            return DictionaryBaseUtilities.GetOrAdd(dictionary, key, factory);
         }
 
         public static IDictionary<TValue, TKey> Reverse<TKey, TValue>(this IDictionary<TKey, TValue> source) where TKey : notnull where TValue : notnull

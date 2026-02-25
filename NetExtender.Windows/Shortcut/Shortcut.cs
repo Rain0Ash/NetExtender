@@ -5,7 +5,7 @@ using System;
 using System.IO;
 using System.Reflection;
 using NetExtender.FileSystems.Interfaces;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 using NetExtender.Utilities.IO;
 using NetExtender.Windows.Shortcut.Interfaces;
 

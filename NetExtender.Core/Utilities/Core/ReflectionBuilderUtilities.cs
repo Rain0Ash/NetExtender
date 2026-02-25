@@ -217,7 +217,7 @@ namespace NetExtender.Utilities.Core
                 throw new ArgumentNullException(nameof(info));
             }
 
-            if (!info.GetAccessors().All(accessor => accessor.IsOverridable()))
+            if (!info.GetAccessors().All(static accessor => accessor.IsOverridable()))
             {
                 throw new MemberAccessException();
             }
@@ -269,7 +269,7 @@ namespace NetExtender.Utilities.Core
                 throw new TargetParameterCountException();
             }
 
-            if (!info.GetAccessors().All(accessor => accessor.IsOverridable()))
+            if (!info.GetAccessors().All(static accessor => accessor.IsOverridable()))
             {
                 throw new MemberAccessException();
             }
@@ -405,7 +405,7 @@ namespace NetExtender.Utilities.Core
 
             static Boolean IsGenericMethod(MethodInfo info)
             {
-                return info.Name == nameof(Interlocked.CompareExchange) && info.IsGenericMethod;
+                return info is { Name: nameof(Interlocked.CompareExchange), IsGenericMethod: true };
             }
 
             MethodInfo generic = typeof(Interlocked).GetMethods().Single(IsGenericMethod).MakeGenericMethod(handlertype);

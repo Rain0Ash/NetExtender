@@ -76,7 +76,7 @@ namespace NetExtender.Utilities.Types
 
         public static ParallelQuery<T> WhereNotNull<T>(this ParallelQuery<T?> query)
         {
-            return query.Where(item => item is not null)!;
+            return query.Where(static item => item is not null)!;
         }
     }
 }

@@ -204,7 +204,7 @@ namespace NetExtender.Configuration.Database.Configuration.Database
         {
             try
             {
-                return Storage.Select(entity => entity.Key).ToArray();
+                return Storage.Select(static entity => entity.Key).ToArray();
             }
             catch (DbException)
             {
@@ -220,7 +220,7 @@ namespace NetExtender.Configuration.Database.Configuration.Database
         {
             try
             {
-                return await Storage.Select(entity => entity.Key).ToArrayAsync(token).ConfigureAwait(false);
+                return await Storage.Select(static entity => entity.Key).ToArrayAsync(token).ConfigureAwait(false);
             }
             catch (DbException)
             {

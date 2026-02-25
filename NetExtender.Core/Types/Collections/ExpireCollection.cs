@@ -6,7 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using NetExtender.Types.Events;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 using NetExtender.Types.Timers;
 using NetExtender.Types.Timers.Interfaces;
 using NetExtender.Utilities.Types;

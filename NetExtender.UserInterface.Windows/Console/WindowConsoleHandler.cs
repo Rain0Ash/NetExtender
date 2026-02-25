@@ -4,7 +4,7 @@ using System.Drawing;
 using NetExtender.Types.Attributes;
 using NetExtender.Types.Console;
 using NetExtender.Types.Console.Interfaces;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 using NetExtender.UserInterface.Console.Interfaces;
 using NetExtender.Utilities.UserInterface;
 using NetExtender.Utilities.Windows;

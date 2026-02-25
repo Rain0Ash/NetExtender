@@ -16,7 +16,7 @@ namespace NetExtender.Utilities.Core
             }
             set
             {
-                HarmonyUtilities.Debugger = value;
+                HarmonySignatureUtilities.DebuggerIsAttachedSetter(value);
             }
         }
     }

@@ -57,7 +57,6 @@ namespace NetExtender.EntityFrameworkCore
         }
 
         public TimeSpan Timeout { get; init; }
-
         public IsolationLevel IsolationLevel { get; init; }
 
         public TransactionParameters(TransactionOptions options)

@@ -74,7 +74,7 @@ namespace NetExtender.Configuration.Builder
         public virtual IConfigBuilder Sort(IComparer<IConfigInfo>? comparer)
         {
             comparer ??= Comparer<IConfigInfo>.Default;
-            Internal.Sort(item => item.Config, comparer);
+            Internal.Sort(static item => item.Config, comparer);
             return this;
         }
 

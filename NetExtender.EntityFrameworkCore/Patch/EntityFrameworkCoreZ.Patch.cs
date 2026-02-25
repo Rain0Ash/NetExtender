@@ -7,8 +7,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
-using HarmonyLib;
-using NetExtender.Types.Exceptions;
+using NetExtender.Cecil;
+using NetExtender.Exceptions;
+using NetExtender.Harmony.Types.Interfaces;
 using NetExtender.Types.Reflection;
 using NetExtender.Types.Sets;
 using NetExtender.Utilities.Core;
@@ -47,7 +48,7 @@ namespace NetExtender.Patch
                     const BindingFlags binding = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
                     foreach (MethodInfo method in Manager.GetMethods(binding).Where(static method => method.Name.StartsWith(nameof(Signature.Add))))
                     {
-                        if (method.GetSafeParameters() is not { } parameters || parameters.Length != signature.Length || !ReflectionUtilities.IsVoid(method.ReturnType))
+                        if (method.GetSafeParameters() is not { } parameters || parameters.Length != signature.Length || !method.ReturnType.IsVoid())
                         {
                             continue;
                         }
@@ -66,7 +67,7 @@ namespace NetExtender.Patch
             {
                 get
                 {
-                    return Manager.Assembly.GetSafeTypes().FirstOrDefault(static type => type.GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic, typeof(Boolean), typeof(String).MakeByRefType(), new Predicate<Type>(static type => type.IsEnum), typeof(Boolean?), typeof(Boolean?), typeof(Boolean?), typeof(Boolean)).Any());
+                    return Manager.Assembly.GetCecilTypes().FirstOrDefault<MonoCecilType>(static type => type.Type is not null && type.Type.GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic, typeof(Boolean), typeof(String).MakeByRefType(), new Predicate<Type>(static type => type.IsEnum), typeof(Boolean?), typeof(Boolean?), typeof(Boolean?), typeof(Boolean)).Any());
                 }
             }
 
@@ -121,16 +122,16 @@ namespace NetExtender.Patch
                     return ReflectionPatchState.Failed;
                 }
 
-                Harmony harmony = new Harmony($"{nameof(NetExtender)}.{nameof(EntityFrameworkCore)}.{nameof(EntityFrameworkCoreZPatch)}");
+                IHarmony harmony = IHarmony.Create($"{nameof(NetExtender)}.{nameof(EntityFrameworkCore)}.{nameof(EntityFrameworkCoreZPatch)}");
 
-                if (!harmony.Instructions<OrderedSet<MethodInfo>>(access, Getters, out OrderedSet<MethodInfo>? getters) || getters.Count <= 0)
+                if (!harmony.Instructions<OrderedSet<MethodInfo>>(Getters, access, out OrderedSet<MethodInfo>? getters) || getters.Count <= 0)
                 {
                     return ReflectionPatchState.Failed;
                 }
 
                 foreach (MethodInfo getter in getters)
                 {
-                    ImmutableArray<CodeInstruction> instructions = harmony.Instructions(getter);
+                    ImmutableArray<IHarmonyInstruction> instructions = harmony.Instructions(getter);
                     if (Field(instructions) is { } field)
                     {
                         field.SetValue(null, true);
@@ -141,13 +142,13 @@ namespace NetExtender.Patch
                 return ReflectionPatchState.Apply;
             }
 
-            protected virtual Boolean Getters(ImmutableArray<CodeInstruction> instructions, [MaybeNullWhen(false)] out OrderedSet<MethodInfo> result)
+            protected virtual Boolean Getters(ImmutableArray<IHarmonyInstruction> instructions, [MaybeNullWhen(false)] out OrderedSet<MethodInfo> result)
             {
                 result = new OrderedSet<MethodInfo>();
 
-                foreach (CodeInstruction instruction in instructions)
+                foreach (IHarmonyInstruction instruction in instructions)
                 {
-                    if (instruction.opcode != OpCodes.Call || instruction.operand is not MethodInfo method)
+                    if (instruction.OpCode != OpCodes.Call || instruction.Operand is not MethodInfo method)
                     {
                         continue;
                     }
@@ -164,11 +165,11 @@ namespace NetExtender.Patch
                 return result.Count > 0;
             }
 
-            protected virtual FieldInfo? Field(ImmutableArray<CodeInstruction> instructions)
+            protected virtual FieldInfo? Field(ImmutableArray<IHarmonyInstruction> instructions)
             {
-                foreach (CodeInstruction instruction in instructions)
+                foreach (IHarmonyInstruction instruction in instructions)
                 {
-                    if (instruction.opcode == OpCodes.Ldsfld && instruction.operand is FieldInfo field)
+                    if (instruction.OpCode == OpCodes.Ldsfld && instruction.Operand is FieldInfo field)
                     {
                         return field;
                     }

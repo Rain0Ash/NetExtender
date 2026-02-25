@@ -14,10 +14,17 @@ namespace NetExtender.AspNetCore.Identity
 {
     public abstract class JWTAuthenticationHandler : JWTAuthenticationHandler<JWTAuthenticationOptions>
     {
+#if NET8_0_OR_GREATER
+        protected JWTAuthenticationHandler(ILoggerFactory logger, UrlEncoder url, IOptionsMonitor<JWTAuthenticationOptions> options)
+            : base(logger, url, options)
+        {
+        }
+#else
         protected JWTAuthenticationHandler(ILoggerFactory logger, UrlEncoder url, ISystemClock clock, IOptionsMonitor<JWTAuthenticationOptions> options)
             : base(logger, url, clock, options)
         {
         }
+#endif
     }
 
     public abstract class JWTAuthenticationHandler<T> : AuthenticationHandler<T> where T : JWTAuthenticationOptions, new()
@@ -38,10 +45,17 @@ namespace NetExtender.AspNetCore.Identity
         protected abstract ITicketFactory Ticket { get; }
         protected abstract IJWTDecoder Decoder { get; }
 
+#if NET8_0_OR_GREATER
+        protected JWTAuthenticationHandler(ILoggerFactory logger, UrlEncoder url, IOptionsMonitor<T> options)
+            : base(options, logger, url)
+        {
+        }
+#else
         protected JWTAuthenticationHandler(ILoggerFactory logger, UrlEncoder url, ISystemClock clock, IOptionsMonitor<T> options)
             : base(options, logger, url, clock)
         {
         }
+#endif
 
         protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
         {

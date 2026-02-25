@@ -248,7 +248,7 @@ namespace NetExtender.Types.Network
                     }
 
                     Int32 code = Int32.Parse(current.ToString(), CultureInfo.InvariantCulture);
-                    response.StatusCode = code >= 100 && code <= 1000 ? (HttpStatusCode) code : throw new FormatException($"Invalid HTTP status code: '{code}'. The status code must be between {100} and {1000}.");
+                    response.StatusCode = code is >= 100 and <= 1000 ? (HttpStatusCode) code : throw new FormatException($"Invalid HTTP status code: '{code}'. The status code must be between {100} and {1000}.");
                     current.Clear();
                     state = HttpStatusLineState.ReasonPhrase;
 

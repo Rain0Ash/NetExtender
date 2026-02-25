@@ -1,7 +1,7 @@
 using System;
 using System.Net.Http;
 using System.Runtime.CompilerServices;
-using NetExtender.CQRS.Interfaces;
+using NetExtender.Types.Entities.Interfaces;
 using NetExtender.Types.Network.API.Interfaces;
 using NetExtender.Utilities.Network;
 using NetExtender.Utilities.Types;
@@ -9,8 +9,8 @@ using NetExtender.Utilities.Types;
 namespace NetExtender.Types.Network.API
 {
     //TODO:
-    public class DynamicHttpApiEndpoint<TRequest, TResponse> : DynamicHttpApiEndpointBase<TRequest, TResponse> where TRequest : IEntityCQRS
-    { 
+    public class DynamicHttpApiEndpoint<TRequest, TResponse> : DynamicHttpApiEndpointBase<TRequest, TResponse> where TRequest : IEntity
+    {
         public new virtual String? Controller
         {
             get
@@ -80,7 +80,7 @@ namespace NetExtender.Types.Network.API
         }
     }
 
-    public class DynamicHttpApiEndpointBase<TRequest, TResponse> : HttpApiEndpoint<TRequest, TResponse> where TRequest : IEntityCQRS
+    public class DynamicHttpApiEndpointBase<TRequest, TResponse> : HttpApiEndpoint<TRequest, TResponse> where TRequest : IEntity
     {
         private protected readonly String? _controller;
         public sealed override String? Controller
@@ -152,7 +152,7 @@ namespace NetExtender.Types.Network.API
         }
     }
 
-    public abstract class HttpApiEndpoint<TRequest, TResponse> : IHttpApiEndpoint<TRequest, TResponse> where TRequest : IEntityCQRS
+    public abstract class HttpApiEndpoint<TRequest, TResponse> : IHttpApiEndpoint<TRequest, TResponse> where TRequest : IEntity
     {
         public abstract String? Controller { get; }
         public abstract String? Name { get; }

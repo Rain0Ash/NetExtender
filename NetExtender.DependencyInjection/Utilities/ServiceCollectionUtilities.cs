@@ -11,7 +11,7 @@ using System.Runtime.CompilerServices;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NetExtender.DependencyInjection.Interfaces;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 
 namespace NetExtender.Utilities.Types
 {
@@ -165,7 +165,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(services));
             }
 
-            return types is not null ? types.WhereNotNull().Aggregate(services, (current, type) => current.Register(type)) : services;
+            return types is not null ? types.WhereNotNull().Aggregate(services, static (current, type) => current.Register(type)) : services;
         }
 
         public static IServiceCollection Register(this IServiceCollection services, Assembly assembly)
@@ -180,7 +180,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(assembly));
             }
 
-            return assembly.DefinedTypes.Aggregate(services, (current, type) => current.Register(type));
+            return assembly.DefinedTypes.Aggregate(services, static (current, type) => current.Register(type));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -196,7 +196,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(services));
             }
 
-            return assemblies is not null ? assemblies.WhereNotNull().Aggregate(services, (current, assembly) => current.Register(assembly)) : services;
+            return assemblies is not null ? assemblies.WhereNotNull().Aggregate(services, static (current, assembly) => current.Register(assembly)) : services;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -435,6 +435,168 @@ namespace NetExtender.Utilities.Types
             return services.Add(service.GetType(), service.Lifetime);
         }
 
+        public static IServiceCollection Add(this IServiceCollection services, Type service, Object? key, ServiceLifetime lifetime)
+        {
+            if (services is null)
+            {
+                throw new ArgumentNullException(nameof(services));
+            }
+
+            if (service is null)
+            {
+                throw new ArgumentNullException(nameof(service));
+            }
+
+            return lifetime switch
+            {
+                ServiceLifetime.Transient => services.AddKeyedTransient(service, key),
+                ServiceLifetime.Scoped => services.AddKeyedScoped(service, key),
+                ServiceLifetime.Singleton => services.AddKeyedSingleton(service, key),
+                _ => throw new EnumUndefinedOrNotSupportedException<ServiceLifetime>(lifetime, nameof(lifetime), null)
+            };
+        }
+
+        public static IServiceCollection Add(this IServiceCollection services, Type service, Object? key, Type implementation, ServiceLifetime lifetime)
+        {
+            if (services is null)
+            {
+                throw new ArgumentNullException(nameof(services));
+            }
+
+            if (service is null)
+            {
+                throw new ArgumentNullException(nameof(service));
+            }
+
+            if (implementation is null)
+            {
+                throw new ArgumentNullException(nameof(implementation));
+            }
+
+            return lifetime switch
+            {
+                ServiceLifetime.Transient => services.AddKeyedTransient(service, key, implementation),
+                ServiceLifetime.Scoped => services.AddKeyedScoped(service, key, implementation),
+                ServiceLifetime.Singleton => services.AddKeyedSingleton(service, key, implementation),
+                _ => throw new EnumUndefinedOrNotSupportedException<ServiceLifetime>(lifetime, nameof(lifetime), null)
+            };
+        }
+
+        public static IServiceCollection Add(this IServiceCollection services, Type service, Object? key, Func<IServiceProvider, Object?, Object> factory, ServiceLifetime lifetime)
+        {
+            if (services is null)
+            {
+                throw new ArgumentNullException(nameof(services));
+            }
+
+            if (service is null)
+            {
+                throw new ArgumentNullException(nameof(service));
+            }
+
+            if (factory is null)
+            {
+                throw new ArgumentNullException(nameof(factory));
+            }
+
+            return lifetime switch
+            {
+                ServiceLifetime.Transient => services.AddKeyedTransient(service, key, factory),
+                ServiceLifetime.Scoped => services.AddKeyedScoped(service, key, factory),
+                ServiceLifetime.Singleton => services.AddKeyedSingleton(service, key, factory),
+                _ => throw new EnumUndefinedOrNotSupportedException<ServiceLifetime>(lifetime, nameof(lifetime), null)
+            };
+        }
+
+        public static IServiceCollection Add<TService>(this IServiceCollection services, Object? key, ServiceLifetime lifetime) where TService : class
+        {
+            if (services is null)
+            {
+                throw new ArgumentNullException(nameof(services));
+            }
+
+            return lifetime switch
+            {
+                ServiceLifetime.Transient => services.AddKeyedTransient<TService>(key),
+                ServiceLifetime.Scoped => services.AddKeyedScoped<TService>(key),
+                ServiceLifetime.Singleton => services.AddKeyedSingleton<TService>(key),
+                _ => throw new EnumUndefinedOrNotSupportedException<ServiceLifetime>(lifetime, nameof(lifetime), null)
+            };
+        }
+
+        public static IServiceCollection Add<TService>(this IServiceCollection services, Object? key, Func<IServiceProvider, Object?, TService> factory, ServiceLifetime lifetime) where TService : class
+        {
+            if (services is null)
+            {
+                throw new ArgumentNullException(nameof(services));
+            }
+
+            if (factory is null)
+            {
+                throw new ArgumentNullException(nameof(factory));
+            }
+
+            return lifetime switch
+            {
+                ServiceLifetime.Transient => services.AddKeyedTransient(key, factory),
+                ServiceLifetime.Scoped => services.AddKeyedScoped(key, factory),
+                ServiceLifetime.Singleton => services.AddKeyedSingleton(key, factory),
+                _ => throw new EnumUndefinedOrNotSupportedException<ServiceLifetime>(lifetime, nameof(lifetime), null)
+            };
+        }
+
+        public static IServiceCollection Add<TService, TImplementation>(this IServiceCollection services, Object? key, ServiceLifetime lifetime) where TService : class where TImplementation : class, TService
+        {
+            if (services is null)
+            {
+                throw new ArgumentNullException(nameof(services));
+            }
+
+            return lifetime switch
+            {
+                ServiceLifetime.Transient => services.AddKeyedTransient<TService, TImplementation>(key),
+                ServiceLifetime.Scoped => services.AddKeyedScoped<TService, TImplementation>(key),
+                ServiceLifetime.Singleton => services.AddKeyedSingleton<TService, TImplementation>(key),
+                _ => throw new EnumUndefinedOrNotSupportedException<ServiceLifetime>(lifetime, nameof(lifetime), null)
+            };
+        }
+
+        public static IServiceCollection Add<TService, TImplementation>(this IServiceCollection services, Object? key, Func<IServiceProvider, Object?, TImplementation> factory, ServiceLifetime lifetime) where TService : class where TImplementation : class, TService
+        {
+            if (services is null)
+            {
+                throw new ArgumentNullException(nameof(services));
+            }
+
+            if (factory is null)
+            {
+                throw new ArgumentNullException(nameof(factory));
+            }
+
+            return lifetime switch
+            {
+                ServiceLifetime.Transient => services.AddKeyedTransient<TService, TImplementation>(key, factory),
+                ServiceLifetime.Scoped => services.AddKeyedScoped<TService, TImplementation>(key, factory),
+                ServiceLifetime.Singleton => services.AddKeyedSingleton<TService, TImplementation>(key, factory),
+                _ => throw new EnumUndefinedOrNotSupportedException<ServiceLifetime>(lifetime, nameof(lifetime), null)
+            };
+        }
+
+        public static IServiceCollection Add(this IServiceCollection services, Object? key, IDependencyService service)
+        {
+            if (services is null)
+            {
+                throw new ArgumentNullException(nameof(services));
+            }
+
+            if (service is null)
+            {
+                throw new ArgumentNullException(nameof(service));
+            }
+
+            return services.Add(service.GetType(), key, service.Lifetime);
+        }
+
         public static IServiceCollection AddIf(this IServiceCollection services, Func<IServiceCollection, IServiceCollection> modifier, Boolean condition)
         {
             if (services is null)
@@ -505,6 +667,77 @@ namespace NetExtender.Utilities.Types
             return !condition ? @if(services) : @else(services);
         }
 
+        public static IServiceCollection AddIf(this IServiceCollection services, Object? key, Func<IServiceCollection, Object?, IServiceCollection> modifier, Boolean condition)
+        {
+            if (services is null)
+            {
+                throw new ArgumentNullException(nameof(services));
+            }
+
+            if (modifier is null)
+            {
+                throw new ArgumentNullException(nameof(modifier));
+            }
+
+            return condition ? modifier(services, key) : services;
+        }
+
+        public static IServiceCollection AddIf(this IServiceCollection services, Object? key, Func<IServiceCollection, Object?, IServiceCollection> @if, Func<IServiceCollection, Object?, IServiceCollection> @else, Boolean condition)
+        {
+            if (services is null)
+            {
+                throw new ArgumentNullException(nameof(services));
+            }
+
+            if (@if is null)
+            {
+                throw new ArgumentNullException(nameof(@if));
+            }
+
+            if (@else is null)
+            {
+                throw new ArgumentNullException(nameof(@else));
+            }
+
+            return condition ? @if(services, key) : @else(services, key);
+        }
+
+        public static IServiceCollection AddIfNot(this IServiceCollection services, Object? key, Func<IServiceCollection, Object?, IServiceCollection> modifier, Boolean condition)
+        {
+            if (services is null)
+            {
+                throw new ArgumentNullException(nameof(services));
+            }
+
+            if (modifier is null)
+            {
+                throw new ArgumentNullException(nameof(modifier));
+            }
+
+            return !condition ? modifier(services, key) : services;
+        }
+
+        public static IServiceCollection AddIfNot(this IServiceCollection services, Object? key, Func<IServiceCollection, Object?, IServiceCollection> @if, Func<IServiceCollection, Object?, IServiceCollection> @else, Boolean condition)
+        {
+            if (services is null)
+            {
+                throw new ArgumentNullException(nameof(services));
+            }
+
+            if (@if is null)
+            {
+                throw new ArgumentNullException(nameof(@if));
+            }
+
+            if (@else is null)
+            {
+                throw new ArgumentNullException(nameof(@else));
+            }
+
+            return !condition ? @if(services, key) : @else(services, key);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IServiceCollection AddLogging(this IServiceCollection services)
         {
             return AddLogging<Object?>(services);
@@ -517,7 +750,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(services));
             }
 
-            return services.AddSingleton<ILogger>(provider => provider.GetRequiredService<ILogger<T>>());
+            return services.AddSingleton<ILogger>(static provider => provider.GetRequiredService<ILogger<T>>());
         }
     }
 }

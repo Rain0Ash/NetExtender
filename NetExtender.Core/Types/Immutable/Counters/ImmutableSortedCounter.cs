@@ -9,7 +9,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using NetExtender.Types.Counters;
 using NetExtender.Types.Counters.Interfaces;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 using NetExtender.Types.Immutable.Counters.Interfaces;
 using NetExtender.Utilities.Types;
 

@@ -4,18 +4,18 @@ using System.Net;
 using System.Runtime.Serialization;
 using NetExtender.AspNetCore.Identity.Interfaces;
 using NetExtender.JWT;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 
 namespace NetExtender.AspNetCore.Identity
 {
     [Serializable]
-    public class IdentityException<T> : BusinessStatusException<T>, IIdentityException
+    public abstract class IdentityException : BusinessCustomException, IIdentityException
     {
-        public virtual IdentityException.Known Known
+        public virtual Id Known
         {
             get
             {
-                return IdentityException.Known.Unknown;
+                return Id.Unknown;
             }
         }
 
@@ -35,38 +35,38 @@ namespace NetExtender.AspNetCore.Identity
             }
         }
 
-        public IdentityException(HttpStatusCode status, T code)
-            : base(status, code)
+        protected IdentityException(HttpStatusCode status)
+            : base(status)
         {
         }
 
-        public IdentityException(String? message, HttpStatusCode status, T code)
-            : base(message, status, code)
+        protected IdentityException(String? message, HttpStatusCode status)
+            : base(message, status)
         {
         }
 
-        public IdentityException(String? message, HttpStatusCode status, T code, Exception? exception)
-            : base(message, status, code, exception)
+        protected IdentityException(String? message, HttpStatusCode status, Exception? exception)
+            : base(message, status, exception)
         {
         }
 
-        public IdentityException(String? message, HttpStatusCode status, T code, BusinessException? exception)
-            : base(message, status, code, exception)
+        protected IdentityException(String? message, HttpStatusCode status, BusinessException? exception)
+            : base(message, status, exception)
         {
         }
 
-        public IdentityException(String? message, HttpStatusCode status, T code, params BusinessException?[]? inner)
-            : base(message, status, code, inner)
+        protected IdentityException(String? message, HttpStatusCode status, params BusinessException?[]? inner)
+            : base(message, status, inner)
         {
         }
 
-        public IdentityException(String? message, HttpStatusCode status, T code, Exception? exception, params BusinessException?[]? inner)
-            : base(message, status, code, exception, inner)
+        protected IdentityException(String? message, HttpStatusCode status, Exception? exception, params BusinessException?[]? inner)
+            : base(message, status, exception, inner)
         {
         }
 
-        public IdentityException(String? message, HttpStatusCode status, T code, BusinessException? exception, params BusinessException?[]? inner)
-            : base(message, status, code, exception, inner)
+        protected IdentityException(String? message, HttpStatusCode status, BusinessException? exception, params BusinessException?[]? inner)
+            : base(message, status, exception, inner)
         {
         }
 
@@ -78,11 +78,8 @@ namespace NetExtender.AspNetCore.Identity
             : base(info, context)
         {
         }
-    }
 
-    public static class IdentityException
-    {
-        public enum Known
+        public new enum Id : Byte
         {
             Unknown,
             Builder,
@@ -100,7 +97,7 @@ namespace NetExtender.AspNetCore.Identity
         }
 
         [return: NotNullIfNotNull("value")]
-        public static IdentityException<String?>? From(JWTException? value)
+        public static IdentityException? From(JWTException? value)
         {
             return value switch
             {
@@ -116,7 +113,7 @@ namespace NetExtender.AspNetCore.Identity
         }
 
         [return: NotNullIfNotNull("value")]
-        public static IdentityException<String?>? From(JWTException? value, Boolean message)
+        public static IdentityException? From(JWTException? value, Boolean message)
         {
             return message ? value switch
             {
@@ -129,38 +126,6 @@ namespace NetExtender.AspNetCore.Identity
                 JWTVerifyException exception => new IdentityTokenVerifyException(exception.Message, exception),
                 _ => new IdentityUnknownException(value.Message, value)
             } : From(value);
-        }
-
-        [return: NotNullIfNotNull("value")]
-        public static IdentityException<T>? From<T>(JWTException? value, T code)
-        {
-            return value switch
-            {
-                null => null,
-                JWTBuilderException exception => new IdentityBuilderException<T>(exception.Message, code, exception),
-                JWTFactoryException exception => new IdentityFactoryException<T>(exception.Message, code, exception),
-                JWTFormatException exception => new IdentityTokenBadFormatException<T>(exception.Message, code, exception),
-                JWTExpiredException exception => new IdentityTokenExpiredException<T>(exception.Message, code, exception),
-                JWTNotYetValidException exception => new IdentityTokenNotYetValidException<T>(exception.Message, code, exception),
-                JWTVerifyException exception => new IdentityTokenVerifyException<T>(exception.Message, code, exception),
-                _ => new IdentityUnknownException<T>(value.Message, code, value)
-            };
-        }
-
-        [return: NotNullIfNotNull("value")]
-        public static IdentityException<T>? From<T>(JWTException? value, T code, Boolean message)
-        {
-            return message ? value switch
-            {
-                null => null,
-                JWTBuilderException exception => new IdentityBuilderException<T>(exception.Message, code, exception),
-                JWTFactoryException exception => new IdentityFactoryException<T>(exception.Message, code, exception),
-                JWTFormatException exception => new IdentityTokenBadFormatException<T>(exception.Message, code, exception),
-                JWTExpiredException exception => new IdentityTokenExpiredException<T>(exception.Message, code, exception),
-                JWTNotYetValidException exception => new IdentityTokenNotYetValidException<T>(exception.Message, code, exception),
-                JWTVerifyException exception => new IdentityTokenVerifyException<T>(exception.Message, code, exception),
-                _ => new IdentityUnknownException<T>(value.Message, code, value)
-            } : From(value, code);
         }
     }
 }

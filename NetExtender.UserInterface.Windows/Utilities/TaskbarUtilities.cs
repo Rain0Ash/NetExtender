@@ -4,7 +4,7 @@
 using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 using NetExtender.UserInterface;
 using NetExtender.UserInterface.Interfaces;
 using NetExtender.UserInterface.Windows.Taskbar;
@@ -64,7 +64,7 @@ namespace NetExtender.Utilities.UserInterface
         }
 
         /// <summary>
-        /// Displays or updates a progress bar hosted in a taskbar button of the given window handle 
+        /// Displays or updates a progress bar hosted in a taskbar button of the given window handle
         /// to show the specific percentage completed of the full operation.
         /// </summary>
         /// <param name="handle">The handle of the window whose associated taskbar button is being used as a progress indicator.
@@ -88,8 +88,8 @@ namespace NetExtender.Utilities.UserInterface
         }
 
         /// <summary>
-        /// Sets the type and state of the progress indicator displayed on a taskbar button 
-        /// of the given window handle 
+        /// Sets the type and state of the progress indicator displayed on a taskbar button
+        /// of the given window handle
         /// </summary>
         /// <param name="handle">The handle of the window whose associated taskbar button is being used as a progress indicator.
         /// This window belong to a calling process associated with the button's application and must be already loaded.</param>

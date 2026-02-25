@@ -4,7 +4,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using NetExtender.AspNetCore.Identity.Interfaces;
-using NetExtender.DependencyInjection.Attributes;
+using NetExtender.DependencyInjection;
 using NetExtender.JWT;
 using NetExtender.JWT.Interfaces;
 using Newtonsoft.Json;

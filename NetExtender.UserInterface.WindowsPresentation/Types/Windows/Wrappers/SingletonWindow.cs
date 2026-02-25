@@ -4,7 +4,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 using NetExtender.Types.Times;
 using NetExtender.UserInterface.Utilities;
 using NetExtender.Utilities.Types;

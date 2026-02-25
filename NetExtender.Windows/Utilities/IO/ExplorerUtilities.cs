@@ -128,11 +128,11 @@ namespace NetExtender.Utilities.Windows.IO
                 throw new ArgumentNullException(nameof(files));
             }
 
-            FileInfo[] values = files.Where(item => item?.Directory?.FullName is not null)
-                .WhereSameBy(item => item!.Directory!.FullName, StringComparer.FromComparison(comparison))
-                .DistinctBy(item => item!.FullName).ToArray()!;
+            FileInfo[] values = files.Where(static item => item?.Directory?.FullName is not null)
+                .WhereSameBy(static item => item!.Directory!.FullName, StringComparer.FromComparison(comparison))
+                .DistinctBy(static item => item!.FullName).ToArray()!;
 
-            return values.Length > 0 && OpenExplorerWithSelection(values[0].Directory!.FullName, values.Select(item => item.Name), comparison);
+            return values.Length > 0 && OpenExplorerWithSelection(values[0].Directory!.FullName, values.Select(static item => item.Name), comparison);
         }
 
         public static Boolean OpenExplorerWithSelection(params FileInfo[] files)

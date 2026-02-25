@@ -5,6 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Xml.Serialization;
 using NetExtender.Utilities.Serialization;
 using NetExtender.Utilities.Types;
 using Newtonsoft.Json;
@@ -27,7 +29,8 @@ namespace NetExtender.Configuration.Common
         public String? Key { get; }
         public ImmutableArray<String> Sections { get; }
 
-        [JsonIgnore]
+        [JsonIgnore, IgnoreDataMember, XmlIgnore, SoapIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public Int32 Length
         {
             get
@@ -72,7 +75,7 @@ namespace NetExtender.Configuration.Common
                 return compare;
             }
 
-            foreach ((String? first, String? second) in Sections.Zip(other.Sections))
+            foreach ((String first, String second) in Sections.Zip(other.Sections))
             {
                 compare = String.Compare(first, second, StringComparison.Ordinal);
 

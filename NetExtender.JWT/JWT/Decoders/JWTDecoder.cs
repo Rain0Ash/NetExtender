@@ -7,7 +7,7 @@ using NetExtender.JWT.Algorithms;
 using NetExtender.JWT.Algorithms.Interfaces;
 using NetExtender.JWT.Interfaces;
 using NetExtender.JWT.Utilities;
-using NetExtender.Types.Exceptions;
+using NetExtender.Exceptions;
 using NetExtender.Utilities.Core;
 using NetExtender.Utilities.Types;
 
