@@ -68,10 +68,12 @@ namespace NetExtender.Utilities.Types
                 return ServiceStrategy.New;
             }
 
+            ServiceStrategy strategy;
             if (@interface.Type is not { IsInterface: true } service)
             {
                 service = @interface.Type;
-                return ImmutableList<ServiceDescriptor>.Empty.AddIfNotNull(service is not null ? Metadata.Set(new ServiceDescriptor(service, key, implementation, lifetime), GetStrategyFromInterface(@interface), null, 0) : null);
+                strategy = GetStrategyFromInterface(@interface);
+                return ImmutableList<ServiceDescriptor>.Empty.AddIfNotNull(service is not null ? Metadata.Set(new ServiceDescriptor(service, key, implementation, lifetime), strategy, ServiceDependencyInfoAttribute.ToSingle(strategy), 0) : null);
             }
 
             if (options.Inherit.TryGetValue(@interface, out ReflectionInheritResult? result) && !result.Inherit.Types.Contains(type))
@@ -82,7 +84,7 @@ namespace NetExtender.Utilities.Types
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             static Boolean IsServiceDependency(MonoCecilType @interface)
             {
-                return @interface.IsGenericType && @interface.GetGenericTypeDefinition() == typeof(IDependencyService<>);
+                return @interface.TryGetGenericTypeDefinition() == typeof(IDependencyService<>);
             }
 
             Dictionary<(MonoCecilType Type, Object? Key), ServiceDescriptor> descriptors = new Dictionary<(MonoCecilType Type, Object? Key), ServiceDescriptor>();
@@ -96,30 +98,69 @@ namespace NetExtender.Utilities.Types
 
                 if (argument.Type is { } argtype)
                 {
-                    descriptors.TryAdd((argument, key), Metadata.Set(new ServiceDescriptor(argtype, key, implementation, lifetime), GetStrategyFromInterface(argument), null, 0));
+                    strategy = GetStrategyFromInterface(argument);
+                    descriptors.TryAdd((argument, key), Metadata.Set(new ServiceDescriptor(argtype, key, implementation, lifetime), strategy, ServiceDependencyInfoAttribute.ToSingle(strategy), 0));
                 }
             }
 
-            descriptors.TryAdd((@interface, key), Metadata.Set(new ServiceDescriptor(service, key, implementation, lifetime), GetStrategyFromInterface(@interface), null, 0));
+            strategy = GetStrategyFromInterface(@interface);
+            descriptors.TryAdd((@interface, key), Metadata.Set(new ServiceDescriptor(service, key, implementation, lifetime), strategy, ServiceDependencyInfoAttribute.ToSingle(strategy), 0));
             return descriptors.Values.ToImmutableList();
         }
 
         private static readonly ImmutableDictionary<Type, ServiceStrategy> InterfaceToStrategy = new Dictionary<Type, ServiceStrategy>
         {
+            { typeof(IDependencyService), ServiceStrategy.New },
+            { typeof(IDependencyService<>), ServiceStrategy.New },
+            { typeof(IMultiDependencyService<>), ServiceStrategy.Multi },
+            { typeof(ISingleDependencyService<>), ServiceStrategy.Single },
+            { typeof(IReplaceDependencyService<>), ServiceStrategy.Replace },
+            { typeof(IMultiReplaceDependencyService<>), ServiceStrategy.MultiReplace },
+
+            { typeof(ITransient), ServiceStrategy.New },
+            { typeof(ITransient<>), ServiceStrategy.New },
             { typeof(IMultiTransient<>), ServiceStrategy.Multi },
             { typeof(ISingleTransient<>), ServiceStrategy.Single },
             { typeof(IReplaceTransient<>), ServiceStrategy.Replace },
             { typeof(IMultiReplaceTransient<>), ServiceStrategy.MultiReplace },
 
+            { typeof(IScoped), ServiceStrategy.New },
+            { typeof(IScoped<>), ServiceStrategy.New },
             { typeof(IMultiScoped<>), ServiceStrategy.Multi },
             { typeof(ISingleScoped<>), ServiceStrategy.Single },
             { typeof(IReplaceScoped<>), ServiceStrategy.Replace },
             { typeof(IMultiReplaceScoped<>), ServiceStrategy.MultiReplace },
 
+            { typeof(ISingleton), ServiceStrategy.New },
+            { typeof(ISingleton<>), ServiceStrategy.New },
             { typeof(IMultiSingleton<>), ServiceStrategy.Multi },
             { typeof(ISingleSingleton<>), ServiceStrategy.Single },
             { typeof(IReplaceSingleton<>), ServiceStrategy.Replace },
             { typeof(IMultiReplaceSingleton<>), ServiceStrategy.MultiReplace }
+        }.ToImmutableDictionary();
+
+        private static readonly ImmutableDictionary<Type, ServiceLifetime> InterfaceToLifetime = new Dictionary<Type, ServiceLifetime>
+        {
+            { typeof(ITransient), ServiceLifetime.Transient },
+            { typeof(ITransient<>), ServiceLifetime.Transient },
+            { typeof(IMultiTransient<>), ServiceLifetime.Transient },
+            { typeof(ISingleTransient<>), ServiceLifetime.Transient },
+            { typeof(IReplaceTransient<>), ServiceLifetime.Transient },
+            { typeof(IMultiReplaceTransient<>), ServiceLifetime.Transient },
+
+            { typeof(IScoped), ServiceLifetime.Scoped },
+            { typeof(IScoped<>), ServiceLifetime.Scoped },
+            { typeof(IMultiScoped<>), ServiceLifetime.Scoped },
+            { typeof(ISingleScoped<>), ServiceLifetime.Scoped },
+            { typeof(IReplaceScoped<>), ServiceLifetime.Scoped },
+            { typeof(IMultiReplaceScoped<>), ServiceLifetime.Scoped },
+
+            { typeof(ISingleton), ServiceLifetime.Singleton },
+            { typeof(ISingleton<>), ServiceLifetime.Singleton },
+            { typeof(IMultiSingleton<>), ServiceLifetime.Singleton },
+            { typeof(ISingleSingleton<>), ServiceLifetime.Singleton },
+            { typeof(IReplaceSingleton<>), ServiceLifetime.Singleton },
+            { typeof(IMultiReplaceSingleton<>), ServiceLifetime.Singleton }
         }.ToImmutableDictionary();
 
         // ReSharper disable once CognitiveComplexity
@@ -176,6 +217,67 @@ namespace NetExtender.Utilities.Types
                     if (split.Lifetime is { } lifetime)
                     {
                         descriptors.Add(new ServiceDescriptor(implementation, implementation, lifetime));
+                    }
+
+                    interfaces = interfaces.Except(split.Transient).Except(split.Scoped).Except(split.Singleton);
+                    foreach (MonoCecilType @interface in interfaces)
+                    {
+                        if (!@interface.IsGenericType || @interface.GetGenericTypeDefinition().Type is not { } generic)
+                        {
+                            continue;
+                        }
+
+                        if (!InterfaceToStrategy.TryGetValue(generic, out ServiceStrategy strategy) || !InterfaceToLifetime.TryGetValue(generic, out lifetime))
+                        {
+                            continue;
+                        }
+
+                        switch (@interface.Generics[0].Type)
+                        {
+                            case { IsInterface: true } service:
+                            {
+                                descriptors.Add(Metadata.Set(new ServiceDescriptor(service, null, implementation, lifetime), strategy, ServiceDependencyInfoAttribute.ToSingle(strategy), 0));
+                                break;
+                            }
+                            case { IsInterface: false } service:
+                            {
+                                throw new TypeNotSupportedException(service, $"Type '{service}' must be interface.");
+                            }
+                            default:
+                            {
+                                break;
+                            }
+                        }
+
+                        foreach (MonoCecilType @base in @interface.Interfaces)
+                        {
+                            if (!@base.IsGenericType || (generic = @base.GetGenericTypeDefinition().Type) is null)
+                            {
+                                continue;
+                            }
+
+                            if (!InterfaceToStrategy.TryGetValue(generic, out strategy) || !InterfaceToLifetime.TryGetValue(generic, out lifetime))
+                            {
+                                continue;
+                            }
+
+                            switch (@base.Generics[0].Type)
+                            {
+                                case { IsInterface: true } service:
+                                {
+                                    descriptors.Add(Metadata.Set(new ServiceDescriptor(service, null, implementation, lifetime), strategy, ServiceDependencyInfoAttribute.ToSingle(strategy), 0));
+                                    break;
+                                }
+                                case { IsInterface: false } service:
+                                {
+                                    throw new TypeNotSupportedException(service, $"Type '{service}' must be interface.");
+                                }
+                                default:
+                                {
+                                    break;
+                                }
+                            }
+                        }
                     }
                 }
 
@@ -788,10 +890,69 @@ namespace NetExtender.Utilities.Types
             return VerifySort(services);
         }
 
+        private record SortData
+        {
+            [return: NotNullIfNotNull("value")]
+            public static implicit operator List<Int32>?(SortData? value)
+            {
+                return value?.Indexes;
+            }
+
+            private HashSet<Type>? _cover;
+            public HashSet<Type> Cover
+            {
+                get
+                {
+                    return _cover ??= new HashSet<Type>();
+                }
+            }
+
+            private List<Int32>? _indexes;
+            public List<Int32> Indexes
+            {
+                get
+                {
+                    return _indexes ??= new List<Int32>();
+                }
+            }
+
+            public ServiceDependsOnAttribute? Dependency { get; }
+
+            public Boolean Depends
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get
+                {
+                    return Dependency is { HasDependency: true };
+                }
+            }
+
+            public ImmutableArray<ServiceDependencyInfoAttribute> Attributes { get; }
+
+            public SortData(Type implementation)
+            {
+                Dependency = AttributeUtilities.GetCustomAttribute<ServiceDependsOnAttribute>(implementation);
+                Attributes = AttributeUtilities.GetCustomAttributes<ServiceDependencyInfoAttribute>(implementation).ToImmutableArray();
+
+                foreach (ServiceDependencyInfoAttribute attribute in Attributes)
+                {
+                    if (attribute.Key is null && attribute.Interface is { IsInterface: true })
+                    {
+                        Cover.Add(attribute.Interface);
+                    }
+                }
+            }
+
+            public List<Int32>.Enumerator GetEnumerator()
+            {
+                return Indexes.GetEnumerator();
+            }
+        }
+
         [SuppressMessage("ReSharper", "CognitiveComplexity")]
         private static IServiceCollection VerifySort(IServiceCollection services)
         {
-            Dictionary<Type, List<Int32>> storage = new Dictionary<Type, List<Int32>>();
+            Dictionary<Type, SortData> storage = new Dictionary<Type, SortData>();
 
             ServiceDescriptor[] descriptors = services.ToArray();
             for (Int32 i = 0; i < descriptors.Length; i++)
@@ -801,15 +962,15 @@ namespace NetExtender.Utilities.Types
                     continue;
                 }
 
-                if (!storage.TryGetValue(implementation, out List<Int32>? container))
+                if (!storage.TryGetValue(implementation, out SortData? data))
                 {
-                    storage[implementation] = container = new List<Int32>();
+                    storage[implementation] = data = new SortData(implementation);
                 }
 
-                container.Add(i);
+                data.Indexes.Add(i);
             }
 
-            List<Exception> errors = new List<Exception>(32);
+            List<Exception> errors = new List<Exception>(64);
 
             HashSet<Int32> @fixed = new HashSet<Int32>(1024);
             foreach (IGrouping<(Type ServiceType, Object? ServiceKey), (Type ServiceType, Object? ServiceKey, Int32 Index)> group in descriptors.Select(static (descriptor, index) => (descriptor.ServiceType, descriptor.ServiceKey, Index: index)).GroupBy(static descriptor => (descriptor.ServiceType, descriptor.ServiceKey)))
@@ -822,6 +983,11 @@ namespace NetExtender.Utilities.Types
                     {
                         case null:
                         {
+                            if (descriptors[index].ImplementationType is { } implementation && storage.TryGetValue(implementation, out SortData? data) && data.Depends && descriptors[index].ServiceKey is null && descriptors[index].ServiceType != implementation && !data.Cover.Contains(descriptors[index].ServiceType))
+                            {
+                                continue;
+                            }
+
                             maximum = Math.Max(maximum ?? index, index);
                             continue;
                         }
@@ -900,9 +1066,9 @@ namespace NetExtender.Utilities.Types
                 }
             }
 
-            foreach (Type implementation in storage.Keys)
+            foreach ((Type implementation, SortData data) in storage)
             {
-                foreach (ServiceDependencyInfoAttribute attribute in AttributeUtilities.GetCustomAttributes<ServiceDependencyInfoAttribute>(implementation))
+                foreach (ServiceDependencyInfoAttribute attribute in data.Attributes)
                 {
                     Type service = attribute.Interface ?? implementation;
                     if (!map.TryGetValue((service, attribute.Key, implementation), out Int32 from))
@@ -925,7 +1091,7 @@ namespace NetExtender.Utilities.Types
                                 continue;
                             }
 
-                            if (storage.TryGetValue(dependency, out List<Int32>? targets))
+                            if (storage.TryGetValue(dependency, out SortData? targets))
                             {
                                 foreach (Int32 to in targets)
                                 {
@@ -952,7 +1118,7 @@ namespace NetExtender.Utilities.Types
                                 continue;
                             }
 
-                            if (storage.TryGetValue(dependency, out List<Int32>? targets))
+                            if (storage.TryGetValue(dependency, out SortData? targets))
                             {
                                 foreach (Int32 to in targets)
                                 {
@@ -965,6 +1131,79 @@ namespace NetExtender.Utilities.Types
                             else if (attribute.Strict)
                             {
                                 errors.Add(new ServiceReferenceNotFoundException($"Service '{implementation.Name}' depends from '{dependency.Name}', but dependency not exists in service collection."));
+                            }
+                        }
+                    }
+                }
+
+                if (data.Dependency is { HasDependency: true } depends)
+                {
+                    HashSet<Type> cover = new HashSet<Type>();
+                    foreach (ServiceDependencyInfoAttribute attribute in data.Attributes)
+                    {
+                        if (attribute.Key is null && attribute.Interface is { IsInterface: true })
+                        {
+                            cover.Add(attribute.Interface);
+                        }
+                    }
+
+                    if (storage.TryGetValue(implementation, out SortData? info))
+                    {
+                        foreach (Int32 from in info)
+                        {
+                            if (descriptors[from] is not { ServiceKey: null } service || service.ServiceType == implementation || cover.Contains(service.ServiceType))
+                            {
+                                continue;
+                            }
+
+                            if (depends.Before is { Length: > 0 } before)
+                            {
+                                foreach (Type dependency in before)
+                                {
+                                    if (dependency == implementation)
+                                    {
+                                        errors.Add(new ServiceSelfReferenceException($"Service '{implementation.Name}' has '{nameof(ServiceDependsOnAttribute.Before)}' self-reference."));
+                                        continue;
+                                    }
+
+                                    if (!storage.TryGetValue(dependency, out SortData? targets))
+                                    {
+                                        continue;
+                                    }
+
+                                    foreach (Int32 to in targets)
+                                    {
+                                        if (descriptors[to] is { ServiceKey: null } descriptor && descriptor.ServiceType != dependency)
+                                        {
+                                            errors.AddIfNotNull(EdgeBefore(descriptors, graph, @fixed, from, to));
+                                        }
+                                    }
+                                }
+                            }
+
+                            if (depends.After is { Length: > 0 } after)
+                            {
+                                foreach (Type dependency in after)
+                                {
+                                    if (dependency == implementation)
+                                    {
+                                        errors.Add(new ServiceSelfReferenceException($"Service '{implementation.Name}' has '{nameof(ServiceDependsOnAttribute.After)}' self-reference."));
+                                        continue;
+                                    }
+
+                                    if (!storage.TryGetValue(dependency, out SortData? targets))
+                                    {
+                                        continue;
+                                    }
+
+                                    foreach (Int32 to in targets)
+                                    {
+                                        if (descriptors[to] is { ServiceKey: null } descriptor && descriptor.ServiceType != dependency)
+                                        {
+                                            errors.AddIfNotNull(EdgeAfter(descriptors, graph, @fixed, from, to));
+                                        }
+                                    }
+                                }
                             }
                         }
                     }

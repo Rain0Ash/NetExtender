@@ -107,6 +107,19 @@ namespace NetExtender.CQRS.Notify.Handlers
         }
     }
 
+    public abstract class NotifyEventCQRSHandler<TContext, TEvent> : EntityCQRSHandler<TContext, TEvent>, INotifyEventCQRSHandler<TContext, TEvent> where TContext : CQRS<TContext>.IContext where TEvent : IEventCQRS
+    {
+        public override BusinessAsync Async(TContext context, TEvent notify, ICQRS.Transaction transaction, CancellationToken token)
+        {
+            return Async(context, in notify, transaction, token);
+        }
+
+        public override BusinessAsync Async(TContext context, in TEvent notify, ICQRS.Transaction transaction, CancellationToken token)
+        {
+            return Async(context, notify, transaction, token);
+        }
+    }
+
     public abstract class NotifyCQRSHandler<TContext, TNotify> : EntityCQRSHandler<TContext, TNotify>, INotifyCQRSHandler<TContext, TNotify> where TContext : CQRS<TContext>.IContext where TNotify : INotifyCQRS
     {
         public override BusinessAsync Async(TContext context, TNotify notify, ICQRS.Transaction transaction, CancellationToken token)

@@ -40,6 +40,9 @@
       <Compile Update="Dispatchers\CQRS.Request.cs">
         <DependentUpon>CQRS.cs</DependentUpon>
       </Compile>
+      <Compile Update="Dispatchers\CQRS.Notify.cs">
+        <DependentUpon>CQRS.cs</DependentUpon>
+      </Compile>
     </ItemGroup>
 
 </Project>

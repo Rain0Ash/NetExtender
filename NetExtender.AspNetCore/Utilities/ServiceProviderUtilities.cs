@@ -10,7 +10,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
 {
     public static class ServiceProviderUtilities
     {
-        public static T? GetService<T>(this IServiceProvider provider)
+        internal static T? GetService<T>(this IServiceProvider provider)
         {
             if (provider is null)
             {
@@ -20,7 +20,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
             return (T?) provider.GetService(typeof(T));
         }
 
-        public static Object GetServiceRequired(this IServiceProvider provider, Type service)
+        internal static Object GetServiceRequired(this IServiceProvider provider, Type service)
         {
             if (provider is null)
             {
@@ -30,7 +30,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
             return provider.GetService(service) ?? throw new ServiceNotFoundException(service);
         }
 
-        public static T GetServiceRequired<T>(this IServiceProvider provider)
+        internal static T GetServiceRequired<T>(this IServiceProvider provider)
         {
             if (provider is null)
             {
