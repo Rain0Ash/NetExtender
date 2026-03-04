@@ -26,4 +26,31 @@
         <ProjectReference Include="..\NetExtender.Core\NetExtender.Core.csproj"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Update="CQRS\CQRS.Command.cs">
+        <DependentUpon>CQRS.cs</DependentUpon>
+      </Compile>
+      <Compile Update="CQRS\CQRS.Context.cs">
+        <DependentUpon>CQRS.cs</DependentUpon>
+      </Compile>
+      <Compile Update="CQRS\CQRS.Entity.cs">
+        <DependentUpon>CQRS.cs</DependentUpon>
+      </Compile>
+      <Compile Update="CQRS\CQRS.Event.cs">
+        <DependentUpon>CQRS.cs</DependentUpon>
+      </Compile>
+      <Compile Update="CQRS\CQRS.Notify.cs">
+        <DependentUpon>CQRS.cs</DependentUpon>
+      </Compile>
+      <Compile Update="CQRS\CQRS.Query.cs">
+        <DependentUpon>CQRS.cs</DependentUpon>
+      </Compile>
+      <Compile Update="CQRS\CQRS.Request.cs">
+        <DependentUpon>CQRS.cs</DependentUpon>
+      </Compile>
+      <Compile Update="CQRS\CQRS.Transaction.cs">
+        <DependentUpon>CQRS.cs</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
 </Project>

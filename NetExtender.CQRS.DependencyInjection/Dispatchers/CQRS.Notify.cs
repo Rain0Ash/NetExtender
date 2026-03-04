@@ -7,6 +7,18 @@ namespace NetExtender.CQRS.Dispatchers
 {
     public partial class ServiceCQRS<TContext>
     {
+        public abstract class NotifyTransientCQRSHandler<TEvent> : NotifyCQRSHandler<TEvent>, IMultiTransient<INotifyEventCQRSHandler<TContext, TEvent>> where TEvent : IEventCQRS
+        {
+        }
+
+        public abstract class NotifyScopedCQRSHandler<TEvent> : NotifyCQRSHandler<TEvent>, IMultiScoped<INotifyEventCQRSHandler<TContext, TEvent>> where TEvent : IEventCQRS
+        {
+        }
+
+        public abstract class NotifySingletonCQRSHandler<TEvent> : NotifyCQRSHandler<TEvent>, IMultiSingleton<INotifyEventCQRSHandler<TContext, TEvent>> where TEvent : IEventCQRS
+        {
+        }
+
         public abstract class NotifyTransientCQRSHandler<TEvent, TNotify> : NotifyCQRSHandler<TEvent, TNotify>, IMultiTransient<INotifyEventCQRSHandler<TContext, TEvent>> where TEvent : IEventCQRS where TNotify : INotifyCQRS<TEvent>
         {
         }

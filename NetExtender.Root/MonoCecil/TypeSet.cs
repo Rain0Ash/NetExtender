@@ -173,7 +173,7 @@ namespace NetExtender.Cecil
             return Search(predicate, false);
         }
 
-        public Type? Search(Predicate<Type> predicate, Boolean single)
+        public Type? Search(Predicate<Type> predicate, Boolean? single)
         {
             if (predicate is null)
             {
@@ -181,7 +181,6 @@ namespace NetExtender.Cecil
             }
 
             Type? result = null;
-
             foreach (MonoCecilType item in this)
             {
                 if (item.Type is not { } type || !predicate(type))
@@ -191,12 +190,12 @@ namespace NetExtender.Cecil
 
                 if (result is not null)
                 {
-                    throw new InvalidOperationMoreThanOneMatchException();
+                    return single is null ? null : throw new InvalidOperationMoreThanOneMatchException();
                 }
 
                 result = type;
 
-                if (!single)
+                if (single is false)
                 {
                     break;
                 }
@@ -219,7 +218,6 @@ namespace NetExtender.Cecil
             }
 
             Type? result = null;
-
             foreach (MonoCecilType item in this)
             {
                 if (item.Type is not { } type || !predicate(type))

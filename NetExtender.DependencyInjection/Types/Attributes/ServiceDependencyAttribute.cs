@@ -170,6 +170,7 @@ namespace NetExtender.DependencyInjection
         }
     }
 
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
     public abstract class ServiceDependencyInfoAttribute : Attribute
     {
         public abstract ServiceLifetime Lifetime { get; }
@@ -315,7 +316,7 @@ namespace NetExtender.DependencyInjection
             }
         }
 
-        private protected static ServiceStrategy ToStrategy(Boolean? multiple)
+        internal static ServiceStrategy ToStrategy(Boolean? multiple)
         {
             return multiple switch
             {
@@ -325,7 +326,7 @@ namespace NetExtender.DependencyInjection
             };
         }
 
-        private protected static Boolean? ToSingle(ServiceStrategy strategy)
+        internal static Boolean? ToSingle(ServiceStrategy strategy)
         {
             return strategy switch
             {

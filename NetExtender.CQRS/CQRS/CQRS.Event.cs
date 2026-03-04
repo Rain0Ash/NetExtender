@@ -38,11 +38,11 @@ namespace NetExtender.CQRS
         {
             private static partial class Event<TEvent> where TEvent : IEventCQRS
             {
-                public static Type Handler { get; }
+                public static Type? Handler { get; }
 
                 static Event()
                 {
-                    Handler = ReflectionUtilities.Inherit[typeof(IEventCQRSHandler<TContext, TEvent>)].Types.Require(static type => type is { IsAbstract: false }, true);
+                    Handler = ReflectionUtilities.Inherit[typeof(IEventCQRSHandler<TContext, TEvent>)].Types.Search(static type => type is { IsAbstract: false }, null);
                 }
             }
 
@@ -50,15 +50,15 @@ namespace NetExtender.CQRS
             {
                 private CQRS<TContext> CQRS { get; }
 
-                public Event(CQRS<TContext> cqrs)
+                public Event(CQRS<TContext> dispatcher)
                 {
-                    CQRS = cqrs ?? throw new ArgumentNullException(nameof(cqrs));
+                    CQRS = dispatcher ?? throw new ArgumentNullException(nameof(dispatcher));
                 }
 
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 public BusinessAsync Async<TEvent>(TContext context, TEvent @event) where TEvent : IEventCQRS
                 {
-                    if (CQRS.Provider.GetService(Event<TEvent>.Handler) is IEventCQRSHandler<TContext, TEvent> handler)
+                    if (Event<TEvent>.Handler is { } dependency && CQRS.Provider.GetService(dependency) is IEventCQRSHandler<TContext, TEvent> handler)
                     {
                         return handler.Async(Next(ref context, @event), @event);
                     }
@@ -89,7 +89,7 @@ namespace NetExtender.CQRS
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 public BusinessAsync Async<TEvent>(TContext context, TEvent @event, CancellationToken token) where TEvent : IEventCQRS
                 {
-                    if (CQRS.Provider.GetService(Event<TEvent>.Handler) is IEventCQRSHandler<TContext, TEvent> handler)
+                    if (Event<TEvent>.Handler is { } dependency && CQRS.Provider.GetService(dependency) is IEventCQRSHandler<TContext, TEvent> handler)
                     {
                         return handler.Async(Next(ref context, @event), @event, token);
                     }
@@ -120,7 +120,7 @@ namespace NetExtender.CQRS
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 public BusinessAsync Async<TEvent>(TContext context, in TEvent @event) where TEvent : IEventCQRS
                 {
-                    if (CQRS.Provider.GetService(Event<TEvent>.Handler) is IEventCQRSHandler<TContext, TEvent> handler)
+                    if (Event<TEvent>.Handler is { } dependency && CQRS.Provider.GetService(dependency) is IEventCQRSHandler<TContext, TEvent> handler)
                     {
                         return handler.Async(Next(ref context, in @event), in @event);
                     }
@@ -151,7 +151,7 @@ namespace NetExtender.CQRS
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 public BusinessAsync Async<TEvent>(TContext context, in TEvent @event, CancellationToken token) where TEvent : IEventCQRS
                 {
-                    if (CQRS.Provider.GetService(Event<TEvent>.Handler) is IEventCQRSHandler<TContext, TEvent> handler)
+                    if (Event<TEvent>.Handler is { } dependency && CQRS.Provider.GetService(dependency) is IEventCQRSHandler<TContext, TEvent> handler)
                     {
                         return handler.Async(Next(ref context, in @event), in @event, token);
                     }
@@ -182,7 +182,7 @@ namespace NetExtender.CQRS
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 public BusinessAsync Async<TEvent>(TContext context, TEvent @event, ICQRS.Transaction transaction) where TEvent : IEventCQRS
                 {
-                    if (CQRS.Provider.GetService(Event<TEvent>.Handler) is IEventCQRSHandler<TContext, TEvent> handler)
+                    if (Event<TEvent>.Handler is { } dependency && CQRS.Provider.GetService(dependency) is IEventCQRSHandler<TContext, TEvent> handler)
                     {
                         return handler.Async(Next(ref context, @event), @event, transaction);
                     }
@@ -213,7 +213,7 @@ namespace NetExtender.CQRS
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 public BusinessAsync Async<TEvent>(TContext context, TEvent @event, ICQRS.Transaction transaction, CancellationToken token) where TEvent : IEventCQRS
                 {
-                    if (CQRS.Provider.GetService(Event<TEvent>.Handler) is IEventCQRSHandler<TContext, TEvent> handler)
+                    if (Event<TEvent>.Handler is { } dependency && CQRS.Provider.GetService(dependency) is IEventCQRSHandler<TContext, TEvent> handler)
                     {
                         return handler.Async(Next(ref context, @event), @event, transaction, token);
                     }
@@ -244,7 +244,7 @@ namespace NetExtender.CQRS
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 public BusinessAsync Async<TEvent>(TContext context, in TEvent @event, ICQRS.Transaction transaction) where TEvent : IEventCQRS
                 {
-                    if (CQRS.Provider.GetService(Event<TEvent>.Handler) is IEventCQRSHandler<TContext, TEvent> handler)
+                    if (Event<TEvent>.Handler is { } dependency && CQRS.Provider.GetService(dependency) is IEventCQRSHandler<TContext, TEvent> handler)
                     {
                         return handler.Async(Next(ref context, in @event), in @event, transaction);
                     }
@@ -275,7 +275,7 @@ namespace NetExtender.CQRS
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 public BusinessAsync Async<TEvent>(TContext context, in TEvent @event, ICQRS.Transaction transaction, CancellationToken token) where TEvent : IEventCQRS
                 {
-                    if (CQRS.Provider.GetService(Event<TEvent>.Handler) is IEventCQRSHandler<TContext, TEvent> handler)
+                    if (Event<TEvent>.Handler is { } dependency && CQRS.Provider.GetService(dependency) is IEventCQRSHandler<TContext, TEvent> handler)
                     {
                         return handler.Async(Next(ref context, in @event), in @event, transaction, token);
                     }
@@ -306,7 +306,7 @@ namespace NetExtender.CQRS
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 public Async SafeAsync<TEvent>(TContext context, TEvent @event) where TEvent : IEventCQRS
                 {
-                    if (CQRS.Provider.GetService(Event<TEvent>.Handler) is IEventCQRSHandler<TContext, TEvent> handler)
+                    if (Event<TEvent>.Handler is { } dependency && CQRS.Provider.GetService(dependency) is IEventCQRSHandler<TContext, TEvent> handler)
                     {
                         return handler.SafeAsync(Next(ref context, @event), @event);
                     }
@@ -337,7 +337,7 @@ namespace NetExtender.CQRS
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 public Async SafeAsync<TEvent>(TContext context, TEvent @event, CancellationToken token) where TEvent : IEventCQRS
                 {
-                    if (CQRS.Provider.GetService(Event<TEvent>.Handler) is IEventCQRSHandler<TContext, TEvent> handler)
+                    if (Event<TEvent>.Handler is { } dependency && CQRS.Provider.GetService(dependency) is IEventCQRSHandler<TContext, TEvent> handler)
                     {
                         return handler.SafeAsync(Next(ref context, @event), @event, token);
                     }
@@ -368,7 +368,7 @@ namespace NetExtender.CQRS
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 public Async SafeAsync<TEvent>(TContext context, in TEvent @event) where TEvent : IEventCQRS
                 {
-                    if (CQRS.Provider.GetService(Event<TEvent>.Handler) is IEventCQRSHandler<TContext, TEvent> handler)
+                    if (Event<TEvent>.Handler is { } dependency && CQRS.Provider.GetService(dependency) is IEventCQRSHandler<TContext, TEvent> handler)
                     {
                         return handler.SafeAsync(Next(ref context, in @event), in @event);
                     }
@@ -399,7 +399,7 @@ namespace NetExtender.CQRS
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 public Async SafeAsync<TEvent>(TContext context, in TEvent @event, CancellationToken token) where TEvent : IEventCQRS
                 {
-                    if (CQRS.Provider.GetService(Event<TEvent>.Handler) is IEventCQRSHandler<TContext, TEvent> handler)
+                    if (Event<TEvent>.Handler is { } dependency && CQRS.Provider.GetService(dependency) is IEventCQRSHandler<TContext, TEvent> handler)
                     {
                         return handler.SafeAsync(Next(ref context, in @event), in @event, token);
                     }
@@ -430,7 +430,7 @@ namespace NetExtender.CQRS
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 public Async SafeAsync<TEvent>(TContext context, TEvent @event, ICQRS.Transaction transaction) where TEvent : IEventCQRS
                 {
-                    if (CQRS.Provider.GetService(Event<TEvent>.Handler) is IEventCQRSHandler<TContext, TEvent> handler)
+                    if (Event<TEvent>.Handler is { } dependency && CQRS.Provider.GetService(dependency) is IEventCQRSHandler<TContext, TEvent> handler)
                     {
                         return handler.SafeAsync(Next(ref context, @event), @event, transaction);
                     }
@@ -461,7 +461,7 @@ namespace NetExtender.CQRS
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 public Async SafeAsync<TEvent>(TContext context, TEvent @event, ICQRS.Transaction transaction, CancellationToken token) where TEvent : IEventCQRS
                 {
-                    if (CQRS.Provider.GetService(Event<TEvent>.Handler) is IEventCQRSHandler<TContext, TEvent> handler)
+                    if (Event<TEvent>.Handler is { } dependency && CQRS.Provider.GetService(dependency) is IEventCQRSHandler<TContext, TEvent> handler)
                     {
                         return handler.SafeAsync(Next(ref context, @event), @event, transaction, token);
                     }
@@ -492,7 +492,7 @@ namespace NetExtender.CQRS
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 public Async SafeAsync<TEvent>(TContext context, in TEvent @event, ICQRS.Transaction transaction) where TEvent : IEventCQRS
                 {
-                    if (CQRS.Provider.GetService(Event<TEvent>.Handler) is IEventCQRSHandler<TContext, TEvent> handler)
+                    if (Event<TEvent>.Handler is { } dependency && CQRS.Provider.GetService(dependency) is IEventCQRSHandler<TContext, TEvent> handler)
                     {
                         return handler.SafeAsync(Next(ref context, in @event), in @event, transaction);
                     }
@@ -523,7 +523,7 @@ namespace NetExtender.CQRS
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 public Async SafeAsync<TEvent>(TContext context, in TEvent @event, ICQRS.Transaction transaction, CancellationToken token) where TEvent : IEventCQRS
                 {
-                    if (CQRS.Provider.GetService(Event<TEvent>.Handler) is IEventCQRSHandler<TContext, TEvent> handler)
+                    if (Event<TEvent>.Handler is { } dependency && CQRS.Provider.GetService(dependency) is IEventCQRSHandler<TContext, TEvent> handler)
                     {
                         return handler.SafeAsync(Next(ref context, in @event), in @event, transaction, token);
                     }
@@ -570,9 +570,9 @@ namespace NetExtender.CQRS
                     private Byte Any = 0;
                     private Byte Business = 0;
 
-                    public Collector(CQRS<TContext> cqrs)
+                    public Collector(CQRS<TContext> dispatcher)
                     {
-                        CQRS = cqrs;
+                        CQRS = dispatcher;
                     }
 
                     public void Add(Exception? exception)
