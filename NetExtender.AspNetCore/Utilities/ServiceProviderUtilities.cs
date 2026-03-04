@@ -2,6 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Runtime.CompilerServices;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using NetExtender.AspNetCore.Types.Exceptions;
@@ -10,6 +11,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
 {
     public static class ServiceProviderUtilities
     {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static T? GetService<T>(this IServiceProvider provider)
         {
             if (provider is null)
@@ -20,6 +22,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
             return (T?) provider.GetService(typeof(T));
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static Object GetServiceRequired(this IServiceProvider provider, Type service)
         {
             if (provider is null)
@@ -30,6 +33,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
             return provider.GetService(service) ?? throw new ServiceNotFoundException(service);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static T GetServiceRequired<T>(this IServiceProvider provider)
         {
             if (provider is null)
@@ -40,6 +44,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
             return provider.GetService<T>() ?? throw new ServiceNotFoundException(typeof(T));
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean Exists(this IServiceProvider provider, Type service)
         {
             if (provider is null)
@@ -57,6 +62,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean Exists<T>(this IServiceProvider provider)
         {
             if (provider is null)
@@ -74,6 +80,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ILogger<T> GetLoggerService<T>(this IServiceProvider provider) where T : class
         {
             if (provider is null)
