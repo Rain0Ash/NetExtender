@@ -17,8 +17,13 @@ namespace NetExtender.DependencyInjection
         MultiReplace = 5
     }
 
+    [AttributeUsage(AttributeTargets.Constructor)]
+    public class DependencyConstructorAttribute : ActivatorUtilitiesConstructorAttribute
+    {
+    }
+
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
-    public sealed class ServiceDependencyAttribute : ServiceDependencyInfoAttribute
+    public sealed class DependencyAttribute : DependencyInfoAttribute
     {
         public static Boolean IsStrict { get; set; }
         public override ServiceLifetime Lifetime { get; }
@@ -26,34 +31,34 @@ namespace NetExtender.DependencyInjection
         protected internal override Boolean? IsSingle { get; protected init; }
         public override Int32 Order { get; init; }
 
-        public ServiceDependencyAttribute(ServiceLifetime lifetime)
+        public DependencyAttribute(ServiceLifetime lifetime)
             : this(lifetime, ServiceStrategy.New)
         {
         }
 
-        public ServiceDependencyAttribute(ServiceLifetime lifetime, Boolean multiple)
+        public DependencyAttribute(ServiceLifetime lifetime, Boolean multiple)
             : this(lifetime, ToStrategy(multiple))
         {
         }
 
-        public ServiceDependencyAttribute(ServiceLifetime lifetime, ServiceStrategy strategy)
+        public DependencyAttribute(ServiceLifetime lifetime, ServiceStrategy strategy)
         {
             Lifetime = lifetime;
             Strategy = strategy;
             IsSingle = ToSingle(strategy);
         }
 
-        public ServiceDependencyAttribute(ServiceLifetime lifetime, params Type[]? after)
+        public DependencyAttribute(ServiceLifetime lifetime, params Type[]? after)
             : this(lifetime, ServiceStrategy.New, after)
         {
         }
 
-        public ServiceDependencyAttribute(ServiceLifetime lifetime, Boolean multiple, params Type[]? after)
+        public DependencyAttribute(ServiceLifetime lifetime, Boolean multiple, params Type[]? after)
             : this(lifetime, ToStrategy(multiple), after)
         {
         }
 
-        public ServiceDependencyAttribute(ServiceLifetime lifetime, ServiceStrategy strategy, params Type[]? after)
+        public DependencyAttribute(ServiceLifetime lifetime, ServiceStrategy strategy, params Type[]? after)
             : base(after)
         {
             Lifetime = lifetime;
@@ -61,17 +66,17 @@ namespace NetExtender.DependencyInjection
             IsSingle = ToSingle(strategy);
         }
 
-        public ServiceDependencyAttribute(Object? key, ServiceLifetime lifetime)
+        public DependencyAttribute(Object? key, ServiceLifetime lifetime)
             : this(key, lifetime, ServiceStrategy.New)
         {
         }
 
-        public ServiceDependencyAttribute(Object? key, ServiceLifetime lifetime, Boolean multiple)
+        public DependencyAttribute(Object? key, ServiceLifetime lifetime, Boolean multiple)
             : this(key, lifetime, ToStrategy(multiple))
         {
         }
 
-        public ServiceDependencyAttribute(Object? key, ServiceLifetime lifetime, ServiceStrategy strategy)
+        public DependencyAttribute(Object? key, ServiceLifetime lifetime, ServiceStrategy strategy)
             : base(key)
         {
             Lifetime = lifetime;
@@ -79,17 +84,17 @@ namespace NetExtender.DependencyInjection
             IsSingle = ToSingle(strategy);
         }
 
-        public ServiceDependencyAttribute(Object? key, ServiceLifetime lifetime, params Type[]? after)
+        public DependencyAttribute(Object? key, ServiceLifetime lifetime, params Type[]? after)
             : this(key, lifetime, ServiceStrategy.New, after)
         {
         }
 
-        public ServiceDependencyAttribute(Object? key, ServiceLifetime lifetime, Boolean multiple, params Type[]? after)
+        public DependencyAttribute(Object? key, ServiceLifetime lifetime, Boolean multiple, params Type[]? after)
             : this(key, lifetime, ToStrategy(multiple), after)
         {
         }
 
-        public ServiceDependencyAttribute(Object? key, ServiceLifetime lifetime, ServiceStrategy strategy, params Type[]? after)
+        public DependencyAttribute(Object? key, ServiceLifetime lifetime, ServiceStrategy strategy, params Type[]? after)
             : base(key, after)
         {
             Lifetime = lifetime;
@@ -97,17 +102,17 @@ namespace NetExtender.DependencyInjection
             IsSingle = ToSingle(strategy);
         }
 
-        public ServiceDependencyAttribute(Type @interface, ServiceLifetime lifetime)
+        public DependencyAttribute(Type @interface, ServiceLifetime lifetime)
             : this(@interface, lifetime, ServiceStrategy.New)
         {
         }
 
-        public ServiceDependencyAttribute(Type @interface, ServiceLifetime lifetime, Boolean multiple)
+        public DependencyAttribute(Type @interface, ServiceLifetime lifetime, Boolean multiple)
             : this(@interface, lifetime, ToStrategy(multiple))
         {
         }
 
-        public ServiceDependencyAttribute(Type @interface, ServiceLifetime lifetime, ServiceStrategy strategy)
+        public DependencyAttribute(Type @interface, ServiceLifetime lifetime, ServiceStrategy strategy)
             : base(@interface)
         {
             Lifetime = lifetime;
@@ -115,17 +120,17 @@ namespace NetExtender.DependencyInjection
             IsSingle = ToSingle(strategy);
         }
 
-        public ServiceDependencyAttribute(Type @interface, ServiceLifetime lifetime, params Type[]? after)
+        public DependencyAttribute(Type @interface, ServiceLifetime lifetime, params Type[]? after)
             : this(@interface, lifetime, ServiceStrategy.New, after)
         {
         }
 
-        public ServiceDependencyAttribute(Type @interface, ServiceLifetime lifetime, Boolean multiple, params Type[]? after)
+        public DependencyAttribute(Type @interface, ServiceLifetime lifetime, Boolean multiple, params Type[]? after)
             : this(@interface, lifetime, ToStrategy(multiple), after)
         {
         }
 
-        public ServiceDependencyAttribute(Type @interface, ServiceLifetime lifetime, ServiceStrategy strategy, params Type[]? after)
+        public DependencyAttribute(Type @interface, ServiceLifetime lifetime, ServiceStrategy strategy, params Type[]? after)
             : base(@interface, after)
         {
             Lifetime = lifetime;
@@ -133,17 +138,17 @@ namespace NetExtender.DependencyInjection
             IsSingle = ToSingle(strategy);
         }
 
-        public ServiceDependencyAttribute(Object? key, Type @interface, ServiceLifetime lifetime)
+        public DependencyAttribute(Object? key, Type @interface, ServiceLifetime lifetime)
             : this(key, @interface, lifetime, ServiceStrategy.New)
         {
         }
 
-        public ServiceDependencyAttribute(Object? key, Type @interface, ServiceLifetime lifetime, Boolean multiple)
+        public DependencyAttribute(Object? key, Type @interface, ServiceLifetime lifetime, Boolean multiple)
             : this(key, @interface, lifetime, ToStrategy(multiple))
         {
         }
 
-        public ServiceDependencyAttribute(Object? key, Type @interface, ServiceLifetime lifetime, ServiceStrategy strategy)
+        public DependencyAttribute(Object? key, Type @interface, ServiceLifetime lifetime, ServiceStrategy strategy)
             : base(key, @interface)
         {
             Lifetime = lifetime;
@@ -151,17 +156,17 @@ namespace NetExtender.DependencyInjection
             IsSingle = ToSingle(strategy);
         }
 
-        public ServiceDependencyAttribute(Object? key, Type @interface, ServiceLifetime lifetime, params Type[]? after)
+        public DependencyAttribute(Object? key, Type @interface, ServiceLifetime lifetime, params Type[]? after)
             : this(key, @interface, lifetime, ServiceStrategy.New, after)
         {
         }
 
-        public ServiceDependencyAttribute(Object? key, Type @interface, ServiceLifetime lifetime, Boolean multiple, params Type[]? after)
+        public DependencyAttribute(Object? key, Type @interface, ServiceLifetime lifetime, Boolean multiple, params Type[]? after)
             : this(key, @interface, lifetime, ToStrategy(multiple), after)
         {
         }
 
-        public ServiceDependencyAttribute(Object? key, Type @interface, ServiceLifetime lifetime, ServiceStrategy strategy, params Type[]? after)
+        public DependencyAttribute(Object? key, Type @interface, ServiceLifetime lifetime, ServiceStrategy strategy, params Type[]? after)
             : base(key, @interface, after)
         {
             Lifetime = lifetime;
@@ -171,7 +176,7 @@ namespace NetExtender.DependencyInjection
     }
 
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
-    public abstract class ServiceDependencyInfoAttribute : Attribute
+    public abstract class DependencyInfoAttribute : Attribute
     {
         public abstract ServiceLifetime Lifetime { get; }
         public Type? Interface { get; }
@@ -200,7 +205,7 @@ namespace NetExtender.DependencyInjection
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
-                return _strict ?? ServiceDependencyAttribute.IsStrict;
+                return _strict ?? DependencyAttribute.IsStrict;
             }
             init
             {
@@ -255,22 +260,22 @@ namespace NetExtender.DependencyInjection
             }
         }
 
-        protected ServiceDependencyInfoAttribute()
+        protected DependencyInfoAttribute()
             : this((Type[]?) null)
         {
         }
 
-        protected ServiceDependencyInfoAttribute(params Type[]? after)
+        protected DependencyInfoAttribute(params Type[]? after)
             : this((Object?) null, after)
         {
         }
 
-        protected ServiceDependencyInfoAttribute(Object? key)
+        protected DependencyInfoAttribute(Object? key)
             : this(key, (Type[]?) null)
         {
         }
 
-        protected ServiceDependencyInfoAttribute(Object? key, params Type[]? after)
+        protected DependencyInfoAttribute(Object? key, params Type[]? after)
         {
             Key = key;
 
@@ -280,22 +285,22 @@ namespace NetExtender.DependencyInjection
             }
         }
 
-        protected ServiceDependencyInfoAttribute(Type @interface)
+        protected DependencyInfoAttribute(Type @interface)
             : this(@interface, (Type[]?) null)
         {
         }
 
-        protected ServiceDependencyInfoAttribute(Type @interface, params Type[]? after)
+        protected DependencyInfoAttribute(Type @interface, params Type[]? after)
             : this(null, @interface, after)
         {
         }
 
-        protected ServiceDependencyInfoAttribute(Object? key, Type @interface)
+        protected DependencyInfoAttribute(Object? key, Type @interface)
             : this(key, @interface, (Type[]?) null)
         {
         }
 
-        protected ServiceDependencyInfoAttribute(Object? key, Type @interface, params Type[]? after)
+        protected DependencyInfoAttribute(Object? key, Type @interface, params Type[]? after)
         {
             if (@interface is null)
             {

@@ -8,7 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace NetExtender.DependencyInjection
 {
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
-    public sealed class SingletonAttribute : ServiceDependencyInfoAttribute
+    public sealed class SingletonAttribute : DependencyInfoAttribute
     {
         public override ServiceLifetime Lifetime
         {

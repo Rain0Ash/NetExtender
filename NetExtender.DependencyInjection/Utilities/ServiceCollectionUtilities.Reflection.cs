@@ -73,7 +73,7 @@ namespace NetExtender.Utilities.Types
             {
                 service = @interface.Type;
                 strategy = GetStrategyFromInterface(@interface);
-                return ImmutableList<ServiceDescriptor>.Empty.AddIfNotNull(service is not null ? Metadata.Set(new ServiceDescriptor(service, key, implementation, lifetime), strategy, ServiceDependencyInfoAttribute.ToSingle(strategy), 0) : null);
+                return ImmutableList<ServiceDescriptor>.Empty.AddIfNotNull(service is not null ? Metadata.Set(new ServiceDescriptor(service, key, implementation, lifetime), strategy, DependencyInfoAttribute.ToSingle(strategy), 0) : null);
             }
 
             if (options.Inherit.TryGetValue(@interface, out ReflectionInheritResult? result) && !result.Inherit.Types.Contains(type))
@@ -99,12 +99,12 @@ namespace NetExtender.Utilities.Types
                 if (argument.Type is { } argtype)
                 {
                     strategy = GetStrategyFromInterface(argument);
-                    descriptors.TryAdd((argument, key), Metadata.Set(new ServiceDescriptor(argtype, key, implementation, lifetime), strategy, ServiceDependencyInfoAttribute.ToSingle(strategy), 0));
+                    descriptors.TryAdd((argument, key), Metadata.Set(new ServiceDescriptor(argtype, key, implementation, lifetime), strategy, DependencyInfoAttribute.ToSingle(strategy), 0));
                 }
             }
 
             strategy = GetStrategyFromInterface(@interface);
-            descriptors.TryAdd((@interface, key), Metadata.Set(new ServiceDescriptor(service, key, implementation, lifetime), strategy, ServiceDependencyInfoAttribute.ToSingle(strategy), 0));
+            descriptors.TryAdd((@interface, key), Metadata.Set(new ServiceDescriptor(service, key, implementation, lifetime), strategy, DependencyInfoAttribute.ToSingle(strategy), 0));
             return descriptors.Values.ToImmutableList();
         }
 
@@ -236,7 +236,7 @@ namespace NetExtender.Utilities.Types
                         {
                             case { IsInterface: true } service:
                             {
-                                descriptors.Add(Metadata.Set(new ServiceDescriptor(service, null, implementation, lifetime), strategy, ServiceDependencyInfoAttribute.ToSingle(strategy), 0));
+                                descriptors.Add(Metadata.Set(new ServiceDescriptor(service, null, implementation, lifetime), strategy, DependencyInfoAttribute.ToSingle(strategy), 0));
                                 break;
                             }
                             case { IsInterface: false } service:
@@ -265,7 +265,7 @@ namespace NetExtender.Utilities.Types
                             {
                                 case { IsInterface: true } service:
                                 {
-                                    descriptors.Add(Metadata.Set(new ServiceDescriptor(service, null, implementation, lifetime), strategy, ServiceDependencyInfoAttribute.ToSingle(strategy), 0));
+                                    descriptors.Add(Metadata.Set(new ServiceDescriptor(service, null, implementation, lifetime), strategy, DependencyInfoAttribute.ToSingle(strategy), 0));
                                     break;
                                 }
                                 case { IsInterface: false } service:
@@ -281,7 +281,7 @@ namespace NetExtender.Utilities.Types
                     }
                 }
 
-                foreach (ServiceDependencyInfoAttribute attribute in AttributeUtilities.GetCustomAttributes<ServiceDependencyInfoAttribute>(implementation))
+                foreach (DependencyInfoAttribute attribute in AttributeUtilities.GetCustomAttributes<DependencyInfoAttribute>(implementation))
                 {
                     if (attribute.Interface is { } @interface)
                     {
@@ -916,7 +916,7 @@ namespace NetExtender.Utilities.Types
                 }
             }
 
-            public ServiceDependsOnAttribute? Dependency { get; }
+            public DependsOnAttribute? Dependency { get; }
 
             public Boolean Depends
             {
@@ -927,14 +927,14 @@ namespace NetExtender.Utilities.Types
                 }
             }
 
-            public ImmutableArray<ServiceDependencyInfoAttribute> Attributes { get; }
+            public ImmutableArray<DependencyInfoAttribute> Attributes { get; }
 
             public SortData(Type implementation)
             {
-                Dependency = AttributeUtilities.GetCustomAttribute<ServiceDependsOnAttribute>(implementation);
-                Attributes = AttributeUtilities.GetCustomAttributes<ServiceDependencyInfoAttribute>(implementation).ToImmutableArray();
+                Dependency = AttributeUtilities.GetCustomAttribute<DependsOnAttribute>(implementation);
+                Attributes = AttributeUtilities.GetCustomAttributes<DependencyInfoAttribute>(implementation).ToImmutableArray();
 
-                foreach (ServiceDependencyInfoAttribute attribute in Attributes)
+                foreach (DependencyInfoAttribute attribute in Attributes)
                 {
                     if (attribute.Key is null && attribute.Interface is { IsInterface: true })
                     {
@@ -997,7 +997,7 @@ namespace NetExtender.Utilities.Types
                         }
                         case true when single is not null:
                         {
-                            errors.Add(new ServiceIsSingleException($"Can't have multiple services with {nameof(ServiceDependencyInfoAttribute.Single)} argument in service{(group.Key.ServiceKey is { } key ? $" group: (Type: '{group.Key.ServiceType}', Key: '{key}')" : $": '{group.Key.ServiceType}'")}."));
+                            errors.Add(new ServiceIsSingleException($"Can't have multiple services with {nameof(DependencyInfoAttribute.Single)} argument in service{(group.Key.ServiceKey is { } key ? $" group: (Type: '{group.Key.ServiceType}', Key: '{key}')" : $": '{group.Key.ServiceType}'")}."));
                             goto case true;
                         }
                         case true:
@@ -1068,7 +1068,7 @@ namespace NetExtender.Utilities.Types
 
             foreach ((Type implementation, SortData data) in storage)
             {
-                foreach (ServiceDependencyInfoAttribute attribute in data.Attributes)
+                foreach (DependencyInfoAttribute attribute in data.Attributes)
                 {
                     Type service = attribute.Interface ?? implementation;
                     if (!map.TryGetValue((service, attribute.Key, implementation), out Int32 from))
@@ -1087,7 +1087,7 @@ namespace NetExtender.Utilities.Types
                         {
                             if (dependency == implementation)
                             {
-                                errors.Add(new ServiceSelfReferenceException($"Service '{implementation.Name}' has '{nameof(ServiceDependencyInfoAttribute.Before)}' self-reference."));
+                                errors.Add(new ServiceSelfReferenceException($"Service '{implementation.Name}' has '{nameof(DependencyInfoAttribute.Before)}' self-reference."));
                                 continue;
                             }
 
@@ -1114,7 +1114,7 @@ namespace NetExtender.Utilities.Types
                         {
                             if (dependency == implementation)
                             {
-                                errors.Add(new ServiceSelfReferenceException($"Service '{implementation.Name}' has '{nameof(ServiceDependencyInfoAttribute.After)}' self-reference."));
+                                errors.Add(new ServiceSelfReferenceException($"Service '{implementation.Name}' has '{nameof(DependencyInfoAttribute.After)}' self-reference."));
                                 continue;
                             }
 
@@ -1139,7 +1139,7 @@ namespace NetExtender.Utilities.Types
                 if (data.Dependency is { HasDependency: true } depends)
                 {
                     HashSet<Type> cover = new HashSet<Type>();
-                    foreach (ServiceDependencyInfoAttribute attribute in data.Attributes)
+                    foreach (DependencyInfoAttribute attribute in data.Attributes)
                     {
                         if (attribute.Key is null && attribute.Interface is { IsInterface: true })
                         {
@@ -1162,7 +1162,7 @@ namespace NetExtender.Utilities.Types
                                 {
                                     if (dependency == implementation)
                                     {
-                                        errors.Add(new ServiceSelfReferenceException($"Service '{implementation.Name}' has '{nameof(ServiceDependsOnAttribute.Before)}' self-reference."));
+                                        errors.Add(new ServiceSelfReferenceException($"Service '{implementation.Name}' has '{nameof(DependsOnAttribute.Before)}' self-reference."));
                                         continue;
                                     }
 
@@ -1187,7 +1187,7 @@ namespace NetExtender.Utilities.Types
                                 {
                                     if (dependency == implementation)
                                     {
-                                        errors.Add(new ServiceSelfReferenceException($"Service '{implementation.Name}' has '{nameof(ServiceDependsOnAttribute.After)}' self-reference."));
+                                        errors.Add(new ServiceSelfReferenceException($"Service '{implementation.Name}' has '{nameof(DependsOnAttribute.After)}' self-reference."));
                                         continue;
                                     }
 
@@ -1351,7 +1351,7 @@ namespace NetExtender.Utilities.Types
                 throw new InvalidOperationException();
             }
 
-            TypeSet attributes = inherit.Type[typeof(ServiceDependencyInfoAttribute)].Types.Add(typeof(ServiceDependencyInfoAttribute));
+            TypeSet attributes = inherit.Type[typeof(DependencyInfoAttribute)].Types.Add(typeof(DependencyInfoAttribute));
             TypeSet set = result.Inherit.Types.Union(attributes.SelectMany<MonoCecilType, MonoCecilType>(attribute => inherit.Attributes[attribute].Types));
             IImmutableSet<MonoCecilType> except = inherit.Type[typeof(IUnscanDependencyService)].Add(typeof(IUnscanDependencyService));
 
@@ -1413,7 +1413,7 @@ namespace NetExtender.Utilities.Types
                 throw new InvalidOperationException();
             }
 
-            TypeSet attributes = inherit.Type[typeof(ServiceDependencyInfoAttribute)].Types.Add(typeof(ServiceDependencyInfoAttribute));
+            TypeSet attributes = inherit.Type[typeof(DependencyInfoAttribute)].Types.Add(typeof(DependencyInfoAttribute));
             TypeSet set = result.Inherit.Types.Union(attributes.SelectMany<MonoCecilType, MonoCecilType>(attribute => inherit.Attributes[attribute].Types));
             IImmutableSet<MonoCecilType> except = inherit.Type[typeof(IUnscanDependencyService)].Add(typeof(IUnscanDependencyService));
 

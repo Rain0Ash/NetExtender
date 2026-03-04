@@ -7,7 +7,7 @@ using System.Runtime.CompilerServices;
 namespace NetExtender.DependencyInjection
 {
     [AttributeUsage(AttributeTargets.Class, Inherited = false)]
-    public sealed class ServiceDependsOnAttribute : Attribute
+    public sealed class DependsOnAttribute : Attribute
     {
         private readonly Type[]? _before;
         public Type[] Before
@@ -56,7 +56,7 @@ namespace NetExtender.DependencyInjection
             }
         }
 
-        public ServiceDependsOnAttribute(params Type[]? after)
+        public DependsOnAttribute(params Type[]? after)
         {
             if (after is not null)
             {

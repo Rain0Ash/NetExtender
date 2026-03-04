@@ -8,7 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace NetExtender.DependencyInjection
 {
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
-    public sealed class TransientAttribute : ServiceDependencyInfoAttribute
+    public sealed class TransientAttribute : DependencyInfoAttribute
     {
         public override ServiceLifetime Lifetime
         {
