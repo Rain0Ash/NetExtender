@@ -18,7 +18,7 @@ namespace NetExtender.DependencyInjection
     }
 
     [AttributeUsage(AttributeTargets.Constructor)]
-    public class DependencyConstructorAttribute : ActivatorUtilitiesConstructorAttribute
+    public sealed class DependencyConstructorAttribute : ActivatorUtilitiesConstructorAttribute
     {
     }
 

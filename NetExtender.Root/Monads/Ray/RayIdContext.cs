@@ -1237,10 +1237,12 @@ namespace NetExtender.Monads
                     buffer[position++] = '>';
                     buffer[position++] = '-';
 
+                    Boolean has = false;
                     Guid parent = ParentId;
                     if (parent != default && parent != id)
                     {
                         RayId.WriteHex(parent, hex, buffer, ref position);
+                        has = true;
                     }
 
                     switch (ValidateParentTimestamp(ref timestamp, ParentTimestamp))
@@ -1258,6 +1260,7 @@ namespace NetExtender.Monads
 
                             position += written;
                             buffer[position++] = '>';
+                            has = true;
                             break;
                         }
                         case false:
@@ -1288,6 +1291,7 @@ namespace NetExtender.Monads
                             buffer[position++] = hex[unchecked((Int32) ((span >> 0) & 0xF))];
 
                             buffer[position++] = '>';
+                            has = true;
                             break;
                         }
                         default:
@@ -1296,7 +1300,10 @@ namespace NetExtender.Monads
                         }
                     }
 
-                    buffer[position++] = '-';
+                    if (has)
+                    {
+                        buffer[position++] = '-';
+                    }
 
                     buffer[position++] = 'V';
                     RayId.WriteDecimal(Version, buffer, ref position);

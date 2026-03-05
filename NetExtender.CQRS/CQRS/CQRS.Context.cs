@@ -6,7 +6,7 @@ namespace NetExtender.CQRS
 {
     public abstract partial class CQRS<TContext>
     {
-        public new interface IContext : ICQRS.IContext, IEquatable<TContext>
+        public interface IContext : ICQRS.IContext, IEquatable<TContext>
         {
             public TContext Next();
             public TContext Next(RayIdPayload? payload);
@@ -79,13 +79,13 @@ namespace NetExtender.CQRS
                 return !(first == second);
             }
 
-            private Boolean _init = false;
+            private Boolean? _init = false;
             public Boolean IsCQRS
             {
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 readonly get
                 {
-                    return !_init;
+                    return _init is not true;
                 }
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 set
@@ -131,6 +131,15 @@ namespace NetExtender.CQRS
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 get
                 {
+                    return _init is null && IsEmptyOrInvalid;
+                }
+            }
+
+            public readonly Boolean IsEmptyOrInvalid
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get
+                {
                     return _context is null or { IsEmptyOrInvalid: true };
                 }
             }
@@ -153,6 +162,10 @@ namespace NetExtender.CQRS
                 {
                     result._context = context.Next();
                 }
+                else if (_init is null)
+                {
+                    result._context = default(RayIdContext).Next();
+                }
 
                 return result;
             }
@@ -164,6 +177,10 @@ namespace NetExtender.CQRS
                 if (result._context is { } context)
                 {
                     result._context = context.Next(payload);
+                }
+                else if (_init is null)
+                {
+                    result._context = default(RayIdContext).Next(payload);
                 }
 
                 return result;
@@ -177,6 +194,10 @@ namespace NetExtender.CQRS
                 {
                     result._context = context.Next(flags);
                 }
+                else if (_init is null)
+                {
+                    result._context = default(RayIdContext).Next(flags);
+                }
 
                 return result;
             }
@@ -188,6 +209,10 @@ namespace NetExtender.CQRS
                 if (result._context is { } context)
                 {
                     result._context = context.Next(flags, payload);
+                }
+                else if (_init is null)
+                {
+                    result._context = default(RayIdContext).Next(flags, payload);
                 }
 
                 return result;
@@ -201,6 +226,10 @@ namespace NetExtender.CQRS
                 {
                     result._context = context.Next(flags);
                 }
+                else if (_init is null)
+                {
+                    result._context = default(RayIdContext).Next(flags);
+                }
 
                 return result;
             }
@@ -212,6 +241,10 @@ namespace NetExtender.CQRS
                 if (result._context is { } context)
                 {
                     result._context = context.Next(flags, payload);
+                }
+                else if (_init is null)
+                {
+                    result._context = default(RayIdContext).Next(flags, payload);
                 }
 
                 return result;
@@ -225,6 +258,10 @@ namespace NetExtender.CQRS
                 {
                     result._context = context.Next(value);
                 }
+                else if (_init is null)
+                {
+                    result._context = default(RayIdContext).Next(value);
+                }
 
                 return result;
             }
@@ -236,6 +273,10 @@ namespace NetExtender.CQRS
                 if (result._context is { } context)
                 {
                     result._context = context.Next(in value);
+                }
+                else if (_init is null)
+                {
+                    result._context = default(RayIdContext).Next(in value);
                 }
 
                 return result;
@@ -249,6 +290,10 @@ namespace NetExtender.CQRS
                 {
                     result._context = context.Next(value, payload);
                 }
+                else if (_init is null)
+                {
+                    result._context = default(RayIdContext).Next(value, payload);
+                }
 
                 return result;
             }
@@ -260,6 +305,10 @@ namespace NetExtender.CQRS
                 if (result._context is { } context)
                 {
                     result._context = context.Next(in value, payload);
+                }
+                else if (_init is null)
+                {
+                    result._context = default(RayIdContext).Next(in value, payload);
                 }
 
                 return result;
@@ -273,6 +322,10 @@ namespace NetExtender.CQRS
                 {
                     result._context = context.Next(value, flags);
                 }
+                else if (_init is null)
+                {
+                    result._context = default(RayIdContext).Next(value, flags);
+                }
 
                 return result;
             }
@@ -284,6 +337,10 @@ namespace NetExtender.CQRS
                 if (result._context is { } context)
                 {
                     result._context = context.Next(in value, flags);
+                }
+                else if (_init is null)
+                {
+                    result._context = default(RayIdContext).Next(in value, flags);
                 }
 
                 return result;
@@ -297,6 +354,10 @@ namespace NetExtender.CQRS
                 {
                     result._context = context.Next(value, flags, payload);
                 }
+                else if (_init is null)
+                {
+                    result._context = default(RayIdContext).Next(value, flags, payload);
+                }
 
                 return result;
             }
@@ -308,6 +369,10 @@ namespace NetExtender.CQRS
                 if (result._context is { } context)
                 {
                     result._context = context.Next(in value, flags, payload);
+                }
+                else if (_init is null)
+                {
+                    result._context = default(RayIdContext).Next(in value, flags, payload);
                 }
 
                 return result;
@@ -321,6 +386,10 @@ namespace NetExtender.CQRS
                 {
                     result._context = context.Next(value, flags);
                 }
+                else if (_init is null)
+                {
+                    result._context = default(RayIdContext).Next(value, flags);
+                }
 
                 return result;
             }
@@ -332,6 +401,10 @@ namespace NetExtender.CQRS
                 if (result._context is { } context)
                 {
                     result._context = context.Next(in value, flags);
+                }
+                else if (_init is null)
+                {
+                    result._context = default(RayIdContext).Next(in value, flags);
                 }
 
                 return result;
@@ -345,6 +418,10 @@ namespace NetExtender.CQRS
                 {
                     result._context = context.Next(value, flags, payload);
                 }
+                else if (_init is null)
+                {
+                    result._context = default(RayIdContext).Next(value, flags, payload);
+                }
 
                 return result;
             }
@@ -356,6 +433,10 @@ namespace NetExtender.CQRS
                 if (result._context is { } context)
                 {
                     result._context = context.Next(in value, flags, payload);
+                }
+                else if (_init is null)
+                {
+                    result._context = default(RayIdContext).Next(in value, flags, payload);
                 }
 
                 return result;
@@ -369,6 +450,10 @@ namespace NetExtender.CQRS
                 {
                     result._context = context.Continue();
                 }
+                else if (_init is null)
+                {
+                    result._context = default(RayIdContext).Continue();
+                }
 
                 return result;
             }
@@ -380,6 +465,10 @@ namespace NetExtender.CQRS
                 if (result._context is { } context)
                 {
                     result._context = context.Continue(payload);
+                }
+                else if (_init is null)
+                {
+                    result._context = default(RayIdContext).Continue(payload);
                 }
 
                 return result;
@@ -393,6 +482,10 @@ namespace NetExtender.CQRS
                 {
                     result._context = context.Continue(flags);
                 }
+                else if (_init is null)
+                {
+                    result._context = default(RayIdContext).Continue(flags);
+                }
 
                 return result;
             }
@@ -404,6 +497,10 @@ namespace NetExtender.CQRS
                 if (result._context is { } context)
                 {
                     result._context = context.Continue(flags, payload);
+                }
+                else if (_init is null)
+                {
+                    result._context = default(RayIdContext).Continue(flags, payload);
                 }
 
                 return result;
@@ -417,6 +514,10 @@ namespace NetExtender.CQRS
                 {
                     result._context = context.Continue(flags);
                 }
+                else if (_init is null)
+                {
+                    result._context = default(RayIdContext).Continue(flags);
+                }
 
                 return result;
             }
@@ -428,6 +529,10 @@ namespace NetExtender.CQRS
                 if (result._context is { } context)
                 {
                     result._context = context.Continue(flags, payload);
+                }
+                else if (_init is null)
+                {
+                    result._context = default(RayIdContext).Continue(flags, payload);
                 }
 
                 return result;
@@ -441,6 +546,10 @@ namespace NetExtender.CQRS
                 {
                     result._context = context.Continue(value);
                 }
+                else if (_init is null)
+                {
+                    result._context = default(RayIdContext).Continue(value);
+                }
 
                 return result;
             }
@@ -452,6 +561,10 @@ namespace NetExtender.CQRS
                 if (result._context is { } context)
                 {
                     result._context = context.Continue(in value);
+                }
+                else if (_init is null)
+                {
+                    result._context = default(RayIdContext).Continue(in value);
                 }
 
                 return result;
@@ -465,6 +578,10 @@ namespace NetExtender.CQRS
                 {
                     result._context = context.Continue(value, payload);
                 }
+                else if (_init is null)
+                {
+                    result._context = default(RayIdContext).Continue(value, payload);
+                }
 
                 return result;
             }
@@ -476,6 +593,10 @@ namespace NetExtender.CQRS
                 if (result._context is { } context)
                 {
                     result._context = context.Continue(in value, payload);
+                }
+                else if (_init is null)
+                {
+                    result._context = default(RayIdContext).Continue(in value, payload);
                 }
 
                 return result;
@@ -489,6 +610,10 @@ namespace NetExtender.CQRS
                 {
                     result._context = context.Continue(value, flags);
                 }
+                else if (_init is null)
+                {
+                    result._context = default(RayIdContext).Continue(value, flags);
+                }
 
                 return result;
             }
@@ -500,6 +625,10 @@ namespace NetExtender.CQRS
                 if (result._context is { } context)
                 {
                     result._context = context.Continue(in value, flags);
+                }
+                else if (_init is null)
+                {
+                    result._context = default(RayIdContext).Continue(in value, flags);
                 }
 
                 return result;
@@ -513,6 +642,10 @@ namespace NetExtender.CQRS
                 {
                     result._context = context.Continue(value, flags, payload);
                 }
+                else if (_init is null)
+                {
+                    result._context = default(RayIdContext).Continue(value, flags, payload);
+                }
 
                 return result;
             }
@@ -524,6 +657,10 @@ namespace NetExtender.CQRS
                 if (result._context is { } context)
                 {
                     result._context = context.Continue(in value, flags, payload);
+                }
+                else if (_init is null)
+                {
+                    result._context = default(RayIdContext).Continue(in value, flags, payload);
                 }
 
                 return result;
@@ -537,6 +674,10 @@ namespace NetExtender.CQRS
                 {
                     result._context = context.Continue(value, flags);
                 }
+                else if (_init is null)
+                {
+                    result._context = default(RayIdContext).Continue(value, flags);
+                }
 
                 return result;
             }
@@ -548,6 +689,10 @@ namespace NetExtender.CQRS
                 if (result._context is { } context)
                 {
                     result._context = context.Continue(in value, flags);
+                }
+                else if (_init is null)
+                {
+                    result._context = default(RayIdContext).Continue(in value, flags);
                 }
 
                 return result;
@@ -561,6 +706,10 @@ namespace NetExtender.CQRS
                 {
                     result._context = context.Continue(value, flags, payload);
                 }
+                else if (_init is null)
+                {
+                    result._context = default(RayIdContext).Continue(value, flags, payload);
+                }
 
                 return result;
             }
@@ -572,6 +721,10 @@ namespace NetExtender.CQRS
                 if (result._context is { } context)
                 {
                     result._context = context.Continue(in value, flags, payload);
+                }
+                else if (_init is null)
+                {
+                    result._context = default(RayIdContext).Continue(in value, flags, payload);
                 }
 
                 return result;
