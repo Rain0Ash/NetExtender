@@ -8,9 +8,9 @@ using NetExtender.CQRS.Events.Dispatchers;
 using NetExtender.CQRS.Events.Handlers;
 using NetExtender.CQRS.Events.Handlers.Interfaces;
 using NetExtender.CQRS.Events.Interfaces;
+using NetExtender.CQRS.Exceptions;
 using NetExtender.CQRS.Notify.Handlers.Interfaces;
 using NetExtender.Exceptions;
-using NetExtender.Initializer.CQRS.Exceptions;
 using NetExtender.Types.Monads;
 using NetExtender.Utilities.Core;
 
@@ -58,6 +58,16 @@ namespace NetExtender.CQRS
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 public BusinessAsync Async<TEvent>(TContext context, TEvent @event) where TEvent : IEventCQRS
                 {
+                    if (@event is null)
+                    {
+                        throw new ArgumentNullException(nameof(@event));
+                    }
+
+                    if (@event.Resolved)
+                    {
+                        throw new CQRSEventResolvedException($"Event '{@event}' is resolved.");
+                    }
+
                     if (Event<TEvent>.Handler is { } dependency && CQRS.Provider.GetService(dependency) is IEventCQRSHandler<TContext, TEvent> handler)
                     {
                         return handler.Async(Next(ref context, @event), @event);
@@ -77,6 +87,13 @@ namespace NetExtender.CQRS
                             collector.Add(await (Async) notify.Async(context, @event));
                         }
 
+                        if (!collector)
+                        {
+                            throw CQRS.Throw<TEvent>();
+                        }
+
+                        @event.Resolved = true;
+
                         if (collector.Dispose() is { } exception)
                         {
                             throw exception;
@@ -89,6 +106,16 @@ namespace NetExtender.CQRS
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 public BusinessAsync Async<TEvent>(TContext context, TEvent @event, CancellationToken token) where TEvent : IEventCQRS
                 {
+                    if (@event is null)
+                    {
+                        throw new ArgumentNullException(nameof(@event));
+                    }
+
+                    if (@event.Resolved)
+                    {
+                        throw new CQRSEventResolvedException($"Event '{@event}' is resolved.");
+                    }
+
                     if (Event<TEvent>.Handler is { } dependency && CQRS.Provider.GetService(dependency) is IEventCQRSHandler<TContext, TEvent> handler)
                     {
                         return handler.Async(Next(ref context, @event), @event, token);
@@ -108,6 +135,13 @@ namespace NetExtender.CQRS
                             collector.Add(await (Async) notify.Async(context, @event, token));
                         }
 
+                        if (!collector)
+                        {
+                            throw CQRS.Throw<TEvent>();
+                        }
+
+                        @event.Resolved = true;
+
                         if (collector.Dispose() is { } exception)
                         {
                             throw exception;
@@ -120,6 +154,16 @@ namespace NetExtender.CQRS
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 public BusinessAsync Async<TEvent>(TContext context, in TEvent @event) where TEvent : IEventCQRS
                 {
+                    if (@event is null)
+                    {
+                        throw new ArgumentNullException(nameof(@event));
+                    }
+
+                    if (@event.Resolved)
+                    {
+                        throw new CQRSEventResolvedException($"Event '{@event}' is resolved.");
+                    }
+
                     if (Event<TEvent>.Handler is { } dependency && CQRS.Provider.GetService(dependency) is IEventCQRSHandler<TContext, TEvent> handler)
                     {
                         return handler.Async(Next(ref context, in @event), in @event);
@@ -139,6 +183,13 @@ namespace NetExtender.CQRS
                             collector.Add(await (Async) notify.Async(context, in @event));
                         }
 
+                        if (!collector)
+                        {
+                            throw CQRS.Throw<TEvent>();
+                        }
+
+                        @event.Resolved = true;
+
                         if (collector.Dispose() is { } exception)
                         {
                             throw exception;
@@ -151,6 +202,16 @@ namespace NetExtender.CQRS
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 public BusinessAsync Async<TEvent>(TContext context, in TEvent @event, CancellationToken token) where TEvent : IEventCQRS
                 {
+                    if (@event is null)
+                    {
+                        throw new ArgumentNullException(nameof(@event));
+                    }
+
+                    if (@event.Resolved)
+                    {
+                        throw new CQRSEventResolvedException($"Event '{@event}' is resolved.");
+                    }
+
                     if (Event<TEvent>.Handler is { } dependency && CQRS.Provider.GetService(dependency) is IEventCQRSHandler<TContext, TEvent> handler)
                     {
                         return handler.Async(Next(ref context, in @event), in @event, token);
@@ -170,6 +231,13 @@ namespace NetExtender.CQRS
                             collector.Add(await (Async) notify.Async(context, in @event, token));
                         }
 
+                        if (!collector)
+                        {
+                            throw CQRS.Throw<TEvent>();
+                        }
+
+                        @event.Resolved = true;
+
                         if (collector.Dispose() is { } exception)
                         {
                             throw exception;
@@ -182,6 +250,16 @@ namespace NetExtender.CQRS
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 public BusinessAsync Async<TEvent>(TContext context, TEvent @event, ICQRS.Transaction transaction) where TEvent : IEventCQRS
                 {
+                    if (@event is null)
+                    {
+                        throw new ArgumentNullException(nameof(@event));
+                    }
+
+                    if (@event.Resolved)
+                    {
+                        throw new CQRSEventResolvedException($"Event '{@event}' is resolved.");
+                    }
+
                     if (Event<TEvent>.Handler is { } dependency && CQRS.Provider.GetService(dependency) is IEventCQRSHandler<TContext, TEvent> handler)
                     {
                         return handler.Async(Next(ref context, @event), @event, transaction);
@@ -201,6 +279,13 @@ namespace NetExtender.CQRS
                             collector.Add(await (Async) notify.Async(context, @event, transaction));
                         }
 
+                        if (!collector)
+                        {
+                            throw CQRS.Throw<TEvent>();
+                        }
+
+                        @event.Resolved = true;
+
                         if (collector.Dispose() is { } exception)
                         {
                             throw exception;
@@ -213,6 +298,16 @@ namespace NetExtender.CQRS
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 public BusinessAsync Async<TEvent>(TContext context, TEvent @event, ICQRS.Transaction transaction, CancellationToken token) where TEvent : IEventCQRS
                 {
+                    if (@event is null)
+                    {
+                        throw new ArgumentNullException(nameof(@event));
+                    }
+
+                    if (@event.Resolved)
+                    {
+                        throw new CQRSEventResolvedException($"Event '{@event}' is resolved.");
+                    }
+
                     if (Event<TEvent>.Handler is { } dependency && CQRS.Provider.GetService(dependency) is IEventCQRSHandler<TContext, TEvent> handler)
                     {
                         return handler.Async(Next(ref context, @event), @event, transaction, token);
@@ -232,6 +327,13 @@ namespace NetExtender.CQRS
                             collector.Add(await (Async) notify.Async(context, @event, transaction, token));
                         }
 
+                        if (!collector)
+                        {
+                            throw CQRS.Throw<TEvent>();
+                        }
+
+                        @event.Resolved = true;
+
                         if (collector.Dispose() is { } exception)
                         {
                             throw exception;
@@ -244,6 +346,16 @@ namespace NetExtender.CQRS
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 public BusinessAsync Async<TEvent>(TContext context, in TEvent @event, ICQRS.Transaction transaction) where TEvent : IEventCQRS
                 {
+                    if (@event is null)
+                    {
+                        throw new ArgumentNullException(nameof(@event));
+                    }
+
+                    if (@event.Resolved)
+                    {
+                        throw new CQRSEventResolvedException($"Event '{@event}' is resolved.");
+                    }
+
                     if (Event<TEvent>.Handler is { } dependency && CQRS.Provider.GetService(dependency) is IEventCQRSHandler<TContext, TEvent> handler)
                     {
                         return handler.Async(Next(ref context, in @event), in @event, transaction);
@@ -263,6 +375,13 @@ namespace NetExtender.CQRS
                             collector.Add(await (Async) notify.Async(context, in @event, transaction));
                         }
 
+                        if (!collector)
+                        {
+                            throw CQRS.Throw<TEvent>();
+                        }
+
+                        @event.Resolved = true;
+
                         if (collector.Dispose() is { } exception)
                         {
                             throw exception;
@@ -275,6 +394,16 @@ namespace NetExtender.CQRS
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 public BusinessAsync Async<TEvent>(TContext context, in TEvent @event, ICQRS.Transaction transaction, CancellationToken token) where TEvent : IEventCQRS
                 {
+                    if (@event is null)
+                    {
+                        throw new ArgumentNullException(nameof(@event));
+                    }
+
+                    if (@event.Resolved)
+                    {
+                        throw new CQRSEventResolvedException($"Event '{@event}' is resolved.");
+                    }
+
                     if (Event<TEvent>.Handler is { } dependency && CQRS.Provider.GetService(dependency) is IEventCQRSHandler<TContext, TEvent> handler)
                     {
                         return handler.Async(Next(ref context, in @event), in @event, transaction, token);
@@ -294,6 +423,13 @@ namespace NetExtender.CQRS
                             collector.Add(await (Async) notify.Async(context, in @event, transaction, token));
                         }
 
+                        if (!collector)
+                        {
+                            throw CQRS.Throw<TEvent>();
+                        }
+
+                        @event.Resolved = true;
+
                         if (collector.Dispose() is { } exception)
                         {
                             throw exception;
@@ -306,6 +442,16 @@ namespace NetExtender.CQRS
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 public Async SafeAsync<TEvent>(TContext context, TEvent @event) where TEvent : IEventCQRS
                 {
+                    if (@event is null)
+                    {
+                        throw new ArgumentNullException(nameof(@event));
+                    }
+
+                    if (@event.Resolved)
+                    {
+                        throw new CQRSEventResolvedException($"Event '{@event}' is resolved.");
+                    }
+
                     if (Event<TEvent>.Handler is { } dependency && CQRS.Provider.GetService(dependency) is IEventCQRSHandler<TContext, TEvent> handler)
                     {
                         return handler.SafeAsync(Next(ref context, @event), @event);
@@ -325,6 +471,13 @@ namespace NetExtender.CQRS
                             collector.Add(await notify.SafeAsync(context, @event));
                         }
 
+                        if (!collector)
+                        {
+                            throw CQRS.Throw<TEvent>();
+                        }
+
+                        @event.Resolved = true;
+
                         if (collector.Dispose() is { } exception)
                         {
                             throw exception;
@@ -337,6 +490,16 @@ namespace NetExtender.CQRS
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 public Async SafeAsync<TEvent>(TContext context, TEvent @event, CancellationToken token) where TEvent : IEventCQRS
                 {
+                    if (@event is null)
+                    {
+                        throw new ArgumentNullException(nameof(@event));
+                    }
+
+                    if (@event.Resolved)
+                    {
+                        throw new CQRSEventResolvedException($"Event '{@event}' is resolved.");
+                    }
+
                     if (Event<TEvent>.Handler is { } dependency && CQRS.Provider.GetService(dependency) is IEventCQRSHandler<TContext, TEvent> handler)
                     {
                         return handler.SafeAsync(Next(ref context, @event), @event, token);
@@ -356,6 +519,13 @@ namespace NetExtender.CQRS
                             collector.Add(await notify.SafeAsync(context, @event, token));
                         }
 
+                        if (!collector)
+                        {
+                            throw CQRS.Throw<TEvent>();
+                        }
+
+                        @event.Resolved = true;
+
                         if (collector.Dispose() is { } exception)
                         {
                             throw exception;
@@ -368,6 +538,16 @@ namespace NetExtender.CQRS
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 public Async SafeAsync<TEvent>(TContext context, in TEvent @event) where TEvent : IEventCQRS
                 {
+                    if (@event is null)
+                    {
+                        throw new ArgumentNullException(nameof(@event));
+                    }
+
+                    if (@event.Resolved)
+                    {
+                        throw new CQRSEventResolvedException($"Event '{@event}' is resolved.");
+                    }
+
                     if (Event<TEvent>.Handler is { } dependency && CQRS.Provider.GetService(dependency) is IEventCQRSHandler<TContext, TEvent> handler)
                     {
                         return handler.SafeAsync(Next(ref context, in @event), in @event);
@@ -387,6 +567,13 @@ namespace NetExtender.CQRS
                             collector.Add(await notify.SafeAsync(context, in @event));
                         }
 
+                        if (!collector)
+                        {
+                            throw CQRS.Throw<TEvent>();
+                        }
+
+                        @event.Resolved = true;
+
                         if (collector.Dispose() is { } exception)
                         {
                             throw exception;
@@ -399,6 +586,16 @@ namespace NetExtender.CQRS
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 public Async SafeAsync<TEvent>(TContext context, in TEvent @event, CancellationToken token) where TEvent : IEventCQRS
                 {
+                    if (@event is null)
+                    {
+                        throw new ArgumentNullException(nameof(@event));
+                    }
+
+                    if (@event.Resolved)
+                    {
+                        throw new CQRSEventResolvedException($"Event '{@event}' is resolved.");
+                    }
+
                     if (Event<TEvent>.Handler is { } dependency && CQRS.Provider.GetService(dependency) is IEventCQRSHandler<TContext, TEvent> handler)
                     {
                         return handler.SafeAsync(Next(ref context, in @event), in @event, token);
@@ -418,6 +615,13 @@ namespace NetExtender.CQRS
                             collector.Add(await notify.SafeAsync(context, in @event, token));
                         }
 
+                        if (!collector)
+                        {
+                            throw CQRS.Throw<TEvent>();
+                        }
+
+                        @event.Resolved = true;
+
                         if (collector.Dispose() is { } exception)
                         {
                             throw exception;
@@ -430,6 +634,16 @@ namespace NetExtender.CQRS
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 public Async SafeAsync<TEvent>(TContext context, TEvent @event, ICQRS.Transaction transaction) where TEvent : IEventCQRS
                 {
+                    if (@event is null)
+                    {
+                        throw new ArgumentNullException(nameof(@event));
+                    }
+
+                    if (@event.Resolved)
+                    {
+                        throw new CQRSEventResolvedException($"Event '{@event}' is resolved.");
+                    }
+
                     if (Event<TEvent>.Handler is { } dependency && CQRS.Provider.GetService(dependency) is IEventCQRSHandler<TContext, TEvent> handler)
                     {
                         return handler.SafeAsync(Next(ref context, @event), @event, transaction);
@@ -449,6 +663,13 @@ namespace NetExtender.CQRS
                             collector.Add(await notify.SafeAsync(context, @event, transaction));
                         }
 
+                        if (!collector)
+                        {
+                            throw CQRS.Throw<TEvent>();
+                        }
+
+                        @event.Resolved = true;
+
                         if (collector.Dispose() is { } exception)
                         {
                             throw exception;
@@ -461,6 +682,16 @@ namespace NetExtender.CQRS
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 public Async SafeAsync<TEvent>(TContext context, TEvent @event, ICQRS.Transaction transaction, CancellationToken token) where TEvent : IEventCQRS
                 {
+                    if (@event is null)
+                    {
+                        throw new ArgumentNullException(nameof(@event));
+                    }
+
+                    if (@event.Resolved)
+                    {
+                        throw new CQRSEventResolvedException($"Event '{@event}' is resolved.");
+                    }
+
                     if (Event<TEvent>.Handler is { } dependency && CQRS.Provider.GetService(dependency) is IEventCQRSHandler<TContext, TEvent> handler)
                     {
                         return handler.SafeAsync(Next(ref context, @event), @event, transaction, token);
@@ -480,6 +711,13 @@ namespace NetExtender.CQRS
                             collector.Add(await notify.SafeAsync(context, @event, transaction, token));
                         }
 
+                        if (!collector)
+                        {
+                            throw CQRS.Throw<TEvent>();
+                        }
+
+                        @event.Resolved = true;
+
                         if (collector.Dispose() is { } exception)
                         {
                             throw exception;
@@ -492,6 +730,16 @@ namespace NetExtender.CQRS
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 public Async SafeAsync<TEvent>(TContext context, in TEvent @event, ICQRS.Transaction transaction) where TEvent : IEventCQRS
                 {
+                    if (@event is null)
+                    {
+                        throw new ArgumentNullException(nameof(@event));
+                    }
+
+                    if (@event.Resolved)
+                    {
+                        throw new CQRSEventResolvedException($"Event '{@event}' is resolved.");
+                    }
+
                     if (Event<TEvent>.Handler is { } dependency && CQRS.Provider.GetService(dependency) is IEventCQRSHandler<TContext, TEvent> handler)
                     {
                         return handler.SafeAsync(Next(ref context, in @event), in @event, transaction);
@@ -511,6 +759,13 @@ namespace NetExtender.CQRS
                             collector.Add(await notify.SafeAsync(context, in @event, transaction));
                         }
 
+                        if (!collector)
+                        {
+                            throw CQRS.Throw<TEvent>();
+                        }
+
+                        @event.Resolved = true;
+
                         if (collector.Dispose() is { } exception)
                         {
                             throw exception;
@@ -523,6 +778,16 @@ namespace NetExtender.CQRS
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 public Async SafeAsync<TEvent>(TContext context, in TEvent @event, ICQRS.Transaction transaction, CancellationToken token) where TEvent : IEventCQRS
                 {
+                    if (@event is null)
+                    {
+                        throw new ArgumentNullException(nameof(@event));
+                    }
+
+                    if (@event.Resolved)
+                    {
+                        throw new CQRSEventResolvedException($"Event '{@event}' is resolved.");
+                    }
+
                     if (Event<TEvent>.Handler is { } dependency && CQRS.Provider.GetService(dependency) is IEventCQRSHandler<TContext, TEvent> handler)
                     {
                         return handler.SafeAsync(Next(ref context, in @event), in @event, transaction, token);
@@ -542,6 +807,13 @@ namespace NetExtender.CQRS
                             collector.Add(await notify.SafeAsync(context, in @event, transaction, token));
                         }
 
+                        if (!collector)
+                        {
+                            throw CQRS.Throw<TEvent>();
+                        }
+
+                        @event.Resolved = true;
+
                         if (collector.Dispose() is { } exception)
                         {
                             throw exception;
@@ -560,8 +832,13 @@ namespace NetExtender.CQRS
         {
             private partial class Event<TEvent>
             {
-                public struct Collector : IDisposable
+                public struct Collector : IStruct<Collector>, IDisposable
                 {
+                    public static implicit operator Boolean(Collector value)
+                    {
+                        return value is { IsEmpty: false, Count: > 0 };
+                    }
+
                     private static ArrayPool<Exception> Pool { get; } = ArrayPool<Exception>.Create(Byte.MaxValue, 4);
 
                     private readonly CQRS<TContext> CQRS;
@@ -569,6 +846,15 @@ namespace NetExtender.CQRS
                     private Byte Count = 0;
                     private Byte Any = 0;
                     private Byte Business = 0;
+
+                    public readonly Boolean IsEmpty
+                    {
+                        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                        get
+                        {
+                            return CQRS is null;
+                        }
+                    }
 
                     public Collector(CQRS<TContext> dispatcher)
                     {

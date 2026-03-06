@@ -4,9 +4,9 @@ using System.Threading;
 using NetExtender.CQRS.Commands.Dispatchers.Interfaces;
 using NetExtender.CQRS.Dispatchers.Interfaces;
 using NetExtender.CQRS.Events.Dispatchers.Interfaces;
+using NetExtender.CQRS.Exceptions;
 using NetExtender.CQRS.Querys.Dispatchers.Interfaces;
 using NetExtender.CQRS.Requests.Dispatchers.Interfaces;
-using NetExtender.Initializer.CQRS.Exceptions;
 using NetExtender.Types.Monads;
 
 namespace NetExtender.CQRS

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-namespace NetExtender.Initializer.CQRS.Exceptions
+namespace NetExtender.CQRS.Exceptions
 {
     [Serializable]
     public class CQRSEventNotifyException : AggregateException

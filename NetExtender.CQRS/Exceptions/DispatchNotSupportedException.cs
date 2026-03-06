@@ -5,7 +5,7 @@ using System;
 using System.Runtime.Serialization;
 using NetExtender.Utilities.Types;
 
-namespace NetExtender.Initializer.CQRS.Exceptions
+namespace NetExtender.CQRS.Exceptions
 {
     [Serializable]
     public class DispatchNotSupportedException<TEntity> : DispatchNotSupportedException
